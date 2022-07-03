@@ -1,16 +1,65 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 100;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\)_UltraLight.ttf");
+}
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 300;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\)_Light.ttf");
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\).ttf");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 500;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\)_Medium.ttf");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 700;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\)_Bold.ttf");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: IRANSans;
+  font-style: normal;
+  font-weight: 900;
+  src: url("/fonts/ttf/IRANSansWeb\(FaNum\)_Black.ttf");
 }
 
 * {
-  box-sizing: border-box;
+  font-family: "IRANSans";
+}
+
+body {
+  direction: rtl;
+  font-family: "IRANSans";
+  color: #2b2f33;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }

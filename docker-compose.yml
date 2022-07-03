@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  patient-app-new:
+    container_name: patient-app-new
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9080:3000
+    restart: always
