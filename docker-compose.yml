@@ -1,8 +1,9 @@
 version: "3.7"
 
 services:
-  patient-app-new:
-    container_name: patient-app-new
+  patient-app:
+    container_name: patient-app
+    image: dockerhub.paziresh24.com/patient-app
     build:
       context: .
       dockerfile: Dockerfile
