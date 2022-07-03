@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useInView } from "react-intersection-observer";
@@ -14,7 +14,6 @@ import { useBookStore } from "@/store";
 import { CenterType } from "@/types/centerType";
 import getDisplayDoctorExpertise from "@/utils/getDisplayDoctorExpertise";
 import { BookStatus } from "@/types/bookStatus";
-import Prescription from "@/components/organisms/prescription";
 import { Tab, Tabs } from "@/components/atoms/tabs";
 
 interface AppointmentsProps {
@@ -38,10 +37,6 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
     threshold: 0,
   });
 
-  const getBooksReformated = (books: { type: string }[]) => {
-    return books.filter((book) => book);
-  };
-
   useEffect(() => {
     if (inView) setPage((prevState) => prevState + 1);
   }, [inView]);
@@ -50,15 +45,15 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
     getBooks.remove();
     getBooks.refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, type]); //  getbook is not a dependency
+  }, [page, type]);
 
   useEffect(() => {
     if (getBooks.isSuccess) {
       setIsLoading(false);
-      getBooks.data?.data?.length > 0 && addBooks(getBooksReformated(getBooks.data.data));
+      getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getBooks.status]); //  just getBooks.status dependency
+  }, [getBooks.status]);
 
   const handleChangeType = (type: BookType) => {
     setPage(1);
@@ -104,62 +99,53 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
           )}
           {!isLoading && books.length === 0 && <EmptyState text="نوبتی وجود ندارد." />}
           {books.length > 0 &&
-            books.map((turn) =>
-              turn.type === "prescription" ? (
-                <Prescription
-                  key={turn.id}
-                  fullName={turn.doctor?.doctor_additional_data?.fullName}
-                  finalizedAt={turn.finalized_at}
-                  pdfName={turn.pdf}
-                />
-              ) : (
-                <Turn
-                  key={turn.book_id}
-                  status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
-                  id={turn.book_id}
-                  centerType={
-                    turn.center?.center_type === "1"
-                      ? CenterType.clinic
-                      : turn.center?.id === "5532"
-                      ? CenterType.consult
-                      : CenterType.hospital
-                  }
-                  centerInfo={{
-                    centerId: turn.center?.id,
-                    centerType: turn.center?.center_type,
-                    hasPaging: turn.center?.settings?.booking_paging_from_clinic,
-                  }}
-                  doctorInfo={{
-                    avatar: "https://uploader.paziresh24.com/api/file/" + turn.doctor_info?.image,
-                    firstName: turn.doctor_info?.name,
-                    lastName: turn.doctor_info?.family,
-                    expertise: getDisplayDoctorExpertise({
-                      aliasTitle: turn.doctor_info?.expertises?.[0]?.alias_title,
-                      degree: turn.doctor_info?.expertises?.[0]?.degree?.name,
-                      expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
-                    }),
-                    slug: turn.doctor_info?.slug,
-                    whatsapp: turn.whatsapp,
-                  }}
-                  patientInfo={{
-                    nationalCode: turn.patient_info?.national_code,
-                  }}
-                  turnDetails={{
-                    bookTime: turn.from,
-                    waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
-                    trackingCode: turn.ref_id,
-                  }}
-                  location={{
-                    ...turn.center?.map,
-                    address: turn.center?.address,
-                  }}
-                  feedbackUrl={turn.feed_back_url}
-                  prescription={{
-                    ...turn.prescription,
-                  }}
-                />
-              )
-            )}
+            books.map((turn) => (
+              <Turn
+                key={turn.book_id}
+                status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
+                id={turn.book_id}
+                centerType={
+                  turn.center?.center_type === "1"
+                    ? CenterType.clinic
+                    : turn.center?.id === "5532"
+                    ? CenterType.consult
+                    : CenterType.hospital
+                }
+                centerInfo={{
+                  centerId: turn.center?.id,
+                  centerType: turn.center?.center_type,
+                  hasPaging: turn.center?.settings?.booking_paging_from_clinic,
+                }}
+                doctorInfo={{
+                  avatar: "https://uploader.paziresh24.com/api/file/" + turn.doctor_info?.image,
+                  firstName: turn.doctor_info?.name,
+                  lastName: turn.doctor_info?.family,
+                  expertise: getDisplayDoctorExpertise({
+                    aliasTitle: turn.doctor_info?.expertises?.[0]?.alias_title,
+                    degree: turn.doctor_info?.expertises?.[0]?.degree?.name,
+                    expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
+                  }),
+                  slug: turn.doctor_info?.slug,
+                  whatsapp: turn.whatsapp,
+                }}
+                patientInfo={{
+                  nationalCode: turn.patient_info?.national_code,
+                }}
+                turnDetails={{
+                  bookTime: turn.from,
+                  waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
+                  trackingCode: turn.ref_id,
+                }}
+                location={{
+                  ...turn.center?.map,
+                  address: turn.center?.address,
+                }}
+                feedbackUrl={turn.feed_back_url}
+                prescription={{
+                  ...turn.prescription,
+                }}
+              />
+            ))}
           {!isLoading && getBooks.data?.status !== 204 && (
             <div ref={ref} className="w-full flex justify-center py-8">
               <Loading />
