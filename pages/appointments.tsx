@@ -137,7 +137,8 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
                   trackingCode: turn.ref_id,
                 }}
                 location={{
-                  ...turn.center?.map,
+                  lat: turn.center?.map?.lat,
+                  lng: turn.center?.map?.lon,
                   address: turn.center?.address,
                 }}
                 feedbackUrl={turn.feed_back_url}
