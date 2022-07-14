@@ -5,7 +5,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const nextConfig = {
   reactStrictMode: false,
   basePath: isProduction ? "/patient" : "",
-  output: "standalone",
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
