@@ -7,8 +7,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - CLINIC_BASE_URL=https://www.paziresh24.com
     ports:
       - 9080:3000
     restart: always

@@ -2,16 +2,6 @@ import axios from "axios";
 import getConfig from "next/config";
 import { refresh } from "./auth/refresh/api";
 const { publicRuntimeConfig } = getConfig();
-// console.log(process.env.NEXT_PUBLIC_PAZIRESH24_API);
-
-// const env: any = process["env"];
-// const variables = {
-//   PAZIRESH24_API: env["NEXT_PUBLIC_PAZIRESH24_API"],
-//   CLINIC_BASE_URL: env["NEXT_PUBLIC_CLINIC_BASE_URL"],
-//   PRESCRIPTION_API: env["NEXT_PUBLIC_PRESCRIPTION_API"],
-// };
-
-console.log(publicRuntimeConfig);
 
 export const paziresh24AppClient = axios.create({
   baseURL: publicRuntimeConfig.PAZIRESH24_API,
