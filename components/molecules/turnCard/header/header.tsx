@@ -10,9 +10,10 @@ import ShareIcon from "@/components/icons/share";
 import TrashIcon from "@/components/icons/trash";
 import ThreeDotsIcon from "@/components/icons/threeDots";
 import { toast } from "react-toastify";
-import { isMobile } from "react-device-detect";
 import { BookStatus } from "@/types/bookStatus";
 import Modal from "@/components/atoms/modal";
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
   id: string;
@@ -61,7 +62,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
     if (navigator.share)
       navigator.share({
         text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-        url: `${process.env.NEXT_PUBLIC_CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
+        url: `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
       });
   };
 

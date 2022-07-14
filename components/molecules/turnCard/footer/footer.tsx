@@ -8,6 +8,8 @@ import { BookStatus } from "@/types/bookStatus";
 import { CenterType } from "@/types/centerType";
 import { isToday } from "@/utils/isToday";
 import Modal from "@/components/atoms/modal";
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
   id: string;
@@ -27,11 +29,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = (props) => {
   const isBookForToday = isToday(new Date(bookTime));
 
   const showPrescription = () => {
-    window.open(`${process.env.NEXT_PUBLIC_PRESCRIPTION_API}/pdfs/${pdfLink}`);
+    window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
   };
 
   const reBook = () => {
-    window.open(`${process.env.NEXT_PUBLIC_CLINIC_BASE_URL}/dr/${slug}`);
+    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (

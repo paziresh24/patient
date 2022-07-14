@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const p24Session = request.cookies.get("P24SESSION");
   const certificate = request.cookies.get("certificate");
   const siginPageRedirectUrl = new URL(
-    `/signin/?url=https://www.paziresh24.com/patient/appointments`,
+    `/signin/?url=${process.env.CLINIC_BASE_URL}/patient/appointments`,
     request.url
   );
   console.log(siginPageRedirectUrl);
