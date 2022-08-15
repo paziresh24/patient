@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
     `/signin/?url=${process.env.CLINIC_BASE_URL}/patient/appointments`,
     request.url
   );
-  if (!certificate || !p24Session) {
+  if (process.env.NODE_ENV !== "development" && (!certificate || !p24Session)) {
     return NextResponse.redirect(siginPageRedirectUrl);
   }
 }

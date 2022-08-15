@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { BookStatus } from "@/types/bookStatus";
 import Modal from "@/components/atoms/modal";
 import getConfig from "next/config";
+import ReceiptIcon from "@/components/icons/receipt";
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
@@ -37,7 +38,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
 
-  const shouldShowTurnMenu = status === BookStatus.notVisited;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited;
 
   const removeBookAction = () => {
     removeBookApi.mutate(
@@ -58,6 +59,13 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
     );
   };
 
+  const receiptTurn = () => {
+    return window.open(
+      `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
+      "_blank"
+    );
+  };
+
   const shareTurn = () => {
     if (navigator.share)
       navigator.share({
@@ -65,6 +73,31 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
         url: `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
       });
   };
+
+  const menuItems = [
+    {
+      id: 0,
+      name: "قبض نوبت",
+      icon: <ReceiptIcon />,
+      action: receiptTurn,
+      shouldShow: true,
+    },
+    {
+      id: 1,
+      name: "اشتراک گذاری",
+      icon: <ShareIcon />,
+      action: shareTurn,
+      shouldShow: true,
+    },
+    {
+      id: 2,
+      name: "حذف نوبت",
+      icon: <TrashIcon />,
+      action: () => setRemoveModal(true),
+      testId: "drop-down__remove-button",
+      shouldShow: shouldShowRemoveTurn,
+    },
+  ];
 
   return (
     <>
@@ -76,35 +109,21 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
         expertise={doctorInfo.expertise}
       />
 
-      {status !== BookStatus.notVisited && <TagStatus status={status} />}
+      {status !== BookStatus.notVisited && <TagStatus status={status} className="left-10" />}
 
-      {shouldShowTurnMenu && (
-        <DropDown
-          element={
-            <div
-              className="flex items-center justify-center w-8 h-8 absolute left-2 top-3 cursor-pointer"
-              data-testid="turn-drop-down-button"
-            >
-              <ThreeDotsIcon color="#000" />
-            </div>
-          }
-          items={[
-            {
-              id: 0,
-              name: "اشتراک گذاری",
-              icon: <ShareIcon />,
-              action: shareTurn,
-            },
-            {
-              id: 1,
-              name: "حذف نوبت",
-              icon: <TrashIcon />,
-              action: () => setRemoveModal(true),
-              testId: "drop-down__remove-button",
-            },
-          ]}
-        />
-      )}
+      <DropDown
+        element={
+          <div
+            className="flex items-center justify-center w-8 h-8 absolute left-2 top-3 cursor-pointer"
+            data-testid="turn-drop-down-button"
+          >
+            <ThreeDotsIcon color="#000" />
+          </div>
+        }
+        items={menuItems
+          .filter((item) => item.shouldShow)
+          .map(({ shouldShow, ...item }) => ({ ...item }))}
+      />
 
       <Modal title="آیا از حدف نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">

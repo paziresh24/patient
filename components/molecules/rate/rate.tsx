@@ -17,7 +17,7 @@ export const Rate: React.FC<RateProps> = (props) => {
         <Text fontWeight="bold" fontSize="sm" className="text-secondary ml-2">
           ثبت نظر
         </Text>
-        <ChevronIcon dir="left" color="#27BDA0" width="10" height="12" style={undefined} />
+        <ChevronIcon dir="left" color="#0077DB" width="10" height="12" style={undefined} />
       </a>
     </div>
   );

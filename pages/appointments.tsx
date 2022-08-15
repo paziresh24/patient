@@ -86,15 +86,15 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
       </div>
       <div className="flex flex-col">
         <div
-          className={`p-5 space-y-3 ${isWebView ? "pt-5" : ""} w-full lg:w-2/5 self-center`}
+          className={`p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center`}
           data-testid="appointments-container"
         >
           {isLoading && (
             <>
-              <Skeleton w="100%" h="15rem" rounded="lg" />
-              <Skeleton w="100%" h="15rem" rounded="lg" />
-              <Skeleton w="100%" h="15rem" rounded="lg" />
-              <Skeleton w="100%" h="15rem" rounded="lg" />
+              <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
+              <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
+              <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
+              <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
             </>
           )}
           {!isLoading && books.length === 0 && <EmptyState text="نوبتی وجود ندارد." />}
@@ -105,7 +105,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
                 status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
                 id={turn.book_id}
                 centerType={
-                  turn.center?.center_type === "1"
+                  turn.center?.center_type === 1
                     ? CenterType.clinic
                     : turn.center?.id === "5532"
                     ? CenterType.consult
@@ -117,7 +117,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
                   hasPaging: turn.center?.settings?.booking_paging_from_clinic,
                 }}
                 doctorInfo={{
-                  avatar: "https://uploader.paziresh24.com/api/file/" + turn.doctor_info?.image,
+                  avatar: turn.doctor_info?.image,
                   firstName: turn.doctor_info?.name,
                   lastName: turn.doctor_info?.family,
                   expertise: getDisplayDoctorExpertise({
@@ -135,6 +135,10 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
                   bookTime: turn.from,
                   waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                   trackingCode: turn.ref_id,
+                  centerName: turn.center?.name,
+                  patientName: `${turn.patient_info?.name ?? ""} ${
+                    turn.patient_info?.family ?? ""
+                  }`,
                 }}
                 location={{
                   lat: turn.center?.map?.lat,

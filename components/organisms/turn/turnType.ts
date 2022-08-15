@@ -25,6 +25,8 @@ export interface TurnProps {
     bookTime: number;
     waitingTime?: string;
     trackingCode: string;
+    centerName: string;
+    patientName: string;
   };
   location: {
     address: string;
