@@ -1,5 +1,6 @@
 import axios from "axios";
 import getConfig from "next/config";
+import { splunkInstance } from "services/splunk";
 import { refresh } from "./auth/refresh/api";
 const { publicRuntimeConfig } = getConfig();
 
@@ -26,6 +27,15 @@ paziresh24AppClient.interceptors.response.use(
         await refresh();
         return paziresh24AppClient(originalRequest);
       } catch (error) {
+        if (axios.isAxiosError(error)) {
+          splunkInstance.sendEvent({
+            group: "patient-app",
+            type: "error-refresh-token",
+            event: {
+              error: error.response?.data,
+            },
+          });
+        }
         return window.location.replace(
           `${`${publicRuntimeConfig.CLINIC_BASE_URL}/signin/?url=${window.location.href}`}/auth`
         );
