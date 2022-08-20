@@ -1,6 +1,6 @@
 import axios from "axios";
 import getConfig from "next/config";
-import { splunkInstance } from "services/splunk";
+import { splunkInstance } from "@/services/splunk";
 import { refresh } from "./auth/refresh/api";
 const { publicRuntimeConfig } = getConfig();
 

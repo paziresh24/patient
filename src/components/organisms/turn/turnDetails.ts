@@ -27,7 +27,12 @@ export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataPar
       id: 1,
       name: centerType === CenterType.consult ? "زمان ارتباط با پزشک" : "زمان نوبت",
       value: dateTime,
-      shouldShow: [BookStatus.expired, BookStatus.visited, BookStatus.notVisited].includes(status),
+      shouldShow: [
+        BookStatus.visited,
+        BookStatus.notVisited,
+        BookStatus.expired,
+        BookStatus.deleted,
+      ].includes(status),
     },
     {
       id: 2,
@@ -65,7 +70,12 @@ export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataPar
       id: 5,
       name: `میانگین زمان انتظار در ${centerType === CenterType.clinic ? "مطب" : "بیمارستان"}`,
       value: waitingTime,
-      shouldShow: [BookStatus.notVisited].includes(status),
+      shouldShow: [
+        BookStatus.visited,
+        BookStatus.notVisited,
+        BookStatus.expired,
+        BookStatus.deleted,
+      ].includes(status),
     },
   ];
 

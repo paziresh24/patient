@@ -38,7 +38,7 @@ export const Turn: React.FC<TurnProps> = (props) => {
   }, [turnDetails, status, centerType]);
 
   return (
-    <Card className="space-y-2 relative rounded-none md:rounded-lg" data-testid="turn-card">
+    <Card className="space-y-2 relative !rounded-none md:!rounded-lg" data-testid="turn-card">
       <TurnHeader
         id={id}
         doctorInfo={doctorInfo}
@@ -49,6 +49,9 @@ export const Turn: React.FC<TurnProps> = (props) => {
       />
 
       <TurnBody
+        id={id}
+        doctorInfo={doctorInfo}
+        centerId={centerInfo.centerId}
         centerType={centerType}
         detailsData={detailsData}
         location={location}

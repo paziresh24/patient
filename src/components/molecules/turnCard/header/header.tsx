@@ -14,6 +14,7 @@ import { BookStatus } from "@/types/bookStatus";
 import Modal from "@/components/atoms/modal";
 import getConfig from "next/config";
 import ReceiptIcon from "@/components/icons/receipt";
+import { redirectToReceoptTurn } from "@/functions/redirectToReceoptTurn";
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
@@ -60,10 +61,11 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
   };
 
   const receiptTurn = () => {
-    return window.open(
-      `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
-      "_blank"
-    );
+    redirectToReceoptTurn({
+      slug: doctorInfo.slug,
+      bookId: id,
+      centerId: centerId,
+    });
   };
 
   const shareTurn = () => {
