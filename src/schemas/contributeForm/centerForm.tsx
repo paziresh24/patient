@@ -11,7 +11,7 @@ export const centerForm: SectionSchema[] = [
       {
         key: "center_type",
         label: "نوع مرکز درمانی",
-        component: (props) =>
+        component: (props: any) =>
           formFiledType.autoComplete({
             ...props,
             options: centerType,
@@ -29,7 +29,7 @@ export const centerForm: SectionSchema[] = [
       {
         key: "center_name",
         label: "نام مرکز درمانی",
-        component: (props) =>
+        component: (props: TextFieldProps) =>
           formFiledType.textField({
             helperText: "در صورتی که نام مرکز درمانی اشتباه است، صحیح آن را بنویسید.",
             InputProps: {
