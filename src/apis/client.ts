@@ -11,7 +11,7 @@ export const paziresh24AppClient = axios.create({
 
 export const clinicClient = axios.create({
   withCredentials: true,
-  baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}/api`,
+  baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}`,
 });
 
 export const prescriptionClient = axios.create({

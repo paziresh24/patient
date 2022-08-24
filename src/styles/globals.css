@@ -63,3 +63,7 @@ body {
   width: 0;
   height: 0;
 }
+
+.leaflet-control-zoom {
+  display: none;
+}

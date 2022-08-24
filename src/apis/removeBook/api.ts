@@ -7,7 +7,7 @@ export const removeBook = (params: {
   national_code: string;
 }) => {
   return clinicClient.post(
-    "/deleteBook",
+    "/api/deleteBook",
     formData({
       ...params,
     })

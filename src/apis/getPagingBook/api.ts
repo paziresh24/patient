@@ -3,7 +3,7 @@ import { clinicClient } from "../client";
 
 export const getPagingBook = (params: { book_id: string }) => {
   return clinicClient.post(
-    "/addBookToQueue",
+    "/api/addBookToQueue",
     formData({
       ...params,
     })
