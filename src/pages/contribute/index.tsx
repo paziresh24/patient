@@ -50,7 +50,7 @@ const Home = ({ slug }: PageProps) => {
       </Head>
 
       <main
-        className="flex flex-col justify-between p-5"
+        className="md:max-w-md mx-auto flex flex-col items-center justify-between p-5 pb-36"
         style={{
           background: "linear-gradient(180deg, #F4F8FB 62.04%, rgba(244, 248, 251, 0) 78.36%)",
         }}
@@ -94,7 +94,7 @@ const Home = ({ slug }: PageProps) => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 right-0 w-full p-5 shadow-lg">
+        <div className="md:max-w-md fixed bottom-0 w-full p-5">
           <Button
             fullWidth
             variant="contained"

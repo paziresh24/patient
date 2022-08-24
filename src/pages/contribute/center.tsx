@@ -117,14 +117,14 @@ const Home: NextPage = () => {
       </Head>
 
       <TopBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton />
-      <main className="flex flex-col p-5 pb-28">
+      <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28">
         <Form
           actionExtend={{
             addressSection: () => setAddressModal(true),
             phoneSection: () => setAddPhoneModal(true),
           }}
         />
-        <div className="bg-white fixed bottom-0 right-0 w-full p-4 shadow-lg">
+        <div className="bg-white md:bg-transparent fixed md:static bottom-0 right-0 w-full p-4 md:px-0 shadow-lg md:shadow-none">
           <Button fullWidth variant="contained" onClick={handleSubmit(onSubmit)}>
             ثبت
           </Button>

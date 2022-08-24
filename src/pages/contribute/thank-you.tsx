@@ -24,7 +24,7 @@ const ThankYouPage = () => {
       </Head>
 
       <main
-        className="flex flex-col justify-between p-5 pt-16"
+        className="md:max-w-md mx-auto flex flex-col justify-between p-5 pt-16"
         style={{
           background: "linear-gradient(rgb(244, 248, 251) 62.04%, #fffffff7 78.36%)",
         }}

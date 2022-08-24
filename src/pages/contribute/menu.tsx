@@ -32,7 +32,7 @@ const Home: NextPage = () => {
         <title>پیشخوان ویرایش {profileData.display_name}</title>
       </Head>
       <TopBar title={`پیشخوان ویرایش ${profileData.display_name}`} />
-      <main className="flex flex-col items-center p-5">
+      <main className="md:max-w-md mx-auto flex flex-col items-center p-5">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-s-2">
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
             {centers.map((center) => (
               <div
                 key={center.id}
-                className="bg-white p-2 pr-3 rounded-lg flex items-center justify-between shadow-sm border border-blue-100"
+                className="bg-white p-2 pr-3 rounded-lg flex items-center justify-between shadow-sm border border-blue-100 cursor-pointer"
                 onClick={() => handleClickCenter(center)}
               >
                 <Text fontSize="sm" fontWeight="medium" className="line-clamp-1">

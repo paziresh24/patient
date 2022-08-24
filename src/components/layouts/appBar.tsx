@@ -10,7 +10,7 @@ interface TopBarProps {
 export const TopBar = ({ title, backButton }: TopBarProps) => {
   const router = useRouter();
   return (
-    <AppBar position="static" color="default">
+    <AppBar position="sticky" color="default">
       <Toolbar>
         {backButton && (
           <IconButton
