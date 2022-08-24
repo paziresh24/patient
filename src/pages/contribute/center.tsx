@@ -6,13 +6,13 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Button from "@mui/material/Button";
 import Modal from "@/components/atoms/modal";
-import { CenterInfoData, EditCenterInfo } from "@/components/organisms/curdSource/editCenterInfo";
-import { PhoneCenter, phoneData } from "@/components/organisms/curdSource/editPhoneCenter";
+import { CenterInfoData, EditCenterInfo } from "@/components/organisms/contribute/editCenterInfo";
+import { PhoneCenter, phoneData } from "@/components/organisms/contribute/editPhoneCenter";
 import TopBar from "@/components/layouts/appBar";
 import { TextFieldProps } from "@mui/material";
 
-import { centerForm } from "@/schemas/crudSourceForm/centerForm";
-import centerType from "@/schemas/crudSourceForm/centerType";
+import { centerForm } from "@/schemas/contributeForm/centerForm";
+import centerType from "@/schemas/contributeForm/centerType";
 import { useCreateForm } from "src/hooks/useCreateForm";
 import { formFiledType } from "src/schemas/formFieldType";
 import { useProfileDataStore } from "src/store/profileData";

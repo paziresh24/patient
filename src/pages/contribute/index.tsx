@@ -2,15 +2,15 @@
 import Text from "@/components/atoms/text";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import heroVector from "@/images/crudSource/hero.png";
+import heroVector from "@/images/contribute/hero.png";
 import Button from "@mui/lab/LoadingButton";
 import { useGetProfileData } from "@/apis/profile/getData/hook";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useProfileDataStore } from "src/store/profileData";
-import heart from "@/images/crudSource/heart.png";
-import idCard from "@/images/crudSource/idCard.png";
-import doctor from "@/images/crudSource/doctor.png";
+import heart from "@/images/contribute/heart.png";
+import idCard from "@/images/contribute/idCard.png";
+import doctor from "@/images/contribute/doctor.png";
 import { useGetUser } from "@/apis/auth/me/hook";
 import { useUserDataStore } from "src/store/userData";
 

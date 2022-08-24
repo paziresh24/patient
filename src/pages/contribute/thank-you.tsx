@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Text from "@/components/atoms/text";
 import Head from "next/head";
-import finalHero from "@/images/crudSource/finalHero.png";
+import finalHero from "@/images/contribute/finalHero.png";
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { useUserDataStore } from "src/store/userData";
