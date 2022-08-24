@@ -1,7 +1,8 @@
 import Text from "@/components/atoms/text";
 import TrashIcon from "@/components/icons/trash";
 import { Button, FormControlLabel, IconButton } from "@mui/material";
-import { useState } from "react";
+import { cloneDeep } from "lodash";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 interface ItemSchema {
@@ -28,8 +29,12 @@ interface FormProps {
 }
 
 export const useCreateForm = (schema: SectionSchema[]) => {
-  const [schemaClone, setSchemaClone] = useState(schema);
+  const [schemaClone, setSchemaClone] = useState<SectionSchema[]>(cloneDeep(schema));
   const { handleSubmit, control, setValue, reset, unregister } = useForm();
+
+  // useEffect(() => {
+  //   setSchemaClone(JSON.parse(JSON.stringify(schema)));
+  // }, []);
 
   const addField = ({
     sectionKey,

@@ -98,6 +98,7 @@ const Home = ({ slug }: PageProps) => {
           variant="contained"
           onClick={handleNextPage}
           loading={getProfileData.isLoading || getUserData.isLoading}
+          className="fixed bottom-0"
         >
           متوجه شدم
         </Button>
