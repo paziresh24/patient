@@ -137,8 +137,8 @@ const Home: NextPage = () => {
           defaultValues={{
             province: { label: selectedCenter.province },
             city: { label: selectedCenter.city },
-            lat: +selectedCenter?.map?.lat!,
-            lng: +selectedCenter?.map?.lon!,
+            lat: selectedCenter?.map?.lat,
+            lng: selectedCenter?.map?.lon,
           }}
         />
       </Modal>

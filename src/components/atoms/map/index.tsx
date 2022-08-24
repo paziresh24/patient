@@ -28,13 +28,13 @@ const GetCenter = ({ sendPosition, lanLng, zoom }: GetCenterProps) => {
   }, [lanLng]);
 
   useEffect(() => {
-    setTimeout(() => !lanLng[0] && !lanLng[1] && map.locate({ zoom: 20 }), 1000);
+    setTimeout(() => !lanLng[0] && !lanLng[1] && map.locate({ maxZoom: 20 }), 1000);
   }, []);
 
   return (
     <div
       className="absolute bottom-3 left-3 z-[400] w-10 h-10 rounded-lg shadow-lg flex justify-center items-center bg-white"
-      onClick={() => map.locate({ zoom: 20 })}
+      onClick={() => map.locate({ maxZoom: 20 })}
     >
       <svg
         width="22"

@@ -96,10 +96,10 @@ export const useCreateForm = (schema: SectionSchema[]) => {
                 />
                 {item.deleteble && (
                   <IconButton
-                    className="!border !border-solid !border-slate-700 !rounded-md"
+                    className="!border !border-solid !border-[#bac8f8] !rounded-md"
                     onClick={() => handleRemove(item.key)}
                   >
-                    <TrashIcon className="fill-slate-700" />
+                    <TrashIcon className="fill-slate-500" />
                   </IconButton>
                 )}
               </div>

@@ -45,6 +45,7 @@
     "@storybook/react": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
     "@tailwindcss/line-clamp": "^0.4.0",
+    "@types/leaflet": "1.7.11",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",

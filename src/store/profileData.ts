@@ -21,8 +21,8 @@ export type Center = {
   province?: string;
   city?: string;
   map?: {
-    lat?: string;
-    lon?: string;
+    lat?: number;
+    lon?: number;
   };
 };
 
