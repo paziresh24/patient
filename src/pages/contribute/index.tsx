@@ -2,15 +2,15 @@
 import Text from "@/components/atoms/text";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import heroVector from "@/images/contribute/hero.png";
+import heroVector from "@/images/contribute/hero.svg";
 import Button from "@mui/lab/LoadingButton";
 import { useGetProfileData } from "@/apis/profile/getData/hook";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useProfileDataStore } from "src/store/profileData";
-import heart from "@/images/contribute/heart.png";
-import idCard from "@/images/contribute/idCard.png";
-import doctor from "@/images/contribute/doctor.png";
+import heart from "@/images/contribute/heart.svg";
+import idCard from "@/images/contribute/idCard.svg";
+import doctor from "@/images/contribute/doctor.svg";
 import { useGetUser } from "@/apis/auth/me/hook";
 import { useUserDataStore } from "src/store/userData";
 
@@ -50,7 +50,7 @@ const Home = ({ slug }: PageProps) => {
       </Head>
 
       <main
-        className="flex flex-col justify-between h-screen p-5"
+        className="flex flex-col justify-between p-5"
         style={{
           background: "linear-gradient(180deg, #F4F8FB 62.04%, rgba(244, 248, 251, 0) 78.36%)",
         }}
@@ -61,7 +61,7 @@ const Home = ({ slug }: PageProps) => {
             با مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی، به 5 میلیون بیمارِ پذیرش 24 کمک کنید.
           </Text>
           <div className="flex items-center space-s-2">
-            <img src={heart.src} alt="" className="-mt-5" />
+            <img src={heart.src} alt="" className="-mt-5" width={25} />
             <Text fontSize="sm" fontWeight="medium" className="text-center text-slate-500">
               شما می توانید با مشارکت در هر یک از موارد زیر، در کمک و یاری به دیگر بیماران قدمی
               بردارید.
@@ -93,15 +93,17 @@ const Home = ({ slug }: PageProps) => {
             </div>
           </div>
         </div>
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={handleNextPage}
-          loading={getProfileData.isLoading || getUserData.isLoading}
-          className="fixed bottom-0"
-        >
-          متوجه شدم
-        </Button>
+
+        <div className="fixed bottom-0 right-0 w-full p-5 shadow-lg">
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={handleNextPage}
+            loading={getProfileData.isLoading || getUserData.isLoading}
+          >
+            متوجه شدم
+          </Button>
+        </div>
       </main>
     </div>
   );

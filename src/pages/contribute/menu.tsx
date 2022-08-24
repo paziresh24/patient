@@ -2,7 +2,7 @@
 import Text from "@/components/atoms/text";
 import type { NextPage } from "next";
 import Head from "next/head";
-import officeVector from "@/images/contribute/office.png";
+import officeVector from "@/images/contribute/office.svg";
 import { Center, useProfileDataStore } from "src/store/profileData";
 import { useRouter } from "next/router";
 import CenterIcon from "@/components/icons/center";
