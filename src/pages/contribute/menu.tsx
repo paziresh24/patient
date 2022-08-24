@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import CenterIcon from "@/components/icons/center";
 import InfoIcon from "@/components/icons/info";
 import TopBar from "@/components/layouts/appBar";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 
 const Home: NextPage = () => {
@@ -25,6 +25,10 @@ const Home: NextPage = () => {
       query: { ...router.query },
     });
   };
+
+  useEffect(() => {
+    router.prefetch("/contribute/center/");
+  }, []);
 
   return (
     <div>

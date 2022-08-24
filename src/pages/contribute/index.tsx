@@ -13,6 +13,7 @@ import idCard from "@/images/contribute/idCard.svg";
 import doctor from "@/images/contribute/doctor.svg";
 import { useGetUser } from "@/apis/auth/me/hook";
 import { useUserDataStore } from "src/store/userData";
+import { toast } from "react-toastify";
 
 interface PageProps {
   slug: string;
@@ -34,7 +35,10 @@ const Home = ({ slug }: PageProps) => {
     if (getUserData.isSuccess) {
       setUserData(getUserData.data.data.data);
     }
-  }, [getProfileData.status, getUserData.isSuccess]);
+    if (getUserData.isError) {
+      toast.dark("خطا در احراز هویت، لطفا وارد شوید.");
+    }
+  }, [getProfileData.status, getUserData.status]);
 
   const handleNextPage = () => {
     router.push({
@@ -99,7 +103,7 @@ const Home = ({ slug }: PageProps) => {
             fullWidth
             variant="contained"
             onClick={handleNextPage}
-            loading={getProfileData.isLoading || getUserData.isLoading}
+            loading={!getProfileData.isSuccess || !getUserData.isSuccess}
           >
             متوجه شدم
           </Button>

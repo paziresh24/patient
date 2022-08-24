@@ -30,7 +30,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         </CacheProvider>
       </QueryClientProvider>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         closeOnClick
         rtl
@@ -39,6 +39,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         limit={3}
         theme="colored"
         transition={Slide}
+        hideProgressBar
       />
     </>
   );
