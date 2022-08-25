@@ -28,7 +28,9 @@
       "@/services/*": ["./src/services/*"],
       "@/images/*": ["./src/images/*"],
       "@/constants/*": ["./src/constants/*"],
-      "@/schemas/*": ["./src/schemas/*"]
+      "@/schemas/*": ["./src/schemas/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/store/*": ["./src/store/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

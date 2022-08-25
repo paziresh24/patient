@@ -13,9 +13,8 @@ import { TextFieldProps } from "@mui/material";
 
 import { centerForm } from "@/schemas/contributeForm/centerForm";
 import centerType from "@/schemas/contributeForm/centerType";
-import { useCreateForm } from "src/hooks/useCreateForm";
-import { formFiledType } from "src/schemas/formFieldType";
-import { useProfileDataStore } from "src/store/profileData";
+import { useCreateForm, formFiledType } from "@/hooks/useCreateForm";
+import { useProfileDataStore } from "@/store/profileData";
 import { splunkInstance } from "@/services/splunk";
 
 const Home: NextPage = () => {

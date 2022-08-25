@@ -1,6 +1,5 @@
 import { InputAdornment, TextFieldProps } from "@mui/material";
-import { SectionSchema } from "src/hooks/useCreateForm";
-import { formFiledType } from "../formFieldType";
+import { SectionSchema, formFiledType } from "@/hooks/useCreateForm";
 import centerType from "./centerType";
 
 export const centerForm: SectionSchema[] = [

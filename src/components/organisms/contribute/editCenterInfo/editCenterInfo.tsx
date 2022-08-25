@@ -1,6 +1,6 @@
 import { Autocomplete, Button, FormControlLabel, TextField } from "@mui/material";
-import provinces from "@/constants/province.json";
-import cities from "@/constants/city.json";
+import provinces from "@/constants/places/province.json";
+import cities from "@/constants/places/city.json";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 const Map = dynamic(() => import("@/components/atoms/map"), { ssr: false });
