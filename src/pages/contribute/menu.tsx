@@ -1,15 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import Text from "@/components/atoms/text";
-import type { NextPage } from "next";
 import Head from "next/head";
-import officeVector from "@/images/contribute/office.svg";
-import { Center, useProfileDataStore } from "src/store/profileData";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+import Text from "@/components/atom/text";
+import TopBar from "@/components/layouts/appBar";
 import CenterIcon from "@/components/icons/center";
 import InfoIcon from "@/components/icons/info";
-import TopBar from "@/components/layouts/appBar";
-import { useEffect, useLayoutEffect } from "react";
-import isEmpty from "lodash/isEmpty";
+
+import officeVector from "@/modules/contribute/images/office.svg";
+import { Center, useProfileDataStore } from "@/modules/contribute/store/profileData";
 
 const Home: NextPage = () => {
   const router = useRouter();

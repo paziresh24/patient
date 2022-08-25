@@ -1,20 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-import Text from "@/components/atoms/text";
 import Head from "next/head";
-import finalHero from "@/images/contribute/finalHero.svg";
-import { Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { useUserDataStore } from "src/store/userData";
+import { Button } from "@mui/material";
+
+import Text from "@/components/atom/text";
+
+import finalHero from "@/modules/contribute/images/finalHero.svg";
+import { useUserDataStore } from "@/modules/contribute/store/userData";
 
 const ThankYouPage = () => {
   const router = useRouter();
   const userData = useUserDataStore((state) => state.user);
 
   const handleBackToMenu = () => {
-    router.push({
-      pathname: `/contribute/menu`,
-      query: { ...router.query },
-    });
+    location.assign(`/dr/${router.query.slug}`);
   };
 
   return (
@@ -76,7 +75,7 @@ const ThankYouPage = () => {
               </svg>
             }
           >
-            بازگشت به پیشخوان ویرایش
+            بازگشت به پروفایل پزشک
           </Button>
         </div>
       </main>

@@ -1,5 +1,5 @@
 import { clinicClient } from "../client";
-import { formData } from "@/utils/formData";
+import { formData } from "@/common/utils/formData";
 
 export const removeBook = (params: {
   center_id: string;

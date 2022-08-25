@@ -1,19 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import Text from "@/components/atoms/text";
-import type { GetServerSideProps } from "next";
-import Head from "next/head";
-import heroVector from "@/images/contribute/hero.svg";
-import Button from "@mui/lab/LoadingButton";
-import { useGetProfileData } from "@/apis/profile/getData/hook";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useProfileDataStore } from "src/store/profileData";
-import heart from "@/images/contribute/heart.svg";
-import idCard from "@/images/contribute/idCard.svg";
-import doctor from "@/images/contribute/doctor.svg";
-import { useGetUser } from "@/apis/auth/me/hook";
-import { useUserDataStore } from "src/store/userData";
+import type { GetServerSideProps } from "next";
+import Head from "next/head";
 import { toast } from "react-toastify";
+import Button from "@mui/lab/LoadingButton";
+
+import Text from "@/components/atom/text";
+import { useGetUser } from "@/apis/auth/me/hook";
+import { useGetProfileData } from "@/apis/profile/getData/hook";
+
+import { useUserDataStore } from "@/modules/contribute/store/userData";
+import { useProfileDataStore } from "@/modules/contribute/store/profileData";
+import heroVector from "@/modules/contribute/images/hero.svg";
+import heart from "@/modules/contribute/images/heart.svg";
+import idCard from "@/modules/contribute/images/idCard.svg";
+import doctor from "@/modules/contribute/images/doctor.svg";
 
 interface PageProps {
   slug: string;
@@ -115,14 +117,10 @@ const Home = ({ slug }: PageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug: string = context.query?.slug as string;
-  if (!slug) {
-    return {
-      notFound: true,
-    };
-  }
+
   return {
     props: {
-      slug,
+      slug: slug ?? "",
     },
   };
 };

@@ -7,14 +7,15 @@
   font-family: IRANSans;
   font-style: normal;
   font-weight: 100;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\)_UltraLight.ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\)_UltraLight.ttf");
 }
+
 @font-face {
   font-display: swap;
   font-family: IRANSans;
   font-style: normal;
   font-weight: 300;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\)_Light.ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\)_Light.ttf");
 }
 
 @font-face {
@@ -22,7 +23,7 @@
   font-family: IRANSans;
   font-style: normal;
   font-weight: 400;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\).ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\).ttf");
 }
 
 @font-face {
@@ -30,7 +31,7 @@
   font-family: IRANSans;
   font-style: normal;
   font-weight: 500;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\)_Medium.ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\)_Medium.ttf");
 }
 
 @font-face {
@@ -38,7 +39,7 @@
   font-family: IRANSans;
   font-style: normal;
   font-weight: 700;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\)_Bold.ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\)_Bold.ttf");
 }
 
 @font-face {
@@ -46,7 +47,7 @@
   font-family: IRANSans;
   font-style: normal;
   font-weight: 900;
-  src: url("../public/fonts/ttf/IRANSansWeb\(FaNum\)_Black.ttf");
+  src: url("~/public/fonts/ttf/IRANSansWeb\(FaNum\)_Black.ttf");
 }
 
 * {

@@ -3,18 +3,18 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useInView } from "react-intersection-observer";
 
-import Turn from "@/components/organisms/turn";
-import Text from "@/components/atoms/text";
-import Skeleton from "@/components/atoms/skeleton";
-import EmptyState from "@/components/atoms/emptyState";
-import Loading from "@/components/atoms/loading";
-
+import Text from "@/components/atom/text";
+import Skeleton from "@/components/atom/skeleton";
+import EmptyState from "@/components/atom/emptyState";
+import Loading from "@/components/atom/loading";
+import { Tab, Tabs } from "@/components/atom/tabs";
+import getDisplayDoctorExpertise from "@/common/utils/getDisplayDoctorExpertise";
 import { useGetBooks } from "@/apis/getBooks/hook";
-import { useBookStore } from "@/store";
-import { CenterType } from "@/types/centerType";
-import getDisplayDoctorExpertise from "@/utils/getDisplayDoctorExpertise";
-import { BookStatus } from "@/types/bookStatus";
-import { Tab, Tabs } from "@/components/atoms/tabs";
+
+import Turn from "@/modules/myTurn/components/turn";
+import { useBookStore } from "@/modules/myTurn/store";
+import { CenterType } from "@/modules/myTurn/types/centerType";
+import { BookStatus } from "@/modules/myTurn/types/bookStatus";
 
 interface AppointmentsProps {
   isWebView: boolean;

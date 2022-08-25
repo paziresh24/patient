@@ -19,18 +19,16 @@
     "strictNullChecks": true,
     "baseUrl": "./",
     "paths": {
-      "@/types/*": ["./src/types/*"],
-      "@/store": ["./src/store"],
-      "@/components/*": ["./src/components/*"],
-      "@/apis/*": ["./src/apis/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/functions/*": ["./src/functions/*"],
-      "@/services/*": ["./src/services/*"],
-      "@/images/*": ["./src/images/*"],
-      "@/constants/*": ["./src/constants/*"],
-      "@/schemas/*": ["./src/schemas/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/store/*": ["./src/store/*"]
+      "@/modules/*": ["./src/modules/*"],
+      "@/common/*": ["./src/common/*"],
+      "@/types/*": ["./src/common/types/*"],
+      "@/components/*": ["./src/common/components/*"],
+      "@/utils/*": ["./src/common/utils/*"],
+      "@/images/*": ["./src/common/images/*"],
+      "@/constants/*": ["./src/common/constants/*"],
+      "@/hooks/*": ["./src/common/hooks/*"],
+      "@/store/*": ["./src/common/store/*"],
+      "@/apis/*": ["./src/apis/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

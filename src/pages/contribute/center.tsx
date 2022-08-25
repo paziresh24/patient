@@ -2,20 +2,21 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-
 import Head from "next/head";
 import Button from "@mui/material/Button";
-import Modal from "@/components/atoms/modal";
-import { CenterInfoData, EditCenterInfo } from "@/components/organisms/contribute/editCenterInfo";
-import { PhoneCenter, phoneData } from "@/components/organisms/contribute/editPhoneCenter";
-import TopBar from "@/components/layouts/appBar";
-import { TextFieldProps } from "@mui/material";
+import { TextFieldProps } from "@mui/material/TextField";
 
-import { centerForm } from "@/schemas/contributeForm/centerForm";
-import centerType from "@/schemas/contributeForm/centerType";
-import { useCreateForm, formFiledType } from "@/hooks/useCreateForm";
-import { useProfileDataStore } from "@/store/profileData";
-import { splunkInstance } from "@/services/splunk";
+import TopBar from "@/components/layouts/appBar";
+import Modal from "@/components/atom/modal";
+import { splunkInstance } from "@/common/services/splunk";
+
+import { PhoneCenter, phoneData } from "@/modules/contribute/components/editPhoneCenter";
+import { CenterInfoData, EditCenterInfo } from "@/modules/contribute/components/editCenterInfo";
+import { useCreateForm, formFiledType } from "@/modules/contribute/hooks/useCreateForm";
+import centerType from "@/modules/contribute/schemas/contributeForm/centerType";
+import { centerForm } from "@/modules/contribute/schemas/contributeForm/centerForm";
+import { useProfileDataStore } from "@/modules/contribute/store/profileData";
+import { useUserDataStore } from "@/modules/contribute/store/userData";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const Home: NextPage = () => {
   const [addPhoneModal, setAddPhoneModal] = useState(false);
   const [userEntredAddressCenter, setUserEntredAddressCenter] = useState<CenterInfoData>({});
   const profileData = useProfileDataStore((state) => state.data);
+  const userData = useUserDataStore((state) => state.user);
   const selectedCenter = useProfileDataStore((state) => state.selectedCenter);
 
   useEffect(() => {
@@ -97,6 +99,7 @@ const Home: NextPage = () => {
         city: userEntredAddressCenter.city?.label,
         province: userEntredAddressCenter.province?.label,
       },
+      user_id: userData.user_id,
     };
     splunkInstance.sendEvent({
       group: "contribute crowdsourcing",

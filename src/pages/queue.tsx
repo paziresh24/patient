@@ -1,8 +1,10 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Text from "@/components/atoms/text";
-import Queue from "@/components/molecules/queue";
+
+import Text from "@/components/atom/text";
+
+import Queue from "@/modules/myTurn/components/queue";
 
 interface AppointmentsProps {
   isWebView: boolean;

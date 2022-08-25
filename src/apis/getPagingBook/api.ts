@@ -1,4 +1,4 @@
-import { formData } from "@/utils/formData";
+import { formData } from "@/common/utils/formData";
 import { clinicClient } from "../client";
 
 export const getPagingBook = (params: { book_id: string }) => {
