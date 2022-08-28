@@ -1,21 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import Button from '@mui/lab/LoadingButton';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import Button from '@mui/lab/LoadingButton';
 
-import Text from '@/components/atom/text';
 import { useGetUser } from '@/common/apis/services/auth/me';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
+import Text from '@/components/atom/text';
 
-import { useUserDataStore } from '@/modules/contribute/store/userData';
-import { useProfileDataStore } from '@/modules/contribute/store/profileData';
-import heroVector from '@/modules/contribute/images/hero.svg';
-import heart from '@/modules/contribute/images/heart.svg';
-import idCard from '@/modules/contribute/images/idCard.svg';
 import doctor from '@/modules/contribute/images/doctor.svg';
+import heart from '@/modules/contribute/images/heart.svg';
+import heroVector from '@/modules/contribute/images/hero.svg';
+import idCard from '@/modules/contribute/images/idCard.svg';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 interface PageProps {
   slug: string;

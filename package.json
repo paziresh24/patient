@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -11,7 +11,6 @@
     "build-storybook": "build-storybook",
     "postinstall": "husky install",
     "format": "prettier --write .",
-    "commit": "cz",
     "pre-commit": "lint-staged",
     "test": "jest --watch",
     "test:ci": "jest --ci"
@@ -64,6 +63,7 @@
     "@types/stylis": "^4.0.2",
     "autoprefixer": "^10.4.7",
     "babel-loader": "^8.2.5",
+    "cross-env": "7.0.3",
     "eslint": "8.18.0",
     "eslint-config-next": "12.2.0",
     "eslint-plugin-jest": "27.0.0",
