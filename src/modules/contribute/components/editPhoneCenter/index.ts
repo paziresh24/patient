@@ -1,1 +1,1 @@
-export * from "./phoneCenter";
+export * from './phoneCenter';

@@ -1,4 +1,4 @@
-import create from "zustand";
+import create from 'zustand';
 
 interface ProfileDataStore {
   data: ProfileData;
@@ -26,14 +26,14 @@ export type Center = {
   };
 };
 
-export const useProfileDataStore = create<ProfileDataStore>((set) => ({
+export const useProfileDataStore = create<ProfileDataStore>(set => ({
   data: {},
   selectedCenter: {},
-  setData: (data) =>
+  setData: data =>
     set(() => ({
       data,
     })),
-  setSelectedCenter: (selectedCenter) =>
+  setSelectedCenter: selectedCenter =>
     set(() => ({
       selectedCenter,
     })),

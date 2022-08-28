@@ -1,32 +1,32 @@
-import { useState, useEffect } from "react";
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import { useInView } from "react-intersection-observer";
+import { useState, useEffect } from 'react';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useInView } from 'react-intersection-observer';
 
-import Text from "@/components/atom/text";
-import Skeleton from "@/components/atom/skeleton";
-import EmptyState from "@/components/atom/emptyState";
-import Loading from "@/components/atom/loading";
-import { Tab, Tabs } from "@/components/atom/tabs";
-import getDisplayDoctorExpertise from "@/common/utils/getDisplayDoctorExpertise";
-import { useGetBooks } from "@/common/apis/services/booking/getBooks";
+import Text from '@/components/atom/text';
+import Skeleton from '@/components/atom/skeleton';
+import EmptyState from '@/components/atom/emptyState';
+import Loading from '@/components/atom/loading';
+import { Tab, Tabs } from '@/components/atom/tabs';
+import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { useGetBooks } from '@/common/apis/services/booking/getBooks';
 
-import Turn from "@/modules/myTurn/components/turn";
-import { useBookStore } from "@/modules/myTurn/store";
-import { CenterType } from "@/modules/myTurn/types/centerType";
-import { BookStatus } from "@/modules/myTurn/types/bookStatus";
+import Turn from '@/modules/myTurn/components/turn';
+import { useBookStore } from '@/modules/myTurn/store';
+import { CenterType } from '@/modules/myTurn/types/centerType';
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 
 interface AppointmentsProps {
   isWebView: boolean;
 }
 
-type BookType = "book" | "book_request";
+type BookType = 'book' | 'book_request';
 
 export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [type, setType] = useState<BookType>("book");
+  const [type, setType] = useState<BookType>('book');
 
   const getBooks = useGetBooks({
     page,
@@ -38,7 +38,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
   });
 
   useEffect(() => {
-    if (inView) setPage((prevState) => prevState + 1);
+    if (inView) setPage(prevState => prevState + 1);
   }, [inView]);
 
   useEffect(() => {
@@ -75,20 +75,13 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
       )}
 
       <div className="w-full lg:flex justify-center bg-white shadow-card md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
-        <Tabs
-          value={type}
-          onChange={(value) => handleChangeType(value as BookType)}
-          className="container mx-auto lg:w-2/5"
-        >
+        <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto lg:w-2/5">
           <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
           <Tab value="book_request" label="درخواست ها" className="w-full lg:w-auto" />
         </Tabs>
       </div>
       <div className="flex flex-col">
-        <div
-          className={`p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center`}
-          data-testid="appointments-container"
-        >
+        <div className={`p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center`} data-testid="appointments-container">
           {isLoading && (
             <>
               <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
@@ -99,17 +92,13 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
           )}
           {!isLoading && books.length === 0 && <EmptyState text="نوبتی وجود ندارد." />}
           {books.length > 0 &&
-            books.map((turn) => (
+            books.map(turn => (
               <Turn
                 key={turn.book_id}
                 status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
                 id={turn.book_id}
                 centerType={
-                  turn.center?.center_type === 1
-                    ? CenterType.clinic
-                    : turn.center?.id === "5532"
-                    ? CenterType.consult
-                    : CenterType.hospital
+                  turn.center?.center_type === 1 ? CenterType.clinic : turn.center?.id === '5532' ? CenterType.consult : CenterType.hospital
                 }
                 centerInfo={{
                   centerId: turn.center?.id,
@@ -136,9 +125,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
                   waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                   trackingCode: turn.ref_id,
                   centerName: turn.center?.name,
-                  patientName: `${turn.patient_info?.name ?? ""} ${
-                    turn.patient_info?.family ?? ""
-                  }`,
+                  patientName: `${turn.patient_info?.name ?? ''} ${turn.patient_info?.family ?? ''}`,
                 }}
                 location={{
                   lat: turn.center?.map?.lat,
@@ -162,7 +149,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const isWebView: boolean = context.query?.isWebView ? true : false;
   return {
     props: {

@@ -1,4 +1,4 @@
-import Text from "@/components/atom/text";
+import Text from '@/components/atom/text';
 
 interface LocationProps {
   address: string;
@@ -12,7 +12,7 @@ interface LocationProps {
   lng: number;
 }
 
-export const Location: React.FC<LocationProps> = (props) => {
+export const Location: React.FC<LocationProps> = props => {
   const { address, lat, lng } = props;
   return (
     <a
@@ -23,14 +23,7 @@ export const Location: React.FC<LocationProps> = (props) => {
       data-testid="location__link"
     >
       <div className="flex items-center justify-center w-12 min-w-[3rem] h-12 bg-gray rounded-md ml-2">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-8 h-8"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
           <path
             fillRule="evenodd"
             clipRule="evenodd"

@@ -1,6 +1,6 @@
-import { useMutation } from "react-query";
-import { formData } from "@/common/utils/formData";
-import { clinicClient } from "@/common/apis/client";
+import { useMutation } from 'react-query';
+import { formData } from '@/common/utils/formData';
+import { clinicClient } from '@/common/apis/client';
 
 interface Params {
   book_id: string;
@@ -8,10 +8,10 @@ interface Params {
 
 export const getPagingBook = (params: Params) => {
   return clinicClient.post(
-    "/api/addBookToQueue",
+    '/api/addBookToQueue',
     formData({
       ...params,
-    })
+    }),
   );
 };
 

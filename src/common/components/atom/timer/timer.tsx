@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import Text from "../text";
+import { useEffect, useState } from 'react';
+import Text from '../text';
 
 interface TimerProps {
   target: number;
 }
 
 const calculateTimeLeft = (
-  time: number
+  time: number,
 ): {
   days: number;
   hours: number;
@@ -34,7 +34,7 @@ const calculateTimeLeft = (
   return timeLeft;
 };
 
-export const Timer: React.FC<TimerProps> = (props) => {
+export const Timer: React.FC<TimerProps> = props => {
   const { target } = props;
 
   const [timeLeft, setTimeLeft] = useState<any>(calculateTimeLeft(target));
@@ -47,7 +47,7 @@ export const Timer: React.FC<TimerProps> = (props) => {
     return () => clearTimeout(timer);
   });
 
-  Object.keys(timeLeft).forEach((interval) => {
+  Object.keys(timeLeft).forEach(interval => {
     if (!timeLeft[interval]) {
       return;
     }
@@ -57,7 +57,7 @@ export const Timer: React.FC<TimerProps> = (props) => {
 
   return (
     <Text fontWeight="bold" className="text-secondary">
-      {timerComponents.length ? timerComponents.join(":") : "-"}
+      {timerComponents.length ? timerComponents.join(':') : '-'}
     </Text>
   );
 };

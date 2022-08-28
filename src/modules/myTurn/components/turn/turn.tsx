@@ -1,24 +1,13 @@
-import type { TurnProps } from "./turnType";
-import Card from "@/components/atom/card";
-import { useState, useEffect } from "react";
-import TurnHeader from "./header";
-import TurnBody from "./body";
-import TurnFooter from "./footer";
-import { turnDetailsData } from "./turnDetails";
+import type { TurnProps } from './turnType';
+import Card from '@/components/atom/card';
+import { useState, useEffect } from 'react';
+import TurnHeader from './header';
+import TurnBody from './body';
+import TurnFooter from './footer';
+import { turnDetailsData } from './turnDetails';
 
-export const Turn: React.FC<TurnProps> = (props) => {
-  const {
-    status,
-    doctorInfo,
-    turnDetails,
-    location,
-    feedbackUrl,
-    prescription,
-    centerType,
-    patientInfo,
-    centerInfo,
-    id,
-  } = props;
+export const Turn: React.FC<TurnProps> = props => {
+  const { status, doctorInfo, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } = props;
 
   const [detailsData, setDetailsData] = useState<
     {
@@ -34,7 +23,7 @@ export const Turn: React.FC<TurnProps> = (props) => {
         data: turnDetails,
         centerType,
         status,
-      })
+      }),
     );
   }, [turnDetails, status, centerType]);
 

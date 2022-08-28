@@ -1,6 +1,6 @@
-import CloseIcon from "@/components/icons/close";
-import clsx from "clsx";
-import { createPortal } from "react-dom";
+import CloseIcon from '@/components/icons/close';
+import clsx from 'clsx';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,10 +26,10 @@ export const Modal = (props: ModalProps) => {
       onClick={handleClose}
     >
       <div
-        className={clsx("bg-white w-full rounded-tr-lg rounded-tl-lg md:rounded-lg md:w-96", {
-          "h-full": fullScreen,
+        className={clsx('bg-white w-full rounded-tr-lg rounded-tl-lg md:rounded-lg md:w-96', {
+          'h-full': fullScreen,
         })}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {!noHeader && (
           <div className="p-4 flex justify-between items-center">
@@ -37,10 +37,10 @@ export const Modal = (props: ModalProps) => {
             <CloseIcon color="#000" onClick={handleClose} />
           </div>
         )}
-        <div className={clsx("p-4 pt-0 overflow-auto", [bodyClassName])}>{children}</div>
+        <div className={clsx('p-4 pt-0 overflow-auto', [bodyClassName])}>{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

@@ -1,5 +1,5 @@
-import clsx from "clsx";
-import { ReactElement, useEffect, useState } from "react";
+import clsx from 'clsx';
+import { ReactElement, useEffect, useState } from 'react';
 
 interface TabsProps {
   children: ReactElement[];
@@ -26,16 +26,16 @@ export const Tabs = ({ children, value, onChange, className, ...rest }: TabsProp
   };
 
   return (
-    <div className={clsx("flex", [className])}>
+    <div className={clsx('flex', [className])}>
       {children.map((tab, i) => (
         <button
           key={tab.props.value}
           className={clsx(
-            "p-4 text-sm font-medium text-neutral-600",
+            'p-4 text-sm font-medium text-neutral-600',
             {
-              "border-b-2 border-solid border-primary !text-primary": i === selected,
+              'border-b-2 border-solid border-primary !text-primary': i === selected,
             },
-            [tab.props.className]
+            [tab.props.className],
           )}
           onClick={() => selectTab(i)}
         >

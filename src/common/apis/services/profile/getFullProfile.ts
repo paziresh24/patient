@@ -1,6 +1,6 @@
-import { useQuery } from "react-query";
-import { paziresh24AppClient } from "@/common/apis/client";
-import { ServerStateKeysEnum } from "@/common/apis/ServerStateKeysEnum";
+import { useQuery } from 'react-query';
+import { paziresh24AppClient } from '@/common/apis/client';
+import { ServerStateKeysEnum } from '@/common/apis/ServerStateKeysEnum';
 
 export interface Params {
   slug: string;

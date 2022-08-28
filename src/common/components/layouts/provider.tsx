@@ -1,13 +1,13 @@
-import { CacheProvider, ThemeProvider } from "@emotion/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Slide, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import createCache from "@emotion/cache";
-import { prefixer } from "stylis";
-import rtlPlugin from "stylis-plugin-rtl";
-import theme from "theme.mui";
-import TagManager from "react-gtm-module";
-import { useEffect } from "react";
+import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Slide, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
+import theme from 'theme.mui';
+import TagManager from 'react-gtm-module';
+import { useEffect } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,14 +19,14 @@ const queryClient = new QueryClient({
 });
 
 const cacheRtl = createCache({
-  key: "muirtl",
+  key: 'muirtl',
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     TagManager.initialize({
-      gtmId: "GTM-P5RPLDP",
+      gtmId: 'GTM-P5RPLDP',
     });
   }, []);
   return (

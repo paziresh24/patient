@@ -1,13 +1,13 @@
-import Button from "@/components/atom/button";
-import { useState } from "react";
-import ChatIcon from "@/components/icons/chat";
-import MegaphoneIcon from "@/components/icons/megaphone";
-import Queue from "../../queue";
-import { BookStatus } from "@/modules/myTurn/types/bookStatus";
-import { CenterType } from "@/modules/myTurn/types/centerType";
-import { isToday } from "@/common/utils/isToday";
-import Modal from "@/components/atom/modal";
-import getConfig from "next/config";
+import Button from '@/components/atom/button';
+import { useState } from 'react';
+import ChatIcon from '@/components/icons/chat';
+import MegaphoneIcon from '@/components/icons/megaphone';
+import Queue from '../../queue';
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
+import { isToday } from '@/common/utils/isToday';
+import Modal from '@/components/atom/modal';
+import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -21,7 +21,7 @@ interface TurnFooterProps {
   whatsapp?: string;
 }
 
-export const TurnFooter: React.FC<TurnFooterProps> = (props) => {
+export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, whatsapp } = props;
   const [queueModal, setQueueModal] = useState(false);
 
@@ -62,8 +62,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = (props) => {
 
   return (
     <>
-      {status === BookStatus.notVisited &&
-        (centerType === CenterType.consult ? CunsultPrimaryButton : ClinicPrimaryButton)}
+      {status === BookStatus.notVisited && (centerType === CenterType.consult ? CunsultPrimaryButton : ClinicPrimaryButton)}
 
       {(status === BookStatus.expired ||
         status === BookStatus.visited ||

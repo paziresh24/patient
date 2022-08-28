@@ -32,11 +32,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "**/*.stories.ts",
-    "**/*.stories.js",
-    "**/*.stories.jsx",
-    "**/*.stories.tsx"
-  ]
+  "exclude": ["node_modules", "**/*.stories.ts", "**/*.stories.js", "**/*.stories.jsx", "**/*.stories.tsx"]
 }

@@ -1,9 +1,9 @@
-import TurnDetails from "../../turnDetails";
-import Location from "../../location/location";
-import Rate from "../../rate/rate";
-import { BookStatus } from "@/modules/myTurn/types/bookStatus";
-import { CenterType } from "@/modules/myTurn/types/centerType";
-import { redirectToReceoptTurn } from "@/modules/myTurn/functions/redirectToReceoptTurn";
+import TurnDetails from '../../turnDetails';
+import Location from '../../location/location';
+import Rate from '../../rate/rate';
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
+import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToReceoptTurn';
 
 interface TurnBodyProps {
   detailsData: Array<{ id: number; name: string; value: string | React.ReactNode }>;
@@ -22,15 +22,12 @@ interface TurnBodyProps {
   centerId: string;
 }
 
-export const TurnBody: React.FC<TurnBodyProps> = (props) => {
-  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo } =
-    props;
+export const TurnBody: React.FC<TurnBodyProps> = props => {
+  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo } = props;
 
   const shouldShowLocation = centerType !== CenterType.consult;
   const shouldShowRate =
-    centerType !== CenterType.consult &&
-    (status === BookStatus.expired || status === BookStatus.visited) &&
-    feedbackUrl;
+    centerType !== CenterType.consult && (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
 
   const handleClinkCard = () => {
     redirectToReceoptTurn({
@@ -44,9 +41,7 @@ export const TurnBody: React.FC<TurnBodyProps> = (props) => {
     <>
       <TurnDetails items={detailsData} onClick={handleClinkCard} />
 
-      {shouldShowLocation && (
-        <Location address={location.address} lat={location.lat} lng={location.lng} />
-      )}
+      {shouldShowLocation && <Location address={location.address} lat={location.lat} lng={location.lng} />}
       {shouldShowRate && <Rate link={feedbackUrl} />}
     </>
   );

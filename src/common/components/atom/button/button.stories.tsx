@@ -1,12 +1,12 @@
-import Button from "./button";
+import Button from './button';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: "Atoms/Button",
+  title: 'Atoms/Button',
   component: Button,
 };
 
-const Template = (args) => (
+const Template = args => (
   <div className="w-96 flex justify-center">
     <Button {...args} />
   </div>
@@ -14,19 +14,19 @@ const Template = (args) => (
 
 export const Simple = Template.bind({});
 Simple.args = {
-  children: "این یک دکمه است",
-  variant: "primary",
-  size: "md",
-  theme: "simple",
+  children: 'این یک دکمه است',
+  variant: 'primary',
+  size: 'md',
+  theme: 'simple',
   block: false,
 };
 
 export const WithIcon = Template.bind({});
 WithIcon.args = {
-  children: "این یک دکمه است",
-  variant: "secondary",
-  size: "md",
-  theme: "simple",
+  children: 'این یک دکمه است',
+  variant: 'secondary',
+  size: 'md',
+  theme: 'simple',
   block: false,
   icon: (
     <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">

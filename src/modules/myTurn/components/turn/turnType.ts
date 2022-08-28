@@ -1,5 +1,5 @@
-import { BookStatus } from "@/modules/myTurn/types/bookStatus";
-import { CenterType } from "@/modules/myTurn/types/centerType";
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
 
 export interface TurnProps {
   status: BookStatus;

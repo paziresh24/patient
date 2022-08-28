@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import "leaflet/dist/leaflet.css";
-import marker from "./marker.png";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
-import { useEffect } from "react";
+import 'leaflet/dist/leaflet.css';
+import marker from './marker.png';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import { useEffect } from 'react';
 
 interface GetCenterProps {
   lanLng: [number, number];
@@ -36,13 +36,7 @@ const GetCenter = ({ sendPosition, lanLng, zoom }: GetCenterProps) => {
       className="absolute bottom-3 left-3 z-[400] w-10 h-10 rounded-lg shadow-lg flex justify-center items-center bg-white"
       onClick={() => map.locate({ maxZoom: 20 })}
     >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           fillRule="evenodd"
           clipRule="evenodd"

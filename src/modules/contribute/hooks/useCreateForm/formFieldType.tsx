@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteProps, TextField, TextFieldProps } from "@mui/material";
+import { Autocomplete, AutocompleteProps, TextField, TextFieldProps } from '@mui/material';
 
 export const formFiledType = {
   textField: (props?: TextFieldProps) => <TextField {...props} fullWidth />,
@@ -6,9 +6,9 @@ export const formFiledType = {
     T,
     Multiple extends boolean | undefined = undefined,
     DisableClearable extends boolean | undefined = undefined,
-    FreeSolo extends boolean | undefined = undefined
+    FreeSolo extends boolean | undefined = undefined,
   >(
-    props: Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">
+    props: Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, 'renderInput'>,
   ) => (
     <Autocomplete
       {...props}

@@ -1,1 +1,1 @@
-export { default } from "./emptyState";
+export { default } from './emptyState';

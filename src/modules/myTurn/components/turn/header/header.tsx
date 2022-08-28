@@ -1,19 +1,19 @@
-import { useState } from "react";
-import DoctorInfo from "../../doctorInfo";
-import TagStatus from "../../tagStatus";
-import DropDown from "@/components/atom/dropDown";
-import Button from "@/components/atom/button";
-import { useBookStore } from "@/modules/myTurn/store";
-import { useRemoveBook } from "@/common/apis/services/booking/removeBook";
-import ShareIcon from "@/components/icons/share";
-import TrashIcon from "@/components/icons/trash";
-import ThreeDotsIcon from "@/components/icons/threeDots";
-import { toast } from "react-toastify";
-import { BookStatus } from "@/modules/myTurn/types/bookStatus";
-import Modal from "@/components/atom/modal";
-import getConfig from "next/config";
-import ReceiptIcon from "@/components/icons/receipt";
-import { redirectToReceoptTurn } from "@/modules/myTurn/functions/redirectToReceoptTurn";
+import { useState } from 'react';
+import DoctorInfo from '../../doctorInfo';
+import TagStatus from '../../tagStatus';
+import DropDown from '@/components/atom/dropDown';
+import Button from '@/components/atom/button';
+import { useBookStore } from '@/modules/myTurn/store';
+import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
+import ShareIcon from '@/components/icons/share';
+import TrashIcon from '@/components/icons/trash';
+import ThreeDotsIcon from '@/components/icons/threeDots';
+import { toast } from 'react-toastify';
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import Modal from '@/components/atom/modal';
+import getConfig from 'next/config';
+import ReceiptIcon from '@/components/icons/receipt';
+import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToReceoptTurn';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
@@ -31,7 +31,7 @@ interface TurnHeaderProps {
   status: BookStatus;
 }
 
-export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
+export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { id, doctorInfo, centerId, trackingCode, nationalCode, status } = props;
 
   const [removeModal, setRemoveModal] = useState(false);
@@ -48,14 +48,14 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
         national_code: nationalCode,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: data => {
           if (data.data.status === 1) {
             setRemoveModal(false);
             return removeBook({ bookId: id });
           }
           toast.error(data.data.message);
         },
-      }
+      },
     );
   };
 
@@ -78,24 +78,24 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
   const menuItems = [
     {
       id: 0,
-      name: "قبض نوبت",
+      name: 'قبض نوبت',
       icon: <ReceiptIcon />,
       action: receiptTurn,
       shouldShow: true,
     },
     {
       id: 1,
-      name: "اشتراک گذاری",
+      name: 'اشتراک گذاری',
       icon: <ShareIcon />,
       action: shareTurn,
       shouldShow: true,
     },
     {
       id: 2,
-      name: "حذف نوبت",
+      name: 'حذف نوبت',
       icon: <TrashIcon />,
       action: () => setRemoveModal(true),
-      testId: "drop-down__remove-button",
+      testId: 'drop-down__remove-button',
       shouldShow: shouldShowRemoveTurn,
     },
   ];
@@ -121,20 +121,12 @@ export const TurnHeader: React.FC<TurnHeaderProps> = (props) => {
             <ThreeDotsIcon color="#000" />
           </div>
         }
-        items={menuItems
-          .filter((item) => item.shouldShow)
-          .map(({ shouldShow, ...item }) => ({ ...item }))}
+        items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
       />
 
       <Modal title="آیا از حدف نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">
-          <Button
-            theme="error"
-            block
-            onClick={removeBookAction}
-            loading={removeBookApi.isLoading}
-            data-testid="modal__remove-turn-button"
-          >
+          <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
             حذف
           </Button>
           <Button

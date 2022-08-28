@@ -1,6 +1,6 @@
-import { AppBar, IconButton, Toolbar } from "@mui/material";
-import { useRouter } from "next/router";
-import Text from "@/components/atom/text";
+import { AppBar, IconButton, Toolbar } from '@mui/material';
+import { useRouter } from 'next/router';
+import Text from '@/components/atom/text';
 
 interface TopBarProps {
   title: string;
@@ -13,20 +13,8 @@ export const TopBar = ({ title, backButton }: TopBarProps) => {
     <AppBar position="sticky" color="default">
       <Toolbar>
         {backButton && (
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={router.back}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+          <IconButton size="large" edge="start" color="inherit" aria-label="menu" onClick={router.back}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

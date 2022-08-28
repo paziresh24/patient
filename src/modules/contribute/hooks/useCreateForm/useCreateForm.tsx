@@ -1,15 +1,15 @@
-import Text from "@/components/atom/text";
-import TrashIcon from "@/components/icons/trash";
-import { Button, FormControlLabel, IconButton } from "@mui/material";
-import { cloneDeep } from "lodash";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import Text from '@/components/atom/text';
+import TrashIcon from '@/components/icons/trash';
+import { Button, FormControlLabel, IconButton } from '@mui/material';
+import { cloneDeep } from 'lodash';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 interface ItemSchema {
   label?: string;
   component: any;
   key: string;
-  type: "textField" | "autoComplete";
+  type: 'textField' | 'autoComplete';
   deleteble?: Boolean;
 }
 
@@ -36,19 +36,9 @@ export const useCreateForm = (schema: SectionSchema[]) => {
   //   setSchemaClone(JSON.parse(JSON.stringify(schema)));
   // }, []);
 
-  const addField = ({
-    sectionKey,
-    item,
-    defaultValue,
-  }: {
-    sectionKey: string;
-    item: ItemSchema;
-    defaultValue: any;
-  }) => {
-    const dupicateKey = schemaClone.flatMap((section) =>
-      section.items
-        .filter((sectionItem) => sectionItem.key.startsWith(item.key))
-        .map((sectionItem) => sectionItem.key)
+  const addField = ({ sectionKey, item, defaultValue }: { sectionKey: string; item: ItemSchema; defaultValue: any }) => {
+    const dupicateKey = schemaClone.flatMap(section =>
+      section.items.filter(sectionItem => sectionItem.key.startsWith(item.key)).map(sectionItem => sectionItem.key),
     );
 
     const key = dupicateKey.length >= 1 ? `${item.key}${dupicateKey.length + 1}` : item.key;
@@ -62,8 +52,8 @@ export const useCreateForm = (schema: SectionSchema[]) => {
   };
 
   const handleRemove = (key: string) => {
-    const newSchema = schemaClone.map((section) => {
-      const items = section.items.filter((item) => item.key !== key);
+    const newSchema = schemaClone.map(section => {
+      const items = section.items.filter(item => item.key !== key);
       return { ...section, items };
     });
     unregister(key);
@@ -85,11 +75,7 @@ export const useCreateForm = (schema: SectionSchema[]) => {
                       control={control}
                       render={({ field: { onChange, value } }) => (
                         <Component
-                          onChange={
-                            item.type === "autoComplete"
-                              ? (_: Event, value: any) => onChange(value)
-                              : onChange
-                          }
+                          onChange={item.type === 'autoComplete' ? (_: Event, value: any) => onChange(value) : onChange}
                           value={value}
                         />
                       )}
@@ -100,32 +86,22 @@ export const useCreateForm = (schema: SectionSchema[]) => {
                   className="!items-start gap-3 !m-0 w-full"
                 />
                 {item.deleteble && (
-                  <IconButton
-                    className="!border !border-solid !border-[#bac8f8] !rounded-md"
-                    onClick={() => handleRemove(item.key)}
-                  >
+                  <IconButton className="!border !border-solid !border-[#bac8f8] !rounded-md" onClick={() => handleRemove(item.key)}>
                     <TrashIcon className="fill-slate-500" />
                   </IconButton>
                 )}
               </div>
             </div>
           ))}
-          {section.items.filter(
-            ({ key }) => key !== schema.find(({ key }) => key === section.key)?.items?.[0]?.key
-          ).length < (section?.limitExtend ?? Infinity) &&
+          {section.items.filter(({ key }) => key !== schema.find(({ key }) => key === section.key)?.items?.[0]?.key).length <
+            (section?.limitExtend ?? Infinity) &&
             section.extendable && (
               <Button
                 size="medium"
                 className="self-start"
                 onClick={props?.actionExtend?.[section.key]}
                 startIcon={
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_711_2888)">
                       <path
                         d="M9.74999 19.4905C11.0819 19.4905 12.3357 19.2357 13.5114 18.7261C14.6871 18.2166 15.7243 17.5128 16.6228 16.6147C17.5213 15.7166 18.2255 14.68 18.7352 13.5048C19.2451 12.3297 19.5 11.0765 19.5 9.74525C19.5 8.41403 19.2451 7.16084 18.7352 5.98568C18.2255 4.81052 17.5213 3.77389 16.6228 2.8758C15.7243 1.97771 14.6855 1.27389 13.5066 0.764333C12.3277 0.254778 11.0723 0 9.74043 0C8.40857 0 7.15477 0.254778 5.97904 0.764333C4.8033 1.27389 3.76776 1.97771 2.87242 2.8758C1.97708 3.77389 1.27451 4.81052 0.764705 5.98568C0.254902 7.16084 0 8.41403 0 9.74525C0 11.0765 0.254902 12.3297 0.764705 13.5048C1.27451 14.68 1.97867 15.7166 2.8772 16.6147C3.77573 17.5128 4.81286 18.2166 5.98859 18.7261C7.16433 19.2357 8.41813 19.4905 9.74999 19.4905Z"

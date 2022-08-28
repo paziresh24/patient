@@ -1,1 +1,1 @@
-declare module "@paziresh24/splunk-event";
+declare module '@paziresh24/splunk-event';

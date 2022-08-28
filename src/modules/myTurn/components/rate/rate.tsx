@@ -1,5 +1,5 @@
-import Text from "@/components/atom/text";
-import { ChevronIcon } from "@/components/icons/chevron";
+import Text from '@/components/atom/text';
+import { ChevronIcon } from '@/components/icons/chevron';
 
 interface RateProps {
   /**
@@ -8,7 +8,7 @@ interface RateProps {
   link: string;
 }
 
-export const Rate: React.FC<RateProps> = (props) => {
+export const Rate: React.FC<RateProps> = props => {
   const { link } = props;
   return (
     <div className="flex items-center justify-between w-full bg-gray p-3 px-4 rounded-md">

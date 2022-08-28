@@ -1,4 +1,4 @@
-import create from "zustand";
+import create from 'zustand';
 
 interface BooksStore {
   books: any[];
@@ -7,19 +7,19 @@ interface BooksStore {
   removeBook: ({ bookId }: { bookId: string }) => void;
 }
 
-export const useBookStore = create<BooksStore>((set) => ({
+export const useBookStore = create<BooksStore>(set => ({
   books: [],
-  addBooks: (books) =>
-    set((state) => ({
+  addBooks: books =>
+    set(state => ({
       books: [...state.books, ...books],
     })),
-  setBooks: (books) =>
+  setBooks: books =>
     set(() => ({
       books,
     })),
   removeBook: ({ bookId }) => {
-    set((state) => ({
-      books: state.books.filter((book) => book.book_id !== bookId),
+    set(state => ({
+      books: state.books.filter(book => book.book_id !== bookId),
     }));
   },
 }));

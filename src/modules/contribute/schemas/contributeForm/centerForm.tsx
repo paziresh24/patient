@@ -1,46 +1,40 @@
-import { InputAdornment, TextFieldProps } from "@mui/material";
-import { SectionSchema, formFiledType } from "@/modules/contribute/hooks/useCreateForm";
-import centerType from "./centerType";
+import { InputAdornment, TextFieldProps } from '@mui/material';
+import { SectionSchema, formFiledType } from '@/modules/contribute/hooks/useCreateForm';
+import centerType from './centerType';
 
 export const centerForm: SectionSchema[] = [
   {
-    title: "",
-    key: "canterSection",
+    title: '',
+    key: 'canterSection',
     items: [
       {
-        key: "center_type",
-        label: "نوع مرکز درمانی",
+        key: 'center_type',
+        label: 'نوع مرکز درمانی',
         component: (props: any) =>
           formFiledType.autoComplete({
             ...props,
             options: centerType,
             sx: {
-              "& .MuiOutlinedInput-root": {
-                boxShadow: "0px 1px 19px -2px #0000001A",
+              '& .MuiOutlinedInput-root': {
+                boxShadow: '0px 1px 19px -2px #0000001A',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#D7DFFE",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#D7DFFE',
               },
             },
           }),
-        type: "autoComplete",
+        type: 'autoComplete',
       },
       {
-        key: "center_name",
-        label: "نام مرکز درمانی",
+        key: 'center_name',
+        label: 'نام مرکز درمانی',
         component: (props: TextFieldProps) =>
           formFiledType.textField({
-            helperText: "در صورتی که نام مرکز درمانی اشتباه است، صحیح آن را بنویسید.",
+            helperText: 'در صورتی که نام مرکز درمانی اشتباه است، صحیح آن را بنویسید.',
             InputProps: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <svg
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -52,72 +46,72 @@ export const centerForm: SectionSchema[] = [
               ),
             },
             sx: {
-              "& .MuiOutlinedInput-root": {
-                boxShadow: "0px 1px 19px -2px #0000001A",
+              '& .MuiOutlinedInput-root': {
+                boxShadow: '0px 1px 19px -2px #0000001A',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#D7DFFE",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#D7DFFE',
               },
             },
             ...props,
           }),
-        type: "textField",
+        type: 'textField',
       },
     ],
   },
   {
-    title: "",
-    key: "addressSection",
+    title: '',
+    key: 'addressSection',
     items: [
       {
-        key: "current_address",
-        label: "آدرس فعلی",
+        key: 'current_address',
+        label: 'آدرس فعلی',
         component: (props: TextFieldProps) =>
           formFiledType.textField({
             ...props,
             multiline: true,
             sx: {
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#e6ebfa",
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e6ebfa',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#e6ebfa",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#e6ebfa',
               },
             },
           }),
-        type: "textField",
+        type: 'textField',
         deleteble: true,
       },
     ],
     extendable: true,
-    addButtonText: "افزودن آدرس جدید",
+    addButtonText: 'افزودن آدرس جدید',
     limitExtend: 1,
   },
   {
-    title: "",
-    key: "phoneSection",
+    title: '',
+    key: 'phoneSection',
     items: [
       {
-        key: "phone_number",
-        label: "شماره تماس",
+        key: 'phone_number',
+        label: 'شماره تماس',
         component: (props: TextFieldProps) =>
           formFiledType.textField({
             ...props,
             sx: {
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#e6ebfa",
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e6ebfa',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#e6ebfa",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#e6ebfa',
               },
             },
           }),
-        type: "textField",
+        type: 'textField',
         deleteble: true,
       },
     ],
     extendable: true,
-    addButtonText: "افزودن شماره تماس دیگری",
+    addButtonText: 'افزودن شماره تماس دیگری',
     limitExtend: Infinity,
   },
 ];

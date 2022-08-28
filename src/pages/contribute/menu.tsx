@@ -1,23 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
-import Head from "next/head";
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import Head from 'next/head';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
-import Text from "@/components/atom/text";
-import TopBar from "@/components/layouts/appBar";
-import CenterIcon from "@/components/icons/center";
-import InfoIcon from "@/components/icons/info";
+import Text from '@/components/atom/text';
+import TopBar from '@/components/layouts/appBar';
+import CenterIcon from '@/components/icons/center';
+import InfoIcon from '@/components/icons/info';
 
-import officeVector from "@/modules/contribute/images/office.svg";
-import { Center, useProfileDataStore } from "@/modules/contribute/store/profileData";
+import officeVector from '@/modules/contribute/images/office.svg';
+import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const profileData = useProfileDataStore((state) => state.data);
-  const setSelectedCenter = useProfileDataStore((state) => state.setSelectedCenter);
+  const profileData = useProfileDataStore(state => state.data);
+  const setSelectedCenter = useProfileDataStore(state => state.setSelectedCenter);
 
-  const centers = profileData?.centers?.filter(({ id }) => id !== "5532") ?? [];
+  const centers = profileData?.centers?.filter(({ id }) => id !== '5532') ?? [];
 
   const handleClickCenter = (center: Center) => {
     setSelectedCenter(center);
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    router.prefetch("/contribute/center/");
+    router.prefetch('/contribute/center/');
   }, []);
 
   return (
@@ -45,12 +45,11 @@ const Home: NextPage = () => {
               <Text fontWeight="bold">ویرایش اطلاعات مرکز درمانی</Text>
             </div>
             <Text fontSize="sm" className="text-slate-500">
-              در این قسمت شما می توانید آدرس و شماره تماس پیشنهادی برای هر یک از مراکز درمانی پزشک
-              را ثبت کنید.
+              در این قسمت شما می توانید آدرس و شماره تماس پیشنهادی برای هر یک از مراکز درمانی پزشک را ثبت کنید.
             </Text>
           </div>
           <div className="mt-5 flex flex-col space-y-3">
-            {centers.map((center) => (
+            {centers.map(center => (
               <div
                 key={center.id}
                 className="bg-white p-2 pr-3 rounded-lg flex items-center justify-between shadow-sm border border-blue-100 cursor-pointer"
@@ -59,18 +58,12 @@ const Home: NextPage = () => {
                 <Text fontSize="sm" fontWeight="medium" className="line-clamp-1">
                   {center.name}
                   <Text fontSize="xs" className="text-slate-400">
-                    {" "}
+                    {' '}
                     | {center.address}
                   </Text>
                 </Text>
                 <div className="rounded-md bg-blue-100">
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 28 28"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"

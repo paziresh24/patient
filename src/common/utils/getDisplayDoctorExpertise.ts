@@ -4,11 +4,7 @@ interface GetDisplayDoctorExpertise {
   expertise: string;
 }
 
-export const getDisplayDoctorExpertise = ({
-  aliasTitle,
-  degree,
-  expertise,
-}: GetDisplayDoctorExpertise) => {
+export const getDisplayDoctorExpertise = ({ aliasTitle, degree, expertise }: GetDisplayDoctorExpertise) => {
   if (aliasTitle) {
     return aliasTitle;
   }

@@ -1,14 +1,8 @@
-import { memo } from "react";
+import { memo } from 'react';
 
 const EmptyStateIcon = () => {
   return (
-    <svg
-      width="167"
-      height="102"
-      viewBox="0 0 167 102"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="167" height="102" viewBox="0 0 167 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

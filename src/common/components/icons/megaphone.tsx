@@ -38,7 +38,7 @@ export const MegaphoneIcon = ({ color }: MegaphoneIconProps) => {
 };
 
 MegaphoneIcon.defaultProps = {
-  color: "#22282F",
+  color: '#22282F',
 };
 
 export default MegaphoneIcon;

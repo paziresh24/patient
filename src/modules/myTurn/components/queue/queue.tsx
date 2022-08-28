@@ -1,8 +1,8 @@
-import { useGetPagingBook } from "@/common/apis/services/booking/getPagingBook";
-import { Text } from "@/components/atom/text/text";
-import { useEffect } from "react";
-import Loading from "@/components/atom/loading";
-import convertTimeStampToFormattedTime from "@/common/utils/convertTimeStampToFormattedTime";
+import { useGetPagingBook } from '@/common/apis/services/booking/getPagingBook';
+import { Text } from '@/components/atom/text/text';
+import { useEffect } from 'react';
+import Loading from '@/components/atom/loading';
+import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
 
 interface QueueProps {
   bookId: string;
@@ -13,7 +13,7 @@ enum QueueStatus {
   inTheBookedDay = 1,
 }
 
-export const Queue: React.FC<QueueProps> = (props) => {
+export const Queue: React.FC<QueueProps> = props => {
   const { bookId } = props;
   const { isLoading, isSuccess, data: pagingBookData, mutate } = useGetPagingBook();
 
@@ -32,13 +32,7 @@ export const Queue: React.FC<QueueProps> = (props) => {
     return (
       <div className="h-64 flex flex-col justify-center items-center p-6">
         <div className="bg-[#f3f7fa] h-full w-full flex flex-col justify-center items-center rounded-xl space-y-5">
-          <svg
-            width="43"
-            height="43"
-            viewBox="0 0 43 43"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -53,11 +47,7 @@ export const Queue: React.FC<QueueProps> = (props) => {
       </div>
     );
 
-  if (
-    isSuccess &&
-    pagingBookData.data.status != QueueStatus.notInTheBookedDay &&
-    pagingBookData.data.status != QueueStatus.inTheBookedDay
-  )
+  if (isSuccess && pagingBookData.data.status != QueueStatus.notInTheBookedDay && pagingBookData.data.status != QueueStatus.inTheBookedDay)
     return (
       <div className="h-64 flex flex-col justify-center items-center p-6">
         <div className="bg-[#f3f7fa] h-full w-full flex flex-col justify-center items-center rounded-xl space-y-5">
@@ -79,13 +69,7 @@ export const Queue: React.FC<QueueProps> = (props) => {
             {pagingBookData.data.booking_queue.message && (
               <>
                 <div className="flex justify-center items-center w-14 h-14 rounded-md bg-[#756E6E] mb-4">
-                  <svg
-                    width="25"
-                    height="25"
-                    viewBox="0 0 25 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -109,13 +93,7 @@ export const Queue: React.FC<QueueProps> = (props) => {
                 </Text>
                 <div className="flex flex-col self-start mt-5 space-y-3">
                   <div className="flex items-center space-s-1">
-                    <svg
-                      width="26"
-                      height="26"
-                      viewBox="0 0 26 26"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fillRule="evenodd"
                         clipRule="evenodd"
@@ -124,24 +102,12 @@ export const Queue: React.FC<QueueProps> = (props) => {
                       />
                     </svg>
                     <Text fontSize="sm">بازه تقریبی حضور شما در مرکز:</Text>
-                    <Text
-                      fontSize="sm"
-                      fontWeight="bold"
-                      data-testid="queue__booking-attendance-time"
-                    >
-                      {convertTimeStampToFormattedTime(
-                        pagingBookData.data.booking_queue.attendance_time
-                      )}
+                    <Text fontSize="sm" fontWeight="bold" data-testid="queue__booking-attendance-time">
+                      {convertTimeStampToFormattedTime(pagingBookData.data.booking_queue.attendance_time)}
                     </Text>
                   </div>
                   <div className="flex items-center space-s-1">
-                    <svg
-                      width="26"
-                      height="26"
-                      viewBox="0 0 26 26"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fillRule="evenodd"
                         clipRule="evenodd"
@@ -163,13 +129,7 @@ export const Queue: React.FC<QueueProps> = (props) => {
             {pagingBookData.data.acceptance_queue.message && (
               <>
                 <div className="flex justify-center items-center w-14 h-14 rounded-md bg-[#756E6E] mb-4">
-                  <svg
-                    width="25"
-                    height="25"
-                    viewBox="0 0 25 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -197,12 +157,10 @@ export const Queue: React.FC<QueueProps> = (props) => {
         </div>
         <div className="bg-gray flex flex-col p-4 rounded-lg space-y-2 text-justify w-full">
           <Text fontSize="sm">
-            1- لطفا 30 دقیقه زودتر از بازه اعلام شده به شما، جهت انجام امور مربوط به پذیرش در مرکز
-            حضور داشته باشید.
+            1- لطفا 30 دقیقه زودتر از بازه اعلام شده به شما، جهت انجام امور مربوط به پذیرش در مرکز حضور داشته باشید.
           </Text>
           <Text fontSize="sm">
-            2- زمان تقریبی اعلام شده ممکن است به علت عدم حضور بیماران و یا تاخیر پزشک، با زمان نوبت
-            شما متفاوت باشد یا تغییر کند
+            2- زمان تقریبی اعلام شده ممکن است به علت عدم حضور بیماران و یا تاخیر پزشک، با زمان نوبت شما متفاوت باشد یا تغییر کند
           </Text>
         </div>
       </div>

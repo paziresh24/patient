@@ -1,4 +1,4 @@
-import Loading from "../loading";
+import Loading from '../loading';
 
 interface ButtonProps {
   /**
@@ -10,19 +10,19 @@ interface ButtonProps {
         values: primary, secondary
         @default primary
     */
-  variant?: "primary" | "secondary";
+  variant?: 'primary' | 'secondary';
   /**
    * The size of the button.
    * values: sm, md, lg
    * @default medium
    */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   /**
    * The theme of the button.
    * values: simple, error
    * @default simple
    */
-  theme?: "simple" | "error";
+  theme?: 'simple' | 'error';
   /**
    * the icon before the text
    */
@@ -46,33 +46,33 @@ interface ButtonProps {
 
 const buttonStyles = {
   variant: {
-    primary: "bg-primary border border-primary text-white",
-    secondary: "border border-primary text-primary",
+    primary: 'bg-primary border border-primary text-white',
+    secondary: 'border border-primary text-primary',
   },
   size: {
-    sm: "px-3 h-10 text-sm",
-    md: "px-4 h-12 text-sm",
-    lg: "px-5 h-14 text-md",
+    sm: 'px-3 h-10 text-sm',
+    md: 'px-4 h-12 text-sm',
+    lg: 'px-5 h-14 text-md',
   },
   theme: {
     error: {
-      primary: "bg-red-500 border-red-50 text-white",
-      secondary: "border-red-500 text-red-500",
+      primary: 'bg-red-500 border-red-50 text-white',
+      secondary: 'border-red-500 text-red-500',
     },
     simple: {
-      primary: "",
-      secondary: "",
+      primary: '',
+      secondary: '',
     },
   },
-  block: "w-full",
+  block: 'w-full',
 };
 
-export const Button: React.FC<ButtonProps> = (props) => {
+export const Button: React.FC<ButtonProps> = props => {
   const {
     children,
-    variant = "primary",
-    size = "md",
-    theme = "simple",
+    variant = 'primary',
+    size = 'md',
+    theme = 'simple',
     block = false,
     onClick,
     icon,
@@ -84,11 +84,9 @@ export const Button: React.FC<ButtonProps> = (props) => {
   return (
     <button
       className={`
-            flex items-center justify-center rounded-md font-bold ${
-              buttonStyles.variant[variant]
-            } ${buttonStyles.size[size]} ${buttonStyles.theme[theme]?.[variant]} ${
-        block ? buttonStyles["block"] : ""
-      } ${className ? className : ""}`}
+            flex items-center justify-center rounded-md font-bold ${buttonStyles.variant[variant]} ${buttonStyles.size[size]} ${
+        buttonStyles.theme[theme]?.[variant]
+      } ${block ? buttonStyles['block'] : ''} ${className ? className : ''}`}
       onClick={onClick}
       {...rest}
     >

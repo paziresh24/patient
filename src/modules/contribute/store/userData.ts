@@ -1,4 +1,4 @@
-import create from "zustand";
+import create from 'zustand';
 
 interface UserDataStore {
   user: ProfileData;
@@ -10,9 +10,9 @@ type ProfileData = {
   user_id?: string;
 };
 
-export const useUserDataStore = create<UserDataStore>((set) => ({
+export const useUserDataStore = create<UserDataStore>(set => ({
   user: {},
-  setUser: (user) =>
+  setUser: user =>
     set(() => ({
       user,
     })),

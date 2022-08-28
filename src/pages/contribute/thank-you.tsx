@@ -1,16 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { Button } from "@mui/material";
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { Button } from '@mui/material';
 
-import Text from "@/components/atom/text";
+import Text from '@/components/atom/text';
 
-import finalHero from "@/modules/contribute/images/finalHero.svg";
-import { useUserDataStore } from "@/modules/contribute/store/userData";
+import finalHero from '@/modules/contribute/images/finalHero.svg';
+import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 const ThankYouPage = () => {
   const router = useRouter();
-  const userData = useUserDataStore((state) => state.user);
+  const userData = useUserDataStore(state => state.user);
 
   const handleBackToMenu = () => {
     location.assign(`/dr/${router.query.slug}`);
@@ -25,7 +25,7 @@ const ThankYouPage = () => {
       <main
         className="md:max-w-md mx-auto flex flex-col justify-between p-5 pt-16"
         style={{
-          background: "linear-gradient(rgb(244, 248, 251) 62.04%, #fffffff7 78.36%)",
+          background: 'linear-gradient(rgb(244, 248, 251) 62.04%, #fffffff7 78.36%)',
         }}
       >
         <div className="flex flex-col space-y-5 justify-center">
@@ -35,9 +35,8 @@ const ThankYouPage = () => {
           </Text>
           <div className="bg-white flex flex-col items-center space-y-3 justify-center p-5 rounded-3xl">
             <Text fontSize="sm" fontWeight="medium" className="text-justify">
-              ما پر شور هستیم تا با کمک شما بتوانیم برای سایر بیماران دسترسی آسان و مطمئنی به پزشکان
-              مختلف ایجاد کنیم . این یک مسئولیت اجتماعی مهم بود که شما به نحو احسن انجام دادید و به
-              ارتقای کیفی و بهبود زندگی افراد جامعه کمک کردید.
+              ما پر شور هستیم تا با کمک شما بتوانیم برای سایر بیماران دسترسی آسان و مطمئنی به پزشکان مختلف ایجاد کنیم . این یک مسئولیت
+              اجتماعی مهم بود که شما به نحو احسن انجام دادید و به ارتقای کیفی و بهبود زندگی افراد جامعه کمک کردید.
             </Text>
             <Text fontWeight="medium" className="text-center text-primary">
               از همدلی و همراهی شما صمیمانه سپاسگزاریم.
@@ -50,13 +49,7 @@ const ThankYouPage = () => {
             className="mt-12"
             onClick={handleBackToMenu}
             startIcon={
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_711_3691)">
                   <path
                     d="M9.96094 19.9316C11.3216 19.9316 12.6026 19.6712 13.8037 19.1504C15.0049 18.6295 16.0645 17.9101 16.9824 16.9922C17.9004 16.0742 18.6198 15.0146 19.1406 13.8135C19.6615 12.6123 19.9219 11.3314 19.9219 9.9707C19.9219 8.61003 19.6615 7.3291 19.1406 6.12793C18.6198 4.92676 17.9004 3.86719 16.9824 2.94922C16.0645 2.03125 15.0033 1.31185 13.7988 0.791016C12.5944 0.270182 11.3119 0.00976562 9.95117 0.00976562C8.5905 0.00976562 7.30957 0.270182 6.1084 0.791016C4.90723 1.31185 3.84928 2.03125 2.93457 2.94922C2.01986 3.86719 1.30208 4.92676 0.78125 6.12793C0.260417 7.3291 0 8.61003 0 9.9707C0 11.3314 0.260417 12.6123 0.78125 13.8135C1.30208 15.0146 2.02148 16.0742 2.93945 16.9922C3.85742 17.9101 4.91699 18.6295 6.11816 19.1504C7.31933 19.6712 8.60026 19.9316 9.96094 19.9316Z"

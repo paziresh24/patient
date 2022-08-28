@@ -17,19 +17,10 @@ interface AvatarProps {
   height?: number;
 }
 
-export const Avatar: React.FC<AvatarProps> = (props) => {
+export const Avatar: React.FC<AvatarProps> = props => {
   const { src, width = 70, height = 70 } = props;
 
-  return (
-    <img
-      src={src}
-      alt="avatar"
-      width={width}
-      height={height}
-      style={{ minWidth: width, height }}
-      className="rounded-full bg-gray"
-    />
-  );
+  return <img src={src} alt="avatar" width={width} height={height} style={{ minWidth: width, height }} className="rounded-full bg-gray" />;
 };
 
 export default Avatar;

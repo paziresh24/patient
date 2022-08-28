@@ -1,1 +1,1 @@
-export * from "./editCenterInfo";
+export * from './editCenterInfo';

@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import Head from "next/head";
-import Button from "@mui/material/Button";
-import { TextFieldProps } from "@mui/material/TextField";
+import { useEffect, useState } from 'react';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Button from '@mui/material/Button';
+import { TextFieldProps } from '@mui/material/TextField';
 
-import TopBar from "@/components/layouts/appBar";
-import Modal from "@/components/atom/modal";
-import { splunkInstance } from "@/common/services/splunk";
+import TopBar from '@/components/layouts/appBar';
+import Modal from '@/components/atom/modal';
+import { splunkInstance } from '@/common/services/splunk';
 
-import { PhoneCenter, phoneData } from "@/modules/contribute/components/editPhoneCenter";
-import { CenterInfoData, EditCenterInfo } from "@/modules/contribute/components/editCenterInfo";
-import { useCreateForm, formFiledType } from "@/modules/contribute/hooks/useCreateForm";
-import centerType from "@/modules/contribute/schemas/contributeForm/centerType";
-import { centerForm } from "@/modules/contribute/schemas/contributeForm/centerForm";
-import { useProfileDataStore } from "@/modules/contribute/store/profileData";
-import { useUserDataStore } from "@/modules/contribute/store/userData";
+import { PhoneCenter, phoneData } from '@/modules/contribute/components/editPhoneCenter';
+import { CenterInfoData, EditCenterInfo } from '@/modules/contribute/components/editCenterInfo';
+import { useCreateForm, formFiledType } from '@/modules/contribute/hooks/useCreateForm';
+import centerType from '@/modules/contribute/schemas/contributeForm/centerType';
+import { centerForm } from '@/modules/contribute/schemas/contributeForm/centerForm';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -24,9 +24,9 @@ const Home: NextPage = () => {
   const [addressModal, setAddressModal] = useState(false);
   const [addPhoneModal, setAddPhoneModal] = useState(false);
   const [userEntredAddressCenter, setUserEntredAddressCenter] = useState<CenterInfoData>({});
-  const profileData = useProfileDataStore((state) => state.data);
-  const userData = useUserDataStore((state) => state.user);
-  const selectedCenter = useProfileDataStore((state) => state.selectedCenter);
+  const profileData = useProfileDataStore(state => state.data);
+  const userData = useUserDataStore(state => state.user);
+  const selectedCenter = useProfileDataStore(state => state.selectedCenter);
 
   useEffect(() => {
     setDefaultValue({
@@ -41,23 +41,23 @@ const Home: NextPage = () => {
     setAddressModal(false);
     setUserEntredAddressCenter(data);
     addField({
-      sectionKey: "addressSection",
+      sectionKey: 'addressSection',
       item: {
-        key: "userEntredAddress",
+        key: 'userEntredAddress',
         component: (props: TextFieldProps) =>
           formFiledType.textField({
             ...props,
             multiline: true,
             sx: {
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#dbf3ec",
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#dbf3ec',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#BDF0E0",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#BDF0E0',
               },
             },
           }),
-        type: "textField",
+        type: 'textField',
         deleteble: true,
       },
       defaultValue: data.address,
@@ -68,22 +68,22 @@ const Home: NextPage = () => {
     if (!phoneNumber) return;
     setAddPhoneModal(false);
     addField({
-      sectionKey: "phoneSection",
+      sectionKey: 'phoneSection',
       item: {
-        key: "phone_number",
+        key: 'phone_number',
         component: (props: TextFieldProps) =>
           formFiledType.textField({
             ...props,
             sx: {
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#dbf3ec",
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#dbf3ec',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#BDF0E0",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#BDF0E0',
               },
             },
           }),
-        type: "textField",
+        type: 'textField',
         deleteble: true,
       },
       defaultValue: phoneNumber,
@@ -102,12 +102,12 @@ const Home: NextPage = () => {
       user_id: userData.user_id,
     };
     splunkInstance.sendEvent({
-      group: "contribute crowdsourcing",
-      type: "contribute doctor profile request edit",
+      group: 'contribute crowdsourcing',
+      type: 'contribute doctor profile request edit',
       event: { ...dataEvent },
     });
     router.push({
-      pathname: "/contribute/thank-you",
+      pathname: '/contribute/thank-you',
       query: { ...router.query },
     });
   };

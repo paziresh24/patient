@@ -1,5 +1,5 @@
 interface Window {
-    ga: any;
+  ga: any;
 }
 
 declare const window: Window;

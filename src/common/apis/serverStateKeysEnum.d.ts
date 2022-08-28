@@ -1,5 +1,5 @@
 export enum ServerStateKeysEnum {
-  UserInfo = "userInfo",
-  Books = "books",
-  DoctorFullProfile = "doctorFullProfile",
+  UserInfo = 'userInfo',
+  Books = 'books',
+  DoctorFullProfile = 'doctorFullProfile',
 }

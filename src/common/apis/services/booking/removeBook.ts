@@ -1,6 +1,6 @@
-import { useMutation } from "react-query";
-import { clinicClient } from "@/common/apis/client";
-import { formData } from "@/common/utils/formData";
+import { useMutation } from 'react-query';
+import { clinicClient } from '@/common/apis/client';
+import { formData } from '@/common/utils/formData';
 
 interface Params {
   center_id: string;
@@ -10,10 +10,10 @@ interface Params {
 
 export const removeBook = (params: Params) => {
   return clinicClient.post(
-    "/api/deleteBook",
+    '/api/deleteBook',
     formData({
       ...params,
-    })
+    }),
   );
 };
 

@@ -2,17 +2,9 @@ interface ThreeDotsProps extends React.SVGAttributes<SVGElement> {
   color?: string;
 }
 
-const ThreeDots = ({ color = "#fff", ...rest }: ThreeDotsProps) => {
+const ThreeDots = ({ color = '#fff', ...rest }: ThreeDotsProps) => {
   return (
-    <svg
-      width="5"
-      height="18"
-      viewBox="0 0 5 18"
-      fill="none"
-      {...rest}
-      aria-hidden
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="5" height="18" viewBox="0 0 5 18" fill="none" {...rest} aria-hidden xmlns="http://www.w3.org/2000/svg">
       <path
         d="M2.45711 17.2674C3.06068 17.2674 3.54997 16.7753 3.54997 16.1682C3.54997 15.5612 3.06068 15.0691 2.45711 15.0691C1.85355 15.0691 1.36426 15.5612 1.36426 16.1682C1.36426 16.7753 1.85355 17.2674 2.45711 17.2674Z"
         fill={color}
@@ -39,7 +31,7 @@ const ThreeDots = ({ color = "#fff", ...rest }: ThreeDotsProps) => {
 };
 
 ThreeDots.defaultProps = {
-  color: "#fff",
+  color: '#fff',
 };
 
 export default ThreeDots;

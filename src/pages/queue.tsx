@@ -1,10 +1,10 @@
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
-import Text from "@/components/atom/text";
+import Text from '@/components/atom/text';
 
-import Queue from "@/modules/myTurn/components/queue";
+import Queue from '@/modules/myTurn/components/queue';
 
 interface AppointmentsProps {
   isWebView: boolean;
@@ -24,7 +24,7 @@ export const QueuePage: React.FC<AppointmentsProps> = ({ isWebView }) => {
             <Text fontWeight="bold">شماره نوبت من</Text>
           </div>
         )}
-        <div className={`p-5 space-y-3 ${isWebView ? "pt-20" : ""} w-full lg:w-2/4 self-center`}>
+        <div className={`p-5 space-y-3 ${isWebView ? 'pt-20' : ''} w-full lg:w-2/4 self-center`}>
           <Queue bookId={query.book_id as string} />
         </div>
       </div>
@@ -32,7 +32,7 @@ export const QueuePage: React.FC<AppointmentsProps> = ({ isWebView }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async context => {
   const isWebView: boolean = context.query?.isWebView ? true : false;
   return {
     props: {

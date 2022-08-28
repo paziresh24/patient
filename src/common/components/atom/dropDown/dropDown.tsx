@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import Text from "../text";
+import { useEffect, useState } from 'react';
+import Text from '../text';
 
 interface DropDownProps {
   items: Array<{
@@ -12,13 +12,13 @@ interface DropDownProps {
   element?: React.ReactNode;
 }
 
-export const DropDown: React.FC<DropDownProps> = (props) => {
+export const DropDown: React.FC<DropDownProps> = props => {
   const { items, element } = props;
 
   const [dropDown, setDropDown] = useState(false);
   useEffect(() => {
-    if (dropDown) return document.body.classList.add("overflow-hidden");
-    document.body.classList.remove("overflow-hidden");
+    if (dropDown) return document.body.classList.add('overflow-hidden');
+    document.body.classList.remove('overflow-hidden');
   }, [dropDown]);
 
   return (
@@ -52,7 +52,7 @@ export const DropDown: React.FC<DropDownProps> = (props) => {
           </div>
           <div
             className="fixed inset-0 bg-[#0e161b] opacity-30 z-10 !m-0"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               setDropDown(false);
             }}

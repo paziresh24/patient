@@ -1,5 +1,5 @@
-import type { NextComponentType } from "next";
-import { Head, Html, Main, NextScript } from "next/document";
+import type { NextComponentType } from 'next';
+import { Head, Html, Main, NextScript } from 'next/document';
 
 const CustomDocument: NextComponentType = () => {
   return (
