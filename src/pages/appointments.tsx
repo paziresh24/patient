@@ -9,7 +9,7 @@ import EmptyState from "@/components/atom/emptyState";
 import Loading from "@/components/atom/loading";
 import { Tab, Tabs } from "@/components/atom/tabs";
 import getDisplayDoctorExpertise from "@/common/utils/getDisplayDoctorExpertise";
-import { useGetBooks } from "@/apis/getBooks/hook";
+import { useGetBooks } from "@/common/apis/services/booking/getBooks";
 
 import Turn from "@/modules/myTurn/components/turn";
 import { useBookStore } from "@/modules/myTurn/store";

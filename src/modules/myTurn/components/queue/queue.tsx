@@ -1,4 +1,4 @@
-import { useGetPagingBook } from "@/apis/getPagingBook/hook";
+import { useGetPagingBook } from "@/common/apis/services/booking/getPagingBook";
 import { Text } from "@/components/atom/text/text";
 import { useEffect } from "react";
 import Loading from "@/components/atom/loading";

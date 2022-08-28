@@ -7,8 +7,8 @@ import { toast } from "react-toastify";
 import Button from "@mui/lab/LoadingButton";
 
 import Text from "@/components/atom/text";
-import { useGetUser } from "@/apis/auth/me/hook";
-import { useGetProfileData } from "@/apis/profile/getData/hook";
+import { useGetUser } from "@/common/apis/services/auth/me";
+import { useGetProfileData } from "@/common/apis/services/profile/getFullProfile";
 
 import { useUserDataStore } from "@/modules/contribute/store/userData";
 import { useProfileDataStore } from "@/modules/contribute/store/profileData";

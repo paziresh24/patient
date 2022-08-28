@@ -4,7 +4,7 @@ import TagStatus from "../../tagStatus";
 import DropDown from "@/components/atom/dropDown";
 import Button from "@/components/atom/button";
 import { useBookStore } from "@/modules/myTurn/store";
-import { useRemoveBook } from "@/apis/removeBook/hook";
+import { useRemoveBook } from "@/common/apis/services/booking/removeBook";
 import ShareIcon from "@/components/icons/share";
 import TrashIcon from "@/components/icons/trash";
 import ThreeDotsIcon from "@/components/icons/threeDots";

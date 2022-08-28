@@ -1,7 +1,7 @@
 import axios from "axios";
 import getConfig from "next/config";
 import { splunkInstance } from "@/common/services/splunk";
-import { refresh } from "./auth/refresh/api";
+import { refresh } from "./services/auth/refresh";
 const { publicRuntimeConfig } = getConfig();
 
 export const paziresh24AppClient = axios.create({
@@ -12,10 +12,6 @@ export const paziresh24AppClient = axios.create({
 export const clinicClient = axios.create({
   withCredentials: true,
   baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}`,
-});
-
-export const prescriptionClient = axios.create({
-  baseURL: publicRuntimeConfig.PRESCRIPTION_API,
 });
 
 paziresh24AppClient.interceptors.response.use(
