@@ -7,7 +7,7 @@ export interface TagStatusProps {
    * Status of the turn
    */
   status: BookStatus;
-  className: string;
+  className?: string;
 }
 
 export enum TagsStatusTranslation {

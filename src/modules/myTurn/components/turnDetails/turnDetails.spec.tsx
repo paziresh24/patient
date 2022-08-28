@@ -5,7 +5,7 @@ import TurnDetails from './turnDetails';
 describe('Tunr Details', () => {
   it('should return just tracking code', () => {
     const { container } = render(<TurnDetails items={[{ id: 0, name: 'کدپیگیری', value: '123' }]} />);
-    expect(container.firstChild.childNodes.length).toBe(1);
+    expect(container.firstChild?.childNodes.length).toBe(1);
     expect(container.querySelectorAll('span')[0].innerHTML).toBe('کدپیگیری:');
     expect(container.querySelectorAll('span')[1].innerHTML).toBe('123');
   });
@@ -18,6 +18,6 @@ describe('Tunr Details', () => {
         ]}
       />,
     );
-    expect(container.firstChild.childNodes.length).toBe(2);
+    expect(container.firstChild?.childNodes.length).toBe(2);
   });
 });
