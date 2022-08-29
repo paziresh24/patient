@@ -40,6 +40,34 @@ const Home: NextPage = () => {
         phone_number: center?.tell_array?.[0],
         center_type: center?.center_type === 1 ? centerType[0] : centerType[1],
       });
+      if (center?.tell_array && center?.tell_array?.length > 1) {
+        center?.tell_array.forEach((phoneNumber, index) => {
+          return (
+            index !== 0 &&
+            addField({
+              sectionKey: 'phoneSection',
+              item: {
+                key: `phone_number`,
+                component: (props: TextFieldProps) =>
+                  formFiledType.textField({
+                    ...props,
+                    sx: {
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#e6ebfa',
+                      },
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#e6ebfa',
+                      },
+                    },
+                  }),
+                type: 'textField',
+                deleteble: true,
+              },
+              defaultValue: phoneNumber,
+            })
+          );
+        });
+      }
     }
   }, [isLoading, profileData, router.query]);
 
