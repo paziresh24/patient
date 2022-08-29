@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
 import Button from '@mui/material/Button';
 import { TextFieldProps } from '@mui/material/TextField';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-import TopBar from '@/components/layouts/appBar';
-import Modal from '@/components/atom/modal';
 import { splunkInstance } from '@/common/services/splunk';
+import Modal from '@/components/atom/modal';
+import TopBar from '@/components/layouts/appBar';
 
-import { PhoneCenter, phoneData } from '@/modules/contribute/components/editPhoneCenter';
 import { CenterInfoData, EditCenterInfo } from '@/modules/contribute/components/editCenterInfo';
-import { useCreateForm, formFiledType } from '@/modules/contribute/hooks/useCreateForm';
-import centerType from '@/modules/contribute/schemas/contributeForm/centerType';
+import { PhoneCenter, phoneData } from '@/modules/contribute/components/editPhoneCenter';
+import { formFiledType, useCreateForm } from '@/modules/contribute/hooks/useCreateForm';
 import { centerForm } from '@/modules/contribute/schemas/contributeForm/centerForm';
+import centerType from '@/modules/contribute/schemas/contributeForm/centerType';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserDataStore } from '@/modules/contribute/store/userData';
 
@@ -93,6 +93,8 @@ const Home: NextPage = () => {
   const onSubmit = (data: any) => {
     const dataEvent = {
       ...data,
+      current_address: data?.current_address ?? null,
+      phone_number: data?.phone_number ?? null,
       center_type: data.center_type.label,
       userEntredAddressCenter: {
         ...userEntredAddressCenter,
