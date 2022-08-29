@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Button from '@mui/material/Button';
+import Button from '@mui/lab/LoadingButton';
 import { TextFieldProps } from '@mui/material/TextField';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -29,6 +29,11 @@ const Home: NextPage = () => {
   const profileData = useProfileDataStore(state => state.data);
   const userData = useUserDataStore(state => state.user);
   const [selectedCenter, setSelectedCenter] = useState<Center>();
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+
+  useEffect(() => {
+    setIsButtonLoading(false);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && profileData && router.query?.center_id) {
@@ -125,6 +130,7 @@ const Home: NextPage = () => {
   };
 
   const onSubmit = (data: any) => {
+    setIsButtonLoading(true);
     const dataEvent = {
       ...data,
       current_address: data?.current_address ?? null,
@@ -163,7 +169,7 @@ const Home: NextPage = () => {
           }}
         />
         <div className="bg-white md:bg-transparent fixed md:static bottom-0 right-0 w-full p-4 md:px-0 shadow-lg md:shadow-none">
-          <Button fullWidth variant="contained" onClick={handleSubmit(onSubmit)}>
+          <Button fullWidth variant="contained" onClick={handleSubmit(onSubmit)} loading={isButtonLoading}>
             ثبت
           </Button>
         </div>
