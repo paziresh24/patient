@@ -13,29 +13,35 @@ import TopBar from '@/components/layouts/appBar';
 import { CenterInfoData, EditCenterInfo } from '@/modules/contribute/components/editCenterInfo';
 import { PhoneCenter, phoneData } from '@/modules/contribute/components/editPhoneCenter';
 import { formFiledType, useCreateForm } from '@/modules/contribute/hooks/useCreateForm';
+import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import { centerForm } from '@/modules/contribute/schemas/contributeForm/centerForm';
 import centerType from '@/modules/contribute/schemas/contributeForm/centerType';
-import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 const Home: NextPage = () => {
   const router = useRouter();
+  const { isLoading } = useGetData();
   const { Form, handleSubmit, addField, setDefaultValue } = useCreateForm(centerForm);
   const [addressModal, setAddressModal] = useState(false);
   const [addPhoneModal, setAddPhoneModal] = useState(false);
   const [userEntredAddressCenter, setUserEntredAddressCenter] = useState<CenterInfoData>({});
   const profileData = useProfileDataStore(state => state.data);
   const userData = useUserDataStore(state => state.user);
-  const selectedCenter = useProfileDataStore(state => state.selectedCenter);
+  const [selectedCenter, setSelectedCenter] = useState<Center>();
 
   useEffect(() => {
-    setDefaultValue({
-      center_name: selectedCenter.name,
-      current_address: selectedCenter.address,
-      phone_number: selectedCenter?.tell_array?.[0],
-      center_type: selectedCenter.center_type === 1 ? centerType[0] : centerType[1],
-    });
-  }, []);
+    if (!isLoading && profileData && router.query?.center_id) {
+      const center = profileData.centers?.find(center => center.id === router.query?.center_id);
+      setSelectedCenter(center);
+      setDefaultValue({
+        center_name: center?.name,
+        current_address: center?.address,
+        phone_number: center?.tell_array?.[0],
+        center_type: center?.center_type === 1 ? centerType[0] : centerType[1],
+      });
+    }
+  }, [isLoading, profileData, router.query]);
 
   const addAddress = (data: CenterInfoData) => {
     setAddressModal(false);
@@ -120,7 +126,7 @@ const Home: NextPage = () => {
         <title>ویرایش اطلاعات مرکز درمانی {profileData.display_name}</title>
       </Head>
 
-      <TopBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton />
+      <TopBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
       <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28">
         <Form
           actionExtend={{
@@ -139,8 +145,8 @@ const Home: NextPage = () => {
           onSubmit={addAddress}
           onCancel={() => setAddressModal(false)}
           defaultValues={{
-            province: { label: selectedCenter.province },
-            city: { label: selectedCenter.city },
+            province: { label: selectedCenter?.province },
+            city: { label: selectedCenter?.city },
             lat: selectedCenter?.map?.lat,
             lng: selectedCenter?.map?.lon,
           }}

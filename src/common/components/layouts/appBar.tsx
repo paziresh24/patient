@@ -1,13 +1,15 @@
+import Text from '@/components/atom/text';
 import { AppBar, IconButton, Toolbar } from '@mui/material';
 import { useRouter } from 'next/router';
-import Text from '@/components/atom/text';
+import Skeleton from '../atom/skeleton';
 
 interface TopBarProps {
   title: string;
   backButton?: Boolean;
+  titleLoading?: Boolean;
 }
 
-export const TopBar = ({ title, backButton }: TopBarProps) => {
+export const TopBar = ({ title, backButton, titleLoading = false }: TopBarProps) => {
   const router = useRouter();
   return (
     <AppBar position="sticky" color="default">
@@ -24,9 +26,13 @@ export const TopBar = ({ title, backButton }: TopBarProps) => {
             </svg>
           </IconButton>
         )}
-        <Text fontWeight="bold" fontSize="sm">
-          {title}
-        </Text>
+        {titleLoading ? (
+          <Skeleton w="7rem" h="1rem" rounded="full" />
+        ) : (
+          <Text fontWeight="bold" fontSize="sm">
+            {title}
+          </Text>
+        )}
       </Toolbar>
     </AppBar>
   );

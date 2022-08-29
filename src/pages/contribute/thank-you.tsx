@@ -1,16 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
+import { Button } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Button } from '@mui/material';
 
 import Text from '@/components/atom/text';
 
+import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
 import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 const ThankYouPage = () => {
   const router = useRouter();
   const userData = useUserDataStore(state => state.user);
+  const { isLoading } = useGetData();
 
   const handleBackToMenu = () => {
     location.assign(`/dr/${router.query.slug}`);
@@ -31,7 +33,7 @@ const ThankYouPage = () => {
         <div className="flex flex-col space-y-5 justify-center">
           <img src={finalHero.src} alt="" className="self-center" />
           <Text fontWeight="bold" className="text-center text-green-600">
-            {userData.name} عزیز اطلاعات ارزشمند شما را دریافت کردیم.
+            {isLoading ? '...' : userData.name} عزیز اطلاعات ارزشمند شما را دریافت کردیم.
           </Text>
           <div className="bg-white flex flex-col items-center space-y-3 justify-center p-5 rounded-3xl">
             <Text fontSize="sm" fontWeight="medium" className="text-justify">

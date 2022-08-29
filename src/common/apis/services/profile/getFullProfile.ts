@@ -10,6 +10,6 @@ export const getProfileData = ({ slug }: Params) => {
   return paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`);
 };
 
-export const useGetProfileData = (params: Params) => {
-  return useQuery([ServerStateKeysEnum.DoctorFullProfile, params], () => getProfileData(params));
+export const useGetProfileData = (params: Params, options?: any) => {
+  return useQuery([ServerStateKeysEnum.DoctorFullProfile, params], () => getProfileData(params), options);
 };

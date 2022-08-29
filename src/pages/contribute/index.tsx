@@ -1,51 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import Button from '@mui/lab/LoadingButton';
-import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 
-import { useGetUser } from '@/common/apis/services/auth/me';
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Text from '@/components/atom/text';
 
+import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import doctor from '@/modules/contribute/images/doctor.svg';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
 import idCard from '@/modules/contribute/images/idCard.svg';
-import { useProfileDataStore } from '@/modules/contribute/store/profileData';
-import { useUserDataStore } from '@/modules/contribute/store/userData';
 
-interface PageProps {
-  slug: string;
-}
-
-const Home = ({ slug }: PageProps) => {
+const Home = () => {
   const router = useRouter();
-  const getProfileData = useGetProfileData({
-    slug,
-  });
-  const getUserData = useGetUser();
-  const setProfileData = useProfileDataStore(state => state.setData);
-  const setUserData = useUserDataStore(state => state.setUser);
-
-  useEffect(() => {
-    if (getProfileData.isSuccess) {
-      setProfileData(getProfileData.data.data.data);
-    }
-    if (getUserData.isSuccess) {
-      setUserData(getUserData.data.data.data);
-    }
-    if (getUserData.isError) {
-      toast.dark('خطا در احراز هویت، لطفا وارد شوید.');
-    }
-  }, [getProfileData.status, getUserData.status]);
+  const { isLoading } = useGetData();
 
   const handleNextPage = () => {
     router.push({
       pathname: '/contribute/menu',
-      query: { slug },
+      query: { slug: router.query?.slug },
     });
   };
 
@@ -99,23 +72,13 @@ const Home = ({ slug }: PageProps) => {
         </div>
 
         <div className="md:max-w-md fixed bottom-0 w-full p-5">
-          <Button fullWidth variant="contained" onClick={handleNextPage} loading={!getProfileData.isSuccess || !getUserData.isSuccess}>
+          <Button fullWidth variant="contained" onClick={handleNextPage} loading={isLoading}>
             متوجه شدم
           </Button>
         </div>
       </main>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const slug: string = context.query?.slug as string;
-
-  return {
-    props: {
-      slug: slug ?? '',
-    },
-  };
 };
 
 export default Home;
