@@ -1,4 +1,3 @@
-import React from 'react';
 import Avatar from './avatar';
 
 // eslint-disable-next-line import/no-anonymous-default-export
