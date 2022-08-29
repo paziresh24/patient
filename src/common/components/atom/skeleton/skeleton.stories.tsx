@@ -1,3 +1,4 @@
+import React from 'react';
 import Skeleton from './skeleton';
 
 // eslint-disable-next-line import/no-anonymous-default-export

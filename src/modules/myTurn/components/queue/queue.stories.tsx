@@ -1,6 +1,7 @@
+import React from 'react';
 import { QueryClientProvider } from 'react-query';
+import { queryClient } from '../../../../common/components/layouts/provider';
 import Queue from './queue';
-import { queryClient } from '../../../pages/_app';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

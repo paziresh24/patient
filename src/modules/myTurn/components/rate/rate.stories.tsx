@@ -1,3 +1,4 @@
+import React from 'react';
 import Rate from './rate';
 
 // eslint-disable-next-line import/no-anonymous-default-export

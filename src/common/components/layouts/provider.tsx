@@ -1,15 +1,15 @@
+import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { useEffect } from 'react';
+import TagManager from 'react-gtm-module';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import theme from 'theme.mui';
-import TagManager from 'react-gtm-module';
-import { useEffect } from 'react';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,

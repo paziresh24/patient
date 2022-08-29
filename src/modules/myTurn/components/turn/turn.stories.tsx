@@ -1,5 +1,6 @@
+import React from 'react';
 import { QueryClientProvider } from 'react-query';
-import { queryClient } from '../../../pages/_app';
+import { queryClient } from '../../../../common/components/layouts/provider';
 import Turn from './turn';
 
 // eslint-disable-next-line import/no-anonymous-default-export

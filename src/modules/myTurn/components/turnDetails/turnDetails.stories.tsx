@@ -1,3 +1,4 @@
+import React from 'react';
 import Timer from '../../atoms/timer/timer';
 import TurnDetails from './turnDetails';
 

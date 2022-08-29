@@ -1,3 +1,4 @@
+import React from 'react';
 import Location from './location';
 
 // eslint-disable-next-line import/no-anonymous-default-export

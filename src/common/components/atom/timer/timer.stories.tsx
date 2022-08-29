@@ -1,3 +1,4 @@
+import React from 'react';
 import Timer from './timer';
 
 // eslint-disable-next-line import/no-anonymous-default-export

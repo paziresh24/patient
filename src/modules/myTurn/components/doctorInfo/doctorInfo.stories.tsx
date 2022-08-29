@@ -1,3 +1,4 @@
+import React from 'react';
 import DoctorInfo from './doctorInfo';
 
 // eslint-disable-next-line import/no-anonymous-default-export
