@@ -1,3 +1,5 @@
+import { LoginModalProvider } from '@/modules/login/context/loginModal';
+import { ModalLogin } from '@/modules/login/views/modalLogin';
 import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -20,8 +22,10 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
   return (
-    <>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <LoginModalProvider>
+      <QueryClientProvider client={queryClient}>
+        {children} <ModalLogin />
+      </QueryClientProvider>
       <ToastContainer
         position="top-center"
         autoClose={3000}
@@ -34,7 +38,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         transition={Slide}
         hideProgressBar
       />
-    </>
+    </LoginModalProvider>
   );
 };
 

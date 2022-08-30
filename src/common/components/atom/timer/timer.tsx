@@ -1,8 +1,10 @@
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import Text from '../text';
 
 interface TimerProps {
   target: number;
+  className?: string;
 }
 
 const calculateTimeLeft = (
@@ -35,7 +37,7 @@ const calculateTimeLeft = (
 };
 
 export const Timer: React.FC<TimerProps> = props => {
-  const { target } = props;
+  const { target, className } = props;
 
   const [timeLeft, setTimeLeft] = useState<any>(calculateTimeLeft(target));
   const timerComponents: string[] = [];
@@ -56,7 +58,7 @@ export const Timer: React.FC<TimerProps> = props => {
   });
 
   return (
-    <Text fontWeight="bold" className="text-secondary">
+    <Text fontWeight="bold" className={clsx('text-secondary', className)}>
       {timerComponents.length ? timerComponents.join(':') : '-'}
     </Text>
   );
