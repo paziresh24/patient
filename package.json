@@ -16,13 +16,10 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
-    "@emotion/react": "11.10.0",
-    "@emotion/styled": "11.10.0",
-    "@mui/lab": "5.0.0-alpha.96",
-    "@mui/material": "5.10.1",
     "@paziresh24/splunk-event": "1.2.1",
     "axios": "^0.27.2",
     "clsx": "^1.1.1",
+    "cookies-next": "2.1.1",
     "leaflet": "1.8.0",
     "lodash": "4.17.21",
     "next": "^12.2.0",
@@ -36,7 +33,6 @@
     "react-query": "^3.39.1",
     "react-toastify": "^9.0.5",
     "react-use": "17.4.0",
-    "stylis-plugin-rtl": "2.1.1",
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
@@ -60,7 +56,6 @@
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
     "@types/react-gtm-module": "2.0.1",
-    "@types/stylis": "^4.0.2",
     "autoprefixer": "^10.4.7",
     "babel-loader": "^8.2.5",
     "cross-env": "7.0.3",
