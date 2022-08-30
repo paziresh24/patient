@@ -1,18 +1,19 @@
-import { Button, FormControlLabel, TextField } from '@mui/material';
+import Button from '@/common/components/atom/button';
+import TextField from '@/common/components/atom/textField';
 import { useState } from 'react';
 
 interface PhoneCenterProps {
-  onSubmit: (data: phoneData) => void;
+  onSubmit: (data: PhoneData) => void;
   onCancel: () => void;
 }
 
-export type phoneData = string;
+export type PhoneData = string;
 
 export const PhoneCenter = ({ onSubmit, onCancel }: PhoneCenterProps) => {
-  const [phoneNumber, setPhoneNumber] = useState<phoneData>('');
+  const [phoneNumber, setPhoneNumber] = useState<PhoneData>('');
   const [textFieldError, setTextFieldError] = useState(false);
 
-  const validate = (phoneNumber: phoneData) => {
+  const validate = (phoneNumber: PhoneData) => {
     if (phoneNumber.length > 11 || phoneNumber.length < 9) {
       setTextFieldError(true);
       return false;
@@ -27,27 +28,23 @@ export const PhoneCenter = ({ onSubmit, onCancel }: PhoneCenterProps) => {
 
   return (
     <div className="flex flex-col space-y-5">
-      <FormControlLabel
-        control={
-          <TextField
-            fullWidth
-            placeholder="تلفن همراه یا تلفن ثابت با کد شهر"
-            onChange={e => setPhoneNumber(e.target.value)}
-            value={phoneNumber}
-            error={textFieldError}
-            onFocus={() => setTextFieldError(false)}
-            helperText={textFieldError ? 'شماره تماس را به درستی وارد کنید.' : ''}
-          />
-        }
+      <TextField
+        placeholder="تلفن همراه یا تلفن ثابت با کد شهر"
+        onChange={e => setPhoneNumber(e.target.value)}
+        value={phoneNumber}
+        error={textFieldError}
+        onFocus={() => setTextFieldError(false)}
+        helperText={textFieldError ? 'شماره تماس را به درستی وارد کنید.' : ''}
+        inputMode="numeric"
         label="شماره تماس"
-        labelPlacement="top"
-        className="!items-start gap-2  w-full"
+        size="small"
       />
+
       <div className="flex space-s-4">
-        <Button color="success" fullWidth variant="contained" disabled={!phoneNumber} onClick={handleSubmit}>
+        <Button block variant="primary" disabled={!phoneNumber} onClick={handleSubmit}>
           ثبت شماره تماس
         </Button>
-        <Button color="secondary" fullWidth variant="outlined" onClick={onCancel}>
+        <Button color="secondary" block variant="secondary" onClick={onCancel}>
           انصراف
         </Button>
       </div>

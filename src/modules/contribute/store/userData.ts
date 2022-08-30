@@ -8,6 +8,7 @@ interface UserDataStore {
 type ProfileData = {
   name?: string;
   user_id?: string;
+  username?: string;
 };
 
 export const useUserDataStore = create<UserDataStore>(set => ({

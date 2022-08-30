@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import Text from '@/components/atom/text';
 
+import Button from '@/common/components/atom/button';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
 import { useUserDataStore } from '@/modules/contribute/store/userData';
@@ -15,7 +15,7 @@ const ThankYouPage = () => {
   const { isLoading } = useGetData();
 
   const handleBackToMenu = () => {
-    location.assign(`/dr/${router.query.slug}`);
+    location.replace(`/dr/${router.query.slug}`);
   };
 
   return (
@@ -50,7 +50,8 @@ const ThankYouPage = () => {
           <Button
             className="mt-12"
             onClick={handleBackToMenu}
-            startIcon={
+            variant="text"
+            icon={
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_711_3691)">
                   <path

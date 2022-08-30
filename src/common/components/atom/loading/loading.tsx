@@ -1,13 +1,15 @@
-interface LoadingProps {
+import { SVGProps } from 'react';
+
+interface LoadingProps extends SVGProps<SVGSVGElement> {
   color?: string;
 }
 
 export const Loading: React.FC<LoadingProps> = props => {
-  const { color = '#2b2f33' } = props;
+  const { ...rest } = props;
 
   return (
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="60px" height="10px" viewBox="0 0 80 20">
-      <circle cx="10" cy="10" r="10" fill={color}>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="60px" height="10px" viewBox="0 0 80 20" className="fill-black" {...rest}>
+      <circle cx="10" cy="10" r="10">
         <animate
           attributeName="cx"
           from="10"
@@ -19,7 +21,7 @@ export const Loading: React.FC<LoadingProps> = props => {
           repeatCount="indefinite"
         />
       </circle>
-      <circle cx="10" cy="10" r="0" fill={color}>
+      <circle cx="10" cy="10" r="0">
         <animate
           attributeName="r"
           from="0"
@@ -31,7 +33,7 @@ export const Loading: React.FC<LoadingProps> = props => {
           repeatCount="indefinite"
         />
       </circle>
-      <circle cx="40" cy="10" r="10" fill={color}>
+      <circle cx="40" cy="10" r="10">
         <animate
           attributeName="cx"
           from="40"
@@ -43,7 +45,7 @@ export const Loading: React.FC<LoadingProps> = props => {
           repeatCount="indefinite"
         />
       </circle>
-      <circle cx="70" cy="10" r="10" fill={color}>
+      <circle cx="70" cy="10" r="10">
         <animate
           attributeName="r"
           from="10"
