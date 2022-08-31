@@ -8,7 +8,7 @@ interface MegaMenuContentProps {
 
 type Item = {
   title: string;
-  url: string;
+  link: string;
   sub_menu?: Item[];
 };
 const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
@@ -33,12 +33,12 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
           <ChevronIcon dir="right" />
         </button>
       )}
-      <div ref={ref} className="flex h-full flex-col flex-wrap ml-8 overflow-hidden scroll-smooth w-full relative p-4">
+      <div ref={ref} className="flex h-full cursor-pointer flex-col flex-wrap ml-8 overflow-hidden scroll-smooth w-full relative p-4">
         {items.map((menu, index) => {
           return (
             <div key={index}>
               <a
-                href={menu.url}
+                href={menu.link}
                 className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
                   'font-bold': !!menu.sub_menu,
                 })}
@@ -49,7 +49,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
               {menu.sub_menu &&
                 menu.sub_menu.map((item, index) => {
                   return (
-                    <a key={index} href={item.url} className="text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5">
+                    <a key={index} href={item.link} className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5">
                       {item.title}
                     </a>
                   );

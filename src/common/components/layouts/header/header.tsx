@@ -59,40 +59,43 @@ const Header = () => {
               <li className="flex items-center" onClick={() => setOpen(true)}>
                 <span className="inline-block text-center cursor-pointer p-3 text-sm">دسته بندی ها </span>
                 <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
-                {open ? (
-                  <div className="flex flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50">
-                    <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
-                      <a
-                        onMouseOver={() => setMenu(MegaMenuItem.CONSULT)}
-                        className={`text-sm mb-2 cursor-pointer flex items-center  ${
-                          menu === MegaMenuItem.CONSULT ? 'bg-slate-50' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
-                      >
-                        مشاوره انلاین پزشکی
-                      </a>
-                      <a
-                        onMouseOver={() => setMenu(MegaMenuItem.SPECIALTY)}
-                        className={`text-sm mb-2 cursor-pointer flex items-center  ${
-                          menu === MegaMenuItem.SPECIALTY ? 'bg-slate-50' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
-                      >
-                        تخصص ها
-                      </a>
-                      <a
-                        onMouseOver={() => setMenu(MegaMenuItem.ARTICLE)}
-                        className={`text-sm mb-2 cursor-pointer flex items-center  ${
-                          menu === MegaMenuItem.ARTICLE ? 'bg-slate-50' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
-                      >
-                        مجله سلامتی
-                      </a>
-                    </div>
 
-                    {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} />}
-                    {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} />}
-                    {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
+                <div
+                  className={` flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50 ${
+                    open ? 'flex' : 'hidden'
+                  }`}
+                >
+                  <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
+                    <a
+                      onMouseOver={() => setMenu(MegaMenuItem.CONSULT)}
+                      className={`text-sm mb-2 cursor-pointer flex items-center  ${
+                        menu === MegaMenuItem.CONSULT ? 'bg-slate-50' : 'bg-white'
+                      } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                    >
+                      مشاوره آنلاین پزشکی
+                    </a>
+                    <a
+                      onMouseOver={() => setMenu(MegaMenuItem.SPECIALTY)}
+                      className={`text-sm mb-2 cursor-pointer flex items-center  ${
+                        menu === MegaMenuItem.SPECIALTY ? 'bg-slate-50' : 'bg-white'
+                      } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                    >
+                      تخصص ها
+                    </a>
+                    <a
+                      onMouseOver={() => setMenu(MegaMenuItem.ARTICLE)}
+                      className={`text-sm mb-2 cursor-pointer flex items-center  ${
+                        menu === MegaMenuItem.ARTICLE ? 'bg-slate-50' : 'bg-white'
+                      } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                    >
+                      مجله سلامتی
+                    </a>
                   </div>
-                ) : null}
+
+                  {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} />}
+                  {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} />}
+                  {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
+                </div>
               </li>
               <SubMenu title="برای بیماران" menuItem={withUserMenu} />
               <SubMenu
@@ -108,7 +111,7 @@ const Header = () => {
           <SubMenu title={<UserCircle width="32" height="32" />} menuItem={menuItems} />
         </div>
       </header>
-      <MobileNavbar />
+      <MobileNavbar menuItems={menuItems} />
     </>
   );
 };
