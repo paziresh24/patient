@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import 'leaflet/dist/leaflet.css';
-import marker from './marker.png';
-import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useEffect } from 'react';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import marker from './marker.png';
 
 interface GetCenterProps {
   lanLng: [number, number];
@@ -59,13 +59,13 @@ interface MapProps {
 const Map = ({ lat = 0, lng = 0, sendPosition, zoom = 20 }: MapProps) => {
   return (
     <MapContainer
-      className="h-full w-full relative flex flex-col justify-center items-center"
+      className="h-full w-full relative flex flex-col justify-center items-center z-0"
       center={[35.71709406629546, 51.360106784450196]}
       zoom={zoom}
       scrollWheelZoom
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <img src={marker.src} alt="" className="absolute z-infinity transition-all" />
+      <img src={marker.src} alt="" className="absolute z-[400] transition-all" />
       <GetCenter sendPosition={sendPosition} lanLng={[lat, lng]} zoom={zoom} />
     </MapContainer>
   );

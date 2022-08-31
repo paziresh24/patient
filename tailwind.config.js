@@ -1,12 +1,16 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [''],
+      },
       colors: {
-        primary: '#0077DB',
+        primary: '#3861fb',
         gray: '#F8FAFB',
-        secondary: '#0077DB',
+        secondary: '#3861fb',
         brand: '#3F3F79',
       },
       boxShadow: {
