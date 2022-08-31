@@ -1,4 +1,6 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
+import Logo from '@/common/components/atom/logo';
+import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import UserCircle from '@/common/components/icons/userCircle';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
@@ -65,29 +67,11 @@ const MobileNavbar = ({ menuItems }: MobileNavbarProps) => {
   return (
     <header ref={ref} className="text-slate-700 bg-white text-sm z-50 px-4  border border-slate-200 block md:hidden">
       <div className="max-w-screen-xl mx-auto relative  flex items-center justify-between p-2 ">
-        <div onClick={() => setOpen(true)}>
-          <svg
-            data-v-88a7ab22=""
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            className="toggle menu-toggler"
-          >
-            <title data-v-88a7ab22="">icon</title>{' '}
-            <path
-              data-v-88a7ab22=""
-              d="M4 7H20M4 12H20M4 17H20"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
+        <div className="flex flex-row items-center gap-2" onClick={() => setOpen(true)}>
+          <HumbuggerMenu />
+          <Logo fontSize="sm" width={32} height={32} />
         </div>
-        <SubMenu title={<UserCircle width="32" height="32" />} menuItem={menuItems} />
-
+        <SubMenu title={<UserCircle width="32" height="32" />} menuItem={menuItems} hasIcon={false} />
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} className={`${open ? 'block' : 'hidden'}`} />
       </div>
     </header>
