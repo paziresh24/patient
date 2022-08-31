@@ -1,8 +1,12 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [''],
+      },
       colors: {
         primary: '#3861fb',
         gray: '#F8FAFB',
