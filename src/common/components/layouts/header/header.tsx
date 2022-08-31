@@ -63,13 +63,6 @@ const Header = () => {
                   <div className="flex flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50">
                     <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
                       <a
-                        className=" text-sm mb-2 cursor-pointer flex items-center  bg-white border-0 rounded text-slate-700 h-8 outline-none py-0 px-2 text-center "
-                        onClick={() => setOpen(false)}
-                      >
-                        <ChevronIcon dir="right" className="ml-3" />
-                        بازگشت
-                      </a>
-                      <a
                         onMouseOver={() => setMenu(MegaMenuItem.CONSULT)}
                         className={`text-sm mb-2 cursor-pointer flex items-center  ${
                           menu === MegaMenuItem.CONSULT ? 'bg-slate-50' : 'bg-white'
