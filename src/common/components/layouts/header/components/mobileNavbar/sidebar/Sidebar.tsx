@@ -32,8 +32,8 @@ const Sidebar = ({ menus, closeSidebar, className }: SidebarProps) => {
           return <SidebarNav key={menu.id} menu={menu} />;
         })}
       </ul>
-      <div className="absolute bottom-3 left-2/4 -translate-x-1/2">
-        <Logo fontSize="lg" />
+      <div className="absolute bottom-7 left-2/4 -translate-x-1/2 ">
+        <Logo fontSize="sm" width={42} height={42} />
       </div>
     </div>
   );
