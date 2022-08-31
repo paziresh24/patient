@@ -15,7 +15,7 @@ const SidebarItem = ({ title, url, sub_menu, className }: SidebarItemProps) => {
   return (
     <>
       {sub_menu ? (
-        <ul className={`font-normal mb-3 overflow-y-scroll ${className}`}>
+        <ul className={`font-semibold mb-3 overflow-y-scroll ${className}`}>
           <li className="max-h-96 overflow-auto border-b border-slate-100">
             <div className="relative">
               <span onClick={() => setOpen(!open)} className="bg-white  py-6 px-3 text-sm flex items-center justify-between">
