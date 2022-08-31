@@ -12,6 +12,8 @@ interface LoginFormProps {
 export const LoginForm = ({ title, postLogin }: LoginFormProps) => {
   const [step, setStep] = useState<StepLoginForm>('mobile_number');
   const [mobileNumberValue, setMobileNumberValue] = useState('');
+  const [retryGetPasswordNumber, setRetryGetPasswordNumber] = useState(0);
+
   return (
     <div className="flex flex-col justify-center h-full space-y-5">
       {step === 'mobile_number' && (
@@ -23,6 +25,8 @@ export const LoginForm = ({ title, postLogin }: LoginFormProps) => {
           setMobileNumberValue={setMobileNumberValue}
           mobileNumberValue={mobileNumberValue}
           postLogin={postLogin}
+          setRetryGetPasswordNumber={setRetryGetPasswordNumber}
+          retryGetPasswordNumber={retryGetPasswordNumber}
         />
       )}
     </div>

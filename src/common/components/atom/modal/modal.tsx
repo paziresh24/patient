@@ -38,7 +38,7 @@ export const Modal = (props: ModalProps) => {
             <CloseIcon color="#000" onClick={handleClose} />
           </div>
         )}
-        <div className={clsx('p-4 pt-0 overflow-auto', [bodyClassName])}>{children}</div>
+        <div className={clsx('p-6 pt-0 overflow-auto', [bodyClassName])}>{children}</div>
       </div>
     </div>,
     document.body,

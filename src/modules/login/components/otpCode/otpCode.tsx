@@ -1,8 +1,10 @@
 import { useLogin } from '@/common/apis/services/auth/login';
+import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
+import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import axios from 'axios';
-import { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import PinInput from 'react-pin-input';
 import { toast } from 'react-toastify';
 import { StepLoginForm } from '../../views/loginForm';
@@ -13,19 +15,16 @@ interface OtpCodeProps {
   mobileNumberValue: string;
   setMobileNumberValue: Dispatch<SetStateAction<string>>;
   postLogin?: () => void;
+  setRetryGetPasswordNumber: Dispatch<SetStateAction<number>>;
+  retryGetPasswordNumber: number;
 }
 
 export const OtpCode = (props: OtpCodeProps) => {
-  const { mobileNumberValue, setStep, postLogin } = props;
+  const { mobileNumberValue, setStep, postLogin, retryGetPasswordNumber, setRetryGetPasswordNumber } = props;
   const login = useLogin();
+  const resetPassword = useResetPassword();
   const [password, setPassword] = useState('');
-  const [timeTarget, setTimeTarget] = useState(0);
-
-  useLayoutEffect(() => {
-    const date = new Date();
-    date.setMinutes(new Date().getMinutes() + 2);
-    setTimeTarget(date.getTime() / 1000);
-  }, []);
+  const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
 
   const handleLogin = async (password: string) => {
     try {
@@ -46,12 +45,40 @@ export const OtpCode = (props: OtpCodeProps) => {
     }
   };
 
+  const handleReset = async () => {
+    if (!shouldShowResetButton) return;
+    setShouldShowResetButton(false);
+    const { data: resetPasswordRes } = await resetPassword.mutateAsync({
+      cell: +mobileNumberValue,
+      number_reset_password: retryGetPasswordNumber,
+    });
+    setRetryGetPasswordNumber(prev => ++prev);
+    if (resetPasswordRes.status === 1) {
+      return;
+    }
+    if (resetPasswordRes.status === 39) {
+      toast.error(resetPasswordRes.message);
+      return setStep('otp_code');
+    }
+    toast.error(resetPasswordRes.message);
+  };
+
+  useEffect(() => {
+    console.log(shouldShowResetButton);
+  }, [shouldShowResetButton]);
+
   return (
     <div className="flex flex-col space-y-2">
       <div className="relative">
         <LoginTitleBar title="کد تایید" description={`لطفا کد ارسال شده به شماره ${mobileNumberValue} را وارد نمایید.`} />
-        <button className="absolute left-0 top-0 bg-slate-100 px-5 py-1 rounded-md">
-          <Timer target={timeTarget} className="!text-slate-500 font-medium" />
+        <button className="absolute left-0 top-0 bg-slate-100 px-5 py-1 rounded-md" onClick={handleReset}>
+          {shouldShowResetButton ? (
+            <Text fontWeight="semiBold" fontSize="sm">
+              {retryGetPasswordNumber >= 3 ? 'تماس صوتی' : 'ارسال مجدد'}
+            </Text>
+          ) : (
+            <Timer target={120} defaultTime="01:59" ended={() => setShouldShowResetButton(true)} className="!text-slate-500 font-medium" />
+          )}
         </button>
       </div>
       <PinInput

@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { HTMLAttributes } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 import Loading from '../loading';
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
         The content of the button.
     */
