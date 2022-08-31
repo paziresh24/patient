@@ -1,28 +1,18 @@
-import { useLoginModalContext } from '@/modules/login/context/modalLogin';
+import Footer from '@/common/components/layouts/footer';
+import Header from '@/common/components/layouts/header';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
 const Home: NextPage = () => {
-  const { openLoginModal } = useLoginModalContext();
   return (
     <div>
       <Head>
         <title>Patient</title>
       </Head>
-
+      <Header />
       <main>*</main>
-      <button
-        onClick={() =>
-          openLoginModal({
-            state: true,
-            postLogin() {
-              console.log('test');
-            },
-          })
-        }
-      >
-        login
-      </button>
+
+      <Footer />
     </div>
   );
 };

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "اپارات پذیرش 24",
+    "src": "/image/footer/aparat.png",
+    "url": "https://www.aparat.com/paziresh24/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  },
+  {
+    "id": 2,
+    "title": "لینکدین پذیرش 24",
+    "src": "/image/footer/linkedin.png",
+    "url": "https://www.linkedin.com/company/paziresh24/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  },
+  {
+    "id": 3,
+    "title": "تلگرام پذیرش 24",
+    "src": "/image/footer/telegram.png",
+    "url": "https://t.me/paziresh24/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  },
+  {
+    "id": 4,
+    "title": "فیس بوک پذیرش 24",
+    "src": "/image/footer/facebook.png",
+    "url": "https://www.facebook.com/paziresh24com/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  },
+  {
+    "id": 5,
+    "title": " توییتر پذیرش 24",
+    "src": "/image/footer/twitter.png",
+    "url": "https://twitter.com/paziresh24/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  },
+  {
+    "id": 6,
+    "title": " اینستاگرام پذیرش 24",
+    "src": "/image/footer/instagram.png",
+    "url": "https://www.instagram.com/paziresh24/",
+    "target": "_blank",
+    "rel": "noopener noreferrer nofollow"
+  }
+]

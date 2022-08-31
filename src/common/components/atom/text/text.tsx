@@ -1,11 +1,15 @@
 import clsx from 'clsx';
 
-interface TextProps {
+type Text0wnProps<E extends React.ElementType> = {
   children: React.ReactNode;
   className?: string;
   fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
   fontWeight?: 'thin' | 'extraLight' | 'light' | 'normal' | 'medium' | 'semiBold' | 'bold' | 'extraBold' | 'black';
-}
+  align?: 'center' | 'left' | 'right' | 'justify' | 'start' | 'end';
+  as?: E;
+};
+
+type TextProps<E extends React.ElementType> = Text0wnProps<E> & Omit<React.ComponentProps<E>, keyof Text0wnProps<E>>;
 
 const textStyles = {
   size: {
@@ -34,20 +38,37 @@ const textStyles = {
     extraBold: 'font-extrabold',
     black: 'font-black',
   },
+  align: {
+    center: 'text-center',
+    start: 'text-start',
+    end: 'text-end',
+    left: 'text-left',
+    right: 'text-right',
+    justify: 'text-justify',
+  },
 };
 
-export const Text: React.FC<TextProps> = props => {
-  const { fontSize, fontWeight, className, children, ...rest } = props;
+export const Text = <E extends React.ElementType = 'span'>({
+  align,
+  children,
+  as,
+  className,
+  fontSize,
+  fontWeight,
+  ...rest
+}: TextProps<E>) => {
+  const Component = as || 'span';
   return (
-    <span
+    <Component
       className={clsx(className, {
         [textStyles.size[fontSize!]]: fontSize,
         [textStyles.weight[fontWeight!]]: fontWeight,
+        [textStyles.align[align!]]: align,
       })}
       {...rest}
     >
       {children}
-    </span>
+    </Component>
   );
 };
 
