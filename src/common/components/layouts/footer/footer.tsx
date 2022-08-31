@@ -16,7 +16,7 @@ const Footer = () => {
           <div className="col-span-12 md:col-span-5">
             <div className="flex flex-col justify-center gap-2">
               <div className="flex flex-row gap-3 items-center justify-center md:justify-start">
-                <Logo />
+                <Logo fontSize="2xl" />
               </div>
               <div className="flex flex-col justify-center md:justify-start ">
                 <Text as="p" className="mb-6  text-center md:text-start " fontWeight="medium" fontSize="sm">
@@ -28,7 +28,7 @@ const Footer = () => {
                   return (
                     <li key={social.id}>
                       <a href={social.url} rel={social.rel} target={social.target} title={social.title}>
-                        <Image src={social.src} alt={social.title} width={30} height={30} />
+                        <Image src={social.src} alt={social.title} width={30} height={32} />
                       </a>
                     </li>
                   );

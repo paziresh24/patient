@@ -65,7 +65,7 @@ const MobileNavbar = ({ menuItems }: MobileNavbarProps) => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <header ref={ref} className="text-slate-700 bg-white text-sm z-50 px-4  border border-slate-200 block md:hidden">
+    <div ref={ref} className="text-sm block">
       <div className="max-w-screen-xl mx-auto relative  flex items-center justify-between p-2 ">
         <div className="flex flex-row items-center gap-2" onClick={() => setOpen(true)}>
           <HumbuggerMenu />
@@ -74,7 +74,7 @@ const MobileNavbar = ({ menuItems }: MobileNavbarProps) => {
         <SubMenu title={<UserCircle width="32" height="32" />} menuItem={menuItems} hasIcon={false} />
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} className={`${open ? 'block' : 'hidden'}`} />
       </div>
-    </header>
+    </div>
   );
 };
 

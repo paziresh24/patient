@@ -13,7 +13,7 @@ const AccordingMenu: React.FC<AccordingMenuProps> = props => {
   const { title, items } = props;
   const [open, setOpen] = useState(false);
   return (
-    <div className="bg-slate-50 cursor-pointer p-4 rounded-lg  " onClick={() => setOpen(!open)}>
+    <div className="bg-slate-100 cursor-pointer p-4 rounded-lg" onClick={() => setOpen(!open)}>
       <div className="flex justify-between items-center">
         <Text as="h3" fontSize="sm" fontWeight="medium">
           {title}

@@ -14,11 +14,15 @@ type Item = {
 const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);
+  const [isEnded, setIsEnded] = useState(false);
 
   useEffect(() => {
-    ref.current?.scrollTo({
-      left: -((ref.current?.clientWidth ?? 0) * (page - 1)),
-    });
+    if (ref.current) {
+      ref.current?.scrollTo({
+        left: -((ref.current?.clientWidth ?? 0) * (page - 1)),
+      });
+      setIsEnded(1 === Math.ceil(ref.current?.scrollWidth / ((ref.current?.clientWidth ?? 0) * page)));
+    }
   }, [page]);
 
   return (
@@ -33,7 +37,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
           <ChevronIcon dir="right" />
         </button>
       )}
-      <div ref={ref} className="flex h-full cursor-pointer flex-col flex-wrap ml-8 overflow-hidden scroll-smooth w-full relative p-4">
+      <div ref={ref} className="flex h-full flex-col flex-wrap ml-8 overflow-hidden scroll-smooth w-full relative p-4">
         {items.map((menu, index) => {
           return (
             <div key={index}>
@@ -58,7 +62,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
           );
         })}
       </div>
-      {
+      {!isEnded && (
         <button
           className="absolute left-5 bg-white shadow-lg  border border-slate-50 rounded-full w-10 h-10 flex items-center justify-center text-white"
           onClick={() => {
@@ -67,7 +71,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
         >
           <ChevronIcon dir="left" />
         </button>
-      }
+      )}
     </div>
   );
 };

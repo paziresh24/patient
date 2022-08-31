@@ -20,11 +20,11 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
     setOpen(false);
   });
   return (
-    <li ref={ref} className="relative  flex items-center" onClick={() => setOpen(!open)}>
-      <span className="inline-block text-center cursor-pointer p-3 text-sm md:p-6 ">{title}</span>
+    <li ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
+      <span className="inline-block text-center cursor-pointer p-3 text-sm md:p-6 font-medium">{title}</span>
       {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
       <ul
-        className={`absolute  left-[50%] ml-10 min-w-full text-slate-700 font-medium whitespace-nowrap z-50 py-3 px-0 overflow-auto bg-white border border-slate-300 rounded-2xl max-w-xs w-max  top-16 -translate-x-1/2 md:ml-0 ${
+        className={`absolute shadow-md left-[50%] ml-10 min-w-full text-slate-700 font-medium whitespace-nowrap z-50 py-3 px-2 overflow-auto bg-white border border-slate-300 rounded-2xl max-w-xs w-max  top-16 -translate-x-1/2 md:ml-0 ${
           open ? 'block' : 'hidden'
         }`}
       >
