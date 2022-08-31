@@ -9,7 +9,7 @@ interface AccordingMenuProps {
     link: string;
   }>;
 }
-export const AccordingMenu: React.FC<AccordingMenuProps> = props => {
+const AccordingMenu: React.FC<AccordingMenuProps> = props => {
   const { title, items } = props;
   const [open, setOpen] = useState(false);
   return (
@@ -21,7 +21,7 @@ export const AccordingMenu: React.FC<AccordingMenuProps> = props => {
           </Text>
           <ChevronIcon dir={open ? 'top' : 'bottom'} />
         </div>
-        {open ? (
+        {open && (
           <ul className="pr-1 text-sm  mt-2 select-none">
             {items.map((link, index) => {
               return (
@@ -33,7 +33,7 @@ export const AccordingMenu: React.FC<AccordingMenuProps> = props => {
               );
             })}
           </ul>
-        ) : null}
+        )}
       </div>
     </div>
   );
