@@ -1,6 +1,6 @@
+import { splunkInstance } from '@/common/services/splunk';
 import axios from 'axios';
 import getConfig from 'next/config';
-import { splunkInstance } from '@/common/services/splunk';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
 
@@ -24,7 +24,7 @@ paziresh24AppClient.interceptors.response.use(
         return paziresh24AppClient(originalRequest);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          splunkInstance.sendEvent({
+          splunkInstance().sendEvent({
             group: 'patient-app',
             type: 'error-refresh-token',
             event: {

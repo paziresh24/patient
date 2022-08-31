@@ -1,6 +1,8 @@
+import clsx from 'clsx';
+import { HTMLAttributes } from 'react';
 import Loading from '../loading';
 
-interface ButtonProps {
+interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   /**
         The content of the button.
     */
@@ -10,7 +12,7 @@ interface ButtonProps {
         values: primary, secondary
         @default primary
     */
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'text';
   /**
    * The size of the button.
    * values: sm, md, lg
@@ -42,12 +44,19 @@ interface ButtonProps {
    * @default false
    */
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const buttonStyles = {
   variant: {
-    primary: 'bg-primary border border-primary text-white',
-    secondary: 'border border-primary text-primary',
+    primary: 'bg-primary border border-primary text-white disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-400',
+    secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400',
+    text: 'text-primary disabled:text-slate-400',
+  },
+  loading: {
+    primary: 'fill-slate-500',
+    secondary: 'fill-slate-400',
+    text: 'fill-slate-500',
   },
   size: {
     sm: 'px-3 h-10 text-sm',
@@ -58,10 +67,12 @@ const buttonStyles = {
     error: {
       primary: 'bg-red-500 border-red-50 text-white',
       secondary: 'border-red-500 text-red-500',
+      text: 'text-red-500',
     },
     simple: {
       primary: '',
       secondary: '',
+      text: '',
     },
   },
   block: 'w-full',
@@ -78,16 +89,22 @@ export const Button: React.FC<ButtonProps> = props => {
     icon,
     className,
     loading = false,
+    disabled = false,
     ...rest
   } = props;
 
   return (
     <button
-      className={`
-            flex items-center justify-center rounded-md font-bold ${buttonStyles.variant[variant]} ${buttonStyles.size[size]} ${
-        buttonStyles.theme[theme]?.[variant]
-      } ${block ? buttonStyles['block'] : ''} ${className ? className : ''}`}
+      className={clsx(
+        'flex items-center justify-center rounded-lg font-bold',
+        buttonStyles.variant[variant],
+        buttonStyles.size[size],
+        buttonStyles.theme[theme][variant],
+        { [buttonStyles['block']]: block, [buttonStyles['loading'][variant]]: loading },
+        className,
+      )}
       onClick={onClick}
+      disabled={loading || disabled}
       {...rest}
     >
       {!loading && (
@@ -96,7 +113,7 @@ export const Button: React.FC<ButtonProps> = props => {
           {children}
         </>
       )}
-      {loading && <Loading color="#fff" />}
+      {loading && <Loading className="fill-inherit" />}
     </button>
   );
 };

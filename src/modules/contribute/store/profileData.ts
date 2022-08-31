@@ -15,6 +15,7 @@ type ProfileData = {
 export type Center = {
   id?: string;
   name?: string;
+  server_id?: string;
   address?: string;
   center_type?: number;
   tell_array?: string[];

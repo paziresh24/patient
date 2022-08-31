@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import Button from '@mui/lab/LoadingButton';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import Text from '@/components/atom/text';
 
+import Button from '@/common/components/atom/button';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import doctor from '@/modules/contribute/images/doctor.svg';
 import heart from '@/modules/contribute/images/heart.svg';
@@ -72,7 +72,7 @@ const Home = () => {
         </div>
 
         <div className="md:max-w-md fixed bottom-0 w-full p-5">
-          <Button fullWidth variant="contained" onClick={handleNextPage} loading={isLoading}>
+          <Button block variant="primary" onClick={handleNextPage} loading={isLoading}>
             متوجه شدم
           </Button>
         </div>

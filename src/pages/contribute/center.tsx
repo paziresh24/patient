@@ -1,154 +1,78 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Button from '@mui/lab/LoadingButton';
-import { TextFieldProps } from '@mui/material/TextField';
+import { getCookie } from 'cookies-next';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
+import Autocomplete from '@/common/components/atom/autocomplete';
+import Button from '@/common/components/atom/button';
+import Skeleton from '@/common/components/atom/skeleton';
+import TextField from '@/common/components/atom/textField';
 import { splunkInstance } from '@/common/services/splunk';
-import Modal from '@/components/atom/modal';
 import TopBar from '@/components/layouts/appBar';
 
-import { CenterInfoData, EditCenterInfo } from '@/modules/contribute/components/editCenterInfo';
-import { PhoneCenter, phoneData } from '@/modules/contribute/components/editPhoneCenter';
-import { formFiledType, useCreateForm } from '@/modules/contribute/hooks/useCreateForm';
+import { AddressSection } from '@/modules/contribute/components/centerSections/address';
+import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
+import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
-import { centerForm } from '@/modules/contribute/schemas/contributeForm/centerForm';
-import centerType from '@/modules/contribute/schemas/contributeForm/centerType';
+import centerTypeOptions from '@/modules/contribute/schemas/centerTypeOptions';
 import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserDataStore } from '@/modules/contribute/store/userData';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
-  const { Form, handleSubmit, addField, setDefaultValue } = useCreateForm(centerForm);
-  const [addressModal, setAddressModal] = useState(false);
-  const [addPhoneModal, setAddPhoneModal] = useState(false);
-  const [userEntredAddressCenter, setUserEntredAddressCenter] = useState<CenterInfoData>({});
   const profileData = useProfileDataStore(state => state.data);
   const userData = useUserDataStore(state => state.user);
   const [selectedCenter, setSelectedCenter] = useState<Center>();
+  const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
+  const [addresses, setAddresses] = useState<CenterInfoData[]>([]);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
-
-  useEffect(() => {
-    setIsButtonLoading(false);
-  }, []);
+  const [centerType, setCenterType] = useState('');
+  const [centerName, setCenterName] = useState('');
 
   useEffect(() => {
     if (!isLoading && profileData && router.query?.center_id) {
       const center = profileData.centers?.find(center => center.id === router.query?.center_id);
       setSelectedCenter(center);
-      setDefaultValue({
-        center_name: center?.name,
-        current_address: center?.address,
-        phone_number: center?.tell_array?.[0],
-        center_type: center?.center_type === 1 ? centerType[0] : centerType[1],
-      });
-      if (center?.tell_array && center?.tell_array?.length > 1) {
-        center?.tell_array.forEach((phoneNumber, index) => {
-          return (
-            index !== 0 &&
-            addField({
-              sectionKey: 'phoneSection',
-              item: {
-                key: `phone_number`,
-                component: (props: TextFieldProps) =>
-                  formFiledType.textField({
-                    ...props,
-                    sx: {
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#e6ebfa',
-                      },
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#e6ebfa',
-                      },
-                    },
-                  }),
-                type: 'textField',
-                deleteble: true,
-              },
-              defaultValue: phoneNumber,
-            })
-          );
-        });
-      }
+      setPhoneNumbers(center?.tell_array ?? []);
+      setCenterName(center?.name ?? '');
+      setCenterType(center?.center_type === 1 ? centerTypeOptions[0].label : centerTypeOptions[1].label);
+      setAddresses([
+        {
+          address: center?.address,
+          city: center?.city,
+          province: center?.province,
+          lat: center?.map?.lat,
+          lng: center?.map?.lon,
+        },
+      ]);
     }
   }, [isLoading, profileData, router.query]);
 
-  const addAddress = (data: CenterInfoData) => {
-    setAddressModal(false);
-    setUserEntredAddressCenter(data);
-    addField({
-      sectionKey: 'addressSection',
-      item: {
-        key: 'userEntredAddress',
-        component: (props: TextFieldProps) =>
-          formFiledType.textField({
-            ...props,
-            multiline: true,
-            sx: {
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#dbf3ec',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#BDF0E0',
-              },
-            },
-          }),
-        type: 'textField',
-        deleteble: true,
-      },
-      defaultValue: data.address,
-    });
-  };
-
-  const addPhoneNumber = (phoneNumber: phoneData) => {
-    if (!phoneNumber) return;
-    setAddPhoneModal(false);
-    addField({
-      sectionKey: 'phoneSection',
-      item: {
-        key: 'phone_number',
-        component: (props: TextFieldProps) =>
-          formFiledType.textField({
-            ...props,
-            sx: {
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#dbf3ec',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#BDF0E0',
-              },
-            },
-          }),
-        type: 'textField',
-        deleteble: true,
-      },
-      defaultValue: phoneNumber,
-    });
-  };
-
-  const onSubmit = (data: any) => {
+  const onSubmit = () => {
     setIsButtonLoading(true);
     const dataEvent = {
-      ...data,
-      current_address: data?.current_address ?? null,
-      phone_number: data?.phone_number ?? null,
-      center_type: data.center_type.label,
-      userEntredAddressCenter: {
-        ...userEntredAddressCenter,
-        city: userEntredAddressCenter.city?.label,
-        province: userEntredAddressCenter.province?.label,
+      center_type: centerType,
+      center_name: centerName,
+      addresses,
+      phone_numbers: phoneNumbers,
+      center: {
+        id: selectedCenter?.id,
+        server_id: selectedCenter?.server_id,
       },
-      user_id: userData.user_id,
+      user: {
+        user_name: userData.username,
+        terminal_id: getCookie('terminal_id'),
+      },
     };
-    splunkInstance.sendEvent({
+    splunkInstance().sendEvent({
       group: 'contribute crowdsourcing',
       type: 'contribute doctor profile request edit',
-      event: { ...dataEvent },
+      event: { data: dataEvent },
     });
-    router.push({
+    router.replace({
       pathname: '/contribute/thank-you',
       query: { ...router.query },
     });
@@ -161,35 +85,81 @@ const Home: NextPage = () => {
       </Head>
 
       <TopBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
-      <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28">
-        <Form
-          actionExtend={{
-            addressSection: () => setAddressModal(true),
-            phoneSection: () => setAddPhoneModal(true),
-          }}
-        />
+      <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28 space-y-4">
+        {selectedCenter?.center_type ? (
+          <>
+            <Autocomplete
+              label="نوع مرکز درمانی"
+              options={centerTypeOptions}
+              size="small"
+              defaultValue={centerType}
+              onChange={value => setCenterType(value.label)}
+              className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
+            />
+            <TextField
+              label="نام مرکز"
+              size="small"
+              defaultValue={selectedCenter?.name}
+              onChange={e => setCenterName(e.target.value)}
+              value={centerName}
+              className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
+            />
+            <hr className="border-slate-200" />
+            <AddressSection
+              addresses={addresses}
+              setAddresses={setAddresses}
+              defaultAddress={{
+                address: selectedCenter?.address,
+                city: selectedCenter?.city,
+                province: selectedCenter?.province,
+                lat: selectedCenter?.map?.lat,
+                lng: selectedCenter?.map?.lon,
+              }}
+            />
+            <hr className="border-slate-200" />
+            <PhoneNumberSection phoneNumbers={phoneNumbers} setPhoneNumbers={setPhoneNumbers} />
+            <hr className="border-slate-200" />
+          </>
+        ) : (
+          <FormLoading />
+        )}
+
         <div className="bg-white md:bg-transparent fixed md:static bottom-0 right-0 w-full p-4 md:px-0 shadow-lg md:shadow-none">
-          <Button fullWidth variant="contained" onClick={handleSubmit(onSubmit)} loading={isButtonLoading}>
+          <Button variant="primary" className="w-full" loading={isButtonLoading} onClick={onSubmit}>
             ثبت
           </Button>
         </div>
       </main>
-      <Modal isOpen={addressModal} onClose={setAddressModal}>
-        <EditCenterInfo
-          onSubmit={addAddress}
-          onCancel={() => setAddressModal(false)}
-          defaultValues={{
-            province: { label: selectedCenter?.province },
-            city: { label: selectedCenter?.city },
-            lat: selectedCenter?.map?.lat,
-            lng: selectedCenter?.map?.lon,
-          }}
-        />
-      </Modal>
-      <Modal isOpen={addPhoneModal} onClose={setAddPhoneModal}>
-        <PhoneCenter onSubmit={addPhoneNumber} onCancel={() => setAddPhoneModal(false)} />
-      </Modal>
     </div>
+  );
+};
+
+const FormLoading = () => {
+  return (
+    <>
+      <Skeleton w="6rem" h="1rem" rounded="full" />
+      <Skeleton w="100%" h="3rem" rounded="lg" />
+      <Skeleton w="6rem" h="1rem" rounded="full" />
+      <Skeleton w="100%" h="3rem" rounded="lg" />
+      <hr className="border-slate-200" />
+      <Skeleton w="6rem" h="1rem" rounded="full" />
+      <div className="flex space-s-2">
+        <Skeleton w="100%" h="3rem" rounded="lg" />
+        <Skeleton w="3.5rem" h="3rem" rounded="lg" />
+      </div>
+      <Skeleton w="8rem" h="3rem" rounded="lg" />
+      <hr className="border-slate-200" />
+      <Skeleton w="6rem" h="1rem" rounded="full" />
+      <div className="flex space-s-2">
+        <Skeleton w="100%" h="3rem" rounded="lg" />
+        <Skeleton w="3.5rem" h="3rem" rounded="lg" />
+      </div>
+      <div className="flex space-s-2">
+        <Skeleton w="100%" h="3rem" rounded="lg" />
+        <Skeleton w="3.5rem" h="3rem" rounded="lg" />
+      </div>
+      <Skeleton w="8rem" h="3rem" rounded="lg" />
+    </>
   );
 };
 
