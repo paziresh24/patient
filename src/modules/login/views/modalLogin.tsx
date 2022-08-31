@@ -1,5 +1,5 @@
 import Modal from '@/common/components/atom/modal';
-import { useLoginModalContext } from '../context/loginModal';
+import { useLoginModalContext } from '../context/modalLogin';
 import LoginForm from './loginForm';
 
 export const ModalLogin = () => {
@@ -18,6 +18,7 @@ export const ModalLogin = () => {
       <div className="pt-5">
         <LoginForm
           title={loginModalState.title}
+          description={loginModalState.description}
           postLogin={() => {
             openLoginModal(prev => ({ ...prev, state: false }));
             loginModalState.postLogin && loginModalState.postLogin();

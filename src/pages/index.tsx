@@ -1,4 +1,4 @@
-import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import { useLoginModalContext } from '@/modules/login/context/modalLogin';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 

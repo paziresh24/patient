@@ -10,13 +10,14 @@ import LoginTitleBar from '../titleBar';
 
 interface MobileNumberProps {
   title?: string;
+  description?: string;
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
   setMobileNumberValue: Dispatch<SetStateAction<string>>;
 }
 
 export const MobileNumber = (props: MobileNumberProps) => {
-  const { mobileNumberValue, setMobileNumberValue, setStep, title } = props;
+  const { mobileNumberValue, setMobileNumberValue, setStep, title, description } = props;
   const register = useRegister();
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
@@ -48,7 +49,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   return (
     <form className="flex flex-col space-y-5" onSubmit={handleRegister}>
-      <LoginTitleBar title="ورود/ثبت نام" description={title ?? 'لطفا شماره موبايل خود را وارد کنيد'} />
+      <LoginTitleBar title={title ?? 'ورود/ثبت نام'} description={description ?? 'لطفا شماره موبايل خود را وارد کنيد'} />
       <TextField
         label="شماره موبایل"
         onChange={e =>

@@ -3,6 +3,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from 'r
 interface State {
   state: boolean;
   title?: string;
+  description?: string;
   postLogin?: () => void;
 }
 
@@ -26,6 +27,7 @@ const LoginModalProvider = ({ children }: any) => {
   const [loginModalState, openLoginModal] = useState<State>({
     state: false,
     title: '',
+    description: '',
   });
 
   return <LoginModalContext.Provider value={{ loginModalState, openLoginModal }}>{children}</LoginModalContext.Provider>;

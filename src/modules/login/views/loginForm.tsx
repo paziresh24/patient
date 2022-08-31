@@ -6,10 +6,11 @@ export type StepLoginForm = 'mobile_number' | 'otp_code';
 
 interface LoginFormProps {
   title?: string;
+  description?: string;
   postLogin?: () => void;
 }
 
-export const LoginForm = ({ title, postLogin }: LoginFormProps) => {
+export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => {
   const [step, setStep] = useState<StepLoginForm>('mobile_number');
   const [mobileNumberValue, setMobileNumberValue] = useState('');
   const [retryGetPasswordNumber, setRetryGetPasswordNumber] = useState(0);
@@ -17,7 +18,13 @@ export const LoginForm = ({ title, postLogin }: LoginFormProps) => {
   return (
     <div className="flex flex-col justify-center h-full space-y-5">
       {step === 'mobile_number' && (
-        <MobileNumber title={title} setStep={setStep} setMobileNumberValue={setMobileNumberValue} mobileNumberValue={mobileNumberValue} />
+        <MobileNumber
+          title={title}
+          description={description}
+          setStep={setStep}
+          setMobileNumberValue={setMobileNumberValue}
+          mobileNumberValue={mobileNumberValue}
+        />
       )}
       {step === 'otp_code' && (
         <OtpCode

@@ -1,4 +1,4 @@
-import { LoginModalProvider } from '@/modules/login/context/loginModal';
+import { LoginModalProvider } from '@/modules/login/context/modalLogin';
 import { ModalLogin } from '@/modules/login/views/modalLogin';
 import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
