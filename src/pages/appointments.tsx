@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
-import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import Text from '@/components/atom/text';
-import Skeleton from '@/components/atom/skeleton';
+import { useGetBooks } from '@/common/apis/services/booking/getBooks';
+import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import EmptyState from '@/components/atom/emptyState';
 import Loading from '@/components/atom/loading';
+import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
-import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
-import { useGetBooks } from '@/common/apis/services/booking/getBooks';
+import Text from '@/components/atom/text';
 
+import { useLoginModalContext } from '@/modules/login/context/modalLogin';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
-import { CenterType } from '@/modules/myTurn/types/centerType';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
+import axios from 'axios';
 
 interface AppointmentsProps {
   isWebView: boolean;
@@ -27,6 +28,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
+  const { openLoginModal } = useLoginModalContext();
 
   const getBooks = useGetBooks({
     page,
@@ -42,8 +44,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
   }, [inView]);
 
   useEffect(() => {
-    getBooks.remove();
-    getBooks.refetch();
+    regetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, type]);
 
@@ -52,8 +53,19 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
       setIsLoading(false);
       getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
     }
+    if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401) {
+      openLoginModal({
+        state: true,
+        postLogin: () => regetchBook(),
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getBooks.status]);
+
+  const regetchBook = () => {
+    getBooks.remove();
+    getBooks.refetch();
+  };
 
   const handleChangeType = (type: BookType) => {
     setPage(1);
@@ -147,15 +159,6 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
       </div>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const isWebView: boolean = context.query?.isWebView ? true : false;
-  return {
-    props: {
-      isWebView,
-    },
-  };
 };
 
 export default Appointments;

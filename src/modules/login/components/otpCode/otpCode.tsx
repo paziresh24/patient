@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import axios from 'axios';
+import { setCookie } from 'cookies-next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import PinInput from 'react-pin-input';
 import { toast } from 'react-toastify';
@@ -32,6 +33,8 @@ export const OtpCode = (props: OtpCodeProps) => {
         username: +mobileNumberValue,
         password,
       });
+
+      setCookie('token', data.token);
 
       if (data.status === 1) {
         postLogin && postLogin();
