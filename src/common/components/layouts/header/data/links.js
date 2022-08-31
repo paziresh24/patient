@@ -339,7 +339,7 @@ export const withUserMenu = [
   },
   {
     title: 'نوبت های من ',
-    link: 'https://www.paziresh24.com/panel/user/#my-turn',
+    link: '/appointments',
   },
   {
     title: 'اپلیکیشن پذیرش 24',

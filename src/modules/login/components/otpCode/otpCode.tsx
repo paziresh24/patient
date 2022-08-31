@@ -3,11 +3,13 @@ import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
+import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import PinInput from 'react-pin-input';
 import { toast } from 'react-toastify';
+import { useUserInfoStore } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 
@@ -24,6 +26,7 @@ export const OtpCode = (props: OtpCodeProps) => {
   const { mobileNumberValue, setStep, postLogin, retryGetPasswordNumber, setRetryGetPasswordNumber } = props;
   const login = useLogin();
   const resetPassword = useResetPassword();
+  const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const [password, setPassword] = useState('');
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
 
@@ -34,7 +37,19 @@ export const OtpCode = (props: OtpCodeProps) => {
         password,
       });
 
-      setCookie('token', data.token);
+      setCookie('token', data.token, {
+        path: '/',
+        maxAge: dayToSecond(60),
+      });
+      setCookie('certificate', data.certificate, {
+        path: '/',
+        maxAge: dayToSecond(60),
+      });
+
+      setUserInfo({
+        is_doctor: data.is_doctor,
+        ...data.result,
+      });
 
       if (data.status === 1) {
         postLogin && postLogin();

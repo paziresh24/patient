@@ -2,18 +2,23 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
+import { useLoginModalContext } from '@/modules/login/context/modalLogin';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+import Button from '../../atom/button';
+import Skeleton from '../../atom/skeleton';
+import Text from '../../atom/text';
 import Calender from '../../icons/calender';
 import Headphone from '../../icons/headphone';
 import Logout from '../../icons/logout';
-import UserCircle from '../../icons/userCircle';
+import { UserCircle } from '../../icons/userCircle';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
 import MobileNavbar from './components/mobileNavbar';
 import SubMenu from './components/subMenu';
-
 import { articleMenus, consultMenus, withUserMenu } from './data/links';
+
 enum MegaMenuItem {
   CONSULT = 'consult',
   SPECIALTY = 'specialty',
@@ -21,6 +26,12 @@ enum MegaMenuItem {
 }
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const { openLoginModal } = useLoginModalContext();
+  const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
+    isLogin: state.isLogin,
+    userInfo: state.info,
+    pending: state.pending,
+  }));
   const { isDesktop } = useResponsive();
   const [menu, setMenu] = useState(MegaMenuItem.SPECIALTY);
   const [expertiseItems, setExpertiseItems] = useState([]);
@@ -29,6 +40,7 @@ const Header = () => {
     {
       id: 0,
       title: 'نوبت های من',
+      link: '/appointments',
       icon: <Calender />,
     },
     {
@@ -52,11 +64,18 @@ const Header = () => {
       setExpertiseItems(menuItemExpertise.data.data.result);
     }
   }, [menuItemExpertise.status]);
+
+  const handleLogin = () => {
+    openLoginModal({
+      state: true,
+    });
+  };
+
   return (
     <>
-      <header className="bg-white text-slate-700 text-lg z-50 px-4 border-b border-solid border-slate-100">
+      <header className="bg-white text-slate-700 text-lg z-50 px-4 h-20 flex items-center border-b border-solid border-slate-100">
         {isDesktop && (
-          <div className="max-w-screen-xl mx-auto relative items-center justify-between flex">
+          <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between flex ">
             <Link href="/">
               <a>
                 <Logo width={40} height={40} />
@@ -116,7 +135,25 @@ const Header = () => {
                 />
               </ul>
             </nav>
-            <SubMenu title={<UserCircle width="32" height="32" />} menuItem={menuItems} />
+
+            {pending && <Skeleton w="8rem" h="2.5rem" rounded="md" />}
+            {!pending &&
+              (isLogin ? (
+                <SubMenu
+                  title={
+                    <>
+                      <UserCircle width="30" height="30" />
+                      <Text fontWeight="bold">{userInfo.name + ' ' + userInfo.family}</Text>
+                    </>
+                  }
+                  menuItem={menuItems}
+                  hasIcon
+                />
+              ) : (
+                <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
+                  ورود / ثبت‌نام
+                </Button>
+              ))}
           </div>
         )}
         {!isDesktop && <MobileNavbar menuItems={menuItems} />}

@@ -7,11 +7,11 @@ import Text from '@/components/atom/text';
 import Button from '@/common/components/atom/button';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
-import { useUserDataStore } from '@/modules/contribute/store/userData';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 const ThankYouPage = () => {
   const router = useRouter();
-  const userData = useUserDataStore(state => state.user);
+  const userData = useUserInfoStore(state => state.info);
   const { isLoading } = useGetData();
 
   const handleBackToMenu = () => {

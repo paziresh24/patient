@@ -5,6 +5,7 @@ import TagManager from 'react-gtm-module';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EntryPoint } from './entryPoint';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,10 +22,15 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       gtmId: 'GTM-P5RPLDP',
     });
   }, []);
+
   return (
     <LoginModalProvider>
       <QueryClientProvider client={queryClient}>
-        {children} <ModalLogin />
+        <EntryPoint>
+          <>
+            {children} <ModalLogin />
+          </>
+        </EntryPoint>
       </QueryClientProvider>
       <ToastContainer
         position="top-center"

@@ -1,15 +1,16 @@
-import { useGetUser } from '@/common/apis/services/auth/me';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { useLoginModalContext } from '@/modules/login/context/modalLogin';
-import axios from 'axios';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useProfileDataStore } from '../store/profileData';
-import { useUserDataStore } from '../store/userData';
 
 export const useGetData = () => {
   const router = useRouter();
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const pendingLogin = useUserInfoStore(state => state.pending);
   const { openLoginModal } = useLoginModalContext();
+
   const getProfileData = useGetProfileData(
     {
       slug: router.query?.slug?.toString() ?? '/',
@@ -18,24 +19,21 @@ export const useGetData = () => {
       enabled: !!router.query?.slug,
     },
   );
-  const getUserData = useGetUser();
   const setProfileData = useProfileDataStore(state => state.setData);
-  const setUserData = useUserDataStore(state => state.setUser);
+
+  useEffect(() => {
+    if (!pendingLogin && !isLogin) {
+      openLoginModal({
+        state: true,
+      });
+    }
+  }, [isLogin, pendingLogin]);
 
   useEffect(() => {
     if (getProfileData.isSuccess) {
       setProfileData(getProfileData.data?.data?.data);
     }
-    if (getUserData.isSuccess) {
-      setUserData(getUserData.data.data.data);
-    }
-    if (getUserData.isError && axios.isAxiosError(getUserData.error) && getUserData.error?.response?.status === 500) {
-      openLoginModal({
-        state: true,
-        postLogin: () => getUserData.refetch(),
-      });
-    }
-  }, [getProfileData.status, getUserData.status]);
+  }, [getProfileData.status]);
 
-  return { isLoading: !getProfileData.isSuccess || !getUserData.isSuccess };
+  return { isLoading: !getProfileData.isSuccess || pendingLogin || !isLogin };
 };

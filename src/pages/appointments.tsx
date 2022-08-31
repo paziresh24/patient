@@ -10,6 +10,7 @@ import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 import Text from '@/components/atom/text';
 
+import Header from '@/common/components/layouts/header';
 import { useLoginModalContext } from '@/modules/login/context/modalLogin';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
@@ -80,6 +81,8 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
         <title>نوبت های من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header />
+
       {isWebView && (
         <div className="h-14 w-full flex items-center px-5 bg-white z-10 sticky border-b border-slate-200 border-solid">
           <Text fontWeight="bold">نوبت های من</Text>
