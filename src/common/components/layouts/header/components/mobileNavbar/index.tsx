@@ -43,7 +43,7 @@ const MobileNavbar = ({ menuItems }: MobileNavbarProps) => {
       items: [
         {
           title: 'ورود / ثبت نام پزشکان',
-          url: 'https://dr.paziresh24.com/auth?utm_source=home&amp;utm_medium=click&amp;utm_campaign=login-register-auth',
+          link: 'https://dr.paziresh24.com/auth?utm_source=home&amp;utm_medium=click&amp;utm_campaign=login-register-auth',
         },
       ],
     },
