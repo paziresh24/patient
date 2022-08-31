@@ -1,8 +1,8 @@
 import { useGetPagingBook } from '@/common/apis/services/booking/getPagingBook';
-import { Text } from '@/components/atom/text/text';
-import { useEffect } from 'react';
-import Loading from '@/components/atom/loading';
 import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
+import Loading from '@/components/atom/loading';
+import Text from '@/components/atom/text';
+import { useEffect } from 'react';
 
 interface QueueProps {
   bookId: string;
