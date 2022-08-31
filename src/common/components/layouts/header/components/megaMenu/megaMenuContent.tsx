@@ -16,19 +16,11 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // if (page !== 1)
     ref.current?.scrollTo({
       left: -((ref.current?.clientWidth ?? 0) * (page - 1)),
     });
-    // }
   }, [page]);
-  // useEffect(() => {
 
-  //   // if (ref.current?.scrollWidth) {
-  //   // ref.current.scrollWidth = ref.current?.clientWidth + 100;
-  //   // }
-  //   console.log();
-  // }, [ref.current]);
   return (
     <div className="w-full flex items-center relative">
       {page !== 1 && (
