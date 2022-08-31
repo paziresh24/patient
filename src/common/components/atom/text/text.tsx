@@ -48,7 +48,15 @@ const textStyles = {
   },
 };
 
-const Text = <E extends React.ElementType = 'span'>({ align, children, as, className, fontSize, fontWeight, ...rest }: TextProps<E>) => {
+export const Text = <E extends React.ElementType = 'span'>({
+  align,
+  children,
+  as,
+  className,
+  fontSize,
+  fontWeight,
+  ...rest
+}: TextProps<E>) => {
   const Component = as || 'span';
   return (
     <Component
