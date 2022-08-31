@@ -20,10 +20,9 @@ const SidebarNav = ({ menu }: SidebarNavProps) => {
           {menu.title}
           <ChevronIcon dir={`${open ? 'bottom' : 'left'}`} />
         </span>
-        {open &&
-          menu.items.map((item, index) => {
-            return <SidebarItem key={index} title={item.title} url={item.title} />;
-          })}
+        {menu.items.map((item, index) => {
+          return <SidebarItem key={index} title={item.title} url={item.title} className={`${open ? 'block' : 'hidden'}`} />;
+        })}
       </div>
     </li>
   );
