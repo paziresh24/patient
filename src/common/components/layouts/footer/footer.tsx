@@ -1,6 +1,7 @@
+import AccordingMenu from '@/components/atom/accordingMenu/';
+import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
 import Image from 'next/image';
-import AccordingMenu from '../../atom/accordingMenu/accordingMenu';
 import { footerForDoctors, footerForUsers, footerPaziresh24 } from './data/link';
 import socials from './data/social.json';
 
@@ -12,10 +13,7 @@ const Footer = () => {
           <div className="col-span-12 md:col-span-5">
             <div className="flex flex-col justify-center gap-2">
               <div className="flex flex-row gap-3 items-center justify-center md:justify-start">
-                <Image src="/image/logo.svg" alt="پذیرش 24" width={60} height={60} />
-                <Text className="text-brand" fontSize="xl" fontWeight="black">
-                  پذیرش 24
-                </Text>
+                <Logo />
               </div>
               <div className="flex flex-col justify-center md:justify-start ">
                 <Text as="p" className="mb-6  text-center md:text-start " fontWeight="medium" fontSize="sm">
