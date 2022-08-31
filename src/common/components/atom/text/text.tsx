@@ -1,7 +1,8 @@
 import clsx from 'clsx';
+import { DOMAttributes } from 'react';
 
-interface TextProps {
-  children: React.ReactNode;
+interface TextProps extends DOMAttributes<HTMLSpanElement> {
+  children?: React.ReactNode;
   className?: string;
   fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
   fontWeight?: 'thin' | 'extraLight' | 'light' | 'normal' | 'medium' | 'semiBold' | 'bold' | 'extraBold' | 'black';

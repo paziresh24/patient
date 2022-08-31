@@ -1,0 +1,7 @@
+.wrapper em {
+  @apply text-secondary not-italic;
+}
+
+.title span {
+  @apply !text-sm;
+}
