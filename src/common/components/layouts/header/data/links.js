@@ -358,3 +358,10 @@ export const withUserMenu = [
     link: 'https://www.paziresh24.com/blog/',
   },
 ];
+
+export const withDoctorMenu = [
+  {
+    title: 'ورود / ثبت نام پزشکان ',
+    link: 'https://dr.paziresh24.com/auth?utm_source=home&utm_medium=click&utm_campaign=login-register-auth',
+  },
+];

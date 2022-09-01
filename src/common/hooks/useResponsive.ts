@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 export const useResponsive = () => {
@@ -14,7 +14,7 @@ export const useResponsive = () => {
     minWidth: 992,
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') setIsClient(true);
   }, []);
 

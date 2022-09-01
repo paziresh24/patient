@@ -11,6 +11,7 @@ type Item = {
   link: string;
   sub_menu?: Item[];
 };
+
 const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);

@@ -8,7 +8,6 @@ import EmptyState from '@/components/atom/emptyState';
 import Loading from '@/components/atom/loading';
 import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
-import Text from '@/components/atom/text';
 
 import Header from '@/common/components/layouts/header';
 import { useLoginModalContext } from '@/modules/login/context/modalLogin';
@@ -17,6 +16,7 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 interface AppointmentsProps {
   isWebView: boolean;
@@ -25,6 +25,7 @@ interface AppointmentsProps {
 type BookType = 'book' | 'book_request';
 
 export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
+  const { query } = useRouter();
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -81,13 +82,7 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
         <title>نوبت های من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Header />
-
-      {isWebView && (
-        <div className="h-14 w-full flex items-center px-5 bg-white z-10 sticky border-b border-slate-200 border-solid">
-          <Text fontWeight="bold">نوبت های من</Text>
-        </div>
-      )}
+      {!query.isWebView && <Header />}
 
       <div className="w-full lg:flex justify-center bg-white shadow-card md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
         <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto lg:w-2/5">
