@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import Text from '@/common/components/atom/text';
 import getConfig from 'next/config';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Item } from '../suggestionCentent';
 const { publicRuntimeConfig } = getConfig();
@@ -18,7 +18,7 @@ export const SliderSection = (props: SliderSectionProps) => {
           <a>
             <div className="flex items-center shadow-md cursor-pointer  bg-white border border-solid border-slate-300 p-2 rounded-lg w-80 space-s-3">
               <div>
-                <Image
+                <img
                   src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`}
                   alt=""
                   className="rounded-full min-w-[4rem]"

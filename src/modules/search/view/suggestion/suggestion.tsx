@@ -30,7 +30,7 @@ export const Suggestion = () => {
   }, [searchSuggestion.status]);
 
   return (
-    <div className="w-full md:w-3/6 relative" ref={ref}>
+    <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <div
         className={clsx('w-full bg-white rounded-full border border-solid border-slate-200 p-1 flex items-center transition-shadow', {
           'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': shouldOpen,

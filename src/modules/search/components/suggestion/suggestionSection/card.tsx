@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import Text from '@/common/components/atom/text';
 import clsx from 'clsx';
 import getConfig from 'next/config';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Item } from '../suggestionCentent';
 import style from './section.module.css';
@@ -20,7 +20,7 @@ export const CardSection = (props: CardSectionProps) => {
           <a>
             <div className={clsx('flex items-center cursor-pointer p-3 rounded-lg space-s-3', style.wrapper)}>
               <div>
-                <Image src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`} alt="" className="rounded-full" width={50} height={50} />
+                <img src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`} alt="" className="rounded-full" width={50} height={50} />
               </div>
               <div className="flex flex-col">
                 <Text className={style.title} fontWeight="medium" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
