@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import AccordingMenu from '@/components/atom/accordingMenu/';
 import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
-import Image from 'next/image';
 import { footerForDoctors, footerForUsers, footerPaziresh24 } from './data/link';
-import socials from './data/social.json';
+import { socials } from './data/social';
 import About from './logo/about';
 import AboutMe from './logo/about-me';
 import AboutUs from './logo/about-us';
@@ -28,7 +28,7 @@ const Footer = () => {
                   return (
                     <li key={social.id}>
                       <a href={social.url} rel={social.rel} target={social.target} title={social.title}>
-                        <Image src={social.src} alt={social.title} width={30} height={32} />
+                        <img src={social.image.src} alt={social.title} width={30} height={32} />
                       </a>
                     </li>
                   );
