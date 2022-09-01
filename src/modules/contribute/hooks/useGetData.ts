@@ -1,5 +1,5 @@
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
-import { useLoginModalContext } from '@/modules/login/context/modalLogin';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

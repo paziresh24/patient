@@ -1,5 +1,5 @@
-import { LoginModalProvider } from '@/modules/login/context/modalLogin';
-import { ModalLogin } from '@/modules/login/views/modalLogin';
+import { LoginModalProvider } from '@/modules/login/context/loginModal';
+import { LoginModal } from '@/modules/login/views/loginModal';
 import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -28,7 +28,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <EntryPoint>
           <>
-            {children} <ModalLogin />
+            {children} <LoginModal />
           </>
         </EntryPoint>
       </QueryClientProvider>

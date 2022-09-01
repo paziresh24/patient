@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { useGetBooks } from '@/common/apis/services/booking/getBooks';
@@ -9,23 +9,18 @@ import Loading from '@/components/atom/loading';
 import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 
-import Header from '@/common/components/layouts/header';
-import { useLoginModalContext } from '@/modules/login/context/modalLogin';
+import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import axios from 'axios';
-import { useRouter } from 'next/router';
-
-interface AppointmentsProps {
-  isWebView: boolean;
-}
+import { NextPageWithLayout } from './_app';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
-  const { query } = useRouter();
+export const Appointments: NextPageWithLayout = () => {
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -82,7 +77,6 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
         <title>نوبت های من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {!query.isWebView && <Header />}
 
       <div className="w-full lg:flex justify-center bg-white shadow-card md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
         <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto lg:w-2/5">
@@ -157,6 +151,10 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isWebView }) => {
       </div>
     </>
   );
+};
+
+Appointments.getLayout = function getLayout(page: ReactElement) {
+  return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
 };
 
 export default Appointments;

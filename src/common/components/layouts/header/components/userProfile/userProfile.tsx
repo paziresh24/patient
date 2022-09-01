@@ -5,7 +5,7 @@ import Calender from '@/common/components/icons/calender';
 import Headphone from '@/common/components/icons/headphone';
 import Logout from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
-import { useLoginModalContext } from '@/modules/login/context/modalLogin';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import SubMenu from '../subMenu';
 

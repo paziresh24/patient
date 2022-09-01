@@ -1,8 +1,8 @@
 import Modal from '@/common/components/atom/modal';
-import { useLoginModalContext } from '../context/modalLogin';
+import { useLoginModalContext } from '../context/loginModal';
 import LoginForm from './loginForm';
 
-export const ModalLogin = () => {
+export const LoginModal = () => {
   const { loginModalState, openLoginModal } = useLoginModalContext();
 
   return (
