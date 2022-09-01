@@ -12,13 +12,15 @@ export const paziresh24AppClient = axios.create({
 
 export const clinicClient = axios.create({
   baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}`,
+  withCredentials: true,
 });
 
 paziresh24AppClient.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     if (getCookie('token'))
-      config.headers = {
-        Authorization: `Bearer ${getCookie('token')}`,
+      config.params = {
+        ...config.params,
+        token: `${getCookie('token')}`,
       };
     return config;
   },
