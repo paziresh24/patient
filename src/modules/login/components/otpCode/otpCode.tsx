@@ -6,7 +6,7 @@ import Timer from '@/common/components/atom/timer';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import PinInput from 'react-pin-input';
 import { toast } from 'react-toastify';
 import { useUserInfoStore } from '../../store/userInfo';
@@ -80,10 +80,6 @@ export const OtpCode = (props: OtpCodeProps) => {
     }
     toast.error(resetPasswordRes.message);
   };
-
-  useEffect(() => {
-    console.log(shouldShowResetButton);
-  }, [shouldShowResetButton]);
 
   return (
     <div className="flex flex-col space-y-2">
