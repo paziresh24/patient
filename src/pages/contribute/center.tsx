@@ -18,13 +18,13 @@ import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import centerTypeOptions from '@/modules/contribute/schemas/centerTypeOptions';
 import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
-import { useUserDataStore } from '@/modules/contribute/store/userData';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
   const profileData = useProfileDataStore(state => state.data);
-  const userData = useUserDataStore(state => state.user);
+  const userData = useUserInfoStore(state => state.info);
   const [selectedCenter, setSelectedCenter] = useState<Center>();
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
   const [addresses, setAddresses] = useState<CenterInfoData[]>([]);

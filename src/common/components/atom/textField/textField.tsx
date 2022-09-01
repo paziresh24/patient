@@ -26,18 +26,22 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
 
   return (
     <div
-      className={clsx('flex flex-col space-y-3 w-full border-slate-300', {
-        'text-red-600 border-red-500': error,
+      className={clsx('flex flex-col space-y-3 w-full border-slate-300 outline-primary', {
+        'text-red-600 border-red-200 !outline-red-200 ': error,
       })}
     >
       {label && (
-        <Text fontSize="sm" fontWeight="medium">
+        <Text fontSize="sm" fontWeight="medium" className="text-black">
           {label}
         </Text>
       )}
       <Component
         ref={ref}
-        className={clsx('rounded-lg border border-solid border-inherit outline-primary w-full', inputSize[size], className)}
+        className={clsx(
+          'rounded-lg border-2 border-solid border-inherit outline-inherit w-full transition-all',
+          inputSize[size],
+          className,
+        )}
         {...inputProps}
       />
       {helperText && <span className="text-sm">{helperText}</span>}

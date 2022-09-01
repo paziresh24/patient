@@ -1,8 +1,11 @@
+import { LoginModalProvider } from '@/modules/login/context/loginModal';
+import { LoginModal } from '@/modules/login/views/loginModal';
 import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EntryPoint } from './entryPoint';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,9 +22,16 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       gtmId: 'GTM-P5RPLDP',
     });
   }, []);
+
   return (
-    <>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <LoginModalProvider>
+      <QueryClientProvider client={queryClient}>
+        <EntryPoint>
+          <>
+            {children} <LoginModal />
+          </>
+        </EntryPoint>
+      </QueryClientProvider>
       <ToastContainer
         position="top-center"
         autoClose={3000}
@@ -34,7 +44,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         transition={Slide}
         hideProgressBar
       />
-    </>
+    </LoginModalProvider>
   );
 };
 

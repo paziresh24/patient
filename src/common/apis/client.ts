@@ -1,6 +1,7 @@
-import { splunkInstance } from '@/common/services/splunk';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
+import { getCookie } from 'cookies-next';
 import getConfig from 'next/config';
+import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
 
@@ -10,9 +11,21 @@ export const paziresh24AppClient = axios.create({
 });
 
 export const clinicClient = axios.create({
-  withCredentials: true,
   baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}`,
 });
+
+paziresh24AppClient.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
+    if (getCookie('token'))
+      config.headers = {
+        Authorization: `Bearer ${getCookie('token')}`,
+      };
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 paziresh24AppClient.interceptors.response.use(
   res => res,
@@ -32,7 +45,6 @@ paziresh24AppClient.interceptors.response.use(
             },
           });
         }
-        return window.location.replace(`${`${publicRuntimeConfig.CLINIC_BASE_URL}/signin/?url=${window.location.href}`}/auth`);
       }
     }
     return Promise.reject(error);
