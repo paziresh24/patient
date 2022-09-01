@@ -85,7 +85,7 @@ export const Appointments: NextPageWithLayout = () => {
         </Tabs>
       </div>
       <div className="flex flex-col">
-        <div className={`p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center`} data-testid="appointments-container">
+        <div className="p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center" data-testid="appointments-container">
           {isLoading && (
             <>
               <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />

@@ -43,7 +43,7 @@
 
 @font-face {
   font-family: 'iransansxv';
-  src: url('~/public/fonts/iransansxv.woff') format('woff-variations'), url('~/public/fonts/iransansxv.woff') format('woff');
+  src: url('../../public/fonts/iransansxv.woff') format('woff-variations'), url('../../public/fonts/iransansxv.woff') format('woff');
   font-weight: 100 900;
   font-display: fallback;
 }
@@ -52,63 +52,63 @@
   font-family: iransansx;
   font-style: normal;
   font-weight: 100;
-  src: url('~/public/fonts/IRANSansXFaNum-thin.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-thin.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 200;
-  src: url('~/public/fonts/IRANSansXFaNum-UltraLight.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-UltraLight.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 300;
-  src: url('~/public/fonts/IRANSansXFaNum-light.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-light.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 500;
-  src: url('~/public/fonts/IRANSansXFaNum-medium.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-medium.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 600;
-  src: url('~/public/fonts/IRANSansXFaNum-demibold.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-demibold.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 800;
-  src: url('~/public/fonts/IRANSansXFaNum-extrabold.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-extrabold.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: 900;
-  src: url('~/public/fonts/IRANSansXFaNum-black.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-black.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: bold;
-  src: url('~/public/fonts/IRANSansXFaNum-bold.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-bold.woff') format('woff');
 }
 
 @font-face {
   font-family: iransansx;
   font-style: normal;
   font-weight: normal;
-  src: url('~/public/fonts/IRANSansXFaNum-regular.woff') format('woff');
+  src: url('../../public/fonts/IRANSansXFaNum-regular.woff') format('woff');
 }
 
 * {

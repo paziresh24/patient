@@ -1,16 +1,12 @@
-import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import Text from '@/components/atom/text';
-
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Queue from '@/modules/myTurn/components/queue';
+import { ReactElement } from 'react';
+import { NextPageWithLayout } from './_app';
 
-interface AppointmentsProps {
-  isWebView: boolean;
-}
-
-export const QueuePage: React.FC<AppointmentsProps> = ({ isWebView }) => {
+export const QueuePage: NextPageWithLayout = () => {
   const { query } = useRouter();
   return (
     <>
@@ -18,13 +14,8 @@ export const QueuePage: React.FC<AppointmentsProps> = ({ isWebView }) => {
         <title>شماره نوبت من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="flex flex-col container mx-auto bg-white h-screen">
-        {isWebView && (
-          <div className="h-14 w-full flex items-center px-5 bg-white shadow-card fixed top-0 right-0 z-10">
-            <Text fontWeight="bold">شماره نوبت من</Text>
-          </div>
-        )}
-        <div className={`p-5 space-y-3 ${isWebView ? 'pt-20' : ''} w-full lg:w-2/4 self-center`}>
+      <div className="flex flex-col h-[80vh] lg:rounded-3xl lg:m-10 bg-white">
+        <div className="lg:p-5 space-y-3 w-full lg:w-3/12 self-center">
           <Queue bookId={query.book_id as string} />
         </div>
       </div>
@@ -32,13 +23,8 @@ export const QueuePage: React.FC<AppointmentsProps> = ({ isWebView }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const isWebView: boolean = context.query?.isWebView ? true : false;
-  return {
-    props: {
-      isWebView,
-    },
-  };
+QueuePage.getLayout = function getLayout(page: ReactElement) {
+  return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
 
 export default QueuePage;
