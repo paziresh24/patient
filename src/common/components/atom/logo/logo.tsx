@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import Text from '@/components/atom/text';
-import Image from 'next/image';
+import logoSvg from './logo.svg';
 
 interface LogoProps {
   width?: number;
@@ -9,9 +10,10 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = props => {
   const { width, height, fontSize } = props;
+
   return (
     <div className="flex items-center gap-2">
-      <Image src="/image/logo.svg" alt="پذیرش 24" width={width || 60} height={height || 60} />
+      <img src={logoSvg.src} alt="پذیرش 24" width={width || 60} height={height || 60} />
       <Text className="text-brand" fontSize={fontSize} fontWeight="black">
         پذیرش 24
       </Text>
