@@ -41,6 +41,14 @@ export const Suggestion = () => {
     if (searchSuggestion.isSuccess) setItems(searchSuggestion.data?.data ?? []);
   }, [searchSuggestion.status]);
 
+  useEffect(() => {
+    if (isOpenSuggestion && isMobile) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+  }, [isOpenSuggestion, isMobile]);
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar

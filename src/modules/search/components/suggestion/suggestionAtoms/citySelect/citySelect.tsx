@@ -35,19 +35,20 @@ export const CitySelect = (props: CitySelectProps) => {
   >([]);
 
   useEffect(() => {
+    setStepSelect('provinces');
     if (getCitiesAndProvince.isSuccess) {
       provincesData.current = getCitiesAndProvince.data.data.result.province;
       citiesData.current = getCitiesAndProvince.data.data.result.city;
     }
-  }, [getCitiesAndProvince.status]);
+  }, [getCitiesAndProvince.status, isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      setUserSearchInput('');
+    setUserSearchInput('');
+    if (isOpen && stepSelect === 'provinces') {
       setStepSelect('provinces');
       setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
     }
-  }, [isOpen]);
+  }, [isOpen, stepSelect]);
 
   const handleClickProvince = (provinceId: string) => {
     setStepSelect('cities');
@@ -104,6 +105,7 @@ export const CitySelect = (props: CitySelectProps) => {
             size="small"
             placeholder={`جستجو در ${stepSelect === 'provinces' ? 'استان ها' : 'شهر ها'}`}
             onChange={e => setUserSearchInput(e.target.value)}
+            value={userSearchInput}
           />
 
           <div className="flex flex-col overflow-auto h-full pb-32">
