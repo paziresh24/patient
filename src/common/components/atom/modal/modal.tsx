@@ -1,5 +1,7 @@
+import useResponsive from '@/common/hooks/useResponsive';
 import CloseIcon from '@/components/icons/close';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {
@@ -14,20 +16,48 @@ interface ModalProps {
 
 export const Modal = (props: ModalProps) => {
   const { title, isOpen, onClose, children, fullScreen, bodyClassName, noHeader = false } = props;
+  const { isMobile } = useResponsive();
 
   const handleClose = () => {
     onClose();
   };
 
+  const neutralizeBack = () => {
+    if (isMobile) {
+      window.history.pushState(null, '', window.location.href);
+      window.onpopstate = () => {
+        window.onpopstate = () => {
+          return;
+        };
+        document.body.classList.remove('overflow-hidden');
+        onClose(false);
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      neutralizeBack();
+      return document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+      if (isMobile) {
+        window.onpopstate = () => {
+          return;
+        };
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
   return createPortal(
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 z-50 pt-8 md:pt-20 flex items-end md:justify-center md:items-start bg-slate-800 bg-opacity-30"
+      className="fixed top-0 overflow-auto left-0 right-0 bottom-0 md:pb-14 z-infinity pt-8 md:pt-20 flex items-end md:justify-center md:items-start bg-slate-800 bg-opacity-30"
       onClick={handleClose}
     >
       <div
         className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:rounded-lg md:w-[28rem]', {
-          'h-full': fullScreen,
+          'h-full overflow-hidden': fullScreen,
         })}
         onClick={e => e.stopPropagation()}
       >
@@ -38,7 +68,7 @@ export const Modal = (props: ModalProps) => {
             <CloseIcon color="#000" onClick={handleClose} />
           </div>
         )}
-        <div className={clsx('p-6 pt-0 overflow-auto', [bodyClassName])}>{children}</div>
+        <div className={clsx('p-6 pt-0 h-full overflow-auto', bodyClassName)}>{children}</div>
       </div>
     </div>,
     document.body,

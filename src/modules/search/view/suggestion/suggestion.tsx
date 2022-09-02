@@ -1,29 +1,41 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
-import clsx from 'clsx';
+import useResponsive from '@/common/hooks/useResponsive';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import { SearchInput } from '../../components/suggestion/searchInput';
+import { SearchBar } from '../../components/suggestion/searchBar';
 import SuggestionCentent from '../../components/suggestion/suggestionCentent';
-import CitySelect from '../citySelect/citySelect';
+import { useSearchStore } from '../../store/search';
 
 export const Suggestion = () => {
-  const [shouldOpen, setShouldOpen] = useState(false);
-  const [userInput, setUserInput] = useState('');
-  const searchSuggestion = useSearchSuggestion({
-    query: userInput,
-  });
+  const [isOpenSuggestion, setIsShouldOpen] = useState(false);
+  const { isMobile } = useResponsive();
+  const userSearchValue = useSearchStore(state => state.userSearchValue);
+  const city = useSearchStore(state => state.city);
+  const searchSuggestion = useSearchSuggestion(
+    {
+      query: userSearchValue,
+      ...(city.id !== '-1' && { city_id: city.id }),
+    },
+    {
+      enabled: false,
+    },
+  );
   const [items, setItems] = useState([]);
   const ref = useRef<HTMLDivElement>(null);
-  useClickAway(ref, () => setShouldOpen(false));
+  useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
   const clickSerchInput = () => {
-    setShouldOpen(true);
+    setIsShouldOpen(true);
+  };
+
+  const clickBackButton = () => {
+    setIsShouldOpen(false);
   };
 
   useEffect(() => {
     searchSuggestion.remove();
     searchSuggestion.refetch();
-  }, [userInput]);
+  }, [userSearchValue, city]);
 
   useEffect(() => {
     if (searchSuggestion.isSuccess) setItems(searchSuggestion.data?.data ?? []);
@@ -31,21 +43,26 @@ export const Suggestion = () => {
 
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
-      <div
-        className={clsx('w-full bg-white rounded-full border border-solid border-slate-200 p-1 flex items-center transition-shadow', {
-          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': shouldOpen,
-          'hover:shadow-lg': !shouldOpen,
-        })}
-      >
-        <SearchInput
-          placeholder="نام بیماری، تخصص، پزشک، مرکز درمانی و ..."
-          onClick={clickSerchInput}
-          onChange={e => setUserInput(e.target.value)}
+      <SearchBar
+        isOpenSuggestion={isOpenSuggestion}
+        onClickSearchInput={clickSerchInput}
+        onClickBackButton={clickBackButton}
+        className={{
+          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
+          'hover:md:shadow-lg': !isOpenSuggestion,
+        }}
+      />
+      {isOpenSuggestion && (
+        <SuggestionCentent
+          searchInput={
+            isMobile ? (
+              <SearchBar isOpenSuggestion={isOpenSuggestion} onClickBackButton={clickBackButton} className="!border-primary" />
+            ) : undefined
+          }
+          items={items}
+          className="shadow-md"
         />
-        <hr className="border border-solid border-slate-200 h-7" />
-        <CitySelect />
-      </div>
-      {shouldOpen && <SuggestionCentent items={items} className="shadow-md" />}
+      )}
     </div>
   );
 };

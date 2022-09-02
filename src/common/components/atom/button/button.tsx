@@ -50,7 +50,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const buttonStyles = {
   variant: {
     primary: 'bg-primary border border-primary text-white disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-400',
-    secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400',
+    secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400 hover:bg-slate-100',
     text: 'text-primary disabled:text-slate-400',
   },
   loading: {
@@ -109,7 +109,7 @@ export const Button: React.FC<ButtonProps> = props => {
     >
       {!loading && (
         <>
-          {icon && <span className="flex items-center justify-center ml-2">{icon}</span>}
+          {icon && <span className="flex items-center justify-center ml-1">{icon}</span>}
           {children}
         </>
       )}

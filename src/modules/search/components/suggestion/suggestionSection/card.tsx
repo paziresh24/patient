@@ -14,17 +14,25 @@ interface CardSectionProps {
 export const CardSection = (props: CardSectionProps) => {
   const { items } = props;
   return (
-    <div>
+    <div className="p-۲">
       {items.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>
             <div className={clsx('flex items-center cursor-pointer p-3 rounded-lg space-s-3', style.wrapper)}>
               <div>
-                <img src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`} alt="" className="rounded-full" width={50} height={50} />
+                <img
+                  src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`}
+                  alt=""
+                  className="rounded-full w-12 min-w-[3rem]"
+                  width={48}
+                  height={48}
+                />
               </div>
               <div className="flex flex-col">
                 <Text className={style.title} fontWeight="medium" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
-                <Text fontSize="sm">{item.sub_title}</Text>
+                <Text fontSize="sm" className="line-clamp-1">
+                  {item.sub_title}
+                </Text>
               </div>
             </div>
           </a>

@@ -3,5 +3,5 @@
 }
 
 .title span {
-  @apply !text-sm;
+  @apply !text-xs !text-slate-400 !font-normal;
 }

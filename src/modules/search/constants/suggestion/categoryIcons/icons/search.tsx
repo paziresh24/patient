@@ -1,6 +1,6 @@
 export const SearchIcon = () => {
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="#000" xmlns="http://www.w3.org/2000/svg">
+    <svg width="25" height="25" viewBox="0 0 28 28" fill="#000" xmlns="http://www.w3.org/2000/svg">
       <title>icon</title>
       <rect x="0.0546875" y="0.502197" width="27" height="27" rx="10" fill="transparent" />
       <path

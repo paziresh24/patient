@@ -12,7 +12,7 @@ interface SliderSectionProps {
 export const SliderSection = (props: SliderSectionProps) => {
   const { items } = props;
   return (
-    <div className="flex p-3 pb-0 space-s-3 overflow-auto">
+    <div className="flex p-4 space-s-3 overflow-auto">
       {items.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>

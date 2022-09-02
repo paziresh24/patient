@@ -4,13 +4,14 @@ import { useQuery } from 'react-query';
 
 export interface Params {
   query: string;
+  city_id?: string;
 }
 
-export const Suggestion = ({ query }: Params) => {
+export const Suggestion = ({ query, city_id }: Params) => {
   return clinicClient.get(`/seapi/v1/suggestion`, {
     params: {
       q: query,
-      city_id: 30,
+      city_id,
     },
   });
 };

@@ -11,16 +11,16 @@ interface TreeSectionProps {
 export const TreeSection = (props: TreeSectionProps) => {
   const { items } = props;
   return (
-    <div className="pb-5">
-      {items.map(item => (
+    <div className="p-2">
+      {items.map((item, index) => (
         <div
-          key={item.position}
+          key={index}
           className={clsx(
-            'flex bg-white p-2 flex-col tree-section relative pr-9 before:content before:w-[1px] before:h-[calc(100%_-_55px)] before:right-[1.05rem] before:top-9  before:bg-slate-300 before:absolute ',
+            'flex bg-white p-2 flex-col tree-section relative pr-9 before:content before:w-[1px] before:h-[calc(100%_-_57px)] before:right-[1.05rem] before:top-9  before:bg-slate-300 before:absolute ',
             style.wrapper,
           )}
         >
-          <Link href={item.url ?? '#'} key={item.position}>
+          <Link href={item.url ?? '#'}>
             <a>
               {item.formatted_title && (
                 <Text
@@ -43,11 +43,10 @@ export const TreeSection = (props: TreeSectionProps) => {
             </a>
           </Link>
           <div className="flex flex-col space-y-3 mt-5">
-            {item.sub_items?.map(subItem => (
-              <Link href={subItem.url ?? '#'} key={item.position}>
+            {item.sub_items?.map((subItem, index) => (
+              <Link href={subItem.url ?? '#'} key={index}>
                 <a>
                   <Text
-                    key={subItem.id}
                     fontSize="sm"
                     fontWeight="medium"
                     className={clsx(

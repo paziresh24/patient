@@ -11,12 +11,12 @@ interface TextSectionProps {
 export const TextSection = (props: TextSectionProps) => {
   const { items } = props;
   return (
-    <div>
+    <div className="p-3">
       {items.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>
             <div className={clsx('flex bg-white p-2', style.wrapper)}>
-              <Text dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
+              <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
             </div>
           </a>
         </Link>
