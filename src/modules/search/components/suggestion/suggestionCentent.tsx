@@ -1,5 +1,7 @@
+import useResponsive from '@/common/hooks/useResponsive';
 import clsx from 'clsx';
-import { HTMLAttributes, ReactElement } from 'react';
+import { HTMLAttributes, ReactElement, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import CategoryBar from './suggestionAtoms/categoryBar';
 import CardSection from './suggestionSection/card';
 import SearchSection from './suggestionSection/search';
@@ -43,7 +45,13 @@ export type Item = {
 
 export const SuggestionCentent = (props: SuggestionCententProps) => {
   const { className, items, searchInput } = props;
-  return (
+  const { isMobile } = useResponsive();
+
+  const wrapper = (children: ReactNode, container: Element) => {
+    return isMobile ? createPortal(children, container) : children;
+  };
+
+  return wrapper(
     <div
       className={clsx(
         'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:h-96 md:top-16 w-full flex flex-col bg-white rounded-bl-xl rounded-br-xl',
@@ -69,7 +77,8 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
           </div>
         ))}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

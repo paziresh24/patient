@@ -1,6 +1,7 @@
+import { HTMLAttributes } from 'react';
 import Text from '../text';
 
-interface ChipsProps {
+interface ChipsProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
 }

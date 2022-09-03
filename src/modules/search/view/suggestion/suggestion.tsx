@@ -24,7 +24,7 @@ export const Suggestion = () => {
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
-  const clickSerchInput = () => {
+  const openSuggestionContent = () => {
     setIsShouldOpen(true);
   };
 
@@ -35,6 +35,9 @@ export const Suggestion = () => {
   useEffect(() => {
     searchSuggestion.remove();
     searchSuggestion.refetch();
+    if (userSearchValue) {
+      openSuggestionContent();
+    }
   }, [userSearchValue, city]);
 
   useEffect(() => {
@@ -53,7 +56,7 @@ export const Suggestion = () => {
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
         isOpenSuggestion={isOpenSuggestion}
-        onClickSearchInput={clickSerchInput}
+        onClickSearchInput={openSuggestionContent}
         onClickBackButton={clickBackButton}
         className={{
           'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
