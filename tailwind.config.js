@@ -19,6 +19,9 @@ module.exports = {
       zIndex: {
         infinity: '999',
       },
+      backgroundSize: {
+        85: '85rem',
+      },
     },
   },
   plugins: [require('@tailwindcss/line-clamp'), require('tailwindcss-rtl')],
