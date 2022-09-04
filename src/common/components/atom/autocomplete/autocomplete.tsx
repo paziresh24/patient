@@ -5,10 +5,11 @@ import ChevronIcon from '../../icons/chevron';
 import Text from '../text';
 import TextField, { TextFieldProps } from '../textField';
 
-export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'value'> {
+export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'value' | 'classNameWrapper'> {
   options: Option[];
   onChange?: (value: { target: { value: Option } }) => void;
   value?: Option;
+  classNameWrapper?: string;
 }
 
 type Option = {
@@ -16,9 +17,6 @@ type Option = {
   value: any;
 };
 
-type Ref = any;
-
-// eslint-disable-next-line react/display-name
 export const Autocomplete = (props: AutocompleteProps) => {
   const { options, onChange, value, classNameWrapper, ...inputProps } = props;
   const [activeSuggestion, setActiveSuggestion] = useState(0);
@@ -31,7 +29,6 @@ export const Autocomplete = (props: AutocompleteProps) => {
   useEffect(() => {
     if (value) {
       if (inputRef.current) inputRef.current.value = value.label ?? '';
-      onChange && onChange({ target: { value } });
     }
   }, [value]);
 
@@ -108,8 +105,14 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   return (
     <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
-      <div className="relative flex items-center w-full" onFocus={onClickInput} onClick={onClickInput} onKeyDown={onKeyDown}>
-        <TextField {...inputProps} className={clsx('cursor-pointer', inputProps.className)} ref={inputRef} readOnly />
+      <div className="relative flex items-center w-full" onKeyDown={onKeyDown}>
+        <TextField
+          {...inputProps}
+          onFocus={onClickInput}
+          className={clsx('cursor-pointer', inputProps.className)}
+          ref={inputRef}
+          readOnly
+        />
         <ChevronIcon
           dir={showSuggestions ? 'top' : 'bottom'}
           className={clsx('absolute', {

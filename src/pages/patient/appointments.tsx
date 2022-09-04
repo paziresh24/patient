@@ -80,7 +80,7 @@ export const Appointments: NextPageWithLayout = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <div className="flex sticky top-0 z-50 space-y-5 flex-col p-5  pb-0 bg-white">
+      <div className="flex sticky top-0 z-10 space-y-5 flex-col p-5 pb-0 bg-white">
         <Text fontWeight="black" fontSize="xl">
           نوبت های من
         </Text>
@@ -92,7 +92,7 @@ export const Appointments: NextPageWithLayout = () => {
         </div>
       </div>
 
-      <div className="flex flex-col p-5">
+      <div className="flex flex-col md:p-5">
         <div className="p-0 space-y-2 pt-3 w-full  self-center" data-testid="appointments-container">
           {isLoading && (
             <>

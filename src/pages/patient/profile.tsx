@@ -29,8 +29,11 @@ export const PatinetProfile: NextPageWithLayout = () => {
             FAMILY: userInfo.family,
             GENDER: userInfo.gender,
             NATIONAL_CODE: userInfo.national_code,
-            CITIES: userInfo.city_id,
-            PROVINCES: userInfo.province_id,
+            CITY: userInfo.city_id,
+            PROVINCE: userInfo.province_id,
+          }}
+          onSubmit={(data: any) => {
+            console.log(data);
           }}
         />
       </div>
