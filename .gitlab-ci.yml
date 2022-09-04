@@ -1,0 +1,95 @@
+#image : node:14.17.6
+
+stages:
+  - docker
+  - deploy
+
+variables:
+  STAGING_DOMAIN: sepehrsalamat.ir
+  PRODUCTION_DOMAIN: paziresh24.com
+  PROJECT_DOCKER_IMAGE_TAG: dockerhub.paziresh24.com/patient-app
+  ANSIBLE_HOST_KEY_CHECKING: 'false'
+  ANSIBLE_FORCE_COLOR: 'true'
+
+services:
+  - name: dockerhub.paziresh24.com/docker:dind
+    alias: docker
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+
+
+# build all branches pushes except master branch and merge requests
+.package install feature branches:
+  stage: install_packages
+  except:
+    - main
+    - merge_requests
+  script:
+    - yarn install --prefer-offline  --frozen-lockfile  --non-interactive
+
+build and push docker develop image:
+  stage: docker
+  image: dockerhub.paziresh24.com/docker:stable
+  only:
+    - develop
+  script:
+    - docker login $DOCKER_AUTH_URL -u $DOCKER_AUTH_USERNAME -p $DOCKER_AUTH_PASSWORD
+    - docker build
+      --build-arg BUILD_ARGUMENT_ENV=dev
+      --tag $PROJECT_DOCKER_IMAGE_TAG:develop
+      --cache-from $PROJECT_DOCKER_IMAGE_TAG:develop
+      .
+    - docker push $PROJECT_DOCKER_IMAGE_TAG:develop
+  tags:
+    - france-loc
+
+build and push docker production image:
+  stage: docker
+  image: dockerhub.paziresh24.com/docker:stable
+  only:
+    - main
+  script:
+    - docker login $DOCKER_AUTH_URL -u $DOCKER_AUTH_USERNAME -p $DOCKER_AUTH_PASSWORD
+    - docker build
+      --build-arg BUILD_ARGUMENT_ENV=prod
+      --tag $PROJECT_DOCKER_IMAGE_TAG:latest
+      --cache-from $PROJECT_DOCKER_IMAGE_TAG:latest
+      .
+    - docker push $PROJECT_DOCKER_IMAGE_TAG:latest
+  tags:
+    - france-loc
+
+
+
+deploy develop:
+  image: dockerhub.paziresh24.com/docker-ansible:latest
+  stage: deploy
+  only:
+    - develop
+  script:
+    - apk add --update bash openssh sshpass wget
+    - ansible-playbook ./ansible/playbook_develop.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+
+
+deploy staging:
+  image: dockerhub.paziresh24.com/docker-ansible:latest
+  stage: deploy
+  only:
+    - main
+  script:
+    - apk add --update bash openssh sshpass wget
+    - ansible-playbook ./ansible/playbook_staging.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+
+
+deploy production:
+  image: dockerhub.paziresh24.com/docker-ansible:latest
+  stage: deploy
+  when: manual
+  script:
+    - apk add --update bash openssh sshpass wget
+    - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+

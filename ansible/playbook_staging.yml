@@ -1,0 +1,45 @@
+---
+- name: Staging Patient Frontend
+  hosts: staging_server
+  
+  tasks:
+    - name: ensure required pip-packages are installed
+      pip:
+        name:
+          - docker>=1.8.0
+          - PyYAML>=3.11
+          - docker-compose>=1.7.0
+        state: present
+        executable: pip3
+
+    - name: Check is docker-compose installed
+      shell: command -v docker-compose >/dev/null 2>&1
+      register: is_docker_compose_install
+    - debug: msg="{{ is_docker_compose_install.rc }}" # it returns rc 1
+    - debug: var=is_docker_compose_install
+
+    - name: pull
+      shell: docker pull dockerhub.paziresh24.com/patient-app:latest
+
+
+#    - name: pull
+#      docker_compose:
+#        project_src: /var/www/clinic_docker
+#        files:
+#          - docker-compose.prod.yml
+#        pull: true
+
+
+    - name: down
+      docker_compose:
+        project_src: /var/www/clinic_docker
+        files:
+          - docker-compose.prod.yml
+        state: absent
+
+    - name: up
+      docker_compose:
+        project_src: /var/www/clinic_docker
+        files:
+          - docker-compose.prod.yml
+        state: present
