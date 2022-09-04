@@ -1,13 +1,14 @@
 import clsx from 'clsx';
-import { KeyboardEvent, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import ChevronIcon from '../../icons/chevron';
 import Text from '../text';
 import TextField, { TextFieldProps } from '../textField';
 
-export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange'> {
+export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'value'> {
   options: Option[];
-  onChange: (value: Option) => void;
+  onChange?: (value: { target: { value: Option } }) => void;
+  value?: Option;
 }
 
 type Option = {
@@ -15,14 +16,24 @@ type Option = {
   value: any;
 };
 
+type Ref = any;
+
+// eslint-disable-next-line react/display-name
 export const Autocomplete = (props: AutocompleteProps) => {
-  const { options, onChange, ...inputProps } = props;
+  const { options, onChange, value, classNameWrapper, ...inputProps } = props;
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState<Option[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const ref = useRef(null);
+  const wrapperRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      if (inputRef.current) inputRef.current.value = value.label ?? '';
+      onChange && onChange({ target: { value } });
+    }
+  }, [value]);
 
   const onClose = () => {
     if (showSuggestions) {
@@ -31,17 +42,18 @@ export const Autocomplete = (props: AutocompleteProps) => {
     }
   };
 
-  useClickAway(ref, onClose);
+  useClickAway(wrapperRef, onClose);
   let suggestionsListComponent;
 
   const handleSetInputValue = (option: Option) => {
     setActiveSuggestion(0);
     setShowSuggestions(false);
-    if (inputRef.current?.value) inputRef.current.value = option.label;
-    onChange && onChange(option);
+    if (inputRef.current) inputRef.current.value = option.label;
+    onChange && onChange({ target: { value: option } });
   };
 
   const onClickInput = () => {
+    if (showSuggestions) return onClose();
     const getFilteredSuggestions = options;
     setActiveSuggestion(0);
     setShowSuggestions(true);
@@ -76,7 +88,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
             return (
               <li
                 key={suggestion.value}
-                className={clsx('p-3', {
+                className={clsx('p-3 cursor-pointer', {
                   'bg-slate-100': index === activeSuggestion,
                 })}
                 onClick={() => onClick(suggestion)}
@@ -95,10 +107,16 @@ export const Autocomplete = (props: AutocompleteProps) => {
   }
 
   return (
-    <div className="relative" ref={ref}>
-      <div className="relative flex items-center w-full" onClick={onClickInput} onKeyDown={onKeyDown}>
-        <TextField {...inputProps} ref={inputRef} readOnly />
-        <ChevronIcon dir={showSuggestions ? 'top' : 'bottom'} className="absolute left-5 bottom-4" />
+    <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
+      <div className="relative flex items-center w-full" onFocus={onClickInput} onClick={onClickInput} onKeyDown={onKeyDown}>
+        <TextField {...inputProps} className={clsx('cursor-pointer', inputProps.className)} ref={inputRef} readOnly />
+        <ChevronIcon
+          dir={showSuggestions ? 'top' : 'bottom'}
+          className={clsx('absolute', {
+            'left-5 bottom-4': inputProps.size === 'small',
+            'left-6 bottom-6': inputProps.size !== 'small',
+          })}
+        />
       </div>
       {suggestionsListComponent}
     </div>

@@ -1,10 +1,10 @@
-import type { TurnProps } from './turnType';
 import Card from '@/components/atom/card';
-import { useState, useEffect } from 'react';
-import TurnHeader from './header';
+import { useEffect, useState } from 'react';
 import TurnBody from './body';
 import TurnFooter from './footer';
+import TurnHeader from './header';
 import { turnDetailsData } from './turnDetails';
+import type { TurnProps } from './turnType';
 
 export const Turn: React.FC<TurnProps> = props => {
   const { status, doctorInfo, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } = props;
@@ -28,7 +28,10 @@ export const Turn: React.FC<TurnProps> = props => {
   }, [turnDetails, status, centerType]);
 
   return (
-    <Card className="space-y-2 relative !rounded-none md:!rounded-lg" data-testid="turn-card">
+    <Card
+      className="space-y-2 md:shadow-none rounded-none md:rounded-lg md:border border-solid border-slate-200 relative"
+      data-testid="turn-card"
+    >
       <TurnHeader
         id={id}
         doctorInfo={doctorInfo}
