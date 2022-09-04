@@ -1,6 +1,6 @@
 import Footer from '@/common/components/layouts/footer';
 import Header from '@/common/components/layouts/header';
-import Promote from '@/common/components/layouts/header/components/promote';
+import Promote from '@/modules/home/components/promote';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 

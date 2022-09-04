@@ -1,7 +1,7 @@
 import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
-import promoteImage from './img/app-mockup.a6e7c2a.png';
+import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {
   return (
@@ -25,13 +25,14 @@ const Promote = () => {
                   سوپر اپلیکیشن پذیرش 24
                 </a>{' '}
                 به هزاران پزشک متخصص ایرانی دسترسی پیدا کنید و به راحتی{' '}
-                <a href="http://paziresh24.com/consult?refafname=website-homecta-moshavere-dlapp" title="مشاوره آنلاین" data-v-decae890="">
+                <a href="http://paziresh24.com/consult?refafname=website-homecta-moshavere-dlapp" title="مشاوره آنلاین">
                   مشاوره آنلاین
                 </a>
                 دریافت کنید یا در صورت تمایل نوبت حضوری آن پزشک را رزرو کنید
               </Text>
               <div className="flex flex-col gap-5 items-center justify-center">
                 <a
+                  href="https://www.paziresh24.com/app"
                   title="دانلود رایگان اپلیکیشن پذیرش24"
                   className="bg-slate-50  text-slate-700 text-sm rounded-2xl text-center border-none py-4 px-6 "
                 >

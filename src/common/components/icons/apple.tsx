@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const Apple = () => {
   return (
     <svg width="32px" height="32px" viewBox="0 0 256 315" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
@@ -11,4 +13,4 @@ const Apple = () => {
   );
 };
 
-export default Apple;
+export default memo(Apple);

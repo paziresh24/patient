@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const Android = () => {
   return (
     <svg
@@ -65,4 +67,4 @@ const Android = () => {
   );
 };
 
-export default Android;
+export default memo(Android);
