@@ -1,5 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { getCookie } from 'cookies-next';
+import axios from 'axios';
 import getConfig from 'next/config';
 import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
@@ -14,20 +13,6 @@ export const clinicClient = axios.create({
   baseURL: `${publicRuntimeConfig.CLINIC_BASE_URL}`,
   withCredentials: true,
 });
-
-paziresh24AppClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    if (getCookie('token'))
-      config.params = {
-        ...config.params,
-        token: `${getCookie('token')}`,
-      };
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  },
-);
 
 paziresh24AppClient.interceptors.response.use(
   res => res,

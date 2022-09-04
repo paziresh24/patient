@@ -4,7 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
   reactStrictMode: false,
-  basePath: isProduction ? '/patient' : '',
+  assetPrefix: isProduction ? '/patient' : '',
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,

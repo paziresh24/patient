@@ -12,4 +12,10 @@ const LoginPage = () => {
   );
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default LoginPage;
