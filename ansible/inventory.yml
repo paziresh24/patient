@@ -1,0 +1,20 @@
+all:
+  children:
+    staging_server:
+      hosts: 192.168.216.81
+      vars:
+        ansible_user: root
+        ansible_password: '{{ lookup("env", "STAGING_SERVER_PASSWORD") }}'
+    develop_server:
+      hosts: 192.168.216.83
+      vars:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3 
+        ansible_password: '{{ lookup("env", "DEVELOP_SERVER_PASSWORD") }}'
+    main_servers:
+      hosts:
+        192.168.216.35:
+      vars:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3 # remove this line for running install python3 playbook
+        ansible_password: '{{ lookup("env", "PRODUCTION_SERVER_PASSWORD") }}'
