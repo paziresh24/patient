@@ -26,7 +26,7 @@ cache:
 .package install feature branches:
   stage: install_packages
   except:
-    - main
+    - master
     - merge_requests
   script:
     - yarn install --prefer-offline  --frozen-lockfile  --non-interactive
@@ -51,7 +51,7 @@ build and push docker production image:
   stage: docker
   image: dockerhub.paziresh24.com/docker:stable
   only:
-    - main
+    - master
   script:
     - docker login $DOCKER_AUTH_URL -u $DOCKER_AUTH_USERNAME -p $DOCKER_AUTH_PASSWORD
     - docker build
@@ -79,7 +79,7 @@ deploy staging:
   image: dockerhub.paziresh24.com/docker-ansible:latest
   stage: deploy
   only:
-    - main
+    - master
   script:
     - apk add --update bash openssh sshpass wget
     - ansible-playbook ./ansible/playbook_staging.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
