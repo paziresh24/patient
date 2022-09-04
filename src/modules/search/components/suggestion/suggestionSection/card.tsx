@@ -14,8 +14,8 @@ interface CardSectionProps {
 export const CardSection = (props: CardSectionProps) => {
   const { items } = props;
   return (
-    <div className="p-۲">
-      {items.map(item => (
+    <div className="p-2">
+      {items?.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>
             <div className={clsx('flex items-center cursor-pointer p-3 rounded-lg space-s-3', style.wrapper)}>

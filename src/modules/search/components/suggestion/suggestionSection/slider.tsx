@@ -13,7 +13,7 @@ export const SliderSection = (props: SliderSectionProps) => {
   const { items } = props;
   return (
     <div className="flex p-4 space-s-3 overflow-auto">
-      {items.map(item => (
+      {items?.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>
             <div className="flex items-center shadow-md cursor-pointer  bg-white border border-solid border-slate-300 p-2 rounded-lg w-80 space-s-3">

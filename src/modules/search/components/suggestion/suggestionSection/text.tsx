@@ -12,7 +12,7 @@ export const TextSection = (props: TextSectionProps) => {
   const { items } = props;
   return (
     <div className="p-3">
-      {items.map(item => (
+      {items?.map(item => (
         <Link href={item.url ?? '#'} key={item.position}>
           <a>
             <div className={clsx('flex bg-white p-2', style.wrapper)}>

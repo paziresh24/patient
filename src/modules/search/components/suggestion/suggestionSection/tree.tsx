@@ -12,7 +12,7 @@ export const TreeSection = (props: TreeSectionProps) => {
   const { items } = props;
   return (
     <div className="p-2">
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <div
           key={index}
           className={clsx(

@@ -1,6 +1,6 @@
 import useResponsive from '@/common/hooks/useResponsive';
 import clsx from 'clsx';
-import { HTMLAttributes, ReactElement, ReactNode } from 'react';
+import { createElement, HTMLAttributes, ReactElement, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import CategoryBar from './suggestionAtoms/categoryBar';
 import CardSection from './suggestionSection/card';
@@ -10,16 +10,18 @@ import TextSection from './suggestionSection/text';
 import TreeSection from './suggestionSection/tree';
 
 interface SuggestionCententProps extends HTMLAttributes<HTMLDivElement> {
-  items: Idata[];
+  items: Section[];
   searchInput?: ReactElement;
 }
 
-export interface Idata {
+type ComponentSection = 'text' | 'slider' | 'tree' | 'card' | 'search';
+
+export interface Section {
   caption?: string;
   additional_info?: string;
   type: string;
   icon: 'hospital-icon' | 'top-icon' | 'list-icon' | 'category-icon' | 'history-icon' | 'search-icon';
-  component: string;
+  component: ComponentSection;
   items: Item[];
 }
 
@@ -51,6 +53,19 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
     return isMobile ? createPortal(children, container) : children;
   };
 
+  const Sections = {
+    text: TextSection,
+    slider: SliderSection,
+    tree: TreeSection,
+    card: CardSection,
+  };
+
+  const Component = ({ type, items }: { type: Exclude<ComponentSection, 'search'>; items: Item[] }) => {
+    return createElement(Sections[type], {
+      items,
+    });
+  };
+
   return wrapper(
     <div
       className={clsx(
@@ -65,10 +80,7 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
             {component !== 'search' && (
               <>
                 <CategoryBar {...section} />
-                {component === 'text' && <TextSection items={items} />}
-                {component === 'slider' && <SliderSection items={items} />}
-                {component === 'tree' && <TreeSection items={items} />}
-                {component === 'card' && <CardSection items={items} />}
+                <Component type={component} items={items} />
               </>
             )}
             {component === 'search' && (
