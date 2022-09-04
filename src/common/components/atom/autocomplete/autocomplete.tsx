@@ -105,12 +105,13 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   return (
     <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
-      <div className="relative flex items-center w-full" onKeyDown={onKeyDown}>
+      <div className="relative flex items-center w-full">
         <TextField
           {...inputProps}
           onFocus={onClickInput}
           className={clsx('cursor-pointer', inputProps.className)}
           ref={inputRef}
+          onKeyDown={(e: any) => onKeyDown(e)}
           readOnly
         />
         <ChevronIcon
