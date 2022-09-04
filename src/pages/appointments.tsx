@@ -157,4 +157,10 @@ Appointments.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default Appointments;

@@ -163,4 +163,10 @@ const FormLoading = () => {
   );
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default Home;

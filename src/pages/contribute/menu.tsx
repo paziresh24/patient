@@ -129,4 +129,10 @@ const MneuItemLoading = () => {
   );
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default Home;

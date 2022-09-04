@@ -27,4 +27,10 @@ QueuePage.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default QueuePage;
