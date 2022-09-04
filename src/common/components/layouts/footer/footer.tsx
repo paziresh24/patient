@@ -49,17 +49,17 @@ const Footer = () => {
               </div>
               <div className="flex flex-col items-center justify-center mt-2 md:basis-[49%]">
                 <div className="flex flex-row items-center justify-center">
-                  <span className="inline-block w-20 h-20">
+                  <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
                       <About />
                     </a>
                   </span>
-                  <span className="inline-block w-20 h-20">
+                  <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
                       <AboutUs />
                     </a>
                   </span>
-                  <span className="inline-block w-20 h-20">
+                  <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
                       <AboutMe />
                     </a>
