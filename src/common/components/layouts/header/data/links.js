@@ -339,7 +339,7 @@ export const withUserMenu = [
   },
   {
     title: 'نوبت های من ',
-    link: '/appointments',
+    link: '/patient/appointments',
   },
   {
     title: 'اپلیکیشن پذیرش 24',

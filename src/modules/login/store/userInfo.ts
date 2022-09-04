@@ -7,6 +7,11 @@ interface IUseUserInfoStore {
     family?: string;
     user_id?: string;
     username?: string;
+    national_code?: string;
+    gender?: 'male' | 'female';
+    city_id?: string;
+    province_id?: string;
+    image?: string;
   };
   pending: boolean;
   setUserInfo: (info: any) => void;

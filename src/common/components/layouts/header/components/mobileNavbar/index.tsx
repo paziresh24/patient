@@ -51,7 +51,7 @@ const MobileNavbar = () => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="text-sm block w-full lg:hidden">
+    <div ref={ref} className="text-sm block w-full lg:hidden sticky top-0 z-50">
       <div className="max-w-screen-xl mx-auto relative  flex items-center justify-between p-2 ">
         <div className="flex flex-row items-center gap-2" onClick={() => setOpen(true)}>
           <HumbuggerMenu />

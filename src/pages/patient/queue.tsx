@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Queue from '@/modules/myTurn/components/queue';
 import { ReactElement } from 'react';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout } from '../_app';
 
 export const QueuePage: NextPageWithLayout = () => {
   const { query } = useRouter();

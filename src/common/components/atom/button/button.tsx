@@ -109,7 +109,7 @@ export const Button: React.FC<ButtonProps> = props => {
     >
       {!loading && (
         <>
-          {icon && <span className="flex items-center justify-center ml-2">{icon}</span>}
+          {icon && <span className="flex items-center justify-center ml-1">{icon}</span>}
           {children}
         </>
       )}

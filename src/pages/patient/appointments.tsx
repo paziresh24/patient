@@ -9,14 +9,16 @@ import Loading from '@/components/atom/loading';
 import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import Text from '@/common/components/atom/text';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import axios from 'axios';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
@@ -78,14 +80,20 @@ export const Appointments: NextPageWithLayout = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <div className="w-full lg:flex justify-center bg-white shadow-card md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
-        <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto lg:w-2/5">
-          <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
-          <Tab value="book_request" label="درخواست ها" className="w-full lg:w-auto" />
-        </Tabs>
+      <div className="flex sticky top-0 z-50 space-y-5 flex-col p-5  pb-0 bg-white">
+        <Text fontWeight="black" fontSize="xl">
+          نوبت های من
+        </Text>
+        <div className="w-full lg:flex justify-center bg-white md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
+          <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
+            <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
+            <Tab value="book_request" label="درخواست ها" className="w-full lg:w-auto" />
+          </Tabs>
+        </div>
       </div>
-      <div className="flex flex-col">
-        <div className="p-0 space-y-2 pt-3 w-full lg:w-2/5 self-center" data-testid="appointments-container">
+
+      <div className="flex flex-col p-5">
+        <div className="p-0 space-y-2 pt-3 w-full  self-center" data-testid="appointments-container">
           {isLoading && (
             <>
               <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
@@ -154,7 +162,11 @@ export const Appointments: NextPageWithLayout = () => {
 };
 
 Appointments.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
+  return (
+    <LayoutWithHeaderAndFooter>
+      <PatientProfileLayout>{page}</PatientProfileLayout>
+    </LayoutWithHeaderAndFooter>
+  );
 };
 
 export async function getServerSideProps() {

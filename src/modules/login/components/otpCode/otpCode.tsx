@@ -3,9 +3,7 @@ import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
-import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
-import { setCookie } from 'cookies-next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import PinInput from 'react-pin-input';
 import { toast } from 'react-toastify';
@@ -35,15 +33,6 @@ export const OtpCode = (props: OtpCodeProps) => {
       const { data } = await login.mutateAsync({
         username: +mobileNumberValue,
         password,
-      });
-
-      setCookie('token', data.token, {
-        path: '/',
-        maxAge: dayToSecond(60),
-      });
-      setCookie('certificate', data.certificate, {
-        path: '/',
-        maxAge: dayToSecond(60),
       });
 
       setUserInfo({
