@@ -19,8 +19,6 @@ const genders = [
 
 const formattedProvinces = provinces.map(item => ({ label: item.name, value: item.id }));
 
-const formattedCities = cities.map(item => ({ label: item.name, value: item.id }));
-
 interface PatinetProfileFormProps {
   fields: Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL'>;
   defaultValues?: {
@@ -37,7 +35,7 @@ interface PatinetProfileFormProps {
 }
 
 export const PatinetProfileForm = (props: PatinetProfileFormProps) => {
-  const { fields, defaultValues, onSubmit, loading } = props;
+  const { fields, defaultValues, onSubmit = () => {}, loading } = props;
   const { handleSubmit, register, setValue, control, getValues, watch } = useForm();
   const [citiesForProvince, setCitiesForProvince] = useState([]);
 

@@ -13,7 +13,7 @@ export const BookmarksList = () => {
   return (
     <div className="w-full grid md:grid-cols-2 gap-3">
       {isSuccess &&
-        data?.data?.result?.map(item => (
+        data?.data?.result?.map((item: DoctorInfo) => (
           <DoctorInfo
             key={item.id}
             firstName={item.name}
