@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 
   const handleClickCenter = (center: Center) => {
     router.push({
-      pathname: `/contribute/center/`,
+      pathname: '/patient/contribute/center/',
       query: { ...router.query, center_id: center.id },
     });
   };
