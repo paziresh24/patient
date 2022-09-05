@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import Logo from '@/common/components/atom/logo';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
@@ -53,9 +54,11 @@ const MobileNavbar = () => {
   return (
     <div ref={ref} className="text-sm block w-full lg:hidden">
       <div className="max-w-screen-xl mx-auto relative  flex items-center justify-between p-2 ">
-        <div className="flex flex-row items-center gap-2" onClick={() => setOpen(true)}>
-          <HumbuggerMenu />
-          <Logo fontSize="sm" width={32} height={32} />
+        <div className="flex flex-row items-center gap-2">
+          <HumbuggerMenu onClick={() => setOpen(true)} />
+          <a href="/">
+            <Logo fontSize="sm" width={32} height={32} />
+          </a>
         </div>
         <UserProfile />
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} className={`${open ? 'block' : 'hidden'}`} />
