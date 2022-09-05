@@ -22,4 +22,5 @@ export async function getServerSideProps() {
     props: {},
   };
 }
+
 export default Home;
