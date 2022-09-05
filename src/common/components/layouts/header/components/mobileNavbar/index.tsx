@@ -53,7 +53,7 @@ const MobileNavbar = () => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="text-sm block w-full lg:hidden">
+    <div ref={ref} className="text-sm block w-full z-50 lg:hidden">
       {open && (
         <BackDrop
           action={() => {
