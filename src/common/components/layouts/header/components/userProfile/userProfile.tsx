@@ -21,7 +21,7 @@ export const UserProfile = () => {
     {
       id: 0,
       title: 'نوبت های من',
-      link: '/appointments',
+      link: '/patient/appointments',
       icon: <Calender />,
     },
     {

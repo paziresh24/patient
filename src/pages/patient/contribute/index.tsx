@@ -17,7 +17,7 @@ const Home = () => {
 
   const handleNextPage = () => {
     router.push({
-      pathname: '/contribute/menu',
+      pathname: '/patient/contribute/menu',
       query: { slug: router.query?.slug },
     });
   };
