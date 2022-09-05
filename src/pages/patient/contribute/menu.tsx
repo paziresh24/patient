@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    router.prefetch('/contribute/center/');
+    router.prefetch('/patient/contribute/center/');
   }, []);
 
   return (
