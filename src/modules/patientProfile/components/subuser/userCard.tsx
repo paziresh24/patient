@@ -68,10 +68,10 @@ export const UserCard = memo((props: UserCardProps) => {
           </div>
         </div>
         <div className="flex space-s-2 self-end">
-          <Button onClick={() => setIsOpenEditUserModal(true)} size="sm" variant="secondary" icon={<EditIcon className="fill-black" />}>
+          <Button onClick={() => setIsOpenEditUserModal(true)} size="sm" variant="secondary" icon={<EditIcon />}>
             ویرایش
           </Button>
-          <Button onClick={() => setIsOpenRemoveModal(true)} size="sm" variant="secondary" icon={<TrashIcon className="fill-black" />}>
+          <Button onClick={() => setIsOpenRemoveModal(true)} size="sm" variant="secondary" icon={<TrashIcon />}>
             حذف
           </Button>
         </div>

@@ -13,11 +13,11 @@ export const Rate: React.FC<RateProps> = props => {
   return (
     <div className="flex items-center justify-between w-full bg-gray p-3 px-4 rounded-md">
       <Text fontSize="sm">هنوز به این پزشک امتیازی نداده اید.</Text>
-      <a href={link} target="_blank" rel="noreferrer" className="flex items-center">
-        <Text fontWeight="bold" fontSize="sm" className="text-secondary ml-2">
+      <a href={link} target="_blank" rel="noreferrer" className="flex items-center text-secondary">
+        <Text fontWeight="bold" fontSize="sm" className="ml-2">
           ثبت نظر
         </Text>
-        <ChevronIcon dir="left" color="#0077DB" width="10" height="12" style={undefined} />
+        <ChevronIcon dir="left" width="10" height="12" />
       </a>
     </div>
   );

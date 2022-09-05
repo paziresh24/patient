@@ -1,9 +1,9 @@
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import Calender from '@/common/components/icons/calender';
-import Headphone from '@/common/components/icons/headphone';
-import Logout from '@/common/components/icons/logout';
+import CalenderIcon from '@/common/components/icons/calender';
+import HeadphoneIcon from '@/common/components/icons/headphone';
+import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -22,18 +22,18 @@ export const UserProfile = () => {
       id: 0,
       title: 'نوبت های من',
       link: '/patient/appointments',
-      icon: <Calender />,
+      icon: <CalenderIcon />,
     },
     {
       id: 1,
       title: 'پشتیبانی',
-      icon: <Headphone />,
+      icon: <HeadphoneIcon />,
       link: 'https://www.paziresh24.com/home/support-form',
     },
     {
       id: 2,
       title: 'خروج',
-      icon: <Logout />,
+      icon: <LogoutIcon />,
       link: 'https://www.paziresh24.com/logout',
     },
   ];
