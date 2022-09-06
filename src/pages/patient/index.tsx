@@ -131,7 +131,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
             <ShareIcon />
             <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
           </div>
-          <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
+          <Link href="/logout">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
               <LogoutIcon />
               <Text fontWeight="medium">خروج</Text>
