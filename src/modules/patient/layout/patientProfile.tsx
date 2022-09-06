@@ -1,7 +1,8 @@
 import Avatar from '@/common/components/atom/avatar';
+import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import { BookmarkIcon } from '@/common/components/icons/bookmark';
-import Calender from '@/common/components/icons/calender';
+import BookmarkIcon from '@/common/components/icons/bookmark';
+import CalenderIcon from '@/common/components/icons/calender';
 import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -17,15 +18,24 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
         <Link href="/patient/profile">
           <a>
             <div className="flex p-5 px-0 items-center space-s-5">
-              <Avatar src={userInfo.image ?? ''} />
+              <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
               <div className="flex flex-col space-y-2">
-                <div className="flex items-center">
-                  <Text fontWeight="bold" className="line-clamp-1">
-                    {userInfo.name} {userInfo.family}
-                  </Text>
-                  <EditIcon className="fill-black w-5 h-5" />
-                </div>
-                <Text fontSize="sm">{userInfo.username}</Text>
+                {!userInfo.name ? (
+                  <>
+                    <Skeleton h="1rem" w="8rem" rounded="full" />
+                    <Skeleton h="1rem" rounded="full" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center">
+                      <Text fontWeight="bold" className="line-clamp-1">
+                        {userInfo.name} {userInfo.family}
+                      </Text>
+                      <EditIcon className="w-5 h-5" />
+                    </div>
+                    <Text fontSize="sm">{userInfo.username}</Text>
+                  </>
+                )}
               </div>
             </div>
           </a>
@@ -34,7 +44,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
         <div className="flex overflow-auto space-s-5 md:space-s-0 md:flex-col">
           <Link href="/patient/appointments">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
-              <Calender className="fill-black" />
+              <CalenderIcon />
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>

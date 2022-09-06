@@ -49,7 +49,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
         )}
         {...inputProps}
       />
-      {helperText && <span className="text-sm">{helperText}</span>}
+      {helperText && <span className="text-xs">{helperText}</span>}
     </div>
   );
 });

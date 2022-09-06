@@ -13,8 +13,8 @@ export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'va
 }
 
 type Option = {
-  label: string;
-  value: any;
+  label?: string;
+  value?: any;
 };
 
 export const Autocomplete = (props: AutocompleteProps) => {
@@ -27,9 +27,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (value) {
-      if (inputRef.current) inputRef.current.value = value.label ?? '';
-    }
+    if (inputRef.current) inputRef.current.value = value?.label ?? '';
   }, [value]);
 
   const onClose = () => {
@@ -45,7 +43,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
   const handleSetInputValue = (option: Option) => {
     setActiveSuggestion(0);
     setShowSuggestions(false);
-    if (inputRef.current) inputRef.current.value = option.label;
+    if (inputRef.current) inputRef.current.value = option.label ?? '';
     onChange && onChange({ target: { value: option } });
   };
 
@@ -105,15 +103,8 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   return (
     <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
-      <div className="relative flex items-center w-full">
-        <TextField
-          {...inputProps}
-          onFocus={onClickInput}
-          className={clsx('cursor-pointer', inputProps.className)}
-          ref={inputRef}
-          onKeyDown={(e: any) => onKeyDown(e)}
-          readOnly
-        />
+      <div className="relative flex items-center w-full" onFocus={onClickInput} onKeyDown={(e: any) => onKeyDown(e)}>
+        <TextField {...inputProps} className={clsx('cursor-pointer', inputProps.className)} ref={inputRef} readOnly />
         <ChevronIcon
           dir={showSuggestions ? 'top' : 'bottom'}
           className={clsx('absolute', {
