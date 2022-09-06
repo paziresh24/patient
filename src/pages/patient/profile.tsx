@@ -4,20 +4,22 @@ import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
 import Avatar from '@/common/components/atom/avatar';
 import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
+import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patientProfile/views/form';
-import { ReactElement, useState } from 'react';
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 import { toast } from 'react-toastify';
 import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
+  const { query } = useRouter();
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const updateUser = useUpdateUser();
-  const [avatarFile, setAvatarFile] = useState<FileList | null>();
 
   const handleUpdateUser = async (data: any) => {
     const res = await updateUser.mutateAsync({
@@ -42,14 +44,20 @@ export const PatinetProfile: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>پروفایل</title>
+        <title>ویرایش اطلاعات من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
+      {query.isWebView && (
+        <AppBar title="ویرایش اطلاعات من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
+
       <div className="flex space-y-5 flex-col p-5 bg-white">
-        <Text fontWeight="black" fontSize="xl">
-          ویرایش اطلاعات من
-        </Text>
+        {!query.isWebView && (
+          <Text fontWeight="black" fontSize="xl">
+            ویرایش اطلاعات من
+          </Text>
+        )}
         <label
           htmlFor="userAvatar"
           className="self-center cursor-pointer flex justify-center items-center text-white hover:text-transparent transition-all"

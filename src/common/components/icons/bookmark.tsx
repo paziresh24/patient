@@ -1,7 +1,7 @@
 import { memo, SVGAttributes } from 'react';
 
 interface BookmarkIconProps extends Omit<SVGAttributes<SVGElement>, 'fill'> {
-  fill: boolean;
+  fill?: boolean;
 }
 
 export const BookmarkIcon = memo(({ fill, ...rest }: BookmarkIconProps) => (

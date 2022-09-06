@@ -40,7 +40,7 @@ export const Avatar: React.FC<AvatarProps> = props => {
     />
   ) : (
     <div
-      style={{ width, height, backgroundColor: name?.trim() && randomColor(name ?? '') }}
+      style={{ width, height, ...(name?.trim() && { backgroundColor: randomColor(name ?? '') }) }}
       className={clsx('rounded-full flex justify-center items-center bg-gray', className)}
     >
       {name?.trim() && (

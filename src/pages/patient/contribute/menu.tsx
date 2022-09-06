@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import Text from '@/components/atom/text';
 import CenterIcon from '@/components/icons/center';
-import TopBar from '@/components/layouts/appBar';
+import AppBar from '@/components/layouts/appBar';
 
 import Skeleton from '@/common/components/atom/skeleton';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       <Head>
         <title>پیشخوان ویرایش {profileData.display_name}</title>
       </Head>
-      <TopBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} />
+      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} />
       <main className="md:max-w-md mx-auto flex flex-col items-center p-5">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col space-y-2">

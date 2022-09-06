@@ -1,23 +1,45 @@
+import Head from 'next/head';
+
 import Avatar from '@/common/components/atom/avatar';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import EditIcon from '@/common/components/icons/edit';
-import { UsersIcon } from '@/common/components/icons/users';
+import UsersIcon from '@/common/components/icons/users';
+import AppBar from '@/common/components/layouts/appBar';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
-import { ReactElement } from 'react';
+import { useEffect } from 'react';
+import { NextPageWithLayout } from '../_app';
 
-export const PatientProfileLayout = ({ children }: { children: ReactElement }) => {
+export const PatinetProfile: NextPageWithLayout = () => {
   const userInfo = useUserInfoStore(state => state.info);
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const { openLoginModal } = useLoginModalContext();
+  const userInfoPending = useUserInfoStore(state => state.pending);
+
+  useEffect(() => {
+    !isLogin &&
+      openLoginModal({
+        state: true,
+      });
+  }, [isLogin]);
 
   return (
-    <div className="max-w-screen-xl min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:mt-10 md:space-s-8">
-      <div className="bg-white md:sticky md:top-10 col-span-3 h-fit md:pb-2 rounded-lg shadow-sm px-5 hidden md:block">
-        <Link href="/patient/profile">
+    <>
+      <Head>
+        <title>ویرایش اطلاعات من</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+
+      <AppBar title="پروفایل من" />
+
+      <div className="h-screen">
+        <Link href="/patient/profile?referrer=profile&isWebView=1">
           <a>
-            <div className="flex p-5 px-0 items-center space-s-5">
+            <div className="flex p-5 items-center space-s-5 bg-white shadow-sm border-t border-slate-200">
               <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
               <div className="flex flex-col space-y-2">
                 {!userInfo.name ? (
@@ -40,29 +62,35 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
             </div>
           </a>
         </Link>
-        <hr className="border-slate-200" />
-        <div className="flex overflow-auto space-s-5 md:space-s-0 md:flex-col">
-          <Link href="/patient/appointments">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
+        <div className="flex flex-col mt-2 space-y-1">
+          <Link href="/patient/appointments?referrer=profile&isWebView=1">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
               <CalenderIcon />
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>
-          <Link href="/patient/bookmarks">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
+          <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
               <BookmarkIcon />
               <Text fontWeight="medium">لیست پزشکان من</Text>
             </a>
           </Link>
-          <Link href="/patient/subuser">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
+          <Link href="/patient/subuser?referrer=profile&isWebView=1">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
               <UsersIcon />
               <Text fontWeight="medium">کاربران زیرمجموعه</Text>
             </a>
           </Link>
         </div>
       </div>
-      <div className="md:bg-white md:sticky md:top-10 col-span-9 md:p-8 rounded-lg shadow-sm h-fit">{children}</div>
-    </div>
+    </>
   );
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
+export default PatinetProfile;

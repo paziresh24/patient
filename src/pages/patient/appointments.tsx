@@ -9,6 +9,7 @@ import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 
 import Text from '@/common/components/atom/text';
+import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -17,11 +18,13 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
 export const Appointments: NextPageWithLayout = () => {
+  const { query } = useRouter();
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -38,6 +41,13 @@ export const Appointments: NextPageWithLayout = () => {
   });
 
   useEffect(() => {
+    return () => {
+      getBooks.remove();
+      handleChangeType('book');
+    };
+  }, []);
+
+  useEffect(() => {
     if (inView) setPage(prevState => prevState + 1);
   }, [inView]);
 
@@ -51,12 +61,11 @@ export const Appointments: NextPageWithLayout = () => {
       setIsLoading(false);
       getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
     }
-    if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401) {
+    if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401)
       openLoginModal({
         state: true,
         postLogin: () => regetchBook(),
       });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getBooks.status]);
 
@@ -78,11 +87,15 @@ export const Appointments: NextPageWithLayout = () => {
         <title>نوبت های من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      {query.isWebView && <AppBar title="نوبت های من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
-      <div className="flex sticky top-0 z-10 space-y-5 flex-col p-5 pb-0 bg-white">
-        <Text fontWeight="black" fontSize="xl">
-          نوبت های من
-        </Text>
+      <div className="flex sticky top-0 z-10 space-y-5 flex-col px-5 pb-0 bg-white">
+        {!query.isWebView && (
+          <Text fontWeight="black" fontSize="xl" className="mt-5">
+            نوبت های من
+          </Text>
+        )}
+
         <div className="w-full lg:flex justify-center bg-white md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
             <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
