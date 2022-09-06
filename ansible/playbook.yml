@@ -2,4 +2,4 @@
 - name: Deploy and update clinic frontend project
   hosts: main_servers
   roles:
-    - patinet_frontend
+    - patient_frontend
