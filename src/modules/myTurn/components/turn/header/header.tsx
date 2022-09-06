@@ -10,6 +10,8 @@ import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToRece
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import getConfig from 'next/config';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import DoctorInfo from '../../doctorInfo';
@@ -32,6 +34,7 @@ interface TurnHeaderProps {
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
+  const { query } = useRouter();
   const { id, doctorInfo, centerId, trackingCode, nationalCode, status } = props;
 
   const [removeModal, setRemoveModal] = useState(false);
@@ -68,11 +71,15 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const shareTurn = () => {
+    const link = `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`;
+    if (query.isWebView) return window.Android.shareQA(`رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`, link);
     if (navigator.share)
-      navigator.share({
-        text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-        url: `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`,
-      });
+      if (navigator.share)
+        navigator.share({
+          title: 'رسید نوبت',
+          text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
+          url: link,
+        });
   };
 
   const menuItems = [
@@ -102,13 +109,16 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
 
   return (
     <>
-      <DoctorInfo
-        className="w-9/12"
-        avatar={doctorInfo.avatar}
-        firstName={doctorInfo.firstName}
-        lastName={doctorInfo.lastName}
-        expertise={doctorInfo.expertise}
-      />
+      <Link href={`/dr/${doctorInfo.slug}`}>
+        <a className="w-9/12">
+          <DoctorInfo
+            avatar={doctorInfo.avatar}
+            firstName={doctorInfo.firstName}
+            lastName={doctorInfo.lastName}
+            expertise={doctorInfo.expertise}
+          />
+        </a>
+      </Link>
 
       {status !== BookStatus.notVisited && <TagStatus status={status} className="left-10" />}
 
