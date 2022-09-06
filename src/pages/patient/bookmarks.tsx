@@ -5,7 +5,7 @@ import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
-import { BookmarksList } from '@/modules/patientProfile/views/bookmarksList';
+import { BookmarksList } from '@/modules/patient/views/bookmarksList';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '../_app';
 

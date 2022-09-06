@@ -8,7 +8,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
-import { PatinetProfileForm } from '@/modules/patientProfile/views/form';
+import { PatinetProfileForm } from '@/modules/patient/views/form';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 import { toast } from 'react-toastify';

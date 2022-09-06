@@ -76,7 +76,7 @@ export const UserProfile = () => {
             >
               <Link href="/patient/profile">
                 <a>
-                  <div className="flex p-2 pb-3 items-center space-s-3 w-56">
+                  <div className="flex p-2 pb-3 items-center space-s-3 w-64">
                     <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} width={50} height={50} />
                     <div className="flex flex-col space-y-2">
                       {!userInfo.name ? (
