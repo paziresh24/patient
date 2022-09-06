@@ -30,7 +30,7 @@ export const DropDown: React.FC<DropDownProps> = props => {
       )}
       {dropDown && (
         <>
-          <div className="absolute left-4 top-2 bg-white shadow-card w-40 rounded-xl rounded-tl-sm z-20">
+          <div className="absolute left-4 top-2 bg-white shadow-lg border border-slate-100 w-40 rounded-xl rounded-tl-sm z-20">
             <div className="flex flex-col p-2">
               {items.map(({ id, action, name, icon, testId }) => (
                 <div
@@ -51,7 +51,7 @@ export const DropDown: React.FC<DropDownProps> = props => {
             </div>
           </div>
           <div
-            className="fixed inset-0 bg-[#0e161b] opacity-30 z-10 !m-0"
+            className="fixed inset-0 opacity-30 z-10 !m-0"
             onClick={e => {
               e.stopPropagation();
               setDropDown(false);
