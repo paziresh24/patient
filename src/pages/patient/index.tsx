@@ -5,27 +5,42 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
+import HeadphoneIcon from '@/common/components/icons/headphone';
+import LogoutIcon from '@/common/components/icons/logout';
+import ShareIcon from '@/common/components/icons/share';
+import StarIcon from '@/common/components/icons/star';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
+  const { query, replace } = useRouter();
   const userInfo = useUserInfoStore(state => state.info);
+  const loginPending = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { openLoginModal } = useLoginModalContext();
-  const userInfoPending = useUserInfoStore(state => state.pending);
 
   useEffect(() => {
     !isLogin &&
+      !loginPending &&
       openLoginModal({
         state: true,
       });
-  }, [isLogin]);
+  }, [isLogin, loginPending]);
+
+  useEffect(() => {
+    if (!query.isWebView) {
+      replace('/patient/appointments');
+    }
+  }, []);
 
   return (
     <>
@@ -62,23 +77,64 @@ export const PatinetProfile: NextPageWithLayout = () => {
             </div>
           </a>
         </Link>
-        <div className="flex flex-col mt-2 space-y-1">
+        <div className="flex flex-col mt-2 bg-white shadow-sm">
           <Link href="/patient/appointments?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
               <CalenderIcon />
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>
           <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
               <BookmarkIcon />
               <Text fontWeight="medium">لیست پزشکان من</Text>
             </a>
           </Link>
           <Link href="/patient/subuser?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap bg-white px-5 shadow-sm">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
               <UsersIcon />
               <Text fontWeight="medium">کاربران زیرمجموعه</Text>
+            </a>
+          </Link>
+        </div>
+        <div className="flex flex-col mt-2 bg-white shadow-sm">
+          <Link href="https://www.paziresh24.com/home/support-form/">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+              <HeadphoneIcon />
+              <Text fontWeight="medium">پشتیبانی</Text>
+            </a>
+          </Link>
+          <Link href="https://www.paziresh24.com/home/fordoctors/">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+              <DoctorIcon />
+              <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
+            </a>
+          </Link>
+        </div>
+        <div className="flex flex-col mt-2 bg-white shadow-sm">
+          <div
+            className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100"
+            onClick={() => {
+              window.Android.rateApp();
+            }}
+          >
+            <StarIcon />
+            <Text fontWeight="medium">امتیاز به پذیرش24</Text>
+          </div>
+
+          <div
+            className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100"
+            onClick={() => {
+              window.Android.shareQA('اپلیکیشن نوبت دهی پذیرش24', 'https://www.paziresh24.com/app');
+            }}
+          >
+            <ShareIcon />
+            <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
+          </div>
+          <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
+            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+              <LogoutIcon />
+              <Text fontWeight="medium">خروج</Text>
             </a>
           </Link>
         </div>
@@ -87,7 +143,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {},
   };
