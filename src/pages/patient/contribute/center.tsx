@@ -93,7 +93,7 @@ const Home: NextPage = () => {
               options={centerTypeOptions}
               size="small"
               value={centerTypeOptions.find(item => item.label === centerType)}
-              onChange={e => setCenterType(e.target.value.label)}
+              onChange={e => setCenterType(e.target.value.label ?? '')}
               className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
             />
             <TextField

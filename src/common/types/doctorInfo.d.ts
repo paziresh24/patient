@@ -4,6 +4,8 @@ interface DoctorInfo {
   family: string;
   image?: string;
   expertises: Expertises;
+  slug?: string;
+  doctor_url?: string;
 }
 
 type Expertises = Array<{

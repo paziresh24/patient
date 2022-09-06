@@ -17,23 +17,31 @@ export const SubuserList = () => {
     mutate();
   }, []);
 
+  const handleOpenAddSubuserModal = () => {
+    addSubUser.reset();
+    setIsOpenAddUserModal(true);
+  };
+
   const handleAddSubuser = async (data: any) => {
     const res = await addSubUser.mutateAsync({
-      ...data,
-      gender: data.gender?.value,
+      cell: data.cell,
+      family: data.family,
+      name: data.name,
+      national_code: data.national_code,
+      ...(data.gender && { gender: data.gender?.value }),
     });
-    if (res.data.status !== 1) {
-      if (res.data.details) return Object.values(res.data.details).forEach(item => toast.error(item as string));
-      toast.error(res.data.message);
+    if (res.data.status === 1) {
+      mutate();
+      setIsOpenAddUserModal(false);
       return;
     }
-    mutate();
-    setIsOpenAddUserModal(false);
+    toast.error(res.data.message);
   };
+
   return (
     <>
       <div className="w-full flex flex-col">
-        {isLoading && <SubUserLoading />}{' '}
+        {isLoading && <SubUserLoading />}
         {isSuccess &&
           data?.data?.result?.map((item: any) => (
             <UserCard
@@ -48,7 +56,7 @@ export const SubuserList = () => {
             />
           ))}
       </div>
-      <Button className="self-center" onClick={() => setIsOpenAddUserModal(true)}>
+      <Button className="self-center" onClick={handleOpenAddSubuserModal}>
         افزودن کاربر جدید
       </Button>
       <Modal title="کاربر جدید" isOpen={isOpenAddUserModal} onClose={setIsOpenAddUserModal}>
@@ -56,6 +64,7 @@ export const SubuserList = () => {
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
           fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
+          errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>
     </>

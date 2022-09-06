@@ -17,7 +17,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
         <Link href="/patient/profile">
           <a>
             <div className="flex p-5 px-0 items-center space-s-5">
-              <Avatar src={userInfo.image ?? ''} />
+              <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center">
                   <Text fontWeight="bold" className="line-clamp-1">

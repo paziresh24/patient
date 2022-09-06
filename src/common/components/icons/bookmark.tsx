@@ -1,7 +1,16 @@
 import { memo, SVGAttributes } from 'react';
 
-export const BookmarkIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
+interface BookmarkIconProps extends Omit<SVGAttributes<SVGElement>, 'fill'> {
+  fill: boolean;
+}
+
+export const BookmarkIcon = memo(({ fill, ...rest }: BookmarkIconProps) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="bg-transparent" xmlns="http://www.w3.org/2000/svg" {...rest}>
+    <path
+      d="M19 21V9C19 6.17157 19 4.75736 18.1213 3.87868C17.2426 3 15.8284 3 13 3H11C8.17157 3 6.75736 3 5.87868 3.87868C5 4.75736 5 6.17157 5 9V21L10.0154 18.134C10.9844 17.5803 11.4689 17.3035 12 17.3035C12.5311 17.3035 13.0156 17.5803 13.9846 18.134L19 21Z"
+      fill="currentColor"
+      fillOpacity={fill ? 1 : 0}
+    />
     <path
       fillRule="evenodd"
       clipRule="evenodd"

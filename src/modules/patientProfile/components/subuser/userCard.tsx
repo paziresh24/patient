@@ -42,18 +42,23 @@ export const UserCard = memo((props: UserCardProps) => {
     toast.error(data.message);
   };
 
+  const handleOpenEditUserModal = () => {
+    editSubuser.reset();
+    setIsOpenEditUserModal(true);
+  };
+
   const handleEditUser = async (data: any) => {
     const res = await editSubuser.mutateAsync({
       ...data,
       gender: data.gender.value,
       id: userId,
     });
-    if (res.data.status === 0) {
-      Object.values(res.data.details).forEach(item => toast.error(item as string));
+    if (res.data.status === 1) {
+      setIsOpenRemoveModal(false);
+      refetchData && refetchData();
       return;
     }
-    setIsOpenRemoveModal(false);
-    refetchData && refetchData();
+    toast.error(res.data.message);
   };
   return (
     <>
@@ -68,7 +73,7 @@ export const UserCard = memo((props: UserCardProps) => {
           </div>
         </div>
         <div className="flex space-s-2 self-end">
-          <Button onClick={() => setIsOpenEditUserModal(true)} size="sm" variant="secondary" icon={<EditIcon />}>
+          <Button onClick={handleOpenEditUserModal} size="sm" variant="secondary" icon={<EditIcon />}>
             ویرایش
           </Button>
           <Button onClick={() => setIsOpenRemoveModal(true)} size="sm" variant="secondary" icon={<TrashIcon />}>
@@ -98,6 +103,7 @@ export const UserCard = memo((props: UserCardProps) => {
           }}
           onSubmit={handleEditUser}
           loading={editSubuser.isLoading}
+          errorsField={{ ...editSubuser.data?.data?.details }}
         />
       </Modal>
     </>
