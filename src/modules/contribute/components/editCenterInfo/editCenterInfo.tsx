@@ -65,15 +65,23 @@ export const EditCenterInfo = ({ onSubmit, onCancel, defaultValues }: EditCenter
           label="استان"
           size="small"
           options={provinces.map(item => ({ label: item.name, value: item.id }))}
-          onChange={value => setDataAddress(prev => ({ ...prev, province: value.label }))}
-          value={dataAddress.province}
+          onChange={e => {
+            setDataAddress(prev => ({ ...prev, city: '', province: e.target.value.label }));
+          }}
+          value={{
+            label: dataAddress.province ?? '',
+            value: provinces.find(item => item.name === dataAddress.province)?.id,
+          }}
         />
         <Autocomplete
           label="شهر"
           size="small"
           options={cities.filter(item => item.province === dataAddress?.province).map(item => ({ label: item.name, value: item.id }))}
-          onChange={value => setDataAddress(prev => ({ ...prev, city: value.label }))}
-          value={dataAddress.city}
+          onChange={e => setDataAddress(prev => ({ ...prev, city: e.target.value.label }))}
+          value={{
+            label: dataAddress.city ?? '',
+            value: cities.find(item => item.name === dataAddress.city)?.id,
+          }}
         />
       </div>
       <TextField

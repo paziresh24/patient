@@ -1,17 +1,19 @@
 import Text from '@/components/atom/text';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import { HTMLAttributes } from 'react';
 import Skeleton from '../atom/skeleton';
 
-interface TopBarProps {
+interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   backButton?: Boolean;
   titleLoading?: Boolean;
 }
 
-export const TopBar = ({ title, backButton, titleLoading = false }: TopBarProps) => {
+export const AppBar = ({ title, backButton, titleLoading = false, className, ...rest }: AppBarProps) => {
   const router = useRouter();
   return (
-    <div className="flex items-center h-16 px-6 bg-white shadow-md">
+    <div className={clsx('flex items-center h-16 px-6 bg-white shadow-md', className)} {...rest}>
       {backButton && (
         <div onClick={router.back} className="ml-2 cursor-pointer">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,4 +37,4 @@ export const TopBar = ({ title, backButton, titleLoading = false }: TopBarProps)
   );
 };
 
-export default TopBar;
+export default AppBar;

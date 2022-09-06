@@ -10,6 +10,7 @@ export interface TextFieldProps extends InputProps {
   multiLine?: boolean;
   helperText?: string;
   error?: boolean;
+  classNameWrapper?: string;
 }
 
 const inputSize = {
@@ -20,15 +21,19 @@ const inputSize = {
 
 // eslint-disable-next-line react/display-name
 export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<any>) => {
-  const { label, className, size = 'medium', multiLine = false, helperText, error = false, ...inputProps } = props;
+  const { label, className, classNameWrapper, size = 'medium', multiLine = false, helperText, error = false, ...inputProps } = props;
 
   const Component = multiLine ? 'textarea' : 'input';
 
   return (
     <div
-      className={clsx('flex flex-col space-y-3 w-full border-slate-300 outline-primary', {
-        'text-red-600 border-red-200 !outline-red-200 ': error,
-      })}
+      className={clsx(
+        'flex flex-col space-y-3 w-full border-slate-300 outline-primary',
+        {
+          'text-red-600 border-red-200 !outline-red-200 ': error,
+        },
+        classNameWrapper,
+      )}
     >
       {label && (
         <Text fontSize="sm" fontWeight="medium" className="text-black">
@@ -44,7 +49,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
         )}
         {...inputProps}
       />
-      {helperText && <span className="text-sm">{helperText}</span>}
+      {helperText && <span className="text-xs">{helperText}</span>}
     </div>
   );
 });

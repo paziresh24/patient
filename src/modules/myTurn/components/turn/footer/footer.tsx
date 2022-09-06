@@ -1,13 +1,13 @@
+import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
-import { useState } from 'react';
+import Modal from '@/components/atom/modal';
 import ChatIcon from '@/components/icons/chat';
 import MegaphoneIcon from '@/components/icons/megaphone';
-import Queue from '../../queue';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { isToday } from '@/common/utils/isToday';
-import Modal from '@/components/atom/modal';
 import getConfig from 'next/config';
+import { useState } from 'react';
+import Queue from '../../queue';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -41,7 +41,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       size="sm"
       block={true}
       onClick={() => setQueueModal(true)}
-      icon={<MegaphoneIcon color="#0077DB" />}
+      icon={<MegaphoneIcon />}
       data-testid="footer__queue_button"
     >
       دریافت شماره نوبت
@@ -49,13 +49,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   );
 
   const CunsultPrimaryButton = (
-    <Button
-      variant="secondary"
-      size="sm"
-      block={true}
-      onClick={() => window.open(`https://wa.me/98${whatsapp}`)}
-      icon={<ChatIcon color="#0077DB" />}
-    >
+    <Button variant="secondary" size="sm" block={true} onClick={() => window.open(`https://wa.me/98${whatsapp}`)} icon={<ChatIcon />}>
       گفتگو با پزشک
     </Button>
   );

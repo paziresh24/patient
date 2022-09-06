@@ -37,10 +37,6 @@ export const OtpCode = (props: OtpCodeProps) => {
         password,
       });
 
-      setCookie('token', data.token, {
-        path: '/',
-        maxAge: dayToSecond(60),
-      });
       setCookie('certificate', data.certificate, {
         path: '/',
         maxAge: dayToSecond(60),

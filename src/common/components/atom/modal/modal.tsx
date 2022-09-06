@@ -65,7 +65,7 @@ export const Modal = (props: ModalProps) => {
         {!noHeader && (
           <div className="p-4 flex justify-between items-center">
             <span className="font-bold line-clamp-1">{title}</span>
-            <CloseIcon color="#000" onClick={handleClose} />
+            <CloseIcon onClick={handleClose} />
           </div>
         )}
         <div className={clsx('p-6 pt-0 h-full overflow-auto', bodyClassName)}>{children}</div>

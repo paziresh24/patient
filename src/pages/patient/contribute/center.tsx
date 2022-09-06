@@ -10,7 +10,7 @@ import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
 import TextField from '@/common/components/atom/textField';
 import { splunkInstance } from '@/common/services/splunk';
-import TopBar from '@/components/layouts/appBar';
+import AppBar from '@/components/layouts/appBar';
 
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
 import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
         <title>ویرایش اطلاعات مرکز درمانی {profileData.display_name}</title>
       </Head>
 
-      <TopBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
+      <AppBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
       <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28 space-y-4">
         {selectedCenter?.center_type ? (
           <>
@@ -92,8 +92,8 @@ const Home: NextPage = () => {
               label="نوع مرکز درمانی"
               options={centerTypeOptions}
               size="small"
-              defaultValue={centerType}
-              onChange={value => setCenterType(value.label)}
+              value={centerTypeOptions.find(item => item.label === centerType)}
+              onChange={e => setCenterType(e.target.value.label ?? '')}
               className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
             />
             <TextField
