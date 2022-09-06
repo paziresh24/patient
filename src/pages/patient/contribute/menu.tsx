@@ -22,13 +22,13 @@ const Home: NextPage = () => {
 
   const handleClickCenter = (center: Center) => {
     router.push({
-      pathname: `/contribute/center/`,
+      pathname: '/patient/contribute/center/',
       query: { ...router.query, center_id: center.id },
     });
   };
 
   useEffect(() => {
-    router.prefetch('/contribute/center/');
+    router.prefetch('/patient/contribute/center/');
   }, []);
 
   return (
@@ -128,5 +128,11 @@ const MneuItemLoading = () => {
     </div>
   );
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
 export default Home;

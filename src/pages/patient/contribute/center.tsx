@@ -73,7 +73,7 @@ const Home: NextPage = () => {
       event: { data: dataEvent },
     });
     router.replace({
-      pathname: '/contribute/thank-you',
+      pathname: '/patient/contribute/thank-you',
       query: { ...router.query },
     });
   };
@@ -162,5 +162,11 @@ const FormLoading = () => {
     </>
   );
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
 export default Home;

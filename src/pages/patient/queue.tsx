@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Queue from '@/modules/myTurn/components/queue';
 import { ReactElement } from 'react';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout } from '../_app';
 
 export const QueuePage: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -26,5 +26,11 @@ export const QueuePage: NextPageWithLayout = () => {
 QueuePage.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
 export default QueuePage;

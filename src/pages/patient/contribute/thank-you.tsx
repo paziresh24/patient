@@ -79,4 +79,10 @@ const ThankYouPage = () => {
   );
 };
 
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default ThankYouPage;

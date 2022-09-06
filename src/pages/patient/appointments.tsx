@@ -16,7 +16,7 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import axios from 'axios';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
@@ -156,5 +156,11 @@ export const Appointments: NextPageWithLayout = () => {
 Appointments.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
 
 export default Appointments;

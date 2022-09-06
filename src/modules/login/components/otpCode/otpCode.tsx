@@ -46,6 +46,8 @@ export const OtpCode = (props: OtpCodeProps) => {
         maxAge: dayToSecond(60),
       });
 
+      if (window?.Android) window.Android.login(data.certificate);
+
       setUserInfo({
         is_doctor: data.is_doctor,
         ...data.result,
