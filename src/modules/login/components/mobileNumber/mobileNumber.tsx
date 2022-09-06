@@ -64,6 +64,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
         onFocus={() => setIsFieldError(false)}
         error={isFieldError}
         autoFocus
+        type="tel"
+        inputMode="numeric"
       />
 
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
