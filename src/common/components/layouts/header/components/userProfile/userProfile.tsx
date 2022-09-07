@@ -1,5 +1,7 @@
+import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
+import Chips from '@/common/components/atom/chips';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
@@ -13,7 +15,7 @@ import UsersIcon from '@/common/components/icons/users';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 
 export const UserProfile = () => {
@@ -23,11 +25,18 @@ export const UserProfile = () => {
     userInfo: state.info,
     pending: state.pending,
   }));
+  const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
+  const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
+  const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
   });
+
+  useEffect(() => {
+    open && handleGetTurnsCount();
+  }, [open]);
 
   const menuItems = [
     {
@@ -53,6 +62,13 @@ export const UserProfile = () => {
   const handleLogin = () => {
     openLoginModal({
       state: true,
+    });
+  };
+
+  const handleGetTurnsCount = async () => {
+    const { data } = await getUserActiveTurnsCount.mutateAsync();
+    setTurnsCount({
+      ...data.result,
     });
   };
 
@@ -99,11 +115,16 @@ export const UserProfile = () => {
                 <hr className="border-slate-200" />
                 <div className="flex overflow-auto flex-col p-3 pb-0">
                   <Link href="/patient/appointments" prefetch={false}>
-                    <a className="py-3 flex items-center space-s-3 whitespace-nowrap">
-                      <CalenderIcon />
-                      <Text fontSize="sm" fontWeight="medium">
-                        نوبت های من
-                      </Text>
+                    <a className="py-3 flex items-center justify-between">
+                      <div className="flex items-center space-s-3 whitespace-nowrap">
+                        <CalenderIcon />
+                        <Text fontSize="sm" fontWeight="medium">
+                          نوبت های من
+                        </Text>
+                      </div>
+                      {!!turnsCount.presence && (
+                        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+                      )}
                     </a>
                   </Link>
                   <Link href="/patient/bookmarks" prefetch={false}>

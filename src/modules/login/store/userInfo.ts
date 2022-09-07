@@ -13,16 +13,23 @@ interface IUseUserInfoStore {
     province_id?: string;
     image?: string;
   };
+  turnsCount: {
+    presence: number;
+  };
   pending: boolean;
   setUserInfo: (info: any) => void;
   removeInfo: () => void;
   setPending: (state: boolean) => void;
+  setTurnsCount: (turnsCount: { presence: number }) => void;
 }
 
 export const useUserInfoStore = create<IUseUserInfoStore>(set => ({
   isLogin: false,
   info: {},
   pending: true,
+  turnsCount: {
+    presence: 0,
+  },
   setUserInfo: info =>
     set(() => ({
       info,
@@ -38,6 +45,12 @@ export const useUserInfoStore = create<IUseUserInfoStore>(set => ({
     set(state => ({
       ...state,
       pending,
+    }));
+  },
+  setTurnsCount: turnsCount => {
+    set(state => ({
+      ...state,
+      turnsCount,
     }));
   },
 }));
