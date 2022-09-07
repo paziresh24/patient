@@ -61,6 +61,7 @@ export const CitySelect = (props: CitySelectProps) => {
       ...citiesData.current.find(item => item.id === cityId),
       id: cityId,
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
+      en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? '',
     });
     setIsOpen(false);
   };
