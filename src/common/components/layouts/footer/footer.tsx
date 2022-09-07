@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
+
 import AccordingMenu from '@/components/atom/accordingMenu/';
 import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
 import { footerForDoctors, footerForUsers, footerPaziresh24 } from './data/link';
 import { socials } from './data/social';
-import About from './logo/about';
-import AboutMe from './logo/about-me';
-import AboutUs from './logo/about-us';
+import aboutMe from './logo/about-me.svg';
+import aboutUs from './logo/about-us.svg';
+import about from './logo/about.svg';
 
 const Footer = () => {
   return (
@@ -28,7 +29,7 @@ const Footer = () => {
                   return (
                     <li key={social.id}>
                       <a href={social.url} rel={social.rel} target={social.target} title={social.title}>
-                        <img src={social.image.src} alt={social.title} width={30} height={32} />
+                        <img src={social.image.src} alt={social.title} width={30} height={32} loading="lazy" />
                       </a>
                     </li>
                   );
@@ -51,17 +52,17 @@ const Footer = () => {
                 <div className="flex flex-row items-center justify-center">
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <About />
+                      <img src={about.src} alt="" loading="lazy" />
                     </a>
                   </span>
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <AboutUs />
+                      <img src={aboutUs.src} alt="" loading="lazy" />
                     </a>
                   </span>
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <AboutMe />
+                      <img src={aboutMe.src} alt="" loading="lazy" />
                     </a>
                   </span>
                 </div>
