@@ -10,6 +10,7 @@ interface SearchStore {
 type City = {
   name: string;
   id: string;
+  en_slug: string;
 };
 
 export const useSearchStore = create<SearchStore>(set => ({

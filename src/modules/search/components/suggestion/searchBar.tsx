@@ -9,12 +9,13 @@ interface SearchBarProps {
   isOpenSuggestion?: boolean;
   onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
   onClickBackButton?: () => void;
+  onEnter?: (text: string) => void;
   className?: string | object;
 }
 
 export const SearchBar = (props: SearchBarProps) => {
   const router = useRouter();
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, className } = props;
+  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className } = props;
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
@@ -34,7 +35,8 @@ export const SearchBar = (props: SearchBarProps) => {
         value={userSearchValue}
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
-        clikSearchButton={() => router.push('/s/')}
+        clikSearchButton={() => onEnter && onEnter(userSearchValue)}
+        onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
       />
       <hr className="border border-solid border-slate-200 h-7" />
       <CitySelect city={city} setCity={setCity} />

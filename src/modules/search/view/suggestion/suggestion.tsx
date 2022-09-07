@@ -90,12 +90,17 @@ export const Suggestion = () => {
     }
   };
 
+  const handleRedirectToSearch = (text: string) => {
+    location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
+  };
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
         isOpenSuggestion={isOpenSuggestion}
         onClickSearchInput={openSuggestionContent}
         onClickBackButton={clickBackButton}
+        onEnter={handleRedirectToSearch}
         className={{
           'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
@@ -105,7 +110,12 @@ export const Suggestion = () => {
         <SuggestionCentent
           searchInput={
             isMobile ? (
-              <SearchBar isOpenSuggestion={isOpenSuggestion} onClickBackButton={clickBackButton} className="!border-primary" />
+              <SearchBar
+                onEnter={handleRedirectToSearch}
+                isOpenSuggestion={isOpenSuggestion}
+                onClickBackButton={clickBackButton}
+                className="!border-primary"
+              />
             ) : undefined
           }
           items={items}
