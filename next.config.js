@@ -10,6 +10,9 @@ const nextConfig = {
     PAZIRESH24_API: process.env.PAZIRESH24_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
   },
+  images: {
+    domains: ['www.paziresh24.com'],
+  },
 };
 
 module.exports = nextConfig;
