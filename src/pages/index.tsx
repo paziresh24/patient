@@ -1,6 +1,7 @@
 import Logo from '@/common/components/atom/logo';
 import Footer from '@/common/components/layouts/footer';
 import Header from '@/common/components/layouts/header';
+import Promote from '@/modules/home/components/promote';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
 import type { NextPage } from 'next';
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
         <RecentSearch />
       </main>
 
+      <Promote />
       <Footer />
     </div>
   );
