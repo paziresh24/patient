@@ -1,3 +1,4 @@
+import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
@@ -15,11 +16,11 @@ const Promote = () => {
       >
         <div className="flex flex-col items-center">
           <div className="order-1 text-center flex-1 flex justify-center items-center">
-            <div className="mr-0  mt-6  w-full text-slate-50  ">
-              <Text as="h2" fontSize="lg" fontWeight="semiBold" className="mb-6 w-full">
+            <div className="mt-6 w-full text-slate-50">
+              <Text as="h2" fontSize="lg" fontWeight="bold" className="mb-6">
                 نزدیک‌ترین پزشک، گوشی شماست !
               </Text>
-              <Text as="p" fontSize="sm" className="pr-6 mb-12">
+              <Text as="p" fontSize="sm" className="mb-12">
                 از طریق{' '}
                 <a href="https://www.paziresh24.com/app" title="سوپر اپلیکیشن پذیرش 24">
                   سوپر اپلیکیشن پذیرش 24
@@ -31,13 +32,8 @@ const Promote = () => {
                 دریافت کنید یا در صورت تمایل نوبت حضوری آن پزشک را رزرو کنید
               </Text>
               <div className="flex flex-col gap-5 items-center justify-center">
-                <a
-                  href="https://www.paziresh24.com/app"
-                  title="دانلود رایگان اپلیکیشن پذیرش24"
-                  className="bg-slate-50  text-slate-700 text-sm rounded-2xl text-center border-none py-4 px-6 "
-                >
-                  {' '}
-                  دانلود رایگان اپلیکیشن پذیرش24
+                <a href="https://www.paziresh24.com/app" title="دانلود رایگان اپلیکیشن پذیرش24">
+                  <Button className="bg-slate-50  text-slate-700 border-none">دانلود رایگان اپلیکیشن پذیرش24</Button>
                 </a>
                 <div className="flex flex-row gap-4">
                   <Apple />
