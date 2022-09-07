@@ -35,7 +35,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
             setPage(prev => prev - 1);
           }}
         >
-          <ChevronIcon dir="right" />
+          <ChevronIcon dir="right" className="text-slate-700" />
         </button>
       )}
       <div ref={ref} className="flex h-full flex-col flex-wrap ml-8 overflow-hidden scroll-smooth w-full relative p-4">
@@ -70,7 +70,7 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
             setPage(prev => prev + 1);
           }}
         >
-          <ChevronIcon dir="left" />
+          <ChevronIcon dir="left" className="text-slate-700" />
         </button>
       )}
     </div>

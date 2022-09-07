@@ -6,7 +6,8 @@ export const useGetRecentSearch = () => {
   useEffect(() => {
     const formmatedHistory: Array<{ name?: string }> = uniqBy(JSON.parse(localStorage.getItem('history') ?? '[]') as [], 'name')
       .reverse()
-      .slice(0, 4);
+      .slice(0, 4)
+      .filter((item: any) => item?.name);
     setRecent(formmatedHistory);
   }, []);
 

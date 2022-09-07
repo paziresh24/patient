@@ -37,20 +37,21 @@ export const OtpCode = (props: OtpCodeProps) => {
         password,
       });
 
-      setCookie('certificate', data.certificate, {
-        path: '/',
-        maxAge: dayToSecond(60),
-      });
-
-      if (window?.Android) window.Android.login(data.certificate);
-
-      setUserInfo({
-        is_doctor: data.is_doctor,
-        ...data.result,
-      });
-
       if (data.status === 1) {
         postLogin && postLogin();
+
+        setCookie('certificate', data.certificate, {
+          path: '/',
+          maxAge: dayToSecond(60),
+        });
+
+        if (window?.Android) window.Android.login(data.certificate);
+
+        setUserInfo({
+          is_doctor: data.is_doctor,
+          ...data.result,
+        });
+
         return;
       }
       toast.error(data.message);
