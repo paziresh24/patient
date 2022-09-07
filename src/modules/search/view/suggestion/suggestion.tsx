@@ -1,5 +1,6 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
+import { getCookie, setCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
@@ -11,6 +12,7 @@ export const Suggestion = () => {
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const city = useSearchStore(state => state.city);
+  const setCity = useSearchStore(state => state.setCity);
   const searchSuggestion = useSearchSuggestion(
     {
       query: userSearchValue,
@@ -33,11 +35,25 @@ export const Suggestion = () => {
   };
 
   useEffect(() => {
+    try {
+      const getCityInCookie = JSON.parse(getCookie('new-city') as string);
+      if (getCityInCookie) {
+        setCity({
+          ...getCityInCookie,
+        });
+      }
+    } catch (error) {
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
     searchSuggestion.remove();
     searchSuggestion.refetch();
     if (userSearchValue) {
       openSuggestionContent();
     }
+    setCookie('new-city', city);
   }, [userSearchValue, city]);
 
   useEffect(() => {
@@ -46,11 +62,33 @@ export const Suggestion = () => {
 
   useEffect(() => {
     if (isOpenSuggestion && isMobile) {
+      neutralizeBack();
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
+      if (isMobile) {
+        window.onpopstate = () => {
+          return;
+        };
+      }
     }
   }, [isOpenSuggestion, isMobile]);
+
+  const handleClose = () => {
+    setIsShouldOpen(false);
+  };
+
+  const neutralizeBack = () => {
+    if (isMobile) {
+      window.history.pushState(null, '', window.location.href);
+      window.onpopstate = () => {
+        window.onpopstate = () => {
+          return;
+        };
+        handleClose();
+      };
+    }
+  };
 
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>

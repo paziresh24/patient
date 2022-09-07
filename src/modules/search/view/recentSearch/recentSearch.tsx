@@ -9,7 +9,6 @@ export const RecentSearch = () => {
 
   const handleChangeSearchInput = (text: string) => {
     setUserSearchValue(text);
-    console.log(text);
   };
 
   if (!recent.length) return null;

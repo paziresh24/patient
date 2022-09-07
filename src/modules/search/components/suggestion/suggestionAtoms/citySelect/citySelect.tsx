@@ -57,6 +57,7 @@ export const CitySelect = (props: CitySelectProps) => {
 
   const handleClickCity = (cityId: string) => {
     setCity({
+      ...citiesData.current.find(item => item.id === cityId),
       id: cityId,
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
     });

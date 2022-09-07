@@ -16,6 +16,7 @@ export const useSearchStore = create<SearchStore>(set => ({
   city: {
     id: '-1',
     name: 'همه ایران',
+    en_slug: 'ir',
   },
   userSearchValue: '',
   setCity: city =>

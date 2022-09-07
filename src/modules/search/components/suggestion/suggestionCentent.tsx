@@ -1,6 +1,6 @@
 import useResponsive from '@/common/hooks/useResponsive';
 import clsx from 'clsx';
-import { createElement, HTMLAttributes, ReactElement, ReactNode } from 'react';
+import { createElement, HTMLAttributes, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import CategoryBar from './suggestionAtoms/categoryBar';
 import CardSection from './suggestionSection/card';
@@ -49,7 +49,7 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
   const { className, items, searchInput } = props;
   const { isMobile } = useResponsive();
 
-  const wrapper = (children: ReactNode, container: Element) => {
+  const wrapper = (children: ReactElement, container: Element) => {
     return isMobile ? createPortal(children, container) : children;
   };
 
