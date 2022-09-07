@@ -35,6 +35,7 @@ export const Suggestion = () => {
   };
 
   useEffect(() => {
+    setIsShouldOpen(false);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
       if (getCityInCookie) {

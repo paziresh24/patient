@@ -16,6 +16,7 @@ type locationParam = {
   name: string;
   id: string;
   province_id?: string;
+  en_slug: string;
 };
 
 export const CitySelect = (props: CitySelectProps) => {
