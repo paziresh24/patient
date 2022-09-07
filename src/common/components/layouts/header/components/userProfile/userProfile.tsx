@@ -81,7 +81,7 @@ export const UserProfile = () => {
             <div className="text-center cursor-pointer p-3 text-sm md:p-6 md:pl-4 font-medium flex items-center">
               <UserCircle width="30" height="30" className="ml-1" />
               <Text className="hidden sm:block" fontWeight="bold">
-                {userInfo.name + ' ' + userInfo.family}
+                {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
               <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="mr-2" />
             </div>
@@ -101,7 +101,7 @@ export const UserProfile = () => {
                           <>
                             <div className="flex items-center">
                               <Text fontSize="sm" fontWeight="bold" className="line-clamp-1">
-                                {userInfo.name} {userInfo.family}
+                                {userInfo?.name ?? ''} {userInfo?.family ?? ''}
                               </Text>
                               <EditIcon className="w-5 h-5" />
                             </div>

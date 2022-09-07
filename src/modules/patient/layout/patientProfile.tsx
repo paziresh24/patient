@@ -29,7 +29,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
                   <>
                     <div className="flex items-center">
                       <Text fontWeight="bold" className="line-clamp-1">
-                        {userInfo.name} {userInfo.family}
+                        {userInfo.name ?? ''} {userInfo.family ?? ''}
                       </Text>
                       <EditIcon className="w-5 h-5" />
                     </div>
