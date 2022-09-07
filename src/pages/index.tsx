@@ -5,14 +5,12 @@ import Promote from '@/modules/home/components/promote';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
 import type { NextPage } from 'next';
-import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 
 const Home: NextPage = () => {
   return (
     <div>
-      <Head>
-        <title>Patient</title>
-      </Head>
+      <NextSeo title="نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان" canonical="https://www.paziresh24.com/" />
       <Header />
       <main className="h-[91vh] flex flex-col justify-center items-center p-5 pb-40 space-y-8">
         <Logo className="text-2xl md:text-3xl" />
