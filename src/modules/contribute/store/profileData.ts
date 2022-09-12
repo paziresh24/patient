@@ -18,7 +18,7 @@ export type Center = {
   server_id?: string;
   address?: string;
   center_type?: number;
-  tell_array?: string[];
+  display_number_array?: string[];
   province?: string;
   city?: string;
   map?: {
