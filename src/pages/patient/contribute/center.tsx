@@ -35,8 +35,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!isLoading && profileData && router.query?.center_id) {
       const center = profileData.centers?.find(center => center.id === router.query?.center_id);
+
       setSelectedCenter(center);
-      setPhoneNumbers(center?.tell_array ?? []);
+      setPhoneNumbers(center?.display_number_array ?? []);
       setCenterName(center?.name ?? '');
       setCenterType(center?.center_type === 1 ? centerTypeOptions[0].label : centerTypeOptions[1].label);
       setAddresses([
