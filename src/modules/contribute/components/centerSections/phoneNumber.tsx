@@ -24,7 +24,6 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
     const removedFieldWithIndex = phoneNumbers.filter((_, i) => i !== index);
     setPhoneNumbers(removedFieldWithIndex);
   };
-  console.log(phoneNumbers);
 
   return (
     <>
