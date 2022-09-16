@@ -6,7 +6,7 @@ import ReceiptIcon from '@/components/icons/receipt';
 import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import TrashIcon from '@/components/icons/trash';
-import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToReceoptTurn';
+import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import getConfig from 'next/config';
@@ -63,15 +63,22 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    redirectToReceoptTurn({
+    window.open(
+      getReceiptTurnUrl({
+        slug: doctorInfo.slug,
+        bookId: id,
+        centerId: centerId,
+      }),
+      '_blank',
+    );
+  };
+
+  const shareTurn = () => {
+    const link = getReceiptTurnUrl({
       slug: doctorInfo.slug,
       bookId: id,
       centerId: centerId,
     });
-  };
-
-  const shareTurn = () => {
-    const link = `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`;
     if (query.isWebView) return window.Android.shareQA(`رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`, link);
     if (navigator.share)
       if (navigator.share)
