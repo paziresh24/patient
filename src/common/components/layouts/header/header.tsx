@@ -3,7 +3,6 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
@@ -41,11 +40,9 @@ const Header = () => {
       <header className="bg-white text-slate-700 text-lg z-50 px-4 h-20 flex items-center border-b border-solid border-slate-100">
         {isDesktop && (
           <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between hidden md:flex">
-            <Link href="/">
-              <a>
-                <Logo width={40} height={40} />
-              </a>
-            </Link>
+            <a href="/">
+              <Logo width={40} height={40} />
+            </a>
             <nav className="flex-1">
               <ul className="flex justify-center">
                 <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
