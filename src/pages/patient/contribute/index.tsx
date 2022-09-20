@@ -38,16 +38,16 @@ const Home = () => {
       >
         <div className="flex flex-col space-y-5">
           <Back />
-          <Text className="!mt-24 mx-auto text-[#1B268D]  " fontSize="3xl" fontWeight="bold">
+          <Text className="!mt-24 mx-auto text-[#1B268D]" fontSize="3xl" fontWeight="bold">
             اینجا کجاست ؟
           </Text>
-          <Text fontWeight="medium" fontSize="sm" className="text-center  line-height-4 text-slate-600 !leading-7 ">
+          <Text fontWeight="medium" fontSize="sm" className="text-center line-height-4 text-slate-600 !leading-7 ">
             در اینجا شما می توانید در صورت عدم ثبت و یا نادرست بودن اطلاعات پزشک، با گزارش شماره تلفن و آدرس صحیح، به بیماران دیگر کمک کنید
             تا دسترسی راحت‌تری به پزشک‌‌شان داشته باشند.
           </Text>
 
           <div className="flex items-center space-s-2">
-            <Text fontSize="sm" fontWeight="medium" className="text-center text-primary leading-7">
+            <Text as="div" fontSize="sm" fontWeight="medium" className="text-center text-primary leading-7">
               این همکاری شما، باعث کاهش زمان درد و رنج سایر بیماران میشود.
               <img src={heart.src} alt="" className=" inline-block" width={25} />
             </Text>
@@ -61,7 +61,7 @@ const Home = () => {
 
         <Checkbox
           label="متوجه شدم "
-          classNameWrapper="flex justify-center mt-28"
+          className="flex justify-center mt-28"
           labelName="agree"
           checked={isChecked}
           onChange={() => setIsChecked(!isChecked)}
