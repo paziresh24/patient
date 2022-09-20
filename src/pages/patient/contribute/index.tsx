@@ -54,7 +54,7 @@ const Home = () => {
           <img src={heroVector.src} alt="پذیرش24-درمان" className="self-center" />
 
           <Text fontSize="sm" className="text-center text-slate-500">
-            مشارکت شما در این گزارش ، قابل ستایش و تقدیر است.{' '}
+            پیشاپیش، از همدلی و همراهی شما صمیمانه سپاسگزاریم.
           </Text>
         </div>
 
