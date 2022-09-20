@@ -48,7 +48,7 @@ const Home = () => {
 
           <div className="flex items-center space-s-2">
             <Text fontSize="sm" fontWeight="medium" className="text-center text-primary leading-7">
-              این همکاری شما، باعث کاهش زمان درد و رنج سایر بیماران میشود .
+              این همکاری شما، باعث کاهش زمان درد و رنج سایر بیماران میشود.
               <img src={heart.src} alt="" className=" inline-block" width={25} />
             </Text>
           </div>
