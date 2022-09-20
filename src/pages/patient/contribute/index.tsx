@@ -51,7 +51,7 @@ const Home = () => {
               <img src={heart.src} alt="" className=" inline-block" width={25} />
             </Text>
           </div>
-          <img src={heroVector.src} alt="" className="self-center" />
+          <img src={heroVector.src} alt="پذیرش24-درمان" className="self-center" />
 
           <Text fontSize="sm" className="text-center text-slate-500">
             مشارکت شما در این گزارش ، قابل ستایش و تقدیر است.{' '}
