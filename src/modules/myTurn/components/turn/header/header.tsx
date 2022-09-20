@@ -44,6 +44,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const shouldShowRemoveTurn = status === BookStatus.notVisited;
 
   const removeBookAction = () => {
+    setRemoveModal(false);
     removeBookApi.mutate(
       {
         center_id: centerId,
@@ -53,7 +54,6 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === 1) {
-            setRemoveModal(false);
             return removeBook({ bookId: id });
           }
           toast.error(data.data.message);
