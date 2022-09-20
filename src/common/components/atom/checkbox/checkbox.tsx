@@ -1,9 +1,7 @@
 import { ForwardedRef, forwardRef, InputHTMLAttributes } from 'react';
 import Text from '../text';
 
-type CheckBoxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
-
-export interface InputProps extends CheckBoxProps {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   labelName?: string;
 }
