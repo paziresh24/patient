@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import 'leaflet/dist/leaflet.css';
 import { useEffect } from 'react';
-import { useMapEvents } from 'react-leaflet/hooks';
-import { MapContainer } from 'react-leaflet/MapContainer';
-import { TileLayer } from 'react-leaflet/TileLayer';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import marker from './marker.png';
 
 interface GetCenterProps {
