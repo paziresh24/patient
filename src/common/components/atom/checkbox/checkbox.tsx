@@ -12,7 +12,7 @@ export const CheckBox = forwardRef((props: InputProps, ref: ForwardedRef<any>) =
 
   return (
     <label className={className}>
-      <input type="checkbox" ref={ref} className="w-4 h-4" {...CheckBoxProps} />
+      <input type="checkbox" ref={ref} className="w-4 h-4 accent-primary" {...CheckBoxProps} />
       <Text fontSize="sm" fontWeight="medium" className="mr-2">
         {label}
       </Text>
