@@ -4,16 +4,19 @@ import { useRouter } from 'next/router';
 
 import Text from '@/components/atom/text';
 
+import Back from '@/common/components/atom/back';
 import Button from '@/common/components/atom/button';
+import Checkbox from '@/common/components/atom/checkbox';
+import WhereIsHereIcon from '@/common/components/icons/whereIsHere';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
-import doctor from '@/modules/contribute/images/doctor.svg';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
-import idCard from '@/modules/contribute/images/idCard.svg';
+import { useState } from 'react';
 
 const Home = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleNextPage = () => {
     router.push({
@@ -35,45 +38,41 @@ const Home = () => {
         }}
       >
         <div className="flex flex-col space-y-5">
-          <img src={heroVector.src} alt="" className="self-center" />
-          <Text fontWeight="bold" className="text-center">
-            با مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی، به 5 میلیون بیمارِ پذیرش 24 کمک کنید.
+          <Back />
+          <WhereIsHereIcon className="!mt-24 mx-auto" />
+          <Text fontWeight="medium" fontSize="sm" className="text-center  line-height-4 text-slate-600 !leading-7 ">
+            در اینجا شما می توانید در صورت عدم ثبت و یا نادرست بودن اطلاعات پزشک، با گزارش شماره تلفن و آدرس صحیح، به بیماران دیگر کمک کنید
+            تا دسترسی راحت‌تری به پزشک‌‌شان داشته باشند.
           </Text>
+
           <div className="flex items-center space-s-2">
-            <img src={heart.src} alt="" className="-mt-5" width={25} />
-            <Text fontSize="sm" fontWeight="medium" className="text-center text-slate-500">
-              شما می توانید با مشارکت در هر یک از موارد زیر، در کمک و یاری به دیگر بیماران قدمی بردارید.
+            <Text fontSize="sm" fontWeight="medium" className="text-center text-blue-500 leading-7">
+              این همکاری شما , باعث کاهش زمان درد و رنج سایر بیماران میشود .
+              <img src={heart.src} alt="" className=" inline-block" width={25} />
             </Text>
           </div>
-          <div className="bg-white shadow-xl shadow-blue-50 flex flex-col rounded-2xl p-6 space-y-4">
-            <div className="flex space-s-4">
-              <img src={idCard.src} className="w-7 h-7" alt="" />
-              <div className="flex flex-col space-y-2">
-                <Text fontWeight="semiBold" fontSize="sm">
-                  اطلاعات پزشک مورد نظر خود را بروز کنید
-                </Text>
-                <Text fontWeight="light" fontSize="sm" className="text-slate-500">
-                  شما می توانید اطلاعات تماس و آدرس مرکز درمانی پزشک مورد نظر خود را ویرایش کنید.
-                </Text>
-              </div>
-            </div>
-            <div className="flex space-s-4">
-              <img src={doctor.src} className="w-7 h-7" alt="" />
-              <div className="flex flex-col space-y-2">
-                <Text fontWeight="semiBold" fontSize="sm">
-                  گزارش روش های دریافت نوبت
-                </Text>
-                <Text fontWeight="light" fontSize="sm" className="text-slate-500">
-                  شما می توانید روش های دریافت نوبت از پزشک مورد نظرتان را با دیگر بیماران به اشتراک بگذارید.
-                </Text>
-              </div>
-            </div>
-          </div>
+          <img src={heroVector.src} alt="" className="self-center" />
+
+          <Text fontSize="sm" className="text-center text-slate-500">
+            مشارکت شما در این گزارش ، قابل ستایش و تقدیر است.{' '}
+          </Text>
         </div>
 
-        <div className="md:max-w-md fixed bottom-0 w-full p-5">
-          <Button block variant="primary" onClick={handleNextPage} loading={isLoading}>
-            متوجه شدم
+        <Checkbox
+          label="متوجه شدم "
+          classNameWrapper="flex justify-center mt-20"
+          labelName="agree"
+          checked={isChecked}
+          onChange={() => setIsChecked(!isChecked)}
+        />
+
+        <div className="flex justify-between gap-5  md:max-w-md fixed bottom-0 w-full p-5">
+          <Button disabled={!isChecked} variant="primary" onClick={handleNextPage} loading={isLoading} className="flex-1">
+            قصد کمک دارم
+          </Button>
+
+          <Button variant="secondary" onClick={handleNextPage} loading={isLoading} className="flex-1">
+            انصراف
           </Button>
         </div>
       </main>
