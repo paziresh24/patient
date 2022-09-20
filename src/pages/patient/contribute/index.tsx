@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 
 import Text from '@/components/atom/text';
 
-import Back from '@/common/components/atom/back';
 import Button from '@/common/components/atom/button';
 import Checkbox from '@/common/components/atom/checkbox';
+import BackIcon from '@/common/components/icons/back';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
@@ -37,7 +37,7 @@ const Home = () => {
         }}
       >
         <div className="flex flex-col space-y-5">
-          <Back />
+          <BackIcon onClick={router.back} />
           <Text className="!mt-24 mx-auto text-[#1B268D]" fontSize="3xl" fontWeight="bold">
             اینجا کجاست ؟
           </Text>
