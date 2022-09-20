@@ -1,6 +1,7 @@
 import Modal from '@/common/components/atom/modal';
+import dynamic from 'next/dynamic';
 import { useLoginModalContext } from '../context/loginModal';
-import LoginForm from './loginForm';
+const LoginForm = dynamic(() => import('./loginForm'));
 
 export const LoginModal = () => {
   const { loginModalState, openLoginModal } = useLoginModalContext();

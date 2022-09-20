@@ -1,11 +1,12 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { getCookie, setCookie } from 'cookies-next';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
-import SuggestionCentent from '../../components/suggestion/suggestionCentent';
 import { useSearchStore } from '../../store/search';
+const SuggestionCentent = dynamic(() => import('../../components/suggestion/suggestionCentent'));
 
 export const Suggestion = () => {
   const [isOpenSuggestion, setIsShouldOpen] = useState(false);
