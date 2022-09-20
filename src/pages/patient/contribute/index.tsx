@@ -72,7 +72,7 @@ const Home = () => {
             قصد کمک دارم
           </Button>
 
-          <Button variant="secondary" onClick={router.back} loading={isLoading} className="flex-1">
+          <Button variant="secondary" onClick={router.back} className="flex-1">
             انصراف
           </Button>
         </div>
