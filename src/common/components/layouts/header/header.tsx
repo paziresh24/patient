@@ -6,6 +6,7 @@ import ChevronIcon from '@/components/icons/chevron';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+import Transition from '../../atom/transition';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
 import MobileNavbar from './components/mobileNavbar';
 import SubMenu from './components/subMenu';
@@ -52,10 +53,10 @@ const Header = () => {
                   <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">دسته بندی ها </span>
                   <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
 
-                  <div
-                    className={`shadow-md rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50 ${
-                      open ? 'flex' : 'hidden'
-                    }`}
+                  <Transition
+                    match={open}
+                    animation="bottom"
+                    className="shadow-md flex rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50"
                   >
                     <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
                       <a
@@ -83,11 +84,10 @@ const Header = () => {
                         مجله سلامتی
                       </a>
                     </div>
-
                     {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} />}
                     {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} />}
                     {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
-                  </div>
+                  </Transition>
                 </li>
                 <SubMenu title="برای بیماران" menuItem={withUserMenu} />
                 <SubMenu title="برای پزشکان" menuItem={withDoctorMenu} />

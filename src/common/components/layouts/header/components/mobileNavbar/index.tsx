@@ -8,7 +8,6 @@ import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from '../../data/links';
 import UserProfile from '../userProfile';
 import Sidebar from './sidebar';
-import BackDrop from './sidebar/backdrop';
 
 const MobileNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -55,14 +54,7 @@ const MobileNavbar = () => {
   }, [menuItemExpertise.status]);
   return (
     <div ref={ref} className="text-sm block w-full z-50 lg:hidden">
-      {open && (
-        <BackDrop
-          action={() => {
-            setOpen(false);
-          }}
-        />
-      )}
-      <div className="max-w-screen-xl mx-auto relative  flex items-center justify-between p-2 ">
+      <div className="max-w-screen-xl mx-auto relative flex items-center justify-between p-2">
         <div className="flex flex-row items-center gap-2">
           <HumbuggerMenu onClick={() => setOpen(true)} />
           <Link href="/">
@@ -72,7 +64,7 @@ const MobileNavbar = () => {
           </Link>
         </div>
         <UserProfile />
-        <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} className={`${open ? 'block' : 'hidden'}`} />
+        <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} isOpen={open} />
       </div>
     </div>
   );
