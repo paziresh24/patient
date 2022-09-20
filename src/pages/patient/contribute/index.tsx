@@ -7,7 +7,6 @@ import Text from '@/components/atom/text';
 import Back from '@/common/components/atom/back';
 import Button from '@/common/components/atom/button';
 import Checkbox from '@/common/components/atom/checkbox';
-import WhereIsHereIcon from '@/common/components/icons/whereIsHere';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
@@ -39,15 +38,17 @@ const Home = () => {
       >
         <div className="flex flex-col space-y-5">
           <Back />
-          <WhereIsHereIcon className="!mt-24 mx-auto" />
+          <Text className="!mt-24 mx-auto text-[#1B268D]  " fontSize="3xl" fontWeight="bold">
+            اینجا کجاست ؟
+          </Text>
           <Text fontWeight="medium" fontSize="sm" className="text-center  line-height-4 text-slate-600 !leading-7 ">
             در اینجا شما می توانید در صورت عدم ثبت و یا نادرست بودن اطلاعات پزشک، با گزارش شماره تلفن و آدرس صحیح، به بیماران دیگر کمک کنید
             تا دسترسی راحت‌تری به پزشک‌‌شان داشته باشند.
           </Text>
 
           <div className="flex items-center space-s-2">
-            <Text fontSize="sm" fontWeight="medium" className="text-center text-blue-500 leading-7">
-              این همکاری شما , باعث کاهش زمان درد و رنج سایر بیماران میشود .
+            <Text fontSize="sm" fontWeight="medium" className="text-center text-primary leading-7">
+              این همکاری شما، باعث کاهش زمان درد و رنج سایر بیماران میشود .
               <img src={heart.src} alt="" className=" inline-block" width={25} />
             </Text>
           </div>
@@ -60,13 +61,13 @@ const Home = () => {
 
         <Checkbox
           label="متوجه شدم "
-          classNameWrapper="flex justify-center mt-20"
+          classNameWrapper="flex justify-center mt-28"
           labelName="agree"
           checked={isChecked}
           onChange={() => setIsChecked(!isChecked)}
         />
 
-        <div className="flex justify-between gap-5  md:max-w-md fixed bottom-0 w-full p-5">
+        <div className="flex   justify-between gap-3  md:max-w-md fixed bottom-0 w-full p-5">
           <Button disabled={!isChecked} variant="primary" onClick={handleNextPage} loading={isLoading} className="flex-1">
             قصد کمک دارم
           </Button>
