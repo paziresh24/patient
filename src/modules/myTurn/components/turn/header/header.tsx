@@ -99,7 +99,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     },
     {
       id: 2,
-      name: 'حذف نوبت',
+      name: 'لغو نوبت',
       icon: <TrashIcon />,
       action: () => setRemoveModal(true),
       testId: 'drop-down__remove-button',
@@ -134,10 +134,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
       />
 
-      <Modal title="آیا از حدف نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
-            حذف
+            لغو نوبت
           </Button>
           <Button
             theme="error"

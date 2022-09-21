@@ -22,7 +22,7 @@ export const ChevronIcon = memo(({ dir = 'left', ...rest }: Props) => (
     viewBox="0 0 7 11"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    style={{ transform: `rotate(${rotateDegrees[dir]})` }}
+    style={{ transition: 'transform 0.3s', transform: `rotate(${rotateDegrees[dir]})` }}
     {...rest}
   >
     <path

@@ -3,9 +3,9 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+import Transition from '../../atom/transition';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
 import MobileNavbar from './components/mobileNavbar';
 import SubMenu from './components/subMenu';
@@ -41,21 +41,19 @@ const Header = () => {
       <header className="bg-white text-slate-700 text-lg z-50 px-4 h-20 flex items-center border-b border-solid border-slate-100">
         {isDesktop && (
           <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between hidden md:flex">
-            <Link href="/">
-              <a>
-                <Logo width={40} height={40} />
-              </a>
-            </Link>
+            <a href="/">
+              <Logo width={40} height={40} />
+            </a>
             <nav className="flex-1">
               <ul className="flex justify-center">
                 <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
                   <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">دسته بندی ها </span>
                   <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
 
-                  <div
-                    className={`shadow-md rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50 ${
-                      open ? 'flex' : 'hidden'
-                    }`}
+                  <Transition
+                    match={open}
+                    animation="bottom"
+                    className="shadow-md flex rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50"
                   >
                     <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
                       <a
@@ -83,11 +81,10 @@ const Header = () => {
                         مجله سلامتی
                       </a>
                     </div>
-
                     {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} />}
                     {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} />}
                     {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
-                  </div>
+                  </Transition>
                 </li>
                 <SubMenu title="برای بیماران" menuItem={withUserMenu} />
                 <SubMenu title="برای پزشکان" menuItem={withDoctorMenu} />

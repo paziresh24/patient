@@ -63,7 +63,9 @@ export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataPar
       id: 5,
       name: `میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
       value: waitingTime,
-      shouldShow: [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.deleted].includes(status),
+      shouldShow:
+        [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.deleted].includes(status) &&
+        centerType !== CenterType.consult,
     },
   ];
 
