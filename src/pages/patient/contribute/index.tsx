@@ -6,7 +6,7 @@ import Text from '@/components/atom/text';
 
 import Button from '@/common/components/atom/button';
 import Checkbox from '@/common/components/atom/checkbox';
-import AppBar from '@/common/components/layouts/appBar';
+import CloseIcon from '@/common/components/icons/close';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
@@ -36,9 +36,11 @@ const Home = () => {
       <Head>
         <title>مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی</title>
       </Head>
-      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} backButton />
+
       <main className="md:max-w-md mx-auto flex flex-col items-center justify-between p-5 pb-36">
         <div className="flex flex-col space-y-5">
+          <CloseIcon onClick={router.back} />
+
           <Text className="!mt-11 mx-auto text-[#1B268D]" fontSize="3xl" fontWeight="bold">
             اینجا کجاست؟
           </Text>
