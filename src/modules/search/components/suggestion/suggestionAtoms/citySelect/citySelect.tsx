@@ -24,7 +24,7 @@ export const CitySelect = (props: CitySelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
-  const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>();
+  const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>('provinces');
   const provincesData = useRef<locationParam[]>([]);
   const citiesData = useRef<locationParam[]>([]);
   const [filtredLocation, setFiltredLocation] = useState<
@@ -36,23 +36,16 @@ export const CitySelect = (props: CitySelectProps) => {
   >([]);
 
   useEffect(() => {
-    setStepSelect('provinces');
     if (getCitiesAndProvince.isSuccess) {
       provincesData.current = getCitiesAndProvince.data.data.result.province;
       citiesData.current = getCitiesAndProvince.data.data.result.city;
+      setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
     }
   }, [getCitiesAndProvince.status, isOpen]);
 
-  useEffect(() => {
-    setUserSearchInput('');
-    if (isOpen && stepSelect === 'provinces') {
-      setStepSelect('provinces');
-      setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
-    }
-  }, [isOpen, stepSelect]);
-
   const handleClickProvince = (provinceId: string) => {
     setStepSelect('cities');
+    setUserSearchInput('');
     setFiltredLocation(citiesData.current.filter(city => city.province_id === provinceId).map(item => ({ ...item, isProvince: false })));
   };
 
