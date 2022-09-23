@@ -69,7 +69,7 @@ export const CitySelect = (props: CitySelectProps) => {
         variant="text"
         icon={
           <svg
-            className="fill-slate-600 min-w-min"
+            className="fill-slate-700 min-w-min"
             width="20"
             height="20"
             viewBox="0 0 19 19"
@@ -85,7 +85,7 @@ export const CitySelect = (props: CitySelectProps) => {
           </svg>
         }
         onClick={() => setIsOpen(true)}
-        className="!text-slate-600 !px-2 whitespace-nowrap"
+        className="!text-slate-700 !px-2 whitespace-nowrap"
       >
         <Text fontSize="sm">{city.name}</Text>
       </Button>

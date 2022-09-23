@@ -1,12 +1,11 @@
 import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
 import CitySelect from './suggestionAtoms/citySelect';
-import { SearchInput } from './suggestionAtoms/searchInput';
+import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
 
-interface SearchBarProps {
+interface SearchBarProps extends SearchInputProps {
   isOpenSuggestion?: boolean;
   onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
   onClickBackButton?: () => void;
@@ -15,8 +14,7 @@ interface SearchBarProps {
 }
 
 export const SearchBar = (props: SearchBarProps) => {
-  const router = useRouter();
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className } = props;
+  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
@@ -39,7 +37,7 @@ export const SearchBar = (props: SearchBarProps) => {
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
         onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
-        autoFocus
+        {...rest}
       />
       <Divider orientation="vertical" height="2rem" />
       <CitySelect city={city} setCity={setCity} key={city.name} />
