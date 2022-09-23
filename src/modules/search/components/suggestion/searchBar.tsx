@@ -1,3 +1,4 @@
+import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { MouseEventHandler } from 'react';
@@ -32,13 +33,15 @@ export const SearchBar = (props: SearchBarProps) => {
         placeholder="نام بیماری، تخصص، پزشک، مرکز درمانی و ..."
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
+        onClear={() => setUserSearchValue('')}
         value={userSearchValue}
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
         onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
+        autoFocus
       />
-      <hr className="border border-solid border-slate-200 h-7" />
+      <Divider orientation="vertical" height="2rem" />
       <CitySelect city={city} setCity={setCity} />
     </div>
   );

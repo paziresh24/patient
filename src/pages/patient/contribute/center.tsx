@@ -12,6 +12,7 @@ import TextField from '@/common/components/atom/textField';
 import { splunkInstance } from '@/common/services/splunk';
 import AppBar from '@/components/layouts/appBar';
 
+import Divider from '@/common/components/atom/divider';
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
 import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
 import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
@@ -105,7 +106,7 @@ const Home: NextPage = () => {
               value={centerName}
               className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
             />
-            <hr className="border-slate-200" />
+            <Divider />
             <AddressSection
               addresses={addresses}
               setAddresses={setAddresses}
@@ -117,9 +118,9 @@ const Home: NextPage = () => {
                 lng: selectedCenter?.map?.lon,
               }}
             />
-            <hr className="border-slate-200" />
+            <Divider />
             <PhoneNumberSection phoneNumbers={phoneNumbers} setPhoneNumbers={setPhoneNumbers} />
-            <hr className="border-slate-200" />
+            <Divider />
           </>
         ) : (
           <FormLoading />
@@ -142,14 +143,14 @@ const FormLoading = () => {
       <Skeleton w="100%" h="3rem" rounded="lg" />
       <Skeleton w="6rem" h="1rem" rounded="full" />
       <Skeleton w="100%" h="3rem" rounded="lg" />
-      <hr className="border-slate-200" />
+      <Divider />
       <Skeleton w="6rem" h="1rem" rounded="full" />
       <div className="flex space-s-2">
         <Skeleton w="100%" h="3rem" rounded="lg" />
         <Skeleton w="3.5rem" h="3rem" rounded="lg" />
       </div>
       <Skeleton w="8rem" h="3rem" rounded="lg" />
-      <hr className="border-slate-200" />
+      <Divider />
       <Skeleton w="6rem" h="1rem" rounded="full" />
       <div className="flex space-s-2">
         <Skeleton w="100%" h="3rem" rounded="lg" />

@@ -12,8 +12,8 @@ const Home: NextPage = () => {
     <div>
       <NextSeo title="نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان" canonical="https://www.paziresh24.com/" />
       <Header />
-      <main className="h-[91vh] flex flex-col justify-center items-center p-5 pb-40 space-y-8">
-        <Logo className="text-2xl md:text-3xl" />
+      <main className="h-[90vh] mb-6 md:mb-0 md:h-[87vh] bg-white md:rounded-2xl md:shadow-sm md:m-5 flex flex-col justify-center items-center p-5 pb-40 space-y-6">
+        <Logo className="text-2xl md:text-3xl" width={55} />
         <Suggestion />
         <RecentSearch />
       </main>

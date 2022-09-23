@@ -2,6 +2,7 @@ import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUs
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
+import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
@@ -117,7 +118,7 @@ export const UserProfile = () => {
                   </div>
                 </a>
               </Link>
-              <hr className="border-slate-200" />
+              <Divider />
               <div className="flex overflow-auto flex-col p-3 pb-0">
                 <MenuList>
                   {menuItems.map(item => (
@@ -126,7 +127,7 @@ export const UserProfile = () => {
                     </MenuItem>
                   ))}
                 </MenuList>
-                <hr className="border-slate-200 my-1" />
+                <Divider className="my-1" />
                 <MenuList>
                   <MenuItem name="پشتیبانی" link="https://www.paziresh24.com/home/support-form/" icon={<HeadphoneIcon />} />
                   <MenuItem name="خروج" link="/logout" icon={<LogoutIcon />} />

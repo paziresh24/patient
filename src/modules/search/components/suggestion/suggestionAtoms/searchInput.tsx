@@ -1,4 +1,4 @@
-import ChevronIcon from '@/common/components/icons/chevron';
+import CloseIcon from '@/common/components/icons/close';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
@@ -6,22 +6,39 @@ interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   showBackButton?: boolean;
   clickBackButton?: () => void;
   clikSearchButton?: () => void;
+  onClear?: () => void;
 }
 
 export const SearchInput = (props: SearchInputProps) => {
-  const { showBackButton, clickBackButton, clikSearchButton, className, ...inputProps } = props;
+  const { showBackButton, clickBackButton, clikSearchButton, onClear, className, ...inputProps } = props;
+
   return (
-    <div className="w-full h-12 md:h-14 flex items-center px-1 space-s-2">
+    <div className="w-full h-12 md:h-14 flex items-center px-1 pl-2 space-s-1 md:space-s-2">
       {showBackButton ? (
-        <ChevronIcon className="cursor-pointer w-7" dir="right" color="#505971" width="1rem" height="1rem" onClick={clickBackButton} />
+        <svg
+          width="26"
+          height="26"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="cursor-pointer min-w-min"
+          onClick={clickBackButton}
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12.4697 5.46967C12.7626 5.17678 13.2374 5.17678 13.5303 5.46967L19.5303 11.4697C19.8232 11.7626 19.8232 12.2374 19.5303 12.5303L13.5303 18.5303C13.2374 18.8232 12.7626 18.8232 12.4697 18.5303C12.1768 18.2374 12.1768 17.7626 12.4697 17.4697L17.1893 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H17.1893L12.4697 6.53033C12.1768 6.23744 12.1768 5.76256 12.4697 5.46967Z"
+            fill="#505971"
+          />
+        </svg>
       ) : (
         <svg
-          width="28"
-          height="28"
+          width="26"
+          height="26"
           viewBox="0 0 28 28"
           fill="#505971"
           xmlns="http://www.w3.org/2000/svg"
-          className="cursor-pointer"
+          className="cursor-pointer min-w-min"
           onClick={clikSearchButton}
         >
           <title>icon</title> <rect x="0.0546875" y="0.502197" width="27" height="27" rx="10" fill="transparent"></rect>
@@ -32,7 +49,15 @@ export const SearchInput = (props: SearchInputProps) => {
           ></path>
         </svg>
       )}
-      <input type="text" className={clsx('h-full w-full bg-transparent outline-none text-sm md:text-base', className)} {...inputProps} />
+
+      <input
+        className={clsx('h-full w-full bg-transparent outline-none text-sm md:text-base appearance-none', className)}
+        {...inputProps}
+        autoComplete="off"
+        data-hj-allow
+        inputMode="search"
+      />
+      {inputProps.value && <CloseIcon onClick={onClear} className="cursor-pointer" />}
     </div>
   );
 };
