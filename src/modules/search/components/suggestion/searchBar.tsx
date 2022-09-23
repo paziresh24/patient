@@ -5,7 +5,7 @@ import { useSearchStore } from '../../store/search';
 import CitySelect from './suggestionAtoms/citySelect';
 import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
 
-interface SearchBarProps extends SearchInputProps {
+interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
   onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
   onClickBackButton?: () => void;
