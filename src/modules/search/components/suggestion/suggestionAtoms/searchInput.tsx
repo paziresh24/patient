@@ -2,7 +2,7 @@ import CloseIcon from '@/common/components/icons/close';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
-export interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
+export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   showBackButton?: boolean;
   clickBackButton?: () => void;
   clikSearchButton?: () => void;
