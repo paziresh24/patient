@@ -1,6 +1,6 @@
 import Text from '@/components/atom/text';
 import clsx from 'clsx';
-import Image from 'next/image';
+import Image from 'next/future/image';
 import logoSvg from './logo.svg';
 
 interface LogoProps {

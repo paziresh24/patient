@@ -3,5 +3,9 @@
 }
 
 .title span {
-  @apply !text-xs !text-slate-400 !font-normal;
+  @apply !text-[0.82rem] !text-slate-400 !font-normal;
+}
+
+.title {
+  @apply hover:opacity-50 transition-opacity line-clamp-1;
 }

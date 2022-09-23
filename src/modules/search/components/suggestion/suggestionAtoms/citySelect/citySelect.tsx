@@ -68,7 +68,14 @@ export const CitySelect = (props: CitySelectProps) => {
       <Button
         variant="text"
         icon={
-          <svg className="fill-slate-700" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="fill-slate-600 min-w-min"
+            width="20"
+            height="20"
+            viewBox="0 0 19 19"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <title>icon</title>
             <path
               fillRule="evenodd"
@@ -78,9 +85,9 @@ export const CitySelect = (props: CitySelectProps) => {
           </svg>
         }
         onClick={() => setIsOpen(true)}
-        className="text-slate-600 px-2 whitespace-nowrap"
+        className="!text-slate-600 !px-2 whitespace-nowrap"
       >
-        {city.name}
+        <Text fontSize="sm">{city.name}</Text>
       </Button>
       <Modal title="انتخاب استان/شهر" fullScreen isOpen={isOpen} onClose={setIsOpen}>
         <div className="flex flex-col space-y-3 h-full">

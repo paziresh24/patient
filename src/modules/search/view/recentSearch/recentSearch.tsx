@@ -1,10 +1,10 @@
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
-import { useGetRecentSearch } from '../../hooks/useGetRecentSearch';
+import { useRecentSearch } from '../../hooks/useRecentSearch';
 import { useSearchStore } from '../../store/search';
 
 export const RecentSearch = () => {
-  const recent = useGetRecentSearch();
+  const { recent } = useRecentSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
 
   const handleChangeSearchInput = (text: string) => {

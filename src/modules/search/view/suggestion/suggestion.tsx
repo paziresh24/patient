@@ -12,6 +12,7 @@ export const Suggestion = () => {
   const [isOpenSuggestion, setIsShouldOpen] = useState(false);
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
+  const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const searchSuggestion = useSearchSuggestion(
@@ -32,6 +33,7 @@ export const Suggestion = () => {
 
   const clickBackButton = () => {
     setIsShouldOpen(false);
+    setUserSearchValue('');
   };
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export const Suggestion = () => {
     if (userSearchValue) {
       openSuggestionContent();
     }
-    setCookie('new-city', city);
+    city.id !== '-1' && setCookie('new-city', city);
   }, [userSearchValue, city]);
 
   useEffect(() => {
@@ -98,7 +100,7 @@ export const Suggestion = () => {
         onClickBackButton={clickBackButton}
         onEnter={handleRedirectToSearch}
         className={{
-          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
+          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
       />
@@ -115,7 +117,7 @@ export const Suggestion = () => {
             ) : undefined
           }
           items={suggestionItems}
-          className="shadow-md"
+          className="shadow-md border border-solid border-slate-200"
         />
       )}
     </div>
