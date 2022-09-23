@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
+  swcMinify: true,
   reactStrictMode: false,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
