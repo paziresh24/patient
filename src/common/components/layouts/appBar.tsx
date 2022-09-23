@@ -13,7 +13,7 @@ interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
 export const AppBar = ({ title, backButton, titleLoading = false, className, ...rest }: AppBarProps) => {
   const router = useRouter();
   return (
-    <div className={clsx('flex items-center h-16 px-6 bg-white shadow-md', className)} {...rest}>
+    <div className={clsx('flex sticky top-0 items-center h-16 px-6 bg-white shadow-md z-50', className)} {...rest}>
       {backButton && (
         <div onClick={router.back} className="ml-2 cursor-pointer">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,10 +26,11 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, ...
           </svg>
         </div>
       )}
+
       {titleLoading ? (
         <Skeleton w="7rem" h="1rem" rounded="full" />
       ) : (
-        <Text fontWeight="bold" fontSize="sm">
+        <Text fontWeight="bold" fontSize="sm" className="line-clamp-1">
           {title}
         </Text>
       )}
