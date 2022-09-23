@@ -116,6 +116,8 @@
   -moz-font-feature-settings: 'ss02';
   -webkit-font-feature-settings: 'ss02';
   font-feature-settings: 'ss02';
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 @supports (font-variation-settings: normal) {
@@ -132,6 +134,13 @@ body {
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+
+::-webkit-search-decoration,
+::-webkit-search-cancel-button,
+::-webkit-search-results-button,
+::-webkit-search-results-decoration {
+  display: none;
 }
 
 .leaflet-control-zoom {

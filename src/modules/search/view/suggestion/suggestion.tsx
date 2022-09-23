@@ -105,7 +105,7 @@ export const Suggestion = () => {
         onClickBackButton={clickBackButton}
         onEnter={handleRedirectToSearch}
         className={{
-          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl': isOpenSuggestion,
+          'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
       />
@@ -118,6 +118,7 @@ export const Suggestion = () => {
                 isOpenSuggestion={isOpenSuggestion}
                 onClickBackButton={clickBackButton}
                 className="!border-primary"
+                autoFocus
               />
             ) : undefined
           }

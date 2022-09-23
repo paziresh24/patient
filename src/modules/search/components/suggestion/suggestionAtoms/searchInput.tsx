@@ -2,7 +2,7 @@ import CloseIcon from '@/common/components/icons/close';
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
 
-interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   showBackButton?: boolean;
   clickBackButton?: () => void;
   clikSearchButton?: () => void;
@@ -56,6 +56,7 @@ export const SearchInput = (props: SearchInputProps) => {
         autoComplete="off"
         data-hj-allow
         inputMode="search"
+        type="search"
       />
       {inputProps.value && <CloseIcon onClick={onClear} className="cursor-pointer" />}
     </div>

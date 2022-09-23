@@ -42,11 +42,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
       )}
       <Component
         ref={ref}
-        className={clsx(
-          'rounded-lg border-2 border-solid border-inherit outline-inherit w-full transition-all',
-          inputSize[size],
-          className,
-        )}
+        className={clsx('rounded-lg border border-solid border-inherit outline-inherit w-full transition-all', inputSize[size], className)}
         {...inputProps}
       />
       {helperText && <span className="text-xs">{helperText}</span>}
