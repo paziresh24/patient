@@ -40,16 +40,9 @@ export const CitySelect = (props: CitySelectProps) => {
     if (getCitiesAndProvince.isSuccess) {
       provincesData.current = getCitiesAndProvince.data.data.result.province;
       citiesData.current = getCitiesAndProvince.data.data.result.city;
-    }
-  }, [getCitiesAndProvince.status, isOpen]);
-
-  useEffect(() => {
-    setUserSearchInput('');
-    if (isOpen && stepSelect === 'provinces') {
-      setStepSelect('provinces');
       setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
     }
-  }, [isOpen, stepSelect]);
+  }, [getCitiesAndProvince.status, isOpen]);
 
   const handleClickProvince = (provinceId: string) => {
     setStepSelect('cities');
@@ -68,6 +61,7 @@ export const CitySelect = (props: CitySelectProps) => {
 
   const handleBackToProvince = () => {
     setStepSelect('provinces');
+    setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
   };
 
   return (

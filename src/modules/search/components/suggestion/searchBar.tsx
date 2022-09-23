@@ -40,7 +40,7 @@ export const SearchBar = (props: SearchBarProps) => {
         {...rest}
       />
       <Divider orientation="vertical" height="2rem" />
-      <CitySelect city={city} setCity={setCity} />
+      <CitySelect city={city} setCity={setCity} key={city.name} />
     </div>
   );
 };
