@@ -13,16 +13,20 @@ export const SearchSection = (props: SearchSectionProps) => {
   const { items } = props;
   const { handleItemClick } = useSuggestionItem();
 
-  return items?.map((item, index) => (
-    <div
-      key={index}
-      className={clsx('bg-slate-100 cursor-pointer p-2 py-4 text-sm font-medium flex items-center space-s-2 pr-4', style.wrapper)}
-      onClick={() => handleItemClick(item, index)}
-    >
-      {categoryIcons['search-icon']()}
-      <Text className="line-clamp-1" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
-    </div>
-  ));
+  return (
+    <>
+      {items?.map((item, index) => (
+        <div
+          key={index}
+          className={clsx('bg-slate-100 cursor-pointer p-2 py-4 text-sm font-medium flex items-center space-s-2 pr-4', style.wrapper)}
+          onClick={() => handleItemClick(item, index)}
+        >
+          {categoryIcons['search-icon']()}
+          <Text className="line-clamp-1" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
+        </div>
+      ))}
+    </>
+  );
 };
 
 export default SearchSection;
