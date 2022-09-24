@@ -7,7 +7,7 @@ import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {
   return (
-    <div className="w-full p-4 mx-auto md:hidden">
+    <div className="w-full p-4 mx-auto">
       <div
         className="bg-[length:50rem] bg-no-repeat bg-brand rounded-xl py-14 px-4"
         style={{

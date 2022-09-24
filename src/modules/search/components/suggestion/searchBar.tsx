@@ -1,9 +1,10 @@
 import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
-import CitySelect from './suggestionAtoms/citySelect';
 import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
+const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
 interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
