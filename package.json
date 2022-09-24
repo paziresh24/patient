@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env PORT=3000 NODE_OPTIONS='--inspect' node server.js",
     "build": "next build",
+    "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
