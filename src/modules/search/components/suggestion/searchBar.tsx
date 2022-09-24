@@ -1,5 +1,6 @@
 import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
+import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
@@ -16,6 +17,7 @@ interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
 
 export const SearchBar = (props: SearchBarProps) => {
   const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
+  const { t } = useTranslation('search');
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
@@ -29,7 +31,7 @@ export const SearchBar = (props: SearchBarProps) => {
       )}
     >
       <SearchInput
-        placeholder="نام بیماری، تخصص، پزشک، مرکز درمانی و ..."
+        placeholder={t('searchBarPlaceHolder')}
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
         onClear={() => setUserSearchValue('')}

@@ -1,5 +1,6 @@
 import Text from '@/components/atom/text';
 import clsx from 'clsx';
+import useTranslation from 'next-translate/useTranslation';
 import Image from 'next/future/image';
 import logoSvg from './logo.svg';
 
@@ -12,12 +13,12 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = props => {
   const { width, height, fontSize, className } = props;
-
+  const { t } = useTranslation('common');
   return (
     <div className="flex items-center space-s-2">
       <Image src={logoSvg.src} alt="پذیرش 24" width={width || 60} height={height || 60} priority />
       <Text className={clsx('text-brand', className)} fontSize={fontSize} fontWeight="black">
-        پذیرش 24
+        {t('brandName')}
       </Text>
     </div>
   );

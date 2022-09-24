@@ -2,10 +2,13 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
+import useTranslation from 'next-translate/useTranslation';
 import Image from 'next/image';
 import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {
+  const { t } = useTranslation('home');
+
   return (
     <div className="w-full p-4 mx-auto">
       <div
@@ -19,22 +22,14 @@ const Promote = () => {
           <div className="order-1 text-center flex-1 flex justify-center items-center">
             <div className="mt-6 w-full text-slate-50">
               <Text as="h2" fontSize="lg" fontWeight="bold" className="mb-6">
-                نزدیک‌ترین پزشک، گوشی شماست !
+                {t('promoteTitle')}
               </Text>
-              <Text as="p" fontSize="sm" className="mb-12">
-                از طریق{' '}
-                <a href="https://www.paziresh24.com/app" title="سوپر اپلیکیشن پذیرش 24">
-                  سوپر اپلیکیشن پذیرش 24
-                </a>{' '}
-                به هزاران پزشک متخصص ایرانی دسترسی پیدا کنید و به راحتی{' '}
-                <a href="http://paziresh24.com/consult?refafname=website-homecta-moshavere-dlapp" title="مشاوره آنلاین">
-                  مشاوره آنلاین
-                </a>
-                دریافت کنید یا در صورت تمایل نوبت حضوری آن پزشک را رزرو کنید
+              <Text as="p" fontSize="sm" className="mb-12 leading-6">
+                {t('promoteDescription')}
               </Text>
               <div className="flex flex-col gap-5 items-center justify-center">
-                <a href="https://www.paziresh24.com/app" title="دانلود رایگان اپلیکیشن پذیرش24">
-                  <Button className="bg-slate-50  text-slate-700 border-none">دانلود رایگان اپلیکیشن پذیرش24</Button>
+                <a href="https://www.paziresh24.com/app" title={t('promoteDownloadButton')}>
+                  <Button className="bg-slate-50  text-slate-700 border-none">{t('promoteDownloadButton')}</Button>
                 </a>
                 <div className="flex flex-row gap-4">
                   <Apple />
