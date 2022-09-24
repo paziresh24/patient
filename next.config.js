@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 
+const nextTranslate = require('next-translate');
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
+  ...nextTranslate(),
   reactStrictMode: false,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,

@@ -111,22 +111,24 @@
   src: url('../../public/fonts/IRANSansXFaNum-Regular.woff') format('woff');
 }
 
-* {
+body {
+  color: #2b2f33;
   font-family: iransansx, tahoma;
   -moz-font-feature-settings: 'ss02';
   -webkit-font-feature-settings: 'ss02';
   font-feature-settings: 'ss02';
 }
 
-@supports (font-variation-settings: normal) {
-  * {
-    font-family: 'iransansxv', tahoma;
-  }
+.dont-fa-number-font {
+  -moz-font-feature-settings: unset;
+  -webkit-font-feature-settings: unset;
+  font-feature-settings: unset;
 }
 
-body {
-  direction: rtl;
-  color: #2b2f33;
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: 'iransansxv', tahoma;
+  }
 }
 
 ::-webkit-scrollbar {

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
@@ -14,6 +15,7 @@ interface SearchBarProps {
 }
 
 export const SearchBar = (props: SearchBarProps) => {
+  const { t } = useTranslation('search');
   const router = useRouter();
   const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className } = props;
   const city = useSearchStore(state => state.city);
@@ -29,7 +31,7 @@ export const SearchBar = (props: SearchBarProps) => {
       )}
     >
       <SearchInput
-        placeholder="نام بیماری، تخصص، پزشک، مرکز درمانی و ..."
+        placeholder={t('searchBarPlaceHolder')}
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
         value={userSearchValue}
