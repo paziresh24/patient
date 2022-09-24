@@ -1,9 +1,10 @@
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
-import CitySelect from './suggestionAtoms/citySelect';
 import { SearchInput } from './suggestionAtoms/searchInput';
+const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
 interface SearchBarProps {
   isOpenSuggestion?: boolean;
