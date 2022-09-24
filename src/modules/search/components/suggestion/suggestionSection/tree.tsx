@@ -52,7 +52,7 @@ export const TreeSection = (props: TreeSectionProps) => {
                 fontWeight="normal"
                 className={clsx(
                   style.title,
-                  'relative cursor-pointer text-slate-500 before:w-3 before:h-[1px] before:bg-slate-300 before:content before:absolute before:top-2 before:-right-[18px]',
+                  'relative !line-clamp-none !overflow-visible cursor-pointer text-slate-500 before:w-3 before:h-[1px] before:bg-slate-300 before:content before:absolute before:top-2 before:-right-[18px]',
                 )}
                 dangerouslySetInnerHTML={{ __html: subItem.formatted_title ?? '' }}
               />

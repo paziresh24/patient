@@ -61,6 +61,7 @@ export const CitySelect = (props: CitySelectProps) => {
 
   const handleBackToProvince = () => {
     setStepSelect('provinces');
+    setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
   };
 
   return (
