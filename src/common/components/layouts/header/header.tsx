@@ -6,6 +6,7 @@ import ChevronIcon from '@/components/icons/chevron';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Transition from '../../atom/transition';
+import PromoteAppBanner from '../promoteAppBanner';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
 import MobileNavbar from './components/mobileNavbar';
 import SubMenu from './components/subMenu';
@@ -18,7 +19,12 @@ enum MegaMenuItem {
   ARTICLE = 'article',
 }
 
-const Header = () => {
+interface HeaderProps {
+  shouldShowBrand?: boolean;
+}
+
+const Header = (props: HeaderProps) => {
+  const { shouldShowBrand = true } = props;
   const [open, setOpen] = useState(false);
   const { isDesktop } = useResponsive();
   const [menu, setMenu] = useState(MegaMenuItem.SPECIALTY);
@@ -38,13 +44,16 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white text-slate-700 text-lg z-50 px-4 h-20 flex items-center border-b border-solid border-slate-100">
+      <PromoteAppBanner />
+      <header className="sticky shadow-card top-0 bg-white text-slate-700 text-lg z-50 px-3 md:px-4 h-16 md:h-20 flex items-center border-b border-solid border-slate-100">
         {isDesktop && (
           <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between hidden md:flex">
-            <a href="/">
-              <Logo width={40} height={40} />
-            </a>
-            <nav className="flex-1">
+            {shouldShowBrand && (
+              <a href="/">
+                <Logo width={40} height={40} />
+              </a>
+            )}
+            <nav>
               <ul className="flex justify-center">
                 <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
                   <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">دسته بندی ها </span>
@@ -93,7 +102,7 @@ const Header = () => {
             <UserProfile />
           </div>
         )}
-        {!isDesktop && <MobileNavbar />}
+        {!isDesktop && <MobileNavbar shouldShowBrand={shouldShowBrand} />}
       </header>
     </>
   );
