@@ -3,15 +3,16 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import Transition from '../../atom/transition';
-import PromoteAppBanner from '../promoteAppBanner';
 import MegaMenuContent from './components/megaMenu/megaMenuContent';
 import MobileNavbar from './components/mobileNavbar';
 import SubMenu from './components/subMenu';
 import UserProfile from './components/userProfile';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
+const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -44,8 +45,8 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <PromoteAppBanner />
-      <header className="sticky shadow-card top-0 bg-white text-slate-700 text-lg z-50 px-3 md:px-4 h-16 md:h-20 flex items-center border-b border-solid border-slate-100">
+      {!isDesktop && <PromoteAppBanner />}
+      <header className="md:shadow-card bg-white text-slate-700 text-lg z-50 px-3 md:px-4 h-16 md:h-20 flex items-center border-b border-solid border-slate-100">
         {isDesktop && (
           <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between hidden md:flex">
             {shouldShowBrand && (
