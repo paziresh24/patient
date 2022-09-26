@@ -54,7 +54,7 @@ export const UserCard = memo((props: UserCardProps) => {
       id: userId,
     });
     if (res.data.status === 1) {
-      setIsOpenRemoveModal(false);
+      setIsOpenEditUserModal(false);
       refetchData && refetchData();
       return;
     }

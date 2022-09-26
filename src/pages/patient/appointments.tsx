@@ -126,6 +126,8 @@ export const Appointments: NextPageWithLayout = () => {
                 centerId: turn.center?.id,
                 centerType: turn.center?.center_type,
                 hasPaging: turn.center?.settings?.booking_paging_from_clinic,
+                userCenterId: turn.center?.user_center_id,
+                serverId: turn.center?.server_id,
               }}
               doctorInfo={{
                 avatar: turn.doctor_info?.image,

@@ -5,7 +5,7 @@ interface IUseUserInfoStore {
   info: {
     name?: string;
     family?: string;
-    user_id?: string;
+    id?: string;
     username?: string;
     national_code?: string;
     gender?: 'male' | 'female';

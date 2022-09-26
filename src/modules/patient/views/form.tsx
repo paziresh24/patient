@@ -20,8 +20,10 @@ const genders = [
 
 const formattedProvinces = provinces.map(item => ({ label: item.name, value: item.id }));
 
+export type FormFields = Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL'>;
+
 interface PatinetProfileFormProps {
-  fields: Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL'>;
+  fields: FormFields;
   defaultValues?: {
     NAME?: string;
     FAMILY?: string;

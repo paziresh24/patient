@@ -21,6 +21,7 @@
     "axios": "^0.27.2",
     "clsx": "^1.1.1",
     "cookies-next": "2.1.1",
+    "jalali-moment": "3.3.11",
     "leaflet": "1.8.0",
     "lodash": "4.17.21",
     "next": "^12.2.0",

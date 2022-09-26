@@ -30,10 +30,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
    */
   icon?: React.ReactNode;
   /**
-   * The Function to be called when the button is clicked
-   */
-  onClick?: () => void;
-  /**
    * The when button full width
    * @default false
    */

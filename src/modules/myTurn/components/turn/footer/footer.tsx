@@ -3,6 +3,7 @@ import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import ChatIcon from '@/components/icons/chat';
 import MegaphoneIcon from '@/components/icons/megaphone';
+import BookingSteps from '@/modules/booking/views';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
@@ -19,11 +20,15 @@ interface TurnFooterProps {
   hasPaging: boolean;
   bookTime: number;
   whatsapp?: string;
+  centerId: string;
+  userCenterId: string;
+  serverId: string;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
-  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, whatsapp } = props;
+  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, whatsapp, centerId, serverId, userCenterId } = props;
   const [queueModal, setQueueModal] = useState(false);
+  const [bookingModal, setBookingModal] = useState(false);
 
   const isBookForToday = isToday(new Date(bookTime));
 
@@ -32,7 +37,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
+    setBookingModal(true);
+    // window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -77,6 +83,16 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
       <Modal onClose={setQueueModal} isOpen={queueModal} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
+      </Modal>
+      <Modal noHeader onClose={setBookingModal} isOpen={bookingModal} bodyClassName="!pt-4">
+        <BookingSteps
+          center={{
+            centerId,
+            serviceId: '',
+            userCenterId,
+            serverId,
+          }}
+        />
       </Modal>
     </>
   );
