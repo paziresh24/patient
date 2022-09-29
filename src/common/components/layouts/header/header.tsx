@@ -3,14 +3,15 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import Transition from '../../atom/transition';
-import MegaMenuContent from './components/megaMenu/megaMenuContent';
-import MobileNavbar from './components/mobileNavbar';
-import SubMenu from './components/subMenu';
-import UserProfile from './components/userProfile';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
+const Transition = dynamic(() => import('../../atom/transition'));
+const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
+const MegaMenuContent = dynamic(() => import('./components/megaMenu/megaMenuContent'));
+const SubMenu = dynamic(() => import('./components/subMenu'));
+const UserProfile = dynamic(() => import('./components/userProfile'));
 
 enum MegaMenuItem {
   CONSULT = 'consult',

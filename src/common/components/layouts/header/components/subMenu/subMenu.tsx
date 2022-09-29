@@ -1,9 +1,10 @@
 import Text from '@/common/components/atom/text';
-import Transition from '@/common/components/atom/transition';
 import ChevronIcon from '@/common/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 interface Item {
   title: React.ReactNode;
   link?: string;

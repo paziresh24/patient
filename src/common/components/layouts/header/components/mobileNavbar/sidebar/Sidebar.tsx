@@ -1,8 +1,9 @@
 import Logo from '@/common/components/atom/logo';
-import Transition from '@/common/components/atom/transition';
 import ChevronIcon from '@/common/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import BackDrop from './backdrop';
 import SidebarNav from './SidebarNav';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 interface SidebarProps {
   closeSidebar: () => void;

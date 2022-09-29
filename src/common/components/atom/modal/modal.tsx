@@ -1,9 +1,10 @@
 import useResponsive from '@/common/hooks/useResponsive';
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import CloseIcon from '../../icons/close';
 import ClientOnlyPortal from '../../layouts/clientOnlyPortal';
-import Transition from '../transition';
+const Transition = dynamic(() => import('../transition'));
 
 interface ModalProps {
   isOpen: boolean;

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env PORT=3000 NODE_OPTIONS='--inspect' node server.js",
     "build": "next build",
+    "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
@@ -16,6 +17,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "12.3.1",
     "@paziresh24/splunk-event": "1.2.1",
     "@persian-tools/persian-tools": "3.4.0",
     "axios": "^0.27.2",

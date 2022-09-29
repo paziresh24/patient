@@ -2,11 +2,12 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import Logo from '@/common/components/atom/logo';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from '../../data/links';
 import UserProfile from '../userProfile';
-import Sidebar from './sidebar';
+const Sidebar = dynamic(() => import('./sidebar'));
 
 const MobileNavbar = () => {
   const [open, setOpen] = useState(false);
