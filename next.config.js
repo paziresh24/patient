@@ -3,6 +3,7 @@
 const isProduction = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
+  swcMinify: true,
   reactStrictMode: false,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
