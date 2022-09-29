@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 
+const nextTranslate = require('next-translate');
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -7,6 +9,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
+  ...nextTranslate(),
   swcMinify: true,
   reactStrictMode: false,
   publicRuntimeConfig: {
