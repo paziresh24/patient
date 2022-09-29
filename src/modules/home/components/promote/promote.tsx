@@ -1,13 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
+import Image from 'next/image';
 import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {
   return (
-    <div className="w-full p-4 mx-auto md:hidden">
+    <div className="w-full p-4 mx-auto">
       <div
         className="bg-[length:50rem] bg-no-repeat bg-brand rounded-xl py-14 px-4"
         style={{
@@ -44,7 +44,7 @@ const Promote = () => {
             </div>
           </div>
           <div className="order-none flex-1 ">
-            <img src={promoteImage.src} className=" block mx-auto " alt="promote-image" width="270" height="300" loading="lazy" />
+            <Image src={promoteImage.src} className=" block mx-auto " alt="promote-image" width="270" height="300" />
           </div>
         </div>
       </div>

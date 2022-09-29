@@ -2,7 +2,12 @@
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig = {
+  swcMinify: true,
   reactStrictMode: false,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -15,4 +20,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
