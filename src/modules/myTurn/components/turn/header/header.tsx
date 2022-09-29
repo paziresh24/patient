@@ -9,6 +9,7 @@ import TrashIcon from '@/components/icons/trash';
 import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToReceoptTurn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -31,17 +32,18 @@ interface TurnHeaderProps {
   nationalCode: string;
   trackingCode: string;
   status: BookStatus;
+  centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { query } = useRouter();
-  const { id, doctorInfo, centerId, trackingCode, nationalCode, status } = props;
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
 
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
   const removeBookAction = () => {
     setRemoveModal(false);
