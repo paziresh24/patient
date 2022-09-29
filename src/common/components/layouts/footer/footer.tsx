@@ -55,17 +55,17 @@ const Footer = () => {
                 <div className="flex flex-row items-center justify-center">
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <img src={about.src} alt="" loading="lazy" />
+                      <img src={about.src} alt="" loading="lazy" width={40} height={40} />
                     </a>
                   </span>
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <img src={aboutUs.src} alt="" loading="lazy" />
+                      <img src={aboutUs.src} alt="" loading="lazy" width={40} height={40} />
                     </a>
                   </span>
                   <span className="flex justify-center items-center w-20 h-20">
                     <a href="/home/about-us/">
-                      <img src={aboutMe.src} alt="" loading="lazy" />
+                      <img src={aboutMe.src} alt="" loading="lazy" width={40} height={40} />
                     </a>
                   </span>
                 </div>

@@ -5,7 +5,6 @@ import Chips from '@/common/components/atom/chips';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import Transition from '@/common/components/atom/transition';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
@@ -17,9 +16,11 @@ import UsersIcon from '@/common/components/icons/users';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 export const UserProfile = () => {
   const { openLoginModal } = useLoginModalContext();
