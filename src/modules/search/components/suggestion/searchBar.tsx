@@ -40,7 +40,7 @@ export const SearchBar = (props: SearchBarProps) => {
         onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
       />
       <hr className="border border-solid border-slate-200 h-7" />
-      <CitySelect city={city} setCity={setCity} />
+      <CitySelect city={city} setCity={setCity} key={city.name} />
     </div>
   );
 };

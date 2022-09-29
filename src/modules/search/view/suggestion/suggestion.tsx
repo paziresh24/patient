@@ -2,7 +2,7 @@ import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { getCookie, setCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
 import { useSearchStore } from '../../store/search';
@@ -20,10 +20,9 @@ export const Suggestion = () => {
       ...(city.id !== '-1' && { city_id: city.id }),
     },
     {
-      enabled: false,
+      keepPreviousData: true,
     },
   );
-  const [items, setItems] = useState([]);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
@@ -36,7 +35,6 @@ export const Suggestion = () => {
   };
 
   useEffect(() => {
-    setIsShouldOpen(false);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
       if (getCityInCookie) {
@@ -50,17 +48,11 @@ export const Suggestion = () => {
   }, []);
 
   useEffect(() => {
-    searchSuggestion.remove();
-    searchSuggestion.refetch();
     if (userSearchValue) {
       openSuggestionContent();
     }
     setCookie('new-city', city);
   }, [userSearchValue, city]);
-
-  useEffect(() => {
-    if (searchSuggestion.isSuccess) setItems(searchSuggestion.data?.data ?? []);
-  }, [searchSuggestion.status]);
 
   useEffect(() => {
     if (isOpenSuggestion && isMobile) {
@@ -96,6 +88,8 @@ export const Suggestion = () => {
     location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
   };
 
+  const suggestionItems = useMemo(() => searchSuggestion.data?.data ?? [], [searchSuggestion.data]);
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
@@ -120,7 +114,7 @@ export const Suggestion = () => {
               />
             ) : undefined
           }
-          items={items}
+          items={suggestionItems}
           className="shadow-md"
         />
       )}
