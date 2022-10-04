@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       <Head>
         <title>پیشخوان ویرایش {profileData.display_name}</title>
       </Head>
-      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} />
+      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} backButton />
       <main className="md:max-w-md mx-auto flex flex-col items-center p-5">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col space-y-2">

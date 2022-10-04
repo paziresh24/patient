@@ -12,7 +12,7 @@ export interface TagStatusProps {
 
 export enum TagsStatusTranslation {
   expired = 'منقضی',
-  deleted = 'حذف شده',
+  deleted = 'لغو شده',
   visited = 'ویزیت شده',
   requested = 'درحال بررسی',
   not_visited = 'ویزیت نشده',

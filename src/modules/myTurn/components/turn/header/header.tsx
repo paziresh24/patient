@@ -9,6 +9,7 @@ import TrashIcon from '@/components/icons/trash';
 import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
+import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -31,19 +32,21 @@ interface TurnHeaderProps {
   nationalCode: string;
   trackingCode: string;
   status: BookStatus;
+  centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { query } = useRouter();
-  const { id, doctorInfo, centerId, trackingCode, nationalCode, status } = props;
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
 
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
   const removeBookAction = () => {
+    setRemoveModal(false);
     removeBookApi.mutate(
       {
         center_id: centerId,
@@ -53,7 +56,6 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === 1) {
-            setRemoveModal(false);
             return removeBook({ bookId: id });
           }
           toast.error(data.data.message);
@@ -106,7 +108,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     },
     {
       id: 2,
-      name: 'حذف نوبت',
+      name: 'لغو نوبت',
       icon: <TrashIcon />,
       action: () => setRemoveModal(true),
       testId: 'drop-down__remove-button',
@@ -141,10 +143,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
       />
 
-      <Modal title="آیا از حدف نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
-            حذف
+            لغو نوبت
           </Button>
           <Button
             theme="error"

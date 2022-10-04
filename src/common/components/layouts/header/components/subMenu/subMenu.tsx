@@ -1,8 +1,10 @@
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 interface Item {
   title: React.ReactNode;
   link?: string;
@@ -23,12 +25,17 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
   });
   return (
     <li ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
-      <div className="text-center cursor-pointer p-3 text-sm md:p-6 md:pl-4 font-medium flex items-center space-s-1">{title}</div>
-      {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
-      <ul
-        className={`absolute shadow-md left-[50%] ml-10 min-w-full text-slate-700 font-medium whitespace-nowrap z-50 py-3 px-2 overflow-auto bg-white border border-slate-300 rounded-2xl max-w-xs w-max  top-16 -translate-x-1/2 md:ml-0 ${
-          open ? 'block' : 'hidden'
-        }`}
+      <div className="text-center cursor-pointer flex items-center">
+        <Text fontSize="sm" className="p-3" fontWeight="medium">
+          {title}
+        </Text>
+        {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
+      </div>
+      <Transition
+        as="ul"
+        match={open}
+        animation="bottom"
+        className="absolute shadow-md min-w-full text-slate-700 font-medium whitespace-nowrap z-50 py-3 px-2 overflow-auto bg-white border border-slate-300 rounded-2xl max-w-xs w-max  top-16 md:ml-0"
       >
         {menuItem.map((item, index) => {
           return (
@@ -42,7 +49,7 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
             </li>
           );
         })}
-      </ul>
+      </Transition>
     </li>
   );
 };
