@@ -22,6 +22,10 @@ export const Modal = (props: ModalProps) => {
 
   const handleClose = () => {
     onClose(false);
+    removeOverflowHidden();
+  };
+
+  const removeOverflowHidden = () => {
     document.body.classList.remove('overflow-hidden');
     if (isMobile) {
       window.onpopstate = () => {
@@ -37,7 +41,7 @@ export const Modal = (props: ModalProps) => {
         window.onpopstate = () => {
           return;
         };
-        document.body.classList.remove('overflow-hidden');
+        removeOverflowHidden();
         onClose(false);
       };
     }
@@ -51,7 +55,7 @@ export const Modal = (props: ModalProps) => {
       handleClose();
     }
 
-    return () => handleClose();
+    return () => removeOverflowHidden();
   }, [isOpen]);
 
   return (
