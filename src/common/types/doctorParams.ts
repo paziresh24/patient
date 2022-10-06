@@ -1,4 +1,4 @@
-interface DoctorInfo {
+export interface DoctorParams {
   id?: string;
   name: string;
   family: string;
@@ -8,7 +8,7 @@ interface DoctorInfo {
   doctor_url?: string;
 }
 
-type Expertises = Array<{
+export type Expertises = Array<{
   alias_title?: string;
   degree?: {
     id?: string;

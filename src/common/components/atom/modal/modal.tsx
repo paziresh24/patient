@@ -19,8 +19,15 @@ interface ModalProps {
 export const Modal = (props: ModalProps) => {
   const { title, isOpen, onClose, children, fullScreen, bodyClassName, noHeader = false } = props;
   const { isMobile } = useResponsive();
+
   const handleClose = () => {
-    onClose();
+    onClose(false);
+    document.body.classList.remove('overflow-hidden');
+    if (isMobile) {
+      window.onpopstate = () => {
+        return;
+      };
+    }
   };
 
   const neutralizeBack = () => {
@@ -41,13 +48,10 @@ export const Modal = (props: ModalProps) => {
       neutralizeBack();
       return document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove('overflow-hidden');
-      if (isMobile) {
-        window.onpopstate = () => {
-          return;
-        };
-      }
+      handleClose();
     }
+
+    return () => handleClose();
   }, [isOpen]);
 
   return (
@@ -55,7 +59,7 @@ export const Modal = (props: ModalProps) => {
       <Transition
         match={isOpen}
         animation="fade"
-        className="fixed top-0 overflow-auto left-0 right-0 bottom-0 md:pb-14 z-infinity pt-8 md:pt-20 flex items-end md:justify-center md:items-start bg-slate-800 bg-opacity-30"
+        className="fixed top-0 bottom-0 left-0 right-0 flex items-end pt-8 overflow-auto md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-800 bg-opacity-30"
         onClick={handleClose}
       >
         <Transition
@@ -67,9 +71,9 @@ export const Modal = (props: ModalProps) => {
           })}
           onClick={e => e.stopPropagation()}
         >
-          {noHeader && <div className="w-11 h-1 md:hidden rounded-full bg-slate-200 mx-auto mt-4" />}
+          {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-200" />}
           {!noHeader && (
-            <div className="p-4 flex justify-between items-center">
+            <div className="flex items-center justify-between p-4">
               <span className="font-bold line-clamp-1">{title}</span>
               <CloseIcon onClick={handleClose} />
             </div>
