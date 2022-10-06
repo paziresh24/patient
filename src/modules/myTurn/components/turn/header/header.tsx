@@ -1,4 +1,5 @@
 import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
+import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -10,14 +11,11 @@ import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl'
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import getConfig from 'next/config';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
-const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
   id: string;
@@ -36,9 +34,8 @@ interface TurnHeaderProps {
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { query } = useRouter();
   const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
-
+  const share = useShare();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
@@ -46,7 +43,6 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
   const removeBookAction = () => {
-    setRemoveModal(false);
     removeBookApi.mutate(
       {
         center_id: centerId,
@@ -56,7 +52,8 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === 1) {
-            return removeBook({ bookId: id });
+            removeBook({ bookId: id });
+            return;
           }
           toast.error(data.data.message);
         },
@@ -81,14 +78,11 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       bookId: id,
       centerId: centerId,
     });
-    if (query.isWebView) return window.Android.shareQA(`رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`, link);
-    if (navigator.share)
-      if (navigator.share)
-        navigator.share({
-          title: 'رسید نوبت',
-          text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-          url: link,
-        });
+    share({
+      title: 'رسید نوبت',
+      text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
+      url: link,
+    });
   };
 
   const menuItems = [
@@ -134,7 +128,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       <DropDown
         element={
           <div
-            className="flex items-center justify-center w-8 h-8 absolute left-2 top-3 cursor-pointer"
+            className="absolute flex items-center justify-center w-8 h-8 cursor-pointer left-2 top-3"
             data-testid="turn-drop-down-button"
           >
             <ThreeDotsIcon color="#000" />

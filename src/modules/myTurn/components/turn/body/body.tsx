@@ -29,7 +29,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
   const shouldShowRate =
     centerType !== CenterType.consult && (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
 
-  const handleClinkCard = () => {
+  const handleClickCard = () => {
     getReceiptTurnUrl({
       slug: doctorInfo.slug,
       bookId: id,
@@ -39,7 +39,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
 
   return (
     <>
-      <TurnDetails items={detailsData} onClick={handleClinkCard} />
+      <TurnDetails items={detailsData} onClick={handleClickCard} />
 
       {shouldShowLocation && <Location address={location.address} lat={location.lat} lng={location.lng} />}
       {shouldShowRate && <Rate link={feedbackUrl} />}
