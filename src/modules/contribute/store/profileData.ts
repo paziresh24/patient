@@ -1,31 +1,12 @@
+import { Center, DoctorParams } from '@/common/types/doctorParams';
 import create from 'zustand';
 
 interface ProfileDataStore {
-  data: ProfileData;
+  data: Partial<DoctorParams>;
   selectedCenter: Center;
-  setData: (data: ProfileData) => void;
+  setData: (data: Partial<DoctorParams>) => void;
   setSelectedCenter: (selectedCenter: Center) => void;
 }
-
-type ProfileData = {
-  centers?: Center[];
-  display_name?: string;
-};
-
-export type Center = {
-  id?: string;
-  name?: string;
-  server_id?: string;
-  address?: string;
-  center_type?: number;
-  display_number_array?: string[];
-  province?: string;
-  city?: string;
-  map?: {
-    lat?: number;
-    lon?: number;
-  };
-};
 
 export const useProfileDataStore = create<ProfileDataStore>(set => ({
   data: {},

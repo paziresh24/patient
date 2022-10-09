@@ -12,12 +12,14 @@ import TextField from '@/common/components/atom/textField';
 import { splunkInstance } from '@/common/services/splunk';
 import AppBar from '@/components/layouts/appBar';
 
+import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
+import { Center } from '@/common/types/doctorParams';
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
 import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
 import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import centerTypeOptions from '@/modules/contribute/schemas/centerTypeOptions';
-import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 const Home: NextPage = () => {
@@ -32,8 +34,23 @@ const Home: NextPage = () => {
   const [centerType, setCenterType] = useState('');
   const [centerName, setCenterName] = useState('');
 
+  const sendPageViewEvent = usePageViewEvent();
+
   useEffect(() => {
     if (!isLoading && profileData && router.query?.center_id) {
+      sendPageViewEvent({
+        group: 'contribute',
+        data: {
+          doctor: {
+            id: profileData.id,
+            server_id: profileData.server_id,
+            name: profileData.name,
+            family: profileData.family,
+            slug: profileData.slug,
+          },
+        },
+      });
+
       const center = profileData.centers?.find(center => center.id === router.query?.center_id);
 
       setSelectedCenter(center);
@@ -86,7 +103,7 @@ const Home: NextPage = () => {
       </Head>
 
       <AppBar title={`ویرایش اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
-      <main className="md:max-w-md mx-auto flex flex-col p-5 pb-28 space-y-4">
+      <main className="flex flex-col p-5 mx-auto space-y-4 md:max-w-md pb-28">
         {selectedCenter?.center_type ? (
           <>
             <Autocomplete
@@ -125,7 +142,7 @@ const Home: NextPage = () => {
           <FormLoading />
         )}
 
-        <div className="bg-white md:bg-transparent fixed md:static bottom-0 right-0 w-full p-4 md:px-0 shadow-lg md:shadow-none">
+        <div className="fixed bottom-0 right-0 w-full p-4 bg-white shadow-lg md:bg-transparent md:static md:px-0 md:shadow-none">
           <Button variant="primary" className="w-full" loading={isButtonLoading} onClick={onSubmit}>
             ثبت
           </Button>
