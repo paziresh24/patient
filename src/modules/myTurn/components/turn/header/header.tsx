@@ -62,7 +62,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    window.open(
+    window.location.assign(
       getReceiptTurnUrl({
         slug: doctorInfo.slug,
         bookId: id,
