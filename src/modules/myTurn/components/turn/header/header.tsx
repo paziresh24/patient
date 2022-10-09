@@ -68,7 +68,6 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         bookId: id,
         centerId: centerId,
       }),
-      '_blank',
     );
   };
 
