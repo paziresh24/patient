@@ -24,6 +24,7 @@ export const Suggestion = () => {
       keepPreviousData: true,
     },
   );
+  const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
@@ -54,6 +55,7 @@ export const Suggestion = () => {
       openSuggestionContent();
     }
     city.id !== '-1' && setCookie('new-city', city);
+    setIsLoading(true);
   }, [userSearchValue, city]);
 
   useEffect(() => {
@@ -90,7 +92,10 @@ export const Suggestion = () => {
     location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
   };
 
-  const suggestionItems = useMemo(() => searchSuggestion.data?.data ?? [], [searchSuggestion.data]);
+  const suggestionItems = useMemo(() => {
+    setIsLoading(false);
+    return searchSuggestion.data?.data ?? [];
+  }, [searchSuggestion.data]);
 
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
@@ -119,6 +124,7 @@ export const Suggestion = () => {
           }
           items={suggestionItems}
           className="border border-solid shadow-md border-slate-200"
+          isLoading={isLoading}
         />
       )}
     </div>
