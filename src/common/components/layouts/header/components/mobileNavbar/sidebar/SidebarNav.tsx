@@ -1,5 +1,6 @@
 import ChevronIcon from '@/common/components/icons/chevron';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useClickAway } from 'react-use';
 import SidebarItem from './SidebarItem';
 
 interface SidebarNavProps {
@@ -17,12 +18,19 @@ interface SidebarNavProps {
 }
 const SidebarNav = ({ menu }: SidebarNavProps) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useClickAway(ref, () => {
+    if (open) {
+      setOpen(false);
+    }
+  });
+
   return (
-    <li className="max-h-96 overflow-auto border-b border-slate-100">
-      <div className="relative">
+    <li className="overflow-auto border-b max-h-96 border-slate-100">
+      <div className="relative" ref={ref}>
         <span
-          onClick={() => setOpen(!open)}
-          className=" sticky top-0 z-infinity bg-white  py-6 px-3 text-sm flex items-center justify-between"
+          onClick={() => setOpen(prev => !prev)}
+          className="sticky top-0 flex items-center justify-between px-3 py-6 text-sm bg-white z-infinity"
         >
           {menu.title}
           <ChevronIcon dir={`${open ? 'bottom' : 'left'}`} />

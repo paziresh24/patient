@@ -1,5 +1,6 @@
 import ChevronIcon from '@/common/components/icons/chevron';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useClickAway } from 'react-use';
 
 interface SidebarItemProps {
   title: string;
@@ -12,13 +13,24 @@ interface SidebarItemProps {
 }
 const SidebarItem = ({ title, url, sub_menu, className }: SidebarItemProps) => {
   const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useClickAway(ref, () => {
+    if (open) {
+      setOpen(false);
+    }
+  });
+
   return (
     <>
       {sub_menu ? (
         <ul className={`font-semibold mb-3 overflow-y-scroll ${className}`}>
-          <li className="max-h-96 overflow-auto border-b border-slate-100">
+          <li className="overflow-auto border-b max-h-96 border-slate-100">
             <div className="relative">
-              <span onClick={() => setOpen(!open)} className="bg-white  py-6 px-3 text-sm flex items-center justify-between">
+              <span
+                ref={ref}
+                onClick={() => setOpen(prev => !prev)}
+                className="flex items-center justify-between px-3 py-6 text-sm bg-white"
+              >
                 {title}
                 <ChevronIcon dir={`${open ? 'bottom' : 'left'}`} />
               </span>
@@ -31,7 +43,7 @@ const SidebarItem = ({ title, url, sub_menu, className }: SidebarItemProps) => {
       ) : (
         <ul className={`font-normal mb-3 overflow-y-scroll ${className}`}>
           <li>
-            <a href={url} className="block py-3 px-5" title={title}>
+            <a href={url} className="block px-5 py-3" title={title}>
               {title}
             </a>
           </li>
