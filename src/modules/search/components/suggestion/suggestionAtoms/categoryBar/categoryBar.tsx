@@ -13,7 +13,7 @@ export const SuggestionCategoryBar = (props: SuggestionCategoryBarProps) => {
   return (
     <div className="bg-slate-100 p-2 text-sm font-medium flex items-center space-s-2">
       {categoryIcons[icon]()}
-      <Text>
+      <Text fontWeight="bold" fontSize="sm">
         {caption} {additional_info && `(${additional_info})`}
       </Text>
     </div>

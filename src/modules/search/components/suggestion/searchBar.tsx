@@ -1,13 +1,13 @@
+import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
-import { SearchInput } from './suggestionAtoms/searchInput';
+import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
 const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
-interface SearchBarProps {
+interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
   onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
   onClickBackButton?: () => void;
@@ -17,8 +17,7 @@ interface SearchBarProps {
 
 export const SearchBar = (props: SearchBarProps) => {
   const { t } = useTranslation('search');
-  const router = useRouter();
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className } = props;
+  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
@@ -35,13 +34,15 @@ export const SearchBar = (props: SearchBarProps) => {
         placeholder={t('searchBarPlaceHolder')}
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
+        onClear={() => setUserSearchValue('')}
         value={userSearchValue}
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
         onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
+        {...rest}
       />
-      <hr className="border border-solid border-slate-200 h-7" />
+      <Divider orientation="vertical" height="2rem" />
       <CitySelect city={city} setCity={setCity} key={city.name} />
     </div>
   );

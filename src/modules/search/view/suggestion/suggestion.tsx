@@ -12,6 +12,7 @@ export const Suggestion = () => {
   const [isOpenSuggestion, setIsShouldOpen] = useState(false);
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
+  const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const searchSuggestion = useSearchSuggestion(
@@ -23,6 +24,7 @@ export const Suggestion = () => {
       keepPreviousData: true,
     },
   );
+  const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
@@ -32,6 +34,7 @@ export const Suggestion = () => {
 
   const clickBackButton = () => {
     setIsShouldOpen(false);
+    setUserSearchValue('');
   };
 
   useEffect(() => {
@@ -51,7 +54,8 @@ export const Suggestion = () => {
     if (userSearchValue) {
       openSuggestionContent();
     }
-    setCookie('new-city', city);
+    city.id !== '-1' && setCookie('new-city', city);
+    setIsLoading(true);
   }, [userSearchValue, city]);
 
   useEffect(() => {
@@ -88,7 +92,10 @@ export const Suggestion = () => {
     location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
   };
 
-  const suggestionItems = useMemo(() => searchSuggestion.data?.data ?? [], [searchSuggestion.data]);
+  const suggestionItems = useMemo(() => {
+    setIsLoading(false);
+    return searchSuggestion.data?.data ?? [];
+  }, [searchSuggestion.data]);
 
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
@@ -98,7 +105,7 @@ export const Suggestion = () => {
         onClickBackButton={clickBackButton}
         onEnter={handleRedirectToSearch}
         className={{
-          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
+          'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
       />
@@ -111,11 +118,13 @@ export const Suggestion = () => {
                 isOpenSuggestion={isOpenSuggestion}
                 onClickBackButton={clickBackButton}
                 className="!border-primary"
+                autoFocus
               />
             ) : undefined
           }
           items={suggestionItems}
-          className="shadow-md"
+          className="border border-solid shadow-md border-slate-200"
+          isLoading={isLoading}
         />
       )}
     </div>

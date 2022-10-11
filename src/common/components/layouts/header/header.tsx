@@ -5,6 +5,7 @@ import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
@@ -13,6 +14,7 @@ const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
 const MegaMenuContent = dynamic(() => import('./components/megaMenu/megaMenuContent'));
 const SubMenu = dynamic(() => import('./components/subMenu'));
 const UserProfile = dynamic(() => import('./components/userProfile'));
+const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -20,7 +22,12 @@ enum MegaMenuItem {
   ARTICLE = 'article',
 }
 
-const Header = () => {
+interface HeaderProps {
+  shouldShowBrand?: boolean;
+}
+
+const Header = (props: HeaderProps) => {
+  const { shouldShowBrand = true } = props;
   const [open, setOpen] = useState(false);
   const { isDesktop } = useResponsive();
   const [menu, setMenu] = useState(MegaMenuItem.SPECIALTY);
@@ -41,24 +48,29 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white text-slate-700 text-lg z-50 px-4 h-20 flex items-center border-b border-solid border-slate-100">
+      {!isDesktop && <PromoteAppBanner />}
+      <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid text-slate-700 md:px-4 md:h-20 border-slate-100">
         {isDesktop && (
-          <div className="max-w-screen-xl w-full mx-auto relative items-center justify-between hidden md:flex">
-            <a href="/">
-              <Logo width={40} height={40} />
-            </a>
-            <nav className="flex-1">
-              <ul className="flex justify-center space-s-3">
+          <div className="relative items-center justify-between hidden w-full h-full max-w-screen-xl mx-auto md:flex">
+            {shouldShowBrand && (
+              <Link href="/">
+                <a>
+                  <Logo width={40} height={40} />
+                </a>
+              </Link>
+            )}
+            <nav>
+              <ul className="flex justify-center space-s-5">
                 <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
-                  <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">{t('header.titles.categories')}</span>
+                  <span className="inline-block p-3 text-sm font-medium text-center cursor-pointer">{t('header.titles.categories')}</span>
                   <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
 
                   <Transition
                     match={open}
                     animation="bottom"
-                    className="shadow-md flex rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 w-full top-16 bg-white border border-slate-100 z-50"
+                    className="w-full shadow-md flex rounded-2xl flex-row mt-1 max-h-[520px] min-h-[496px] p-6 absolute right-0 top-16 bg-white border border-slate-200 z-50"
                   >
-                    <div className="border-l border-slate-200 flex flex-col flex-shrink-0 pl-4 w-44">
+                    <div className="flex flex-col flex-shrink-0 pl-4 border-l border-slate-200 w-44">
                       <a
                         onMouseOver={() => setMenu(MegaMenuItem.CONSULT)}
                         className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${
@@ -96,7 +108,7 @@ const Header = () => {
             <UserProfile />
           </div>
         )}
-        {!isDesktop && <MobileNavbar />}
+        <MobileNavbar shouldShowBrand={shouldShowBrand} />
       </header>
     </>
   );

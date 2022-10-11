@@ -1,12 +1,12 @@
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
 import useTranslation from 'next-translate/useTranslation';
-import { useGetRecentSearch } from '../../hooks/useGetRecentSearch';
+import { useRecentSearch } from '../../hooks/useRecentSearch';
 import { useSearchStore } from '../../store/search';
 
 export const RecentSearch = () => {
   const { t } = useTranslation('search');
-  const recent = useGetRecentSearch();
+  const { recent } = useRecentSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
 
   const handleChangeSearchInput = (text: string) => {
@@ -20,7 +20,7 @@ export const RecentSearch = () => {
         {t('recentSearchTitle')}
       </Text>
 
-      <div className="relative flex space-s-3 overflow-auto w-full">
+      <div className="relative flex w-full overflow-auto space-s-3">
         {recent.map((item: any, index) => (
           <Chips key={index} className="cursor-pointer" onClick={() => handleChangeSearchInput(item.name)}>
             {item.name}

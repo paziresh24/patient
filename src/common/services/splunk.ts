@@ -8,3 +8,9 @@ export const splunkInstance = () =>
       current_url: window.location.href,
     },
   });
+
+export const splunkSearchInstance = () =>
+  splunk.create({
+    baseUrl: 'https://p24splk.paziresh24.com',
+    token: '7e35b085-d39f-441d-a62f-22890fdd6ac9',
+  });

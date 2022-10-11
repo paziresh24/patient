@@ -98,7 +98,7 @@ const Home: NextPage = () => {
               ))}
             </div>
           )}
-          {/* <hr className="border-slate-300" /> */}
+          {/* <Divider /> */}
           {/* <div className="flex flex-col space-y-2">
             <div className="flex items-center space-s-2">
               <InfoIcon />

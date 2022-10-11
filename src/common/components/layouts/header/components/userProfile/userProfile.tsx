@@ -2,6 +2,7 @@ import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUs
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
+import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
@@ -83,7 +84,7 @@ export const UserProfile = () => {
       {!pending &&
         (isLogin ? (
           <div ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
-            <div className="text-center cursor-pointer p-3 space-s-2 text-sm md:p-6 md:pl-4 font-medium flex items-center">
+            <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
               <UserCircle width="30" height="30" />
               <Text className="hidden sm:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
@@ -93,11 +94,11 @@ export const UserProfile = () => {
             <Transition
               match={open}
               animation="bottom"
-              className="absolute shadow-md left-0 top-14 md:top-16 min-w-full text-slate-700 font-medium whitespace-nowrap z-50 py-3 px-2 overflow-auto bg-white border border-slate-300 rounded-2xl max-w-xs w-max md:ml-0"
+              className="absolute left-0 z-50 max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
                 <a>
-                  <div className="flex p-2 pb-3 items-center space-s-3 w-64">
+                  <div className="flex items-center w-64 p-2 pb-3 space-s-3">
                     <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
                     <div className="flex flex-col space-y-2">
                       {!userInfo.name ? (
@@ -120,8 +121,8 @@ export const UserProfile = () => {
                   </div>
                 </a>
               </Link>
-              <hr className="border-slate-200" />
-              <div className="flex overflow-auto flex-col p-3 pb-0">
+              <Divider />
+              <div className="flex flex-col p-3 pb-0 overflow-auto">
                 <MenuList>
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
@@ -129,7 +130,7 @@ export const UserProfile = () => {
                     </MenuItem>
                   ))}
                 </MenuList>
-                <hr className="border-slate-200 my-1" />
+                <Divider className="my-1" />
                 <MenuList>
                   <MenuItem name="پشتیبانی" link="https://www.paziresh24.com/home/support-form/" icon={<HeadphoneIcon />} />
                   <MenuItem name="خروج" link="/logout" icon={<LogoutIcon />} />
