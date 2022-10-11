@@ -22,7 +22,7 @@ export const TextSection = (props: TextSectionProps) => {
           onClick={() => handleItemClick(item, index)}
         >
           <>
-            {item.type && categoryIcons[item.type]()}
+            {item.type && categoryIcons[item.type]?.()}
             <Text fontSize="sm" className={style.title} dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
           </>
         </div>
