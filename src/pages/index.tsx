@@ -26,7 +26,7 @@ const Home: NextPageWithLayout = () => {
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
+  return <LayoutWithHeaderAndFooter shouldShowBrand={false}>{page}</LayoutWithHeaderAndFooter>;
 };
 
 export async function getServerSideProps() {
