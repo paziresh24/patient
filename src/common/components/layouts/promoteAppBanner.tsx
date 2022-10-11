@@ -1,9 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { getCookie, setCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 import Text from '../atom/text';
 import CloseIcon from '../icons/close';
 import StarIcon from '../icons/star';
+
+import logoSvg from '../../../../public/logos/primary.svg';
 
 export const PromoteAppBanner = () => {
   const [isShow, setIShow] = useState(false);
@@ -19,11 +23,11 @@ export const PromoteAppBanner = () => {
 
   if (!isShow) return null;
   return (
-    <div className="flex items-center justify-between border-b border-solid border-slate-100 bg-white p-3 px-5">
+    <div className="fixed bottom-0 right-0 z-50 flex items-center justify-between w-full p-3 px-5 bg-white border-t border-b border-solid border-slate-200">
       <div className="flex items-center space-s-2">
         <CloseIcon className="cursor-pointer" onClick={handleHide} />
         <a href="/app" className="flex items-center space-s-2">
-          <img className="border border-solid rounded-md p-1 w-12 h-12" width={48} height={48} src="/logos/primary.svg" alt="" />
+          <img className="w-12 h-12 p-1 border border-solid rounded-md" width={48} height={48} src={logoSvg.src} alt="" />
           <div className="flex flex-col">
             <Text fontSize="sm" fontWeight="bold">
               پذیرش24
