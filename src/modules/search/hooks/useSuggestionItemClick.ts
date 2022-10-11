@@ -33,8 +33,6 @@ export const useSuggestionItem = () => {
     handleItemEvent(item, index);
     if (item.use_suggestion) {
       setUserSearchValue(item?.name ?? '');
-    } else if (item.absolute_url) {
-      window.location.href = item.url ?? '#';
     } else {
       window.location.href = item.url ?? '#';
     }
