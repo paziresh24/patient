@@ -3,14 +3,16 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useResponsive from '@/common/hooks/useResponsive';
 import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
+import useTranslation from 'next-translate/useTranslation';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import Transition from '../../atom/transition';
-import MegaMenuContent from './components/megaMenu/megaMenuContent';
-import MobileNavbar from './components/mobileNavbar';
-import SubMenu from './components/subMenu';
-import UserProfile from './components/userProfile';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
+const Transition = dynamic(() => import('../../atom/transition'));
+const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
+const MegaMenuContent = dynamic(() => import('./components/megaMenu/megaMenuContent'));
+const SubMenu = dynamic(() => import('./components/subMenu'));
+const UserProfile = dynamic(() => import('./components/userProfile'));
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -24,6 +26,7 @@ const Header = () => {
   const [menu, setMenu] = useState(MegaMenuItem.SPECIALTY);
   const [expertiseItems, setExpertiseItems] = useState([]);
   const menuItemExpertise = useGetMegaMenu();
+  const { t } = useTranslation('common');
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -45,9 +48,9 @@ const Header = () => {
               <Logo width={40} height={40} />
             </a>
             <nav className="flex-1">
-              <ul className="flex justify-center">
+              <ul className="flex justify-center space-s-3">
                 <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
-                  <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">دسته بندی ها </span>
+                  <span className="inline-block text-center cursor-pointer p-3 font-medium text-sm">{t('header.titles.categories')}</span>
                   <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
 
                   <Transition
@@ -86,8 +89,8 @@ const Header = () => {
                     {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
                   </Transition>
                 </li>
-                <SubMenu title="برای بیماران" menuItem={withUserMenu} />
-                <SubMenu title="برای پزشکان" menuItem={withDoctorMenu} />
+                <SubMenu title={t('header.titles.forPatients')} menuItem={withUserMenu} />
+                <SubMenu title={t('header.titles.forDoctors')} menuItem={withDoctorMenu} />
               </ul>
             </nav>
             <UserProfile />

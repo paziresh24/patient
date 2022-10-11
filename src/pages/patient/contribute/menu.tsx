@@ -9,14 +9,17 @@ import CenterIcon from '@/components/icons/center';
 import AppBar from '@/components/layouts/appBar';
 
 import Skeleton from '@/common/components/atom/skeleton';
+import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
+import { Center } from '@/common/types/doctorParams';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import officeVector from '@/modules/contribute/images/office.svg';
-import { Center, useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
   const profileData = useProfileDataStore(state => state.data);
+  const sendPageViewEvent = usePageViewEvent();
 
   const centers = profileData?.centers?.filter(({ id }) => id !== '5532') ?? [];
 
@@ -28,6 +31,22 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
+    !isLoading &&
+      sendPageViewEvent({
+        group: 'contribute',
+        data: {
+          doctor: {
+            id: profileData.id,
+            server_id: profileData.server_id,
+            name: profileData.name,
+            family: profileData.family,
+            slug: profileData.slug,
+          },
+        },
+      });
+  }, [isLoading]);
+
+  useEffect(() => {
     router.prefetch('/patient/contribute/center/');
   }, []);
 
@@ -36,8 +55,8 @@ const Home: NextPage = () => {
       <Head>
         <title>پیشخوان ویرایش {profileData.display_name}</title>
       </Head>
-      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} />
-      <main className="md:max-w-md mx-auto flex flex-col items-center p-5">
+      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} backButton />
+      <main className="flex flex-col items-center p-5 mx-auto md:max-w-md">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-s-2">
@@ -51,11 +70,11 @@ const Home: NextPage = () => {
           {isLoading ? (
             <MneuItemLoading />
           ) : (
-            <div className="mt-5 flex flex-col space-y-3">
+            <div className="flex flex-col mt-5 space-y-3">
               {centers.map(center => (
                 <div
                   key={center.id}
-                  className="bg-white p-2 pr-3 rounded-lg flex items-center justify-between shadow-sm border border-blue-100 cursor-pointer"
+                  className="flex items-center justify-between p-2 pr-3 bg-white border border-blue-100 rounded-lg shadow-sm cursor-pointer"
                   onClick={() => handleClickCenter(center)}
                 >
                   <Text fontSize="sm" fontWeight="medium" className="line-clamp-1">
@@ -65,7 +84,7 @@ const Home: NextPage = () => {
                       | {center.address}
                     </Text>
                   </Text>
-                  <div className="rounded-md bg-blue-100">
+                  <div className="bg-blue-100 rounded-md">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fillRule="evenodd"
@@ -90,12 +109,12 @@ const Home: NextPage = () => {
               اشتراک بگذارید.
             </Text>
           </div>
-          <div className="mt-5 flex flex-col space-y-3">
-            <div className="bg-white p-2 rounded-lg flex items-center justify-between shadow-sm border border-blue-100">
+          <div className="flex flex-col mt-5 space-y-3">
+            <div className="flex items-center justify-between p-2 bg-white border border-blue-100 rounded-lg shadow-sm">
               <Text fontSize="sm" fontWeight="medium">
                 شما چگونه از این پزشک نوبت گرفتید؟
               </Text>
-              <div className="rounded-md bg-blue-100">
+              <div className="bg-blue-100 rounded-md">
                 <svg
                   width="28"
                   height="28"

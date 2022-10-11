@@ -1,9 +1,10 @@
 import Text from '@/common/components/atom/text';
-import Transition from '@/common/components/atom/transition';
 import ChevronIcon from '@/common/components/icons/chevron';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 interface Item {
   title: React.ReactNode;
   link?: string;
@@ -24,8 +25,12 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
   });
   return (
     <li ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
-      <div className="text-center cursor-pointer p-3 text-sm md:p-6 md:pl-4 font-medium flex items-center space-s-1">{title}</div>
-      {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
+      <div className="text-center cursor-pointer flex items-center">
+        <Text fontSize="sm" className="p-3" fontWeight="medium">
+          {title}
+        </Text>
+        {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
+      </div>
       <Transition
         as="ul"
         match={open}

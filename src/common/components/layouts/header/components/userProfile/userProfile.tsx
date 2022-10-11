@@ -6,7 +6,6 @@ import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import Transition from '@/common/components/atom/transition';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
@@ -17,12 +16,16 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import useTranslation from 'next-translate/useTranslation';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 export const UserProfile = () => {
   const { openLoginModal } = useLoginModalContext();
+  const { t } = useTranslation('common');
   const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userInfo: state.info,
@@ -81,12 +84,12 @@ export const UserProfile = () => {
       {!pending &&
         (isLogin ? (
           <div ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
-            <div className="text-center cursor-pointer p-3 text-sm md:p-6 md:pl-4 font-medium flex items-center">
-              <UserCircle width="30" height="30" className="ml-1" />
+            <div className="text-center cursor-pointer p-3 space-s-2 text-sm md:p-6 md:pl-4 font-medium flex items-center">
+              <UserCircle width="30" height="30" />
               <Text className="hidden sm:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
-              <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="mr-2" />
+              <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
             </div>
             <Transition
               match={open}
@@ -137,7 +140,7 @@ export const UserProfile = () => {
           </div>
         ) : (
           <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
-            ورود / ثبت‌نام
+            {t('header.userProfile.useNotloggedIn')}
           </Button>
         ))}
     </>

@@ -1,11 +1,12 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { getCookie, setCookie } from 'cookies-next';
-import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
-import SuggestionCentent from '../../components/suggestion/suggestionCentent';
 import { useSearchStore } from '../../store/search';
+const SuggestionCentent = dynamic(() => import('../../components/suggestion/suggestionCentent'));
 
 export const Suggestion = () => {
   const [isOpenSuggestion, setIsShouldOpen] = useState(false);
@@ -20,10 +21,9 @@ export const Suggestion = () => {
       ...(city.id !== '-1' && { city_id: city.id }),
     },
     {
-      enabled: false,
+      keepPreviousData: true,
     },
   );
-  const [items, setItems] = useState([]);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
@@ -37,7 +37,6 @@ export const Suggestion = () => {
   };
 
   useEffect(() => {
-    setIsShouldOpen(false);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
       if (getCityInCookie) {
@@ -51,17 +50,11 @@ export const Suggestion = () => {
   }, []);
 
   useEffect(() => {
-    searchSuggestion.remove();
-    searchSuggestion.refetch();
     if (userSearchValue) {
       openSuggestionContent();
     }
     city.id !== '-1' && setCookie('new-city', city);
   }, [userSearchValue, city]);
-
-  useEffect(() => {
-    if (searchSuggestion.isSuccess) setItems(searchSuggestion.data?.data ?? []);
-  }, [searchSuggestion.status]);
 
   useEffect(() => {
     if (isOpenSuggestion && isMobile) {
@@ -97,6 +90,8 @@ export const Suggestion = () => {
     location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
   };
 
+  const suggestionItems = useMemo(() => searchSuggestion.data?.data ?? [], [searchSuggestion.data]);
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
@@ -122,8 +117,8 @@ export const Suggestion = () => {
               />
             ) : undefined
           }
-          items={items}
-          className="shadow-md border border-solid border-slate-200"
+          items={suggestionItems}
+          className="border border-solid shadow-md border-slate-200"
         />
       )}
     </div>
