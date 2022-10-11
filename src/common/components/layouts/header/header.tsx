@@ -5,6 +5,7 @@ import Logo from '@/components/atom/logo';
 import ChevronIcon from '@/components/icons/chevron';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
@@ -52,9 +53,11 @@ const Header = (props: HeaderProps) => {
         {isDesktop && (
           <div className="relative items-center justify-between hidden w-full h-full max-w-screen-xl mx-auto md:flex">
             {shouldShowBrand && (
-              <a href="/">
-                <Logo width={40} height={40} />
-              </a>
+              <Link href="/">
+                <a>
+                  <Logo width={40} height={40} />
+                </a>
+              </Link>
             )}
             <nav>
               <ul className="flex justify-center space-s-5">
