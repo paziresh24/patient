@@ -1,5 +1,5 @@
 .wrapper em {
-  @apply text-secondary not-italic;
+  @apply not-italic text-secondary;
 }
 
 .title span {
@@ -7,5 +7,5 @@
 }
 
 .title {
-  @apply hover:opacity-50 transition-opacity line-clamp-1;
+  @apply !block transition-opacity hover:opacity-50 line-clamp-1;
 }
