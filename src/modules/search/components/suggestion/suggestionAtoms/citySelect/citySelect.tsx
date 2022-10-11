@@ -69,7 +69,7 @@ export const CitySelect = (props: CitySelectProps) => {
     <>
       <Button
         variant="text"
-        icon={<LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-min" />}
+        icon={<LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />}
         onClick={() => setIsOpen(true)}
         className="!text-slate-700 !px-2 whitespace-nowrap"
       >

@@ -24,7 +24,7 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
     setOpen(false);
   });
   return (
-    <li ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
+    <li ref={ref} className="relative flex items-center" onClick={() => setOpen(prev => !prev)}>
       <div className="flex items-center text-center cursor-pointer">
         <Text fontSize="sm" className="p-3" fontWeight="medium">
           {title}

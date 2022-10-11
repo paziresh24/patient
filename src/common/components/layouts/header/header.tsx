@@ -30,7 +30,7 @@ const Header = (props: HeaderProps) => {
   const { shouldShowBrand = true } = props;
   const [open, setOpen] = useState(false);
   const { isDesktop } = useResponsive();
-  const [menu, setMenu] = useState(MegaMenuItem.SPECIALTY);
+  const [menu, setMenu] = useState(MegaMenuItem.CONSULT);
   const [expertiseItems, setExpertiseItems] = useState([]);
   const menuItemExpertise = useGetMegaMenu();
   const { t } = useTranslation('common');
@@ -61,9 +61,11 @@ const Header = (props: HeaderProps) => {
             )}
             <nav>
               <ul className="flex justify-center space-s-5">
-                <li ref={ref} className="flex items-center" onClick={() => setOpen(true)}>
-                  <span className="inline-block p-3 text-sm font-medium text-center cursor-pointer">{t('header.titles.categories')}</span>
-                  <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
+                <li ref={ref}>
+                  <div className="flex items-center" onClick={() => setOpen(prev => !prev)}>
+                    <span className="inline-block p-3 text-sm font-medium text-center cursor-pointer">{t('header.titles.categories')}</span>
+                    <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
+                  </div>
 
                   <Transition
                     match={open}

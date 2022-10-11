@@ -113,7 +113,6 @@
 
 body {
   color: #2b2f33;
-  font-family: iransansx, tahoma;
   -moz-font-feature-settings: 'ss02';
   -webkit-font-feature-settings: 'ss02';
   font-feature-settings: 'ss02';
@@ -127,8 +126,12 @@ body {
   font-feature-settings: unset;
 }
 
+* {
+  font-family: iransansx, tahoma;
+}
+
 @supports (font-variation-settings: normal) {
-  body {
+  * {
     font-family: 'iransansxv', tahoma;
   }
 }

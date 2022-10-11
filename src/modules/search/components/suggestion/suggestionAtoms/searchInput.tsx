@@ -17,9 +17,9 @@ export const SearchInput = (props: SearchInputProps) => {
   return (
     <div className="flex items-center w-full h-12 px-1 pl-2 md:h-14 space-s-1 md:space-s-2">
       {showBackButton ? (
-        <BackIcon className="w-6 h-6 cursor-pointer min-w-min" onClick={clickBackButton} />
+        <BackIcon className="w-6 h-6 cursor-pointer min-w-[1.5rem]" onClick={clickBackButton} />
       ) : (
-        <SearchIcon className="w-6 h-6 cursor-pointer min-w-min" onClick={clikSearchButton} />
+        <SearchIcon className="w-6 h-6 cursor-pointer min-w-[1.5rem]" onClick={clikSearchButton} />
       )}
 
       <input
