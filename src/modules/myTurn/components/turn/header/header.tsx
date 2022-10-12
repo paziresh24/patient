@@ -40,7 +40,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
   const removeBookAction = () => {
     removeBookApi.mutate(
