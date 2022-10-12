@@ -9,6 +9,11 @@ export const paziresh24AppClient = axios.create({
   withCredentials: true,
 });
 
+export const searchClinet = axios.create({
+  baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
+  withCredentials: true,
+});
+
 export const clinicClient = axios.create({
   baseURL: publicRuntimeConfig.CLINIC_BASE_URL,
   withCredentials: true,

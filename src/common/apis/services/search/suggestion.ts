@@ -1,4 +1,4 @@
-import { clinicClient } from '@/common/apis/client';
+import { searchClinet } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from 'react-query';
 
@@ -8,7 +8,7 @@ export interface Params {
 }
 
 export const Suggestion = ({ query, city_id }: Params) => {
-  return clinicClient.get(`/seapi/v1/suggestion`, {
+  return searchClinet.get(`/seapi/v1/suggestion`, {
     params: {
       q: query,
       city_id,
