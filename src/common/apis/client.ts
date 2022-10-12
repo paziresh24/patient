@@ -9,7 +9,7 @@ export const paziresh24AppClient = axios.create({
   withCredentials: true,
 });
 
-export const searchClinet = axios.create({
+export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
   withCredentials: true,
 });
