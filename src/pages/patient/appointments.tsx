@@ -89,14 +89,14 @@ export const Appointments: NextPageWithLayout = () => {
       </Head>
       {query.isWebView && <AppBar title="نوبت های من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
-      <div className="flex sticky top-0 z-10 space-y-5 flex-col px-5 pb-0 bg-white">
+      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
         {!query.isWebView && (
           <Text fontWeight="black" fontSize="xl" className="mt-5">
             نوبت های من
           </Text>
         )}
 
-        <div className="w-full lg:flex justify-center bg-white md:shadow-none sticky top-0 z-10 border-b border-slate-200 border-solid">
+        <div className="sticky top-0 z-10 justify-center w-full bg-white border-b border-solid lg:flex md:shadow-none border-slate-200">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
             <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
             <Tab value="book_request" label="درخواست ها" className="w-full lg:w-auto" />
@@ -104,7 +104,7 @@ export const Appointments: NextPageWithLayout = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:p-5 p-0 space-y-2 pt-3 w-full  self-center" data-testid="appointments-container">
+      <div className="flex flex-col self-center w-full p-0 pt-3 space-y-2 md:p-5" data-testid="appointments-container">
         {isLoading && (
           <>
             <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
@@ -137,7 +137,7 @@ export const Appointments: NextPageWithLayout = () => {
                   expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
                 }),
                 slug: turn.doctor_info?.slug,
-                whatsapp: turn.whatsapp,
+                onlineVisitChannels: turn.doctor_info?.online_visit_channels,
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
@@ -161,7 +161,7 @@ export const Appointments: NextPageWithLayout = () => {
             />
           ))}
         {!isLoading && getBooks.data?.status !== 204 && (
-          <div ref={ref} className="w-full flex justify-center py-8">
+          <div ref={ref} className="flex justify-center w-full py-8">
             <Loading />
           </div>
         )}
