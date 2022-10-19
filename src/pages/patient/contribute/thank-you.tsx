@@ -23,6 +23,7 @@ const ThankYouPage = () => {
     !isLoading &&
       sendPageViewEvent({
         group: 'contribute',
+        type: 'thankyou',
         data: {
           doctor: {
             id: profileData.id,

@@ -5,6 +5,7 @@ import { splunkInstance } from '../services/splunk';
 
 interface UsePageViewEvent {
   group: string;
+  type: string;
   data?: Record<string, unknown>;
 }
 
@@ -12,10 +13,12 @@ export const usePageViewEvent = () => {
   const userInfo = useUserInfoStore(state => state.info);
   const { query } = useRouter();
 
-  const sendPageViewEvent = ({ group, data }: UsePageViewEvent) =>
+  const sendPageViewEvent = ({ group, type, data }: UsePageViewEvent) =>
     splunkInstance().sendEvent({
       group,
+      type,
       event: {
+        event_action: 'page-view',
         data: {
           url: window.location.pathname,
           user: {
@@ -25,7 +28,6 @@ export const usePageViewEvent = () => {
           ...data,
           query: { ...query },
         },
-        type: 'page-view',
       },
     });
 
