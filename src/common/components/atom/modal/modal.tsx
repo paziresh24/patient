@@ -27,6 +27,7 @@ export const Modal = (props: ModalProps) => {
 
   const removeOverflowHidden = () => {
     document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('md:pr-[0.3rem]');
     if (isMobile) {
       window.onpopstate = () => {
         return;
@@ -50,6 +51,7 @@ export const Modal = (props: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       neutralizeBack();
+      document.body.classList.add('md:pr-[0.3rem]');
       return document.body.classList.add('overflow-hidden');
     } else {
       handleClose();
@@ -63,7 +65,7 @@ export const Modal = (props: ModalProps) => {
       <Transition
         match={isOpen}
         animation="fade"
-        className="fixed top-0 bottom-0 left-0 right-0 flex items-end pt-8 overflow-auto md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-800 bg-opacity-30"
+        className="fixed top-0 bottom-0 left-0 right-0 flex items-end pt-8 overflow-auto no-scroll md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-800 bg-opacity-30"
         onClick={handleClose}
       >
         <Transition
@@ -82,7 +84,7 @@ export const Modal = (props: ModalProps) => {
               <CloseIcon onClick={handleClose} />
             </div>
           )}
-          <div className={clsx('p-6 pt-0 h-full overflow-auto', bodyClassName)}>{children}</div>
+          <div className={clsx('p-6 pt-0 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>

@@ -23,28 +23,28 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     {
       id: 1,
       title: 'مشاوره آنلاین پزشکی',
-      items: consultMenus,
+      sub_menu: consultMenus,
     },
     {
       id: 2,
       title: 'تخصص ها',
-      items: expertiseItems,
+      sub_menu: expertiseItems,
     },
 
     {
       id: 3,
       title: 'برای بیماران',
-      items: withUserMenu,
+      sub_menu: withUserMenu,
     },
     {
       id: 4,
       title: 'برای پزشکان',
-      items: withDoctorMenu,
+      sub_menu: withDoctorMenu,
     },
     {
       id: 5,
       title: 'مجله سلامتی',
-      items: articleMenus,
+      sub_menu: articleMenus,
     },
   ];
 
@@ -57,10 +57,10 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="text-sm block w-full z-50 lg:hidden">
-      <div className="max-w-screen-xl mx-auto relative flex items-center justify-between">
+    <div ref={ref} className="z-50 block w-full text-sm lg:hidden">
+      <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
-          <div className="w-8 h-8 flex justify-center items-center" onClick={() => setOpen(true)}>
+          <div className="flex items-center justify-center w-8 h-8" onClick={() => setOpen(true)}>
             <HumbuggerMenu />
           </div>
           {shouldShowBrand && (

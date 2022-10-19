@@ -122,7 +122,7 @@ export const UserProfile = () => {
                 </a>
               </Link>
               <Divider />
-              <div className="flex flex-col p-3 pb-0 overflow-auto">
+              <div className="flex flex-col p-3 pb-0">
                 <MenuList>
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>

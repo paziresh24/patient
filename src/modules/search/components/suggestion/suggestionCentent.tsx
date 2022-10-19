@@ -48,13 +48,13 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
       {searchInput && <div className="top-0 z-20 p-2 bg-white shadow-sm stiky">{searchInput}</div>}
       <div
         className={clsx(
-          'invisible relative z-50 h-[1px]  rounded-full bg-gradient-to-r from-transparent via-slate-300 to-transparent w-56 animate-progress',
+          'invisible relative z-50 h-[1px] rounded-full bg-gradient-to-r from-transparent via-slate-400 to-transparent w-56 animate-progress',
           {
             '!visible': isLoading,
           },
         )}
       />
-      <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col overflow-auto no-scroll">
         {items?.map(({ items, component, ...section }, index) => (
           <div key={index}>
             {component !== 'search' && <CategoryBar {...section} />}

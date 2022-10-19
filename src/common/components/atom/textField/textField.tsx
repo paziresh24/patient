@@ -42,6 +42,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
       )}
       <Component
         ref={ref}
+        autoComplete="off"
         className={clsx('rounded-lg border border-solid border-inherit outline-inherit w-full transition-all', inputSize[size], className)}
         {...inputProps}
       />

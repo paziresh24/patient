@@ -38,7 +38,7 @@ const Home: NextPageWithLayout = () => {
           },
         ]}
       />
-      <main className="h-[90vh] mb-6 md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-5 pb-48 space-y-6">
+      <main className="h-[90vh] mb-6 md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6">
         <Logo className="text-2xl md:text-3xl" width={55} />
         <Suggestion />
         <RecentSearch />

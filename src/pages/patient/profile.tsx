@@ -28,7 +28,10 @@ export const PatinetProfile: NextPageWithLayout = () => {
       province: data.province.value,
       city: data.city.value,
     });
-    if (res.data.status === 1) return setUserInfo({ ...res.data.result });
+    if (res.data.status === 1) {
+      toast.success('اطلاعات شما با موفقیت ویرایش شد.');
+      return setUserInfo({ ...res.data.result });
+    }
     toast.error(res.data.message);
   };
 
@@ -52,7 +55,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
         <AppBar title="ویرایش اطلاعات من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
       )}
 
-      <div className="flex space-y-5 flex-col p-5 bg-white">
+      <div className="flex flex-col p-5 space-y-5 bg-white">
         {!query.isWebView && (
           <Text fontWeight="black" fontSize="xl">
             ویرایش اطلاعات من
@@ -60,10 +63,10 @@ export const PatinetProfile: NextPageWithLayout = () => {
         )}
         <label
           htmlFor="userAvatar"
-          className="self-center cursor-pointer flex justify-center items-center text-white hover:text-transparent transition-all"
+          className="flex items-center self-center justify-center text-white transition-all cursor-pointer hover:text-transparent"
         >
           <Avatar
-            className="brightness-50 hover:brightness-100 transition-all"
+            className="transition-all brightness-50 hover:brightness-100"
             name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`}
             src={userInfo.image ?? ''}
             width={120}
@@ -76,7 +79,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
           type="file"
           accept="image/png, image/jpg, image/jpeg, image/bmp"
           onChange={e => handleUploadUserAvatar(e.target.files)}
-          className="hidden absolute"
+          className="absolute hidden"
         />
         {!userInfoPending && (
           <PatinetProfileForm

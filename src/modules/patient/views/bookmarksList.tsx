@@ -1,8 +1,10 @@
 import { useDeleteBookmark } from '@/common/apis/services/bookmarks/deleteBookmark';
 import { useGetBookMarksList } from '@/common/apis/services/bookmarks/getBookmarksList';
+import DropDown from '@/common/components/atom/dropDown';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import BookmarkIcon from '@/common/components/icons/bookmark';
+import ThreeDotsIcon from '@/common/components/icons/threeDots';
+import TrashIcon from '@/common/components/icons/trash';
 import { DoctorParams } from '@/common/types/doctorParams';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
@@ -26,12 +28,12 @@ export const BookmarksList = () => {
   };
 
   return (
-    <div className="w-full grid md:grid-cols-2 gap-3 gap-y-4">
+    <div className="grid w-full gap-3 md:grid-cols-2 gap-y-4">
       {isLoading && <BookmarkListLoading />}
       {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک بوک مارک شده ای در لیست شما نیست.</Text>}
       {isSuccess &&
         data?.data?.result?.map((item: DoctorParams) => (
-          <div key={item.id} className="border-b border-slate-100 pb-4 flex justify-between space-s-1 px-2">
+          <div key={item.id} className="relative flex justify-between px-2 pb-4 border-b border-slate-100 space-s-1">
             <Link href={item.doctor_url ?? '#'}>
               <a>
                 <DoctorInfo
@@ -46,10 +48,23 @@ export const BookmarksList = () => {
                 />
               </a>
             </Link>
-            <BookmarkIcon
-              className="min-w-fit cursor-pointer"
-              fill={true}
-              onClick={() => handleDeleteDoctorInBookmarkList(item.slug ?? '#')}
+            <DropDown
+              items={[
+                {
+                  id: 0,
+                  name: 'حذف از لیست',
+                  icon: <TrashIcon />,
+                  action: () => handleDeleteDoctorInBookmarkList(item.slug ?? '#'),
+                },
+              ]}
+              element={
+                <div
+                  className="absolute top-0 flex items-center justify-center w-6 h-6 cursor-pointer left-2"
+                  data-testid="turn-drop-down-button"
+                >
+                  <ThreeDotsIcon className="w-4 h-4" />
+                </div>
+              }
             />
           </div>
         ))}

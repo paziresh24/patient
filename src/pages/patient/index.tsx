@@ -54,7 +54,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
       <div className="h-screen">
         <Link href="/patient/profile?referrer=profile&isWebView=1">
           <a>
-            <div className="flex p-5 items-center space-s-5 bg-white shadow-sm border-t border-slate-200">
+            <div className="flex items-center p-5 bg-white border-t shadow-sm space-s-5 border-slate-200">
               <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
               <div className="flex flex-col space-y-2">
                 {!userInfo.name ? (
@@ -79,19 +79,19 @@ export const PatinetProfile: NextPageWithLayout = () => {
         </Link>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
           <Link href="/patient/appointments?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <CalenderIcon />
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>
           <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <BookmarkIcon />
               <Text fontWeight="medium">لیست پزشکان من</Text>
             </a>
           </Link>
           <Link href="/patient/subuser?referrer=profile&isWebView=1">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <UsersIcon />
               <Text fontWeight="medium">کاربران زیرمجموعه</Text>
             </a>
@@ -99,13 +99,13 @@ export const PatinetProfile: NextPageWithLayout = () => {
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
           <Link href="https://www.paziresh24.com/home/support-form/">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <HeadphoneIcon />
               <Text fontWeight="medium">پشتیبانی</Text>
             </a>
           </Link>
           <Link href="https://www.paziresh24.com/home/fordoctors/">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <DoctorIcon />
               <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
             </a>
@@ -113,7 +113,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
           <div
-            className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100"
+            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
             onClick={() => {
               window.Android.rateApp();
             }}
@@ -123,7 +123,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
           </div>
 
           <div
-            className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100"
+            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
             onClick={() => {
               window.Android.shareQA('اپلیکیشن نوبت دهی پذیرش24', 'https://www.paziresh24.com/app');
             }}
@@ -132,7 +132,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
             <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
           </div>
           <Link href="/logout">
-            <a className="py-4 flex items-center space-s-3 whitespace-nowrap px-5 border-b border-slate-100">
+            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <LogoutIcon />
               <Text fontWeight="medium">خروج</Text>
             </a>

@@ -17,8 +17,12 @@ export const DropDown: React.FC<DropDownProps> = props => {
 
   const [dropDown, setDropDown] = useState(false);
   useEffect(() => {
-    if (dropDown) return document.body.classList.add('overflow-hidden');
+    if (dropDown) {
+      document.body.classList.add('md:pr-[0.3rem]');
+      return document.body.classList.add('overflow-hidden');
+    }
     document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('md:pr-[0.3rem]');
   }, [dropDown]);
 
   return (
@@ -30,12 +34,12 @@ export const DropDown: React.FC<DropDownProps> = props => {
       )}
       {dropDown && (
         <>
-          <div className="absolute left-4 top-2 bg-white shadow-lg border border-slate-100 w-40 rounded-xl rounded-tl-sm z-20">
+          <div className="absolute z-20 w-40 bg-white border rounded-tl-sm shadow-lg left-4 top-2 border-slate-100 rounded-xl">
             <div className="flex flex-col p-2">
               {items.map(({ id, action, name, icon, testId }) => (
                 <div
                   key={id}
-                  className="flex items-center p-2 space-s-2 cursor-pointer"
+                  className="flex items-center p-2 cursor-pointer space-s-2"
                   onClick={() => {
                     setDropDown(false);
                     action();

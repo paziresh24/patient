@@ -11,6 +11,7 @@ import { popularCities } from '../../../../constants/cityList/popularCities';
 interface CitySelectProps {
   city: locationParam;
   setCity: (city: locationParam) => void;
+  onChange: () => void;
 }
 
 type locationParam = {
@@ -21,7 +22,7 @@ type locationParam = {
 };
 
 export const CitySelect = (props: CitySelectProps) => {
-  const { city, setCity } = props;
+  const { city, setCity, onChange } = props;
   const [isOpen, setIsOpen] = useState(false);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
@@ -57,6 +58,7 @@ export const CitySelect = (props: CitySelectProps) => {
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
       en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? '',
     });
+    onChange();
     setIsOpen(false);
   };
 
@@ -97,7 +99,7 @@ export const CitySelect = (props: CitySelectProps) => {
             value={userSearchInput}
           />
 
-          <div className="flex flex-col h-full pb-32 overflow-auto">
+          <div className="flex flex-col h-full pb-32 overflow-auto no-scroll">
             {stepSelect === 'cities' && (
               <div
                 className="sticky top-0 z-10 flex items-center p-3 font-medium bg-white border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50 space-s-2 "

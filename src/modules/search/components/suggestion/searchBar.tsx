@@ -2,14 +2,13 @@ import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
-import { MouseEventHandler } from 'react';
 import { useSearchStore } from '../../store/search';
 import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
 const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
 interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
-  onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
+  onClickSearchInput?: () => void;
   onClickBackButton?: () => void;
   onEnter?: (text: string) => void;
   className?: string | object;
@@ -43,7 +42,7 @@ export const SearchBar = (props: SearchBarProps) => {
         {...rest}
       />
       <Divider orientation="vertical" height="2rem" />
-      <CitySelect city={city} setCity={setCity} key={city.name} />
+      <CitySelect onChange={() => onClickSearchInput && onClickSearchInput()} city={city} setCity={setCity} key={city.name} />
     </div>
   );
 };

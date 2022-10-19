@@ -1,5 +1,5 @@
 .wrapper em {
-  @apply not-italic text-secondary;
+  @apply not-italic font-semibold text-secondary;
 }
 
 .title span {

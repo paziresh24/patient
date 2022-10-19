@@ -15,11 +15,11 @@ export const SliderSection = (props: SliderSectionProps) => {
   const { handleItemClick } = useSuggestionItem();
 
   return (
-    <div className="flex p-3 space-s-3 overflow-auto bg-white">
+    <div className="flex p-3 overflow-auto bg-white space-s-3 no-scroll">
       {items?.map((item, index) => (
         <div key={index}>
           <div
-            className="relative flex items-center shadow-md hover:shadow-lg transition-shadow cursor-pointer bg-white border border-solid border-slate-200 p-2 rounded-lg w-72 space-s-3"
+            className="relative flex items-center p-2 transition-shadow bg-white border border-solid rounded-lg shadow-md cursor-pointer hover:shadow-lg border-slate-200 w-72 space-s-3"
             onClick={() => handleItemClick(item, index)}
           >
             <div
