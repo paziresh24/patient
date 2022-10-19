@@ -16,7 +16,7 @@ export interface TurnProps {
     lastName: string;
     expertise?: string;
     slug: string;
-    whatsapp?: string;
+    onlineVisitChannels?: OnlineVisitChannels;
   };
   patientInfo: {
     nationalCode: string;
@@ -38,3 +38,8 @@ export interface TurnProps {
     pdf?: string;
   };
 }
+
+export type OnlineVisitChannels = {
+  type: 'igap' | 'whatsapp';
+  channel: string;
+}[];

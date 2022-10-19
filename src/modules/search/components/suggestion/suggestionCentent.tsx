@@ -13,10 +13,11 @@ import TreeSection from './suggestionSection/tree';
 interface SuggestionCententProps extends HTMLAttributes<HTMLDivElement> {
   items: Section[];
   searchInput?: ReactElement;
+  isLoading: boolean;
 }
 
 export const SuggestionCentent = (props: SuggestionCententProps) => {
-  const { className, items, searchInput } = props;
+  const { className, items, searchInput, isLoading } = props;
   const { isMobile } = useResponsive();
 
   const wrapper = (children: ReactElement, container: Element) => {
@@ -44,7 +45,15 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
         className,
       )}
     >
-      {searchInput && <div className="p-2 bg-white shadow-sm z-20 stiky top-0">{searchInput}</div>}
+      {searchInput && <div className="top-0 z-20 p-2 bg-white shadow-sm stiky">{searchInput}</div>}
+      <div
+        className={clsx(
+          'invisible relative z-50 h-[1px]  rounded-full bg-gradient-to-r from-transparent via-slate-300 to-transparent w-56 animate-progress',
+          {
+            '!visible': isLoading,
+          },
+        )}
+      />
       <div className="flex flex-col overflow-auto">
         {items?.map(({ items, component, ...section }, index) => (
           <div key={index}>

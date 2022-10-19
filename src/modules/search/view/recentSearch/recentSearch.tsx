@@ -20,7 +20,7 @@ export const RecentSearch = () => {
         {t('recentSearchTitle')}
       </Text>
 
-      <div className="relative flex space-s-3 overflow-auto w-full">
+      <div className="relative flex w-full overflow-auto space-s-3">
         {recent.map((item: any, index) => (
           <Chips key={index} className="cursor-pointer" onClick={() => handleChangeSearchInput(item.name)}>
             {item.name}

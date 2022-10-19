@@ -29,12 +29,13 @@ export const Turn: React.FC<TurnProps> = props => {
 
   return (
     <Card
-      className="space-y-2 md:shadow-none rounded-none md:rounded-lg md:border border-solid border-slate-200 relative"
+      className="relative space-y-2 border-solid rounded-none md:shadow-none md:rounded-lg md:border border-slate-200"
       data-testid="turn-card"
     >
       <TurnHeader
         id={id}
         doctorInfo={doctorInfo}
+        centerType={centerType}
         centerId={centerInfo.centerId}
         trackingCode={turnDetails.trackingCode}
         nationalCode={patientInfo.nationalCode}
@@ -60,7 +61,7 @@ export const Turn: React.FC<TurnProps> = props => {
         status={status}
         hasPaging={centerInfo.hasPaging}
         bookTime={turnDetails.bookTime}
-        whatsapp={doctorInfo.whatsapp}
+        onlineVisitChannels={doctorInfo.onlineVisitChannels}
       />
     </Card>
   );

@@ -1,4 +1,5 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
+import { LoginModal } from '../views/loginModal';
 
 interface State {
   state: boolean;
@@ -30,7 +31,12 @@ const LoginModalProvider = ({ children }: any) => {
     description: '',
   });
 
-  return <LoginModalContext.Provider value={{ loginModalState, openLoginModal }}>{children}</LoginModalContext.Provider>;
+  return (
+    <LoginModalContext.Provider value={{ loginModalState, openLoginModal }}>
+      {children}
+      <LoginModal />
+    </LoginModalContext.Provider>
+  );
 };
 
 export { useLoginModalContext, LoginModalProvider };

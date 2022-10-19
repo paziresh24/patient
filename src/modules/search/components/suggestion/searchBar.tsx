@@ -16,8 +16,8 @@ interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
 }
 
 export const SearchBar = (props: SearchBarProps) => {
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
   const { t } = useTranslation('search');
+  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);

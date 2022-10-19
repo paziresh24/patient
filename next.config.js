@@ -9,6 +9,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
+  ...nextTranslate(),
   swcMinify: true,
   reactStrictMode: false,
   publicRuntimeConfig: {
@@ -16,6 +17,7 @@ const nextConfig = {
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
     PAZIRESH24_API: process.env.PAZIRESH24_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
+    SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
   },
   images: {
     domains: ['www.paziresh24.com'],

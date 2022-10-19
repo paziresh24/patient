@@ -3,6 +3,7 @@ import { useGetBookMarksList } from '@/common/apis/services/bookmarks/getBookmar
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
+import { DoctorParams } from '@/common/types/doctorParams';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
@@ -27,9 +28,9 @@ export const BookmarksList = () => {
   return (
     <div className="w-full grid md:grid-cols-2 gap-3 gap-y-4">
       {isLoading && <BookmarkListLoading />}
-      {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک بوک مارک شده ای در لیست شما نیست.</Text>}
+      {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک ذخیره شده ای در لیست شما نیست.</Text>}
       {isSuccess &&
-        data?.data?.result?.map((item: DoctorInfo) => (
+        data?.data?.result?.map((item: DoctorParams) => (
           <div key={item.id} className="border-b border-slate-100 pb-4 flex justify-between space-s-1 px-2">
             <Link href={item.doctor_url ?? '#'}>
               <a>

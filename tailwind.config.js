@@ -22,6 +22,15 @@ module.exports = {
       backgroundSize: {
         85: '85rem',
       },
+      keyframes: {
+        progress: {
+          '0%': { right: '-100%' },
+          '100%': { right: '100%' },
+        },
+      },
+      animation: {
+        progress: 'progress 2s linear infinite',
+      },
     },
   },
   plugins: [require('@tailwindcss/line-clamp'), require('tailwindcss-rtl')],

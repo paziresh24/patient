@@ -1,13 +1,15 @@
+import ChatIcon from '@/common/components/icons/chat';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
-import ChatIcon from '@/components/icons/chat';
 import MegaphoneIcon from '@/components/icons/megaphone';
+import { getVisitChannel } from '@/modules/myTurn/functions/getVisitChannel';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
 import { useState } from 'react';
 import Queue from '../../queue';
+import { OnlineVisitChannels } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -18,11 +20,11 @@ interface TurnFooterProps {
   centerType: CenterType;
   hasPaging: boolean;
   bookTime: number;
-  whatsapp?: string;
+  onlineVisitChannels?: OnlineVisitChannels;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
-  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, whatsapp } = props;
+  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, onlineVisitChannels } = props;
   const [queueModal, setQueueModal] = useState(false);
 
   const isBookForToday = isToday(new Date(bookTime));
@@ -48,15 +50,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     </Button>
   );
 
-  const CunsultPrimaryButton = (
-    <Button variant="secondary" size="sm" block={true} onClick={() => window.open(`https://wa.me/98${whatsapp}`)} icon={<ChatIcon />}>
-      گفتگو با پزشک
-    </Button>
-  );
+  const CunsultPrimaryButton = () => {
+    if (!onlineVisitChannels) return null;
+    const { name, url } = getVisitChannel({ type: onlineVisitChannels?.[0]?.type, username: onlineVisitChannels?.[0]?.channel });
+    return (
+      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(url)} icon={<ChatIcon />}>
+        گفتگو با پزشک در {name}
+      </Button>
+    );
+  };
 
   return (
     <>
-      {status === BookStatus.notVisited && (centerType === CenterType.consult ? CunsultPrimaryButton : ClinicPrimaryButton)}
+      {status === BookStatus.notVisited && (centerType === CenterType.consult ? <CunsultPrimaryButton /> : ClinicPrimaryButton)}
 
       {(status === BookStatus.expired ||
         status === BookStatus.visited ||
