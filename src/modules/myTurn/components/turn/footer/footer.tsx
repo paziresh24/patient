@@ -3,7 +3,6 @@ import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
-import { getVisitChannel } from '@/modules/myTurn/functions/getVisitChannel';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
@@ -52,17 +51,21 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const CunsultPrimaryButton = () => {
     if (!onlineVisitChannels) return null;
-    const { name, url } = getVisitChannel({ type: onlineVisitChannels?.[0]?.type, username: onlineVisitChannels?.[0]?.channel });
+    const channelsText = {
+      igap: 'آی گپ',
+      whatsapp: 'واتس اپ',
+    };
+    const channel = onlineVisitChannels?.[0];
     return (
-      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(url)} icon={<ChatIcon />}>
-        گفتگو با پزشک در {name}
+      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel.channel_link)} icon={<ChatIcon />}>
+        گفتگو با پزشک در {channelsText[channel.type]}
       </Button>
     );
   };
 
   return (
     <>
-      {status === BookStatus.notVisited && (centerType === CenterType.consult ? <CunsultPrimaryButton /> : ClinicPrimaryButton)}
+      {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
 
       {(status === BookStatus.expired ||
         status === BookStatus.visited ||
@@ -70,6 +73,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         status === BookStatus.rejected) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
+          {centerType === CenterType.consult && <CunsultPrimaryButton />}
           <Button variant="secondary" size="sm" block={true} onClick={reBook}>
             دریافت نوبت مجدد
           </Button>

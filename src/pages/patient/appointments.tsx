@@ -118,6 +118,7 @@ export const Appointments: NextPageWithLayout = () => {
             <Turn
               key={turn.book_id}
               status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
+              paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={
                 turn.center?.center_type === 1 ? CenterType.clinic : turn.center?.id === '5532' ? CenterType.consult : CenterType.hospital

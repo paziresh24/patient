@@ -1,8 +1,10 @@
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '../../types/paymentStatus';
 
 export interface TurnProps {
   status: BookStatus;
+  paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
   centerInfo: {
@@ -42,4 +44,5 @@ export interface TurnProps {
 export type OnlineVisitChannels = {
   type: 'igap' | 'whatsapp';
   channel: string;
+  channel_link: string;
 }[];
