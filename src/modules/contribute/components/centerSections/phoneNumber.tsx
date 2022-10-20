@@ -65,7 +65,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
           />
         )}
       </div>
-      <Modal isOpen={addPhoneModal} onClose={setAddPhoneModal}>
+      <Modal title="شماره تماس پیشنهادی شما" isOpen={addPhoneModal} onClose={setAddPhoneModal}>
         <PhoneCenter onSubmit={handleAddPhoneNumber} onCancel={() => setAddPhoneModal(false)} />
       </Modal>
     </>
