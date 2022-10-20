@@ -7,7 +7,8 @@ import { turnDetailsData } from './turnDetails';
 import type { TurnProps } from './turnType';
 
 export const Turn: React.FC<TurnProps> = props => {
-  const { status, doctorInfo, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } = props;
+  const { status, doctorInfo, paymentStatus, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } =
+    props;
 
   const [detailsData, setDetailsData] = useState<
     {
@@ -23,6 +24,7 @@ export const Turn: React.FC<TurnProps> = props => {
         data: turnDetails,
         centerType,
         status,
+        paymentStatus,
       }),
     );
   }, [turnDetails, status, centerType]);
