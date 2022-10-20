@@ -74,7 +74,7 @@ export const AddressSection = (props: AddressSectionProps) => {
           )}
         {addresses.every(item => !item.address) && <AddButton text="افزودن آدرس جدید" onClick={() => setInsertAddressModal(true)} />}
       </div>
-      <Modal isOpen={insertAddressModal} onClose={setInsertAddressModal}>
+      <Modal title="آدرس پیشنهادی شما" isOpen={insertAddressModal} onClose={setInsertAddressModal}>
         <EditCenterInfo
           onSubmit={handleAddAddress}
           onCancel={() => setInsertAddressModal(false)}
@@ -86,7 +86,7 @@ export const AddressSection = (props: AddressSectionProps) => {
           }}
         />
       </Modal>
-      <Modal isOpen={editAddressModal} onClose={setEditAddressModal}>
+      <Modal title="آدرس پیشنهادی شما" isOpen={editAddressModal} onClose={setEditAddressModal}>
         <EditCenterInfo
           onSubmit={handleSubmitEditAddress}
           onCancel={() => setEditAddressModal(false)}

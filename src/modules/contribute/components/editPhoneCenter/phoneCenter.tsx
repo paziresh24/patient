@@ -36,7 +36,6 @@ export const PhoneCenter = ({ onSubmit, onCancel }: PhoneCenterProps) => {
         onFocus={() => setTextFieldError(false)}
         helperText={textFieldError ? 'شماره تماس را به درستی وارد کنید.' : ''}
         inputMode="numeric"
-        label="شماره تماس"
         size="small"
       />
 
