@@ -44,10 +44,10 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                   />
                   {phoneNumbers.every(item => item?.default) && (
                     <div className="flex flex-col justify-center grid gap-2">
-                      <LikeButton onClick={like} />
+                      <LikeButton onClick={() => like(phoneNumber?.cell)} />
                       <DislikeButton
                         onClick={() => {
-                          dislike({ cell: phoneNumber });
+                          dislike(phoneNumber?.cell);
                           setAddPhoneModal(true);
                         }}
                       />

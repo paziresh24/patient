@@ -60,10 +60,10 @@ export const AddressSection = (props: AddressSectionProps) => {
                   />
                   {addresses.length <= 1 && (
                     <div className="flex flex-col justify-center grid gap-2 relative top-2">
-                      <LikeButton onClick={like} />
+                      <LikeButton onClick={() => like(location?.address)} />
                       <DislikeButton
                         onClick={() => {
-                          dislike({ location: location?.address });
+                          dislike(location?.address);
                           setInsertAddressModal(true);
                         }}
                       />

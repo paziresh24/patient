@@ -23,7 +23,7 @@ export const useInfoVote = (type: string) => {
     username: userData?.username,
   };
 
-  const like = () => {
+  const like = (value: string | undefined) => {
     splunkInstance().sendEvent({
       group: 'contribute',
       type,
@@ -32,6 +32,7 @@ export const useInfoVote = (type: string) => {
         data: {
           doctor: doctorInfo,
           user: userInfo,
+          value,
           url: window.location.pathname,
           query: { ...query },
         },
@@ -40,21 +41,23 @@ export const useInfoVote = (type: string) => {
     toast.success('نظر شما با موفقیت ثبت شد');
   };
 
-  const dislike = (prevData: object) => {
+  const dislike = (value: string | undefined) => {
     splunkInstance().sendEvent({
       group: 'contribute',
       type,
       event: {
         event_action: 'dislike',
         data: {
-          doctor: { ...doctorInfo, ...prevData },
+          doctor: { ...doctorInfo },
           user: userInfo,
+          value,
           url: window.location.pathname,
           query: { ...query },
         },
       },
     });
   };
+
   const submit = (value: string | undefined) => {
     splunkInstance().sendEvent({
       group: 'contribute',
