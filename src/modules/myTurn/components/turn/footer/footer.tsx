@@ -74,9 +74,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
           {centerType === CenterType.consult && <CunsultPrimaryButton />}
-          <Button variant="secondary" size="sm" block={true} onClick={reBook}>
-            دریافت نوبت مجدد
-          </Button>
+          {centerType !== CenterType.consult && (
+            <Button variant="secondary" size="sm" block={true} onClick={reBook}>
+              دریافت نوبت مجدد
+            </Button>
+          )}
           {pdfLink && (
             <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>
               مشاهده نسخه
