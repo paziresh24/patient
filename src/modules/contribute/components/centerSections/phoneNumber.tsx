@@ -17,12 +17,11 @@ interface PhoneNumberSectionProps {
 export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   const { phoneNumbers, setPhoneNumbers } = props;
   const [addPhoneModal, setAddPhoneModal] = useState<boolean>(false);
-  const { dislike, like, submit } = useInfoVote('phone_number');
+  const { submit } = useInfoVote('phone_number');
 
   const handleAddPhoneNumber = (phoneNumberValue: PhoneData) => {
-    setPhoneNumbers(prev => [...prev, { cell: phoneNumberValue, default: false }]);
+    setPhoneNumbers(prev => [...prev, { cell: phoneNumberValue, default: false, status: 'add' }]);
     setAddPhoneModal(false);
-    submit(phoneNumberValue);
   };
 
   return (
@@ -42,14 +41,26 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                     className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
                     readOnly
                   />
-                  {phoneNumbers.every(item => item?.default) && (
+                  {phoneNumber.default && (
                     <div className="flex flex-col justify-center grid gap-2">
-                      <LikeButton onClick={() => like(phoneNumber?.cell)} />
+                      <LikeButton
+                        onClick={() => {
+                          setPhoneNumbers(
+                            phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: 'like' }) })),
+                          );
+                        }}
+                        color={phoneNumbers.some(item => item.cell === phoneNumber.cell && item.status === 'like') ? '#00c700' : '#22282F'}
+                      />
                       <DislikeButton
                         onClick={() => {
-                          dislike(phoneNumber?.cell);
+                          setPhoneNumbers(
+                            phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: 'dislike' }) })),
+                          );
                           setAddPhoneModal(true);
                         }}
+                        color={
+                          phoneNumbers.some(item => item.cell === phoneNumber.cell && item.status === 'dislike') ? '#ff0000' : '#22282F'
+                        }
                       />
                     </div>
                   )}
@@ -58,7 +69,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
             </div>
           </>
         )}
-        {(phoneNumbers.some(item => !item?.default) || phoneNumbers.length === 0) && (
+        {(phoneNumbers.some(item => !item?.default) || phoneNumbers.length >= 0) && (
           <AddButton
             text={phoneNumbers.length > 0 ? 'افزودن شماره تماس دیگر' : 'افزودن شماره تماس جدید'}
             onClick={() => setAddPhoneModal(true)}

@@ -1,7 +1,6 @@
 import Modal from '@/common/components/atom/modal';
 import TextField from '@/common/components/atom/textField';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useInfoVote } from '../../hooks/useInfoVote';
 import AddButton from '../addButton';
 import DislikeButton from '../dislikeButton';
 import { CenterInfoData, EditCenterInfo } from '../editCenterInfo';
@@ -24,11 +23,9 @@ export const AddressSection = (props: AddressSectionProps) => {
     index: 0,
     data: {},
   });
-  const { dislike, like, submit } = useInfoVote('address');
   const handleAddAddress = (center: CenterInfoData) => {
-    setAddresses(prev => [...prev, center]);
+    setAddresses(prev => [...prev, { ...center, status: 'add' }]);
     setInsertAddressModal(false);
-    submit(center?.address);
   };
   const handleEditAddress = (center: CenterInfoData, index: number) => {
     setEditAddressModal(true);
@@ -60,12 +57,26 @@ export const AddressSection = (props: AddressSectionProps) => {
                   />
                   {addresses.length <= 1 && (
                     <div className="flex flex-col justify-center grid gap-2 relative top-2">
-                      <LikeButton onClick={() => like(location?.address)} />
+                      <LikeButton
+                        onClick={() =>
+                          setAddresses(
+                            addresses.map(items => ({ ...items, ...(items.address === location.address && { status: 'like' }) })),
+                          )
+                        }
+                        color={
+                          addresses.some(items => items.address === location.address && items.status === 'like') ? '#00c700' : '#22282F'
+                        }
+                      />
                       <DislikeButton
                         onClick={() => {
-                          dislike(location?.address);
+                          setAddresses(
+                            addresses.map(items => ({ ...items, ...(items.address === location.address && { status: 'dislike' }) })),
+                          );
                           setInsertAddressModal(true);
                         }}
+                        color={
+                          addresses.some(items => items.address === location.address && items.status === 'dislike') ? '#ff0000' : '#22282F'
+                        }
                       />
                     </div>
                   )}

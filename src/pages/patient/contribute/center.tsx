@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import Button from '@/common/components/atom/button';
-import Skeleton from '@/common/components/atom/skeleton';
 import AppBar from '@/components/layouts/appBar';
 
 import Divider from '@/common/components/atom/divider';
+import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
@@ -16,6 +16,7 @@ import { AddressSection } from '@/modules/contribute/components/centerSections/a
 import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
 import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
+import { useInfoVote } from '@/modules/contribute/hooks/useInfoVote';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { PhoneNumbers } from '@/modules/contribute/types/phoneNumbers';
 
@@ -27,6 +28,9 @@ const Home: NextPage = () => {
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumbers>([]);
   const [addresses, setAddresses] = useState<CenterInfoData[]>([]);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const { like: phoneLike, dislike: phoneDislike, submit: phoneSubmit } = useInfoVote('phone_number');
+  const { like: addressLike, dislike: addressDislike, submit: addressSubmit } = useInfoVote('address');
+
   const sendPageViewEvent = usePageViewEvent();
 
   useEffect(() => {
@@ -62,6 +66,20 @@ const Home: NextPage = () => {
   }, [isLoading, profileData, router.query]);
 
   const onSubmit = () => {
+    phoneNumbers.forEach(
+      item =>
+        item.status &&
+        (item.status === 'like' ? phoneLike(item.cell) : item.status === 'add' ? phoneSubmit(item.cell) : phoneDislike(item.cell)),
+    );
+    addresses.forEach(
+      item =>
+        item.status &&
+        (item.status === 'like'
+          ? addressLike(item.address)
+          : item.status === 'add'
+          ? addressSubmit(item.address)
+          : addressDislike(item.address)),
+    );
     setIsButtonLoading(true);
     router.replace({
       pathname: '/patient/contribute/thank-you',
@@ -86,6 +104,8 @@ const Home: NextPage = () => {
               <Text fontWeight="medium">{selectedCenter?.name}</Text>
             </div>
             <Divider />
+            <PhoneNumberSection phoneNumbers={phoneNumbers} setPhoneNumbers={setPhoneNumbers} />
+            <Divider />
             <AddressSection
               addresses={addresses}
               setAddresses={setAddresses}
@@ -98,8 +118,6 @@ const Home: NextPage = () => {
               }}
             />
             <Divider />
-            <PhoneNumberSection phoneNumbers={phoneNumbers} setPhoneNumbers={setPhoneNumbers} />
-            <Divider />
           </>
         ) : (
           <FormLoading />
@@ -107,14 +125,13 @@ const Home: NextPage = () => {
 
         <div className="fixed bottom-0 right-0 w-full p-4 bg-white shadow-lg md:bg-transparent md:static md:px-0 md:shadow-none">
           <Button variant="primary" className="w-full" loading={isButtonLoading} onClick={onSubmit}>
-            ادامه
+            ثبت
           </Button>
         </div>
       </main>
     </div>
   );
 };
-
 const FormLoading = () => {
   return (
     <>
