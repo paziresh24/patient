@@ -60,6 +60,7 @@ const Home: NextPage = () => {
           province: center?.province,
           lat: center?.map?.lat,
           lng: center?.map?.lon,
+          default: true,
         },
       ]);
     }
