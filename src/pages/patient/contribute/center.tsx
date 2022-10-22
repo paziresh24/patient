@@ -18,7 +18,7 @@ import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import { useInfoVote } from '@/modules/contribute/hooks/useInfoVote';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
-import { PhoneNumbers } from '@/modules/contribute/types/phoneNumbers';
+import { PhoneNumbers } from '@/modules/contribute/types/phoneNumber';
 
 const Home: NextPage = () => {
   const router = useRouter();
