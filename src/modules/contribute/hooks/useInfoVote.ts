@@ -3,7 +3,6 @@ import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 
 export const useInfoVote = (type: string) => {
   const profileData = useProfileDataStore(state => state.data);
@@ -38,7 +37,6 @@ export const useInfoVote = (type: string) => {
         },
       },
     });
-    toast.success('نظر شما با موفقیت ثبت شد');
   };
 
   const dislike = (value: string | undefined) => {

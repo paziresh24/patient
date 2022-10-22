@@ -1,9 +1,12 @@
 import DislikeIcone from '@/common/components/icons/dislike';
-
-export const DislikeButton = ({ onClick }: { onClick: () => void }) => {
+interface Props {
+  color?: string;
+  onClick?: () => void;
+}
+export const DislikeButton = ({ color, onClick }: Props) => {
   return (
     <button onClick={onClick} className="p-[0.3rem] rounded-md border border-solid border-slate-300">
-      <DislikeIcone />
+      <DislikeIcone color={color} />
     </button>
   );
 };
