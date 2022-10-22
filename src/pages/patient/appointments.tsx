@@ -127,6 +127,7 @@ export const Appointments: NextPageWithLayout = () => {
                 centerId: turn.center?.id,
                 centerType: turn.center?.center_type,
                 hasPaging: turn.center?.settings?.booking_paging_from_clinic,
+                activePaymentStatus: turn.center?.active_online_payment_status === '1',
               }}
               doctorInfo={{
                 avatar: turn.doctor_info?.image,

@@ -15,10 +15,11 @@ interface TurnDetailsDataParam {
   };
   status: BookStatus;
   paymentStatus: PaymentStatus;
+  activePaymentStatus: Boolean;
   centerType: CenterType;
 }
 
-export const turnDetailsData = ({ data, status, centerType, paymentStatus }: TurnDetailsDataParam) => {
+export const turnDetailsData = ({ data, status, centerType, paymentStatus, activePaymentStatus }: TurnDetailsDataParam) => {
   const { bookTime, trackingCode, waitingTime, centerName, patientName } = data;
 
   const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
@@ -47,7 +48,7 @@ export const turnDetailsData = ({ data, status, centerType, paymentStatus }: Tur
       id: 3,
       name: 'وضعیت پرداخت',
       value: PAYMENT_STATUS_TRANSLATION[paymentStatus],
-      shouldShow: true,
+      shouldShow: activePaymentStatus,
     },
     {
       id: 4,

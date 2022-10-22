@@ -56,9 +56,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       whatsapp: 'واتس اپ',
     };
     const channel = onlineVisitChannels?.[0];
+    if (!channel) return null;
     return (
-      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel.channel_link)} icon={<ChatIcon />}>
-        گفتگو با پزشک در {channelsText[channel.type]}
+      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel?.channel_link)} icon={<ChatIcon />}>
+        گفتگو با پزشک در {channelsText[channel?.type]}
       </Button>
     );
   };
@@ -67,18 +68,16 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
 
+      {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
       {(status === BookStatus.expired ||
         status === BookStatus.visited ||
         status === BookStatus.deleted ||
         status === BookStatus.rejected) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
-          {centerType === CenterType.consult && <CunsultPrimaryButton />}
-          {centerType !== CenterType.consult && (
-            <Button variant="secondary" size="sm" block={true} onClick={reBook}>
-              دریافت نوبت مجدد
-            </Button>
-          )}
+          <Button variant="secondary" size="sm" block={true} onClick={reBook}>
+            دریافت نوبت مجدد
+          </Button>
           {pdfLink && (
             <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>
               مشاهده نسخه

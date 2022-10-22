@@ -5,7 +5,7 @@ export default {
   description:
     'پذیرش24، دکتر آنلاین و نوبت دهی سریع از بهترین پزشکان ، درمانگاه ها ، کلینیک ها و بیمارستان های کشور.از طریق این سایت و یا اپلیکیشن پذیرش24 اینترنتی با جستجوی دکتر مورد نظر ، مشاوره تلفنی و یا نوبت بگیرید.',
   openGraph: {
-    url: 'https://www.paziresh24.com',
+    url: 'https://www.paziresh24.com/',
     images: [
       {
         url: `https://www.paziresh24.com${logo.src}`,

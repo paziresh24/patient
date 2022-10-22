@@ -35,8 +35,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               },
             ]}
             sameAs={[
-              'https://www.facebook.com/paziresh24',
-              'https://twitter.com/paziresh24',
+              'https://www.facebook.com/paziresh24com/',
+              'https://twitter.com/paziresh24/',
               'https://www.instagram.com/paziresh24/',
               'https://www.linkedin.com/company/paziresh24/',
               'https://www.paziresh24.com/home/about/',

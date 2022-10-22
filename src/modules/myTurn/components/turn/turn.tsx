@@ -25,6 +25,7 @@ export const Turn: React.FC<TurnProps> = props => {
         centerType,
         status,
         paymentStatus,
+        activePaymentStatus: centerInfo.activePaymentStatus,
       }),
     );
   }, [turnDetails, status, centerType]);

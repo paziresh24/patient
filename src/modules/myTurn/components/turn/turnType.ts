@@ -11,6 +11,7 @@ export interface TurnProps {
     centerId: string;
     centerType: string;
     hasPaging: boolean;
+    activePaymentStatus: boolean;
   };
   doctorInfo: {
     avatar: string;
