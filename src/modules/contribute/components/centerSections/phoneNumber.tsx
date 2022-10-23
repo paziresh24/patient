@@ -3,15 +3,15 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
-import { PhoneNumbers } from '../../types/phoneNumbers';
+import { PhoneNumber } from '../../types/phoneNumber';
 import AddButton from '../addButton';
 import DislikeButton from '../dislikeButton/dislikeButton';
 import { PhoneCenter, PhoneData } from '../editPhoneCenter';
 import LikeButton from '../likeButton/likeButton';
 
 interface PhoneNumberSectionProps {
-  phoneNumbers: PhoneNumbers;
-  setPhoneNumbers: Dispatch<SetStateAction<PhoneNumbers>>;
+  phoneNumbers: PhoneNumber[];
+  setPhoneNumbers: Dispatch<SetStateAction<PhoneNumber[]>>;
 }
 
 export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
@@ -32,7 +32,11 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
     setPhoneDataForEdit(value);
   };
 
-  const handlePhoneStatus = (phoneNumber: any, type: 'like' | 'dislike') => {
+  const getStatus = (type: string) => {
+    return phoneNumbers.some(({ status }: Pick<PhoneNumber, 'status'>) => status === type);
+  };
+
+  const handlePhoneStatus = (phoneNumber: PhoneNumber, type: 'like' | 'dislike') => {
     setPhoneNumbers(phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: type }) })));
   };
 
@@ -63,16 +67,14 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'like');
                         }}
-                        color={phoneNumbers.some(item => item.cell === phoneNumber.cell && item.status === 'like') ? '#00c700' : '#22282F'}
+                        currentColor={getStatus('like') ? '#00c700' : '#22282F'}
                       />
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'dislike');
                           setAddPhoneModal(true);
                         }}
-                        color={
-                          phoneNumbers.some(item => item.cell === phoneNumber.cell && item.status === 'dislike') ? '#ff0000' : '#22282F'
-                        }
+                        currentColor={getStatus('dislike') ? '#ff0000' : '#22282F'}
                       />
                     </div>
                   )}

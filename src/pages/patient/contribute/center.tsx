@@ -18,18 +18,17 @@ import { CenterInfoData } from '@/modules/contribute/components/editCenterInfo';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import { useInfoVote } from '@/modules/contribute/hooks/useInfoVote';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
-import { PhoneNumbers } from '@/modules/contribute/types/phoneNumbers';
+import { PhoneNumber } from '@/modules/contribute/types/phoneNumber';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
   const profileData = useProfileDataStore(state => state.data);
   const [selectedCenter, setSelectedCenter] = useState<Center>();
-  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumbers>([]);
+  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [addresses, setAddresses] = useState<CenterInfoData[]>([]);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
-  const { like: phoneLike, dislike: phoneDislike, submit: phoneSubmit } = useInfoVote('phone_number');
-  const { like: addressLike, dislike: addressDislike, submit: addressSubmit } = useInfoVote('address');
+  const { like, dislike, submit } = useInfoVote();
 
   const sendPageViewEvent = usePageViewEvent();
 
@@ -50,7 +49,6 @@ const Home: NextPage = () => {
       });
 
       const center = profileData.centers?.find(center => center.id === router.query?.center_id);
-
       setSelectedCenter(center);
       setPhoneNumbers(center?.display_number_array?.map(item => ({ cell: item, default: true })) ?? []);
       setAddresses([
@@ -65,22 +63,21 @@ const Home: NextPage = () => {
       ]);
     }
   }, [isLoading, profileData, router.query]);
+  const submitMethods = {
+    like: (value: string, type: string) => {
+      return like(value, type);
+    },
+    dislike: (value: string, type: string) => {
+      return dislike(value, type);
+    },
+    add: (value: string, type: string) => {
+      return submit(value, type);
+    },
+  };
 
   const onSubmit = () => {
-    phoneNumbers.forEach(
-      item =>
-        item.status &&
-        (item.status === 'like' ? phoneLike(item.cell) : item.status === 'add' ? phoneSubmit(item.cell) : phoneDislike(item.cell)),
-    );
-    addresses.forEach(
-      item =>
-        item.status &&
-        (item.status === 'like'
-          ? addressLike(item.address)
-          : item.status === 'add'
-          ? addressSubmit(item.address)
-          : addressDislike(item.address)),
-    );
+    phoneNumbers.forEach(item => item.status && submitMethods[item.status](item.cell, 'phone_number'));
+    addresses.forEach(item => item.status && submitMethods[item.status](item.address ?? '', 'address'));
     setIsButtonLoading(true);
     router.replace({
       pathname: '/patient/contribute/thank-you',
