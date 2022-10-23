@@ -43,7 +43,7 @@ export const AddressSection = (props: AddressSectionProps) => {
   };
 
   const getStatus = (type: string) => {
-    return addresses.some(items => items.status === type);
+    return addresses.some((items: Pick<CenterInfoData, 'status'>) => items.status === type);
   };
 
   return (
@@ -65,13 +65,16 @@ export const AddressSection = (props: AddressSectionProps) => {
                   />
                   {location.default && (
                     <div className="flex flex-col justify-center grid gap-2 relative top-2">
-                      <LikeButton onClick={() => handlePhoneStatus(location, 'like')} color={getStatus('like') ? '#00c700' : '#22282F'} />
+                      <LikeButton
+                        onClick={() => handlePhoneStatus(location, 'like')}
+                        currentColor={getStatus('like') ? '#00c700' : '#22282F'}
+                      />
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(location, 'dislike');
                           setInsertAddressModal(true);
                         }}
-                        color={getStatus('dislike') ? '#ff0000' : '#22282F'}
+                        currentColor={getStatus('dislike') ? '#ff0000' : '#22282F'}
                       />
                     </div>
                   )}

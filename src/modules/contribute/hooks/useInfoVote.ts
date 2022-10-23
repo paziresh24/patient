@@ -4,7 +4,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 
-export const useInfoVote = (type: string) => {
+export const useInfoVote = () => {
   const profileData = useProfileDataStore(state => state.data);
   const { query } = useRouter();
   const userData = useUserInfoStore(state => state.info);
@@ -22,7 +22,7 @@ export const useInfoVote = (type: string) => {
     username: userData?.username,
   };
 
-  const like = (value: string | undefined) => {
+  const like = (value: string | undefined, type: string) => {
     splunkInstance().sendEvent({
       group: 'contribute',
       type,
@@ -39,7 +39,7 @@ export const useInfoVote = (type: string) => {
     });
   };
 
-  const dislike = (value: string | undefined) => {
+  const dislike = (value: string | undefined, type: string) => {
     splunkInstance().sendEvent({
       group: 'contribute',
       type,
@@ -56,7 +56,7 @@ export const useInfoVote = (type: string) => {
     });
   };
 
-  const submit = (value: string | undefined) => {
+  const submit = (value: string | undefined, type: string) => {
     splunkInstance().sendEvent({
       group: 'contribute',
       type,
