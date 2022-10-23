@@ -63,6 +63,7 @@ const Home: NextPage = () => {
       ]);
     }
   }, [isLoading, profileData, router.query]);
+
   const submitMethods = {
     like: (value: string, type: string) => {
       return like(value, type);

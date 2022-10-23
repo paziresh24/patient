@@ -5,9 +5,11 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 
 export const useInfoVote = () => {
+  const router = useRouter();
   const profileData = useProfileDataStore(state => state.data);
   const { query } = useRouter();
   const userData = useUserInfoStore(state => state.info);
+  const selectedCenter = profileData.centers?.find(center => center.id === router.query?.center_id);
 
   const doctorInfo = {
     name: profileData?.name,
@@ -30,6 +32,7 @@ export const useInfoVote = () => {
         event_action: 'like',
         data: {
           doctor: doctorInfo,
+          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -46,7 +49,8 @@ export const useInfoVote = () => {
       event: {
         event_action: 'dislike',
         data: {
-          doctor: { ...doctorInfo },
+          doctor: doctorInfo,
+          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -64,6 +68,7 @@ export const useInfoVote = () => {
         event_action: 'add',
         data: {
           doctor: doctorInfo,
+          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
           user: userInfo,
           value,
           url: window.location.pathname,
