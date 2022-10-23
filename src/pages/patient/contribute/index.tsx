@@ -26,6 +26,7 @@ const Home = () => {
     !isLoading &&
       sendPageViewEvent({
         group: 'contribute',
+        type: 'onboarding',
         data: {
           doctor: {
             id: profileData.id,

@@ -5,16 +5,17 @@ import { useState } from 'react';
 interface PhoneCenterProps {
   onSubmit: (data: PhoneData) => void;
   onCancel: () => void;
+  defaultPhone?: string;
 }
 
 export type PhoneData = string;
 
-export const PhoneCenter = ({ onSubmit, onCancel }: PhoneCenterProps) => {
-  const [phoneNumber, setPhoneNumber] = useState<PhoneData>('');
+export const PhoneCenter = ({ onSubmit, onCancel, defaultPhone }: PhoneCenterProps) => {
+  const [phoneNumber, setPhoneNumber] = useState<PhoneData>(defaultPhone ?? '');
   const [textFieldError, setTextFieldError] = useState(false);
 
   const validate = (phoneNumber: PhoneData) => {
-    if (phoneNumber.length > 11 || phoneNumber.length < 9) {
+    if (phoneNumber.length > 15 || phoneNumber.length < 9) {
       setTextFieldError(true);
       return false;
     }
@@ -36,8 +37,8 @@ export const PhoneCenter = ({ onSubmit, onCancel }: PhoneCenterProps) => {
         onFocus={() => setTextFieldError(false)}
         helperText={textFieldError ? 'شماره تماس را به درستی وارد کنید.' : ''}
         inputMode="numeric"
-        label="شماره تماس"
         size="small"
+        style={{ direction: 'ltr' }}
       />
 
       <div className="flex space-s-4">

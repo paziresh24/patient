@@ -30,7 +30,7 @@ export const BookmarksList = () => {
   return (
     <div className="grid w-full gap-3 md:grid-cols-2 gap-y-4">
       {isLoading && <BookmarkListLoading />}
-      {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک بوک مارک شده ای در لیست شما نیست.</Text>}
+      {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک ذخیره شده ای در لیست شما نیست.</Text>}
       {isSuccess &&
         data?.data?.result?.map((item: DoctorParams) => (
           <div key={item.id} className="relative flex justify-between px-2 pb-4 border-b border-slate-100 space-s-1">

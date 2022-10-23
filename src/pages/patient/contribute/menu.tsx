@@ -34,6 +34,7 @@ const Home: NextPage = () => {
     !isLoading &&
       sendPageViewEvent({
         group: 'contribute',
+        type: 'choose_center',
         data: {
           doctor: {
             id: profileData.id,
@@ -53,9 +54,9 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>پیشخوان ویرایش {profileData.display_name}</title>
+        <title>پیشخوان {profileData.display_name}</title>
       </Head>
-      <AppBar title={`پیشخوان ویرایش ${profileData.display_name}`} titleLoading={isLoading} backButton />
+      <AppBar title={`پیشخوان ${profileData.display_name}`} titleLoading={isLoading} backButton />
       <main className="flex flex-col items-center p-5 mx-auto md:max-w-md">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col space-y-2">

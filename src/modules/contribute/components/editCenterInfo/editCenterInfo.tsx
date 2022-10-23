@@ -20,6 +20,8 @@ export type CenterInfoData = {
   city?: string;
   province?: string;
   removed?: boolean;
+  default?: boolean;
+  status?: 'like' | 'dislike' | 'add';
 };
 
 export const EditCenterInfo = ({ onSubmit, onCancel, defaultValues }: EditCenterInfoProps) => {
