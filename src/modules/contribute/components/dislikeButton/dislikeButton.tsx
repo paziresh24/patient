@@ -1,12 +1,17 @@
-import DislikeIcone from '@/common/components/icons/dislike';
+import DislikeIcon from '@/common/components/icons/dislike';
+import clsx from 'clsx';
 interface Props {
-  currentColor?: string;
-  onClick?: () => void;
+  fill: boolean;
+  onClick: () => void;
 }
-export const DislikeButton = ({ currentColor, onClick }: Props) => {
+export const DislikeButton = ({ fill, onClick }: Props) => {
   return (
     <button onClick={onClick} className="p-[0.3rem] rounded-md border border-solid border-slate-300">
-      <DislikeIcone currentColor={currentColor} />
+      <DislikeIcon
+        className={clsx({
+          'text-red-500': fill,
+        })}
+      />
     </button>
   );
 };

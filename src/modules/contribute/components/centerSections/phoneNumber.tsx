@@ -67,14 +67,14 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'like');
                         }}
-                        currentColor={getStatus(phoneNumber) === 'like' ? '#00c700' : '#22282F'}
+                        fill={getStatus(phoneNumber) === 'like'}
                       />
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'dislike');
                           setAddPhoneModal(true);
                         }}
-                        currentColor={getStatus(phoneNumber) === 'dislike' ? '#ff0000' : '#22282F'}
+                        fill={getStatus(phoneNumber) === 'dislike'}
                       />
                     </div>
                   )}
