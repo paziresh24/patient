@@ -22,7 +22,6 @@ const nextConfig = {
   images: {
     domains: ['www.paziresh24.com'],
   },
-  ...nextTranslate(),
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
