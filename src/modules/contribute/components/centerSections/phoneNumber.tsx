@@ -32,8 +32,8 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
     setPhoneDataForEdit(value);
   };
 
-  const getStatus = (type: string) => {
-    return phoneNumbers.some(({ status }: Pick<PhoneNumber, 'status'>) => status === type);
+  const getStatus = (phoneNumber: PhoneNumber) => {
+    return phoneNumbers.find(({ cell }: Pick<PhoneNumber, 'cell'>) => cell === phoneNumber.cell)?.status;
   };
 
   const handlePhoneStatus = (phoneNumber: PhoneNumber, type: 'like' | 'dislike') => {
@@ -67,14 +67,14 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'like');
                         }}
-                        currentColor={getStatus('like') ? '#00c700' : '#22282F'}
+                        currentColor={getStatus(phoneNumber) === 'like' ? '#00c700' : '#22282F'}
                       />
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'dislike');
                           setAddPhoneModal(true);
                         }}
-                        currentColor={getStatus('dislike') ? '#ff0000' : '#22282F'}
+                        currentColor={getStatus(phoneNumber) === 'dislike' ? '#ff0000' : '#22282F'}
                       />
                     </div>
                   )}
