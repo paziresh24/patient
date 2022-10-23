@@ -1,6 +1,6 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
-import { getCookie, removeCookies, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
@@ -52,7 +52,7 @@ export const Suggestion = () => {
 
   useEffect(() => {
     if (userSearchValue) openSuggestionContent();
-    city.id !== '-1' ? setCookie('new-city', city) : removeCookies('new-city');
+    city.id !== '-1' ? setCookie('new-city', city) : deleteCookie('new-city');
     setIsLoading(true);
   }, [userSearchValue, city]);
 
