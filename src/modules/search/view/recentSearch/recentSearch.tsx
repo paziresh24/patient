@@ -1,6 +1,7 @@
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
 import useTranslation from 'next-translate/useTranslation';
+import ScrollContainer from 'react-indiana-drag-scroll';
 import { useRecentSearch } from '../../hooks/useRecentSearch';
 import { useSearchStore } from '../../store/search';
 
@@ -20,13 +21,13 @@ export const RecentSearch = () => {
         {t('recentSearchTitle')}
       </Text>
 
-      <div className="relative flex w-full overflow-auto no-scroll space-s-3">
+      <ScrollContainer className="relative flex w-full overflow-auto no-scroll space-s-3 select-none">
         {recent.map((item: any, index) => (
           <Chips key={index} className="cursor-pointer !text-slate-500" onClick={() => handleChangeSearchInput(item.name)}>
             {item.name}
           </Chips>
         ))}
-      </div>
+      </ScrollContainer>
     </div>
   );
 };
