@@ -61,9 +61,12 @@ export type Badge = {
 };
 
 type SeoInfo = {
+  title: string;
   heading: string;
   description: string;
   seo_box: string;
+  canonical_link: string;
+  jsonld: {}[];
   breadcrumbs: {
     text: string;
     href: string;

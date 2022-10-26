@@ -3,6 +3,7 @@ import { search as searchApi } from '@/common/apis/services/search/search';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useResponsive from '@/common/hooks/useResponsive';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -28,7 +29,7 @@ const Search: NextPageWithLayout = () => {
     query: { params },
     ...router
   } = useRouter();
-  const { isLanding, isLoading, total } = useSearch();
+  const { isLanding, isLoading, total, seoInfo } = useSearch();
   const city = useSearchStore(state => state.city);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const Search: NextPageWithLayout = () => {
 
   return (
     <>
+      <Seo {...seoInfo} jsonlds={[seoInfo?.jsonld]} />
       <div className="flex flex-col items-center justify-center px-3 py-5 space-y-3 bg-white">
         <Suggestion key={asPath.toString()} overlay />
         {!isLanding && <MobileToolbar />}
