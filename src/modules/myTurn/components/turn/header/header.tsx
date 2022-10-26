@@ -53,6 +53,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         onSuccess: data => {
           if (data.data.status === 1) {
             removeBook({ bookId: id });
+            setRemoveModal(false);
             return;
           }
           toast.error(data.data.message);

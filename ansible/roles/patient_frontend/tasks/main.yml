@@ -19,22 +19,22 @@
 
     - name: pull
       docker_compose:
-        project_src: /var/www/html/apps
+        project_src: /root/paziresh24-frontends
         files:
-          - docker-compose-patient.yml
+          - docker-compose.yml
         pull: true
 
 
     - name: down
       docker_compose:
-        project_src: /var/www/html/apps
+        project_src: /root/paziresh24-frontends
         files:
-          - docker-compose-patient.yml
+          - docker-compose.yml
         state: absent
 
     - name: up
       docker_compose:
-        project_src: /var/www/html/apps
+        project_src: /root/paziresh24-frontends
         files:
-          - docker-compose-patient.yml
+          - docker-compose.yml
         state: present

@@ -72,7 +72,7 @@ export const Modal = (props: ModalProps) => {
           match={isOpen}
           animation={fullScreen && isMobile ? 'right' : 'bottom'}
           duration={300}
-          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem]', {
+          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto', {
             'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
           })}
           onClick={e => e.stopPropagation()}

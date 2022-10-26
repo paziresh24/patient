@@ -19,7 +19,7 @@ export const useBookStore = create<BooksStore>(set => ({
     })),
   removeBook: ({ bookId }) => {
     set(state => ({
-      books: state.books.filter(book => book.book_id !== bookId),
+      books: state.books.map(book => (book.book_id === bookId ? { ...book, delete: 1 } : book)),
     }));
   },
 }));
