@@ -126,7 +126,7 @@ export const SearchCard = (props: SearchCardProps) => {
           </Text>
         </div>
       )}
-      {details?.price?.value && (
+      {details?.price && (
         <div className="flex items-center mt-5 space-s-1">
           <svg
             width="24"
@@ -179,7 +179,7 @@ export const SearchCard = (props: SearchCardProps) => {
           </svg>
 
           <Text fontSize="sm" className="line-clamp-1">
-            {details?.price?.value}
+            {details?.price}
           </Text>
         </div>
       )}
