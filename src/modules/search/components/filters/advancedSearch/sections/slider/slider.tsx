@@ -3,7 +3,7 @@ import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { addCommas } from '@persian-tools/persian-tools';
 import 'chart.js/auto';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 
 const BarChart = ({ data, highlight }: any) => {
@@ -46,7 +46,7 @@ const BarChart = ({ data, highlight }: any) => {
 export const SliderFilter = (props: any) => {
   const { handleChange } = useFilterChange();
 
-  const [selectedRange, setSelectedRange] = useState<number[]>([props.min, props.max + 1]);
+  const [selectedRange, setSelectedRange] = useState<[number, number]>(props.value);
   const avarage = useMemo(() => {
     const rangeSlice = (props.data as any[]).slice(selectedRange[0], selectedRange[1]).filter((item: any) => +item.count !== 0);
     const minValue = rangeSlice[0]?.value?.split('_')[0] * 1000;
@@ -69,6 +69,10 @@ export const SliderFilter = (props: any) => {
         .map(item => item.value),
     );
   };
+
+  useEffect(() => {
+    setSelectedRange(props.value);
+  }, [props.value]);
 
   return (
     <div className="flex flex-col space-y-2">
@@ -95,6 +99,7 @@ export const SliderFilter = (props: any) => {
           onChange={value => setSelectedRange(value)}
           onTouchEnd={handleMouseUp}
           onMouseUp={handleMouseUp}
+          value={selectedRange}
         />
         <div className="flex justify-between select-none">
           <Text fontSize="xs">{addCommas(props.data?.[props.min]?.value?.split('_')[0] * 1000)}</Text>{' '}

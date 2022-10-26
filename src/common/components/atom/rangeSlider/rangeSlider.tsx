@@ -1,13 +1,14 @@
 import { ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useRef, useState } from 'react';
 
-export interface RangeSliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
-  onChange: (value: number[]) => void;
+export interface RangeSliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
+  onChange: (value: [number, number]) => void;
+  value: [number, number];
 }
 // eslint-disable-next-line react/display-name
 export const RangeSlider = forwardRef((props: RangeSliderProps, ref: ForwardedRef<any>) => {
-  const { min, max, step, onChange, ...rest } = props;
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(+max!);
+  const { min, max, step, onChange, value, ...rest } = props;
+  const [minValue, setMinValue] = useState(value?.[0] ?? 0);
+  const [maxValue, setMaxValue] = useState(value?.[1] ?? +max!);
   const progressRef = useRef<HTMLDivElement>(null);
 
   const handleMax = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +37,11 @@ export const RangeSlider = forwardRef((props: RangeSliderProps, ref: ForwardedRe
       }
     }
   };
+
+  useEffect(() => {
+    setMinValue(value?.[0] ?? 0);
+    setMaxValue(value?.[1] ?? +max!);
+  }, [value]);
 
   useEffect(() => {
     if (progressRef.current) {

@@ -10,7 +10,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
   ...nextTranslate(),
-  swcMinify: true,
+  swcMinify: false,
   reactStrictMode: false,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,

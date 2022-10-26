@@ -1,6 +1,7 @@
 import Divider from '@/common/components/atom/divider';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import clsx from 'clsx';
+import { isArray } from 'lodash';
 import dynamic from 'next/dynamic';
 import RadioFilter from './sections/radio';
 import SwitchFilter from './sections/switch';
@@ -8,7 +9,7 @@ import SwitchFilter from './sections/switch';
 const SliderFilter = dynamic(() => import('./sections/slider'), { ssr: false });
 
 export const AdvancedSearch = ({ className }: { className?: string }) => {
-  const { filters } = useSearch();
+  const { filters, selectedFilters } = useSearch();
 
   if (filters.length === 0) return null;
   return (
@@ -24,6 +25,21 @@ export const AdvancedSearch = ({ className }: { className?: string }) => {
               max={item.items.length - 1}
               min={0}
               name={item.name}
+              value={
+                selectedFilters?.consult_price
+                  ? isArray(selectedFilters?.consult_price)
+                    ? [
+                        item.items.findIndex(item => item.value === selectedFilters?.consult_price[0]),
+                        item.items.findIndex(
+                          item => item.value === selectedFilters?.consult_price[selectedFilters?.consult_price.length - 1],
+                        ),
+                      ]
+                    : [
+                        item.items.findIndex(item => item.value === selectedFilters?.consult_price),
+                        item.items.findIndex(item => item.value === selectedFilters?.consult_price),
+                      ]
+                  : [0, item.items.length]
+              }
             />
           )}
           {index + 1 !== filters.length && <Divider />}
