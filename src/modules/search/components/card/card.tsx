@@ -8,6 +8,7 @@ import EyeIcon from '@/common/components/icons/eye';
 import LocationIcon from '@/common/components/icons/location';
 import clsx from 'clsx';
 import getConfig from 'next/config';
+import Image from 'next/future/image';
 import Badge, { BadgeProps } from '../badge';
 const { publicRuntimeConfig } = getConfig();
 
@@ -55,6 +56,7 @@ export const SearchCard = (props: SearchCardProps) => {
             className={clsx('border-2 border-slate-200', {
               'border-primary': baseInfo.isVerify,
             })}
+            as={Image}
           />
           {baseInfo.isVerify && (
             <svg

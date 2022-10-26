@@ -24,13 +24,16 @@ interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
    * name of the user for placeholder when user don't have image
    */
   name?: string;
+  as?: any;
 }
 
 export const Avatar: React.FC<AvatarProps> = props => {
-  const { src, width = 70, height = 70, className, name } = props;
+  const { src, width = 70, height = 70, className, name, as = 'img' } = props;
+
+  const Component = as;
 
   return src ? (
-    <img
+    <Component
       src={src}
       alt="avatar"
       width={width}
