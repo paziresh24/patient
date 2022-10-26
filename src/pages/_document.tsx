@@ -9,7 +9,7 @@ const CustomDocument: NextComponentType = (props: any) => {
     <Html dir={dir} className="scroll-smooth">
       <Head />
       <body
-        className={clsx('bg-[#F5F6F7]', {
+        className={clsx('bg-slate-100', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

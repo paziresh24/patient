@@ -5,7 +5,54 @@ interface SearchStore {
   setCity: (city: City) => void;
   userSearchValue: string;
   setUserSearchValue: (value: string) => void;
+  isOpenSuggestion: boolean;
+  setIsOpenSuggestion: (status: boolean) => void;
+  filters: Filter[];
+  setFilters: (filters: Filter[]) => void;
+  categories: Category[];
+  setCategories: (categories: Category[]) => void;
+  selectedCategory: Category | undefined;
+  selectedSubCategory: Category | undefined;
+  selectedFilters: Record<string, string | string[]>;
+  setSelectedFilters: (selectedFilters: Record<string, string | string[]>) => void;
+  seoInfo: SeoInfo | undefined;
+  setSeoInfo: (seoInfo: SeoInfo) => void;
 }
+
+export type Category = {
+  title: string;
+  sub_categories?: Category[];
+  value: string;
+  url: string;
+};
+
+export type Filter = {
+  items: {
+    count: number;
+    title: string;
+    value: string;
+  }[];
+  name: string;
+  title: string;
+  type: 'radio' | 'switch' | 'slider_with_count';
+};
+
+type SeoInfo = {
+  heading: string;
+  description: string;
+  seo_box: string;
+  breadcrumbs: {
+    text: string;
+    href: string;
+  }[];
+  footers: {
+    title: string;
+    items: {
+      name: string;
+      url: string;
+    }[];
+  }[];
+};
 
 type City = {
   name: string;
@@ -19,7 +66,19 @@ export const useSearchStore = create<SearchStore>(set => ({
     name: 'همه ایران',
     en_slug: 'ir',
   },
+  isOpenSuggestion: false,
   userSearchValue: '',
+  filters: [],
+  categories: [],
+  selectedFilters: {},
+  selectedSubCategory: undefined,
+  selectedCategory: undefined,
+  seoInfo: undefined,
+  setIsOpenSuggestion: isOpenSuggestion =>
+    set(state => ({
+      ...state,
+      isOpenSuggestion,
+    })),
   setCity: city =>
     set(state => ({
       ...state,
@@ -30,4 +89,24 @@ export const useSearchStore = create<SearchStore>(set => ({
       ...state,
       userSearchValue,
     })),
+  setFilters: filters =>
+    set(state => ({
+      ...state,
+      filters,
+    })),
+  setCategories: categories =>
+    set(state => ({
+      ...state,
+      categories: categories ?? [],
+    })),
+  setSelectedFilters: selectedFilters =>
+    set(state => ({
+      ...state,
+      selectedFilters,
+      selectedCategory: state.categories?.find((item: any) => item.value === selectedFilters?.category),
+      selectedSubCategory: state.categories
+        ?.find((item: any) => item.value === selectedFilters?.category)
+        ?.sub_categories?.find((item: any) => item.value === `exp-${(selectedFilters?.sub_category as string)?.replace('exp-', '')}`),
+    })),
+  setSeoInfo: seoInfo => set(state => ({ ...state, seoInfo })),
 }));

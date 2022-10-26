@@ -39,7 +39,7 @@ const Promote = () => {
             </div>
           </div>
           <div className="flex-1 order-none ">
-            <Image src={promoteImage.src} className="block mx-auto " alt="promote-image" width="270" height="300" />
+            <Image src={promoteImage.src} className="block mx-auto" alt="promote-image" width="270" height="300" />
           </div>
         </div>
       </div>

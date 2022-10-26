@@ -51,9 +51,9 @@ const Header = (props: HeaderProps) => {
       {!isDesktop && <PromoteAppBanner />}
       <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid text-slate-700 md:px-4 md:h-20 border-slate-100">
         {isDesktop && (
-          <div className="relative items-center justify-between hidden w-full h-full max-w-screen-xl mx-auto md:flex">
+          <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
             {shouldShowBrand && (
-              <Link href="/">
+              <Link href="/" shallow>
                 <a>
                   <Logo width={40} height={40} />
                 </a>

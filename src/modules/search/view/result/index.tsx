@@ -1,0 +1,91 @@
+import Button from '@/common/components/atom/button';
+import Skeleton from '@/common/components/atom/skeleton';
+import { useRouter } from 'next/router';
+import Card from '../../components/card';
+import CategoryCard from '../../components/categoryCard';
+import NotFound from '../../components/notFound';
+import { useSearch } from '../../hooks/useSearch';
+
+export const Result = () => {
+  const {
+    query: { params, ...query },
+    asPath,
+    ...router
+  } = useRouter();
+
+  const { result, pagination, total, isLanding, isLoading, isSuccess } = useSearch();
+
+  const handleNextPage = () => {
+    const currentPage = (query?.page as string) ? (query?.page as string) : 1;
+    router.push(
+      {
+        pathname: (params as string[])?.join('/'),
+        query: {
+          ...query,
+          page: +currentPage + 1,
+        },
+      },
+      undefined,
+      {
+        shallow: true,
+      },
+    );
+  };
+
+  return (
+    <div className="flex flex-col w-full space-y-3">
+      {!isLoading && result.length === 0 && <NotFound />}
+      {result.map((item, index) =>
+        isLanding ? (
+          <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
+        ) : (
+          <Card
+            key={index}
+            baseInfo={{
+              displayName: item.title,
+              avatar: item.image,
+              expertise: item.display_expertise,
+              viewCount: item.view,
+              isVerify: !item.is_bulk,
+              experience: item.experience,
+              rate: {
+                count: item.rates_count,
+                satisfaction: item.satisfaction,
+              },
+            }}
+            type={item.type}
+            details={{
+              address: { text: item.display_address },
+              price: item.price,
+              badges: item.badges,
+            }}
+            actions={item?.actions?.map(item => ({
+              text: item.title,
+              description: item.top_title,
+              outline: item.outline,
+              action: () => {},
+            }))}
+          />
+        ),
+      )}
+      {isLoading && <Loading />}
+      {isSuccess && !isLoading && !isLanding && total > Number(pagination.limit) * pagination.page && (
+        <Button variant="secondary" className="self-center !my-8 !px-10" onClick={handleNextPage}>
+          نمایش بیشتر
+        </Button>
+      )}
+    </div>
+  );
+};
+
+const Loading = () => {
+  return (
+    <>
+      <Skeleton w="100%" h="15rem" rounded="lg" />
+      <Skeleton w="100%" h="15rem" rounded="lg" />
+      <Skeleton w="100%" h="15rem" rounded="lg" />
+    </>
+  );
+};
+
+export default Result;

@@ -1,12 +1,15 @@
 import { splunkSearchInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { getCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
 import { useSearchStore } from '../store/search';
 import { Item } from '../types/suggestion';
 import { useRecentSearch } from './useRecentSearch';
 
 export const useSuggestionItem = () => {
+  const router = useRouter();
   const { setUserSearchValue, city, userSearchValue } = useSearchStore();
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { addRecentSearch } = useRecentSearch();
 
   const handleItemEvent = (item: Item, index: number) => {
@@ -33,8 +36,11 @@ export const useSuggestionItem = () => {
     handleItemEvent(item, index);
     if (item.use_suggestion) {
       setUserSearchValue(item?.name ?? '');
-    } else {
+    } else if (item.absolute_url) {
       window.location.href = item.url ?? '#';
+    } else {
+      router.push(item.url ?? '/s', undefined, { shallow: true, scroll: true });
+      setIsOpenSuggestion(false);
     }
     addRecentSearch(item);
   };

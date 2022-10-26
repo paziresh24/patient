@@ -1,20 +1,30 @@
+import { useSearch } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
+import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
 const SuggestionCentent = dynamic(() => import('../../components/suggestion/suggestionCentent'));
+interface SuggestionProps {
+  overlay?: boolean;
+}
 
-export const Suggestion = () => {
-  const [isOpenSuggestion, setIsShouldOpen] = useState(false);
+export const Suggestion = (props: SuggestionProps) => {
+  const { overlay = false } = props;
+  const router = useRouter();
+  const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
+  const search = useSearch();
   const searchSuggestion = useSearchSuggestion(
     {
       query: userSearchValue,
@@ -26,14 +36,14 @@ export const Suggestion = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
+  useClickAway(ref, () => !isMobile && setIsOpenSuggestion(false));
 
   const openSuggestionContent = () => {
-    setIsShouldOpen(true);
+    setIsOpenSuggestion(true);
   };
 
   const clickBackButton = () => {
-    setIsShouldOpen(false);
+    setIsOpenSuggestion(false);
     setUserSearchValue('');
   };
 
@@ -49,19 +59,20 @@ export const Suggestion = () => {
       return;
     }
   }, []);
+  const { changeRoute } = useSearchRouting();
 
   useEffect(() => {
-    if (userSearchValue) openSuggestionContent();
-    city.id !== '-1' ? setCookie('new-city', city) : deleteCookie('new-city');
     setIsLoading(true);
   }, [userSearchValue, city]);
 
   useEffect(() => {
-    if (isOpenSuggestion && isMobile) {
+    if (isOpenSuggestion && (isMobile || overlay)) {
       neutralizeBack();
       document.body.classList.add('overflow-hidden');
+      document.body.classList.add('md:pr-[0.3rem]');
     } else {
       document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove('md:pr-[0.3rem]');
       if (isMobile) {
         window.onpopstate = () => {
           return;
@@ -71,7 +82,7 @@ export const Suggestion = () => {
   }, [isOpenSuggestion, isMobile]);
 
   const handleClose = () => {
-    setIsShouldOpen(false);
+    setIsOpenSuggestion(false);
   };
 
   const neutralizeBack = () => {
@@ -87,7 +98,13 @@ export const Suggestion = () => {
   };
 
   const handleRedirectToSearch = (text: string) => {
-    location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
+    setIsOpenSuggestion(false);
+    changeRoute({
+      params: { ...(city.id !== '-1' && { city: city.en_slug }) },
+      query: {
+        text: text,
+      },
+    });
   };
 
   const suggestionItems = useMemo(() => {
@@ -95,15 +112,26 @@ export const Suggestion = () => {
     return searchSuggestion.data?.data ?? [];
   }, [searchSuggestion.data]);
 
+  const onChangeCity = (city: any) => {
+    setCity({
+      ...city,
+    });
+    if (city.id !== '-1') {
+      setCookie('new-city', city);
+    } else deleteCookie('new-city');
+    router.pathname.startsWith('/s/') && changeRoute({ params: { city: city.en_slug } });
+  };
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
         isOpenSuggestion={isOpenSuggestion}
         onClickSearchInput={openSuggestionContent}
         onClickBackButton={clickBackButton}
+        onChangeCity={onChangeCity}
         onEnter={handleRedirectToSearch}
         className={{
-          'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl': isOpenSuggestion,
+          'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl z-infinity relative': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
       />
@@ -115,6 +143,7 @@ export const Suggestion = () => {
                 onEnter={handleRedirectToSearch}
                 isOpenSuggestion={isOpenSuggestion}
                 onClickBackButton={clickBackButton}
+                onChangeCity={onChangeCity}
                 className="!border-primary"
                 autoFocus
               />
@@ -124,6 +153,9 @@ export const Suggestion = () => {
           className="border border-solid shadow-md border-slate-200"
           isLoading={isLoading}
         />
+      )}
+      {isOpenSuggestion && overlay && (
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 bg-slate-900 bg-opacity-60" onClick={handleClose} />
       )}
     </div>
   );
