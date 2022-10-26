@@ -32,7 +32,7 @@ export const useInfoVote = () => {
         event_action: 'like',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id, center_name: selectedCenter?.name },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -50,7 +50,7 @@ export const useInfoVote = () => {
         event_action: 'dislike',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id, center_name: selectedCenter?.name },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -68,7 +68,11 @@ export const useInfoVote = () => {
         event_action: 'add',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: {
+            center_id: selectedCenter?.id,
+            server_id: selectedCenter?.server_id,
+            center_name: selectedCenter?.name,
+          },
           user: userInfo,
           value,
           url: window.location.pathname,
