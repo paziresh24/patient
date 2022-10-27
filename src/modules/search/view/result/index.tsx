@@ -5,6 +5,7 @@ import Card from '../../components/card';
 import CategoryCard from '../../components/categoryCard';
 import NotFound from '../../components/notFound';
 import { useSearch } from '../../hooks/useSearch';
+import { useSearchRouting } from '../../hooks/useSearchRouting';
 
 export const Result = () => {
   const {
@@ -14,22 +15,15 @@ export const Result = () => {
   } = useRouter();
 
   const { result, pagination, total, isLanding, isLoading, isSuccess } = useSearch();
+  const { changeRoute } = useSearchRouting();
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
-    router.push(
-      {
-        pathname: (params as string[])?.join('/'),
-        query: {
-          ...query,
-          page: +currentPage + 1,
-        },
+    changeRoute({
+      query: {
+        page: +currentPage + 1,
       },
-      undefined,
-      {
-        shallow: true,
-      },
-    );
+    });
   };
 
   return (
@@ -52,6 +46,7 @@ export const Result = () => {
                 count: item.rates_count,
                 satisfaction: item.satisfaction,
               },
+              url: item.url,
             }}
             type={item.type}
             details={{
@@ -63,12 +58,15 @@ export const Result = () => {
               text: item.title,
               description: item.top_title,
               outline: item.outline,
-              action: () => {},
+
+              action: () => {
+                window.location.assign(item.url);
+              },
             }))}
           />
         ),
       )}
-      {isLoading && <Loading />}
+      {isLoading && <Loading line={isLanding} />}
       {isSuccess && !isLoading && !isLanding && total > Number(pagination.limit) * pagination.page && (
         <Button variant="secondary" className="self-center !my-8 !px-10" onClick={handleNextPage}>
           نمایش بیشتر
@@ -78,12 +76,19 @@ export const Result = () => {
   );
 };
 
-const Loading = () => {
+const Loading = ({ line }: { line: boolean }) => {
   return (
     <>
-      <Skeleton w="100%" h="15rem" rounded="lg" />
-      <Skeleton w="100%" h="15rem" rounded="lg" />
-      <Skeleton w="100%" h="15rem" rounded="lg" />
+      <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+      <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+      <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+      {line && (
+        <>
+          <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+          <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+          <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />
+        </>
+      )}
     </>
   );
 };

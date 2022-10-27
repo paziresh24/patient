@@ -1,6 +1,8 @@
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import { getCookie } from 'cookies-next';
+import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
@@ -10,13 +12,21 @@ export const UnknownCity = () => {
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
   const city = useSearchStore(state => state.city);
-  const { searchCity } = useSearch();
-
+  const { searchCity, selectedFilters } = useSearch();
   const [unknownCityModal, setUnknownCityModla] = useState(false);
 
   useEffect(() => {
-    setUnknownCityModla(city.en_slug !== 'ir' && searchCity !== undefined && city !== undefined && searchCity?.en_slug !== city?.en_slug);
-  }, [searchCity]);
+    const currentCity = JSON.parse((getCookie('new-city') as string) ?? '{}');
+    setUnknownCityModla(
+      currentCity.en_slug !== 'ir' &&
+        selectedFilters.city !== undefined &&
+        !isEmpty(currentCity) &&
+        selectedFilters?.city !== currentCity?.en_slug,
+    );
+    if (isEmpty(currentCity) && selectedFilters.city !== undefined) {
+      setCity(searchCity);
+    }
+  }, [selectedFilters]);
 
   return (
     <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModla}>

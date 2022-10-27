@@ -3,6 +3,7 @@ import Card from '@/common/components/atom/card';
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import getConfig from 'next/config';
+import Image from 'next/future/image';
 import Link from 'next/link';
 const { publicRuntimeConfig } = getConfig();
 
@@ -20,7 +21,7 @@ export const CategoryCard = (props: CategoryCardProps) => {
       <a>
         <Card className="flex !flex-row items-center justify-between cursor-pointer">
           <div className="flex items-center space-s-3">
-            <img src={publicRuntimeConfig.CLINIC_BASE_URL + image} alt="" className="w-8 h-8" />
+            <Image src={publicRuntimeConfig.CLINIC_BASE_URL + image} alt="" className="w-8 h-8" width={32} height={32} />
             <Text fontSize="sm" fontWeight="bold">
               {title}
             </Text>

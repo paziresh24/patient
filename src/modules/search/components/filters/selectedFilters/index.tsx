@@ -3,6 +3,7 @@ import Chips from '@/common/components/atom/chips';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { useSearch } from '@/modules/search/hooks/useSearch';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useRouter } from 'next/router';
 import { Fragment, useMemo } from 'react';
 import { useFilterChange } from '../../../hooks/useFilterChange';
@@ -14,8 +15,9 @@ interface CategoriesProps {
 
 export const SelectedFilters = (props: CategoriesProps) => {
   const { isLoading } = props;
-  const { categories, filters, selectedFilters } = useSearch();
+  const { categories, filters, selectedFilters, searchCity } = useSearch();
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
+  const { changeRoute } = useSearchRouting();
 
   const {
     query: { params },
@@ -43,22 +45,13 @@ export const SelectedFilters = (props: CategoriesProps) => {
       return removeFilter('expertise');
     }
     if (name === 'category') {
-      return router.push(
-        {
-          pathname: (params as string[])[0],
-        },
-        undefined,
-        {
-          shallow: true,
-          scroll: true,
-        },
-      );
+      return handleRemoveAllFilters();
     }
     removeFilter(name);
   };
 
   const handleRemoveAllFilters = () => {
-    router.push((params as string[])[0], undefined, { shallow: true });
+    changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true });
   };
 
   return (

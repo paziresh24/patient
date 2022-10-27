@@ -10,12 +10,14 @@ import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import Sort from '@/modules/search/components/filters/sort';
 import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
 import Filter from '@/modules/search/view/filter';
 import Result from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { addCommas } from '@persian-tools/persian-tools';
+import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
@@ -29,14 +31,19 @@ const Search: NextPageWithLayout = () => {
     query: { params },
     ...router
   } = useRouter();
-  const { isLanding, isLoading, total, seoInfo } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters } = useSearch();
   const city = useSearchStore(state => state.city);
+  const { changeRoute } = useSearchRouting();
 
   useEffect(() => {
-    if (!params && city.en_slug !== 'ir') {
-      router.push(`/s/${city?.en_slug}`);
+    if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
+      changeRoute({ params: { city: '' } });
     }
-  }, [params, city]);
+
+    if (!isLoading && !selectedFilters.city && city.en_slug !== 'ir') {
+      changeRoute({ params: { city: city?.en_slug } });
+    }
+  }, [params, city, isLoading]);
 
   return (
     <>
@@ -77,10 +84,10 @@ Search.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
 
-export const getServerSideProps: GetServerSideProps = withCSR(async (context: { query: { [x: string]: any; params: any } }) => {
+export const getServerSideProps: GetServerSideProps = withCSR(async (context: { query: { [x: string]: any; params: any }; res: any }) => {
   const { params, ...query } = context.query;
 
-  if ((params as string[])?.[0] === 'ir') {
+  if (params?.length === 1 && (params as string[])?.[0] === 'ir') {
     return {
       redirect: {
         destination: '/s',
@@ -88,33 +95,42 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: { 
       },
     };
   }
+  try {
+    const queryClient = new QueryClient();
 
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery(
-    [
-      ServerStateKeysEnum.Search,
-      {
-        route: (params as string[])?.join('/') ?? '',
-        query: {
-          ...query,
+    await queryClient.fetchQuery(
+      [
+        ServerStateKeysEnum.Search,
+        {
+          route: (params as string[])?.join('/') ?? '',
+          query: {
+            ...query,
+          },
         },
+      ],
+      () =>
+        searchApi({
+          route: (params as string[])?.join('/') ?? '',
+          query: {
+            ...query,
+          },
+        }),
+    );
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
       },
-    ],
-    () =>
-      searchApi({
-        route: (params as string[])?.join('/') ?? '',
-        query: {
-          ...query,
-        },
-      }),
-  );
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404)
+        return {
+          notFound: true,
+        };
+    }
+    throw new TypeError('Opps.');
+  }
 });
 
 export default Search;

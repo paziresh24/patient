@@ -1,4 +1,3 @@
-import { useSearch } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -24,7 +23,7 @@ export const Suggestion = (props: SuggestionProps) => {
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
-  const search = useSearch();
+  const { changeRoute } = useSearchRouting();
   const searchSuggestion = useSearchSuggestion(
     {
       query: userSearchValue,
@@ -59,7 +58,6 @@ export const Suggestion = (props: SuggestionProps) => {
       return;
     }
   }, []);
-  const { changeRoute } = useSearchRouting();
 
   useEffect(() => {
     setIsLoading(true);

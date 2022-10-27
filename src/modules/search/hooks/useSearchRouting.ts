@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { ParsedUrlQueryInput } from 'querystring';
 
 export const useSearchRouting = () => {
   const {
@@ -7,17 +8,30 @@ export const useSearchRouting = () => {
   } = useRouter();
   const slug = defualtParams as string[];
 
-  const changeRoute = ({ params, query }: { params?: Record<string, string>; query?: Record<string, string> }) => {
+  const changeRoute = ({
+    params,
+    query,
+    overWrite = false,
+    previousQueries = true,
+  }: {
+    params?: Record<string, string>;
+    query?: ParsedUrlQueryInput | null | undefined;
+    overWrite?: boolean;
+    previousQueries?: boolean;
+  }) => {
     router.push(
       {
-        pathname: `/s/${[params?.city ?? slug?.[0], params?.category ?? slug?.[1] ?? ''].join('/')}`,
+        pathname: `/s/${[
+          overWrite ? params?.city : params?.city ?? slug?.[0],
+          overWrite ? params?.category : params?.category ?? slug?.[1] ?? '',
+        ].join('/')}`,
         query: {
-          ...queries,
+          ...(!overWrite && previousQueries && { ...queries }),
           ...query,
         },
       },
       undefined,
-      { shallow: true },
+      { shallow: true, scroll: true },
     );
   };
 

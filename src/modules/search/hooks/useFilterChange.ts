@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useSearchRouting } from './useSearchRouting';
 
 export const useFilterChange = () => {
   const {
@@ -7,6 +8,7 @@ export const useFilterChange = () => {
     ...router
   } = useRouter();
   const [filters, setFilters] = useState<Record<string, any>>(queries);
+  const { changeRoute } = useSearchRouting();
 
   useEffect(() => {
     setFilters({ ...queries });
@@ -15,19 +17,10 @@ export const useFilterChange = () => {
   const removeFilter = (name: string) => {
     delete queries[name];
     delete queries.page;
-    router.push(
-      {
-        pathname: (params as string[])?.join('/') ?? '',
-        query: {
-          ...queries,
-        },
-      },
-      undefined,
-      {
-        shallow: true,
-        scroll: true,
-      },
-    );
+    changeRoute({
+      query: { ...queries },
+      previousQueries: false,
+    });
   };
 
   const handleChange = (name: string, value: string | boolean | string[]) => {
@@ -44,19 +37,10 @@ export const useFilterChange = () => {
         [name]: value,
       };
     }
-    router.push(
-      {
-        pathname: (params as string[])?.join('/') ?? '',
-        query: {
-          ...newQueries,
-        },
-      },
-      undefined,
-      {
-        shallow: true,
-        scroll: true,
-      },
-    );
+    changeRoute({
+      query: { ...newQueries },
+      previousQueries: false,
+    });
   };
 
   return { handleChange, filters, removeFilter };

@@ -5,8 +5,8 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { addCommas } from '@persian-tools/persian-tools';
-import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import AdvancedSearch from '../advancedSearch';
 import RadioFilter from '../advancedSearch/sections/radio';
@@ -19,6 +19,7 @@ export const MobileToolbar = () => {
   const [sortsModal, setSortsModal] = useState(false);
   const [freeturnModal, setFreeTurnModal] = useState(false);
   const [categoryModal, setCategoryModal] = useState(false);
+  const { changeRoute } = useSearchRouting();
 
   const { filters } = useFilterChange();
 
@@ -30,13 +31,8 @@ export const MobileToolbar = () => {
     return Object.entries(freeturnItems).map(([value, label]: any) => ({ title: label, value }));
   }, [orderItems]);
 
-  const {
-    query: { params },
-    ...router
-  } = useRouter();
-
   const handleRemoveAllFilters = () => {
-    router.push((params as string[]).join('/'), undefined, { shallow: true });
+    changeRoute({ previousQueries: false });
     setFiltersModal(false);
   };
 

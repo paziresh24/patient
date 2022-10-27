@@ -18,7 +18,7 @@ export const Seo = (props: SeoProps) => {
   const { title, description, jsonlds, children } = props;
   const { asPath } = useRouter();
 
-  const titleTemplate = `${title} | پذیرش24`;
+  const titleTemplate = `${title ?? ''} | پذیرش24`;
 
   return (
     <Head>

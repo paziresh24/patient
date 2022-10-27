@@ -50,6 +50,7 @@ type Result = {
     title: string;
     top_title: string;
     outline: boolean;
+    url: string;
   }[];
 };
 
@@ -134,7 +135,7 @@ export const useSearch = () => {
     }
   }, [search]);
 
-  const isLanding = params?.length === 1 && query.text === undefined;
+  const isLanding = search.is_landing ?? (params?.length === 1 && query.text === undefined);
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
   const selectedSubCategory = useMemo(
