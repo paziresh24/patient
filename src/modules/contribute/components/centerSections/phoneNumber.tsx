@@ -1,6 +1,7 @@
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import { PhoneNumber } from '../../types/phoneNumber';
@@ -18,15 +19,20 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   const { phoneNumbers, setPhoneNumbers } = props;
   const [phoneDataForEdit, setPhoneDataForEdit] = useState<string | null>(null);
   const [addPhoneModal, setAddPhoneModal] = useState<boolean>(false);
+  const userData = useUserInfoStore(state => state.info);
 
   const handleAddPhoneNumber = (phoneNumberValue: PhoneData) => {
-    if (phoneNumbers.every(items => items.cell !== phoneNumberValue)) {
+    if (phoneNumbers.every(items => items.cell !== phoneNumberValue) && phoneNumberValue != userData?.username) {
+      phoneDataForEdit && handlePhoneStatus(phoneNumbers.find(items => items.cell == phoneDataForEdit)!, 'dislike');
       setPhoneNumbers(prev => [...prev, { cell: phoneNumberValue, default: false, status: 'add' }]);
       setAddPhoneModal(false);
       return;
     }
-    toast.warning('این شماره قبلا وارد شده است.');
+    phoneNumberValue == userData?.username
+      ? toast.warning('لطفا شماره تلفن مرکز را وارد کنید.')
+      : toast.warning('این شماره قبلا وارد شده است.');
   };
+
   const editPhoneNumber = (value: string) => {
     setAddPhoneModal(true);
     setPhoneDataForEdit(value);
@@ -58,7 +64,6 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                     readOnly
                     onClick={() => {
                       phoneNumber.default && editPhoneNumber(phoneNumber.cell);
-                      handlePhoneStatus(phoneNumber, 'dislike');
                     }}
                   />
                   {phoneNumber.default && (

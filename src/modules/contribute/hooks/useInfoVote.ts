@@ -17,6 +17,8 @@ export const useInfoVote = () => {
     id: profileData?.id,
     server_id: profileData?.server_id,
     slug: profileData?.slug,
+    expertise: profileData?.expertises?.[0].expertise?.name,
+    group_expertises: profileData.group_expertises?.[0]?.name,
   };
 
   const userInfo = {
@@ -32,7 +34,13 @@ export const useInfoVote = () => {
         event_action: 'like',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: {
+            center_id: selectedCenter?.id,
+            server_id: selectedCenter?.server_id,
+            center_name: selectedCenter?.name,
+            city: selectedCenter?.city,
+            province: selectedCenter?.province,
+          },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -50,7 +58,13 @@ export const useInfoVote = () => {
         event_action: 'dislike',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: {
+            center_id: selectedCenter?.id,
+            server_id: selectedCenter?.server_id,
+            center_name: selectedCenter?.name,
+            city: selectedCenter?.city,
+            province: selectedCenter?.province,
+          },
           user: userInfo,
           value,
           url: window.location.pathname,
@@ -68,7 +82,13 @@ export const useInfoVote = () => {
         event_action: 'add',
         data: {
           doctor: doctorInfo,
-          center: { center_id: selectedCenter?.id, server_id: selectedCenter?.server_id },
+          center: {
+            center_id: selectedCenter?.id,
+            server_id: selectedCenter?.server_id,
+            center_name: selectedCenter?.name,
+            city: selectedCenter?.city,
+            province: selectedCenter?.province,
+          },
           user: userInfo,
           value,
           url: window.location.pathname,
