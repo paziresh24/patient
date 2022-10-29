@@ -42,7 +42,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
     return phoneNumbers.find(({ cell }: Pick<PhoneNumber, 'cell'>) => cell === phoneNumber.cell)?.status;
   };
 
-  const handlePhoneStatus = (phoneNumber: PhoneNumber, type: 'like' | 'dislike') => {
+  const handlePhoneStatus = (phoneNumber: PhoneNumber, type: 'like' | 'dislike' | undefined) => {
     setPhoneNumbers(phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: type }) })));
   };
 
@@ -70,14 +70,18 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                     <div className="flex flex-col justify-center grid gap-2">
                       <LikeButton
                         onClick={() => {
-                          handlePhoneStatus(phoneNumber, 'like');
+                          phoneNumber.status === 'like'
+                            ? handlePhoneStatus(phoneNumber, undefined)
+                            : handlePhoneStatus(phoneNumber, 'like');
                         }}
                         fill={getStatus(phoneNumber) === 'like'}
                       />
                       <DislikeButton
                         onClick={() => {
-                          handlePhoneStatus(phoneNumber, 'dislike');
-                          setAddPhoneModal(true);
+                          phoneNumber.status === 'dislike'
+                            ? handlePhoneStatus(phoneNumber, undefined)
+                            : handlePhoneStatus(phoneNumber, 'dislike');
+                          (phoneNumber.status === 'like' || !phoneNumber.status) && setAddPhoneModal(true);
                         }}
                         fill={getStatus(phoneNumber) === 'dislike'}
                       />

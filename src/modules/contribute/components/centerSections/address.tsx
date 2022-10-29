@@ -38,7 +38,7 @@ export const AddressSection = (props: AddressSectionProps) => {
     const newAddresses = addresses.map((item, index) => (index === addressDataForEdit.index ? center : item));
     setAddresses(newAddresses);
   };
-  const handlePhoneStatus = (address: any, type: 'like' | 'dislike') => {
+  const handleAddressStatus = (address: any, type: 'like' | 'dislike' | undefined) => {
     setAddresses(addresses.map(items => ({ ...items, ...(items.address === address.address && { status: type }) })));
   };
 
@@ -65,11 +65,18 @@ export const AddressSection = (props: AddressSectionProps) => {
                   />
                   {location.default && (
                     <div className="flex flex-col justify-center grid gap-2 relative top-2">
-                      <LikeButton onClick={() => handlePhoneStatus(location, 'like')} fill={getStatus(location) === 'like'} />
+                      <LikeButton
+                        onClick={() =>
+                          location.status === 'like' ? handleAddressStatus(location, undefined) : handleAddressStatus(location, 'like')
+                        }
+                        fill={getStatus(location) === 'like'}
+                      />
                       <DislikeButton
                         onClick={() => {
-                          handlePhoneStatus(location, 'dislike');
-                          setInsertAddressModal(true);
+                          location.status === 'dislike'
+                            ? handleAddressStatus(location, undefined)
+                            : handleAddressStatus(location, 'dislike');
+                          (location.status === 'like' || !location.status) && setInsertAddressModal(true);
                         }}
                         fill={getStatus(location) === 'dislike'}
                       />
