@@ -43,7 +43,9 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   };
 
   const handlePhoneStatus = (phoneNumber: PhoneNumber, type: 'like' | 'dislike') => {
-    setPhoneNumbers(phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: type }) })));
+    setPhoneNumbers(
+      phoneNumbers.map(item => ({ ...item, ...(item.cell === phoneNumber.cell && { status: item?.status !== type ? type : undefined }) })),
+    );
   };
 
   return (
@@ -77,7 +79,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'dislike');
-                          setAddPhoneModal(true);
+                          (phoneNumber.status === 'like' || !phoneNumber.status) && setAddPhoneModal(true);
                         }}
                         fill={getStatus(phoneNumber) === 'dislike'}
                       />
