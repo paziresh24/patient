@@ -335,7 +335,7 @@ export const articleMenus = [
 export const withUserMenu = [
   {
     title: 'جستجو پزشکان و دریافت نوبت ',
-    link: 'http://paziresh24.com/s/',
+    link: '/s/',
   },
   {
     title: 'نوبت های من ',
