@@ -132,7 +132,7 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  <MenuItem name="پشتیبانی" link="https://www.paziresh24.com/home/support-form/" icon={<HeadphoneIcon />} />
+                  <MenuItem name="پشتیبانی" link="/home/support-form/" icon={<HeadphoneIcon />} />
                   <MenuItem name="خروج" link="/logout" icon={<LogoutIcon />} />
                 </MenuList>
               </div>
