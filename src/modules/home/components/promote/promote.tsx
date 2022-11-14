@@ -28,7 +28,7 @@ const Promote = () => {
                 {t('promoteDescription')}
               </Text>
               <div className="flex flex-col items-center justify-center gap-5">
-                <a href="https://www.paziresh24.com/app" title={t('promoteDownloadButton')}>
+                <a href="/app" title={t('promoteDownloadButton')}>
                   <Button className="border-none bg-slate-50 text-slate-700">{t('promoteDownloadButton')}</Button>
                 </a>
                 <div className="flex flex-row gap-4">
