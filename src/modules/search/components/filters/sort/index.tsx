@@ -34,7 +34,7 @@ export const Sort = () => {
         <Autocomplete
           size="small"
           className="font-medium border-0 rounded-tr-none rounded-br-none"
-          classNameWrapper="w-72"
+          classNameWrapper="lg:w-72"
           options={orderItemsFormmated}
           onChange={e => handleChange('sortBy', e.target.value.value)}
           value={
@@ -50,7 +50,7 @@ export const Sort = () => {
         <Autocomplete
           size="small"
           className="font-medium border-0 rounded-tr-none rounded-br-none"
-          classNameWrapper="w-36"
+          classNameWrapper="lg:w-36"
           options={freeturnItemsFormmated}
           onChange={e => handleChange('freeturn', e.target.value.value)}
           value={

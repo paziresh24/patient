@@ -73,7 +73,7 @@ export const CitySelect = (props: CitySelectProps) => {
         onClick={() => setIsOpen(true)}
         className="!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg"
       >
-        <Text fontSize="sm">{city.name}</Text>
+        <Text fontSize="sm">{city?.name}</Text>
       </Button>
       <Modal title="انتخاب استان/شهر" fullScreen isOpen={isOpen} onClose={setIsOpen}>
         <div className="flex flex-col h-full space-y-3">
@@ -86,7 +86,7 @@ export const CitySelect = (props: CitySelectProps) => {
                 size="sm"
                 className="!border-slate-300 font-medium"
               >
-                {city.name}
+                {city?.name}
               </Button>
             ))}
           </div>
@@ -115,7 +115,7 @@ export const CitySelect = (props: CitySelectProps) => {
                   className="flex items-center justify-between p-3 font-medium border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50"
                   onClick={() => (city.isProvince ? handleClickProvince(city.id) : handleClickCity(city.id))}
                 >
-                  <Text>{city.name}</Text>
+                  <Text>{city?.name}</Text>
                   <ChevronIcon dir="left" />
                 </div>
               ))}

@@ -12,6 +12,7 @@ const nextConfig = {
   ...nextTranslate(),
   swcMinify: false,
   reactStrictMode: false,
+  trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,

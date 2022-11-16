@@ -141,7 +141,7 @@ export const MobileToolbar = () => {
           </div>
           <Divider />
           <AdvancedSearch className="!p-0 !shadow-none" />
-          <div className="fixed bottom-0 right-0 flex w-full p-4 bg-white border-t border-slate-200 space-s-3">
+          <div className="fixed md:static bottom-0 right-0 flex w-full p-4 bg-white border-t border-slate-200 space-s-3">
             <Button block loading={isLoading} onClick={() => setFiltersModal(false)}>
               مشاهده {addCommas(total)} نتیجه
             </Button>

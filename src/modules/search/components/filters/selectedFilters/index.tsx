@@ -78,7 +78,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
                   <Chips
                     key={item}
                     handleRemove={() => handleRemoveFilter(name)}
-                    className="!text-slate-500 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
+                    className="!text-slate-600 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
                   >
                     {getFilterTitle(name, item)}
                   </Chips>
@@ -86,7 +86,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
               {!Array.isArray(value) && name !== 'city' && getFilterTitle(name, value) && (
                 <Chips
                   handleRemove={() => handleRemoveFilter(name)}
-                  className="!text-slate-500 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
+                  className="!text-slate-600 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
                 >
                   {getFilterTitle(name, value)}
                 </Chips>

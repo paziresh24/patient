@@ -1,3 +1,4 @@
+import { sendPositionStatEvent } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
 import { useRouter } from 'next/router';
@@ -11,10 +12,9 @@ export const Result = () => {
   const {
     query: { params, ...query },
     asPath,
-    ...router
   } = useRouter();
 
-  const { result, pagination, total, isLanding, isLoading, isSuccess } = useSearch();
+  const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters } = useSearch();
   const { changeRoute } = useSearchRouting();
 
   const handleNextPage = () => {
@@ -23,6 +23,7 @@ export const Result = () => {
       query: {
         page: +currentPage + 1,
       },
+      scroll: false,
     });
   };
 
@@ -63,6 +64,15 @@ export const Result = () => {
                 window.location.assign(item.url);
               },
             }))}
+            sendEventWhenClick={() =>
+              sendPositionStatEvent({
+                id: item._id,
+                filters: selectedFilters,
+                position: item.position,
+                route: asPath,
+                card_data: item,
+              })
+            }
           />
         ),
       )}

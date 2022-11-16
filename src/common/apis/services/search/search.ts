@@ -1,4 +1,4 @@
-import { clinicClient } from '@/common/apis/client';
+import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
@@ -10,7 +10,7 @@ export interface Params {
 }
 
 export const search = async ({ route, query }: Params) => {
-  const { data } = await clinicClient.get(`/seapi/v1/search/${route}`, {
+  const { data } = await searchClient.get(`/seapi/v1/search/${route}`, {
     params: {
       ...query,
     },

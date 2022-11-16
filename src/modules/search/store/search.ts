@@ -1,3 +1,4 @@
+import { deleteCookie, setCookie } from 'cookies-next';
 import create from 'zustand';
 
 interface SearchStore {
@@ -79,11 +80,16 @@ export const useSearchStore = create<SearchStore>(set => ({
       ...state,
       isOpenSuggestion,
     })),
-  setCity: city =>
+  setCity: city => {
     set(state => ({
       ...state,
       city,
-    })),
+    }));
+    if (city?.id !== '-1') {
+      return setCookie('new-city', city);
+    }
+    deleteCookie('new-city');
+  },
   setUserSearchValue: userSearchValue =>
     set(state => ({
       ...state,

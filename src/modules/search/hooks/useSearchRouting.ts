@@ -13,11 +13,13 @@ export const useSearchRouting = () => {
     query,
     overWrite = false,
     previousQueries = true,
+    scroll = true,
   }: {
     params?: Record<string, string>;
     query?: ParsedUrlQueryInput | null | undefined;
     overWrite?: boolean;
     previousQueries?: boolean;
+    scroll?: boolean;
   }) => {
     router.push(
       {
@@ -31,7 +33,7 @@ export const useSearchRouting = () => {
         },
       },
       undefined,
-      { shallow: true, scroll: true },
+      { shallow: true, scroll },
     );
   };
 

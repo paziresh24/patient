@@ -1,5 +1,6 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { search as searchApi } from '@/common/apis/services/search/search';
+import { useStat } from '@/common/apis/services/search/stat';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -28,12 +29,12 @@ const Search: NextPageWithLayout = () => {
   const { isMobile } = useResponsive();
   const {
     asPath,
-    query: { params },
-    ...router
+    query: { params, ...query },
   } = useRouter();
-  const { isLanding, isLoading, total, seoInfo, selectedFilters } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result } = useSearch();
   const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
+  const stat = useStat();
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -45,6 +46,15 @@ const Search: NextPageWithLayout = () => {
     }
   }, [params, city, isLoading]);
 
+  useEffect(() => {
+    stat.mutate({
+      route: asPath,
+      filters: selectedFilters,
+      result: result,
+      ...(!isLanding && { centerTypeFilterPresence: 1 }),
+    });
+  }, [asPath]);
+
   return (
     <>
       <Seo {...seoInfo} jsonlds={[seoInfo?.jsonld]} />
@@ -53,7 +63,7 @@ const Search: NextPageWithLayout = () => {
         {!isLanding && <MobileToolbar />}
       </div>
       <div className="container flex flex-col p-3 !pt-5 mx-auto space-y-3 md:p-0">
-        <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-s-5">
+        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-s-5">
           {!isLanding && <Filter isLoading={isLoading} />}
           <div className="flex flex-col w-full space-y-3">
             {!isLanding && !isMobile && (
@@ -68,9 +78,9 @@ const Search: NextPageWithLayout = () => {
           </div>
         </div>
 
-        <SearchSeoBox />
+        {!query.isWebView && <SearchSeoBox />}
         <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${asPath}`} className="block">
-          <Button variant="secondary" className="!mt-10" block>
+          <Button variant="secondary" className="!my-5" block>
             گزارش مشکل در جستجو
           </Button>
         </a>
@@ -95,6 +105,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: { 
       },
     };
   }
+
   try {
     const queryClient = new QueryClient();
 

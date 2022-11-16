@@ -32,6 +32,9 @@ type Search = {
 };
 
 type Result = {
+  _id: string;
+  id: string;
+  position: number;
   count: string;
   badges: Badge[];
   display_address: string;

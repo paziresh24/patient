@@ -1,5 +1,6 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import useResponsive from '@/common/hooks/useResponsive';
+import isEmpty from 'lodash/isEmpty';
 import AdvancedSearch from '../../components/filters/advancedSearch';
 import Categories from '../../components/filters/categories';
 import SelectedFilters from '../../components/filters/selectedFilters';
@@ -12,13 +13,13 @@ interface FilterProps {
 export const Filter = (props: FilterProps) => {
   const { isLoading } = props;
   const { isMobile } = useResponsive();
-  const { categories } = useSearch();
+  const { categories, selectedFilters } = useSearch();
 
   return (
     <div className="md:w-[23rem] md:min-w-[23rem] flex flex-col space-y-3">
-      <SelectedFilters isLoading={isLoading} />
+      {(!isEmpty(selectedFilters) || isLoading) && <SelectedFilters isLoading={isLoading} />}
 
-      {categories.length === 0 ? (
+      {categories && categories.length === 0 ? (
         <Skeleton w="100%" h="42.2rem" rounded="lg" />
       ) : (
         !isMobile && (

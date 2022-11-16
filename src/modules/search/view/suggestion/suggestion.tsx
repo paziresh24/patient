@@ -1,6 +1,6 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -27,7 +27,7 @@ export const Suggestion = (props: SuggestionProps) => {
   const searchSuggestion = useSearchSuggestion(
     {
       query: userSearchValue,
-      ...(city.id !== '-1' && { city_id: city.id }),
+      ...(city?.id !== '-1' && { city_id: city?.id }),
     },
     {
       keepPreviousData: true,
@@ -98,7 +98,7 @@ export const Suggestion = (props: SuggestionProps) => {
   const handleRedirectToSearch = (text: string) => {
     setIsOpenSuggestion(false);
     changeRoute({
-      params: { ...(city.id !== '-1' && { city: city.en_slug }) },
+      params: { ...(city?.id !== '-1' && { city: city?.en_slug }) },
       query: {
         text: text,
       },
@@ -114,9 +114,6 @@ export const Suggestion = (props: SuggestionProps) => {
     setCity({
       ...city,
     });
-    if (city.id !== '-1') {
-      setCookie('new-city', city);
-    } else deleteCookie('new-city');
     router.pathname.startsWith('/s/') && changeRoute({ params: { city: city.en_slug } });
   };
 

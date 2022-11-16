@@ -13,11 +13,11 @@ export const UnknownCity = () => {
   const { changeRoute } = useSearchRouting();
   const city = useSearchStore(state => state.city);
   const { searchCity, selectedFilters } = useSearch();
-  const [unknownCityModal, setUnknownCityModla] = useState(false);
+  const [unknownCityModal, setUnknownCityModal] = useState(false);
 
   useEffect(() => {
     const currentCity = JSON.parse((getCookie('new-city') as string) ?? '{}');
-    setUnknownCityModla(
+    setUnknownCityModal(
       currentCity.en_slug !== 'ir' &&
         selectedFilters.city !== undefined &&
         !isEmpty(currentCity) &&
@@ -29,9 +29,9 @@ export const UnknownCity = () => {
   }, [selectedFilters]);
 
   return (
-    <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModla}>
+    <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModal}>
       <Text fontWeight="medium" className="leading-8">
-        شما قبلاً «{city.name}» را برای مشاهده نتایج در پذیرش24 انتخاب کردید. لطفا شهر مورد نظر خود را انتخاب کنید.
+        شما قبلاً «{city?.name}» را برای مشاهده نتایج در پذیرش24 انتخاب کردید. لطفا شهر مورد نظر خود را انتخاب کنید.
       </Text>
       <div className="flex space-s-3 mt-5">
         <Button
@@ -44,16 +44,16 @@ export const UnknownCity = () => {
               },
             });
             setCity(city);
-            setUnknownCityModla(false);
+            setUnknownCityModal(false);
           }}
         >
-          {city.name}
+          {city?.name}
         </Button>
         <Button
           block
           onClick={() => {
             setCity(searchCity);
-            setUnknownCityModla(false);
+            setUnknownCityModal(false);
           }}
         >
           {searchCity?.name}

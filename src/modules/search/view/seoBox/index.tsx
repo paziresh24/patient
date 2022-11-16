@@ -15,19 +15,19 @@ export const SearchSeoBox = () => {
         <Text fontWeight="bold">{seoInfo?.heading}</Text>
         <Text fontSize="sm">{seoInfo?.description}</Text>
         <Accordion title="درباره این صفحه" className="!bg-white shadow-card !mt-5">
-          <Text dangerouslySetInnerHTML={{ __html: seoInfo?.seo_box ?? '' }} />
+          <div className="text-justify text-sm [&>h2]:font-bold" dangerouslySetInnerHTML={{ __html: seoInfo?.seo_box ?? '' }} />
+          {footers?.map((item: any, index: any) => (
+            <Accordion key={index} title={item.title} className="mt-2">
+              <MenuList className="flex !flex-row flex-wrap gap-x-14">
+                {item.items.map((menu: any) => (
+                  <MenuItem key={menu.name} name={menu.name} link={menu.url} className="flex-[1_1_25rem] !justify-start">
+                    <ChevronIcon dir="left" />
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Accordion>
+          ))}
         </Accordion>
-        {footers?.map((item: any, index: any) => (
-          <Accordion key={index} title={item.title} className="!bg-white shadow-card">
-            <MenuList className="flex !flex-row flex-wrap gap-x-14">
-              {item.items.map((menu: any) => (
-                <MenuItem key={menu.name} name={menu.name} link={menu.url} className="flex-[1_1_25rem] !justify-start">
-                  <ChevronIcon dir="left" />
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Accordion>
-        ))}
       </div>
     </>
   );

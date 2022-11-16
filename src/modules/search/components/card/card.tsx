@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import getConfig from 'next/config';
 import Image from 'next/future/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import Badge, { BadgeProps } from '../badge';
 const { publicRuntimeConfig } = getConfig();
 
@@ -23,7 +24,7 @@ interface SearchCardProps {
     viewCount?: string;
     isVerify?: boolean;
     experience?: number;
-    url?: string;
+    url: string;
     rate?: {
       satisfaction: number;
       count: number;
@@ -43,26 +44,33 @@ interface SearchCardProps {
     action: () => void;
     outline: boolean;
   }[];
+  sendEventWhenClick?: () => void;
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick } = props;
+
+  const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
+
+  const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
+
   return (
     <Card className="relative">
-      <Link href={baseInfo.url ?? '#'}>
-        <a href="">
-          <div className="flex items-center mb-3 space-s-2">
+      <div className="flex items-center mb-3 space-s-2">
+        <Link href={baseInfo.url} onClick={sendEventWhenClick}>
+          <a>
             <div className="relative">
               <Avatar
-                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo.avatar}
+                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+                alt={imageAlt}
                 width={80}
                 height={80}
                 className={clsx('border-2 border-slate-200', {
-                  'border-primary': baseInfo.isVerify,
+                  'border-primary': baseInfo?.isVerify,
                 })}
                 as={Image}
               />
-              {baseInfo.isVerify && (
+              {baseInfo?.isVerify && (
                 <svg
                   width="25"
                   height="25"
@@ -82,54 +90,60 @@ export const SearchCard = (props: SearchCardProps) => {
                 </svg>
               )}
             </div>
-            <div className="flex flex-col w-full space-y-1">
-              <div className="flex items-start justify-between">
+          </a>
+        </Link>
+        <div className="flex flex-col w-full space-y-1">
+          <div className="flex items-start justify-between">
+            <Link href={baseInfo.url} onClick={sendEventWhenClick}>
+              <a className="w-4/5">
                 <Text fontWeight="bold" className="text-base md:text-lg">
-                  {baseInfo.displayName ?? `${baseInfo.name} ${baseInfo.family}`}
+                  {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
                 </Text>
-                <div className="flex items-center space-s-1 absolute left-5 top-5">
-                  <Text fontSize="sm">{baseInfo.viewCount}</Text>
-                  <EyeIcon width={18} height={18} />
-                </div>
-              </div>
-              {type === 'doctor' && (
-                <Text fontSize="sm" className="line-clamp-2">
-                  {baseInfo.expertise}
-                </Text>
-              )}
-              {type === 'doctor' && (
-                <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base">
-                  <div className="flex items-center space-s-1">
-                    <svg width="23" height="23" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="fill-primary">
-                      <path
-                        d="M12.795 2.51996L7.23969 8.86892C6.75029 9.42824 6.50559 9.7079 6.37779 10.048C6.25 10.3881 6.25 10.7597 6.25 11.5029V16C6.25 17.8856 6.25 18.8284 6.83579 19.4142C7.42157 20 8.36438 20 10.25 20H15.1948C16.6642 20 17.3988 20 17.9364 19.5894C18.474 19.1788 18.6673 18.47 19.0539 17.0525L19.8721 14.0525C20.5049 11.7322 20.8213 10.572 20.2209 9.78601C19.6206 9 18.418 9 16.013 9H13.25L15.3404 4.12239C15.771 3.11767 15.034 2 13.9409 2C13.5018 2 13.0842 2.18953 12.795 2.51996Z"
-                        fillOpacity="0.16"
-                      />
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M13.3595 3.01384C13.5062 2.84617 13.7181 2.75 13.9409 2.75C14.4956 2.75 14.8695 3.31713 14.651 3.82695L12.5606 8.70456C12.4613 8.93628 12.4851 9.2024 12.6239 9.41287C12.7627 9.62334 12.9979 9.75 13.25 9.75H16.013C17.2393 9.75 18.0762 9.75189 18.6859 9.84046C19.2766 9.92628 19.4968 10.0735 19.6249 10.2413C19.753 10.409 19.8371 10.6602 19.7645 11.2526C19.6895 11.8641 19.4712 12.672 19.1485 13.8551L18.3303 16.8551C18.1323 17.5813 17.9997 18.0625 17.8563 18.4177C17.7203 18.7544 17.6037 18.8997 17.4812 18.9934C17.3586 19.087 17.1877 19.1613 16.8271 19.2039C16.4466 19.2488 15.9475 19.25 15.1948 19.25H10.25C9.28599 19.25 8.63843 19.2484 8.15539 19.1835C7.69393 19.1214 7.49643 19.0142 7.36612 18.8839C7.2358 18.7536 7.12858 18.5561 7.06654 18.0946C7.00159 17.6116 7 16.964 7 16V11.5029C7 10.7047 7.0111 10.4949 7.07987 10.3118C7.14865 10.1288 7.27847 9.96355 7.80413 9.3628L13.3595 3.01384ZM13.9409 1.25C13.2856 1.25 12.6621 1.53289 12.2306 2.02608L6.67526 8.37504L6.60306 8.45746C6.18398 8.93556 5.8525 9.31373 5.67572 9.78422C5.49894 10.2547 5.49938 10.7576 5.49994 11.3934L5.5 11.5029V16V16.052C5.49997 16.9505 5.49994 17.6997 5.57991 18.2945C5.66432 18.9223 5.84999 19.4891 6.30546 19.9445C6.76093 20.4 7.32773 20.5857 7.95552 20.6701C8.5503 20.7501 9.29952 20.75 10.198 20.75H10.25H15.1948H15.2382C15.9359 20.75 16.5242 20.75 17.003 20.6935C17.5115 20.6334 17.9767 20.5024 18.3916 20.1854C18.8066 19.8685 19.0554 19.4541 19.2472 18.9794C19.4277 18.5324 19.5825 17.9648 19.766 17.2917L19.7774 17.2498L20.5956 14.2498L20.6113 14.1922C20.9144 13.0811 21.1635 12.1677 21.2533 11.4351C21.347 10.671 21.2892 9.94904 20.8169 9.33077C20.3447 8.71249 19.6634 8.46673 18.9015 8.35604C18.1712 8.24994 17.2244 8.24997 16.0727 8.25H16.013H14.3874L16.0298 4.41783C16.6725 2.91821 15.5724 1.25 13.9409 1.25ZM4 10C4 9.58579 3.66421 9.25 3.25 9.25C2.83579 9.25 2.5 9.58579 2.5 10V20C2.5 20.4142 2.83579 20.75 3.25 20.75C3.66421 20.75 4 20.4142 4 20V10Z"
-                      />
-                    </svg>
-                    <Text>
-                      {baseInfo.rate?.satisfaction}٪ ({baseInfo.rate?.count} نظر)
-                    </Text>
-                  </div>
-                  {baseInfo.experience && (
-                    <>
-                      <Divider orientation="vertical" height={20} />
-                      <div className="flex items-center space-s-1">
-                        <DoctorIcon width={23} height={23} />
-                        <Text>{baseInfo.experience} سال تجربه </Text>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+              </a>
+            </Link>
+            <div className="flex items-center space-s-1 absolute left-5 top-5">
+              <Text fontSize="xs">{baseInfo?.viewCount}</Text>
+              <EyeIcon width={18} height={18} />
             </div>
           </div>
-        </a>
-      </Link>
+          {type === 'doctor' && (
+            <Text fontSize="sm" className="line-clamp-2">
+              {baseInfo?.expertise}
+            </Text>
+          )}
+          {type === 'doctor' && (
+            <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base whitespace-nowrap">
+              <div className="flex items-center space-s-1">
+                <svg width="22" height="22" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="fill-primary">
+                  <path
+                    d="M12.795 2.51996L7.23969 8.86892C6.75029 9.42824 6.50559 9.7079 6.37779 10.048C6.25 10.3881 6.25 10.7597 6.25 11.5029V16C6.25 17.8856 6.25 18.8284 6.83579 19.4142C7.42157 20 8.36438 20 10.25 20H15.1948C16.6642 20 17.3988 20 17.9364 19.5894C18.474 19.1788 18.6673 18.47 19.0539 17.0525L19.8721 14.0525C20.5049 11.7322 20.8213 10.572 20.2209 9.78601C19.6206 9 18.418 9 16.013 9H13.25L15.3404 4.12239C15.771 3.11767 15.034 2 13.9409 2C13.5018 2 13.0842 2.18953 12.795 2.51996Z"
+                    fillOpacity="0.16"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M13.3595 3.01384C13.5062 2.84617 13.7181 2.75 13.9409 2.75C14.4956 2.75 14.8695 3.31713 14.651 3.82695L12.5606 8.70456C12.4613 8.93628 12.4851 9.2024 12.6239 9.41287C12.7627 9.62334 12.9979 9.75 13.25 9.75H16.013C17.2393 9.75 18.0762 9.75189 18.6859 9.84046C19.2766 9.92628 19.4968 10.0735 19.6249 10.2413C19.753 10.409 19.8371 10.6602 19.7645 11.2526C19.6895 11.8641 19.4712 12.672 19.1485 13.8551L18.3303 16.8551C18.1323 17.5813 17.9997 18.0625 17.8563 18.4177C17.7203 18.7544 17.6037 18.8997 17.4812 18.9934C17.3586 19.087 17.1877 19.1613 16.8271 19.2039C16.4466 19.2488 15.9475 19.25 15.1948 19.25H10.25C9.28599 19.25 8.63843 19.2484 8.15539 19.1835C7.69393 19.1214 7.49643 19.0142 7.36612 18.8839C7.2358 18.7536 7.12858 18.5561 7.06654 18.0946C7.00159 17.6116 7 16.964 7 16V11.5029C7 10.7047 7.0111 10.4949 7.07987 10.3118C7.14865 10.1288 7.27847 9.96355 7.80413 9.3628L13.3595 3.01384ZM13.9409 1.25C13.2856 1.25 12.6621 1.53289 12.2306 2.02608L6.67526 8.37504L6.60306 8.45746C6.18398 8.93556 5.8525 9.31373 5.67572 9.78422C5.49894 10.2547 5.49938 10.7576 5.49994 11.3934L5.5 11.5029V16V16.052C5.49997 16.9505 5.49994 17.6997 5.57991 18.2945C5.66432 18.9223 5.84999 19.4891 6.30546 19.9445C6.76093 20.4 7.32773 20.5857 7.95552 20.6701C8.5503 20.7501 9.29952 20.75 10.198 20.75H10.25H15.1948H15.2382C15.9359 20.75 16.5242 20.75 17.003 20.6935C17.5115 20.6334 17.9767 20.5024 18.3916 20.1854C18.8066 19.8685 19.0554 19.4541 19.2472 18.9794C19.4277 18.5324 19.5825 17.9648 19.766 17.2917L19.7774 17.2498L20.5956 14.2498L20.6113 14.1922C20.9144 13.0811 21.1635 12.1677 21.2533 11.4351C21.347 10.671 21.2892 9.94904 20.8169 9.33077C20.3447 8.71249 19.6634 8.46673 18.9015 8.35604C18.1712 8.24994 17.2244 8.24997 16.0727 8.25H16.013H14.3874L16.0298 4.41783C16.6725 2.91821 15.5724 1.25 13.9409 1.25ZM4 10C4 9.58579 3.66421 9.25 3.25 9.25C2.83579 9.25 2.5 9.58579 2.5 10V20C2.5 20.4142 2.83579 20.75 3.25 20.75C3.66421 20.75 4 20.4142 4 20V10Z"
+                  />
+                </svg>
+                <Text fontWeight="medium" className="text-primary">
+                  {baseInfo?.rate?.satisfaction}٪
+                </Text>
+                <Text>({baseInfo?.rate?.count} نظر)</Text>
+              </div>
+              {baseInfo?.experience && (
+                <>
+                  <Divider orientation="vertical" height={20} />
+                  <div className="flex items-center space-s-1">
+                    <DoctorIcon width={22} height={22} />
+                    <Text>{baseInfo?.experience} سال تجربه </Text>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
       {details?.address?.text && (
         <div className="flex items-center mt-2 space-s-1">
           <LocationIcon className="w-5 h-5 min-w-[1.25rem]" />
@@ -202,11 +216,18 @@ export const SearchCard = (props: SearchCardProps) => {
           ))}
         </div>
       )}
-      <div className="flex items-end mt-6 space-s-3">
+      <div className="flex items-end mt-3 space-s-3">
         {actions?.map((item, index) => (
           <div key={index} className="flex flex-col w-full space-y-3">
-            <Text className="text-xs md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />
-            <Button block variant={item.outline ? 'secondary' : 'primary'} onClick={item.action}>
+            {item.description && <Text className="text-xs md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />}
+            <Button
+              block
+              variant={item.outline ? 'secondary' : 'primary'}
+              onClick={() => {
+                item.action();
+                sendEventWhenClick?.();
+              }}
+            >
               {item.text}
             </Button>
           </div>

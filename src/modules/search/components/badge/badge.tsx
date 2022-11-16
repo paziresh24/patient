@@ -26,9 +26,13 @@ export const Badge = (props: BadgeProps) => {
   return (
     <>
       <Chips
-        className={clsx('md:!p-2 px-2 md:!px-3 !rounded-md flex justify-center items-center', badgeStyles.type[type], {
-          'cursor-pointer': description,
-        })}
+        className={clsx(
+          'md:!p-2 h-8 cursor-default md:h-10 px-2 md:!px-3 !rounded-md flex justify-center items-center',
+          badgeStyles.type[type],
+          {
+            '!cursor-pointer': description,
+          },
+        )}
         icon={icon && categoryIcons[icon]?.()}
         onClick={() => description && setDescriptionModal(true)}
       >

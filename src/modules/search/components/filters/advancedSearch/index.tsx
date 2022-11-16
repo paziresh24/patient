@@ -32,11 +32,11 @@ export const AdvancedSearch = ({ className }: { className?: string }) => {
                         item.items.findIndex(item => item.value === selectedFilters?.consult_price[0]),
                         item.items.findIndex(
                           item => item.value === selectedFilters?.consult_price[selectedFilters?.consult_price.length - 1],
-                        ),
+                        ) + 1,
                       ]
                     : [
                         item.items.findIndex(item => item.value === selectedFilters?.consult_price),
-                        item.items.findIndex(item => item.value === selectedFilters?.consult_price),
+                        item.items.findIndex(item => item.value === selectedFilters?.consult_price) + 1,
                       ]
                   : [0, item.items.length]
               }

@@ -28,14 +28,14 @@ interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Avatar: React.FC<AvatarProps> = props => {
-  const { src, width = 70, height = 70, className, name, as = 'img' } = props;
+  const { src, width = 70, height = 70, className, name, as = 'img', alt } = props;
 
   const Component = as;
 
   return src ? (
     <Component
       src={src}
-      alt="avatar"
+      alt={alt ?? 'avatar'}
       width={width}
       height={height}
       style={{ minWidth: width, height }}
