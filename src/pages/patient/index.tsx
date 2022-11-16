@@ -98,13 +98,13 @@ export const PatinetProfile: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          <Link href="https://www.paziresh24.com/home/support-form/">
+          <Link href="/home/support-form/">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <HeadphoneIcon />
               <Text fontWeight="medium">پشتیبانی</Text>
             </a>
           </Link>
-          <Link href="https://www.paziresh24.com/home/fordoctors/">
+          <Link href="/home/fordoctors/">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <DoctorIcon />
               <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
@@ -125,7 +125,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
           <div
             className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
             onClick={() => {
-              window.Android.shareQA('اپلیکیشن نوبت دهی پذیرش24', 'https://www.paziresh24.com/app');
+              window.Android.shareQA('اپلیکیشن نوبت دهی پذیرش24', '/app');
             }}
           >
             <ShareIcon />

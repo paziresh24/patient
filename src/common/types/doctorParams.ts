@@ -9,6 +9,7 @@ export interface DoctorParams {
   doctor_url?: string;
   centers?: Center[];
   server_id?: string;
+  group_expertises?: GroupExpertises;
 }
 
 export type Expertises = Array<{
@@ -21,6 +22,11 @@ export type Expertises = Array<{
     id?: string;
     name?: string;
   };
+}>;
+
+export type GroupExpertises = Array<{
+  en_slug?: string;
+  name?: string;
 }>;
 
 export type Center = {
