@@ -34,6 +34,7 @@ export const useSuggestionItem = () => {
 
   const handleItemClick = (item: Item, index: number) => {
     handleItemEvent(item, index);
+    addRecentSearch(item);
     if (item.use_suggestion) {
       setUserSearchValue(item?.name ?? '');
     } else if (item.absolute_url) {
@@ -41,8 +42,8 @@ export const useSuggestionItem = () => {
     } else {
       router.push(item.url ?? '/s', undefined, { shallow: true, scroll: true });
       setIsOpenSuggestion(false);
+      setTimeout(() => setUserSearchValue(''), 0);
     }
-    addRecentSearch(item);
   };
 
   return { handleItemClick, handleItemEvent };

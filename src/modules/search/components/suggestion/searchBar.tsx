@@ -38,7 +38,7 @@ export const SearchBar = (props: SearchBarProps) => {
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
-        onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
+        onKeyPress={e => e.key === 'Enter' && onEnter && onEnter(e.currentTarget?.value)}
         {...rest}
       />
       <Divider orientation="vertical" height="2rem" />

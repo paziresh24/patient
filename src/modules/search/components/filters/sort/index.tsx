@@ -38,8 +38,7 @@ export const Sort = () => {
           options={orderItemsFormmated}
           onChange={e => handleChange('sortBy', e.target.value.value)}
           value={
-            orderItemsFormmated.find(item => item.value === filters['sortBy']) ??
-            orderItemsFormmated.find(item => item.value === 'clinic_less_waiting_time')
+            orderItemsFormmated.find(item => item.value === filters['sortBy']) ?? orderItemsFormmated.find(item => item.value === 'clinic')
           }
         />
       </div>

@@ -19,6 +19,7 @@ export type Category = {
   sub_categories?: Category[];
   value: string;
   url: string;
+  count?: number;
 };
 
 type Search = {

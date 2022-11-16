@@ -1,5 +1,7 @@
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
+import Text from '@/common/components/atom/text';
 import { useSearch } from '@/modules/search/hooks/useSearch';
+import { addCommas } from '@persian-tools/persian-tools';
 import clsx from 'clsx';
 import { Fragment } from 'react';
 
@@ -19,6 +21,11 @@ export const Categories = ({ className }: { className?: string }) => {
                   className={clsx({
                     'text-primary hidden md:flex sticky top-0 !bg-white z-10 !font-extrabold': selectedCategory?.value === item.value,
                   })}
+                  postFix={
+                    <Text fontSize="xs" className="decoration-dotted underline opacity-50">
+                      {addCommas(item.count ?? 0)}
+                    </Text>
+                  }
                   shallow
                   scroll
                 />

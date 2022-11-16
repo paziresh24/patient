@@ -1,5 +1,6 @@
 import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
+import { addCommas } from '@persian-tools/persian-tools';
 
 export const RadioFilter = ({
   items,
@@ -32,6 +33,11 @@ export const RadioFilter = ({
             }}
           />
           <Text>{item.title}</Text>
+          {item.count && (
+            <Text fontSize="xs" className="decoration-dotted underline opacity-50">
+              {addCommas(item.count ?? 0)}
+            </Text>
+          )}
         </label>
       ))}
     </div>

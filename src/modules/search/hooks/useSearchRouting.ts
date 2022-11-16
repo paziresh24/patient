@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { useRouter } from 'next/router';
 import { ParsedUrlQueryInput } from 'querystring';
 
@@ -14,12 +15,14 @@ export const useSearchRouting = () => {
     overWrite = false,
     previousQueries = true,
     scroll = true,
+    pageParam = false,
   }: {
     params?: Record<string, string>;
     query?: ParsedUrlQueryInput | null | undefined;
     overWrite?: boolean;
     previousQueries?: boolean;
     scroll?: boolean;
+    pageParam?: boolean;
   }) => {
     router.push(
       {
@@ -28,7 +31,7 @@ export const useSearchRouting = () => {
           overWrite ? params?.category : params?.category ?? slug?.[1] ?? '',
         ].join('/')}`,
         query: {
-          ...(!overWrite && previousQueries && { ...queries }),
+          ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
           ...query,
         },
       },

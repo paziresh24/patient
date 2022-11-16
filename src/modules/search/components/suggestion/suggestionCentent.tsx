@@ -41,7 +41,7 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
   return wrapper(
     <div
       className={clsx(
-        'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:h-96 md:top-16 w-full flex flex-col bg-slate-100 rounded-bl-xl rounded-br-xl',
+        'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:h-96 md:top-16 w-full flex flex-col bg-slate-100 md:rounded-bl-xl md:rounded-br-xl',
         className,
       )}
     >

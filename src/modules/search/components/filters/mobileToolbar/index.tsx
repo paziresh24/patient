@@ -95,7 +95,7 @@ export const MobileToolbar = () => {
         >
           مرتب سازی:{' '}
           {orderItemsFormmated.find(item => item.value === filters['sortBy'])?.title ??
-            orderItemsFormmated.find(item => item.value === 'clinic_less_waiting_time')?.title}
+            orderItemsFormmated.find(item => item.value === 'clinic')?.title}
         </Chips>
         <Chips
           className="py-2 !rounded-md !text-black flex justify-center items-center"

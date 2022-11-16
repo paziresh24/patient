@@ -27,7 +27,6 @@ export const SearchInput = (props: SearchInputProps) => {
         {...inputProps}
         autoComplete="off"
         data-hj-allow
-        inputMode="search"
         type="search"
       />
       {inputProps.value && <CloseIcon onClick={onClear} className="cursor-pointer" />}
