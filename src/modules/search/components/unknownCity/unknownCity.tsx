@@ -16,17 +16,17 @@ export const UnknownCity = () => {
   const [unknownCityModal, setUnknownCityModal] = useState(false);
 
   useEffect(() => {
-    const currentCity = JSON.parse((getCookie('new-city') as string) ?? '{}');
+    const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
     setUnknownCityModal(
       currentCity.en_slug !== 'ir' &&
         selectedFilters.city !== undefined &&
         !isEmpty(currentCity) &&
         selectedFilters?.city !== currentCity?.en_slug,
     );
-    if (isEmpty(currentCity) && selectedFilters.city !== undefined) {
+    if (isEmpty(currentCity) && selectedFilters.city !== undefined && searchCity) {
       setCity(searchCity);
     }
-  }, [selectedFilters]);
+  }, [selectedFilters, searchCity]);
 
   return (
     <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModal}>

@@ -79,7 +79,7 @@ const Search: NextPageWithLayout = () => {
         </div>
 
         {!query.isWebView && <SearchSeoBox />}
-        <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${asPath}`} className="block">
+        <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${encodeURIComponent(asPath)}`} className="block">
           <Button variant="secondary" className="!my-5" block>
             گزارش مشکل در جستجو
           </Button>
