@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: { 
           notFound: true,
         };
     }
-    throw new TypeError('Opps.');
+    throw new TypeError(JSON.stringify(error));
   }
 });
 

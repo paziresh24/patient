@@ -57,8 +57,8 @@ export const SearchCard = (props: SearchCardProps) => {
   return (
     <Card className="relative">
       <div className="flex items-center mb-3 space-s-2">
-        <Link href={baseInfo.url} onClick={sendEventWhenClick}>
-          <a>
+        <Link href={baseInfo.url}>
+          <a onClick={sendEventWhenClick}>
             <div className="relative">
               <Avatar
                 src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
@@ -94,8 +94,8 @@ export const SearchCard = (props: SearchCardProps) => {
         </Link>
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
-            <Link href={baseInfo.url} onClick={sendEventWhenClick}>
-              <a className="w-4/5">
+            <Link href={baseInfo.url}>
+              <a className="w-4/5" onClick={sendEventWhenClick}>
                 <Text fontWeight="bold" className="text-base md:text-lg">
                   {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
                 </Text>

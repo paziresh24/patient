@@ -10,7 +10,7 @@ export interface Params {
 }
 
 export const search = async ({ route, query }: Params) => {
-  const { data } = await searchClient.get(`/seapi/v1/search/${route}`, {
+  const { data } = await searchClient.get(`/seapi/v1/search/${encodeURIComponent(route)}`, {
     params: {
       ...query,
     },

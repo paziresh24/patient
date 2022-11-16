@@ -98,9 +98,9 @@ const Header = (props: HeaderProps) => {
                         مجله سلامتی
                       </a>
                     </div>
-                    {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} />}
-                    {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} />}
-                    {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} />}
+                    {menu === MegaMenuItem.CONSULT && <MegaMenuContent items={consultMenus} onClose={() => setOpen(prev => !prev)} />}
+                    {menu === MegaMenuItem.ARTICLE && <MegaMenuContent items={articleMenus} onClose={() => setOpen(prev => !prev)} />}
+                    {menu === MegaMenuItem.SPECIALTY && <MegaMenuContent items={expertiseItems} onClose={() => setOpen(prev => !prev)} />}
                   </Transition>
                 </li>
                 <SubMenu title={t('header.titles.forPatients')} menuItem={withUserMenu} />
