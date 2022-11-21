@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
 import LocationIcon from '@/common/components/icons/location';
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
 
@@ -33,6 +34,7 @@ export const CitySelect = (props: CitySelectProps) => {
       name: string;
       id: string;
       isProvince: boolean;
+      is_capital?: '1' | '0';
     }[]
   >([]);
 
@@ -115,7 +117,13 @@ export const CitySelect = (props: CitySelectProps) => {
                   className="flex items-center justify-between p-3 font-medium border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50"
                   onClick={() => (city.isProvince ? handleClickProvince(city.id) : handleClickCity(city.id))}
                 >
-                  <Text>{city?.name}</Text>
+                  <Text
+                    className={clsx({
+                      'font-bold': city.is_capital === '1',
+                    })}
+                  >
+                    {city?.name}
+                  </Text>
                   <ChevronIcon dir="left" />
                 </div>
               ))}

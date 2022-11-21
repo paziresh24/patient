@@ -55,7 +55,7 @@ export const SearchCard = (props: SearchCardProps) => {
   const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
 
   return (
-    <Card className="relative">
+    <Card className="relative !p-3 md:!p-4">
       <div className="flex items-center mb-3 space-s-2">
         <Link href={baseInfo.url}>
           <a onClick={sendEventWhenClick}>
@@ -101,7 +101,7 @@ export const SearchCard = (props: SearchCardProps) => {
                 </Text>
               </a>
             </Link>
-            <div className="flex items-center space-s-1 absolute left-5 top-5">
+            <div className="flex items-center space-s-1 absolute rtl:left-5 ltr:right-5 top-5">
               <Text fontSize="xs">{baseInfo?.viewCount}</Text>
               <EyeIcon width={18} height={18} />
             </div>
@@ -111,7 +111,7 @@ export const SearchCard = (props: SearchCardProps) => {
               {baseInfo?.expertise}
             </Text>
           )}
-          {type === 'doctor' && (
+          {type === 'doctor' && baseInfo?.rate?.count && (
             <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base whitespace-nowrap">
               <div className="flex items-center space-s-1">
                 <svg width="22" height="22" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="fill-primary">
@@ -145,7 +145,7 @@ export const SearchCard = (props: SearchCardProps) => {
       </div>
 
       {details?.address?.text && (
-        <div className="flex items-center mt-2 space-s-1">
+        <div className="flex items-center mt-1 space-s-1">
           <LocationIcon className="w-5 h-5 min-w-[1.25rem]" />
           <Text fontSize="sm" className="line-clamp-1">
             {details?.address?.text}
@@ -153,7 +153,7 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.price && (
-        <div className="flex items-center mt-5 space-s-1">
+        <div className="flex items-center mt-3 space-s-1">
           <svg
             width="24"
             height="24"
@@ -210,16 +210,16 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.badges && details?.badges?.length > 0 && (
-        <div className="flex flex-wrap justify-start gap-2 mt-5 md:justify-center">
+        <div className="flex flex-wrap justify-start gap-2 mt-3 md:justify-center">
           {details?.badges?.map((badge, index) => (
             <Badge key={index} {...badge} />
           ))}
         </div>
       )}
-      <div className="flex items-end mt-3 space-s-3">
+      <div className="flex items-end mt-4 space-s-3">
         {actions?.map((item, index) => (
-          <div key={index} className="flex flex-col w-full space-y-3">
-            {item.description && <Text className="text-xs md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />}
+          <div key={index} className="flex flex-col w-full space-y-2">
+            {item.description && <Text className="text-[0.7rem] md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />}
             <Button
               block
               variant={item.outline ? 'secondary' : 'primary'}

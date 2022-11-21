@@ -1,6 +1,7 @@
 import Chips from '@/common/components/atom/chips';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import InfoIcon from '@/common/components/icons/info';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { categoryIcons } from '../../constants/suggestion/categoryIcons';
@@ -27,7 +28,7 @@ export const Badge = (props: BadgeProps) => {
     <>
       <Chips
         className={clsx(
-          'md:!p-2 h-8 cursor-default md:h-10 px-2 md:!px-3 !rounded-md flex justify-center items-center',
+          'md:!p-2 h-8 cursor-default md:h-10 !px-2 md:!px-2 !rounded-md flex justify-center items-center',
           badgeStyles.type[type],
           {
             '!cursor-pointer': description,
@@ -36,7 +37,10 @@ export const Badge = (props: BadgeProps) => {
         icon={icon && categoryIcons[icon]?.()}
         onClick={() => description && setDescriptionModal(true)}
       >
-        {title}
+        <div className="flex items-center">
+          {title}
+          {description && <InfoIcon className="w-5 h-5 mr-1" />}
+        </div>
       </Chips>
       <Modal isOpen={descriptionModal} onClose={setDescriptionModal} noHeader>
         <Text fontSize="sm" fontWeight="medium">

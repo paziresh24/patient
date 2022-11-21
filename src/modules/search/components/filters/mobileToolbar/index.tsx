@@ -6,6 +6,7 @@ import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
+import { useSearchStore } from '@/modules/search/store/search';
 import { addCommas } from '@persian-tools/persian-tools';
 import { useMemo, useState } from 'react';
 import AdvancedSearch from '../advancedSearch';
@@ -14,7 +15,8 @@ import MobileCategories from '../mobileCategories';
 import { freeturnItems } from '../sort';
 
 export const MobileToolbar = () => {
-  const { total, isLoading, orderItems, selectedCategory, selectedSubCategory } = useSearch();
+  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory } = useSearch();
+  const city = useSearchStore(state => state.city);
   const [filtersModal, setFiltersModal] = useState(false);
   const [sortsModal, setSortsModal] = useState(false);
   const [freeturnModal, setFreeTurnModal] = useState(false);
@@ -36,9 +38,47 @@ export const MobileToolbar = () => {
     setFiltersModal(false);
   };
 
+  const suggestionTags = () => {
+    if (!city) return [];
+
+    const cityName = city.en_slug === 'ir' ? 'ایران' : city.name;
+    return [
+      {
+        text: `پزشکان متخصص ${cityName}`,
+        onClick: () =>
+          changeRoute({
+            params: {
+              category: 'doctor',
+            },
+          }),
+      },
+      {
+        text: `بیمارستان های ${cityName}`,
+        onClick: () =>
+          changeRoute({
+            params: {
+              category: 'center',
+            },
+          }),
+      },
+    ];
+  };
+
+  if (isLanding) {
+    return (
+      <div className="flex w-full overflow-auto md:hidden space-s-3 no-scroll">
+        {suggestionTags().map((chip, index) => (
+          <Chips key={index} className="py-2 !rounded-md !text-black flex justify-center items-center" {...chip}>
+            {chip.text}
+          </Chips>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="md:hidden flex w-full overflow-auto space-s-3 no-scroll">
+      <div className="flex w-full overflow-auto md:hidden space-s-3 no-scroll">
         <Chips
           className="py-2 !rounded-md !text-black flex justify-center items-center"
           icon={
@@ -130,18 +170,18 @@ export const MobileToolbar = () => {
         </Chips>
       </div>
       <Modal fullScreen title="فیلترها" isOpen={filtersModal} onClose={setFiltersModal}>
-        <div className="pb-36 space-y-3">
+        <div className="space-y-3 pb-36">
           <div className="flex justify-between" onClick={() => setCategoryModal(true)}>
             <Text fontSize="sm" fontWeight="bold">
               تخصص ها
             </Text>
-            <Text fontSize="sm" className="line-clamp-1 w-40 text-left">
+            <Text fontSize="sm" className="w-40 text-left line-clamp-1">
               {selectedSubCategory?.title ?? selectedCategory?.title ?? 'انتخاب کنید'}
             </Text>
           </div>
           <Divider />
           <AdvancedSearch className="!p-0 !shadow-none" />
-          <div className="fixed md:static bottom-0 right-0 flex w-full p-4 bg-white border-t border-slate-200 space-s-3">
+          <div className="fixed bottom-0 right-0 flex w-full p-4 bg-white border-t md:static border-slate-200 space-s-3">
             <Button block loading={isLoading} onClick={() => setFiltersModal(false)}>
               مشاهده {addCommas(total)} نتیجه
             </Button>

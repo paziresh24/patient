@@ -1,5 +1,5 @@
-import { sendEvent } from '@/common/services/sendEvent';
 import getConfig from 'next/config';
+import { useMutation } from 'react-query';
 const { publicRuntimeConfig } = getConfig();
 
 export interface Params {
@@ -11,5 +11,14 @@ export interface Params {
 }
 
 export const sendPositionStatEvent = (params: Params) => {
-  return sendEvent(`${publicRuntimeConfig.SEARCH_BASE_URL}/seapi/stat/position`, params);
+  return fetch(`${publicRuntimeConfig.SEARCH_BASE_URL}/seapi/stat/position`, {
+    body: JSON.stringify(params),
+    method: 'PATCH',
+    keepalive: true,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };
+
+export const useStat = () => useMutation(sendPositionStatEvent);

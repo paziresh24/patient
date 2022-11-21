@@ -1,6 +1,5 @@
 import { deleteCookie, setCookie } from 'cookies-next';
 import create from 'zustand';
-
 interface SearchStore {
   city: City;
   setCity: (city: City) => void;
@@ -86,6 +85,11 @@ export const useSearchStore = create<SearchStore>(set => ({
       city,
     }));
     if (city?.id !== '-1') {
+      try {
+        if (new URLSearchParams(location.search).get('isWebView') && window.Android) window.Android.updateCityWithoutProvince(city.id);
+      } catch (error) {
+        console.error(error);
+      }
       return setCookie('new-city', city);
     }
     deleteCookie('new-city');

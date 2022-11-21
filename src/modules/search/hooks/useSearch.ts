@@ -30,9 +30,10 @@ type Search = {
   result: Result[];
   total: number;
   is_landing: boolean;
+  query_id: string;
 };
 
-type Result = {
+export type Result = {
   _id: string;
   id: string;
   position: number;
@@ -50,6 +51,7 @@ type Result = {
   url: string;
   view: string;
   price: string;
+  server_id: number;
   actions: {
     title: string;
     top_title: string;
@@ -96,7 +98,7 @@ export const useSearch = () => {
   const searchRequest = useSearchRequest();
 
   const {
-    search = { result: [], is_landing: false, pagination: { limit: 20, page: 1 }, total: 0 },
+    search = { result: [], is_landing: false, pagination: { limit: 20, page: 1 }, total: 0, query_id: '' },
     filters = [],
     categories = [],
     order_items: orderItems = {},
@@ -142,6 +144,7 @@ export const useSearch = () => {
   const isLanding = search.is_landing ?? (params?.length === 1 && query.text === undefined);
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
+
   const selectedSubCategory = useMemo(
     () =>
       selectedCategory?.sub_categories?.find(
@@ -149,6 +152,13 @@ export const useSearch = () => {
       ) ?? undefined,
     [selectedFilters],
   );
+
+  const searchCity = useMemo(
+    () => baseInfo.data?.data?.result?.city?.find((item: any) => item.en_slug === selectedFilters.city),
+    [baseInfo.data, selectedFilters.city],
+  );
+
+  const isConsult = useMemo(() => query.turn_type === 'consult', [query.turn_type]);
 
   return {
     isLanding,
@@ -165,6 +175,8 @@ export const useSearch = () => {
     seoInfo,
     selectedCategory,
     selectedSubCategory,
-    searchCity: baseInfo.data?.data?.result?.city?.find((item: any) => item.en_slug === selectedFilters.city),
+    searchCity,
+    isConsult,
+    search,
   };
 };

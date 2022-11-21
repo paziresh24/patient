@@ -7,6 +7,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useResponsive from '@/common/hooks/useResponsive';
+import ConsultBanner from '@/modules/search/components/consultBanner';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import Sort from '@/modules/search/components/filters/sort';
 import UnknownCity from '@/modules/search/components/unknownCity';
@@ -14,7 +15,7 @@ import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
 import Filter from '@/modules/search/view/filter';
-import Result from '@/modules/search/view/result';
+import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { addCommas } from '@persian-tools/persian-tools';
@@ -58,32 +59,34 @@ const Search: NextPageWithLayout = () => {
   return (
     <>
       <Seo {...seoInfo} jsonlds={[seoInfo?.jsonld]} />
-      <div className="flex flex-col items-center justify-center px-3 py-5 space-y-3 bg-white">
+      <div className="flex flex-col items-center justify-center p-3 space-y-3 bg-white">
         <Suggestion key={asPath.toString()} overlay />
-        {!isLanding && <MobileToolbar />}
+        <MobileToolbar />
       </div>
-      <div className="container flex flex-col p-3 !pt-5 mx-auto space-y-3 md:p-0">
-        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-s-5">
+      <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
+        <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-s-5">
           {!isLanding && <Filter isLoading={isLoading} />}
-          <div className="flex flex-col w-full space-y-3">
+          <div className="flex flex-col w-full">
             {!isLanding && !isMobile && (
-              <div className="hidden md:flex items-center justify-between">
+              <div className="items-center justify-between hidden mb-3 md:flex">
                 <Sort />
                 <Text fontSize="sm" fontWeight="semiBold">
                   {addCommas(total)} نتیجه
                 </Text>
               </div>
             )}
+            <ConsultBanner />
             <Result />
           </div>
         </div>
-
-        {!query.isWebView && <SearchSeoBox />}
-        <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${encodeURIComponent(asPath)}`} className="block">
-          <Button variant="secondary" className="!my-5" block>
-            گزارش مشکل در جستجو
-          </Button>
-        </a>
+        <SearchSeoBox />
+        {!query.isWebView && (
+          <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${encodeURIComponent(asPath)}`} className="block">
+            <Button variant="secondary" className="!my-5" block>
+              گزارش مشکل در جستجو
+            </Button>
+          </a>
+        )}
       </div>
       <UnknownCity />
     </>
@@ -134,6 +137,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: { 
       },
     };
   } catch (error) {
+    console.dir(error);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404)
         return {

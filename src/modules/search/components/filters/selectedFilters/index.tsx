@@ -4,7 +4,6 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
-import { useRouter } from 'next/router';
 import { Fragment, useMemo } from 'react';
 import { useFilterChange } from '../../../hooks/useFilterChange';
 import { freeturnItems } from '../sort';
@@ -19,10 +18,6 @@ export const SelectedFilters = (props: CategoriesProps) => {
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
   const { changeRoute } = useSearchRouting();
 
-  const {
-    query: { params },
-    ...router
-  } = useRouter();
   const { removeFilter } = useFilterChange();
 
   const getFilterTitle = (name: string, value: string) => {
@@ -47,6 +42,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
     if (name === 'category') {
       return handleRemoveAllFilters();
     }
+
     removeFilter(name);
   };
 

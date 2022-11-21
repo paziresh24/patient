@@ -1,11 +1,14 @@
-import { sendPositionStatEvent } from '@/common/apis/services/search/position';
+import { useCtr } from '@/common/apis/services/search/ctr';
+import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
+import { sendGaEvent } from '@/common/services/sendGaEvent';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import Card from '../../components/card';
 import CategoryCard from '../../components/categoryCard';
 import NotFound from '../../components/notFound';
-import { useSearch } from '../../hooks/useSearch';
+import { Result as ResultType, useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 
 export const Result = () => {
@@ -14,8 +17,10 @@ export const Result = () => {
     asPath,
   } = useRouter();
 
-  const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters } = useSearch();
+  const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters, search } = useSearch();
   const { changeRoute } = useSearchRouting();
+  const sendPositionStatEvent = useStat();
+  const sendCtrEvent = useCtr();
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
@@ -24,6 +29,29 @@ export const Result = () => {
         page: +currentPage + 1,
       },
       scroll: false,
+    });
+  };
+
+  const handleCardEvent = (item: ResultType) => {
+    sendPositionStatEvent.mutate({
+      id: item._id,
+      filters: selectedFilters,
+      position: item.position,
+      route: asPath,
+      card_data: item,
+    });
+    sendCtrEvent.mutate({
+      terminal_id: (getCookie('terminal_id') as string) ?? '',
+      id: item.id,
+      position: item.position,
+      query_id: search.query_id,
+      server_id: item.server_id,
+      type: item.type,
+    });
+    sendGaEvent({
+      action: 'CardSearchClick',
+      category: `Card${item.position}`,
+      label: `${window.location.href}&docName=${item.title}`,
     });
   };
 
@@ -64,15 +92,7 @@ export const Result = () => {
                 window.location.assign(item.url);
               },
             }))}
-            sendEventWhenClick={() =>
-              sendPositionStatEvent({
-                id: item._id,
-                filters: selectedFilters,
-                position: item.position,
-                route: asPath,
-                card_data: item,
-              })
-            }
+            sendEventWhenClick={() => handleCardEvent(item)}
           />
         ),
       )}

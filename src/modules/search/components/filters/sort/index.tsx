@@ -34,7 +34,7 @@ export const Sort = () => {
         <Autocomplete
           size="small"
           className="font-medium border-0 rounded-tr-none rounded-br-none"
-          classNameWrapper="lg:w-72"
+          classNameWrapper="lg:w-64"
           options={orderItemsFormmated}
           onChange={e => handleChange('sortBy', e.target.value.value)}
           value={

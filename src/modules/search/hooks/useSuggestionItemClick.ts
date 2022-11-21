@@ -1,3 +1,4 @@
+import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { splunkSearchInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { getCookie } from 'cookies-next';
@@ -13,6 +14,11 @@ export const useSuggestionItem = () => {
   const { addRecentSearch } = useRecentSearch();
 
   const handleItemEvent = (item: Item, index: number) => {
+    sendGaEvent({
+      action: 'Search Suggestion',
+      category: 'Search Suggestion Click Result',
+      label: `Search Suggestion ${item.formatted_title}`,
+    });
     splunkSearchInstance().sendEvent({
       group: 'suggestion_events',
       type: 'record_click',

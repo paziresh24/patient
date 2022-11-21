@@ -1,7 +1,6 @@
 import Divider from '@/common/components/atom/divider';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import clsx from 'clsx';
-import { isArray } from 'lodash';
 import dynamic from 'next/dynamic';
 import RadioFilter from './sections/radio';
 import SwitchFilter from './sections/switch';
@@ -14,11 +13,13 @@ export const AdvancedSearch = ({ className }: { className?: string }) => {
   if (filters.length === 0) return null;
   return (
     <div className={clsx('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card', className)}>
-      {filters.map((item, index) => (
-        <div key={item.title} className="flex flex-col space-y-3">
-          {item.type === 'radio' && <RadioFilter title={item.title} items={item.items} name={item.name} />}
-          {item.type === 'switch' && <SwitchFilter title={item.title} name={item.name} />}
-          {item.type === 'slider_with_count' && (
+      {filters.map(
+        (item, index) =>
+          item.type !== 'slider_with_count' && (
+            <div key={item.title} className="flex flex-col space-y-3">
+              {item.type === 'radio' && <RadioFilter title={item.title} items={item.items} name={item.name} />}
+              {item.type === 'switch' && <SwitchFilter title={item.title} name={item.name} />}
+              {/* {item.type === 'slider_with_count' && (
             <SliderFilter
               title={item.title}
               data={item.items.map((item: any) => ({ lable: item.title, count: item.count, value: item.value }))}
@@ -41,10 +42,11 @@ export const AdvancedSearch = ({ className }: { className?: string }) => {
                   : [0, item.items.length]
               }
             />
-          )}
-          {index + 1 !== filters.length && <Divider />}
-        </div>
-      ))}
+          )} */}
+              {index + 1 !== filters.length && <Divider />}
+            </div>
+          ),
+      )}
     </div>
   );
 };

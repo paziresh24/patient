@@ -84,7 +84,7 @@ export const Modal = (props: ModalProps) => {
               <CloseIcon onClick={handleClose} />
             </div>
           )}
-          <div className={clsx('p-6 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
+          <div className={clsx('p-5 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>
