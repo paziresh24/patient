@@ -10,7 +10,7 @@ module.exports = {
       colors: {
         primary: '#3861fb',
         gray: '#F8FAFB',
-        secondary: '#3861fb',
+        secondary: '#00acac',
         brand: '#3F3F79',
       },
       boxShadow: {
@@ -21,6 +21,15 @@ module.exports = {
       },
       backgroundSize: {
         85: '85rem',
+      },
+      keyframes: {
+        progress: {
+          '0%': { right: '-100%' },
+          '100%': { right: '100%' },
+        },
+      },
+      animation: {
+        progress: 'progress 2s linear infinite',
       },
     },
   },

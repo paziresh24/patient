@@ -2,13 +2,18 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import Logo from '@/common/components/atom/logo';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from '../../data/links';
 import UserProfile from '../userProfile';
-import Sidebar from './sidebar';
+const Sidebar = dynamic(() => import('./sidebar'));
 
-const MobileNavbar = () => {
+interface MobileNavbarProps {
+  shouldShowBrand?: boolean;
+}
+const MobileNavbar = (props: MobileNavbarProps) => {
+  const { shouldShowBrand = true } = props;
   const [open, setOpen] = useState(false);
   const [expertiseItems, setExpertiseItems] = useState([]);
   const ref = useRef(null);
@@ -18,28 +23,28 @@ const MobileNavbar = () => {
     {
       id: 1,
       title: 'مشاوره آنلاین پزشکی',
-      items: consultMenus,
+      sub_menu: consultMenus,
     },
     {
       id: 2,
       title: 'تخصص ها',
-      items: expertiseItems,
+      sub_menu: expertiseItems,
     },
 
     {
       id: 3,
       title: 'برای بیماران',
-      items: withUserMenu,
+      sub_menu: withUserMenu,
     },
     {
       id: 4,
       title: 'برای پزشکان',
-      items: withDoctorMenu,
+      sub_menu: withDoctorMenu,
     },
     {
       id: 5,
       title: 'مجله سلامتی',
-      items: articleMenus,
+      sub_menu: articleMenus,
     },
   ];
 
@@ -52,13 +57,17 @@ const MobileNavbar = () => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="text-sm block w-full z-50 lg:hidden">
-      <div className="max-w-screen-xl mx-auto relative flex items-center justify-between p-2">
+    <div ref={ref} className="z-50 block w-full text-sm lg:hidden">
+      <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
-          <HumbuggerMenu onClick={() => setOpen(true)} />
-          <a href="/">
-            <Logo fontSize="sm" width={32} height={32} />
-          </a>
+          <div className="flex items-center justify-center w-8 h-8" onClick={() => setOpen(true)}>
+            <HumbuggerMenu />
+          </div>
+          {shouldShowBrand && (
+            <a href="/">
+              <Logo fontSize="sm" width={32} height={32} />
+            </a>
+          )}
         </div>
         <UserProfile />
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} isOpen={open} />

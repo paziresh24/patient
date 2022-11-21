@@ -1,9 +1,10 @@
 import useResponsive from '@/common/hooks/useResponsive';
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import CloseIcon from '../../icons/close';
 import ClientOnlyPortal from '../../layouts/clientOnlyPortal';
-import Transition from '../transition';
+const Transition = dynamic(() => import('../transition'));
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,8 +19,20 @@ interface ModalProps {
 export const Modal = (props: ModalProps) => {
   const { title, isOpen, onClose, children, fullScreen, bodyClassName, noHeader = false } = props;
   const { isMobile } = useResponsive();
+
   const handleClose = () => {
-    onClose();
+    onClose(false);
+    removeOverflowHidden();
+  };
+
+  const removeOverflowHidden = () => {
+    document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('md:pr-[0.3rem]');
+    if (isMobile) {
+      window.onpopstate = () => {
+        return;
+      };
+    }
   };
 
   const neutralizeBack = () => {
@@ -29,7 +42,7 @@ export const Modal = (props: ModalProps) => {
         window.onpopstate = () => {
           return;
         };
-        document.body.classList.remove('overflow-hidden');
+        removeOverflowHidden();
         onClose(false);
       };
     }
@@ -38,15 +51,13 @@ export const Modal = (props: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       neutralizeBack();
+      document.body.classList.add('md:pr-[0.3rem]');
       return document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove('overflow-hidden');
-      if (isMobile) {
-        window.onpopstate = () => {
-          return;
-        };
-      }
+      handleClose();
     }
+
+    return () => removeOverflowHidden();
   }, [isOpen]);
 
   return (
@@ -54,26 +65,26 @@ export const Modal = (props: ModalProps) => {
       <Transition
         match={isOpen}
         animation="fade"
-        className="fixed top-0 overflow-auto left-0 right-0 bottom-0 md:pb-14 z-infinity pt-8 md:pt-20 flex items-end md:justify-center md:items-start bg-slate-800 bg-opacity-30"
+        className="fixed top-0 bottom-0 left-0 right-0 flex items-end pt-8 overflow-auto no-scroll md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-800 bg-opacity-30"
         onClick={handleClose}
       >
         <Transition
           match={isOpen}
           animation="bottom"
           duration={300}
-          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:rounded-lg md:w-[28rem]', {
+          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:rounded-lg md:w-[28rem]  max-h-screen overflow-auto', {
             'h-full overflow-hidden': fullScreen,
           })}
           onClick={e => e.stopPropagation()}
         >
-          {noHeader && <div className="w-11 h-1 md:hidden rounded-full bg-slate-200 mx-auto mt-4" />}
+          {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-200" />}
           {!noHeader && (
-            <div className="p-4 flex justify-between items-center">
+            <div className="flex items-center justify-between p-4">
               <span className="font-bold line-clamp-1">{title}</span>
               <CloseIcon onClick={handleClose} />
             </div>
           )}
-          <div className={clsx('p-6 pt-0 h-full overflow-auto', bodyClassName)}>{children}</div>
+          <div className={clsx('p-6 pt-0 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>

@@ -1,16 +1,18 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
-import { getCookie, setCookie } from 'cookies-next';
-import { useEffect, useRef, useState } from 'react';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import dynamic from 'next/dynamic';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
-import SuggestionCentent from '../../components/suggestion/suggestionCentent';
 import { useSearchStore } from '../../store/search';
+const SuggestionCentent = dynamic(() => import('../../components/suggestion/suggestionCentent'));
 
 export const Suggestion = () => {
   const [isOpenSuggestion, setIsShouldOpen] = useState(false);
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
+  const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const searchSuggestion = useSearchSuggestion(
@@ -19,10 +21,10 @@ export const Suggestion = () => {
       ...(city.id !== '-1' && { city_id: city.id }),
     },
     {
-      enabled: false,
+      keepPreviousData: true,
     },
   );
-  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsShouldOpen(false));
 
@@ -32,10 +34,10 @@ export const Suggestion = () => {
 
   const clickBackButton = () => {
     setIsShouldOpen(false);
+    setUserSearchValue('');
   };
 
   useEffect(() => {
-    setIsShouldOpen(false);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
       if (getCityInCookie) {
@@ -49,17 +51,10 @@ export const Suggestion = () => {
   }, []);
 
   useEffect(() => {
-    searchSuggestion.remove();
-    searchSuggestion.refetch();
-    if (userSearchValue) {
-      openSuggestionContent();
-    }
-    setCookie('new-city', city);
+    if (userSearchValue) openSuggestionContent();
+    city.id !== '-1' ? setCookie('new-city', city) : deleteCookie('new-city');
+    setIsLoading(true);
   }, [userSearchValue, city]);
-
-  useEffect(() => {
-    if (searchSuggestion.isSuccess) setItems(searchSuggestion.data?.data ?? []);
-  }, [searchSuggestion.status]);
 
   useEffect(() => {
     if (isOpenSuggestion && isMobile) {
@@ -95,6 +90,11 @@ export const Suggestion = () => {
     location.assign(`/s/${city?.en_slug}/?text=${text ?? ''}`);
   };
 
+  const suggestionItems = useMemo(() => {
+    setIsLoading(false);
+    return searchSuggestion.data?.data ?? [];
+  }, [searchSuggestion.data]);
+
   return (
     <div className="w-full lg:w-[50rem] relative" ref={ref}>
       <SearchBar
@@ -103,7 +103,7 @@ export const Suggestion = () => {
         onClickBackButton={clickBackButton}
         onEnter={handleRedirectToSearch}
         className={{
-          'rounded-br-none rounded-bl-none rounded-tr-3xl rounded-tl-3xl border-transparent': isOpenSuggestion,
+          'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
       />
@@ -116,11 +116,13 @@ export const Suggestion = () => {
                 isOpenSuggestion={isOpenSuggestion}
                 onClickBackButton={clickBackButton}
                 className="!border-primary"
+                autoFocus
               />
             ) : undefined
           }
-          items={items}
-          className="shadow-md"
+          items={suggestionItems}
+          className="border border-solid shadow-md border-slate-200"
+          isLoading={isLoading}
         />
       )}
     </div>

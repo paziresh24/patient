@@ -1,7 +1,11 @@
 .wrapper em {
-  @apply text-secondary not-italic;
+  @apply not-italic font-semibold text-secondary;
 }
 
 .title span {
-  @apply !text-xs !text-slate-400 !font-normal;
+  @apply !text-[0.82rem] !text-slate-400 !font-normal;
+}
+
+.title {
+  @apply !block transition-opacity hover:opacity-50 line-clamp-1;
 }

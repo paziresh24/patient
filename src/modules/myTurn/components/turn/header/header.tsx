@@ -1,4 +1,5 @@
 import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
+import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -6,17 +7,15 @@ import ReceiptIcon from '@/components/icons/receipt';
 import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import TrashIcon from '@/components/icons/trash';
-import { redirectToReceoptTurn } from '@/modules/myTurn/functions/redirectToReceoptTurn';
+import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
-import getConfig from 'next/config';
+import { CenterType } from '@/modules/myTurn/types/centerType';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
-const { publicRuntimeConfig } = getConfig();
 
 interface TurnHeaderProps {
   id: string;
@@ -31,17 +30,17 @@ interface TurnHeaderProps {
   nationalCode: string;
   trackingCode: string;
   status: BookStatus;
+  centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { query } = useRouter();
-  const { id, doctorInfo, centerId, trackingCode, nationalCode, status } = props;
-
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
+  const share = useShare();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
   const removeBookApi = useRemoveBook();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
   const removeBookAction = () => {
     removeBookApi.mutate(
@@ -53,8 +52,9 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === 1) {
+            removeBook({ bookId: id });
             setRemoveModal(false);
-            return removeBook({ bookId: id });
+            return;
           }
           toast.error(data.data.message);
         },
@@ -63,23 +63,26 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    redirectToReceoptTurn({
+    window.location.assign(
+      getReceiptTurnUrl({
+        slug: doctorInfo.slug,
+        bookId: id,
+        centerId: centerId,
+      }),
+    );
+  };
+
+  const shareTurn = () => {
+    const link = getReceiptTurnUrl({
       slug: doctorInfo.slug,
       bookId: id,
       centerId: centerId,
     });
-  };
-
-  const shareTurn = () => {
-    const link = `${publicRuntimeConfig.CLINIC_BASE_URL}/booking/${doctorInfo.slug}?id=${id}&center_id=${centerId}`;
-    if (query.isWebView) return window.Android.shareQA(`رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`, link);
-    if (navigator.share)
-      if (navigator.share)
-        navigator.share({
-          title: 'رسید نوبت',
-          text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-          url: link,
-        });
+    share({
+      title: 'رسید نوبت',
+      text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
+      url: link,
+    });
   };
 
   const menuItems = [
@@ -125,7 +128,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       <DropDown
         element={
           <div
-            className="flex items-center justify-center w-8 h-8 absolute left-2 top-3 cursor-pointer"
+            className="absolute flex items-center justify-center w-8 h-8 cursor-pointer left-2 top-3"
             data-testid="turn-drop-down-button"
           >
             <ThreeDotsIcon color="#000" />

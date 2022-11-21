@@ -1,4 +1,5 @@
 import Avatar from '@/common/components/atom/avatar';
+import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
@@ -40,7 +41,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
             </div>
           </a>
         </Link>
-        <hr className="border-slate-200" />
+        <Divider />
         <div className="flex overflow-auto space-s-5 md:space-s-0 md:flex-col">
           <Link href="/patient/appointments">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap">

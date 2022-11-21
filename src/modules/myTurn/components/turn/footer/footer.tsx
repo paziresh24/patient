@@ -1,14 +1,14 @@
+import ChatIcon from '@/common/components/icons/chat';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
-import ChatIcon from '@/components/icons/chat';
 import MegaphoneIcon from '@/components/icons/megaphone';
-import BookingSteps from '@/modules/booking/views';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import getConfig from 'next/config';
 import { useState } from 'react';
 import Queue from '../../queue';
+import { OnlineVisitChannels } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -19,16 +19,12 @@ interface TurnFooterProps {
   centerType: CenterType;
   hasPaging: boolean;
   bookTime: number;
-  whatsapp?: string;
-  centerId: string;
-  userCenterId: string;
-  serverId: string;
+  onlineVisitChannels?: OnlineVisitChannels;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
-  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, whatsapp, centerId, serverId, userCenterId } = props;
+  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, onlineVisitChannels } = props;
   const [queueModal, setQueueModal] = useState(false);
-  const [bookingModal, setBookingModal] = useState(false);
 
   const isBookForToday = isToday(new Date(bookTime));
 
@@ -37,8 +33,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    setBookingModal(true);
-    // window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
+    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -54,16 +49,26 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     </Button>
   );
 
-  const CunsultPrimaryButton = (
-    <Button variant="secondary" size="sm" block={true} onClick={() => window.open(`https://wa.me/98${whatsapp}`)} icon={<ChatIcon />}>
-      گفتگو با پزشک
-    </Button>
-  );
+  const CunsultPrimaryButton = () => {
+    if (!onlineVisitChannels) return null;
+    const channelsText = {
+      igap: 'آی گپ',
+      whatsapp: 'واتس اپ',
+    };
+    const channel = onlineVisitChannels?.[0];
+    if (!channel) return null;
+    return (
+      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel?.channel_link)} icon={<ChatIcon />}>
+        گفتگو با پزشک در {channelsText[channel?.type]}
+      </Button>
+    );
+  };
 
   return (
     <>
-      {status === BookStatus.notVisited && (centerType === CenterType.consult ? CunsultPrimaryButton : ClinicPrimaryButton)}
+      {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
 
+      {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
       {(status === BookStatus.expired ||
         status === BookStatus.visited ||
         status === BookStatus.deleted ||
@@ -83,16 +88,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
       <Modal onClose={setQueueModal} isOpen={queueModal} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
-      </Modal>
-      <Modal noHeader onClose={setBookingModal} isOpen={bookingModal} bodyClassName="!pt-4">
-        <BookingSteps
-          center={{
-            centerId,
-            serviceId: '',
-            userCenterId,
-            serverId,
-          }}
-        />
       </Modal>
     </>
   );

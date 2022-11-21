@@ -5,37 +5,65 @@ import { useRouter } from 'next/router';
 import Text from '@/components/atom/text';
 
 import Button from '@/common/components/atom/button';
+import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useEffect } from 'react';
 
 const ThankYouPage = () => {
   const router = useRouter();
   const userData = useUserInfoStore(state => state.info);
   const { isLoading } = useGetData();
+  const profileData = useProfileDataStore(state => state.data);
+  const sendPageViewEvent = usePageViewEvent();
+
+  useEffect(() => {
+    !isLoading &&
+      sendPageViewEvent({
+        group: 'contribute',
+        type: 'thankyou',
+        data: {
+          doctor: {
+            id: profileData.id,
+            server_id: profileData.server_id,
+            name: profileData.name,
+            family: profileData.family,
+            slug: profileData.slug,
+            expertise: profileData.expertises?.[0].expertise?.name,
+            group_expertises: profileData.group_expertises?.[0]?.name,
+          },
+          center: {
+            city: profileData.centers?.map(center => center.city),
+            province: profileData.centers?.map(center => center.province),
+          },
+        },
+      });
+  }, [isLoading]);
 
   const handleBackToMenu = () => {
     location.replace(`/dr/${router.query.slug}`);
   };
 
   return (
-    <div className="h-screen bg-white overflow-auto">
+    <div className="h-screen overflow-auto bg-white">
       <Head>
         <title>مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی</title>
       </Head>
 
       <main
-        className="md:max-w-md mx-auto flex flex-col justify-between p-5 pt-16"
+        className="flex flex-col justify-between p-5 pt-16 mx-auto md:max-w-md"
         style={{
           background: 'linear-gradient(rgb(244, 248, 251) 62.04%, #fffffff7 78.36%)',
         }}
       >
-        <div className="flex flex-col space-y-5 justify-center">
+        <div className="flex flex-col justify-center space-y-5">
           <img src={finalHero.src} alt="" className="self-center" />
           <Text fontWeight="bold" className="text-center text-green-600">
             {isLoading ? '...' : userData.name} عزیز اطلاعات ارزشمند شما را دریافت کردیم.
           </Text>
-          <div className="bg-white flex flex-col items-center space-y-3 justify-center p-5 rounded-3xl">
+          <div className="flex flex-col items-center justify-center p-5 space-y-3 bg-white rounded-3xl">
             <Text fontSize="sm" fontWeight="medium" className="text-justify">
               ما پر شور هستیم تا با کمک شما بتوانیم برای سایر بیماران دسترسی آسان و مطمئنی به پزشکان مختلف ایجاد کنیم . این یک مسئولیت
               اجتماعی مهم بود که شما به نحو احسن انجام دادید و به ارتقای کیفی و بهبود زندگی افراد جامعه کمک کردید.

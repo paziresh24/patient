@@ -1,28 +1,53 @@
 /* eslint-disable @next/next/no-img-element */
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-
-import Text from '@/components/atom/text';
-
 import Button from '@/common/components/atom/button';
 import Checkbox from '@/common/components/atom/checkbox';
 import CloseIcon from '@/common/components/icons/close';
+import DislikeIcon from '@/common/components/icons/dislike';
+import LikeIcon from '@/common/components/icons/like';
+import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
+import Text from '@/components/atom/text';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
-import { useState } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
   const router = useRouter();
   const { isLoading } = useGetData();
   const [isChecked, setIsChecked] = useState(false);
   const profileData = useProfileDataStore(state => state.data);
+  const sendPageViewEvent = usePageViewEvent();
+
+  useEffect(() => {
+    !isLoading &&
+      sendPageViewEvent({
+        group: 'contribute',
+        type: 'onboarding',
+        data: {
+          doctor: {
+            id: profileData.id,
+            name: profileData.name,
+            family: profileData.family,
+            slug: profileData.slug,
+            server_id: profileData.server_id,
+            expertise: profileData.expertises?.[0].expertise?.name,
+            group_expertises: profileData.group_expertises?.[0]?.name,
+          },
+          center: {
+            city: profileData.centers?.map(center => center.city),
+            province: profileData.centers?.map(center => center.province),
+          },
+        },
+      });
+  }, [isLoading]);
 
   const handleNextPage = () => {
     router.push({
       pathname: '/patient/contribute/menu',
-      query: { slug: router.query?.slug },
+      query: { ...router.query },
     });
   };
 
@@ -37,32 +62,36 @@ const Home = () => {
         <title>مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی</title>
       </Head>
 
-      <main className="md:max-w-md mx-auto flex flex-col items-center justify-between p-5 pb-36">
+      <main className="flex flex-col items-center justify-between p-5 mx-auto md:max-w-md pb-36">
         <div className="flex flex-col space-y-5">
           <CloseIcon onClick={router.back} />
 
-          <Text className="!mt-11 mx-auto text-[#1B268D]" fontSize="3xl" fontWeight="bold">
-            اینجا کجاست؟
-          </Text>
-          <Text fontWeight="medium" fontSize="sm" className="text-center line-height-4 text-slate-600 !leading-7 ">
-            در اینجا شما می توانید در صورت عدم ثبت و یا نادرست بودن اطلاعات پزشک، با گزارش شماره تلفن و آدرس صحیح، به بیماران دیگر کمک کنید
-            تا دسترسی راحت‌تری به پزشک‌‌شان داشته باشند.
+          <Text className="!mt-11 mx-auto text-[#1B268D] text-center" fontSize="xl" fontWeight="bold">
+            به بقیه بیماران برای یافتن پزشک کمک کنید.
           </Text>
 
-          <div className="space-s-2 text-center">
-            <Text fontSize="sm" fontWeight="medium" className="text-center text-primary leading-7">
-              این همکاری شما، باعث کاهش زمان درد و رنج سایر بیماران میشود.
-            </Text>
-            <img src={heart.src} alt="" className="inline-block" width={25} />
-          </div>
+          <Text fontWeight="medium" fontSize="sm" className="text-right	 line-height-4 text-slate-600 !leading-7 flex">
+            اگر از نظر شما آدرس یا شماره تلفن مطب پزشک صحیح است به ما تایید دهید.
+            <div>
+              <LikeIcon />
+            </div>
+          </Text>
+          <Text fontWeight="medium" fontSize="sm" className="text-right	 line-height-4 text-slate-600 !leading-7 !mt-0  flex">
+            در غیر این صورت شماره تماس و آدرس صحیح پزشک را اعلام کنید.
+            <div>
+              <DislikeIcon className="mt-2" />
+            </div>
+          </Text>
+
           <img src={heroVector.src} alt="پذیرش24-درمان" className="self-center" />
 
           <Text fontSize="sm" fontWeight="medium" className="text-center text-slate-600">
-            پیشاپیش، از همدلی و همراهی شما صمیمانه سپاسگزاریم.
+            از صمیم قلب از کمک شما ممنونیم.
+            <img src={heart.src} alt="" className="inline-block mr-2" width={25} />
           </Text>
         </div>
 
-        <div className="flex flex-col gap-3 md:max-w-md fixed bottom-0 w-full p-5">
+        <div className="fixed bottom-0 flex flex-col w-full gap-3 p-5 md:max-w-md">
           <Checkbox
             label="متوجه شدم "
             className="flex justify-center mb-2"
@@ -70,7 +99,7 @@ const Home = () => {
             checked={isChecked}
             onChange={() => setIsChecked(!isChecked)}
           />
-          <div className="flex justify-between space-s-3 w-full">
+          <div className="flex justify-between w-full space-s-3">
             <Button disabled={!isChecked} variant="primary" onClick={handleNextPage} loading={isLoading} className="flex-1">
               قصد کمک دارم
             </Button>

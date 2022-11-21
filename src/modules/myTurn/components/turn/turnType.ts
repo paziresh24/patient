@@ -1,16 +1,17 @@
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '../../types/paymentStatus';
 
 export interface TurnProps {
   status: BookStatus;
+  paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
   centerInfo: {
     centerId: string;
     centerType: string;
     hasPaging: boolean;
-    userCenterId: string;
-    serverId: string;
+    activePaymentStatus: boolean;
   };
   doctorInfo: {
     avatar: string;
@@ -18,7 +19,7 @@ export interface TurnProps {
     lastName: string;
     expertise?: string;
     slug: string;
-    whatsapp?: string;
+    onlineVisitChannels?: OnlineVisitChannels;
   };
   patientInfo: {
     nationalCode: string;
@@ -40,3 +41,9 @@ export interface TurnProps {
     pdf?: string;
   };
 }
+
+export type OnlineVisitChannels = {
+  type: 'igap' | 'whatsapp';
+  channel: string;
+  channel_link: string;
+}[];

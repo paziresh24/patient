@@ -1,21 +1,22 @@
+import Divider from '@/common/components/atom/divider';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import { MouseEventHandler } from 'react';
+import useTranslation from 'next-translate/useTranslation';
+import dynamic from 'next/dynamic';
 import { useSearchStore } from '../../store/search';
-import CitySelect from './suggestionAtoms/citySelect';
-import { SearchInput } from './suggestionAtoms/searchInput';
+import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
+const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
-interface SearchBarProps {
+interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
-  onClickSearchInput?: MouseEventHandler<HTMLInputElement>;
+  onClickSearchInput?: () => void;
   onClickBackButton?: () => void;
   onEnter?: (text: string) => void;
   className?: string | object;
 }
 
 export const SearchBar = (props: SearchBarProps) => {
-  const router = useRouter();
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className } = props;
+  const { t } = useTranslation('search');
+  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
@@ -29,17 +30,19 @@ export const SearchBar = (props: SearchBarProps) => {
       )}
     >
       <SearchInput
-        placeholder="نام بیماری، تخصص، پزشک، مرکز درمانی و ..."
+        placeholder={t('searchBarPlaceHolder')}
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
+        onClear={() => setUserSearchValue('')}
         value={userSearchValue}
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
         onKeyDown={e => e.keyCode === 13 && onEnter && onEnter(e.currentTarget?.value)}
+        {...rest}
       />
-      <hr className="border border-solid border-slate-200 h-7" />
-      <CitySelect city={city} setCity={setCity} />
+      <Divider orientation="vertical" height="2rem" />
+      <CitySelect onChange={() => onClickSearchInput && onClickSearchInput()} city={city} setCity={setCity} key={city.name} />
     </div>
   );
 };

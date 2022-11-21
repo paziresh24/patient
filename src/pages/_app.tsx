@@ -1,6 +1,6 @@
 import Provider from '@/components/layouts/provider';
 import type { NextPage } from 'next';
-import { DefaultSeo, OrganizationJsonLd, SiteLinksSearchBoxJsonLd } from 'next-seo';
+import { DefaultSeo, OrganizationJsonLd } from 'next-seo';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
 import SEO from '../../next-seo.config';
@@ -21,7 +21,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <Provider>
       {getLayout(
         <>
-          <DefaultSeo {...SEO} />
           <OrganizationJsonLd
             name="paziresh24"
             alternateName="پذیرش24"
@@ -36,8 +35,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               },
             ]}
             sameAs={[
-              'https://www.facebook.com/paziresh24',
-              'https://twitter.com/paziresh24',
+              'https://www.facebook.com/paziresh24com/',
+              'https://twitter.com/paziresh24/',
               'https://www.instagram.com/paziresh24/',
               'https://www.linkedin.com/company/paziresh24/',
               'https://www.paziresh24.com/home/about/',
@@ -62,15 +61,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               },
             ]}
           />
-          <SiteLinksSearchBoxJsonLd
-            url="https://www.paziresh24.com/"
-            potentialActions={[
-              {
-                target: 'https://www.paziresh24.com/s/?text={search_term_string}',
-                queryInput: 'required name=search_term_string',
-              },
-            ]}
-          />
+          <DefaultSeo {...SEO} />
           <Component {...pageProps} />
         </>,
       )}

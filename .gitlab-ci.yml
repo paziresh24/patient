@@ -71,7 +71,6 @@ deploy develop:
   only:
     - develop
   script:
-    - apk add --update bash openssh sshpass wget
     - ansible-playbook ./ansible/playbook_develop.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
 
 
@@ -81,7 +80,6 @@ deploy staging:
   only:
     - master
   script:
-    - apk add --update bash openssh sshpass wget
     - ansible-playbook ./ansible/playbook_staging.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
 
 
@@ -90,6 +88,5 @@ deploy production:
   stage: deploy
   when: manual
   script:
-    - apk add --update bash openssh sshpass wget
     - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
 

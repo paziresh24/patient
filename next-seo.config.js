@@ -1,15 +1,11 @@
 /* eslint-disable import/no-anonymous-default-export */
 import logo from './public/logos/primary.svg';
 export default {
-  'titleTemplate': '%s | پذیرش24',
-  'description':
+  titleTemplate: '%s | پذیرش24',
+  description:
     'پذیرش24، دکتر آنلاین و نوبت دهی سریع از بهترین پزشکان ، درمانگاه ها ، کلینیک ها و بیمارستان های کشور.از طریق این سایت و یا اپلیکیشن پذیرش24 اینترنتی با جستجوی دکتر مورد نظر ، مشاوره تلفنی و یا نوبت بگیرید.',
-  'content-language': 'fa',
-  'Language': 'fa',
-  'owner': 'پذیرش24',
-  'autor': 'پذیرش24',
-  'openGraph': {
-    url: 'https://www.paziresh24.com',
+  openGraph: {
+    url: 'https://www.paziresh24.com/',
     images: [
       {
         url: `https://www.paziresh24.com${logo.src}`,
@@ -21,12 +17,12 @@ export default {
     type: 'website',
     locale: 'fa_IR',
   },
-  'twitter': {
+  twitter: {
     handle: 'پذیرش24',
     site: 'پذیرش24',
     cardType: 'summary',
   },
-  'additionalMetaTags': [
+  additionalMetaTags: [
     {
       property: 'msapplication-TileColor',
       content: '#2d89ef',
@@ -41,10 +37,39 @@ export default {
     },
     {
       property: 'application-name',
-      content: 'پذیرش۲۴',
+      content: 'پذیرش24',
+    },
+    {
+      property: 'owner',
+      content: 'پذیرش24',
+    },
+    {
+      property: 'autor',
+      content: 'پذیرش24',
+    },
+    {
+      property: 'Language',
+      content: 'fa',
+    },
+    {
+      property: 'content-language',
+      content: 'fa',
+    },
+    {
+      property: 'dc.description',
+      content:
+        'پذیرش24، دکتر آنلاین و نوبت دهی سریع از بهترین پزشکان ، درمانگاه ها ، کلینیک ها و بیمارستان های کشور.از طریق این سایت و یا اپلیکیشن پذیرش24 اینترنتی با جستجوی دکتر مورد نظر ، مشاوره تلفنی و یا نوبت بگیرید.',
+    },
+    {
+      property: 'dc.type',
+      content: 'website',
+    },
+    {
+      property: 'dc.language',
+      content: 'fa-ir',
     },
   ],
-  'additionalLinkTags': [
+  additionalLinkTags: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     {
       rel: 'icon',

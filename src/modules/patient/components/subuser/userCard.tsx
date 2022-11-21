@@ -6,7 +6,6 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
-import useResponsive from '@/common/hooks/useResponsive';
 import { memo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { PatinetProfileForm } from '../../views/form';
@@ -22,7 +21,6 @@ interface UserCardProps {
 }
 
 export const UserCard = memo((props: UserCardProps) => {
-  const { isMobile } = useResponsive();
   const { userId, name, family, cell, nationalCode, gender, refetchData } = props;
   const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
   const removeSubuser = useRemoveSubuser();
@@ -62,17 +60,17 @@ export const UserCard = memo((props: UserCardProps) => {
   };
   return (
     <>
-      <div className="p-5 px-0 flex-col space-y-5 md:space-y-0 md:flex-row border-b border-solid border-slate-100 flex justify-between">
+      <div className="flex flex-col justify-between p-5 px-0 space-y-5 border-b border-solid md:space-y-0 md:flex-row border-slate-100">
         <div className="flex flex-col space-y-1">
           <Text fontWeight="semiBold">
             {name} {family}
           </Text>
           <div className="flex space-s-3">
-            <Text fontSize="xs">شماره موبایل: 0{cell}</Text>
+            <Text fontSize="xs">شماره موبایل: {cell}</Text>
             <Text fontSize="xs">کدملی: {nationalCode}</Text>
           </div>
         </div>
-        <div className="flex space-s-2 self-end">
+        <div className="flex self-end space-s-2">
           <Button onClick={handleOpenEditUserModal} size="sm" variant="secondary" icon={<EditIcon />}>
             ویرایش
           </Button>

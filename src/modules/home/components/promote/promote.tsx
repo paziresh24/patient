@@ -1,13 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
+import useTranslation from 'next-translate/useTranslation';
+import Image from 'next/future/image';
 import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {
+  const { t } = useTranslation('home');
+
   return (
-    <div className="w-full p-4 mx-auto md:hidden">
+    <div className="w-full p-4 mx-auto">
       <div
         className="bg-[length:50rem] bg-no-repeat bg-brand rounded-xl py-14 px-4"
         style={{
@@ -16,25 +19,17 @@ const Promote = () => {
         }}
       >
         <div className="flex flex-col items-center">
-          <div className="order-1 text-center flex-1 flex justify-center items-center">
-            <div className="mt-6 w-full text-slate-50">
+          <div className="flex items-center justify-center flex-1 order-1 text-center">
+            <div className="w-full mt-6 text-slate-50">
               <Text as="h2" fontSize="lg" fontWeight="bold" className="mb-6">
-                نزدیک‌ترین پزشک، گوشی شماست !
+                {t('promoteTitle')}
               </Text>
-              <Text as="p" fontSize="sm" className="mb-12">
-                از طریق{' '}
-                <a href="https://www.paziresh24.com/app" title="سوپر اپلیکیشن پذیرش 24">
-                  سوپر اپلیکیشن پذیرش 24
-                </a>{' '}
-                به هزاران پزشک متخصص ایرانی دسترسی پیدا کنید و به راحتی{' '}
-                <a href="http://paziresh24.com/consult?refafname=website-homecta-moshavere-dlapp" title="مشاوره آنلاین">
-                  مشاوره آنلاین
-                </a>
-                دریافت کنید یا در صورت تمایل نوبت حضوری آن پزشک را رزرو کنید
+              <Text as="p" fontSize="sm" className="mb-12 leading-6">
+                {t('promoteDescription')}
               </Text>
-              <div className="flex flex-col gap-5 items-center justify-center">
-                <a href="https://www.paziresh24.com/app" title="دانلود رایگان اپلیکیشن پذیرش24">
-                  <Button className="bg-slate-50  text-slate-700 border-none">دانلود رایگان اپلیکیشن پذیرش24</Button>
+              <div className="flex flex-col items-center justify-center gap-5">
+                <a href="/app" title={t('promoteDownloadButton')}>
+                  <Button className="border-none bg-slate-50 text-slate-700">{t('promoteDownloadButton')}</Button>
                 </a>
                 <div className="flex flex-row gap-4">
                   <Apple />
@@ -43,8 +38,8 @@ const Promote = () => {
               </div>
             </div>
           </div>
-          <div className="order-none flex-1 ">
-            <img src={promoteImage.src} className=" block mx-auto " alt="promote-image" width="270" height="300" loading="lazy" />
+          <div className="flex-1 order-none ">
+            <Image src={promoteImage.src} className="block mx-auto " alt="promote-image" width="270" height="300" />
           </div>
         </div>
       </div>

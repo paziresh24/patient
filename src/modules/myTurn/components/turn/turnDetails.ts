@@ -2,6 +2,8 @@ import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStamp
 import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PAYMENT_STATUS_TRANSLATION } from '../../constants/paymentStatusTranslation';
+import { PaymentStatus } from '../../types/paymentStatus';
 
 interface TurnDetailsDataParam {
   data: {
@@ -12,10 +14,12 @@ interface TurnDetailsDataParam {
     patientName: string;
   };
   status: BookStatus;
+  paymentStatus: PaymentStatus;
+  activePaymentStatus: Boolean;
   centerType: CenterType;
 }
 
-export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataParam) => {
+export const turnDetailsData = ({ data, status, centerType, paymentStatus, activePaymentStatus }: TurnDetailsDataParam) => {
   const { bookTime, trackingCode, waitingTime, centerName, patientName } = data;
 
   const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
@@ -42,6 +46,12 @@ export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataPar
     },
     {
       id: 3,
+      name: 'وضعیت پرداخت',
+      value: PAYMENT_STATUS_TRANSLATION[paymentStatus],
+      shouldShow: activePaymentStatus,
+    },
+    {
+      id: 4,
       name: 'کد پیگیری',
       value: trackingCode,
       shouldShow: [
@@ -54,13 +64,13 @@ export const turnDetailsData = ({ data, status, centerType }: TurnDetailsDataPar
       ].includes(status),
     },
     {
-      id: 4,
+      id: 5,
       name: 'نام مرکز',
       value: centerName,
       shouldShow: centerType === CenterType.hospital,
     },
     {
-      id: 5,
+      id: 6,
       name: `میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
       value: waitingTime,
       shouldShow:
