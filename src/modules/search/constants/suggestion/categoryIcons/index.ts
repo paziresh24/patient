@@ -1,10 +1,13 @@
 import { CategoryIcon } from './icons/category';
+import { ClockIcon } from './icons/clock';
 import { HistoryIcon } from './icons/history';
 import { HospitalIcon } from './icons/hospital';
 import { IllnessIcon } from './icons/illness';
 import { ListIcon } from './icons/list';
 import { MostCommonIcon } from './icons/mostCommon';
 import { SearchIcon } from './icons/search';
+import { SmileIcon } from './icons/smile';
+import { StarIcon } from './icons/star';
 import { TopIcon } from './icons/top';
 
 export const categoryIcons = {
@@ -16,4 +19,7 @@ export const categoryIcons = {
   'search-icon': SearchIcon,
   'most_common': MostCommonIcon,
   'illness': IllnessIcon,
+  'star-icon': StarIcon,
+  'smile-icon': SmileIcon,
+  'clock-icon': ClockIcon,
 };

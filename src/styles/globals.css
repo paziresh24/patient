@@ -147,12 +147,12 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #dfe5eb;
+  background: #e8ecf1;
   border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #9ba3af;
+  background: #8995a7;
   border-radius: 100px;
 }
 
@@ -165,4 +165,8 @@ body {
 
 .leaflet-control-zoom {
   display: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  @apply w-5 h-5 bg-white border-[6px] border-solid rounded-full appearance-none pointer-events-auto border-primary cursor-pointer;
 }

@@ -1,30 +1,32 @@
-import Link from 'next/link';
-import { LiHTMLAttributes, ReactNode } from 'react';
+import clsx from 'clsx';
+import Link, { LinkProps } from 'next/link';
+import { ReactNode } from 'react';
 import Text from '../text';
 
-interface MenuItemProps extends LiHTMLAttributes<HTMLLIElement> {
+interface MenuItemProps extends Omit<LinkProps, 'href'> {
   link?: string;
   icon?: ReactNode;
   name: string;
   children?: ReactNode;
+  className?: string;
 }
 
 export const MenuItem = (props: MenuItemProps) => {
-  const { link = '', name, icon, children, ...rest } = props;
+  const { link = '', name, icon, children, className, ...rest } = props;
+
+  const Component = link ? Link : 'div';
 
   return (
-    <li {...rest}>
-      <Link href={link} prefetch={false}>
-        <a className="py-3 flex items-center justify-between relative">
-          <div className="flex items-center space-s-3 whitespace-nowrap">
+    <li className={clsx('font-medium', className)}>
+      <Component href={link} prefetch={false} {...rest}>
+        <a className="relative flex items-center justify-between py-3" onClick={rest.onClick}>
+          <div className="flex items-center space-s-2 whitespace-nowrap">
             {icon}
-            <Text fontSize="sm" fontWeight="medium">
-              {name}
-            </Text>
+            <Text fontSize="sm">{name}</Text>
           </div>
           {children}
         </a>
-      </Link>
+      </Component>
     </li>
   );
 };

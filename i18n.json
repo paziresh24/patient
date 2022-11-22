@@ -4,6 +4,7 @@
   "localeDetection": false,
   "pages": {
     "*": ["common"],
-    "/": ["home", "search"]
+    "/": ["home", "search"],
+    "/s/[[...params]]": ["search"]
   }
 }

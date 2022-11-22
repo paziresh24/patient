@@ -9,9 +9,11 @@ export const RecentSearch = () => {
   const { t } = useTranslation('search');
   const { recent } = useRecentSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
 
   const handleChangeSearchInput = (text: string) => {
     setUserSearchValue(text);
+    setIsOpenSuggestion(true);
   };
 
   if (!recent.length) return <div className="h-[68px] md:h-6"></div>;

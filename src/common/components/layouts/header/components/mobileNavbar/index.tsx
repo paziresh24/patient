@@ -3,6 +3,7 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import Logo from '@/common/components/atom/logo';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from '../../data/links';
@@ -64,9 +65,11 @@ const MobileNavbar = (props: MobileNavbarProps) => {
             <HumbuggerMenu />
           </div>
           {shouldShowBrand && (
-            <a href="/">
-              <Logo fontSize="sm" width={32} height={32} />
-            </a>
+            <Link href="/" shallow>
+              <a>
+                <Logo fontSize="sm" width={32} height={32} />
+              </a>
+            </Link>
           )}
         </div>
         <UserProfile />

@@ -5,13 +5,13 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
 import LocationIcon from '@/common/components/icons/location';
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
 
 interface CitySelectProps {
   city: locationParam;
-  setCity: (city: locationParam) => void;
-  onChange: () => void;
+  onChange: (value: any) => void;
 }
 
 type locationParam = {
@@ -22,7 +22,7 @@ type locationParam = {
 };
 
 export const CitySelect = (props: CitySelectProps) => {
-  const { city, setCity, onChange } = props;
+  const { city, onChange } = props;
   const [isOpen, setIsOpen] = useState(false);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
@@ -34,6 +34,7 @@ export const CitySelect = (props: CitySelectProps) => {
       name: string;
       id: string;
       isProvince: boolean;
+      is_capital?: '1' | '0';
     }[]
   >([]);
 
@@ -52,13 +53,12 @@ export const CitySelect = (props: CitySelectProps) => {
   };
 
   const handleClickCity = (cityId: string) => {
-    setCity({
+    onChange({
       ...citiesData.current.find(item => item.id === cityId),
       id: cityId,
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
-      en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? '',
+      en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? 'ir',
     });
-    onChange();
     setIsOpen(false);
   };
 
@@ -73,9 +73,9 @@ export const CitySelect = (props: CitySelectProps) => {
         variant="text"
         icon={<LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />}
         onClick={() => setIsOpen(true)}
-        className="!text-slate-700 !px-2 whitespace-nowrap"
+        className="!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg"
       >
-        <Text fontSize="sm">{city.name}</Text>
+        <Text fontSize="sm">{city?.name}</Text>
       </Button>
       <Modal title="انتخاب استان/شهر" fullScreen isOpen={isOpen} onClose={setIsOpen}>
         <div className="flex flex-col h-full space-y-3">
@@ -88,7 +88,7 @@ export const CitySelect = (props: CitySelectProps) => {
                 size="sm"
                 className="!border-slate-300 font-medium"
               >
-                {city.name}
+                {city?.name}
               </Button>
             ))}
           </div>
@@ -117,7 +117,13 @@ export const CitySelect = (props: CitySelectProps) => {
                   className="flex items-center justify-between p-3 font-medium border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50"
                   onClick={() => (city.isProvince ? handleClickProvince(city.id) : handleClickCity(city.id))}
                 >
-                  <Text>{city.name}</Text>
+                  <Text
+                    className={clsx({
+                      'font-bold': city.is_capital === '1',
+                    })}
+                  >
+                    {city?.name}
+                  </Text>
                   <ChevronIcon dir="left" />
                 </div>
               ))}

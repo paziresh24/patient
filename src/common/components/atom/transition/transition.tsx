@@ -5,7 +5,7 @@ interface TranstionProps extends HTMLAttributes<HTMLDivElement> {
   match: boolean;
   children: ReactNode;
   as?: 'div' | 'li' | 'ul' | 'span';
-  animation?: 'bottom' | 'left' | 'fade';
+  animation?: 'bottom' | 'left' | 'right' | 'fade';
   duration?: number;
   delay?: number;
 }
@@ -22,6 +22,11 @@ export const Transition = (props: TranstionProps) => {
       leave: { opacity: 0, x: 100 },
       enter: { opacity: 1, x: 0, delay: delay },
       from: { opacity: 0, x: 100 },
+    },
+    right: {
+      leave: { opacity: 0, x: -100 },
+      enter: { opacity: 1, x: 0, delay: delay },
+      from: { opacity: 0, x: -100 },
     },
     fade: {
       leave: { opacity: 0 },

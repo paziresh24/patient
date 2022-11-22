@@ -65,26 +65,26 @@ export const Modal = (props: ModalProps) => {
       <Transition
         match={isOpen}
         animation="fade"
-        className="fixed top-0 bottom-0 left-0 right-0 flex items-end pt-8 overflow-auto no-scroll md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-800 bg-opacity-30"
+        className="fixed top-0 bottom-0 left-0 right-0 flex items-end md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-900 bg-opacity-60"
         onClick={handleClose}
       >
         <Transition
           match={isOpen}
-          animation="bottom"
+          animation={fullScreen && isMobile ? 'right' : 'bottom'}
           duration={300}
-          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:rounded-lg md:w-[28rem]  max-h-screen overflow-auto', {
-            'h-full overflow-hidden': fullScreen,
+          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto', {
+            'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
           })}
           onClick={e => e.stopPropagation()}
         >
-          {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-200" />}
+          {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-300" />}
           {!noHeader && (
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100">
               <span className="font-bold line-clamp-1">{title}</span>
               <CloseIcon onClick={handleClose} />
             </div>
           )}
-          <div className={clsx('p-6 pt-0 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
+          <div className={clsx('p-5 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>

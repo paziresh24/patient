@@ -1,9 +1,11 @@
 import ChevronIcon from '@/common/components/icons/chevron';
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 interface MegaMenuContentProps {
   items: Item[];
+  onClose: () => void;
 }
 
 type Item = {
@@ -12,7 +14,7 @@ type Item = {
   sub_menu?: Item[];
 };
 
-const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
+const MegaMenuContent = ({ items, onClose }: MegaMenuContentProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);
   const [isEnded, setIsEnded] = useState(false);
@@ -42,21 +44,25 @@ const MegaMenuContent = ({ items }: MegaMenuContentProps) => {
         {items.map((menu, index) => {
           return (
             <div key={index}>
-              <a
-                href={menu.link}
-                className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
-                  'font-bold': !!menu.sub_menu,
-                })}
-              >
-                {menu.title}
-              </a>
+              <Link href={menu.link ?? '#'}>
+                <a
+                  className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
+                    'font-bold': !!menu.sub_menu,
+                  })}
+                  onClick={onClose}
+                >
+                  {menu.title}
+                </a>
+              </Link>
 
               {menu.sub_menu &&
                 menu.sub_menu.map((item, index) => {
                   return (
-                    <a key={index} href={item.link} className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5">
-                      {item.title}
-                    </a>
+                    <Link key={index} href={item.link ?? '#'}>
+                      <a onClick={onClose} className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5">
+                        {item.title}
+                      </a>
+                    </Link>
                   );
                 })}
             </div>
