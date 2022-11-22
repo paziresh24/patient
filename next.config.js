@@ -21,7 +21,7 @@ const nextConfig = {
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
   },
   images: {
-    domains: ['www.paziresh24.com'],
+    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
 };
 

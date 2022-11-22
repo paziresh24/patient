@@ -81,7 +81,7 @@ export const SearchCard = (props: SearchCardProps) => {
           <div className="flex items-start justify-between">
             <Link href={baseInfo.url}>
               <a className="w-4/5" onClick={sendEventWhenClick}>
-                <Text fontWeight="bold" className="text-base md:text-lg">
+                <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
                   {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
                 </Text>
               </a>

@@ -13,7 +13,7 @@ export const Onboard = () => {
 
   return (
     <div className="flex flex-col space-y-4">
-      <Text fontSize="sm" fontWeight="semiBold">
+      <Text as="h2" fontSize="sm" fontWeight="semiBold">
         {isConsult ? 'چگونه مشاوره آنلاین بگیرم؟' : 'چطور با پذیرش24 درمان شوم؟'}
       </Text>
       <div className="flex flex-col p-4 pr-12 space-y-3 bg-white rounded-lg md:space-s-24 md:flex-row">
