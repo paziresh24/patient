@@ -17,8 +17,12 @@ export const SearchSeoBox = () => {
       <Onboard />
       {!query.isWebView && (
         <div className="flex flex-col !mt-5 space-y-2">
-          <Text fontWeight="bold">{seoInfo?.heading}</Text>
-          <Text fontSize="sm">{seoInfo?.description}</Text>
+          <Text as="h1" fontWeight="bold">
+            {seoInfo?.heading}
+          </Text>
+          <Text as="p" fontSize="sm">
+            {seoInfo?.description}
+          </Text>
           <Accordion title="درباره این صفحه" className="!bg-white shadow-card !mt-5">
             <div className="text-justify text-sm [&>h2]:font-bold" dangerouslySetInnerHTML={{ __html: seoInfo?.seo_box ?? '' }} />
             {footers?.map((item: any, index: any) => (
