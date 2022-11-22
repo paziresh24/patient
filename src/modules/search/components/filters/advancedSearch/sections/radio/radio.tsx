@@ -2,18 +2,17 @@ import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { addCommas } from '@persian-tools/persian-tools';
 
-export const RadioFilter = ({
-  items,
-  name,
-  title,
-  onChange,
-}: {
+interface RadioFilterProps {
   items: any[];
   name: string;
   title?: string;
   onChange?: (value: any) => void;
-}) => {
+}
+
+export const RadioFilter = (props: RadioFilterProps) => {
+  const { items, name, title, onChange } = props;
   const { handleChange, filters } = useFilterChange();
+
   return (
     <div className="flex flex-col space-y-2">
       {title && (

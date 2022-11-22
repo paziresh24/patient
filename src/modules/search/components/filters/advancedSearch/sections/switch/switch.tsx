@@ -2,7 +2,13 @@ import Switch from '@/common/components/atom/switch';
 import Text from '@/common/components/atom/text';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 
-export const SwitchFilter = ({ title, name }: { title: string; name: string }) => {
+interface SwitchFilterProps {
+  title: string;
+  name: string;
+}
+
+export const SwitchFilter = (props: SwitchFilterProps) => {
+  const { title, name } = props;
   const { handleChange, filters } = useFilterChange();
 
   return (
