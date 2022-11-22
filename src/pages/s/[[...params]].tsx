@@ -20,7 +20,7 @@ import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { addCommas } from '@persian-tools/persian-tools';
 import axios from 'axios';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
@@ -97,7 +97,7 @@ Search.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
 
-export const getServerSideProps: GetServerSideProps = withCSR(async (context: { query: { [x: string]: any; params: any }; res: any }) => {
+export const getServerSideProps: GetServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   const { params, ...query } = context.query;
 
   if (params?.length === 1 && (params as string[])?.[0] === 'ir') {
