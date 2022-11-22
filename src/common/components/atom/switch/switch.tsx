@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useState } from 'react';
 
 export type SwitchProps = InputHTMLAttributes<HTMLInputElement>;
-// eslint-disable-next-line react/display-name
+
 export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) => {
   const { className, onChange, ...checkBoxProps } = props;
   const [isChecked, setIsChecked] = useState(checkBoxProps.defaultChecked);

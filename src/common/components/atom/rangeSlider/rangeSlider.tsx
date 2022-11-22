@@ -4,7 +4,7 @@ export interface RangeSliderProps extends Omit<InputHTMLAttributes<HTMLInputElem
   onChange: (value: [number, number]) => void;
   value: [number, number];
 }
-// eslint-disable-next-line react/display-name
+
 export const RangeSlider = forwardRef((props: RangeSliderProps, ref: ForwardedRef<any>) => {
   const { min, max, step, onChange, value, ...rest } = props;
   const [minValue, setMinValue] = useState(value?.[0] ?? 0);
@@ -12,29 +12,26 @@ export const RangeSlider = forwardRef((props: RangeSliderProps, ref: ForwardedRe
   const progressRef = useRef<HTMLDivElement>(null);
 
   const handleMax = (e: ChangeEvent<HTMLInputElement>) => {
-    if (maxValue - minValue >= 0 && maxValue <= +max!) {
-      if (parseInt(e.target.value) > minValue) {
-        setMaxValue(parseInt(e.target.value));
-        onChange && onChange([minValue, parseInt(e.target.value)]);
-      }
-    } else {
-      if (parseInt(e.target.value) > maxValue) {
-        setMaxValue(parseInt(e.target.value));
-        onChange && onChange([minValue, parseInt(e.target.value)]);
-      }
+    if (maxValue - minValue >= 0 && maxValue <= +max! && parseInt(e.target.value) > minValue) {
+      setMaxValue(parseInt(e.target.value));
+      onChange && onChange([minValue, parseInt(e.target.value)]);
+      return;
+    }
+    if (parseInt(e.target.value) > maxValue) {
+      setMaxValue(parseInt(e.target.value));
+      onChange && onChange([minValue, parseInt(e.target.value)]);
     }
   };
+
   const handleMin = (e: ChangeEvent<HTMLInputElement>) => {
-    if (maxValue - minValue >= 0 && maxValue <= +max!) {
-      if (parseInt(e.target.value) < maxValue) {
-        setMinValue(parseInt(e.target.value));
-        onChange && onChange([parseInt(e.target.value), maxValue]);
-      }
-    } else {
-      if (parseInt(e.target.value) < minValue) {
-        setMinValue(parseInt(e.target.value));
-        onChange && onChange([parseInt(e.target.value), maxValue]);
-      }
+    if (maxValue - minValue >= 0 && maxValue <= +max! && parseInt(e.target.value) < maxValue) {
+      setMinValue(parseInt(e.target.value));
+      onChange && onChange([parseInt(e.target.value), maxValue]);
+      return;
+    }
+    if (parseInt(e.target.value) < minValue) {
+      setMinValue(parseInt(e.target.value));
+      onChange && onChange([parseInt(e.target.value), maxValue]);
     }
   };
 
