@@ -51,7 +51,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg md:p-5 md:space-y-5 md:bg-white md:shadow-card">
+    <div className="flex flex-col overflow-hidden rounded-full md:rounded-lg md:p-5 md:space-y-5 md:bg-white md:shadow-card">
       <div className="items-center justify-between hidden md:flex">
         <Text fontWeight="bold">فیلتر های انتخاب شده</Text>
         <Button
@@ -63,7 +63,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
           حذف
         </Button>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex overflow-auto no-scroll md:flex-wrap gap-2">
         {isLoading && <Loading />}
         {!isLoading &&
           Object.entries(selectedFilters).map(([name, value]) => (

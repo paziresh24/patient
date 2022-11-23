@@ -19,16 +19,15 @@ export const Filter = (props: FilterProps) => {
     <div className="md:w-[23rem] md:min-w-[23rem] flex flex-col space-y-3">
       {(!isEmpty(selectedFilters) || isLoading) && <SelectedFilters isLoading={isLoading} />}
 
-      {categories && categories.length === 0 ? (
-        <Skeleton w="100%" h="42.2rem" rounded="lg" />
-      ) : (
-        !isMobile && (
+      {!isMobile &&
+        (categories && categories.length === 0 ? (
+          <Skeleton w="100%" h="42.2rem" rounded="lg" className="hidden md:block" />
+        ) : (
           <>
             <Categories className="hidden md:flex" />
             <AdvancedSearch className="hidden md:flex" />
           </>
-        )
-      )}
+        ))}
     </div>
   );
 };

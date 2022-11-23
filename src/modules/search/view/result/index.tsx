@@ -63,6 +63,7 @@ export const Result = () => {
           <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
         ) : (
           <Card
+            avatarPriority={index <= 1}
             key={index}
             baseInfo={{
               displayName: item.title,
