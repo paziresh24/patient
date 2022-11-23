@@ -1,6 +1,7 @@
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import useWebView from '@/common/hooks/useWebView';
 import { getCookie } from 'cookies-next';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
@@ -11,11 +12,16 @@ import { useSearchStore } from '../../store/search';
 export const UnknownCity = () => {
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
+  const isWebView = useWebView();
   const city = useSearchStore(state => state.city);
   const { searchCity, selectedFilters } = useSearch();
   const [unknownCityModal, setUnknownCityModal] = useState(false);
 
   useEffect(() => {
+    !isWebView && handleCheckUserCity();
+  }, [selectedFilters, searchCity]);
+
+  const handleCheckUserCity = () => {
     const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
     setUnknownCityModal(
       currentCity.en_slug !== 'ir' &&
@@ -26,7 +32,7 @@ export const UnknownCity = () => {
     if (isEmpty(currentCity) && selectedFilters.city !== undefined && searchCity) {
       setCity(searchCity);
     }
-  }, [selectedFilters, searchCity]);
+  };
 
   return (
     <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModal}>
