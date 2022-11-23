@@ -23,7 +23,7 @@ export const Onboard = () => {
               <div
                 key={index}
                 className={clsx(
-                  'relative inline-flex flex-col md:min-h-[3rem] space-y-1 before:content before:border before:top-8 before:bottom-0 before:-right-6 before:rounded-full before:border-slate-800 before:absolute',
+                  'relative inline-flex flex-col md:min-h-[3rem] space-y-1 before:content before:border before:top-8 before:bottom-0 before:bg-slate-800 before:-right-6 before:rounded-full before:border-slate-800 before:absolute',
                   {
                     'before:hidden': allIndex === allSelf.length - 1 && index === self.length - 1,
                   },

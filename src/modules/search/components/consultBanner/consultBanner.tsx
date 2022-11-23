@@ -16,11 +16,11 @@ export const ConsultBanner = () => {
     });
   };
 
-  if (isConsult || !isMobile) return null;
+  if (isConsult) return null;
   return (
     <div
       onClick={handleClick}
-      className="relative flex items-center p-5 px-6 mb-3 overflow-hidden text-teal-700 bg-white rounded-lg space-s-3"
+      className="relative md:hidden flex items-center p-5 px-6 mb-3 overflow-hidden text-teal-700 bg-white rounded-lg space-s-3"
     >
       <div className="flex items-center justify-center before:rounded-full before:content before:absolute before:w-10 before:h-10 before:bg-teal-700 before:opacity-30 before:animate-ping">
         <svg

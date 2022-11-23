@@ -129,6 +129,7 @@ export const Suggestion = (props: SuggestionProps) => {
           'md:rounded-br-none md:rounded-bl-none md:rounded-tr-3xl md:rounded-tl-3xl z-infinity relative': isOpenSuggestion,
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
+        readOnly={isMobile}
       />
       {isOpenSuggestion && (
         <SuggestionCentent
