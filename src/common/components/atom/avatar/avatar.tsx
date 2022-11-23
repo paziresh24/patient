@@ -35,6 +35,7 @@ export const Avatar: React.FC<AvatarProps> = props => {
       alt={alt}
       style={{ minWidth: width, height }}
       className={clsx('rounded-full bg-gray', className)}
+      src={src}
       {...rest}
     />
   ) : (
