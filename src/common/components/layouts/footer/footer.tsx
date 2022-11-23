@@ -4,7 +4,7 @@ import Accordion from '@/common/components/atom/accordion';
 import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
 import useTranslation from 'next-translate/useTranslation';
-import { footerForDoctors, footerForUsers, footerPaziresh24 } from './data/link';
+import { footerForUsers, footerPaziresh24 } from './data/link';
 import { socials } from './data/social';
 import aboutMe from './logo/about-me.svg';
 import aboutUs from './logo/about-us.svg';
@@ -60,21 +60,9 @@ const Footer = () => {
                 </Accordion>
               </div>
               <div className="md:basis-[49%]">
-                <Accordion title={t('footer.menu.forDoctors')}>
-                  {
-                    <ul className="pr-1 mt-2 text-sm select-none">
-                      {footerForDoctors.links.map((link, index) => {
-                        return (
-                          <li key={index}>
-                            <a href={link.link} className="block px-0 py-1 text-xs">
-                              {link.title}
-                            </a>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  }
-                </Accordion>
+                <a href="https://dr.paziresh24.com/auth" className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100">
+                  {t('footer.menu.forDoctors')}
+                </a>
               </div>
               <div className="md:basis-[49%]">
                 <Accordion title={t('footer.menu.forCompany')}>
