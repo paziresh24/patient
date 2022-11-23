@@ -4,7 +4,7 @@ import { ImageProps } from 'next/future/image';
 import Text from '../text';
 
 /* eslint-disable @next/next/no-img-element */
-interface AvatarProps extends ImageProps {
+interface AvatarProps extends Omit<ImageProps, 'alt'> {
   /**
    * Width of the image in pixels
    * @default 70
@@ -20,19 +20,19 @@ interface AvatarProps extends ImageProps {
    */
   name?: string;
   as?: any;
+  alt?: string;
 }
 
 export const Avatar: React.FC<AvatarProps> = props => {
-  const { src, width = 70, height = 70, className, name, as = 'img', alt, ...rest } = props;
+  const { src, width = 70, height = 70, className, name, as = 'img', alt = 'avatar', ...rest } = props;
 
   const Component = as;
 
   return src ? (
     <Component
-      src={src}
-      alt={alt ?? 'avatar'}
       width={width}
       height={height}
+      alt={alt}
       style={{ minWidth: width, height }}
       className={clsx('rounded-full bg-gray', className)}
       {...rest}
