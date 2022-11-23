@@ -18,11 +18,7 @@
       shell: docker tag dockerhub.paziresh24.com/patient-app:latest dockerhub.paziresh24.com/patient-app:prev-latest
 
     - name: pull
-      docker_compose:
-        project_src: /root/paziresh24-frontends
-        files:
-          - docker-compose.yml
-        pull: true
+      shell: docker pull dockerhub.paziresh24.com/patient-app:latest
 
 
     - name: down
