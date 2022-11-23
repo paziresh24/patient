@@ -13,6 +13,7 @@ import ShareIcon from '@/common/components/icons/share';
 import StarIcon from '@/common/components/icons/star';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
+import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next';
@@ -22,7 +23,8 @@ import { useEffect } from 'react';
 import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
-  const { query, replace } = useRouter();
+  const router = useRouter();
+  const isWebView = useWebView();
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -37,8 +39,8 @@ export const PatinetProfile: NextPageWithLayout = () => {
   }, [isLogin, loginPending]);
 
   useEffect(() => {
-    if (!query.isWebView) {
-      replace('/patient/appointments');
+    if (!isWebView) {
+      router.replace('/patient/appointments');
     }
   }, []);
 

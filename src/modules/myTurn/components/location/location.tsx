@@ -1,5 +1,5 @@
+import useWebView from '@/common/hooks/useWebView';
 import Text from '@/components/atom/text';
-import { useRouter } from 'next/router';
 
 interface LocationProps {
   address: string;
@@ -15,11 +15,11 @@ interface LocationProps {
 
 export const Location: React.FC<LocationProps> = props => {
   const { address, lat, lng } = props;
-  const { query } = useRouter();
+  const isWebView = useWebView();
 
   return (
     <a
-      href={`https://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=${query.isWebView ? '&openInBrowser=1' : ''}
+      href={`https://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=${isWebView ? '&openInBrowser=1' : ''}
 `}
       target="_blank"
       rel="noreferrer"

@@ -96,7 +96,7 @@ export const SearchCard = (props: SearchCardProps) => {
               {baseInfo?.expertise}
             </Text>
           )}
-          {type === 'doctor' && baseInfo?.rate?.count && baseInfo?.rate?.count > 0 && (
+          {type === 'doctor' && (baseInfo?.rate?.count ?? 0) > 0 && (
             <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base whitespace-nowrap">
               <div className="flex items-center space-s-1">
                 <LikeIcon width={22} height={22} className="text-primary" />
