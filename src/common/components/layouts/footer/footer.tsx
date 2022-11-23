@@ -61,7 +61,7 @@ const Footer = () => {
               </div>
               <div className="md:basis-[49%]">
                 <a href="https://dr.paziresh24.com/auth" className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100">
-                  ورود / ثبت نام پزشکان
+                  {t('footer.menu.forDoctors')}
                 </a>
               </div>
               <div className="md:basis-[49%]">
