@@ -6,6 +6,7 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
@@ -16,6 +17,7 @@ import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
   const { query } = useRouter();
+  const isWebView = useWebView();
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
@@ -51,12 +53,10 @@ export const PatinetProfile: NextPageWithLayout = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      {query.isWebView && (
-        <AppBar title="ویرایش اطلاعات من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
-      )}
+      {isWebView && <AppBar title="ویرایش اطلاعات من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
       <div className="flex flex-col p-5 space-y-5 bg-white">
-        {!query.isWebView && (
+        {!isWebView && (
           <Text fontWeight="black" fontSize="xl">
             ویرایش اطلاعات من
           </Text>

@@ -7,6 +7,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useResponsive from '@/common/hooks/useResponsive';
+import useWebView from '@/common/hooks/useWebView';
 import ConsultBanner from '@/modules/search/components/consultBanner';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import Sort from '@/modules/search/components/filters/sort';
@@ -30,8 +31,10 @@ const Search: NextPageWithLayout = () => {
   const { isMobile } = useResponsive();
   const {
     asPath,
-    query: { params, ...query },
+    query: { params },
   } = useRouter();
+  const isWebView = useWebView();
+
   const { isLanding, isLoading, total, seoInfo, selectedFilters, result } = useSearch();
   const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
@@ -80,7 +83,7 @@ const Search: NextPageWithLayout = () => {
           </div>
         </div>
         <SearchSeoBox />
-        {!query.isWebView && (
+        {!isWebView && (
           <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${encodeURIComponent(asPath)}`} className="block">
             <Button variant="secondary" className="!my-5" block>
               گزارش مشکل در جستجو

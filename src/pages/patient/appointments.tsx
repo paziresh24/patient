@@ -11,6 +11,7 @@ import { Tab, Tabs } from '@/components/atom/tabs';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
@@ -25,6 +26,7 @@ type BookType = 'book' | 'book_request';
 
 export const Appointments: NextPageWithLayout = () => {
   const { query } = useRouter();
+  const isWebView = useWebView();
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -87,10 +89,10 @@ export const Appointments: NextPageWithLayout = () => {
         <title>نوبت های من</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {query.isWebView && <AppBar title="نوبت های من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {isWebView && <AppBar title="نوبت های من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
       <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
-        {!query.isWebView && (
+        {!isWebView && (
           <Text fontWeight="black" fontSize="xl" className="mt-5">
             نوبت های من
           </Text>
