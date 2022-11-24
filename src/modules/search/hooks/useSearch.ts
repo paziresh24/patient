@@ -141,7 +141,7 @@ export const useSearch = () => {
     }
   }, [search]);
 
-  const isLanding = search.is_landing ?? (params?.length === 1 && query.text === undefined);
+  const isLanding = useMemo(() => params?.length === 1 && query.text === undefined, [params, query]);
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
 

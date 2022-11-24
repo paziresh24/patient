@@ -1,5 +1,7 @@
+import merge from 'lodash/merge';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import { useSearch } from './useSearch';
 import { useSearchRouting } from './useSearchRouting';
 
 export const useFilterChange = () => {
@@ -7,12 +9,10 @@ export const useFilterChange = () => {
     query: { params, ...queries },
     ...router
   } = useRouter();
-  const [filters, setFilters] = useState<Record<string, any>>(queries);
+  const { selectedFilters } = useSearch();
   const { changeRoute } = useSearchRouting();
 
-  useEffect(() => {
-    setFilters({ ...queries });
-  }, [router.asPath]);
+  const filters = useMemo(() => merge(queries, selectedFilters), [router.asPath, selectedFilters]);
 
   const removeFilter = (name: string) => {
     delete queries[name];

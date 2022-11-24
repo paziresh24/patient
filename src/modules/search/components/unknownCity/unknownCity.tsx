@@ -14,24 +14,24 @@ export const UnknownCity = () => {
   const { changeRoute } = useSearchRouting();
   const isWebView = useWebView();
   const city = useSearchStore(state => state.city);
-  const { searchCity, selectedFilters } = useSearch();
+  const { searchCity } = useSearch();
   const [unknownCityModal, setUnknownCityModal] = useState(false);
+  const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
 
   useEffect(() => {
     !isWebView && handleCheckUserCity();
-  }, [selectedFilters, searchCity]);
-
-  const handleCheckUserCity = () => {
-    const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
-    setUnknownCityModal(
-      currentCity.en_slug !== 'ir' &&
-        selectedFilters.city !== undefined &&
-        !isEmpty(currentCity) &&
-        selectedFilters?.city !== currentCity?.en_slug,
-    );
-    if (isEmpty(currentCity) && selectedFilters.city !== undefined && searchCity) {
+    if (!isWebView && isEmpty(currentCity) && searchCity) {
       setCity(searchCity);
     }
+    if (isWebView && searchCity) {
+      setCity(searchCity);
+    }
+  }, [searchCity]);
+
+  const handleCheckUserCity = () => {
+    setUnknownCityModal(
+      !isEmpty(currentCity) && !isEmpty(searchCity) && currentCity.en_slug !== 'ir' && searchCity.en_slug !== currentCity?.en_slug,
+    );
   };
 
   return (

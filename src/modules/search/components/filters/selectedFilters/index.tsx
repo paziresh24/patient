@@ -4,16 +4,19 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
+import { useRouter } from 'next/router';
 import { Fragment, useMemo } from 'react';
 import { useFilterChange } from '../../../hooks/useFilterChange';
 import { freeturnItems } from '../sort';
-
 interface CategoriesProps {
   isLoading: boolean;
 }
 
 export const SelectedFilters = (props: CategoriesProps) => {
   const { isLoading } = props;
+  const {
+    query: { params },
+  } = useRouter();
   const { categories, filters, selectedFilters, searchCity } = useSearch();
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
   const { changeRoute } = useSearchRouting();
@@ -35,12 +38,17 @@ export const SelectedFilters = (props: CategoriesProps) => {
       : filters.find(item => item.name === name)?.title ?? null;
   };
 
-  const handleRemoveFilter = (name: string) => {
+  const handleRemoveFilter = (name: string, value: string) => {
+    if (
+      (name === 'sub_category' && value.startsWith('exp-')) ||
+      name === 'category' ||
+      (name === 'text' && (params as string[])[1].startsWith('q-')) ||
+      (name === 'result_type' && ['center', 'doctor'].includes((params as string[])[1]))
+    ) {
+      return handleRemoveAllFilters();
+    }
     if (name === 'sub_category') {
       return removeFilter('expertise');
-    }
-    if (name === 'category') {
-      return handleRemoveAllFilters();
     }
 
     removeFilter(name);
@@ -73,7 +81,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
                 value?.map(item => (
                   <Chips
                     key={item}
-                    handleRemove={() => handleRemoveFilter(name)}
+                    handleRemove={() => handleRemoveFilter(name, item)}
                     className="!text-slate-600 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
                   >
                     {getFilterTitle(name, item)}
@@ -81,7 +89,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
                 ))}
               {!Array.isArray(value) && name !== 'city' && getFilterTitle(name, value) && (
                 <Chips
-                  handleRemove={() => handleRemoveFilter(name)}
+                  handleRemove={() => handleRemoveFilter(name, value)}
                   className="!text-slate-600 !bg-white md:!bg-slate-100 !text-sm cursor-pointer"
                 >
                   {getFilterTitle(name, value)}
