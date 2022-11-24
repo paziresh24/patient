@@ -1,14 +1,11 @@
 import Divider from '@/common/components/atom/divider';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import clsx from 'clsx';
-import dynamic from 'next/dynamic';
 import RadioFilter from './sections/radio';
 import SwitchFilter from './sections/switch';
 
-const SliderFilter = dynamic(() => import('./sections/slider'), { ssr: false });
-
 export const AdvancedSearch = ({ className }: { className?: string }) => {
-  const { filters, selectedFilters } = useSearch();
+  const { filters } = useSearch();
 
   if (filters.length === 0) return null;
   return (

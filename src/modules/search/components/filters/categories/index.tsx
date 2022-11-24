@@ -1,11 +1,13 @@
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import clsx from 'clsx';
+import isEmpty from 'lodash/isEmpty';
 import { Fragment } from 'react';
 
 export const Categories = ({ className }: { className?: string }) => {
   const { categories, selectedCategory, selectedSubCategory } = useSearch();
 
+  if (isEmpty(categories)) return null;
   return (
     <div className={clsx('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card max-h-[24rem]', className)}>
       <MenuList className="overflow-auto scrollBar">
