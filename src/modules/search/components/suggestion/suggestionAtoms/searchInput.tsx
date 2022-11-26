@@ -2,7 +2,7 @@ import BackIcon from '@/common/components/icons/back';
 import CloseIcon from '@/common/components/icons/close';
 import SearchIcon from '@/common/components/icons/search';
 import clsx from 'clsx';
-import { InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes, LegacyRef } from 'react';
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   showBackButton?: boolean;
@@ -11,7 +11,7 @@ export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> 
   onClear?: () => void;
 }
 
-export const SearchInput = (props: SearchInputProps) => {
+export const SearchInput = forwardRef((props: SearchInputProps, ref) => {
   const { showBackButton, clickBackButton, clikSearchButton, onClear, className, ...inputProps } = props;
 
   return (
@@ -25,6 +25,7 @@ export const SearchInput = (props: SearchInputProps) => {
       <input
         className={clsx('h-full w-full bg-transparent outline-none text-sm md:text-base appearance-none', className)}
         {...inputProps}
+        ref={ref as LegacyRef<HTMLInputElement>}
         autoComplete="off"
         data-hj-allow
         type="search"
@@ -32,4 +33,4 @@ export const SearchInput = (props: SearchInputProps) => {
       {inputProps.value && <CloseIcon onClick={onClear} className="cursor-pointer" />}
     </div>
   );
-};
+});
