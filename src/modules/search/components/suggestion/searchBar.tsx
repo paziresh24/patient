@@ -27,7 +27,7 @@ export const SearchBar = (props: SearchBarProps) => {
 
   useEffect(() => {
     if (autoFocus) {
-      searchInputRef.current?.focus();
+      setTimeout(() => searchInputRef.current?.focus(), 50);
     }
   }, [autoFocus]);
 
