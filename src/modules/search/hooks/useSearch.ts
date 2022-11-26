@@ -141,7 +141,10 @@ export const useSearch = () => {
     }
   }, [search]);
 
-  const isLanding = useMemo(() => params?.length === 1 && query.text === undefined, [params, query]);
+  const isLanding = useMemo(
+    () => (!isLoading && search.is_landing) || (params?.length === 1 && query.text === undefined),
+    [params, query, search, isLoading],
+  );
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
 

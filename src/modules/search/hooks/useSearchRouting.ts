@@ -24,12 +24,16 @@ export const useSearchRouting = () => {
     scroll?: boolean;
     pageParam?: boolean;
   }) => {
+    const formattedSlug = [
+      overWrite ? params?.city : params?.city ?? slug?.[0],
+      overWrite ? params?.category : params?.category ?? slug?.[1] ?? '',
+    ]
+      .filter(item => item)
+      .join('/');
+
     router.push(
       {
-        pathname: `/s/${[
-          overWrite ? params?.city : params?.city ?? slug?.[0],
-          overWrite ? params?.category : params?.category ?? slug?.[1] ?? '',
-        ].join('/')}`,
+        pathname: `/s/${formattedSlug}`,
         query: {
           ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
           ...query,

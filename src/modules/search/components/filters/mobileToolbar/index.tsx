@@ -48,8 +48,10 @@ export const MobileToolbar = () => {
         onClick: () =>
           changeRoute({
             params: {
+              ...(city.en_slug === 'ir' && { city: 'ir' }),
               category: 'doctor',
             },
+            previousQueries: false,
           }),
       },
       {
@@ -57,8 +59,10 @@ export const MobileToolbar = () => {
         onClick: () =>
           changeRoute({
             params: {
+              ...(city.en_slug === 'ir' && { city: 'ir' }),
               category: 'center',
             },
+            previousQueries: false,
           }),
       },
     ];
