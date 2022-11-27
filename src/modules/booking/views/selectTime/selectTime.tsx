@@ -13,7 +13,7 @@ interface SelectTurnTimeProps {
   onSubmit: () => void;
 }
 
-const SelectTurnTime = (props: SelectTurnTimeProps) => {
+export const SelectTime = (props: SelectTurnTimeProps) => {
   const { onSubmit } = props;
   const { query } = useRouter();
   const center = useBookingStore(state => state.center);
@@ -106,4 +106,4 @@ const SelectTurnTime = (props: SelectTurnTimeProps) => {
   );
 };
 
-export default SelectTurnTime;
+export default SelectTime;

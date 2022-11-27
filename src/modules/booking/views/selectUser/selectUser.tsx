@@ -15,7 +15,7 @@ interface SelectUserProps {
   loading: boolean;
 }
 
-const SelectUser = (props: SelectUserProps) => {
+export const SelectUser = (props: SelectUserProps) => {
   const { onSubmit, loading } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const { data, mutate, isSuccess, isLoading } = useGetSubuser();

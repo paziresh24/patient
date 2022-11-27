@@ -2,8 +2,8 @@ import { useBook } from '@/common/apis/services/booking/book';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useBookingStore } from '../store/booking';
-import SelectTurnTime from './steps/selectTurnTime';
-import SelectUser from './steps/selectUser';
+import SelectTurnTime from './selectTime';
+import SelectUser from './selectUser';
 
 interface BookingStepsProps {
   center: {
