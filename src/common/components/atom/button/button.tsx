@@ -47,7 +47,7 @@ const buttonStyles = {
   variant: {
     primary: 'bg-primary border border-primary text-white disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-400',
     secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400 hover:bg-slate-100',
-    text: 'text-primary disabled:text-slate-400',
+    text: 'text-primary disabled:text-slate-400 bg-transparent hover:bg-slate-100',
   },
   loading: {
     primary: 'fill-slate-500',
@@ -92,7 +92,7 @@ export const Button: React.FC<ButtonProps> = props => {
   return (
     <button
       className={clsx(
-        'flex items-center justify-center rounded-lg font-bold',
+        'flex items-center justify-center rounded-lg font-bold transition-colors',
         buttonStyles.variant[variant],
         buttonStyles.size[size],
         buttonStyles.theme[theme][variant],

@@ -34,12 +34,12 @@
       docker_compose:
         project_src: /var/www/clinic_docker
         files:
-          - docker-compose.prod.yml
+          - docker-compose.yml
         state: absent
 
     - name: up
       docker_compose:
         project_src: /var/www/clinic_docker
         files:
-          - docker-compose.prod.yml
+          - docker-compose.yml
         state: present

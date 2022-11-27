@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
-import AccordingMenu from '@/components/atom/accordingMenu/';
+import Accordion from '@/common/components/atom/accordion';
 import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
 import useTranslation from 'next-translate/useTranslation';
-import { footerForDoctors, footerForUsers, footerPaziresh24 } from './data/link';
+import { footerForUsers, footerPaziresh24 } from './data/link';
 import { socials } from './data/social';
 import aboutMe from './logo/about-me.svg';
 import aboutUs from './logo/about-us.svg';
@@ -14,12 +14,12 @@ const Footer = () => {
   const { t } = useTranslation('common');
 
   return (
-    <footer className="bg-white text-slate-700 p-4 mt-14 ">
-      <div className="max-w-screen-xl mx-auto p-4">
+    <footer className="p-4 bg-white text-slate-700 mt-14 ">
+      <div className="container p-4 px-0 mx-auto">
         <div className="grid grid-cols-12 grid-rows-1 gap-5">
           <div className="col-span-12 md:col-span-5">
             <div className="flex flex-col justify-center gap-2">
-              <div className="flex flex-row gap-3 items-center justify-center md:justify-start">
+              <div className="flex flex-row items-center justify-center gap-3 md:justify-start">
                 <Logo fontSize="2xl" />
               </div>
               <div className="flex flex-col justify-center md:justify-start">
@@ -41,29 +41,59 @@ const Footer = () => {
             </div>
           </div>
           <div className="col-span-12 md:col-span-7">
-            <div className="flex flex-wrap flex-col justify-center gap-2 md:flex-row md:justify-start">
+            <div className="flex flex-col flex-wrap justify-center gap-2 md:flex-row md:justify-start">
               <div className="md:basis-[49%]">
-                <AccordingMenu title={t('footer.menu.forPatients')} items={footerForUsers.links} />
+                <Accordion title={t('footer.menu.forPatients')}>
+                  {
+                    <ul className="pr-1 mt-2 text-sm select-none">
+                      {footerForUsers.links.map((link, index) => {
+                        return (
+                          <li key={index}>
+                            <a href={link.link} className="block px-0 py-1 text-xs">
+                              {link.title}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  }
+                </Accordion>
               </div>
               <div className="md:basis-[49%]">
-                <AccordingMenu title={t('footer.menu.forDoctors')} items={footerForDoctors.links} />
+                <a href="https://dr.paziresh24.com/auth" className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100">
+                  {t('footer.menu.forDoctors')}
+                </a>
               </div>
               <div className="md:basis-[49%]">
-                <AccordingMenu title={t('footer.menu.forCompany')} items={footerPaziresh24.links} />
+                <Accordion title={t('footer.menu.forCompany')}>
+                  {
+                    <ul className="pr-1 mt-2 text-sm select-none">
+                      {footerPaziresh24.links.map((link, index) => {
+                        return (
+                          <li key={index}>
+                            <a href={link.link} className="block px-0 py-1 text-xs">
+                              {link.title}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  }
+                </Accordion>
               </div>
               <div className="flex flex-col items-center justify-center mt-2 md:basis-[49%]">
                 <div className="flex flex-row items-center justify-center">
-                  <span className="flex justify-center items-center w-20 h-20">
+                  <span className="flex items-center justify-center w-20 h-20">
                     <a href="/home/about-us/">
                       <img src={about.src} alt="" loading="lazy" width={40} height={40} />
                     </a>
                   </span>
-                  <span className="flex justify-center items-center w-20 h-20">
+                  <span className="flex items-center justify-center w-20 h-20">
                     <a href="/home/about-us/">
                       <img src={aboutUs.src} alt="" loading="lazy" width={40} height={40} />
                     </a>
                   </span>
-                  <span className="flex justify-center items-center w-20 h-20">
+                  <span className="flex items-center justify-center w-20 h-20">
                     <a href="/home/about-us/">
                       <img src={aboutMe.src} alt="" loading="lazy" width={40} height={40} />
                     </a>

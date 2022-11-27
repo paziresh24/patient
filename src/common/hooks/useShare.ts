@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import useWebView from './useWebView';
 
 interface shareParams {
   title?: string;
@@ -7,10 +7,10 @@ interface shareParams {
 }
 
 export const useShare = () => {
-  const { query } = useRouter();
+  const isWebView = useWebView();
 
   const share = ({ title = '', text = '', url }: shareParams) => {
-    if (query.isWebView) return window.Android.shareQA(text, url);
+    if (isWebView) return window.Android.shareQA(text, url);
     if (window.navigator && !!window.navigator.share) {
       navigator.share({
         title,

@@ -10,8 +10,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
   ...nextTranslate(),
-  swcMinify: true,
+  swcMinify: false,
   reactStrictMode: false,
+  trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
@@ -20,7 +21,7 @@ const nextConfig = {
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
   },
   images: {
-    domains: ['www.paziresh24.com'],
+    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
 };
 

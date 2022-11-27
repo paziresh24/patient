@@ -1,15 +1,10 @@
 import { randomColor } from '@/common/utils/randomColor';
 import clsx from 'clsx';
-import { ImgHTMLAttributes } from 'react';
+import { ImageProps } from 'next/future/image';
 import Text from '../text';
 
 /* eslint-disable @next/next/no-img-element */
-interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
-  /**
-   * Src of the image
-   * if not provided, the avatar will be a placeholder
-   */
-  src?: string;
+interface AvatarProps extends Omit<ImageProps, 'alt'> {
   /**
    * Width of the image in pixels
    * @default 70
@@ -24,20 +19,24 @@ interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
    * name of the user for placeholder when user don't have image
    */
   name?: string;
+  as?: any;
+  alt?: string;
 }
 
 export const Avatar: React.FC<AvatarProps> = props => {
-  const { src, width = 70, height = 70, className, name } = props;
+  const { src, width = 70, height = 70, className, name, as = 'img', alt = 'avatar', ...rest } = props;
+
+  const Component = as;
 
   return src ? (
-    <img
-      src={src}
-      alt="avatar"
+    <Component
       width={width}
       height={height}
+      alt={alt}
       style={{ minWidth: width, height }}
       className={clsx('rounded-full bg-gray', className)}
-      loading="lazy"
+      src={src}
+      {...rest}
     />
   ) : (
     <div

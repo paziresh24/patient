@@ -1,16 +1,16 @@
-import { useRouter } from 'next/router';
+import useWebView from '@/common/hooks/useWebView';
 import { ReactNode } from 'react';
 import Footer from './footer';
 import Header from './header';
 
 export const LayoutWithHeaderAndFooter = ({ children, shouldShowBrand = true }: { children: ReactNode; shouldShowBrand?: boolean }) => {
-  const { query } = useRouter();
+  const isWebView = useWebView();
 
   return (
     <>
-      {!query.isWebView && <Header shouldShowBrand={shouldShowBrand} />}
+      {!isWebView && <Header shouldShowBrand={shouldShowBrand} />}
       {children}
-      {!query.isWebView && <Footer />}
+      {!isWebView && <Footer />}
     </>
   );
 };

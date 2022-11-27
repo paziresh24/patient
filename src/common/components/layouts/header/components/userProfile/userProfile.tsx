@@ -85,11 +85,15 @@ export const UserProfile = () => {
         (isLogin ? (
           <div ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
             <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
-              <UserCircle width="30" height="30" />
+              {userInfo?.image ? (
+                <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
+              ) : (
+                <UserCircle width="30" height="30" />
+              )}
               <Text className="hidden sm:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
-              <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
+              <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="hidden md:block" />
             </div>
             <Transition
               match={open}

@@ -28,7 +28,8 @@
       "@/constants/*": ["./src/common/constants/*"],
       "@/hooks/*": ["./src/common/hooks/*"],
       "@/store/*": ["./src/common/store/*"],
-      "@/apis/*": ["src/common/apis/*"]
+      "@/apis/*": ["./src/common/apis/*"],
+      "@/public/*": ["./public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
