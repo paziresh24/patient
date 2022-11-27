@@ -3,7 +3,7 @@ import TagStatus from './tagStatus';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'Molecules/TagStatus',
+  title: 'MyTurn/TagStatus',
   component: TagStatus,
 };
 

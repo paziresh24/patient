@@ -3,7 +3,7 @@ import Rate from './rate';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'Molecules/Rate',
+  title: 'MyTurn/Rate',
   component: Rate,
 };
 

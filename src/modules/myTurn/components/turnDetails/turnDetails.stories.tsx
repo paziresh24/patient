@@ -1,10 +1,10 @@
+import Timer from '@/common/components/atom/timer';
 import React from 'react';
-import Timer from '../../atoms/timer/timer';
 import TurnDetails from './turnDetails';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'Molecules/Turn Details',
+  title: 'MyTurn/Turn Details',
   component: TurnDetails,
 };
 
