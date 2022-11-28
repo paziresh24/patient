@@ -14,4 +14,8 @@ const Template = args => (
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  id: '12',
+  name: 'رادیولوژی مغز',
+  disable: false,
+};
