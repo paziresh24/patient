@@ -12,9 +12,12 @@ export const SelectService = (props: SelectServiceProps) => {
   return (
     <>
       <div
-        className={clsx('w-full h-auto rounded-md whitespace-nowrap overflow-hidden text-ellipsis block p-4 bg-[#3861FB]/[0.1]', {
-          'bg-[#0F1D40]/[0.1]': disable,
-        })}
+        className={clsx(
+          'w-full h-auto rounded-md whitespace-nowrap overflow-hidden text-ellipsis block p-4 bg-[#3861FB]/[0.1] cursor-pointer',
+          {
+            'bg-[#0F1D40]/[0.1] pointer-events-none': disable,
+          },
+        )}
       >
         <Text>{name}</Text>
       </div>
