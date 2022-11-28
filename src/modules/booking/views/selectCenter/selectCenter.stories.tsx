@@ -15,11 +15,24 @@ const Template = args => (
 
 export const Default = Template.bind({});
 Default.args = {
-  id: '12',
-  name: 'مطب دکتر ویدا دبیران',
-  address: 'تهران - تهران - خیابان ولی عصر (عج)، بالاتر از میدان ونک، کوچه شهید والی نژاد',
-  freeturn: '۲۹ شهریور - حدود ساعت 13:00',
-  disable: false,
-  type: 'office',
-  centerNumber: ['058-2227460', '058-2241001-6'],
+  centers: [
+    {
+      id: '12',
+      name: 'مطب دکتر ویدا دبیران',
+      address: 'تهران - تهران - خیابان ولی عصر (عج)، بالاتر از میدان ونک، کوچه شهید والی نژاد',
+      freeturn: '۲۹ شهریور - حدود ساعت 13:00',
+      disable: false,
+      type: 'office',
+      centerNumber: [],
+    },
+    {
+      id: '12',
+      name: 'مطب دکتر ویدا دبیران',
+      address: 'تهران - تهران - خیابان ولی عصر (عج)، بالاتر از میدان ونک، کوچه شهید والی نژاد',
+      freeturn: null,
+      disable: true,
+      type: 'office',
+      centerNumber: ['058-2227460', '058-2241001-6'],
+    },
+  ],
 };
