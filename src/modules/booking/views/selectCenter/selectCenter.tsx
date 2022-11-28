@@ -23,7 +23,7 @@ export const SelectCenter = (props: CenterProps) => {
 
   return (
     <>
-      <div className="w-full h-auto rounded-lg bg-white border-[#DAE4FF]">
+      <div className={clsx('w-full h-auto rounded-lg bg-white border-[#DAE4FF] cursor-pointer', { 'pointer-events-none': disable })}>
         <div className="p-4">
           <div className="w-full flex items-center">
             <div
