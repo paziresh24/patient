@@ -10,14 +10,14 @@ import { selectCenter } from '../../types/selectCenter';
 
 interface CenterProps {
   centers: selectCenter[];
-  setSelectedCnter: Dispatch<SetStateAction<selectCenter>>;
+  setSelectedCenter: Dispatch<SetStateAction<selectCenter>>;
 }
 
 export const SelectCenter = (props: CenterProps) => {
-  const { centers, setSelectedCnter } = props;
+  const { centers, setSelectedCenter } = props;
   const [centerPhoneNumberModal, setCenterPhoneNumberModal] = useState(false);
   const handleSelectCenter = (center: selectCenter) => {
-    setSelectedCnter(center);
+    setSelectedCenter(center);
   };
 
   return (
