@@ -1,9 +1,9 @@
-export type selectCenter = {
+export type Center = {
   id: string;
   name: string;
   address?: string;
   freeturn?: string;
-  disable: boolean;
+  isDisable: boolean;
   type: 'office' | 'hospital';
-  centerNumber?: string[];
+  phoneNumbers?: string[];
 };

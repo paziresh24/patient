@@ -5,19 +5,20 @@ import Text from '@/common/components/atom/text';
 import HospitalIcon from '@/common/components/icons/hospital';
 import OfficeIcon from '@/common/components/icons/office';
 import clsx from 'clsx';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { selectCenter } from '../../types/selectCenter';
+import { useState } from 'react';
+import { Center } from '../../types/selectCenter';
 
 interface CenterProps {
-  centers: selectCenter[];
-  setSelectedCenter: Dispatch<SetStateAction<selectCenter>>;
+  centers: Center[];
+  onSelect: (center: Center) => void;
 }
 
 export const SelectCenter = (props: CenterProps) => {
-  const { centers, setSelectedCenter } = props;
-  const [centerPhoneNumberModal, setCenterPhoneNumberModal] = useState(false);
-  const handleSelectCenter = (center: selectCenter) => {
-    setSelectedCenter(center);
+  const { centers, onSelect } = props;
+  const [phoneNumberModal, setPhoneNumberModal] = useState(false);
+
+  const handleSelectCenter = (center: Center) => {
+    onSelect(center);
   };
 
   return (
@@ -27,8 +28,8 @@ export const SelectCenter = (props: CenterProps) => {
           <div
             key={center.id}
             onClick={() => handleSelectCenter(center)}
-            className={clsx('w-full  rounded-lg bg-white border-[#DAE4FF] cursor-pointer', {
-              'pointer-events-none': center.disable,
+            className={clsx('w-full rounded-lg bg-white border-[#DAE4FF] cursor-pointer', {
+              'pointer-events-none': center.isDisable,
               'mt-3': index != 0,
             })}
           >
@@ -36,22 +37,22 @@ export const SelectCenter = (props: CenterProps) => {
               <div className="w-full flex items-center">
                 <div
                   className={clsx('py-[0.5rem] px-[0.1  rem] rounded-md', {
-                    'bg-[#3861FB]/[0.1]': center.type === 'office' && !center.disable,
-                    'bg-[#27BDA0]/[0.1]': center.type === 'hospital' && !center.disable,
-                    'bg-[#0F1D40]/[0.1]': center.disable,
+                    'bg-[#3861FB]/[0.1]': center.type === 'office' && !center.isDisable,
+                    'bg-[#27BDA0]/[0.1]': center.type === 'hospital' && !center.isDisable,
+                    'bg-[#0F1D40]/[0.1]': center.isDisable,
                   })}
                 >
                   {center.type === 'office' ? (
-                    <OfficeIcon className={clsx('w-12 h-7', { 'text-[#8C93A3]': center.disable })} />
+                    <OfficeIcon className={clsx('w-12 h-7', { 'text-[#8C93A3]': center.isDisable })} />
                   ) : (
-                    <HospitalIcon className={clsx('w-12 h-7', { 'text-[#8C93A3]': center.disable })} />
+                    <HospitalIcon className={clsx('w-12 h-7', { 'text-[#8C93A3]': center.isDisable })} />
                   )}
                 </div>
                 <Text
                   className={clsx('mr-2 text-black  w-full p-[0.65rem] rounded-md', {
-                    'bg-[#3861FB]/[0.1]': center.type === 'office' && !center.disable,
-                    'bg-[#27BDA0]/[0.1]': center.type === 'hospital' && !center.disable,
-                    'bg-[#0F1D40]/[0.1] text-[#0F1D40]/[0.6]': center.disable,
+                    'bg-[#3861FB]/[0.1]': center.type === 'office' && !center.isDisable,
+                    'bg-[#27BDA0]/[0.1]': center.type === 'hospital' && !center.isDisable,
+                    'bg-[#0F1D40]/[0.1] text-[#0F1D40]/[0.6]': center.isDisable,
                   })}
                 >
                   {center.name}
@@ -63,7 +64,7 @@ export const SelectCenter = (props: CenterProps) => {
                 </Text>
               )}
             </div>
-            {center.freeturn && !center.disable && (
+            {center.freeturn && !center.isDisable && (
               <>
                 <Divider />
                 <div className="w-full p-4 flex justify-between">
@@ -72,18 +73,18 @@ export const SelectCenter = (props: CenterProps) => {
                 </div>
               </>
             )}
-            {center.disable && (
+            {center.isDisable && (
               <>
                 <Divider />
                 <div className="w-full p-4">
                   <Text fontSize="sm" align="center" fontWeight="medium" className="block text-[#B2B7C2]">
-                    {` نوبت دهی اینترنتی در این ${center.type === 'office' ? 'مطب' : 'مرکز'} غیر فعال است.`}
+                    نوبت دهی اینترنتی در این {center.type === 'office' ? 'مطب' : 'مرکز'} غیر فعال است.
                   </Text>
-                  {!!center.centerNumber?.length && (
+                  {!!center.phoneNumbers?.length && (
                     <Button
                       block
                       size="sm"
-                      onClick={() => setCenterPhoneNumberModal(true)}
+                      onClick={() => setPhoneNumberModal(true)}
                       className="!bg-white !border-[#5c8afe] !text-[#3861FB] mt-4 pointer-events-auto"
                     >
                       تماس تلفنی با مرکز درمانی / مطب پزشک
@@ -95,12 +96,12 @@ export const SelectCenter = (props: CenterProps) => {
           </div>
           <Modal
             title=" تماس تلفنی با مرکز درمانی / مطب پزشک"
-            isOpen={centerPhoneNumberModal}
+            isOpen={phoneNumberModal}
             onClose={() => {
-              setCenterPhoneNumberModal(false);
+              setPhoneNumberModal(false);
             }}
           >
-            {center.centerNumber?.map((cell, index) => (
+            {center.phoneNumbers?.map((cell, index) => (
               <Button
                 key={index}
                 block
