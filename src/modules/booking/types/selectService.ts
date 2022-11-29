@@ -1,5 +1,5 @@
-export type selectService = {
+export type Service = {
   name: string;
   id: string;
-  disable: boolean;
+  isDisable: boolean;
 };

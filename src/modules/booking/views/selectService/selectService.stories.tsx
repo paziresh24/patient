@@ -19,12 +19,13 @@ Default.args = {
     {
       id: '12',
       name: 'رادیولوژی مغز',
-      disable: false,
+      isDisable: false,
     },
     {
       id: '12',
       name: 'رادیولوژی مغز',
-      disable: true,
+      isDisable: true,
     },
   ],
+  onSelect: service => alert(JSON.stringify(service)),
 };
