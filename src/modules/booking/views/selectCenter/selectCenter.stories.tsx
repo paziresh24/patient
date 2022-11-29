@@ -35,4 +35,5 @@ Default.args = {
       centerNumber: ['058-2227460', '058-2241001-6'],
     },
   ],
+  onSelect: center => alert(JSON.stringify(center)),
 };
