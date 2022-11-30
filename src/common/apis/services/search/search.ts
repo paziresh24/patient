@@ -7,13 +7,15 @@ import { useQuery } from 'react-query';
 export interface Params {
   query?: ParsedUrlQuery;
   route: string;
+  headers?: any;
 }
 
-export const search = async ({ route, query }: Params) => {
+export const search = async ({ route, query, headers }: Params) => {
   const { data } = await searchClient.get(`/seapi/v1/search/${encodeURIComponent(route)}`, {
     params: {
       ...query,
     },
+    headers,
   });
   return data;
 };
