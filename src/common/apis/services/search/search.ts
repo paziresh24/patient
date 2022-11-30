@@ -32,5 +32,6 @@ export const useSearch = () => {
 
   return useQuery([ServerStateKeysEnum.Search, searchParams], () => search(searchParams), {
     keepPreviousData: true,
+    refetchOnMount: false,
   });
 };
