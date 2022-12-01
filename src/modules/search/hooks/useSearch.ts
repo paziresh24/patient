@@ -118,7 +118,7 @@ export const useSearch = () => {
   }, [searchRequest.data]);
 
   const [result, setResult] = useState(search?.result ?? []);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(searchRequest.isLoading || searchRequest.isIdle);
 
   useEffect(() => {
     setIsLoading(true);
@@ -141,7 +141,10 @@ export const useSearch = () => {
     }
   }, [search]);
 
-  const isLanding = useMemo(() => params?.length === 1 && query.text === undefined, [params, query]);
+  const isLanding = useMemo(
+    () => (!isLoading && search.is_landing) || (params?.length === 1 && query.text === undefined),
+    [params, query, search, isLoading],
+  );
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
 

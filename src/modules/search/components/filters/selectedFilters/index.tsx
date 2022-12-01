@@ -40,10 +40,10 @@ export const SelectedFilters = (props: CategoriesProps) => {
 
   const handleRemoveFilter = (name: string, value: string) => {
     if (
-      (name === 'sub_category' && value.startsWith('exp-')) ||
+      (name === 'sub_category' && value?.startsWith('exp-')) ||
       name === 'category' ||
-      (name === 'text' && (params as string[])[1].startsWith('q-')) ||
-      (name === 'result_type' && ['center', 'doctor'].includes((params as string[])[1]))
+      (name === 'text' && (params as string[])?.[1]?.startsWith('q-')) ||
+      (name === 'result_type' && ['center', 'doctor'].includes((params as string[])?.[1]))
     ) {
       return handleRemoveAllFilters();
     }
@@ -71,7 +71,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
           حذف
         </Button>
       </div>
-      <div className="flex overflow-auto no-scroll md:flex-wrap gap-2">
+      <div className="flex gap-2 overflow-auto no-scroll md:flex-wrap">
         {isLoading && <Loading />}
         {!isLoading &&
           Object.entries(selectedFilters).map(([name, value]) => (

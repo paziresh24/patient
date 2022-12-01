@@ -84,7 +84,7 @@ const Search: NextPageWithLayout = () => {
         </div>
         <SearchSeoBox />
         {!isWebView && (
-          <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${encodeURIComponent(asPath)}`} className="block">
+          <a href={`/home/support-form-search/?p24refer=${asPath}`} className="block">
             <Button variant="secondary" className="!my-5" block>
               گزارش مشکل در جستجو
             </Button>
@@ -115,6 +115,8 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
   try {
     const queryClient = new QueryClient();
 
+    const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
+
     await queryClient.fetchQuery(
       [
         ServerStateKeysEnum.Search,
@@ -131,6 +133,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
           query: {
             ...query,
           },
+          headers,
         }),
     );
 

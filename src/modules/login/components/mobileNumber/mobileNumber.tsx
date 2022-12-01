@@ -4,7 +4,7 @@ import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
 import { digitsFaToEn, phoneNumberValidator } from '@persian-tools/persian-tools';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 

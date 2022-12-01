@@ -1,12 +1,10 @@
 import Text from '@/common/components/atom/text';
-import useResponsive from '@/common/hooks/useResponsive';
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 
 export const ConsultBanner = () => {
-  const { selectedCategory, isConsult, isLanding } = useSearch();
+  const { selectedCategory, isConsult } = useSearch();
   const { changeRoute } = useSearchRouting();
-  const { isMobile } = useResponsive();
 
   const handleClick = () => {
     changeRoute({
@@ -20,7 +18,7 @@ export const ConsultBanner = () => {
   return (
     <div
       onClick={handleClick}
-      className="relative md:hidden flex items-center p-5 px-6 mb-3 overflow-hidden text-teal-700 bg-white rounded-lg space-s-3"
+      className="relative flex items-center p-5 px-6 mb-3 overflow-hidden text-teal-700 bg-white rounded-lg md:hidden space-s-3"
     >
       <div className="flex items-center justify-center before:rounded-full before:content before:absolute before:w-10 before:h-10 before:bg-teal-700 before:opacity-30 before:animate-ping">
         <svg
