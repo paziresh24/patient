@@ -125,7 +125,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
           query: {
             ...query,
           },
-          headers,
         },
       ],
       () =>
