@@ -4,7 +4,7 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import UserCard from '../components/subuser/userCard';
 import { PatinetProfileForm } from './form';
 

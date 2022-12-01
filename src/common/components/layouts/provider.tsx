@@ -1,9 +1,8 @@
 import { LoginModalProvider } from '@/modules/login/context/loginModal';
 import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
+import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Slide, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { EntryPoint } from './entryPoint';
 
 export const queryClient = new QueryClient({
@@ -30,17 +29,14 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
           <>{children}</>
         </EntryPoint>
       </LoginModalProvider>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        closeOnClick
-        rtl
-        draggable
-        closeButton
-        limit={3}
-        theme="colored"
-        transition={Slide}
-        hideProgressBar
+      <Toaster
+        position="top-left"
+        toastOptions={{
+          style: {
+            padding: '1rem',
+          },
+          duration: 3000,
+        }}
       />
     </QueryClientProvider>
   );

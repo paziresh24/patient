@@ -33,6 +33,7 @@
     "react-dom": "18.2.0",
     "react-gtm-module": "2.0.11",
     "react-hook-form": "7.34.2",
+    "react-hot-toast": "2.4.0",
     "react-indiana-drag-scroll": "2.2.0",
     "react-intersection-observer": "^9.3.4",
     "react-leaflet": "4.0.1",
@@ -40,7 +41,6 @@
     "react-query": "^3.39.1",
     "react-responsive": "9.0.0-beta.10",
     "react-spring": "9.5.4",
-    "react-toastify": "^9.0.5",
     "react-use": "17.4.0",
     "uuid": "8.3.2",
     "zustand": "^4.0.0-rc.1"
