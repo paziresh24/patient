@@ -7,7 +7,7 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
 import { memo, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { PatinetProfileForm } from '../../views/form';
 
 interface UserCardProps {

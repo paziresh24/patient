@@ -12,7 +12,7 @@ import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
