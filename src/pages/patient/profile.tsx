@@ -6,6 +6,7 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
@@ -30,7 +31,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
       province: data.province.value,
       city: data.city.value,
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       toast.success('اطلاعات شما با موفقیت ویرایش شد.');
       return setUserInfo({ ...res.data.result });
     }
@@ -42,7 +43,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
     const res = await updateUser.mutateAsync({
       image: file[0],
     });
-    if (res.data.status === 1) return setUserInfo({ ...res.data.result });
+    if (res.data.status === ClinicStatus.SUCCESS) return setUserInfo({ ...res.data.result });
     toast.error(res.data.message);
   };
 

@@ -1,4 +1,5 @@
 import { useBook } from '@/common/apis/services/booking/book';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useBookingStore } from '../store/booking';
@@ -26,7 +27,6 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   useEffect(() => {
     setCenterInfo({ ...center });
-    console.log('hi', { ...center });
   }, [center]);
 
   const handleBookAction = async (user: any) => {
@@ -41,7 +41,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       cell: user.cell,
       national_code: user.national_code,
     });
-    if (data.status === 1) {
+    if (data.status === ClinicStatus.SUCCESS) {
       if (data.payment.reqiure_payment === '1') return router.push(`/factor/${data.book_info.id}`);
       return router.push(`/receipt/${data.book_info.id}`);
     }

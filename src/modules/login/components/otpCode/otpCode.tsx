@@ -3,6 +3,7 @@ import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
@@ -37,7 +38,7 @@ export const OtpCode = (props: OtpCodeProps) => {
         password,
       });
 
-      if (data.status === 1) {
+      if (data.status === ClinicStatus.SUCCESS) {
         postLogin && postLogin();
 
         setCookie('certificate', data.certificate, {
@@ -70,7 +71,7 @@ export const OtpCode = (props: OtpCodeProps) => {
       number_reset_password: retryGetPasswordNumber,
     });
     setRetryGetPasswordNumber(prev => ++prev);
-    if (resetPasswordRes.status === 1) {
+    if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
       return;
     }
     if (resetPasswordRes.status === 39) {
@@ -84,7 +85,7 @@ export const OtpCode = (props: OtpCodeProps) => {
     <div className="flex flex-col space-y-2">
       <div className="relative">
         <LoginTitleBar title="کد تایید" description={`لطفا کد ارسال شده به شماره ${mobileNumberValue} را وارد نمایید.`} />
-        <button className="absolute left-0 top-0 bg-slate-100 px-5 py-1 rounded-md" onClick={handleReset}>
+        <button className="absolute top-0 left-0 px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
           {shouldShowResetButton ? (
             <Text fontWeight="semiBold" fontSize="sm">
               {retryGetPasswordNumber >= 3 ? 'تماس صوتی' : 'ارسال مجدد'}

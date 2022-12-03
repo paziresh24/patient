@@ -2,6 +2,7 @@ import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser'
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
 import Modal from '@/common/components/atom/modal';
 import EditIcon from '@/common/components/icons/edit';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { useMemo, useState } from 'react';
@@ -38,7 +39,7 @@ export const UserCard = (props: UserCardProps) => {
         ...data,
         gender: data.gender.value,
       });
-      if (res.data.status === 1) {
+      if (res.data.status === ClinicStatus.SUCCESS) {
         setIsOpenEditUserModal(false);
         setUserInfo(res.data.result);
         return;
@@ -50,7 +51,7 @@ export const UserCard = (props: UserCardProps) => {
       gender: data.gender.value,
       id: userId,
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       refetchData && refetchData();
       return;
     }

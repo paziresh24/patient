@@ -1,4 +1,5 @@
 import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
@@ -51,7 +52,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       },
       {
         onSuccess: data => {
-          if (data.data.status === 1) {
+          if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
             setRemoveModal(false);
             return;

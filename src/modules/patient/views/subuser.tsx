@@ -3,6 +3,7 @@ import { useGetSubuser } from '@/common/apis/services/auth/subuser/getSubuser';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import UserCard from '../components/subuser/userCard';
@@ -30,7 +31,7 @@ export const SubuserList = () => {
       national_code: data.national_code,
       ...(data.gender && { gender: data.gender?.value }),
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
       setIsOpenAddUserModal(false);
       return;
@@ -40,7 +41,7 @@ export const SubuserList = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col">
+      <div className="flex flex-col w-full">
         {isLoading && <SubUserLoading />}
         {isSuccess &&
           data?.data?.result?.map((item: any) => (
