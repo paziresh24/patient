@@ -8,7 +8,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import UserCard from '../../components/userCard';
 
 interface SelectUserProps {
