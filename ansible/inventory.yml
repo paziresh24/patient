@@ -13,7 +13,7 @@ all:
         ansible_password: '{{ lookup("env", "DEVELOP_SERVER_PASSWORD") }}'
     main_servers:
       hosts:
-        192.168.216.44:
+        192.168.216.54:
       vars:
         ansible_user: root
         ansible_python_interpreter: /usr/bin/python3 # remove this line for running install python3 playbook

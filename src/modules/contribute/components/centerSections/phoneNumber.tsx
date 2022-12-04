@@ -3,7 +3,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { PhoneNumber } from '../../types/phoneNumber';
 import AddButton from '../addButton';
 import DislikeButton from '../dislikeButton/dislikeButton';
@@ -29,8 +29,8 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
       return;
     }
     phoneNumberValue == userData?.username
-      ? toast.warning('لطفا شماره تلفن مرکز را وارد کنید.')
-      : toast.warning('این شماره قبلا وارد شده است.');
+      ? toast.error('لطفا شماره تلفن مرکز را وارد کنید.')
+      : toast.error('این شماره قبلا وارد شده است.');
   };
 
   const editPhoneNumber = (value: string) => {

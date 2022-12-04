@@ -115,6 +115,8 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
   try {
     const queryClient = new QueryClient();
 
+    const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
+
     await queryClient.fetchQuery(
       [
         ServerStateKeysEnum.Search,
@@ -131,6 +133,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
           query: {
             ...query,
           },
+          headers,
         }),
     );
 
