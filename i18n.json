@@ -2,6 +2,7 @@
   "locales": ["fa", "en"],
   "defaultLocale": "fa",
   "localeDetection": false,
+  "logBuild": false,
   "pages": {
     "*": ["common"],
     "/": ["home", "search"],

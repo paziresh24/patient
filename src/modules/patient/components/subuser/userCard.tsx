@@ -8,7 +8,7 @@ import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { memo, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { PatinetProfileForm } from '../../views/form';
 
 interface UserCardProps {
