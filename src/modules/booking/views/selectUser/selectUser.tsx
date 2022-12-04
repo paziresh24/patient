@@ -7,7 +7,7 @@ import Text from '@/common/components/atom/text';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import UserCard from '../../components/userCard';
 
 interface SelectUserProps {
@@ -55,7 +55,7 @@ export const SelectUser = (props: SelectUserProps) => {
   return (
     <div className="flex flex-col space-y-6">
       <Text fontWeight="bold">لطفا بیمار را انتخاب کنید</Text>
-      <div className="w-full flex flex-col space-y-3">
+      <div className="flex flex-col w-full space-y-3">
         {isLoading && <SubUserLoading />}
         {isSuccess && (
           <>
