@@ -7,11 +7,11 @@ import { Dispatch, SetStateAction } from 'react';
 interface FileUploaderProp {
   files: any[];
   setFiles: Dispatch<SetStateAction<any[]>>;
-  lable?: string;
+  title?: string;
 }
 
 export const Uploader = (props: FileUploaderProp) => {
-  const { files, setFiles, lable } = props;
+  const { files, setFiles, title } = props;
 
   const handleFileChange = (file: any) => {
     if (!file.target.files) return;
@@ -27,9 +27,9 @@ export const Uploader = (props: FileUploaderProp) => {
 
   return (
     <>
-      {!!lable && (
+      {!!title && (
         <Text fontSize="sm" fontWeight="medium" className="text-black -mb-1 block">
-          {lable}
+          {title}
         </Text>
       )}
       <div className={clsx('bg-none', { ' bg-[#f8fafb] border rounded-lg !border-solid border-slate-300': !!files.length })}>

@@ -5,6 +5,11 @@ import Uploader from '../../components/uploader';
 
 interface TurnRequestProps {
   uploadRequired: boolean;
+  discriptionTitle?: string;
+  placeholder?: string;
+  uploaderTitle?: string;
+  rulesBoxTitle?: string;
+  checkboxText?: string;
   rules: Array<string>;
   getData: (data: TurnRequestInformation) => void;
 }
@@ -15,7 +20,7 @@ type TurnRequestInformation = {
 };
 
 export const TurnRequest = (props: TurnRequestProps) => {
-  const { uploadRequired, rules, getData } = props;
+  const { uploadRequired, rules, getData, discriptionTitle, placeholder, uploaderTitle, rulesBoxTitle, checkboxText } = props;
   const [files, setFiles] = useState<Array<any>>([]);
   const [acceptRules, setAcceptRules] = useState<boolean>(false);
   const [discription, setDiscription] = useState<string>('');
@@ -37,17 +42,12 @@ export const TurnRequest = (props: TurnRequestProps) => {
           size="large"
           className="!bg-[#f8fafb] h-[10rem]"
           multiLine
-          label="لطفا توضیحات مورد نظر خود را وارد کنید"
-          placeholder="توضیحات..."
+          label={discriptionTitle}
+          placeholder={placeholder}
           onChange={e => setDiscription(e.target.value)}
         />
-        {uploadRequired && <Uploader lable="لطفا مدارک مورد نیاز خود را بارگذاری کنید" files={files} setFiles={setFiles} />}
-        <RulesBox
-          checkedText="قوانین را مطالعه کردم و پذیرفتم."
-          onChecked={setAcceptRules}
-          rules={rules}
-          title="شرایط دریافت نوبت از پذیرش24"
-        />
+        {uploadRequired && <Uploader title={uploaderTitle} files={files} setFiles={setFiles} />}
+        <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />
       </div>
     </>
   );
