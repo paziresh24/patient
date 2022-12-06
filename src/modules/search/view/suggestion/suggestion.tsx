@@ -1,9 +1,11 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
+import { splunkSearchInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
+import { debounce } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
@@ -59,6 +61,25 @@ export const Suggestion = (props: SuggestionProps) => {
     }
   }, []);
 
+  const sendSuggestionViewEvent = useCallback(
+    debounce(data => {
+      splunkSearchInstance().sendEvent({
+        group: 'suggestion_events',
+        type: 'suggestion_view',
+        event: {
+          data: {
+            result_count: data?.map((suggestionItems: any) => suggestionItems.items).flat().length,
+            city: city.name,
+            searched_text: userSearchValue,
+            current_url: window.location.href,
+            uuid: getCookie('terminal_id'),
+          },
+        },
+      });
+    }, 2000),
+    [],
+  );
+
   useEffect(() => {
     setIsLoading(true);
   }, [userSearchValue, city]);
@@ -107,6 +128,7 @@ export const Suggestion = (props: SuggestionProps) => {
 
   const suggestionItems = useMemo(() => {
     setIsLoading(false);
+    sendSuggestionViewEvent(searchSuggestion.data?.data);
     return searchSuggestion.data?.data ?? [];
   }, [searchSuggestion.data]);
 
