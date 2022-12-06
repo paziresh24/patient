@@ -47,7 +47,7 @@ export const TurnRequest = (props: TurnRequestProps) => {
           onChange={e => setDiscription(e.target.value)}
         />
         {uploadRequired && <Uploader title={uploaderTitle} files={files} setFiles={setFiles} />}
-        <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />
+        {rules.length && <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />}
       </div>
     </>
   );
