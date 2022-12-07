@@ -91,5 +91,5 @@ deploy production:
   stage: deploy
   when: manual
   script:
-    - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+#    - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
     - curl -X POST -F variables[DOCKER_TAG_PATIENT]=${KUBERNETES_DOCKER_TAG} -F token=${KUBIT_WEBHOOK_TOKEN} https://api.kubit.ir/api/core/packs/pand5jlz/vars/
