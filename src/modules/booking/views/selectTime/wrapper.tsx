@@ -1,7 +1,7 @@
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { BaseInfo } from '../../types/baseInfo';
 import SelectTime from './selectTime';
 
@@ -14,7 +14,7 @@ export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {
   const [timeId, setTimeId] = useState('');
 
   const handleSubmit = (id: string) => {
-    if (!id) return toast.warn('لطفا زمان مورد نظر خود را انتخاب کنید');
+    if (!id) return toast.error('لطفا زمان مورد نظر خود را انتخاب کنید');
     onSubmit(id);
   };
 

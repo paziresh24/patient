@@ -2,16 +2,26 @@
 
 const nextTranslate = require('next-translate');
 
-const isProduction = process.env.NODE_ENV === 'production';
-
+const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
-  ...nextTranslate(),
-  swcMinify: false,
-  reactStrictMode: false,
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+        __SENTRY_TRACING__: false,
+      }),
+    );
+
+    return config;
+  },
+  swcMinify: true,
+  reactStrictMode: true,
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -23,6 +33,13 @@ const nextConfig = {
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
+  sentry: {
+    hideSourceMaps: false,
+  },
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+module.exports = withSentryConfig(withBundleAnalyzer(nextTranslate(nextConfig)), sentryWebpackPluginOptions);

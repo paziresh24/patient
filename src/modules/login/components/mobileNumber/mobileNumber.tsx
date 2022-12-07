@@ -5,7 +5,7 @@ import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { digitsFaToEn, phoneNumberValidator } from '@persian-tools/persian-tools';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 

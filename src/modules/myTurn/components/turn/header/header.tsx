@@ -14,7 +14,7 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import Link from 'next/link';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
 
