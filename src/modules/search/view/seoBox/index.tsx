@@ -4,7 +4,6 @@ import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useWebView from '@/common/hooks/useWebView';
-import Onboard from '../../components/onboard';
 import { useSearch } from '../../hooks/useSearch';
 
 export const SearchSeoBox = () => {
@@ -14,7 +13,6 @@ export const SearchSeoBox = () => {
   return (
     <>
       <Breadcrumbs className="py-5" items={seoInfo?.breadcrumbs!} />
-      <Onboard />
       {!isWebView && (
         <div className="flex flex-col !mt-5 space-y-2">
           <Text as="h1" fontWeight="bold">
