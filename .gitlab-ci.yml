@@ -10,6 +10,7 @@ variables:
   PROJECT_DOCKER_IMAGE_TAG: dockerhub.paziresh24.com/patient-app
   ANSIBLE_HOST_KEY_CHECKING: 'false'
   ANSIBLE_FORCE_COLOR: 'true'
+  KUBERNETES_DOCKER_TAG: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID
 
 services:
   - name: dockerhub.paziresh24.com/docker:dind
@@ -57,9 +58,11 @@ build and push docker production image:
     - docker build
       --build-arg BUILD_ARGUMENT_ENV=prod
       --tag $PROJECT_DOCKER_IMAGE_TAG:latest
+      --tag $PROJECT_DOCKER_IMAGE_TAG:$KUBERNETES_DOCKER_TAG
       --cache-from $PROJECT_DOCKER_IMAGE_TAG:latest
       .
     - docker push $PROJECT_DOCKER_IMAGE_TAG:latest
+    - docker push $PROJECT_DOCKER_IMAGE_TAG:$KUBERNETES_DOCKER_TAG
   tags:
     - france-loc
 
