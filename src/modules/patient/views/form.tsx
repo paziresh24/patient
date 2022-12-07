@@ -1,9 +1,11 @@
 /* eslint-disable react/display-name */
 import Autocomplete from '@/common/components/atom/autocomplete';
 import Button from '@/common/components/atom/button';
+import Checkbox from '@/common/components/atom/checkbox';
 import TextField from '@/common/components/atom/textField';
 import cities from '@/common/constants/places/city.json';
 import provinces from '@/common/constants/places/province.json';
+import clsx from 'clsx';
 import { memo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -20,7 +22,7 @@ const genders = [
 
 const formattedProvinces = provinces.map(item => ({ label: item.name, value: item.id }));
 
-export type FormFields = Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL'>;
+export type FormFields = Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL' | 'IS_FOREIGNER'>;
 
 interface PatinetProfileFormProps {
   fields: FormFields;
@@ -28,6 +30,7 @@ interface PatinetProfileFormProps {
     NAME?: string;
     FAMILY?: string;
     NATIONAL_CODE?: string;
+    IS_FOREIGNER?: boolean;
     GENDER?: string;
     PROVINCE?: string;
     CITY?: string;
@@ -84,6 +87,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
       name: defaultValues?.NAME ?? '',
       family: defaultValues?.FAMILY ?? '',
       national_code: defaultValues?.NATIONAL_CODE ?? '',
+      is_foreigner: defaultValues?.IS_FOREIGNER ?? false,
       ...(defaultValues?.CELL && { cell: defaultValues?.CELL ?? '' }),
       ...(defaultValues?.GENDER && { gender: genders.find(item => item.value === defaultValues?.GENDER) }),
       ...(defaultValues?.PROVINCE && {
@@ -115,6 +119,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
           | 'name'
           | 'family'
           | 'national_code'
+          | 'is_foreigner'
           | 'province'
           | 'city';
         fieldName &&
@@ -128,8 +133,8 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
   const provinceValue = watch('province');
 
   return (
-    <form className="flex space-y-5 flex-wrap" onSubmit={handleSubmit(onSubmit)}>
-      <div className="w-full grid md:grid-cols-2 gap-3">
+    <form className="flex flex-wrap space-y-5" onSubmit={handleSubmit(onSubmit)}>
+      <div className="grid w-full gap-3 md:grid-cols-2">
         {fields?.includes('NAME') && (
           <TextField error={!!errors.name} helperText={errors.name?.message} {...register('name', { required: true })} label="نام" />
         )}
@@ -142,12 +147,19 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
           />
         )}
         {fields?.includes('NATIONAL_CODE') && (
-          <TextField
-            error={!!errors.national_code}
-            helperText={errors.national_code?.message}
-            {...register('national_code', { required: true })}
-            label="کدملی"
-          />
+          <div className="flex flex-col space-y-2">
+            <TextField
+              error={!!errors.national_code}
+              helperText={errors.national_code?.message}
+              {...register('national_code', { required: !watch('is_foreigner') })}
+              label="کدملی"
+              disabled={watch('is_foreigner')}
+              classNameWrapper={clsx({
+                'opacity-40': watch('is_foreigner'),
+              })}
+            />
+            {fields?.includes('IS_FOREIGNER') && <Checkbox label="اتباع خارجی" {...register('is_foreigner')} />}
+          </div>
         )}
         {fields?.includes('GENDER') && (
           <Controller
