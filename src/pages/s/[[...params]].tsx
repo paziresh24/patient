@@ -61,7 +61,7 @@ const Search: NextPageWithLayout = () => {
 
   return (
     <>
-      <Seo {...seoInfo} jsonlds={[seoInfo?.jsonld]} />
+      <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} />
       <div className="flex flex-col items-center justify-center p-3 space-y-3 bg-white">
         <Suggestion key={asPath.toString()} overlay />
         <MobileToolbar />
