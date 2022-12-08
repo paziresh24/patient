@@ -2,7 +2,7 @@ import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkSearchInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
