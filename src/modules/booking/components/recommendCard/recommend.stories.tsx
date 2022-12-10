@@ -13,8 +13,8 @@ const Template = args => (
   </div>
 );
 
-export const Default = Template.bind({});
-Default.args = {
+export const Recommend = Template.bind({});
+Recommend.args = {
   recommendDoctors: [
     {
       id: '38291d62-ea0e-48da-aa65-8e4c544dbcc1',
