@@ -33,15 +33,17 @@ const nextConfig = {
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
-  sentry: {
-    hideSourceMaps: false,
-  },
+  ...(isProduction && {
+    sentry: {
+      hideSourceMaps: false,
+    },
+  }),
 };
 
 const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-console.log(process.env.NODE_ENV);
+const sentryConfig = isProduction ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig;
 
-module.exports = withBundleAnalyzer(nextTranslate(isProduction ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig));
+module.exports = withBundleAnalyzer(nextTranslate(sentryConfig));
