@@ -6,6 +6,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { memo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { PatinetProfileForm } from '../../views/form';
@@ -32,7 +33,7 @@ export const UserCard = memo((props: UserCardProps) => {
       user_id: userId,
     });
 
-    if (data.status === 1) {
+    if (data.status === ClinicStatus.SUCCESS) {
       setIsOpenRemoveModal(false);
       refetchData && refetchData();
       return;
@@ -51,7 +52,7 @@ export const UserCard = memo((props: UserCardProps) => {
       gender: data.gender.value,
       id: userId,
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       setIsOpenEditUserModal(false);
       refetchData && refetchData();
       return;

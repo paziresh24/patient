@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import { useEffect, useState } from 'react';
@@ -40,7 +41,7 @@ export const SelectUser = (props: SelectUserProps) => {
       national_code: data.national_code,
       ...(data.gender && { gender: data.gender?.value }),
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
       setIsOpenAddUserModal(false);
       return;

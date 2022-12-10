@@ -1,4 +1,5 @@
 import * as NextImage from 'next/image';
+import Provider from '../src/common/components/layouts/provider';
 import '../src/styles/globals.css';
 import './rtl.css';
 
@@ -8,6 +9,8 @@ Object.defineProperty(NextImage, 'default', {
   configurable: true,
   value: props => <OriginalNextImage {...props} unoptimized />,
 });
+
+export const decorators = [story => <Provider>{story()}</Provider>];
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
