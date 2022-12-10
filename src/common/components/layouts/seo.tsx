@@ -8,6 +8,7 @@ interface SeoProps {
   description?: string;
   children?: ReactNode;
   jsonlds?: any[];
+  canonicalUrl?: string;
 }
 
 const getPathFromUrl = (url: string): string => {
@@ -15,7 +16,7 @@ const getPathFromUrl = (url: string): string => {
 };
 
 export const Seo = (props: SeoProps) => {
-  const { title, description, jsonlds, children } = props;
+  const { title, description, jsonlds, canonicalUrl, children } = props;
   const { asPath } = useRouter();
 
   const titleTemplate = `${title ?? ''} | پذیرش24`;
@@ -28,7 +29,7 @@ export const Seo = (props: SeoProps) => {
       <meta name="title" content={titleTemplate} />
       <meta name="description" content={description} />
 
-      <link rel="canonical" href={`https://www.paziresh24.com${getPathFromUrl(asPath)}`} />
+      <link rel="canonical" href={canonicalUrl ?? `https://www.paziresh24.com${getPathFromUrl(asPath)}`} />
 
       <meta property="og:title" content={titleTemplate} />
       <meta property="og:description" content={description} />

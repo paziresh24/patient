@@ -42,4 +42,6 @@ const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-module.exports = withSentryConfig(withBundleAnalyzer(nextTranslate(nextConfig)), sentryWebpackPluginOptions);
+console.log(process.env.NODE_ENV);
+
+module.exports = withBundleAnalyzer(nextTranslate(isProduction ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig));

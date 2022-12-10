@@ -1,109 +1,85 @@
-import { useGetFreeTurn } from '@/common/apis/services/booking/getFreeTurn';
 import { useSuspend } from '@/common/apis/services/booking/suspend';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
-import Button from '@/common/components/atom/button';
-import Text from '@/common/components/atom/text';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
-import Select from '../../components/select';
-import SelectOtherTurnTime from '../../components/selectOtherTurnTime';
-import { useBookingStore } from '../../store/booking';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import FreeTurn from '../../components/selectTime/freeTurn';
+import OtherTimes from '../../components/selectTime/otherTimes';
+import useFirstFreeTime from '../../hooks/selectTime/useFirstFreeTime';
+import useOtherTimes from '../../hooks/selectTime/useOtherTimes';
+import { BaseInfo } from '../../types/baseInfo';
 
-interface SelectTurnTimeProps {
-  onSubmit: () => void;
+interface SelectTimeProps extends BaseInfo {
+  onSelect: ({ timeId, forceClick }: { timeId: string; forceClick: boolean }) => void;
 }
 
-export const SelectTime = (props: SelectTurnTimeProps) => {
-  const { onSubmit } = props;
-  const { query } = useRouter();
-  const center = useBookingStore(state => state.center);
-  const setTurnTime = useBookingStore(state => state.setTurnTime);
-  const requestCode = useBookingStore(state => state.turnTime.requestCode);
-  const getFreeTurn = useGetFreeTurn();
-  const unsuspend = useUnsuspend();
+enum TimeMode {
+  'FIRST_FREE_TURN' = 'FIRST_FREE_TURN',
+  'OTHER_FREE_TURN' = 'OTHER_FREE_TURN',
+}
+
+export const SelectTimeUi = (props: SelectTimeProps) => {
+  const { onSelect, ...baseInfo } = props;
+  const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo });
+  const firstFreeTime = useFirstFreeTime({ ...baseInfo });
   const suspend = useSuspend();
-  const [selectedTime, setSelectedTime] = useState<{
-    from: number;
-    to: number;
-  } | null>(null);
-  const [type, setType] = useState<'firstTime' | 'otherTimes'>('firstTime');
+  const unSuspend = useUnsuspend();
+
+  const [timeMode, setTimeMode] = useState<TimeMode>(TimeMode.FIRST_FREE_TURN);
 
   useEffect(() => {
-    if (center.centerId && center.userCenterId) getAvailableTurnTime();
-  }, [center]);
-
-  const getAvailableTurnTime = async () => {
-    const { data } = await getFreeTurn.mutateAsync({
-      center_id: center.centerId,
-      service_id: center.serviceId,
-      user_center_id: center.userCenterId,
-      type: query.isWebView ? 'app' : 'web',
-    });
-    if (data.status === 1) {
-      setTurnTime({ requestCode: data.result?.request_code });
-      setSelectedTime({
-        from: data.result?.from,
-        to: data.result?.to,
-      });
+    if (firstFreeTime.isSuccess) {
+      handleSelectTime(firstFreeTime.timeId!);
     }
+  }, [firstFreeTime.isSuccess]);
+
+  const timeModeAction = {
+    FIRST_FREE_TURN: async () => {
+      if (timeMode === TimeMode.FIRST_FREE_TURN) return null;
+      setTimeMode(TimeMode.FIRST_FREE_TURN);
+      const data = await firstFreeTime.getFirstFreeTime();
+      handleSelectTime(data.timeId!, 'forceClick');
+    },
+    OTHER_FREE_TURN: () => {
+      if (timeMode === TimeMode.FIRST_FREE_TURN) {
+        unSuspend.mutate({
+          center_id: baseInfo.centerId,
+          request_code: firstFreeTime.timeId!,
+        });
+        getDays();
+        setTimeMode(TimeMode.OTHER_FREE_TURN);
+        handleSelectTime('');
+      }
+    },
   };
 
-  const handleClickOtherTime = useCallback(() => {
-    unsuspend.mutate({
-      center_id: center.centerId,
-      request_code: requestCode,
-    });
-    setType('otherTimes');
-    setSelectedTime(null);
-  }, [center, requestCode]);
-
-  const handleSubmitOtherTime = useCallback(
-    async ({ from, to }: { from: number; to: number }) => {
-      const { data } = await suspend.mutateAsync({
-        center_id: center.centerId,
-        service_id: center.serviceId,
-        user_center_id: center.userCenterId,
-        from,
-        to,
-      });
-      setTurnTime({ requestCode: data.request_code });
-      onSubmit();
-    },
-    [center, requestCode],
-  );
-
-  const handleSubmit = useCallback(() => {
-    setTurnTime({ requestCode: getFreeTurn.data?.data?.result?.request_code });
-    onSubmit();
-  }, [getFreeTurn.data]);
+  const handleSelectTime = async (timeId: string, forceClick?: string) => {
+    onSelect({ timeId, forceClick: !!forceClick });
+  };
 
   return (
-    <div className="flex flex-col space-y-6">
-      <Text fontWeight="bold">انتخاب زمان نوبت</Text>
-      <div className="flex flex-col space-y-3">
-        <Select
-          title="زودترین زمان نوبت خالی:"
-          subTitle={getFreeTurn.data?.data?.result?.full_date ?? 'زمان نوبت خالی وجود ندارد.'}
-          isLoading={!getFreeTurn.isSuccess}
-          selected={type === 'firstTime'}
-          onSelect={() => {
-            setType('firstTime');
-            handleSubmit();
-          }}
-        />
-        <Select title="انتخاب زمان دیگر" selected={type === 'otherTimes'} onSelect={handleClickOtherTime} />
-        {type === 'otherTimes' && <SelectOtherTurnTime onSelectTime={handleSubmitOtherTime} />}
-      </div>
-      <Button
-        className="self-end w-40"
-        disabled={!selectedTime}
-        onClick={() => selectedTime && handleSubmit()}
-        loading={getFreeTurn.isLoading || suspend.isLoading}
-      >
-        ادامه
-      </Button>
+    <div
+      className={clsx('flex flex-col space-y-3', {
+        'animate-pulse opacity-75 pointer-events-none': suspend.isLoading,
+      })}
+    >
+      <FreeTurn {...firstFreeTime} onSelect={timeModeAction[TimeMode.FIRST_FREE_TURN]} selected={timeMode === TimeMode.FIRST_FREE_TURN} />
+      <OtherTimes
+        {...otherTimes}
+        onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}
+        selected={timeMode === TimeMode.OTHER_FREE_TURN}
+        onSelectTime={async ({ from, to }) => {
+          const { data } = await suspend.mutateAsync({
+            center_id: baseInfo.centerId,
+            service_id: baseInfo.serviceId,
+            user_center_id: baseInfo.userCenterId,
+            from,
+            to,
+          });
+          handleSelectTime(data.request_code, 'forceClick');
+        }}
+      />
     </div>
   );
 };
 
-export default SelectTime;
+export default SelectTimeUi;

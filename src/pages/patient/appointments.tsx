@@ -31,7 +31,7 @@ export const Appointments: NextPageWithLayout = () => {
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
-  const { openLoginModal } = useLoginModalContext();
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   const getBooks = useGetBooks({
     page,
@@ -64,7 +64,7 @@ export const Appointments: NextPageWithLayout = () => {
       getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
     }
     if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401)
-      openLoginModal({
+      handleOpenLoginModal({
         state: true,
         postLogin: () => regetchBook(),
       });
