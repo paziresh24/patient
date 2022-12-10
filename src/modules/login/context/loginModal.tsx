@@ -1,16 +1,17 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { LoginModal } from '../views/loginModal';
 
 interface State {
   state: boolean;
   title?: string;
   description?: string;
+  closable?: boolean;
   postLogin?: () => void;
 }
 
 export type TodoContextType = {
   loginModalState: State;
-  openLoginModal: Dispatch<SetStateAction<State>>;
+  handleOpenLoginModal: (state: State) => void;
 };
 
 const LoginModalContext = createContext<TodoContextType | null>(null);
@@ -25,14 +26,19 @@ const useLoginModalContext = () => {
 };
 
 const LoginModalProvider = ({ children }: any) => {
-  const [loginModalState, openLoginModal] = useState<State>({
+  const [loginModalState, setLoginModalState] = useState<State>({
     state: false,
-    title: '',
-    description: '',
+    title: undefined,
+    description: undefined,
+    closable: true,
   });
 
+  const handleOpenLoginModal = (state: State) => {
+    setLoginModalState(prev => ({ ...prev, ...state }));
+  };
+
   return (
-    <LoginModalContext.Provider value={{ loginModalState, openLoginModal }}>
+    <LoginModalContext.Provider value={{ loginModalState, handleOpenLoginModal }}>
       {children}
       <LoginModal />
     </LoginModalContext.Provider>

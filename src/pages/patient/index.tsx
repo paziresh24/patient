@@ -28,12 +28,12 @@ export const PatinetProfile: NextPageWithLayout = () => {
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
-  const { openLoginModal } = useLoginModalContext();
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   useEffect(() => {
     !isLogin &&
       !loginPending &&
-      openLoginModal({
+      handleOpenLoginModal({
         state: true,
       });
   }, [isLogin, loginPending]);

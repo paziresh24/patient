@@ -50,7 +50,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   return (
     <div>
       {step === 'selectTurnTime' && <SelectTurnTime onSubmit={() => setStep('selectUser')} />}
-      {step === 'selectUser' && <SelectUser onSubmit={handleBookAction} loading={book.isLoading} />}
+      {step === 'selectUser' && <SelectUser onSelect={handleBookAction} loading={book.isLoading} />}
     </div>
   );
 };

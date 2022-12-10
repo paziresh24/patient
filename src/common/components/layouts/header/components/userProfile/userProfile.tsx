@@ -24,7 +24,7 @@ import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 export const UserProfile = () => {
-  const { openLoginModal } = useLoginModalContext();
+  const { handleOpenLoginModal } = useLoginModalContext();
   const { t } = useTranslation('common');
   const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
@@ -66,7 +66,7 @@ export const UserProfile = () => {
   }, [open]);
 
   const handleLogin = () => {
-    openLoginModal({
+    handleOpenLoginModal({
       state: true,
     });
   };
