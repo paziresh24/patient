@@ -32,14 +32,14 @@
 
     - name: down
       docker_compose:
-        project_src: /var/www/beigi/patient
+        project_src: /var/www/fti.cicd/dev/paziresh24-frontends
         files:
-          - docker-compose.dev.yml
+          - docker-compose.yml
         state: absent
 
     - name: up
       docker_compose:
-        project_src: /var/www/beigi/patient
+        project_src: /var/www/fti.cicd/dev/paziresh24-frontends
         files:
-          - docker-compose.dev.yml
+          - docker-compose.yml
         state: present
