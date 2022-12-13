@@ -4,8 +4,8 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import BookInfo from '@/modules/booking/views/receipt/views/bookInfo/bookInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import BookInfo from '@/modules/receipt/views/bookInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo } from 'react';
@@ -29,6 +29,8 @@ const Receipt: NextPageWithLayout = () => {
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
 
+  console.log(bookDetailsData);
+
   const handlePaymentAction = async () => {
     if (bookId) {
       const { data } = await centerPayment.mutateAsync({ book_id: bookId?.toString() });
@@ -39,7 +41,7 @@ const Receipt: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10">
+    <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10 p-2">
       <div className="w-full flex flex-col space-y-6 bg-white rounded-lg shadow-card p-5 md:p-8">
         <div className="flex flex-col justify-center items-center space-y-3">
           <svg width="43" height="43" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,15 +67,24 @@ const Receipt: NextPageWithLayout = () => {
               اشتراک گذاری
             </Button>
           </div>
+          <div className="flex space-s-3">
+            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+              نوبت های من
+            </Button>
+            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+              لغو نوبت
+            </Button>
+          </div>
           <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
-            نوبت های من
+            مشاهده در نقشه و مسیریابی
           </Button>
         </div>
       </div>
-      <div className="w-full md:w-[35rem] bg-white p-5 shadow-card rounded-lg mb-2 md:mb-0">
+      <div className="w-full md:w-[35rem] bg-white p-4 shadow-card rounded-lg mb-2 md:mb-0">
         <DoctorInfo
+          className="bg-[#f8fafb] p-4 rounded-lg"
           avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
-          firstName={bookDetailsData?.doctor_name}
+          firstName={`دکتر ${bookDetailsData?.doctor_name}`}
           lastName={bookDetailsData?.doctor_family}
           expertise={getDisplayDoctorExpertise({
             aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,
