@@ -56,7 +56,6 @@ export const Suggestion = (props: SuggestionProps) => {
     if (isMobile || overlay) {
       neutralizeBack();
       lockScroll();
-      console.log('hi');
     }
     setIsOpenSuggestion(true);
     suggestionEvents.open({
