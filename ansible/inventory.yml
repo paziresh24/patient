@@ -6,11 +6,11 @@ all:
         ansible_user: root
         ansible_password: '{{ lookup("env", "STAGING_SERVER_PASSWORD") }}'
     develop_server:
-      hosts: 192.168.216.83
+      hosts: 192.168.216.108
       vars:
         ansible_user: root
         ansible_python_interpreter: /usr/bin/python3 
-        ansible_password: '{{ lookup("env", "DEVELOP_SERVER_PASSWORD") }}'
+        ansible_password: '{{ lookup("env", "DEV_SERVER_PASSWORD") }}'
     main_servers:
       hosts:
         192.168.216.54:

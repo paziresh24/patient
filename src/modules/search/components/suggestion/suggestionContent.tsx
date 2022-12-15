@@ -10,13 +10,13 @@ import SliderSection from './suggestionSection/slider';
 import TextSection from './suggestionSection/text';
 import TreeSection from './suggestionSection/tree';
 
-interface SuggestionCententProps extends HTMLAttributes<HTMLDivElement> {
+interface SuggestionContentProps extends HTMLAttributes<HTMLDivElement> {
   items: Section[];
   searchInput?: ReactElement;
   isLoading: boolean;
 }
 
-export const SuggestionCentent = (props: SuggestionCententProps) => {
+export const SuggestionContent = (props: SuggestionContentProps) => {
   const { className, items, searchInput, isLoading } = props;
   const { isMobile } = useResponsive();
 
@@ -67,4 +67,4 @@ export const SuggestionCentent = (props: SuggestionCententProps) => {
   );
 };
 
-export default SuggestionCentent;
+export default SuggestionContent;
