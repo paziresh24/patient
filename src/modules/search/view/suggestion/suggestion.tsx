@@ -1,16 +1,19 @@
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
+import useLockScroll from '@/common/hooks/useLockScroll';
 import useResponsive from '@/common/hooks/useResponsive';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import useVirtualBack from '@/common/hooks/useVirtualBack';
 import { getCookie } from 'cookies-next';
 import debounce from 'lodash/debounce';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { SearchBar } from '../../components/suggestion/searchBar';
+import suggestionEvents from '../../functions/suggestionEvents';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
-const SuggestionCentent = dynamic(() => import('../../components/suggestion/suggestionCentent'));
+import { Section } from '../../types/suggestion';
+const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
 }
@@ -38,9 +41,26 @@ export const Suggestion = (props: SuggestionProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, () => !isMobile && setIsOpenSuggestion(false));
+  const handleClose = () => {
+    setIsOpenSuggestion(false);
+    openScroll();
+    removeBack();
+  };
+  const { neutralizeBack, removeBack } = useVirtualBack({
+    handleClose,
+  });
+  const { lockScroll, openScroll } = useLockScroll();
 
   const openSuggestionContent = () => {
+    if (isOpenSuggestion) return;
+    if (isMobile || overlay) {
+      neutralizeBack();
+      lockScroll();
+    }
     setIsOpenSuggestion(true);
+    suggestionEvents.open({
+      cityName: city.name,
+    });
   };
 
   const clickBackButton = () => {
@@ -62,19 +82,11 @@ export const Suggestion = (props: SuggestionProps) => {
   }, []);
 
   const sendSuggestionViewEvent = useCallback(
-    debounce(data => {
-      splunkSearchInstance().sendEvent({
-        group: 'suggestion_events',
-        type: 'suggestion_view',
-        event: {
-          data: {
-            result_count: data?.map((suggestionItems: any) => suggestionItems.items).flat().length,
-            city: city.name,
-            searched_text: userSearchValue,
-            current_url: window.location.href,
-            uuid: getCookie('terminal_id'),
-          },
-        },
+    debounce(({ item, cityName, userSearchValue }: { item: Section[]; cityName: string; userSearchValue: string }) => {
+      suggestionEvents.view({
+        cityName: cityName,
+        item,
+        userSearchValue,
       });
     }, 2000),
     [],
@@ -83,38 +95,6 @@ export const Suggestion = (props: SuggestionProps) => {
   useEffect(() => {
     setIsLoading(true);
   }, [userSearchValue, city]);
-
-  useEffect(() => {
-    if (isOpenSuggestion && (isMobile || overlay)) {
-      neutralizeBack();
-      document.body.classList.add('overflow-hidden');
-      document.body.classList.add('md:pr-[0.3rem]');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-      document.body.classList.remove('md:pr-[0.3rem]');
-      if (isMobile) {
-        window.onpopstate = () => {
-          return;
-        };
-      }
-    }
-  }, [isOpenSuggestion, isMobile]);
-
-  const handleClose = () => {
-    setIsOpenSuggestion(false);
-  };
-
-  const neutralizeBack = () => {
-    if (isMobile) {
-      window.history.pushState(null, '', window.location.href);
-      window.onpopstate = () => {
-        window.onpopstate = () => {
-          return;
-        };
-        handleClose();
-      };
-    }
-  };
 
   const handleRedirectToSearch = (text: string) => {
     setIsOpenSuggestion(false);
@@ -126,11 +106,17 @@ export const Suggestion = (props: SuggestionProps) => {
     });
   };
 
-  const suggestionItems = useMemo(() => {
-    setIsLoading(false);
-    sendSuggestionViewEvent(searchSuggestion.data?.data);
-    return searchSuggestion.data?.data ?? [];
-  }, [searchSuggestion.data]);
+  useEffect(() => {
+    if (searchSuggestion.data && isOpenSuggestion) {
+      setIsLoading(false);
+      if (userSearchValue)
+        sendSuggestionViewEvent({
+          item: searchSuggestion.data?.data,
+          cityName: city.name,
+          userSearchValue,
+        });
+    }
+  }, [searchSuggestion.data, isOpenSuggestion]);
 
   const onChangeCity = (city: any) => {
     setCity({
@@ -154,7 +140,7 @@ export const Suggestion = (props: SuggestionProps) => {
         readOnly={isMobile}
       />
       {isOpenSuggestion && (
-        <SuggestionCentent
+        <SuggestionContent
           searchInput={
             isMobile ? (
               <SearchBar
@@ -167,7 +153,7 @@ export const Suggestion = (props: SuggestionProps) => {
               />
             ) : undefined
           }
-          items={suggestionItems}
+          items={searchSuggestion.data?.data ?? []}
           className="border border-solid shadow-md border-slate-200"
           isLoading={isLoading}
         />
