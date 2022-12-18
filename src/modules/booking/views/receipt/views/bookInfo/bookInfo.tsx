@@ -3,7 +3,6 @@ import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { addCommas } from '@persian-tools/persian-tools';
 import { turnDetailsData } from './turnDetails';
-
 interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
@@ -13,7 +12,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
   const formattedPrice = addCommas(+0 / 10);
   return (
     <div className="flex flex-col space-y-6">
-      <div className="mt-5 flex flex-col space-y-5 py-5 border border-solid border-slate-200 bg-[#f8fafb] rounded-lg">
+      <div className="mt-5 flex flex-col space-y-4 py-5 border border-solid border-slate-200 bg-[#f8fafb] rounded-lg">
         {loading && (
           <>
             <div className="flex justify-between items-center px-5">
@@ -59,7 +58,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             centerType: CenterType.clinic,
           }).map(item => (
             <>
-              <div className="px-3 py-2">
+              <div className="px-3 py-1">
                 <BaseRow key={item.id} data={item} />
               </div>
             </>

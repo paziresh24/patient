@@ -1,14 +1,18 @@
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
 import { useCenterPayment } from '@/common/apis/services/factor/centerPayment';
 import Button from '@/common/components/atom/button';
+import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
-import BookInfo from '@/modules/booking/views/receipt/views/bookInfo/bookInfo';
+import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../_app';
 const { publicRuntimeConfig } = getConfig();
 
@@ -16,9 +20,11 @@ const Receipt: NextPageWithLayout = () => {
   const {
     query: { bookId },
   } = useRouter();
-
+  const [removeModal, setRemoveModal] = useState(false);
   const getBookDetails = useGetBookDetails();
   const centerPayment = useCenterPayment();
+  const router = useRouter();
+  const { shareTurn, removeBookApi, centerMap } = useBookAction();
 
   useEffect(() => {
     if (bookId)
@@ -29,8 +35,6 @@ const Receipt: NextPageWithLayout = () => {
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
 
-  console.log(bookDetailsData);
-
   const handlePaymentAction = async () => {
     if (bookId) {
       const { data } = await centerPayment.mutateAsync({ book_id: bookId?.toString() });
@@ -40,6 +44,40 @@ const Receipt: NextPageWithLayout = () => {
     }
   };
 
+  const handleRemoveBookTurn = () => {
+    removeBookApi.mutate(
+      {
+        center_id: bookDetailsData.center_id,
+        national_code: bookDetailsData.patient_temp_national_code,
+        reference_code: bookDetailsData.book_ref_id,
+      },
+      {
+        onSuccess: data => {
+          if (data.data.status === ClinicStatus.SUCCESS) {
+            setRemoveModal(false);
+            toast.success('نوبت شما با موفقیت لغو شد!');
+            window.location.href = `/dr/${bookDetailsData.doctor_slug}`;
+            return;
+          }
+          toast.error(data.data.message);
+        },
+      },
+    );
+  };
+
+  const handleShareAction = () => {
+    shareTurn({
+      bookId: bookDetailsData.book_id,
+      text: `رسید نوبت ${bookDetailsData?.doctor_display_name} برای ${bookDetailsData?.patient_temp_name} ${bookDetailsData?.patient_temp_family}`,
+      title: 'رسیدنوبت',
+    });
+  };
+
+  const handleMyTrunButtonAction = () => {
+    router.push({
+      pathname: '/patient/appointments',
+    });
+  };
   return (
     <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10 p-2">
       <div className="w-full flex flex-col space-y-6 bg-white rounded-lg shadow-card p-5 md:p-8">
@@ -56,6 +94,7 @@ const Receipt: NextPageWithLayout = () => {
             نوبت شما با موفقیت ثبت شد
           </Text>
         </div>
+
         <BookInfo turnData={bookDetailsData} loading={getBookDetails.isLoading || getBookDetails.isIdle} />
         <div className="flex flex-col space-y-3">
           <div className="flex space-s-3">
@@ -63,19 +102,24 @@ const Receipt: NextPageWithLayout = () => {
               دانلود رسید نوبت
             </Button>
 
-            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+            <Button block variant="secondary" onClick={handleShareAction} loading={centerPayment.isLoading}>
               اشتراک گذاری
             </Button>
           </div>
           <div className="flex space-s-3">
-            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+            <Button block variant="secondary" onClick={handleMyTrunButtonAction} loading={centerPayment.isLoading}>
               نوبت های من
             </Button>
-            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+            <Button block variant="secondary" onClick={() => setRemoveModal(true)} loading={centerPayment.isLoading}>
               لغو نوبت
             </Button>
           </div>
-          <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+          <Button
+            block
+            variant="secondary"
+            onClick={() => centerMap({ lat: bookDetailsData.center_lat, lon: bookDetailsData.center_lon })}
+            loading={centerPayment.isLoading}
+          >
             مشاهده در نقشه و مسیریابی
           </Button>
         </div>
@@ -94,6 +138,16 @@ const Receipt: NextPageWithLayout = () => {
           isLoading={getBookDetails.isLoading || getBookDetails.isIdle}
         />
       </div>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+        <div className="flex space-s-2">
+          <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
+            لغو نوبت
+          </Button>
+          <Button theme="error" variant="secondary" block onClick={() => setRemoveModal(false)}>
+            انصراف
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

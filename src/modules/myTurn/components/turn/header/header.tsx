@@ -1,4 +1,3 @@
-import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
@@ -8,6 +7,7 @@ import ReceiptIcon from '@/components/icons/receipt';
 import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import TrashIcon from '@/components/icons/trash';
+import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -39,7 +39,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const share = useShare();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
-  const removeBookApi = useRemoveBook();
+  const { shareTurn, removeBookApi } = useBookAction();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
@@ -64,25 +64,14 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    window.location.assign(
-      getReceiptTurnUrl({
-        slug: doctorInfo.slug,
-        bookId: id,
-        centerId: centerId,
-      }),
-    );
+    window.location.assign(getReceiptTurnUrl(id));
   };
 
-  const shareTurn = () => {
-    const link = getReceiptTurnUrl({
-      slug: doctorInfo.slug,
+  const shareTurnInfo = () => {
+    shareTurn({
       bookId: id,
-      centerId: centerId,
-    });
-    share({
-      title: 'رسید نوبت',
       text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-      url: link,
+      title: 'رسیدنوبت',
     });
   };
 
@@ -98,7 +87,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 1,
       name: 'اشتراک گذاری',
       icon: <ShareIcon />,
-      action: shareTurn,
+      action: shareTurnInfo,
       shouldShow: true,
     },
     {

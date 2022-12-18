@@ -36,6 +36,7 @@
     "react-gtm-module": "2.0.11",
     "react-hook-form": "7.34.2",
     "react-hot-toast": "2.4.0",
+    "react-html2pdf": "1.0.1",
     "react-indiana-drag-scroll": "2.2.0",
     "react-intersection-observer": "^9.3.4",
     "react-leaflet": "4.0.1",
