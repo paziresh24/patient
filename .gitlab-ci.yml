@@ -8,13 +8,13 @@ stages:
 variables:
   STAGING_DOMAIN: sepehrsalamat.ir
   PRODUCTION_DOMAIN: paziresh24.com
-  PROJECT_DOCKER_IMAGE_TAG: dockerhub.paziresh24.com/patient-app
+  PROJECT_DOCKER_IMAGE_TAG: docker.paziresh24.info/patient-app
   ANSIBLE_HOST_KEY_CHECKING: 'false'
   ANSIBLE_FORCE_COLOR: 'true'
-  KUBERNETES_DOCKER_TAG: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID
+  KUBERNETES_DOCKER_TAG: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
 
 services:
-  - name: dockerhub.paziresh24.com/docker:dind
+  - name: docker.paziresh24.info/docker:dind
     alias: docker
 
 cache:
@@ -35,11 +35,11 @@ cache:
 
 build and push docker develop image:
   stage: docker
-  image: dockerhub.paziresh24.com/docker:stable
+  image: docker.paziresh24.info/docker:stable
   only:
     - develop
   script:
-    - docker login $DOCKER_AUTH_URL -u $DOCKER_AUTH_USERNAME -p $DOCKER_AUTH_PASSWORD
+    - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD
     - docker build
       --build-arg BUILD_ARGUMENT_ENV=dev
       --tag $PROJECT_DOCKER_IMAGE_TAG:develop
@@ -51,11 +51,11 @@ build and push docker develop image:
 
 build and push docker production image:
   stage: docker
-  image: dockerhub.paziresh24.com/docker:stable
+  image: docker.paziresh24.info/docker:stable
   only:
     - master
   script:
-    - docker login $DOCKER_AUTH_URL -u $DOCKER_AUTH_USERNAME -p $DOCKER_AUTH_PASSWORD
+    - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD
     - docker build
       --build-arg BUILD_ARGUMENT_ENV=prod
       --tag $PROJECT_DOCKER_IMAGE_TAG:latest
@@ -70,7 +70,7 @@ build and push docker production image:
 
 
 deploy develop:
-  image: dockerhub.paziresh24.com/docker-ansible:latest
+  image: docker.paziresh24.info/docker-ansible:latest
   stage: deploy-develop
   only:
     - develop
@@ -79,7 +79,7 @@ deploy develop:
 
 
 deploy staging:
-  image: dockerhub.paziresh24.com/docker-ansible:latest
+  image: docker.paziresh24.info/docker-ansible:latest
   stage: deploy
   only:
     - master
@@ -88,7 +88,7 @@ deploy staging:
 
 
 deploy production:
-  image: dockerhub.paziresh24.com/docker-ansible:latest
+  image: docker.paziresh24.info/docker-ansible:latest
   stage: deploy
   only:
     - master
