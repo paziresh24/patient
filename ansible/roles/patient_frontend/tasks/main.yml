@@ -14,11 +14,11 @@
     - debug: msg="{{ is_docker_compose_install.rc }}" # it returns rc 1
     - debug: var=is_docker_compose_install
 
-    - name: rename old image tag
-      shell: docker tag dockerhub.paziresh24.com/patient-app:latest dockerhub.paziresh24.com/patient-app:prev-latest
+    #- name: rename old image tag
+    #  shell: docker tag dockerhub.paziresh24.com/patient-app:latest dockerhub.paziresh24.com/patient-app:prev-latest
 
     - name: pull
-      shell: docker pull dockerhub.paziresh24.com/patient-app:latest
+      shell: docker pull docker.paziresh24.info/patient-app:latest
 
 
     - name: down
