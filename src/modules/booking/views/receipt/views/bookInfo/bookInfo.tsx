@@ -3,16 +3,18 @@ import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { addCommas } from '@persian-tools/persian-tools';
 import { turnDetailsData } from './turnDetails';
+
 interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
 }
+
 export const BookInfo = (props: PaymentDetailsProps) => {
   const { loading = false, turnData } = props;
   const formattedPrice = addCommas(+0 / 10);
   return (
     <div className="flex flex-col space-y-6">
-      <div className="mt-5 flex flex-col space-y-4 py-5 border border-solid border-slate-200 bg-[#f8fafb] rounded-lg">
+      <div className="mt-5 flex flex-col space-y-5 py-5 border border-solid border-slate-200  rounded-lg">
         {loading && (
           <>
             <div className="flex justify-between items-center px-5">
@@ -38,16 +40,17 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             data: {
               bookTime: turnData.book_from,
               centerName: turnData.center_name,
+              patientName: `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
               trackingCode: turnData.book_ref_id,
-              waitingTime: 'کمتر از یک ساعت' ?? '',
-              address: turnData.center_address,
-              centerId: turnData.center_id,
-              centerPhone: turnData.center_tell,
+              waitingTime: turnData?.rate_info?.waiting_time ?? '',
+              centerPhone: turnData?.center_display_number,
+              address: turnData?.center_address,
+              centerId: turnData?.center_id,
               patientInfo: {
                 name: `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
-                cell: turnData.patient_temp_cell,
-                nationalCode: turnData.patient_temp_national_code,
-                selectServeis: turnData.services[0].alias_title,
+                cell: turnData?.patient_temp_cell,
+                nationalCode: turnData?.patient_temp_national_code,
+                selectServeis: turnData?.services[0].alias_title,
               },
               rules: [
                 'لطفا پس از مراجعه به مطب(مرکز درمانی) ، به منشی اعلام کنید از طریق پذیرش24 نوبت را دریافت کرده اید تا پذیرش شما تکمیل شده و طبق زمان انتظار به پزشک مراجعه کنید.',
@@ -57,11 +60,9 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             },
             centerType: CenterType.clinic,
           }).map(item => (
-            <>
-              <div className="px-3 py-1">
-                <BaseRow key={item.id} data={item} />
-              </div>
-            </>
+            <div key={item.id} className="px-5">
+              <BaseRow data={item} key={item.id} />
+            </div>
           ))}
       </div>
     </div>
