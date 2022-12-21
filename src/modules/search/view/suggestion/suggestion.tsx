@@ -122,7 +122,13 @@ export const Suggestion = (props: SuggestionProps) => {
     setCity({
       ...city,
     });
-    router.pathname.startsWith('/s/') && changeRoute({ params: { city: city.en_slug } });
+    router.pathname.startsWith('/s/') &&
+      changeRoute({
+        params: { city: city.en_slug },
+        query: {
+          ...(router.query.city_id && { city_id: city.id }),
+        },
+      });
   };
 
   return (
