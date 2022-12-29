@@ -3,8 +3,8 @@ interface Window {
   Android: {
     shareQA: any;
     login: any;
-    updateCityWithoutProvince: any;
-    rateApp:any
+    updateCity: any;
+    rateApp: any;
   };
 }
 
