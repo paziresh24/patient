@@ -3,17 +3,17 @@ import Breadcrumbs from '@/common/components/atom/breadcrumbs';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
-import useWebView from '@/common/hooks/useWebView';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useSearch } from '../../hooks/useSearch';
 
 export const SearchSeoBox = () => {
-  const isWebView = useWebView();
+  const { showSeoBoxs } = useCustomize();
   const { seoInfo, footers } = useSearch();
 
   return (
     <>
       <Breadcrumbs className="py-5" items={seoInfo?.breadcrumbs!} />
-      {!isWebView && (
+      {showSeoBoxs && (
         <div className="flex flex-col !mt-5 space-y-2">
           <Text as="h1" fontWeight="bold">
             {seoInfo?.heading}
