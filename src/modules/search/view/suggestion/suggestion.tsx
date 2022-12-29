@@ -40,7 +40,7 @@ export const Suggestion = (props: SuggestionProps) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickAway(ref, () => !isMobile && setIsOpenSuggestion(false));
+  useClickAway(ref, () => !isMobile && handleClose());
   const handleClose = () => {
     setIsOpenSuggestion(false);
     openScroll();
@@ -64,7 +64,7 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   const clickBackButton = () => {
-    setIsOpenSuggestion(false);
+    handleClose();
     setUserSearchValue('');
   };
 
@@ -97,7 +97,7 @@ export const Suggestion = (props: SuggestionProps) => {
   }, [userSearchValue, city]);
 
   const handleRedirectToSearch = (text: string) => {
-    setIsOpenSuggestion(false);
+    handleClose();
     changeRoute({
       params: { ...(city?.id !== '-1' && { city: city?.en_slug }) },
       query: {

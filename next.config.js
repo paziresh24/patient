@@ -29,6 +29,7 @@ const nextConfig = {
     PAZIRESH24_API: process.env.PAZIRESH24_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
+    PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
