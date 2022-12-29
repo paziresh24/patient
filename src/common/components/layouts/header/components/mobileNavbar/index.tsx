@@ -73,11 +73,6 @@ const MobileNavbar = (props: MobileNavbarProps) => {
           {shouldShowBrand && (
             <Link href="/" shallow>
               <a>
-                {/* {cosutomize.showPartnerLogoInPrimaryPlace && cosutomize.partnerLogo ? (
-                  <img src={publicRuntimeConfig.PARTNER_LOGO_BASE_URL + cosutomize.partnerLogo} height={32} className="max-w-[190px]" />
-                ) : (
-                  <Logo type={cosutomize.headerBrandLogoType} fontSize="sm" width={32} height={32} />
-                )} */}
                 <HeaderLogo
                   showPartnerLogo={cosutomize.showPartnerLogoInPrimaryPlace}
                   partnerLogo={cosutomize.partnerLogo}
