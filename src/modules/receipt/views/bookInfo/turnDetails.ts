@@ -14,7 +14,6 @@ interface TurnDetailsDataParam {
     waitingTime?: string;
     trackingCode: string;
     centerName: string;
-    patientName: string;
     centerPhone?: string;
     address?: string;
     centerId: string;
@@ -25,7 +24,7 @@ interface TurnDetailsDataParam {
 }
 
 export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
-  const { bookTime, trackingCode, waitingTime, centerName, centerPhone, patientName, address, centerId, patientInfo, rules } = data;
+  const { bookTime, trackingCode, waitingTime, centerName, centerPhone, address, centerId, patientInfo, rules } = data;
 
   const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
 

@@ -40,7 +40,6 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             data: {
               bookTime: turnData.book_from,
               centerName: turnData.center_name,
-              patientName: `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
               trackingCode: turnData.book_ref_id,
               waitingTime: turnData?.rate_info?.waiting_time ?? '6 ساعت',
               centerPhone: turnData?.center_display_number,
