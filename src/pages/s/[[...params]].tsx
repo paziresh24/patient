@@ -6,6 +6,7 @@ import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import ConsultBanner from '@/modules/search/components/consultBanner';
@@ -39,6 +40,7 @@ const Search: NextPageWithLayout = () => {
   const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
+  const customize = useCustomize(state => state.customize);
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -78,13 +80,13 @@ const Search: NextPageWithLayout = () => {
                 </Text>
               </div>
             )}
-            <ConsultBanner />
+            {customize.showConsultServices && <ConsultBanner />}
             <Result />
           </div>
         </div>
         <SearchSeoBox />
         {!isWebView && (
-          <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${asPath}`} className="block">
+          <a href={`https://www.paziresh24.com/home/support-form-search/?p24refer=${decodeURIComponent(asPath)}`} className="block">
             <Button variant="secondary" className="!my-5" block>
               گزارش مشکل در جستجو
             </Button>
@@ -116,6 +118,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
     const queryClient = new QueryClient();
 
     const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
+    const university = query?.university;
 
     await queryClient.fetchQuery(
       [
@@ -124,6 +127,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
           route: (params as string[])?.join('/') ?? '',
           query: {
             ...query,
+            ...(university && { university }),
           },
         },
       ],
@@ -140,6 +144,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(async (context: Ge
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        query: context.query,
       },
     };
   } catch (error) {

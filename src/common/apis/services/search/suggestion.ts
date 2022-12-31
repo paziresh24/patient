@@ -1,6 +1,6 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import { useUniversity } from '@/common/hooks/useUniversity';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { useQuery } from 'react-query';
 
 export interface Params {
@@ -20,7 +20,7 @@ export const Suggestion = ({ query, city_id, university }: Params) => {
 };
 
 export const useSearchSuggestion = (params: Params, options?: any) => {
-  const university = useUniversity();
+  const university = useServerQuery(state => state.queries?.university);
   params = { ...params, ...(university && { university }) };
 
   return useQuery([ServerStateKeysEnum.SearchSuggestion, params], () => Suggestion(params), options);

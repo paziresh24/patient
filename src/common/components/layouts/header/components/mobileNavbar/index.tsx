@@ -22,7 +22,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
   const [expertiseItems, setExpertiseItems] = useState([]);
   const ref = useRef(null);
   const menuItemExpertise = useGetMegaMenu();
-  const cosutomize = useCustomize();
+  const customize = useCustomize(state => state.customize);
 
   const sidebarMenu = [
     {
@@ -65,7 +65,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     <div ref={ref} className="z-50 block w-full text-sm lg:hidden">
       <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
-          {cosutomize.showSideBar && (
+          {customize.showSideBar && (
             <div className="flex items-center justify-center w-8 h-8" onClick={() => setOpen(true)}>
               <HumbuggerMenu />
             </div>
@@ -74,9 +74,9 @@ const MobileNavbar = (props: MobileNavbarProps) => {
             <Link href="/" shallow>
               <a>
                 <HeaderLogo
-                  showPartnerLogo={cosutomize.showPartnerLogoInPrimaryPlace}
-                  partnerLogo={cosutomize.partnerLogo}
-                  brandType={cosutomize.headerBrandLogoType}
+                  showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
+                  partnerLogo={customize.partnerLogo}
+                  brandType={customize.headerBrandLogoType}
                   size="mobile"
                 />
               </a>
@@ -85,12 +85,12 @@ const MobileNavbar = (props: MobileNavbarProps) => {
         </div>
 
         <HeaderLogo
-          showPartnerLogo={!cosutomize.showPartnerLogoInPrimaryPlace}
-          partnerLogo={cosutomize.partnerLogo}
-          brandType={cosutomize.headerBrandLogoType}
+          showPartnerLogo={!customize.showPartnerLogoInPrimaryPlace}
+          partnerLogo={customize.partnerLogo}
+          brandType={customize.headerBrandLogoType}
           size="mobile"
         />
-        {cosutomize.showUserProfile && <UserProfile />}
+        {customize.showUserProfile && <UserProfile />}
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} isOpen={open} />
       </div>
     </div>

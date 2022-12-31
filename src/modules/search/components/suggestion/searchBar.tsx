@@ -22,7 +22,7 @@ export const SearchBar = (props: SearchBarProps) => {
   const city = useSearchStore(state => state.city);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
-  const customize = useCustomize();
+  const customize = useCustomize(state => state.customize);
 
   return (
     <div

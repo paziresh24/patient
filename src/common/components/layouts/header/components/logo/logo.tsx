@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 interface HeaderLogoProps {
-  showPartnerLogo: boolean;
+  showPartnerLogo?: boolean;
   partnerLogo?: string;
   brandType?: 'default' | 'compact';
   size?: 'mobile' | 'desktop';
