@@ -7,13 +7,13 @@ import useCustomize from '@/common/hooks/useCustomize';
 import { useSearch } from '../../hooks/useSearch';
 
 export const SearchSeoBox = () => {
-  const { showSeoBoxs } = useCustomize();
+  const customize = useCustomize(state => state.customize);
   const { seoInfo, footers } = useSearch();
 
   return (
     <>
       <Breadcrumbs className="py-5" items={seoInfo?.breadcrumbs!} />
-      {showSeoBoxs && (
+      {customize.showSeoBoxs && (
         <div className="flex flex-col !mt-5 space-y-2">
           <Text as="h1" fontWeight="bold">
             {seoInfo?.heading}

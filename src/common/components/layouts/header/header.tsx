@@ -37,7 +37,7 @@ const Header = (props: HeaderProps) => {
   const [expertiseItems, setExpertiseItems] = useState([]);
   const menuItemExpertise = useGetMegaMenu();
   const { t } = useTranslation('common');
-  const cosutomize = useCustomize();
+  const customize = useCustomize(state => state.customize);
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -52,7 +52,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      {!isDesktop && cosutomize.showPromoteApp && <PromoteAppBanner />}
+      {!isDesktop && customize.showPromoteApp && <PromoteAppBanner />}
       <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid text-slate-700 md:px-4 md:h-20 border-slate-100">
         {isDesktop && (
           <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
@@ -61,20 +61,20 @@ const Header = (props: HeaderProps) => {
                 <Link href="/" shallow>
                   <a>
                     <HeaderLogo
-                      showPartnerLogo={cosutomize.showPartnerLogoInPrimaryPlace}
-                      partnerLogo={cosutomize.partnerLogo}
-                      brandType={cosutomize.headerBrandLogoType}
+                      showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
+                      partnerLogo={customize.partnerLogo}
+                      brandType={customize.headerBrandLogoType}
                     />
                   </a>
                 </Link>
                 <HeaderLogo
-                  showPartnerLogo={!cosutomize.showPartnerLogoInPrimaryPlace}
-                  partnerLogo={cosutomize.partnerLogo}
-                  brandType={cosutomize.headerBrandLogoType}
+                  showPartnerLogo={!customize.showPartnerLogoInPrimaryPlace}
+                  partnerLogo={customize.partnerLogo}
+                  brandType={customize.headerBrandLogoType}
                 />
               </>
             )}
-            {cosutomize.showSideBar && (
+            {customize.showSideBar && (
               <nav>
                 <ul className="flex justify-center space-s-5">
                   <li ref={ref}>
@@ -126,7 +126,7 @@ const Header = (props: HeaderProps) => {
                 </ul>
               </nav>
             )}
-            {cosutomize.showUserProfile && <UserProfile />}
+            {customize.showUserProfile && <UserProfile />}
           </div>
         )}
         <MobileNavbar shouldShowBrand={shouldShowBrand} />

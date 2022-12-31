@@ -2,18 +2,20 @@ import Logo from '@/common/components/atom/logo';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { withCSR } from '@/common/hoc/withCsr';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
 import dynamic from 'next/dynamic';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import { NextPageWithLayout } from './_app';
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
-const Home: NextPageWithLayout = () => {
+const Home: NextPageWithLayout = ({ customizeQuery }: any) => {
   const { isMobile } = useResponsive();
-  const customize = useCustomize();
+  const customize = useCustomize(state => state.customize);
 
   return (
     <>
@@ -51,15 +53,15 @@ const Home: NextPageWithLayout = () => {
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const cosutomize = useCustomize();
-  return <LayoutWithHeaderAndFooter shouldShowBrand={cosutomize.showBrandLogoInHomePage}>{page}</LayoutWithHeaderAndFooter>;
+  return <LayoutWithHeaderAndFooter shouldShowBrand={false}>{page}</LayoutWithHeaderAndFooter>;
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
-}
+});
 
 export default Home;
