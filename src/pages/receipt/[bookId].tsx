@@ -5,7 +5,7 @@ import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import useResponsive from '@/common/hooks/useResponsive';
+import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
@@ -25,7 +25,13 @@ const Receipt: NextPageWithLayout = () => {
   const getBookDetails = useGetBookDetails();
   const centerPayment = useCenterPayment();
   const router = useRouter();
-  const { isMobile } = useResponsive();
+  const pdfGenerator = usePdfGenerator({
+    ref: 'receipt',
+    fileName: 'Paziresh24-Receipt',
+    orientation: 'portrait',
+    pageSize: 'a4',
+    scale: 2,
+  });
   const { shareTurn, removeBookApi, centerMap } = useBookAction();
 
   useEffect(() => {
@@ -37,14 +43,6 @@ const Receipt: NextPageWithLayout = () => {
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
 
-  const handlePaymentAction = async () => {
-    if (bookId) {
-      const { data } = await centerPayment.mutateAsync({ book_id: bookId?.toString() });
-      if (data.status) {
-        location.assign(data.url);
-      }
-    }
-  };
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
       {
@@ -65,7 +63,6 @@ const Receipt: NextPageWithLayout = () => {
       },
     );
   };
-
   const handleShareAction = () => {
     shareTurn({
       bookId: bookDetailsData.book_id,
@@ -73,16 +70,16 @@ const Receipt: NextPageWithLayout = () => {
       title: 'رسیدنوبت',
     });
   };
-
   const handleMyTrunButtonAction = () => {
     router.push({
       pathname: '/patient/appointments',
     });
   };
+
   return (
-    <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10 p-2">
+    <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10 p-2 overflow-hidden">
       <div className="w-full flex flex-col space-y-6 bg-white rounded-lg shadow-card p-3 md:p-8">
-        <div>
+        <div id="receipt">
           <div className="flex flex-col justify-center items-center space-y-3 mt-4">
             <svg width="43" height="43" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -100,7 +97,7 @@ const Receipt: NextPageWithLayout = () => {
         </div>
         <div className="flex flex-col space-y-3">
           <div className="flex space-s-3">
-            <Button block variant="secondary" onClick={handlePaymentAction} loading={centerPayment.isLoading}>
+            <Button block variant="secondary" onClick={pdfGenerator} loading={centerPayment.isLoading}>
               دانلود رسید نوبت
             </Button>
             <Button block variant="secondary" onClick={handleShareAction} loading={centerPayment.isLoading}>

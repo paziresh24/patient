@@ -10,6 +10,7 @@ type Data = {
   type: string;
   buttonAction?: () => void;
   shouldShow: boolean;
+  isBoldValue?: boolean;
 };
 
 interface BaseRowProps {
@@ -28,7 +29,7 @@ export const BaseRow = (props: BaseRowProps) => {
             titleFontSize="sm"
             titleFontWeight="medium"
             valueFontSize="sm"
-            valueFontWeight="medium"
+            valueFontWeight={data.isBoldValue ? 'bold' : 'medium'}
           />
         )}
         {data.type === 'Button' && (
@@ -40,6 +41,9 @@ export const BaseRow = (props: BaseRowProps) => {
             titleFontWeight="medium"
             variant="secondary"
           />
+        )}
+        {data.type === 'Label' && (
+          <Text fontSize="sm" fontWeight={data.isBoldValue ? 'bold' : 'medium'} dangerouslySetInnerHTML={{ __html: data.value }} />
         )}
         {data.type === 'Accordion' && (
           <Accordion className="-mt-1" title={data.name}>
