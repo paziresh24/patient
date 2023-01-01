@@ -6,10 +6,12 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { withCSR } from '@/common/hoc/withCsr';
 import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 import { toast } from 'react-hot-toast';
@@ -18,6 +20,7 @@ import { NextPageWithLayout } from '../_app';
 export const PatinetProfile: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const { t } = useTranslation('patient/profile');
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
@@ -49,16 +52,16 @@ export const PatinetProfile: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>ویرایش اطلاعات من</title>
+        <title>{t('title')}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      {isWebView && <AppBar title="ویرایش اطلاعات من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
       <div className="flex flex-col p-5 space-y-5 bg-white">
         {!isWebView && (
           <Text fontWeight="black" fontSize="xl">
-            ویرایش اطلاعات من
+            {t('title')}
           </Text>
         )}
         <label
@@ -110,10 +113,10 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default PatinetProfile;

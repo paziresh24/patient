@@ -3,6 +3,7 @@ import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
 import { digitsFaToEn, phoneNumberValidator } from '@persian-tools/persian-tools';
+import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { StepLoginForm } from '../../views/loginForm';
@@ -18,6 +19,7 @@ interface MobileNumberProps {
 
 export const MobileNumber = (props: MobileNumberProps) => {
   const { mobileNumberValue, setMobileNumberValue, setStep, title, description } = props;
+  const { t } = useTranslation('login');
   const register = useRegister();
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
@@ -49,9 +51,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   return (
     <form className="flex flex-col space-y-5" onSubmit={handleRegister}>
-      <LoginTitleBar title={title ?? 'ورود/ثبت نام'} description={description ?? 'لطفا شماره موبايل خود را وارد کنيد'} />
+      <LoginTitleBar title={title ?? t('steps.first.title')} description={description ?? t('steps.first.description')} />
       <TextField
-        label="شماره موبایل"
+        label={t('steps.first.phoneNumberFieldLable')}
         onChange={e =>
           e.target.value.startsWith('9') && e.target.value.length >= 3
             ? setMobileNumberValue(digitsFaToEn(`0${e.target.value}`))
@@ -60,7 +62,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
         value={mobileNumberValue}
         style={{ direction: 'ltr' }}
         placeholder="09"
-        helperText="مثال:*******0912"
+        helperText={t('steps.first.exampleHint')}
         onFocus={() => setIsFieldError(false)}
         error={isFieldError}
         autoFocus
@@ -69,7 +71,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       />
 
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
-        دریافت کد تایید
+        {t('steps.first.action')}
       </Button>
     </form>
   );

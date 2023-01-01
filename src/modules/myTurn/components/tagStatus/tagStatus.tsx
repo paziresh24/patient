@@ -1,6 +1,7 @@
 import Chips from '@/components/atom/chips';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import clsx from 'clsx';
+import useTranslation from 'next-translate/useTranslation';
 
 export interface TagStatusProps {
   /**
@@ -10,21 +11,13 @@ export interface TagStatusProps {
   className?: string;
 }
 
-export enum TagsStatusTranslation {
-  expired = 'منقضی',
-  deleted = 'لغو شده',
-  visited = 'ویزیت شده',
-  requested = 'درحال بررسی',
-  not_visited = 'ویزیت نشده',
-  rejected = 'رد شده',
-}
-
 export const TagStatus: React.FC<TagStatusProps> = props => {
   const { status, className } = props;
+  const { t } = useTranslation('patient/appointments');
 
   return (
-    <Chips className={clsx(className, 'absolute left-4 top-2')} data-testid="tag-status">
-      {TagsStatusTranslation[status as BookStatus]}
+    <Chips className={clsx(className, 'absolute top-2')} data-testid="tag-status">
+      {t(`turnStatus.${[status as BookStatus]}`)}
     </Chips>
   );
 };

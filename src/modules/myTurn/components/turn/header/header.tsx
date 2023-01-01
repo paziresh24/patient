@@ -38,6 +38,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const share = useShare();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
+
   const removeBookApi = useRemoveBook();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
@@ -111,9 +112,9 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   ];
 
   return (
-    <>
+    <div className="flex relative flex-col items-end">
       <Link href={`/dr/${doctorInfo.slug}`}>
-        <a className="w-9/12">
+        <a className="w-9/12 self-start">
           <DoctorInfo
             avatar={doctorInfo.avatar}
             firstName={doctorInfo.firstName}
@@ -123,14 +124,11 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         </a>
       </Link>
 
-      {status !== BookStatus.notVisited && <TagStatus status={status} className="left-10" />}
+      {status !== BookStatus.notVisited && <TagStatus status={status} className="mx-5" />}
 
       <DropDown
         element={
-          <div
-            className="absolute flex items-center justify-center w-8 h-8 cursor-pointer left-2 top-3"
-            data-testid="turn-drop-down-button"
-          >
+          <div className="flex items-center justify-center w-8 h-8 absolute top-1 -mx-3 cursor-pointer" data-testid="turn-drop-down-button">
             <ThreeDotsIcon color="#000" />
           </div>
         }
@@ -153,7 +151,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           </Button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 

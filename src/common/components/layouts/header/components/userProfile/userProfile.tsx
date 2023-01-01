@@ -25,7 +25,7 @@ const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 export const UserProfile = () => {
   const { openLoginModal } = useLoginModalContext();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
   const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userInfo: state.info,
@@ -42,7 +42,7 @@ export const UserProfile = () => {
 
   const menuItems = [
     {
-      name: 'نوبت های من',
+      name: t('patient/common:menu.myTurns'),
       icon: <CalenderIcon />,
       link: '/patient/appointments',
       badge: !!turnsCount.presence && (
@@ -50,12 +50,12 @@ export const UserProfile = () => {
       ),
     },
     {
-      name: 'لیست پزشکان من',
+      name: t('patient/common:menu.bookmarks'),
       icon: <BookmarkIcon />,
       link: '/patient/bookmarks',
     },
     {
-      name: 'کاربران زیرمجموعه',
+      name: t('patient/common:menu.subuser'),
       icon: <UsersIcon />,
       link: '/patient/subuser',
     },
@@ -83,8 +83,8 @@ export const UserProfile = () => {
       {pending && <Skeleton w="8rem" h="2.5rem" rounded="md" />}
       {!pending &&
         (isLogin ? (
-          <div ref={ref} className="relative flex items-center" onClick={() => setOpen(!open)}>
-            <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
+          <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
+            <div className="text-center cursor-pointer p-3 space-s-2 text-sm md:p-6 md:pl-4 font-medium flex items-center">
               {userInfo?.image ? (
                 <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
               ) : (
@@ -136,15 +136,15 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  <MenuItem name="پشتیبانی" link="/home/support-form/" icon={<HeadphoneIcon />} />
-                  <MenuItem name="خروج" link="/logout" icon={<LogoutIcon />} />
+                  <MenuItem name={t('patient/common:menu.support')} link="/home/support-form/" icon={<HeadphoneIcon />} />
+                  <MenuItem name={t('patient/common:menu.logout')} link="/logout" icon={<LogoutIcon />} />
                 </MenuList>
               </div>
             </Transition>
           </div>
         ) : (
           <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
-            {t('header.userProfile.useNotloggedIn')}
+            {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}
     </>
