@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
 import cities from '@/common/constants/places/city.json';
 import provinces from '@/common/constants/places/province.json';
+import useTranslation from 'next-translate/useTranslation';
 import { memo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -65,6 +66,7 @@ const fieldsNameForError = [
 ];
 
 export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
+  const { t } = useTranslation('patient/common');
   const { fields, defaultValues, onSubmit = () => {}, loading, errorsField } = props;
 
   const {
@@ -129,14 +131,19 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
     <form className="flex space-y-5 flex-wrap" onSubmit={handleSubmit(onSubmit)}>
       <div className="w-full grid md:grid-cols-2 gap-3">
         {fields?.includes('NAME') && (
-          <TextField error={!!errors.name} helperText={errors.name?.message} {...register('name', { required: true })} label="نام" />
+          <TextField
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            {...register('name', { required: true })}
+            label={t('userForm.firstName')}
+          />
         )}
         {fields?.includes('FAMILY') && (
           <TextField
             error={!!errors.family}
             helperText={errors.family?.message}
             {...register('family', { required: true })}
-            label="نام خانوادگی"
+            label={t('userForm.lastName')}
           />
         )}
         {fields?.includes('NATIONAL_CODE') && (
@@ -144,7 +151,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
             error={!!errors.national_code}
             helperText={errors.national_code?.message}
             {...register('national_code', { required: true })}
-            label="کدملی"
+            label={t('userForm.nationalCode')}
           />
         )}
         {fields?.includes('GENDER') && (
@@ -161,7 +168,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
                 classNameWrapper="flex-1"
                 onChange={e => onChange(e.target.value)}
                 value={value}
-                label="جنسیت"
+                label={t('userForm.gender')}
                 options={genders}
                 onBlur={onBlur}
               />
@@ -174,7 +181,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
             error={!!errors.cell}
             helperText={errors.cell?.message}
             {...register('cell', { required: true })}
-            label="شماره موبایل"
+            label={t('userForm.phoneNumber')}
           />
         )}
 
@@ -186,7 +193,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <Autocomplete
                 classNameWrapper="flex-1"
-                label="استان"
+                label={t('userForm.province')}
                 error={!!error}
                 helperText={error?.message}
                 onChange={e => {
@@ -209,7 +216,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <Autocomplete
                 classNameWrapper="flex-1"
-                label="شهر"
+                label={t('userForm.city')}
                 onChange={e => onChange(e.target.value)}
                 value={value}
                 error={!!error}
@@ -227,7 +234,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
       </div>
 
       <Button block type="submit" loading={loading}>
-        ذخیره
+        {t('userForm.action')}
       </Button>
     </form>
   );

@@ -96,7 +96,7 @@ export const Button: React.FC<ButtonProps> = props => {
   return (
     <button
       className={clsx(
-        'flex items-center justify-center rounded-lg font-bold transition-colors',
+        'flex items-center justify-center rounded-lg font-bold gap-1 transition-colors',
         buttonStyles.variant[variant],
         buttonStyles.size[size],
         buttonStyles.theme[theme][variant],
@@ -109,7 +109,7 @@ export const Button: React.FC<ButtonProps> = props => {
     >
       {!loading && (
         <>
-          {icon && <span className="flex items-center justify-center ml-1">{icon}</span>}
+          {icon && <span className="flex items-center justify-center">{icon}</span>}
           {children}
         </>
       )}

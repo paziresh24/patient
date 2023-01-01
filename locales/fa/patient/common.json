@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "myTurns": "نوبت های من",
+    "bookmarks": "لیست پزشکان من",
+    "subuser": "کاربران زیرمجموعه",
+    "support": "پشتیبانی",
+    "logout": "خروج"
+  },
+  "userForm": {
+    "firstName": "نام",
+    "lastName": "نام خانوادگی",
+    "nationalCode": "کدملی",
+    "gender": "جنسیت",
+    "phoneNumber": "شماره موبایل",
+    "province": "استان",
+    "city": "شهر",
+    "action": "ذخیره"
+  }
+}
