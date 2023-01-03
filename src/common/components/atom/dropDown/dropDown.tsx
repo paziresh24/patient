@@ -34,7 +34,7 @@ export const DropDown: React.FC<DropDownProps> = props => {
       )}
       {dropDown && (
         <>
-          <div className="absolute z-20 w-40 bg-white border rounded-tl-sm shadow-lg left-4 top-2 border-slate-100 rounded-xl">
+          <div className="absolute mx-1 top-2 bg-white shadow-lg border border-slate-100 w-40 rounded-xl z-20">
             <div className="flex flex-col p-2">
               {items.map(({ id, action, name, icon, testId }) => (
                 <div

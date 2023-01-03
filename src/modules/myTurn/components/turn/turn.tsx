@@ -1,5 +1,6 @@
 import Card from '@/components/atom/card';
-import { useEffect, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
+import { useMemo } from 'react';
 import TurnBody from './body';
 import TurnFooter from './footer';
 import TurnHeader from './header';
@@ -9,30 +10,24 @@ import type { TurnProps } from './turnType';
 export const Turn: React.FC<TurnProps> = props => {
   const { status, doctorInfo, paymentStatus, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } =
     props;
+  const { t } = useTranslation();
 
-  const [detailsData, setDetailsData] = useState<
-    {
-      id: number;
-      name: string;
-      value: string | undefined;
-    }[]
-  >([]);
-
-  useEffect(() => {
-    setDetailsData(
+  const detailsData = useMemo(
+    () =>
       turnDetailsData({
         data: turnDetails,
         centerType,
         status,
         paymentStatus,
         activePaymentStatus: centerInfo.activePaymentStatus,
+        translate: t,
       }),
-    );
-  }, [turnDetails, status, centerType]);
+    [turnDetails, status, centerType],
+  );
 
   return (
     <Card
-      className="relative space-y-2 border-solid rounded-none md:shadow-none md:rounded-lg md:border border-slate-200"
+      className="space-y-2 md:shadow-none !rounded-none md:!rounded-lg md:border border-solid border-slate-200 relative"
       data-testid="turn-card"
     >
       <TurnHeader

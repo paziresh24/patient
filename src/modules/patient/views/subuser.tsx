@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useTranslation from 'next-translate/useTranslation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import UserCard from '../components/subuser/userCard';
@@ -13,6 +14,7 @@ export const SubuserList = () => {
   const { data, mutate, isSuccess, isLoading } = useGetSubuser();
   const addSubUser = useAddSubuser();
   const [isOpenAddUserModal, setIsOpenAddUserModal] = useState(false);
+  const { t } = useTranslation('patient/subuser');
 
   useEffect(() => {
     mutate();
@@ -58,9 +60,9 @@ export const SubuserList = () => {
           ))}
       </div>
       <Button className="self-center" onClick={handleOpenAddSubuserModal}>
-        افزودن کاربر جدید
+        {t('addUser')}
       </Button>
-      <Modal title="کاربر جدید" isOpen={isOpenAddUserModal} onClose={setIsOpenAddUserModal}>
+      <Modal title={t('newUserModalTitle')} isOpen={isOpenAddUserModal} onClose={setIsOpenAddUserModal}>
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}

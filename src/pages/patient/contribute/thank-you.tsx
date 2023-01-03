@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Text from '@/components/atom/text';
 
 import Button from '@/common/components/atom/button';
+import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
@@ -107,10 +108,10 @@ const ThankYouPage = () => {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default ThankYouPage;

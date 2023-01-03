@@ -1,5 +1,6 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { useQuery } from 'react-query';
@@ -24,11 +25,13 @@ export const useSearch = () => {
   const {
     query: { params, ...query },
   } = useRouter();
+  const university = useServerQuery(state => state.queries?.university);
 
   const searchParams = {
     route: (params as string[])?.join('/') ?? '',
     query: {
       ...query,
+      ...(university && { university }),
     },
   };
 

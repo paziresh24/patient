@@ -10,6 +10,7 @@ import AppBar from '@/components/layouts/appBar';
 import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
+import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
@@ -166,10 +167,10 @@ const FormLoading = () => {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default Home;

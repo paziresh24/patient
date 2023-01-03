@@ -13,10 +13,10 @@ import ShareIcon from '@/common/components/icons/share';
 import StarIcon from '@/common/components/icons/star';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
+import { withCSR } from '@/common/hoc/withCsr';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -145,10 +145,10 @@ export const PatinetProfile: NextPageWithLayout = () => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default PatinetProfile;

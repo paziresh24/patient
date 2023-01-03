@@ -7,11 +7,13 @@ import CalenderIcon from '@/common/components/icons/calender';
 import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
 export const PatientProfileLayout = ({ children }: { children: ReactElement }) => {
   const userInfo = useUserInfoStore(state => state.info);
+  const { t } = useTranslation('patient/common');
 
   return (
     <div className="max-w-screen-xl min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:mt-10 md:space-s-8">
@@ -46,19 +48,19 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
           <Link href="/patient/appointments">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
               <CalenderIcon />
-              <Text fontWeight="medium">نوبت های من</Text>
+              <Text fontWeight="medium">{t('menu.myTurns')}</Text>
             </a>
           </Link>
           <Link href="/patient/bookmarks">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
               <BookmarkIcon />
-              <Text fontWeight="medium">لیست پزشکان من</Text>
+              <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
             </a>
           </Link>
           <Link href="/patient/subuser">
             <a className="py-4 flex items-center space-s-3 whitespace-nowrap">
               <UsersIcon />
-              <Text fontWeight="medium">کاربران زیرمجموعه</Text>
+              <Text fontWeight="medium">{t('menu.subuser')}</Text>
             </a>
           </Link>
         </div>

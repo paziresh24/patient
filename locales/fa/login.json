@@ -1,0 +1,19 @@
+{
+  "steps": {
+    "first": {
+      "title": "ورود/ثبت نام",
+      "description": "لطفا شماره موبايل خود را وارد کنيد",
+      "phoneNumberFieldLable": "شماره موبایل",
+      "exampleHint": "مثال:*******0912",
+      "action": "دریافت کد تایید"
+    },
+    "second": {
+      "title": "کد تایید",
+      "description": "لطفا کد ارسال شده به شماره {{mobileNumber}} را وارد نمایید.",
+      "changeMobileNumber": "ویرایش شماره موبایل",
+      "voiceCallWay": "تماس صوتی",
+      "resend": "ارسال مجدد",
+      "action": "ورود"
+    }
+  }
+}

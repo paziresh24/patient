@@ -1,4 +1,5 @@
 import Divider from '@/common/components/atom/divider';
+import useCustomize from '@/common/hooks/useCustomize';
 import clsx from 'clsx';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
@@ -21,6 +22,7 @@ export const SearchBar = (props: SearchBarProps) => {
   const city = useSearchStore(state => state.city);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
+  const customize = useCustomize(state => state.customize);
 
   return (
     <div
@@ -41,8 +43,12 @@ export const SearchBar = (props: SearchBarProps) => {
         onKeyPress={e => e.key === 'Enter' && onEnter && onEnter(e.currentTarget?.value)}
         {...rest}
       />
-      <Divider orientation="vertical" height="2rem" />
-      <CitySelect onChange={onChangeCity} city={city} key={city?.name} />
+      {customize.showSelectCityInSuggestion && (
+        <>
+          <Divider orientation="vertical" height="2rem" />
+          <CitySelect onChange={onChangeCity} city={city} key={city?.name} />
+        </>
+      )}
     </div>
   );
 };

@@ -1,0 +1,24 @@
+{
+  "title": "My Turns",
+  "tunrsTabName": "Turns",
+  "requestsTabName": "Requests",
+  "turnDetails": {
+    "time": "Turn Time",
+    "timeForConsult": "Time to contact the doctor",
+    "referred": "Referred",
+    "trackingCode": "Tracking Code",
+    "waitingTime": "Average waiting time in",
+    "centerName": "Center Name"
+  },
+  "turnAction": {
+    "rebook": "Get the book again"
+  },
+  "turnStatus": {
+    "expired": "Expired",
+    "deleted": "Canceled",
+    "visited": "visited",
+    "requested": "Pending",
+    "not_visited": "Not Visited",
+    "rejected": "Rejected"
+  }
+}
