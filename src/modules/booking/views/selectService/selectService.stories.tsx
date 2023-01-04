@@ -14,4 +14,18 @@ const Template = args => (
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  services: [
+    {
+      id: '12',
+      name: 'رادیولوژی مغز',
+      isDisable: false,
+    },
+    {
+      id: '12',
+      name: 'رادیولوژی مغز',
+      isDisable: true,
+    },
+  ],
+  onSelect: service => alert(JSON.stringify(service)),
+};

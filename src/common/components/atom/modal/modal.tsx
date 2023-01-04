@@ -1,4 +1,6 @@
+import useLockScroll from '@/common/hooks/useLockScroll';
 import useResponsive from '@/common/hooks/useResponsive';
+import useVirtualBack from '@/common/hooks/useVirtualBack';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
@@ -19,40 +21,24 @@ interface ModalProps {
 export const Modal = (props: ModalProps) => {
   const { title, isOpen, onClose, children, fullScreen, bodyClassName, noHeader = false } = props;
   const { isMobile } = useResponsive();
-
+  const { lockScroll, openScroll } = useLockScroll();
   const handleClose = () => {
     onClose(false);
     removeOverflowHidden();
   };
+  const { neutralizeBack, removeBack } = useVirtualBack({
+    handleClose,
+  });
 
   const removeOverflowHidden = () => {
-    document.body.classList.remove('overflow-hidden');
-    document.body.classList.remove('md:pr-[0.3rem]');
-    if (isMobile) {
-      window.onpopstate = () => {
-        return;
-      };
-    }
-  };
-
-  const neutralizeBack = () => {
-    if (isMobile) {
-      window.history.pushState(null, '', window.location.href);
-      window.onpopstate = () => {
-        window.onpopstate = () => {
-          return;
-        };
-        removeOverflowHidden();
-        onClose(false);
-      };
-    }
+    openScroll();
+    removeBack();
   };
 
   useEffect(() => {
     if (isOpen) {
       neutralizeBack();
-      document.body.classList.add('md:pr-[0.3rem]');
-      return document.body.classList.add('overflow-hidden');
+      lockScroll();
     } else {
       handleClose();
     }
