@@ -1,17 +1,17 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { addCommas } from '@persian-tools/persian-tools';
+import { VisitChannels } from './onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
-
 interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
+  centerId: string;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData } = props;
-  const formattedPrice = addCommas(+0 / 10);
+  const { loading = false, turnData, centerId } = props;
+  const isConsultReceipt = centerId === '5532';
   return (
     <div className="flex flex-col space-y-6">
       <div className="mt-5 flex flex-col space-y-5 py-5 border border-solid border-slate-200  rounded-lg">
@@ -38,26 +38,35 @@ export const BookInfo = (props: PaymentDetailsProps) => {
         {!loading &&
           turnDetailsData({
             data: {
-              bookTime: turnData.book_from,
+              bookTime: isConsultReceipt ? turnData.from_book : turnData.book_from,
               centerName: turnData.center_name,
-              trackingCode: turnData.book_ref_id,
-              waitingTime: turnData?.rate_info?.waiting_time ?? '6 ساعت',
+              trackingCode: isConsultReceipt ? turnData.ref_id : turnData.book_ref_id,
+              waitingTime: turnData?.rate_info?.waiting_time,
               centerPhone: turnData?.center_display_number,
               address: turnData?.center_address,
-              centerId: turnData?.center_id,
+              durationConversation: turnData?.duration_conversation_doctor,
+              doctorPhone: turnData?.whatsapp_cell_doctor,
+              receiptLink: turnData?.link_bill,
+              centerId: centerId,
               patientInfo: {
-                name: `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
-                cell: turnData?.patient_temp_cell,
+                name: isConsultReceipt ? turnData.fullname_patient : `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
+                cell: isConsultReceipt ? turnData.cell_patient : turnData?.patient_temp_cell,
                 nationalCode: turnData?.patient_temp_national_code,
-                selectServeis: turnData?.services[0].alias_title,
+                selectServeis: turnData?.services?.[0].alias_title,
               },
-              rules: [
-                'لطفا پس از مراجعه به مطب(مرکز درمانی) ، به منشی اعلام کنید از طریق پذیرش24 نوبت را دریافت کرده اید تا پذیرش شما تکمیل شده و طبق زمان انتظار به پزشک مراجعه کنید.',
-                'با توجه به عمل های اورژانسی پزشک و یا سایر مراجعات درمانی غیر منتظره به پزشک ممکن است زمان انتظار ویزیت شما متفاوت باشد.',
-                'شما می‌توانید با نصب اپلیکیشن پذیرش24، روند درمان خود را تکمیل کنید و از تغییر زمان نوبت توسط پزشک مطلع شوید.',
-              ],
+              rules: isConsultReceipt
+                ? turnData?.online_visit_channels?.[0].type === VisitChannels.igap
+                  ? [
+                      ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
+                      '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
+                    ]
+                  : [
+                      'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
+                      ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
+                    ]
+                : turnData.book_notices,
             },
-            centerType: CenterType.clinic,
+            centerType: isConsultReceipt ? CenterType.consult : CenterType.clinic,
           }).map(item => (
             <div key={item.id} className="px-5">
               <BaseRow data={item} key={item.id} />

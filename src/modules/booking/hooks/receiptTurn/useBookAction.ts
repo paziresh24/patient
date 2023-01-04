@@ -8,8 +8,8 @@ export const useBookAction = () => {
   const removeBookApi = useRemoveBook();
   const isWebView = useWebView();
 
-  const shareTurn = ({ bookId, title, text }: { bookId: string; title: string; text: string }) => {
-    const link = getReceiptTurnUrl(bookId);
+  const shareTurn = ({ bookId, title, text, centerId }: { bookId: string; title: string; text: string; centerId: string }) => {
+    const link = getReceiptTurnUrl({ bookId, centerId });
     share({
       title: title,
       text: text,

@@ -30,7 +30,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
     centerType !== CenterType.consult && (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
 
   const handleClickCard = () => {
-    window.location.assign(getReceiptTurnUrl(id));
+    window.location.assign(getReceiptTurnUrl({ bookId: id, centerId }));
   };
 
   return (

@@ -64,7 +64,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    window.location.assign(getReceiptTurnUrl(id));
+    window.location.assign(getReceiptTurnUrl({ bookId: id, centerId }));
   };
 
   const shareTurnInfo = () => {
@@ -72,6 +72,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       bookId: id,
       text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
       title: 'رسیدنوبت',
+      centerId,
     });
   };
 

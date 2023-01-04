@@ -13,7 +13,10 @@ interface TurnDetailsDataParam {
     bookTime: number;
     waitingTime?: string;
     trackingCode: string;
+    doctorPhone?: string;
+    durationConversation?: string;
     centerName: string;
+    receiptLink?: string;
     centerPhone?: string;
     address?: string;
     centerId: string;
@@ -24,7 +27,20 @@ interface TurnDetailsDataParam {
 }
 
 export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
-  const { bookTime, trackingCode, waitingTime, centerName, centerPhone, address, centerId, patientInfo, rules } = data;
+  const {
+    bookTime,
+    trackingCode,
+    waitingTime,
+    centerName,
+    centerPhone,
+    address,
+    centerId,
+    patientInfo,
+    receiptLink,
+    rules,
+    doctorPhone,
+    durationConversation,
+  } = data;
 
   const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
 
@@ -32,7 +48,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
-      value: dateTime,
+      value: centerType === CenterType.consult ? bookTime : dateTime,
       shouldShow: true,
       type: 'Text',
       isBoldValue: true,
@@ -41,20 +57,28 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 2,
       name: 'توضیحات',
       value: 'زمان نوبت اعلام شده، برای حضور در مرکز درمانی بوده و با زمان ویزیت تفاوت دارد.',
-      shouldShow: true,
+      shouldShow: centerType == CenterType.clinic,
       type: 'Label',
       isBoldValue: true,
     },
     {
       id: 3,
-      name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
-      value: waitingTime,
-      shouldShow: true,
+      name: 'مدت زمان گفتگو',
+      value: `تا ${durationConversation} روز`,
+      shouldShow: centerType === CenterType.consult,
       type: 'Text',
-      isBoldValue: false,
+      isBoldValue: true,
     },
+    // {
+    //   id: 4,
+    //   name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
+    //   value: waitingTime,
+    //   shouldShow: centerType === CenterType.clinic,
+    //   type: 'Text',
+    //   isBoldValue: false,
+    // },
     {
-      id: 4,
+      id: 5,
       name: 'کد پیگیری',
       value: trackingCode,
       shouldShow: true,
@@ -62,7 +86,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 5,
+      id: 6,
       name: 'نام مرکز',
       value: centerName,
       shouldShow: centerType === CenterType.hospital,
@@ -70,7 +94,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 6,
+      id: 7,
       name: 'تماس با مرکز درمانی',
       value: centerPhone,
       buttonAction: () => {
@@ -80,7 +104,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       type: 'Button',
     },
     {
-      id: 7,
+      id: 8,
       name: 'آدرس مرکز',
       value: address,
       shouldShow: centerId !== '5532',
@@ -88,7 +112,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 8,
+      id: 9,
       name: 'نام بیمار',
       value: patientInfo.name,
       shouldShow: true,
@@ -96,7 +120,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 9,
+      id: 10,
       name: 'شماره بیمار',
       value: patientInfo.cell,
       shouldShow: true,
@@ -104,24 +128,40 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 10,
+      id: 11,
       name: 'کدملی بیمار',
       value: patientInfo.nationalCode,
-      shouldShow: true,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
-      id: 11,
-      name: 'سرویس انتخاب شده',
-      value: patientInfo.selectServeis,
-      shouldShow: true,
+      shouldShow: centerType === CenterType.clinic,
       type: 'Text',
       isBoldValue: false,
     },
     {
       id: 12,
-      name: 'قوانین',
+      name: 'سرویس انتخاب شده',
+      value: patientInfo.selectServeis,
+      shouldShow: centerType === CenterType.clinic,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
+      id: 13,
+      name: 'شماره پزشک',
+      value: doctorPhone,
+      shouldShow: centerType === CenterType.consult,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
+      id: 14,
+      name: 'لینک قبض نوبت',
+      value: receiptLink,
+      shouldShow: centerType === CenterType.consult,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
+      id: 15,
+      name: centerType === CenterType.consult ? 'نحوه ویزیت آنلاین' : 'قوانین',
       value: rules?.map((items, index) => ({
         id: index,
         name: items,

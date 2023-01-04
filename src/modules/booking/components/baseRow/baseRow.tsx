@@ -71,11 +71,7 @@ export const BaseRow = (props: BaseRowProps) => {
                         variant="secondary"
                       />
                     )}
-                    {item.type === 'Label' && (
-                      <Text fontSize="sm" fontWeight="medium">
-                        {item.name}
-                      </Text>
-                    )}
+                    {item.type === 'Label' && <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.name }} />}
                   </div>
                 ))}
               </div>
