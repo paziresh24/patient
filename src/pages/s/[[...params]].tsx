@@ -42,7 +42,7 @@ const Search: NextPageWithLayout = () => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
-  const publicRuntimeConfig = getConfig();
+  const config = getConfig();
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -90,9 +90,9 @@ const Search: NextPageWithLayout = () => {
         {!isWebView && (
           <Button
             onClick={() =>
-              (window.location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form-search/?p24refer=${decodeURIComponent(
-                asPath,
-              )}`)
+              (window.location.href = `${
+                config.publicRuntimeConfig.CLINIC_BASE_URL
+              }/home/support-form-search/?p24refer=${decodeURIComponent(asPath)}`)
             }
             variant="secondary"
             className="!my-5"
