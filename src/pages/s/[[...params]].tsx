@@ -42,7 +42,7 @@ const Search: NextPageWithLayout = () => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
-  const publicRuntimeConfig = getConfig();
+  const { publicRuntimeConfig } = getConfig();
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
