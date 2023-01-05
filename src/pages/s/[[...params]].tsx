@@ -23,6 +23,7 @@ import Suggestion from '@/modules/search/view/suggestion';
 import { addCommas } from '@persian-tools/persian-tools';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
@@ -41,6 +42,7 @@ const Search: NextPageWithLayout = () => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
+  const publicRuntimeConfig = getConfig();
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -87,7 +89,11 @@ const Search: NextPageWithLayout = () => {
         <SearchSeoBox />
         {!isWebView && (
           <Button
-            onClick={() => (window.location.href = `/home/support-form-search/?p24refer=${decodeURIComponent(asPath)}`)}
+            onClick={() =>
+              (window.location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form-search/?p24refer=${decodeURIComponent(
+                asPath,
+              )}`)
+            }
             variant="secondary"
             className="!my-5"
             block
