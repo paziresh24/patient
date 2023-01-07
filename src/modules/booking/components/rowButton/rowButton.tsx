@@ -1,6 +1,6 @@
+import Button from '@/common/components/atom/button/button';
+import Text from '@/common/components/atom/text/text';
 import clsx from 'clsx';
-import Button from '../button/button';
-import Text from '../text/text';
 
 interface RowButtonProps {
   title: string;
