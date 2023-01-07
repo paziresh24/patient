@@ -1,7 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { VisitChannels } from './onlineVisitChannels';
+import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
 interface PaymentDetailsProps {
   loading: boolean;

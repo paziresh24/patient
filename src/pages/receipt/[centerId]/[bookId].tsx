@@ -9,8 +9,8 @@ import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise'
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { VisitChannels } from '@/modules/receipt/constants/onlineVisitChannels';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
-import { VisitChannels } from '@/modules/receipt/views/bookInfo/onlineVisitChannels';
 import clsx from 'clsx';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -86,10 +86,10 @@ const Receipt: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row items-start space-s-0 md:space-s-5 max-w-screen-xl mx-auto md:py-10 p-2 overflow-hidden">
-      <div className="w-full flex flex-col space-y-6 bg-white rounded-lg shadow-card p-3 md:p-8">
+    <div className="flex flex-col-reverse items-start max-w-screen-xl p-2 mx-auto overflow-hidden md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col w-full p-3 space-y-6 bg-white rounded-lg shadow-card md:p-8">
         <div id="receipt">
-          <div className="flex flex-col justify-center items-center space-y-3 mt-4">
+          <div className="flex flex-col items-center justify-center mt-4 space-y-3">
             {turnStatus.deletedTurn || turnStatus.expiredTurn ? (
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -195,6 +195,12 @@ const Receipt: NextPageWithLayout = () => {
 
 Receipt.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
+};
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
 };
 
 export default Receipt;
