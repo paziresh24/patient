@@ -9,6 +9,7 @@ import CenterIcon from '@/components/icons/center';
 import AppBar from '@/components/layouts/appBar';
 
 import Skeleton from '@/common/components/atom/skeleton';
+import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
@@ -155,10 +156,10 @@ const MneuItemLoading = () => {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default Home;

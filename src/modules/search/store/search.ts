@@ -58,6 +58,7 @@ type City = {
   name: string;
   id: string;
   en_slug: string;
+  province_id: string;
 };
 
 export const useSearchStore = create<SearchStore>(set => ({
@@ -65,6 +66,7 @@ export const useSearchStore = create<SearchStore>(set => ({
     id: '-1',
     name: 'همه ایران',
     en_slug: 'ir',
+    province_id: '-1',
   },
   isOpenSuggestion: false,
   userSearchValue: '',
@@ -86,7 +88,7 @@ export const useSearchStore = create<SearchStore>(set => ({
     }));
     if (city?.id !== '-1') {
       try {
-        if (new URLSearchParams(location.search).get('isWebView') && window.Android) window.Android.updateCityWithoutProvince(city.id);
+        if (new URLSearchParams(location.search).get('isWebView') && window.Android) window.Android.updateCity(city.id, city.province_id);
       } catch (error) {
         console.error(error);
       }

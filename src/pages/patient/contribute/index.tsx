@@ -4,6 +4,7 @@ import Checkbox from '@/common/components/atom/checkbox';
 import CloseIcon from '@/common/components/icons/close';
 import DislikeIcon from '@/common/components/icons/dislike';
 import LikeIcon from '@/common/components/icons/like';
+import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import Text from '@/components/atom/text';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
@@ -114,10 +115,10 @@ const Home = () => {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default Home;

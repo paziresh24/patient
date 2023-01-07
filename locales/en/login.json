@@ -1,0 +1,19 @@
+{
+  "steps": {
+    "first": {
+      "title": "Login/Register",
+      "description": "Please enter your mobile number",
+      "phoneNumberFieldLable": "Mobile number",
+      "exampleHint": "E.g. 0912*******",
+      "action": "Get Code"
+    },
+    "second": {
+      "title": "Verification code",
+      "description": "Please enter the code sent to {{mobileNumber}}.",
+      "changeMobileNumber": "Change mobile number",
+      "voiceCallWay": "Voice Call",
+      "resend": "ٰResend",
+      "action": "Login"
+    }
+  }
+}

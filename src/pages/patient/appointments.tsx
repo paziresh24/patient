@@ -11,6 +11,7 @@ import { Tab, Tabs } from '@/components/atom/tabs';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { withCSR } from '@/common/hoc/withCsr';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -19,6 +20,7 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import axios from 'axios';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '../_app';
 
@@ -27,6 +29,7 @@ type BookType = 'book' | 'book_request';
 export const Appointments: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const { t } = useTranslation('patient/appointments');
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -86,22 +89,22 @@ export const Appointments: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>نوبت های من</title>
+        <title>{t('title')}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {isWebView && <AppBar title="نوبت های من" className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
       <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
         {!isWebView && (
           <Text fontWeight="black" fontSize="xl" className="mt-5">
-            نوبت های من
+            {t('title')}
           </Text>
         )}
 
         <div className="sticky top-0 z-10 justify-center w-full bg-white border-b border-solid lg:flex md:shadow-none border-slate-200">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
-            <Tab value="book" label="نوبت ها" className="w-full lg:w-auto" />
-            <Tab value="book_request" label="درخواست ها" className="w-full lg:w-auto" />
+            <Tab value="book" label={t('tunrsTabName')} className="w-full lg:w-auto" />
+            <Tab value="book_request" label={t('requestsTabName')} className="w-full lg:w-auto" />
           </Tabs>
         </div>
       </div>
@@ -187,10 +190,10 @@ Appointments.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default Appointments;

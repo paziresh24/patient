@@ -42,7 +42,7 @@ const Loading = () => {
   return (
     <>
       <Skeleton w="4.4rem" h="4.4rem" rounded="full" />
-      <div className="flex flex-col space-y-3 mr-4">
+      <div className="flex flex-col mr-4 space-y-3">
         <Skeleton w="7rem" h="1rem" rounded="full" />
         <Skeleton w="4rem" h="1rem" rounded="full" />
       </div>

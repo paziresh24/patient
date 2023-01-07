@@ -19,7 +19,7 @@
     - debug: var=is_docker_compose_install
 
     - name: pull
-      shell: docker pull dockerhub.paziresh24.com/patient-app:develop
+      shell: docker pull docker.paziresh24.info/patient-app:develop
 
 
 #    - name: pull

@@ -1,0 +1,24 @@
+{
+  "title": "نوبت های من",
+  "tunrsTabName": "نوبت ها",
+  "requestsTabName": "درخواست ها",
+  "turnDetails": {
+    "time": "زمان نوبت",
+    "timeForConsult": "زمان ارتباط با پزشک",
+    "referred": "مراجعه کننده",
+    "trackingCode": "کد پیگیری",
+    "waitingTime": "میانگین زمان انتظار در",
+    "centerName": "نام مرکز"
+  },
+  "turnAction": {
+    "rebook": "دریافت نوبت مجدد"
+  },
+  "turnStatus": {
+    "expired": "منقضی",
+    "deleted": "لغو شده",
+    "visited": "ویزیت شده",
+    "requested": "درحال بررسی",
+    "not_visited": "ویزیت نشده",
+    "rejected": "رد شده"
+  }
+}

@@ -5,6 +5,7 @@ import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
 import { useState } from 'react';
 import Queue from '../../queue';
@@ -24,6 +25,7 @@ interface TurnFooterProps {
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, onlineVisitChannels } = props;
+  const { t } = useTranslation('patient/appointments');
   const [queueModal, setQueueModal] = useState(false);
 
   const isBookForToday = isToday(new Date(bookTime));
@@ -76,7 +78,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
           <Button variant="secondary" size="sm" block={true} onClick={reBook}>
-            دریافت نوبت مجدد
+            {t('turnAction.rebook')}{' '}
           </Button>
           {pdfLink && (
             <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>

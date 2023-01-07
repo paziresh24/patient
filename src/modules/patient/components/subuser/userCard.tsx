@@ -7,6 +7,7 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useTranslation from 'next-translate/useTranslation';
 import { memo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { PatinetProfileForm } from '../../views/form';
@@ -23,6 +24,7 @@ interface UserCardProps {
 
 export const UserCard = memo((props: UserCardProps) => {
   const { userId, name, family, cell, nationalCode, gender, refetchData } = props;
+  const { t } = useTranslation();
   const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
   const removeSubuser = useRemoveSubuser();
   const editSubuser = useEditSubuser();
@@ -59,6 +61,7 @@ export const UserCard = memo((props: UserCardProps) => {
     }
     toast.error(res.data.message);
   };
+
   return (
     <>
       <div className="flex flex-col justify-between p-5 px-0 space-y-5 border-b border-solid md:space-y-0 md:flex-row border-slate-100">
@@ -67,30 +70,34 @@ export const UserCard = memo((props: UserCardProps) => {
             {name} {family}
           </Text>
           <div className="flex space-s-3">
-            <Text fontSize="xs">شماره موبایل: {cell}</Text>
-            <Text fontSize="xs">کدملی: {nationalCode}</Text>
+            <Text fontSize="xs">
+              {t('common:words.phoneNumber')}: {cell}
+            </Text>
+            <Text fontSize="xs">
+              {t('common:words.nationalCode')}: {nationalCode}
+            </Text>
           </div>
         </div>
         <div className="flex self-end space-s-2">
           <Button onClick={handleOpenEditUserModal} size="sm" variant="secondary" icon={<EditIcon />}>
-            ویرایش
+            {t('common:words.edit')}
           </Button>
           <Button onClick={() => setIsOpenRemoveModal(true)} size="sm" variant="secondary" icon={<TrashIcon />}>
-            حذف
+            {t('common:words.delete')}
           </Button>
         </div>
       </div>
-      <Modal title="از حذف کاربر مطمئن هستید؟" isOpen={isOpenRemoveModal} onClose={setIsOpenRemoveModal}>
+      <Modal title={t('patient/subuser:removeUserModalTitle')} isOpen={isOpenRemoveModal} onClose={setIsOpenRemoveModal}>
         <div className="flex space-s-3">
           <Button block onClick={handleRemove} loading={removeSubuser.isLoading}>
-            حذف
+            {t('common:words.delete')}
           </Button>
           <Button block variant="secondary" onClick={() => setIsOpenRemoveModal(false)}>
-            انصراف
+            {t('common:words.cancel')}
           </Button>
         </div>
       </Modal>
-      <Modal title="ویرایش کاربر" isOpen={isOpenEditUserModal} onClose={setIsOpenEditUserModal}>
+      <Modal title={t('patient/subuser:editUserModalTitle')} isOpen={isOpenEditUserModal} onClose={setIsOpenEditUserModal}>
         <PatinetProfileForm
           fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
           defaultValues={{

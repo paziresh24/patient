@@ -7,6 +7,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
+import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import PinInput from 'react-pin-input';
@@ -25,6 +26,7 @@ interface OtpCodeProps {
 
 export const OtpCode = (props: OtpCodeProps) => {
   const { mobileNumberValue, setStep, postLogin, retryGetPasswordNumber, setRetryGetPasswordNumber } = props;
+  const { t } = useTranslation('login');
   const login = useLogin();
   const resetPassword = useResetPassword();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
@@ -83,12 +85,12 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="relative">
-        <LoginTitleBar title="کد تایید" description={`لطفا کد ارسال شده به شماره ${mobileNumberValue} را وارد نمایید.`} />
-        <button className="absolute top-0 left-0 px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
+      <div className="relative flex flex-col">
+        <LoginTitleBar title={t('steps.second.title')} description={t('steps.second.description', { mobileNumber: mobileNumberValue })} />
+        <button className="absolute top-0 self-end px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
           {shouldShowResetButton ? (
             <Text fontWeight="semiBold" fontSize="sm">
-              {retryGetPasswordNumber >= 3 ? 'تماس صوتی' : 'ارسال مجدد'}
+              {retryGetPasswordNumber >= 3 ? t('steps.second.voiceCallWay') : t('steps.second.resend')}
             </Text>
           ) : (
             <Timer target={120} defaultTime="01:59" ended={() => setShouldShowResetButton(true)} className="!text-slate-500 font-medium" />
@@ -110,11 +112,11 @@ export const OtpCode = (props: OtpCodeProps) => {
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
       />
       <Button size="sm" variant="text" className="underline !text-slate-500" onClick={() => setStep('mobile_number')}>
-        ویرایش شماره موبایل
+        {t('steps.second.changeMobileNumber')}
       </Button>
 
       <Button onClick={() => handleLogin(password)} loading={login.isLoading}>
-        ورود
+        {t('steps.second.action')}
       </Button>
     </div>
   );

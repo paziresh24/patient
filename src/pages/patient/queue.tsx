@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { withCSR } from '@/common/hoc/withCsr';
 import Queue from '@/modules/myTurn/components/queue';
 import { ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
@@ -27,10 +28,10 @@ QueuePage.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-}
+});
 
 export default QueuePage;

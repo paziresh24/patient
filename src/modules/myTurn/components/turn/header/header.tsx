@@ -102,9 +102,9 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   ];
 
   return (
-    <>
+    <div className="relative flex flex-col items-end">
       <Link href={`/dr/${doctorInfo.slug}`}>
-        <a className="w-9/12">
+        <a className="self-start w-9/12">
           <DoctorInfo
             avatar={doctorInfo.avatar}
             firstName={doctorInfo.firstName}
@@ -114,14 +114,11 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         </a>
       </Link>
 
-      {status !== BookStatus.notVisited && <TagStatus status={status} className="left-10" />}
+      {status !== BookStatus.notVisited && <TagStatus status={status} className="mx-5" />}
 
       <DropDown
         element={
-          <div
-            className="absolute flex items-center justify-center w-8 h-8 cursor-pointer left-2 top-3"
-            data-testid="turn-drop-down-button"
-          >
+          <div className="absolute flex items-center justify-center w-8 h-8 -mx-3 cursor-pointer top-1" data-testid="turn-drop-down-button">
             <ThreeDotsIcon color="#000" />
           </div>
         }
@@ -144,7 +141,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           </Button>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 
