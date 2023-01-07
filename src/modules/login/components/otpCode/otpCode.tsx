@@ -87,7 +87,7 @@ export const OtpCode = (props: OtpCodeProps) => {
     <div className="flex flex-col space-y-2">
       <div className="relative flex flex-col">
         <LoginTitleBar title={t('steps.second.title')} description={t('steps.second.description', { mobileNumber: mobileNumberValue })} />
-        <button className="top-0 absolute self-end bg-slate-100 px-5 py-1 rounded-md" onClick={handleReset}>
+        <button className="absolute top-0 self-end px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
           {shouldShowResetButton ? (
             <Text fontWeight="semiBold" fontSize="sm">
               {retryGetPasswordNumber >= 3 ? t('steps.second.voiceCallWay') : t('steps.second.resend')}

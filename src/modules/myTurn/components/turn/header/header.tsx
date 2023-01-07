@@ -1,6 +1,4 @@
-import { useRemoveBook } from '@/common/apis/services/booking/removeBook';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -8,11 +6,12 @@ import ReceiptIcon from '@/components/icons/receipt';
 import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import TrashIcon from '@/components/icons/trash';
-import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
+import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import DoctorInfo from '../../doctorInfo';
@@ -36,11 +35,10 @@ interface TurnHeaderProps {
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
-  const share = useShare();
+  const router = useRouter();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
-
-  const removeBookApi = useRemoveBook();
+  const { shareTurn, removeBookApi } = useBookAction();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
@@ -65,25 +63,15 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    window.location.assign(
-      getReceiptTurnUrl({
-        slug: doctorInfo.slug,
-        bookId: id,
-        centerId: centerId,
-      }),
-    );
+    router.push(`/receipt/${centerId}/${id}`);
   };
 
-  const shareTurn = () => {
-    const link = getReceiptTurnUrl({
-      slug: doctorInfo.slug,
+  const shareTurnInfo = () => {
+    shareTurn({
       bookId: id,
-      centerId: centerId,
-    });
-    share({
-      title: 'رسید نوبت',
       text: `رسید نوبت ${doctorInfo.firstName} ${doctorInfo.lastName}`,
-      url: link,
+      title: 'رسیدنوبت',
+      centerId,
     });
   };
 
@@ -99,7 +87,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 1,
       name: 'اشتراک گذاری',
       icon: <ShareIcon />,
-      action: shareTurn,
+      action: shareTurnInfo,
       shouldShow: true,
     },
     {
@@ -113,9 +101,9 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   ];
 
   return (
-    <div className="flex relative flex-col items-end">
+    <div className="relative flex flex-col items-end">
       <Link href={`/dr/${doctorInfo.slug}`}>
-        <a className="w-9/12 self-start">
+        <a className="self-start w-9/12">
           <DoctorInfo
             avatar={doctorInfo.avatar}
             firstName={doctorInfo.firstName}
@@ -129,7 +117,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
 
       <DropDown
         element={
-          <div className="flex items-center justify-center w-8 h-8 absolute top-1 -mx-3 cursor-pointer" data-testid="turn-drop-down-button">
+          <div className="absolute flex items-center justify-center w-8 h-8 -mx-3 cursor-pointer top-1" data-testid="turn-drop-down-button">
             <ThreeDotsIcon color="#000" />
           </div>
         }

@@ -11,7 +11,7 @@ export interface Params {
   headers?: any;
 }
 
-export const search = async ({ route, query, headers }: Params) => {
+export const search = async ({ route, query, headers, signal }: Params) => {
   const { data } = await searchClient.get(`/seapi/v1/search/${encodeURIComponent(route)}`, {
     params: {
       ...query,
