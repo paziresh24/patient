@@ -22,6 +22,7 @@ export const Bookmarks: NextPageWithLayout = () => {
       <Head>
         <title>{t('title')}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="robots" content="noindex" />
       </Head>
 
       {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
