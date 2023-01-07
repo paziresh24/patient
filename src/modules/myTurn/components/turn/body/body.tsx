@@ -1,6 +1,6 @@
-import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useRouter } from 'next/router';
 import Location from '../../location/location';
 import Rate from '../../rate/rate';
 import TurnDetails from '../../turnDetails';
@@ -24,13 +24,14 @@ interface TurnBodyProps {
 
 export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo } = props;
+  const router = useRouter();
 
   const shouldShowLocation = centerType !== CenterType.consult;
   const shouldShowRate =
     centerType !== CenterType.consult && (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
 
   const handleClickCard = () => {
-    window.location.assign(getReceiptTurnUrl({ bookId: id, centerId }));
+    router.push(`/receipt/${centerId}/${id}`);
   };
 
   return (

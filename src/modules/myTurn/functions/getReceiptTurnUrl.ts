@@ -2,12 +2,12 @@ import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 
-interface getReceiptTurnUrlProps {
+interface GetReceiptTurnUrlProps {
   bookId: string;
   centerId: string;
 }
 
-export const getReceiptTurnUrl = ({ bookId, centerId }: getReceiptTurnUrlProps) => {
+export const getReceiptTurnUrl = ({ bookId, centerId }: GetReceiptTurnUrlProps) => {
   const defaultCentersReceiptUrl = `${publicRuntimeConfig.CLINIC_BASE_URL}/receipt/${centerId}/${bookId}/`;
 
   return defaultCentersReceiptUrl;

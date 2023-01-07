@@ -1,7 +1,7 @@
 import Accordion from '@/common/components/atom/accordion/accordion';
-import RowButton from '@/common/components/atom/rowButton/rowButton';
-import RowText from '@/common/components/atom/rowText/rowText';
 import Text from '@/common/components/atom/text/text';
+import RowButton from '@/modules/booking/components/rowButton/rowButton';
+import RowText from '@/modules/booking/components/rowText/rowText';
 
 type Data = {
   id: number;

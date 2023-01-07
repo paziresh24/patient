@@ -43,7 +43,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     });
     if (data.status === ClinicStatus.SUCCESS) {
       if (data.payment.reqiure_payment === '1') return router.push(`/factor/${data.book_info.id}`);
-      return router.push(`/receipt/${data.book_info.id}`);
+      return router.push(`/receipt/${data.book_info.center_id}/${data.book_info.id}`);
     }
   };
 

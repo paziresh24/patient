@@ -7,8 +7,6 @@ interface pdfGeneratorParams {
 }
 export const usePdfGenerator = ({ ref, fileName, scale, pageSize, orientation }: pdfGeneratorParams) => {
   const pdfGenrator = async () => {
-    console.log('kjiohoh');
-
     const html2pdf = (await import('html2pdf.js')).default;
     const options = {
       margin: 0.3,

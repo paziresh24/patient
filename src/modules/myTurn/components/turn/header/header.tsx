@@ -1,5 +1,4 @@
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import { useShare } from '@/common/hooks/useShare';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -8,11 +7,11 @@ import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import TrashIcon from '@/components/icons/trash';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
-import { getReceiptTurnUrl } from '@/modules/myTurn/functions/getReceiptTurnUrl';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import DoctorInfo from '../../doctorInfo';
@@ -36,7 +35,7 @@ interface TurnHeaderProps {
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
-  const share = useShare();
+  const router = useRouter();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
   const { shareTurn, removeBookApi } = useBookAction();
@@ -64,7 +63,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   };
 
   const receiptTurn = () => {
-    window.location.assign(getReceiptTurnUrl({ bookId: id, centerId }));
+    router.push(`/receipt/${centerId}/${id}`);
   };
 
   const shareTurnInfo = () => {
