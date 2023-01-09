@@ -9,7 +9,6 @@ interface WrapperProps {
 }
 
 export const Wrapper = ({ title, Component, TopComponent, data, nextStep }: WrapperProps) => {
-  console.log(TopComponent);
   return (
     <div className="flex flex-col space-y-3">
       {title && <Text fontWeight="bold">{title}</Text>}
