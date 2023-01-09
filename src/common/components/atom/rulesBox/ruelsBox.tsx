@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import Checkbox from '../checkbox';
 import Text from '../text';
 
 interface RulesProp {
@@ -21,20 +22,17 @@ export const RulesBox = (props: RulesProp) => {
             {title}
           </Text>
         )}
-        <div className={clsx('w-full bg-slate-200 p-4 rounded-lg', className)}>
-          <ul className="flex flex-col gap-3">
+        <div className={clsx('w-full bg-slate-100 p-3 rounded-lg', className)}>
+          <ul className="flex flex-col space-y-1 list-disc mr-5">
             {rules.map((rule, index) => (
-              <li key={index} className="text-sm font-medium leading-8" dangerouslySetInnerHTML={{ __html: rule }} />
+              <li key={index} className="text-sm font-medium leading-7" dangerouslySetInnerHTML={{ __html: rule }} />
             ))}
           </ul>
         </div>
         {!!checkedText && (
           <>
-            <div className="flex items-center mt-4">
-              <input onChange={e => onChecked(e.target.checked)} type="checkbox" />
-              <Text fontWeight="medium" fontSize="sm" className="text-black block mr-2">
-                {checkedText}
-              </Text>
+            <div className="mt-4">
+              <Checkbox label={checkedText} onChange={e => onChecked(e.target.checked)} />
             </div>
           </>
         )}

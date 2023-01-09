@@ -1,53 +1,69 @@
+import Button from '@/common/components/atom/button';
 import RulesBox from '@/common/components/atom/rulesBox';
 import TextField from '@/common/components/atom/textField';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Uploader from '../../components/uploader';
 
 interface TurnRequestProps {
   uploadRequired: boolean;
-  discriptionTitle?: string;
+  descriptionTitle?: string;
   placeholder?: string;
   uploaderTitle?: string;
   rulesBoxTitle?: string;
   checkboxText?: string;
   rules: Array<string>;
-  getData: (data: TurnRequestInformation) => void;
+  onSubmit: (data: TurnRequestInformation) => void;
+  loading?: boolean;
 }
-type TurnRequestInformation = {
+
+export type TurnRequestInformation = {
   checkedRules?: boolean;
   files?: Array<any>;
-  discription: string;
+  description: string;
 };
 
 export const TurnRequest = (props: TurnRequestProps) => {
-  const { uploadRequired, rules, getData, discriptionTitle, placeholder, uploaderTitle, rulesBoxTitle, checkboxText } = props;
+  const {
+    uploadRequired,
+    rules,
+    onSubmit,
+    descriptionTitle,
+    placeholder,
+    uploaderTitle,
+    rulesBoxTitle,
+    checkboxText,
+    loading = false,
+  } = props;
   const [files, setFiles] = useState<Array<any>>([]);
   const [acceptRules, setAcceptRules] = useState<boolean>(false);
-  const [discription, setDiscription] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
-  const information: TurnRequestInformation = {
-    checkedRules: acceptRules,
-    files: files,
-    discription: discription,
+  const handleSubmit = () => {
+    onSubmit({
+      checkedRules: acceptRules,
+      files: files,
+      description: description,
+    });
   };
-
-  useEffect(() => {
-    getData(information);
-  }, [information]);
 
   return (
     <>
-      <div className="w-full flex flex-col gap-4">
+      <div className="flex flex-col w-full gap-4">
         <TextField
           size="large"
           className="!bg-[#f8fafb] h-[10rem]"
           multiLine
-          label={discriptionTitle}
+          label={descriptionTitle}
           placeholder={placeholder}
-          onChange={e => setDiscription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
         />
         {uploadRequired && <Uploader title={uploaderTitle} files={files} setFiles={setFiles} />}
-        {rules.length && <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />}
+        {rules?.length && <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />}
+        <div className="p-4 flex flex-col md:p-0 fixed md:static bottom-0 w-full md:w-auto right-0  bg-white md:bg-transparent shadow-card md:shadow-none">
+          <Button loading={loading} className="self-end w-full md:w-1/5" onClick={handleSubmit}>
+            ثبت درخواست
+          </Button>
+        </div>
       </div>
     </>
   );

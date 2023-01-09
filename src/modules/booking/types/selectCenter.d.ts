@@ -4,6 +4,8 @@ export type Center = {
   address?: string;
   freeturn?: string;
   isDisable: boolean;
+  isAvailable?: boolean;
+  availableTime?: string;
   type: 'office' | 'hospital';
   phoneNumbers?: string[];
 };

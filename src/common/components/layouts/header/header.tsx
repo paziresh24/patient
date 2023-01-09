@@ -27,10 +27,11 @@ enum MegaMenuItem {
 
 interface HeaderProps {
   shouldShowBrand?: boolean;
+  shouldShowPromoteApp?: boolean;
 }
 
 const Header = (props: HeaderProps) => {
-  const { shouldShowBrand = true } = props;
+  const { shouldShowBrand = true, shouldShowPromoteApp = true } = props;
   const [open, setOpen] = useState(false);
   const { isDesktop } = useResponsive();
   const [menu, setMenu] = useState(MegaMenuItem.CONSULT);
@@ -52,7 +53,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      {!isDesktop && customize.showPromoteApp && <PromoteAppBanner />}
+      {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
       <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid text-slate-700 md:px-4 md:h-20 border-slate-100">
         {isDesktop && (
           <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">

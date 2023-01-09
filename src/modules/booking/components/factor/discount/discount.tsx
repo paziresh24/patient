@@ -8,10 +8,11 @@ interface DiscountProps {
   onSubmit: (code: string) => void;
   status?: 'default' | 'successful' | 'unSuccessful';
   errorMessage?: string;
+  loading?: boolean;
 }
 
 export const Discount = (props: DiscountProps) => {
-  const { errorMessage, status = 'default', onSubmit } = props;
+  const { errorMessage, status = 'default', onSubmit, loading } = props;
   const [code, setCode] = useState('');
 
   const handleSubmit = () => {
@@ -33,7 +34,7 @@ export const Discount = (props: DiscountProps) => {
         readOnly={status === 'successful'}
         placeholder="کد تخفیف را وارد کنید ..."
       />
-      <Button className="!w-1/4" onClick={handleSubmit} disabled={status === 'successful'}>
+      <Button loading={loading} className="!w-1/4" onClick={handleSubmit} disabled={status === 'successful'}>
         {status === 'successful' ? 'تایید شد' : 'اعمال'}
       </Button>
     </div>

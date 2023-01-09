@@ -1,5 +1,6 @@
 import { useSuspend } from '@/common/apis/services/booking/suspend';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import FreeTurn from '../../components/selectTime/freeTurn';
@@ -10,6 +11,7 @@ import { BaseInfo } from '../../types/baseInfo';
 
 interface SelectTimeProps extends BaseInfo {
   onSelect: ({ timeId, forceClick }: { timeId: string; forceClick: boolean }) => void;
+  loading: boolean;
 }
 
 enum TimeMode {
@@ -18,9 +20,9 @@ enum TimeMode {
 }
 
 export const SelectTimeUi = (props: SelectTimeProps) => {
-  const { onSelect, ...baseInfo } = props;
+  const { onSelect, loading, ...baseInfo } = props;
   const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo });
-  const firstFreeTime = useFirstFreeTime({ ...baseInfo });
+  const firstFreeTime = useFirstFreeTime({ ...baseInfo, enabled: !loading });
   const suspend = useSuspend();
   const unSuspend = useUnsuspend();
 
@@ -62,7 +64,13 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         'animate-pulse opacity-75 pointer-events-none': suspend.isLoading,
       })}
     >
-      <FreeTurn {...firstFreeTime} onSelect={timeModeAction[TimeMode.FIRST_FREE_TURN]} selected={timeMode === TimeMode.FIRST_FREE_TURN} />
+      <FreeTurn
+        {...firstFreeTime}
+        loading={loading || firstFreeTime.loading}
+        onSelect={timeModeAction[TimeMode.FIRST_FREE_TURN]}
+        selected={timeMode === TimeMode.FIRST_FREE_TURN}
+        title={baseInfo.centerId === CENTERS.CONSULT ? 'پاسخگویی پزشک' : 'زودترین زمان نوبت خالی'}
+      />
       <OtherTimes
         {...otherTimes}
         onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}

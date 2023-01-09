@@ -34,7 +34,7 @@ export const useDiscount = ({ bookId }: { bookId: string }) => {
     }));
   };
 
-  return { ...invoiceDetails, handleDiscountSubmit };
+  return { ...invoiceDetails, handleDiscountSubmit, discountLoading: discountInquiry.isLoading };
 };
 
 export default useDiscount;

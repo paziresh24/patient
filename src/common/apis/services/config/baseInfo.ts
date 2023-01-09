@@ -21,5 +21,5 @@ export const baseInfo = ({ table }: Params) => {
 };
 
 export const useGetBaseInfo = (params: Params, options?: any) => {
-  return useQuery([ServerStateKeysEnum.DoctorFullProfile, params], () => baseInfo(params), options);
+  return useQuery([ServerStateKeysEnum.BaseInfo, params], () => baseInfo(params), options);
 };

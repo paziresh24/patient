@@ -8,6 +8,7 @@ interface UseFirstFreeTime {
   centerId: string;
   serviceId: string;
   userCenterId: string;
+  enabled?: boolean;
 }
 
 type FirstFreeTime = {
@@ -17,14 +18,14 @@ type FirstFreeTime = {
   timeId?: string;
 };
 
-export const useFirstFreeTime = ({ centerId, serviceId, userCenterId }: UseFirstFreeTime) => {
+export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true }: UseFirstFreeTime) => {
   const getFreeTurn = useGetFreeTurn();
   const isWebView = useWebView();
   const [data, setData] = useState<FirstFreeTime>({});
 
   useEffect(() => {
-    getFirstFreeTime();
-  }, []);
+    enabled && getFirstFreeTime();
+  }, [enabled]);
 
   const getFirstFreeTime = async (): Promise<FirstFreeTime> => {
     const { data } = await getFreeTurn.mutateAsync({

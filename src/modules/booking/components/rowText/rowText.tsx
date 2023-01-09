@@ -15,11 +15,11 @@ export const RowText = (props: RowTextProps) => {
   const { title, value, className, titleFontWeight, titleFontSize, valueFontWeight, valueFontSize } = props;
 
   return (
-    <div className={clsx('flex items-center justify-between', className)}>
-      <Text fontWeight={titleFontWeight} fontSize={titleFontSize}>
+    <div className={clsx('flex items-center justify-between space-s-3', className)}>
+      <Text className="whitespace-nowrap" fontWeight={titleFontWeight} fontSize={titleFontSize}>
         {title}
       </Text>
-      <Text fontWeight={valueFontWeight} fontSize={valueFontSize}>
+      <Text fontWeight={valueFontWeight} fontSize={valueFontSize} className="text-end">
         {value}
       </Text>
     </div>

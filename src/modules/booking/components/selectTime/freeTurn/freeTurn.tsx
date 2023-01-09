@@ -1,6 +1,7 @@
 import Select from '../../select';
 
 interface FreeTurnProps {
+  title: string;
   timeText?: string;
   loading?: boolean;
   selected: boolean;
@@ -8,10 +9,10 @@ interface FreeTurnProps {
 }
 
 export const FreeTurn = (props: FreeTurnProps) => {
-  const { timeText, loading, onSelect, selected } = props;
+  const { title, timeText, loading, onSelect, selected } = props;
   return (
     <Select
-      title="زودترین زمان نوبت خالی:"
+      title={`${title}:`}
       subTitle={timeText ?? 'زمان نوبت خالی وجود ندارد'}
       isLoading={loading}
       selected={selected}

@@ -1,17 +1,17 @@
 import Button from '@/common/components/atom/button';
-import Text from '@/common/components/atom/text';
 import { UserInfo } from '@/modules/login/store/userInfo';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { BaseInfo } from '../../types/baseInfo';
 import SelectUser from './selectUser';
 
-interface SelectTimeWrapperProps extends BaseInfo {
+interface SelectTimeWrapperProps {
   onSubmit: (userInfo: UserInfo) => void;
+  loading?: boolean;
+  submitButtonText: string;
 }
 
 export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
-  const { onSubmit, ...baseInfo } = props;
+  const { onSubmit, loading, submitButtonText } = props;
   const [userSelected, setUserSelected] = useState<UserInfo>({});
 
   const handleSubmit = (info: UserInfo) => {
@@ -25,11 +25,12 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
 
   return (
     <div className="flex flex-col space-y-3">
-      <Text fontWeight="bold">لطفا بیمار را انتخاب کنید</Text>
-      <SelectUser {...baseInfo} onSelect={handleSelect} />
-      <Button className="self-end w-1/5" onClick={() => handleSubmit(userSelected)}>
-        ادامه
-      </Button>
+      <SelectUser onSelect={handleSelect} />
+      <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
+        <Button loading={loading} className="self-end w-full md:w-1/5" onClick={() => handleSubmit(userSelected)}>
+          {submitButtonText}
+        </Button>
+      </div>
     </div>
   );
 };

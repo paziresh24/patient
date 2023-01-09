@@ -182,7 +182,6 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
                 classNameWrapper="flex-1"
                 onChange={e => onChange(e.target.value)}
                 value={value}
-                size="small"
                 label={t('userForm.gender')}
                 options={genders}
                 onBlur={onBlur}

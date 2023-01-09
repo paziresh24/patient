@@ -42,8 +42,8 @@ export const Uploader = (props: FileUploaderProp) => {
         {!!files.length && (
           <div className="mx-2 mb-2 flex flex-col gap-4">
             {files?.map((file, index) => (
-              <div key={index} className="w-full flex justify-between h-auto p-5 bg-slate-300 rounded-lg">
-                <Text>{file.name}</Text>
+              <div key={index} className="w-full flex justify-between items-center h-auto p-3 bg-slate-200 rounded-md text-slate-600">
+                <Text fontSize="sm">{file.name}</Text>
                 <CloseIcon onClick={() => handleRemoveFile(index)} className="cursor-pointer" />
               </div>
             ))}

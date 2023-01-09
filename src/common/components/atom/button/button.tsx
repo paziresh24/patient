@@ -45,7 +45,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const buttonStyles = {
   variant: {
-    primary: 'bg-primary border border-primary text-white disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-400',
+    primary: 'bg-primary border border-primary text-white disabled:bg-slate-200 disabled:border-slate-200 disabled:text-slate-500',
     secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400 hover:bg-slate-100',
     text: 'text-primary disabled:text-slate-400 bg-transparent hover:bg-slate-100',
   },
@@ -61,9 +61,9 @@ const buttonStyles = {
   },
   theme: {
     error: {
-      primary: 'bg-red-500 border-red-50 text-white',
-      secondary: 'border-red-500 text-red-500',
-      text: 'text-red-500',
+      primary: 'bg-red-500 border-red-50 !text-white',
+      secondary: 'border-red-500 !text-red-500 hover:bg-red-50',
+      text: '!text-red-500 hover:bg-red-50',
     },
     simple: {
       primary: '',

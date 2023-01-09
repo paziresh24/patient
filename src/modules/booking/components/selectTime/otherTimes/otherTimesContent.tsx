@@ -23,12 +23,13 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    handleClickDay(days[0]);
+    if (!isEmpty(days)) handleClickDay(days[0]);
+    setIsLoading(true);
   }, [days]);
 
   const handleClickDay = async (dayTimeStamp: number) => {
-    setSelectedDay(dayTimeStamp);
     setIsLoading(true);
+    setSelectedDay(dayTimeStamp);
     setTimes({});
     const times = await onSelectDay(dayTimeStamp);
     turnsTime(times);
@@ -51,16 +52,18 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
       }
     });
 
+    setTabState(isEmpty(morning) ? 'evening' : 'morning');
+
     setTimes({ morning, evening });
   };
 
   return (
-    <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-s-1">
-      <div className="flex w-full overflow-auto md:flex-col space-s-3 md:space-s-0 md:w-36 md:h-80 md:space-y-3 md:pl-1">
+    <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-s-1">
+      <div className="flex w-full pb-2 overflow-auto md:flex-col space-s-2 md:space-s-0 md:w-36 md:h-80 md:space-y-2 md:pb-0 md:pl-1">
         {isEmpty(days) && <FreeDaysLoading />}
         {days?.map((turn: number, index: number) => (
           <div
-            className={clsx('cursor-pointer min-w-fit flex flex-col border border-solid border-slate-200 rounded-lg p-3', {
+            className={clsx('cursor-pointer min-w-fit flex flex-col border border-solid border-slate-200 rounded-lg pl-6 py-2 p-3', {
               'bg-primary bg-opacity-5 border-primary border-opacity-30 text-primary': selectedDay === turn,
             })}
             key={turn}
@@ -85,40 +88,44 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
         ))}
       </div>
       <div className="w-full border border-solid rounded-lg md:h-80 border-slate-200">
-        {!isEmpty(times?.morning) && !isEmpty(times?.evening) && (
+        {(!isEmpty(times?.morning) || !isEmpty(times?.evening)) && (
           <Tabs value={tabState} onChange={(value: any) => setTabState(value)} className="border-b border-solid border-slate-200">
             <Tab value="morning" label="صبح" className="w-full" />
             <Tab value="evening" label="عصر" className="w-full" />
           </Tabs>
         )}
         {!isLoading && isEmpty(times?.[tabState]) && (
-          <div className="flex items-center justify-center w-full h-full">
-            <Text fontWeight="bold">نوبت پزشک در این روز به پایان رسیده است.</Text>
+          <div className="flex items-center justify-center w-full h-full py-8 md:py-0 md:!pb-11">
+            <Text fontWeight="bold" fontSize="sm">
+              نوبت پزشک در این روز به پایان رسیده است.
+            </Text>
           </div>
         )}
         {isLoading && (
-          <div className="flex items-center justify-center w-full h-full">
+          <div className="flex items-center justify-center w-full h-20 md:h-full">
             <Loading />
           </div>
         )}
-        <div className="flex flex-wrap gap-3 p-4 overflow-auto">
-          {times?.[tabState]?.map((turn: any) => (
-            <div
-              key={turn.from}
-              className="flex-[1_1_4rem] md:flex-[1_1_5rem] cursor-pointer border border-solid p-2 md:p-3 text-center rounded-lg transition-colors border-slate-200 hover:border-primary"
-              onClick={() => {
-                onSelectTime({
-                  from: turn.from,
-                  to: turn.to,
-                });
-              }}
-            >
-              {moment(turn.from * 1000)
-                .locale('fa')
-                .format('LT')}
-            </div>
-          ))}
-        </div>
+        {!isEmpty(times?.[tabState]) && (
+          <div className="flex flex-wrap h-64 gap-3 p-3 m-1 overflow-auto">
+            {times?.[tabState]?.map((turn: any) => (
+              <div
+                key={turn.from}
+                className="flex-[1_1_4rem] md:flex-[1_1_5rem] cursor-pointer border border-solid p-2 md:p-3 text-center rounded-lg transition-colors border-slate-200 hover:border-primary"
+                onClick={() => {
+                  onSelectTime({
+                    from: turn.from,
+                    to: turn.to,
+                  });
+                }}
+              >
+                {moment(turn.from * 1000)
+                  .locale('fa')
+                  .format('LT')}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

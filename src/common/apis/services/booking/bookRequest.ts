@@ -5,28 +5,23 @@ import { useMutation } from 'react-query';
 import { setTerminal } from '../auth/setTerminal';
 
 interface Params {
-  server_id: string;
-  request_code: string;
-  national_code: string;
-  cell: string;
-  email?: string;
-  gender: 'male' | 'female';
-  is_foreigner: boolean;
-  selected_user_id: string;
-  // insurance_id: this.insurance.id,
-  // insurance_number: this.insurance.number,
-  first_name: string;
-  last_name: string;
-  is_webview: 1 | 0;
-  symptomes?: string;
   center_id: string;
+  service_id: string;
+  server_id: string;
+  national_code: string;
+  user_center_id: string;
+  name: string;
+  cell: string;
+  gender: 'male' | 'female';
+  description: string;
+  files: any[];
 }
 
-export const book = (params: Params) => {
+export const bookRequest = (params: Params) => {
   setTerminal();
 
   return clinicClient.post(
-    '/api/book',
+    '/api/bookRequest',
     formData({
       ...params,
       certificate: getCookie('certificate'),
@@ -34,6 +29,6 @@ export const book = (params: Params) => {
   );
 };
 
-export const useBook = () => {
-  return useMutation(book);
+export const useBookRequest = () => {
+  return useMutation(bookRequest);
 };

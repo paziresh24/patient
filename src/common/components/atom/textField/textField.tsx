@@ -14,9 +14,9 @@ export interface TextFieldProps extends InputProps {
 }
 
 const inputSize = {
-  small: 'px-3 h-10 text-sm',
-  medium: 'px-4 h-12 text-sm',
-  large: 'px-5 h-14 text-md',
+  small: 'p-3 h-10 text-sm',
+  medium: 'p-4 h-12 text-sm',
+  large: 'p-5 h-14 text-md',
 };
 
 // eslint-disable-next-line react/display-name

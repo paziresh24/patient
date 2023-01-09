@@ -4,4 +4,6 @@ export enum ServerStateKeysEnum {
   SearchSuggestion = 'searchSuggestion',
   Search = 'search',
   MenuExpertise = 'menuExpertise',
+  BaseInfo = 'baseInfo',
+  CurrentDateTime = 'currentDateTime',
 }

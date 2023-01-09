@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { withCSR } from '@/common/hoc/withCsr';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -23,10 +24,10 @@ const { publicRuntimeConfig } = getConfig();
 const Receipt: NextPageWithLayout = () => {
   const {
     query: { bookId, centerId },
+    ...router
   } = useRouter();
   const [removeModal, setRemoveModal] = useState(false);
   const getReceiptDetails = useGetReceiptDetails();
-  const router = useRouter();
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
     fileName: 'Paziresh24-Receipt',
@@ -64,7 +65,7 @@ const Receipt: NextPageWithLayout = () => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             setRemoveModal(false);
             toast.success('نوبت شما با موفقیت لغو شد!');
-            window.location.href = `/dr/${bookDetailsData.doctor_slug}`;
+            router.push('/patient/appointments');
             return;
           }
           toast.error(data.data.message);
@@ -88,8 +89,8 @@ const Receipt: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse items-start max-w-screen-xl p-2 mx-auto overflow-hidden md:flex-row space-s-0 md:space-s-5 md:py-10">
-      <div className="flex flex-col w-full p-3 space-y-6 bg-white rounded-lg shadow-card md:p-8">
+    <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
         <div id="receipt">
           {getReceiptDetails.isSuccess ? (
             <div className="flex flex-col items-center justify-center mt-4 space-y-3">
@@ -181,9 +182,9 @@ const Receipt: NextPageWithLayout = () => {
           </div>
         )}
       </div>
-      <div className="w-full md:w-[35rem] bg-white p-4 shadow-card rounded-lg mb-2 md:mb-0">
+      <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
         <DoctorInfo
-          className="bg-[#f8fafb] p-4 rounded-lg"
+          className="p-4 rounded-lg bg-slate-50"
           avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
           firstName={
             centerType === 'consult'
@@ -216,15 +217,15 @@ const Receipt: NextPageWithLayout = () => {
 const ReceiptButtonLoading = () => {
   return (
     <>
-      <div className="flex items-center justify-between px-5">
+      <div className="flex items-center justify-between">
         <Skeleton w="49%" h="2.8rem" rounded="lg" />
         <Skeleton w="49%" h="2.8rem" rounded="lg" />
       </div>
-      <div className="flex justify-between items-center px-5 !mt-3">
+      <div className="flex justify-between items-center !mt-3">
         <Skeleton w="49%" h="2.8rem" rounded="lg" />
         <Skeleton w="49%" h="2.8rem" rounded="lg" />
       </div>
-      <div className="px-5 !mt-3">
+      <div className="!mt-3">
         <Skeleton w="100%" h="2.8rem" rounded="lg" />
       </div>
     </>
@@ -232,13 +233,13 @@ const ReceiptButtonLoading = () => {
 };
 
 Receipt.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
+  return <LayoutWithOutFooter shouldShowPromoteApp={false}>{page}</LayoutWithOutFooter>;
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = withCSR(async () => {
   return {
     props: {},
   };
-};
+});
 
 export default Receipt;
