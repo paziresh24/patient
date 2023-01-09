@@ -2,6 +2,7 @@
 
 stages:
   - docker
+  - deploy-develop
   - deploy
 
 variables:
@@ -70,7 +71,7 @@ build and push docker production image:
 
 deploy develop:
   image: dockerhub.paziresh24.com/docker-ansible:latest
-  stage: deploy
+  stage: deploy-develop
   only:
     - develop
   script:
@@ -89,6 +90,8 @@ deploy staging:
 deploy production:
   image: dockerhub.paziresh24.com/docker-ansible:latest
   stage: deploy
+  only:
+    - master
   when: manual
   script:
 #    - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
