@@ -3,7 +3,7 @@ import { splunk } from '@paziresh24/splunk-event';
 export const splunkInstance = () =>
   splunk.create({
     baseUrl: 'https://p24splk.paziresh24.com',
-    token: '26018e14-efd5-41a3-8b3d-ca263f0c68ac',
+    token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
     constant: {
       current_url: window.location.href,
     },
@@ -12,5 +12,5 @@ export const splunkInstance = () =>
 export const splunkSearchInstance = () =>
   splunk.create({
     baseUrl: 'https://p24splk.paziresh24.com',
-    token: '7e35b085-d39f-441d-a62f-22890fdd6ac9',
+    token: '7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd',
   });
