@@ -12,6 +12,7 @@ import { BaseInfo } from '../../types/baseInfo';
 interface SelectTimeProps extends BaseInfo {
   onSelect: ({ timeId, forceClick }: { timeId: string; forceClick: boolean }) => void;
   loading: boolean;
+  onFirstFreeTimeError: (errorText: string) => void;
 }
 
 enum TimeMode {
@@ -20,9 +21,9 @@ enum TimeMode {
 }
 
 export const SelectTimeUi = (props: SelectTimeProps) => {
-  const { onSelect, loading, ...baseInfo } = props;
+  const { onSelect, loading, onFirstFreeTimeError, ...baseInfo } = props;
   const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo });
-  const firstFreeTime = useFirstFreeTime({ ...baseInfo, enabled: !loading });
+  const firstFreeTime = useFirstFreeTime({ ...baseInfo, enabled: !loading, onError: onFirstFreeTimeError });
   const suspend = useSuspend();
   const unSuspend = useUnsuspend();
 

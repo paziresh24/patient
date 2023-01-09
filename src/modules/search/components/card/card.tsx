@@ -71,7 +71,7 @@ export const SearchCard = (props: SearchCardProps) => {
   );
 
   return (
-    <Card className={clsx('relative !p-3 md:!p-4', className)}>
+    <Card className={clsx('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
         <Link href={baseInfo.url}>
           <a onClick={sendEventWhenClick}>
@@ -101,7 +101,7 @@ export const SearchCard = (props: SearchCardProps) => {
               </a>
             </Link>
             {!!baseInfo?.viewCount && (
-              <div className="flex items-center space-s-1 absolute rtl:left-5 ltr:right-5 top-5">
+              <div className="absolute flex items-center space-s-1 rtl:left-5 ltr:right-5 top-5">
                 <Text fontSize="xs">{baseInfo?.viewCount}</Text>
                 <EyeIcon width={18} height={18} />
               </div>

@@ -18,6 +18,7 @@ import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import Recommend from '../components/recommend/recommend';
 import Wrapper from '../components/wrapper/wrapper';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -88,6 +89,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [insuranceModal, setInsuranceModal] = useState(false);
   const [insuranceName, setInsuranceName] = useState('');
   const [insuranceNumber, setInsuranceNumber] = useState('');
+  const [recommendModal, setRecommendModal] = useState(false);
+  const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -276,6 +279,10 @@ const BookingSteps = (props: BookingStepsProps) => {
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             userCenterId: center?.user_center_id,
+            onFirstFreeTimeError: (errorText: string) => {
+              setFirstFreeTimeErrorText(errorText);
+              setRecommendModal(true);
+            },
           }}
           nextStep={(timeId: string) => {
             setTimeId(timeId);
@@ -360,6 +367,21 @@ const BookingSteps = (props: BookingStepsProps) => {
           >
             ثبت نوبت
           </Button>
+        </div>
+      </Modal>
+      <Modal noHeader isOpen={recommendModal} onClose={() => {}} bodyClassName="bg-slate-100 !p-0">
+        <div className="flex flex-col space-y-3">
+          <div className="p-5 bg-white">{firstFreeTimeErrorText}</div>
+          <Text fontSize="sm" className="px-5 leading-6">
+            برترین پزشکان{' '}
+            <Text fontWeight="bold">
+              {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} در {center?.city}
+            </Text>{' '}
+            از دیدگاه بیماران
+          </Text>
+          {profile && (
+            <Recommend doctorId={profile.id} city={profile.city_en_slug} category={profile.expertises[0]?.expertise_groups[0].en_slug} />
+          )}
         </div>
       </Modal>
     </div>

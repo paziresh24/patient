@@ -7,10 +7,11 @@ import SelectTime from './selectTime';
 interface SelectTimeWrapperProps extends BaseInfo {
   onSubmit: (timeId: string) => void;
   loading: boolean;
+  onFirstFreeTimeError: (errorText: string) => void;
 }
 
 export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {
-  const { onSubmit, loading, ...baseInfo } = props;
+  const { onSubmit, loading, onFirstFreeTimeError, ...baseInfo } = props;
   const [timeId, setTimeId] = useState('');
 
   const handleSubmit = (id: string) => {
@@ -25,8 +26,8 @@ export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {
 
   return (
     <>
-      <SelectTime {...baseInfo} loading={loading} onSelect={handleSelect} />
-      <div className="p-4 flex flex-col md:p-0 fixed md:static bottom-0 w-full md:w-auto right-0  bg-white md:bg-transparent shadow-card md:shadow-none">
+      <SelectTime {...baseInfo} onFirstFreeTimeError={onFirstFreeTimeError} loading={loading} onSelect={handleSelect} />
+      <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
         <Button className="self-end w-full md:w-1/5" onClick={() => handleSubmit(timeId)}>
           ادامه
         </Button>
