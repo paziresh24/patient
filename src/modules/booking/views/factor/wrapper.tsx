@@ -50,13 +50,14 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         {...invoice}
         {...discount}
         centerId={centerId}
+        bookId={bookId}
         loading={isLoading}
         onSubmitDiscount={handleDiscountSubmit}
         onPayment={handlePaymentAction}
         isShowDiscountInput={centerId === CENTERS.CONSULT}
         rules={getRules()}
       />
-      <div className="p-4 flex flex-col md:p-0 fixed md:static bottom-0 w-full md:w-auto right-0  bg-white md:bg-transparent shadow-card md:shadow-none">
+      <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
         <Button
           onClick={() =>
             handlePaymentAction({
