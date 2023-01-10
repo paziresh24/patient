@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
-
 const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -34,17 +33,25 @@ const nextConfig = {
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
-  ...(isProduction && {
-    sentry: {
-      hideSourceMaps: false,
-    },
-  }),
+  sentry: {
+    hideSourceMaps: true,
+  },
 };
 
 const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-const sentryConfig = isProduction ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig;
+module.exports = (phase, defaultConfig) => {
+  const plugins = [nextTranslate, withBundleAnalyzer, config => withSentryConfig(config, sentryWebpackPluginOptions)];
 
-module.exports = withBundleAnalyzer(nextTranslate(sentryConfig));
+  const config = plugins.reduce(
+    (acc, plugin) => {
+      const update = plugin(acc);
+      return typeof update === 'function' ? update(phase, defaultConfig) : update;
+    },
+    { ...nextConfig },
+  );
+
+  return config;
+};

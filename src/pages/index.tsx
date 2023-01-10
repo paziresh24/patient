@@ -13,7 +13,7 @@ import { ReactElement } from 'react';
 import { NextPageWithLayout } from './_app';
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
-const Home: NextPageWithLayout = ({ customizeQuery }: any) => {
+const Home: NextPageWithLayout = () => {
   const { isMobile } = useResponsive();
   const customize = useCustomize(state => state.customize);
 
