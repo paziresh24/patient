@@ -130,7 +130,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     });
     if (data.status === ClinicStatus.SUCCESS) {
       if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
-      return router.push(`/receipt/${data.book_info.center_id}/${data.book_info.id}`);
+      return router.push(`/receipt/${center.id}/${data.book_info.id}`);
     }
     toast.error(data.message);
   };
@@ -149,7 +149,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       ...(user.national_code && { national_code: user.national_code }),
     });
     if (data.status === ClinicStatus.SUCCESS) {
-      return router.push(`/receipt/${data.result.book_request_id}`);
+      return router.push(`/receipt/${center.id}/${data.result.book_request_id}`);
     }
     toast.error(data.message);
   };
