@@ -97,15 +97,13 @@ const BookingSteps = (props: BookingStepsProps) => {
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
       const selectedCenter = centers?.find((c: any) => c.id === defaultStep.payload.centerId);
-      const selectedService = selectedCenter?.services // @ts-ignore
-        .find((c: any) => c.id === defaultStep.payload?.serviceId);
-
-      defaultStep.payload?.centerId && setCenter(selectedCenter);
-      // @ts-ignore
-      defaultStep.payload?.serviceId && setService(selectedService);
-      // @ts-ignore
-      defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
-      if (defaultStep.step === 'SELECT_TIME' && selectedService.can_request) {
+      const selectedService =
+        (defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER') &&
+        selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
+      setCenter(selectedCenter);
+      setService(selectedService);
+      defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
+      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
         return handleChangeStep('SELECT_USER', { serviceId: selectedService.id });
       }
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
@@ -127,8 +125,8 @@ const BookingSteps = (props: BookingStepsProps) => {
       selected_user_id: user.id,
       is_foreigner: user.is_foreigner,
       ...(user.national_code && { national_code: user.national_code }),
-      insurance_id,
-      insurance_number,
+      ...(insurance_id && { insurance_id }),
+      ...(insurance_number && { insurance_number }),
     });
     if (data.status === ClinicStatus.SUCCESS) {
       if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
@@ -154,14 +152,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       return router.push(`/receipt/${data.result.book_request_id}`);
     }
     toast.error(data.message);
-  };
-
-  const isCenterDisabled = (settings: any, services: any[], status: number) => {
-    return (
-      settings.disable_booking == 1 ||
-      services.every((service: any) => service.can_booking == 0 || isEmpty(service.hours_of_work)) ||
-      status === 2
-    );
   };
 
   const handleChangeStep = (key: Step, payload?: any) => {
@@ -196,8 +186,9 @@ const BookingSteps = (props: BookingStepsProps) => {
           freeturn: center.freeturn_text,
           type: center.center_type === 1 ? 'office' : 'hospital',
           phoneNumbers: center.tell_array,
-          isDisable: isCenterDisabled(center.settings, center.services, center.status),
-          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < currentDateTime.data?.data?.timestamp,
+          isDisable: !center.is_active,
+          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
+          availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
         };
       }) ?? []
     );
@@ -231,7 +222,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 serviceId: service.id,
               };
               setService(service);
-              if (service.can_request) return handleChangeStep('SELECT_USER', payload);
+              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
               return handleChangeStep('SELECT_TIME', payload);
             }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
@@ -253,7 +244,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           nextStep={(service: Service) => {
             const selectedService = center?.services?.find((s: any) => s.id === service.id);
             setService(selectedService);
-            if (selectedService.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id });
+            if (selectedService?.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id });
             handleChangeStep('SELECT_TIME', { serviceId: service.id });
           }}
         />
@@ -300,7 +291,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           }}
           nextStep={(user: UserInfo) => {
             setUser(user);
-            if (service.can_request) {
+            if (service?.can_request) {
               handleChangeStep('BOOK_REQUEST');
               return;
             }
@@ -371,11 +362,13 @@ const BookingSteps = (props: BookingStepsProps) => {
       </Modal>
       <Modal noHeader isOpen={recommendModal} onClose={() => {}} bodyClassName="bg-slate-100 !p-0">
         <div className="flex flex-col space-y-3">
-          <div className="p-5 bg-white">{firstFreeTimeErrorText}</div>
+          <Text className="p-5 leading-7 bg-white" fontWeight="bold">
+            {firstFreeTimeErrorText}
+          </Text>
           <Text fontSize="sm" className="px-5 leading-6">
             برترین پزشکان{' '}
             <Text fontWeight="bold">
-              {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} در {center?.city}
+              {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
             </Text>{' '}
             از دیدگاه بیماران
           </Text>

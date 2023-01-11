@@ -20,7 +20,7 @@ export const CenterCard = (props: CenterCardProps) => {
   return (
     <>
       <div
-        onClick={() => (!isDisable || !isAvailable) && onClick(center)}
+        onClick={() => !isDisable && isAvailable && onClick(center)}
         className={clsx('w-full rounded-lg border border-slate-200 cursor-pointer shadow-sm', {
           'cursor-auto': isDisable || !isAvailable,
         })}
@@ -68,9 +68,12 @@ export const CenterCard = (props: CenterCardProps) => {
         {!isAvailable && availableTime && (
           <>
             <Divider />
-            <Text fontSize="sm" align="center" fontWeight="medium" className="block text-[#B2B7C2]">
-              زمان نوبت دهی پزشک به پایان رسیده است!
-            </Text>
+            <div className="w-full p-4">
+              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-400">
+                زمان نوبت دهی پزشک به پایان رسیده است!
+              </Text>
+            </div>
+            <Divider />
             <div className="flex justify-between w-full p-4">
               <Text className="text-black/">نوبت دهی اینترنتی:</Text>
               <Text className="block text-slate-500">{availableTime}</Text>
@@ -81,7 +84,7 @@ export const CenterCard = (props: CenterCardProps) => {
           <>
             <Divider />
             <div className="w-full p-4">
-              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-[#B2B7C2]">
+              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-400">
                 نوبت دهی اینترنتی در این {type === 'office' ? 'مطب' : 'مرکز'} غیر فعال است.
               </Text>
               {!!phoneNumbers?.length && (
