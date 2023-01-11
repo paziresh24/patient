@@ -187,7 +187,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           type: center.center_type === 1 ? 'office' : 'hospital',
           phoneNumbers: center.tell_array,
           isDisable: !center.is_active,
-          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < currentDateTime.data?.data?.timestamp,
+          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
           availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
         };
       }) ?? []
