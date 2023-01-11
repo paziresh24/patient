@@ -3,8 +3,8 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
-import ErrorIcon from '@/common/components/icons/errorIcon';
-import SuccessIcon from '@/common/components/icons/successIcon';
+import ErrorIcon from '@/common/components/icons/error';
+import SuccessIcon from '@/common/components/icons/success';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -103,7 +103,11 @@ const Receipt: NextPageWithLayout = () => {
             <>
               {getReceiptDetails.isSuccess ? (
                 <div className="flex flex-col items-center justify-center mt-4 space-y-3">
-                  {turnStatus.deletedTurn || turnStatus.expiredTurn ? <ErrorIcon /> : <SuccessIcon />}
+                  {turnStatus.deletedTurn || turnStatus.expiredTurn ? (
+                    <ErrorIcon className="text-red-500" />
+                  ) : (
+                    <SuccessIcon className="text-green-600" />
+                  )}
                   <Text
                     fontWeight="bold"
                     className={clsx('text-green-600', {
