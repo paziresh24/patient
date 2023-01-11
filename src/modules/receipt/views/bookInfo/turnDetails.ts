@@ -1,5 +1,6 @@
 import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
 import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
+import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 
 type Patient = {
@@ -12,7 +13,7 @@ interface TurnDetailsDataParam {
   data: {
     bookTime: number;
     waitingTime?: string;
-    bookStatus?: string;
+    turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
     durationConversation?: string;
@@ -41,7 +42,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     rules,
     doctorPhone,
     durationConversation,
-    bookStatus,
+    turnStatus,
   } = data;
 
   const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
@@ -51,7 +52,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
       value: centerType === CenterType.consult ? bookTime : dateTime,
-      shouldShow: bookStatus !== 'requested',
+      shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
     },
@@ -59,7 +60,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 2,
       name: 'توضیحات',
       value:
-        bookStatus === 'requested'
+        turnStatus === BookStatus.requested
           ? `${patientInfo.name} عزیز این درخواست به معنی ثبت نوبت نمیباشد. نتیجه درخواست شما پس از بررسی توسط مرکز درمانی از طریق پیامک به شما اطلاع داده می شود. همینطور شما میتوانید وضعیت درخواست خود را از طریق صفحه نوبت های من مشاهده کنید.`
           : 'زمان نوبت اعلام شده، برای حضور در مرکز درمانی بوده و با زمان ویزیت تفاوت دارد.',
       shouldShow: centerType == CenterType.clinic,
@@ -94,7 +95,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 6,
       name: 'نام مرکز',
       value: centerName,
-      shouldShow: centerType === CenterType.hospital || bookStatus === 'requested',
+      shouldShow: centerType === CenterType.hospital || turnStatus === BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },
@@ -120,7 +121,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 9,
       name: 'نام بیمار',
       value: patientInfo.name,
-      shouldShow: bookStatus !== 'requested',
+      shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },
@@ -128,7 +129,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 10,
       name: 'شماره بیمار',
       value: patientInfo.cell,
-      shouldShow: bookStatus !== 'requested',
+      shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },
@@ -136,7 +137,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 11,
       name: 'کدملی بیمار',
       value: patientInfo.nationalCode,
-      shouldShow: centerType === CenterType.clinic && bookStatus !== 'requested',
+      shouldShow: centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },
@@ -144,7 +145,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 12,
       name: 'سرویس انتخاب شده',
       value: patientInfo.selectServeis,
-      shouldShow: centerType === CenterType.clinic && bookStatus !== 'requested',
+      shouldShow: centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },
@@ -172,7 +173,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
         name: items,
         type: 'Label',
       })),
-      shouldShow: bookStatus !== 'requested',
+      shouldShow: turnStatus !== BookStatus.requested,
       type: 'Accordion',
     },
   ];

@@ -44,7 +44,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               waitingTime: turnData?.rate_info?.waiting_time,
               centerPhone: turnData?.center_display_number,
               address: turnData?.center_address,
-              bookStatus: turnData?.book_status,
+              turnStatus: turnData?.book_status,
               durationConversation: turnData?.duration_conversation_doctor,
               doctorPhone: turnData?.whatsapp_cell_doctor,
               receiptLink: turnData?.link_bill,
