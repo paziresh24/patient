@@ -77,13 +77,13 @@ export const BottomNavigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 flex items-center justify-between w-full h-16 bg-white border-t md:hidden px-7 border-slate-200">
+    <div className="fixed bottom-0 left-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-white border-t md:hidden border-slate-200">
       {menus.map(({ icon, name, link, privateRoute }, index) => (
         <div
           key={index}
           onClick={() => handleChangeRoute(link, privateRoute)}
-          className={clsx('flex flex-col items-center space-y-1 font-medium', {
-            'text-primary font-bold': router.asPath.split('?')[0] === link,
+          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-600', {
+            '!text-primary font-bold': router.asPath.split('?')[0] === link,
           })}
         >
           {icon}
