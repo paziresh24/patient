@@ -53,7 +53,11 @@ const Factor: NextPageWithLayout = () => {
 };
 
 Factor.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter shouldShowPromoteApp={false}>{page}</LayoutWithOutFooter>;
+  return (
+    <LayoutWithOutFooter shouldShowPromoteApp={false} showBottomNavigation={false}>
+      {page}
+    </LayoutWithOutFooter>
+  );
 };
 
 export const getServerSideProps = withCSR(async () => {
