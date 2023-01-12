@@ -1,6 +1,6 @@
 import useCustomize from '@/common/hooks/useCustomize';
-import useWebView from '@/common/hooks/useWebView';
 import { ReactNode } from 'react';
+import BottomNavigation from './bottomNavigation';
 import Footer from './footer';
 import CompactFooter from './footer/compactFooter';
 import Header from './header';
@@ -14,16 +14,16 @@ export const LayoutWithHeaderAndFooter = ({
   shouldShowBrand?: boolean;
   shouldShowPromoteApp?: boolean;
 }) => {
-  const isWebView = useWebView();
   const customize = useCustomize(state => state.customize);
 
   return (
-    <>
-      {!isWebView && (
+    <div className="pb-16 md:pb-0">
+      {customize.showHeader && (
         <Header shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />
       )}
       {children}
-      {!isWebView && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
-    </>
+      {customize.showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
+      <BottomNavigation />
+    </div>
   );
 };

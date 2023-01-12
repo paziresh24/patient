@@ -10,16 +10,18 @@ import EditIcon from '@/common/components/icons/edit';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import ShareIcon from '@/common/components/icons/share';
-import StarIcon from '@/common/components/icons/star';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
+import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
+import useShare from '@/common/hooks/useShare';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { NextPageWithLayout } from '../_app';
 
 export const PatinetProfile: NextPageWithLayout = () => {
@@ -29,6 +31,8 @@ export const PatinetProfile: NextPageWithLayout = () => {
   const loginPending = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const isApplication = useApplication();
+  const share = useShare();
 
   useEffect(() => {
     !isLogin &&
@@ -38,12 +42,6 @@ export const PatinetProfile: NextPageWithLayout = () => {
       });
   }, [isLogin, loginPending]);
 
-  useEffect(() => {
-    if (!isWebView) {
-      router.replace('/patient/appointments');
-    }
-  }, []);
-
   return (
     <>
       <Head>
@@ -51,9 +49,9 @@ export const PatinetProfile: NextPageWithLayout = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <AppBar title="پروفایل من" />
+      {isApplication && <AppBar title="پروفایل من" />}
 
-      <div className="h-screen">
+      <div>
         <Link href="/patient/profile?referrer=profile&isWebView=1">
           <a>
             <div className="flex items-center p-5 bg-white border-t shadow-sm space-s-5 border-slate-200">
@@ -117,17 +115,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
           <div
             className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
             onClick={() => {
-              window.Android.rateApp();
-            }}
-          >
-            <StarIcon />
-            <Text fontWeight="medium">امتیاز به پذیرش24</Text>
-          </div>
-
-          <div
-            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
-            onClick={() => {
-              window.Android.shareQA('اپلیکیشن نوبت دهی پذیرش24', '/app');
+              share({ url: 'https://www.paziresh24.com/app' });
             }}
           >
             <ShareIcon />
@@ -143,6 +131,10 @@ export const PatinetProfile: NextPageWithLayout = () => {
       </div>
     </>
   );
+};
+
+PatinetProfile.getLayout = function getLayout(page: ReactElement) {
+  return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
 };
 
 export const getServerSideProps = withCSR(async () => {

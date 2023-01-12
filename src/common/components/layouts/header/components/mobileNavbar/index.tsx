@@ -62,7 +62,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="z-50 block w-full text-sm lg:hidden">
+    <div ref={ref} className="block w-full text-sm z-infinity lg:hidden">
       <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
           {customize.showSideBar && (

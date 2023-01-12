@@ -98,7 +98,7 @@ export const UserProfile = () => {
             <Transition
               match={open}
               animation="bottom"
-              className="absolute z-50 max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
+              className="absolute max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
                 <a>

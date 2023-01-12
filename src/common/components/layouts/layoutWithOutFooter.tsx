@@ -1,5 +1,6 @@
-import useWebView from '@/common/hooks/useWebView';
+import useCustomize from '@/common/hooks/useCustomize';
 import { ReactElement } from 'react';
+import BottomNavigation from './bottomNavigation';
 import Header from './header';
 
 export const LayoutWithOutFooter = ({
@@ -11,12 +12,15 @@ export const LayoutWithOutFooter = ({
   shouldShowBrand?: boolean;
   shouldShowPromoteApp?: boolean;
 }) => {
-  const isWebView = useWebView();
+  const customize = useCustomize(state => state.customize);
 
   return (
     <>
-      {!isWebView && <Header shouldShowBrand={shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />}
+      {customize.showHeader && (
+        <Header shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />
+      )}
       {children}
+      <BottomNavigation />
     </>
   );
 };

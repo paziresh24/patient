@@ -5,8 +5,15 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+const runtimeCaching = require('./runtimeCaching');
 
 const isProduction = process.env.NODE_ENV === 'production';
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  runtimeCaching,
+});
 
 const nextConfig = {
   webpack: (config, { webpack }) => {
@@ -43,7 +50,7 @@ const sentryWebpackPluginOptions = {
 };
 
 module.exports = (phase, defaultConfig) => {
-  const plugins = [nextTranslate, withBundleAnalyzer, config => withSentryConfig(config, sentryWebpackPluginOptions)];
+  const plugins = [nextTranslate, withBundleAnalyzer, withPWA, config => withSentryConfig(config, sentryWebpackPluginOptions)];
 
   const config = plugins.reduce(
     (acc, plugin) => {

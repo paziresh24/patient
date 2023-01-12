@@ -23,6 +23,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="Language" content="fa" />
         <meta name="robots" content="index, follow" />
         <meta name="autor" content="پذیرش24" />
+        <link rel="manifest" href="/manifest.json" />
 
         <script
           type="application/ld+json"
