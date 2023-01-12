@@ -10,6 +10,7 @@ import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { BookmarksList } from '@/modules/patient/views/bookmarksList';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { NextPageWithLayout } from '../_app';
 
 export const Bookmarks: NextPageWithLayout = () => {
@@ -27,7 +28,7 @@ export const Bookmarks: NextPageWithLayout = () => {
 
       {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
 
-      <div className="flex space-y-5 flex-col p-5 bg-white">
+      <div className="flex flex-col p-5 space-y-5 bg-white">
         {!isWebView && (
           <Text fontWeight="black" fontSize="xl">
             {t('title')}
@@ -47,9 +48,11 @@ Bookmarks.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

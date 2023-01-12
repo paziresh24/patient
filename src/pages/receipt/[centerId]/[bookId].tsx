@@ -19,6 +19,7 @@ import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import clsx from 'clsx';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../../_app';
@@ -237,9 +238,11 @@ Receipt.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithOutFooter shouldShowPromoteApp={false}>{page}</LayoutWithOutFooter>;
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

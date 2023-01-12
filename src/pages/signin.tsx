@@ -1,10 +1,12 @@
+import { withCSR } from '@/common/hoc/withCsr';
 import LoginForm from '@/modules/login/views/loginForm';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 
 const LoginPage = () => {
   const router = useRouter();
   return (
-    <div className="h-screen p-8 bg-white flex justify-center items-center">
+    <div className="flex items-center justify-center h-screen p-8 bg-white">
       <div className="w-96">
         <LoginForm postLogin={() => router.push('/')} />
       </div>
@@ -12,10 +14,12 @@ const LoginPage = () => {
   );
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
-}
+});
 
 export default LoginPage;

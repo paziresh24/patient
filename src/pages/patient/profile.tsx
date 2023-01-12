@@ -14,6 +14,7 @@ import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../_app';
@@ -114,9 +115,11 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

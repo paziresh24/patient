@@ -8,6 +8,7 @@ import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useCallback } from 'react';
 import { NextPageWithLayout } from '../_app';
 const { publicRuntimeConfig } = getConfig();
@@ -87,9 +88,11 @@ Booking.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

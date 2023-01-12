@@ -21,6 +21,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';
 import { NextPageWithLayout } from '../_app';
 
@@ -137,9 +138,11 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

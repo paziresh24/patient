@@ -7,6 +7,7 @@ import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
@@ -60,9 +61,11 @@ Factor.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

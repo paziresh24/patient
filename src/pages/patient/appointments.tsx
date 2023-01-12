@@ -22,6 +22,7 @@ import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
@@ -190,9 +191,11 @@ Appointments.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 
