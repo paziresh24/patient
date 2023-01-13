@@ -46,11 +46,11 @@ const Search: NextPageWithLayout = () => {
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
-      changeRoute({ params: { city: '' } });
+      changeRoute({ params: { city: '' }, replace: true });
     }
 
     if (!isLoading && !selectedFilters.city && city.en_slug !== 'ir') {
-      changeRoute({ params: { city: city?.en_slug } });
+      changeRoute({ params: { city: city?.en_slug }, replace: true });
     }
   }, [params, city, isLoading]);
 

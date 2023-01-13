@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.paziresh24.paziresh24",
+      "sha256_cert_fingerprints": ["7B:19:A2:5F:10:ED:F3:8C:A8:1C:91:AC:05:DD:37:A6:79:C6:BC:E9:13:FC:5A:4E:F9:D2:C1:A0:52:8C:DA:DE"]
+    }
+  }
+]

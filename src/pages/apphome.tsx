@@ -1,0 +1,134 @@
+import { useGetAppHome } from '@/common/apis/services/apphome/apphome';
+import Logo from '@/common/components/atom/logo';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import Text from '@/common/components/atom/text/text';
+import Transition from '@/common/components/atom/transition/transition';
+import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import Seo from '@/common/components/layouts/seo';
+import { withCSR } from '@/common/hoc/withCsr';
+import { useSearchStore } from '@/modules/search/store/search';
+import Suggestion from '@/modules/search/view/suggestion';
+import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next/types';
+import { ReactElement } from 'react';
+import ScrollContainer from 'react-indiana-drag-scroll';
+import { NextPageWithLayout } from './_app';
+
+const Home: NextPageWithLayout = () => {
+  const appHome = useGetAppHome();
+  const city = useSearchStore(state => state.city);
+
+  const handlePopupRoute = (type: string) => {
+    if (type === 'center') {
+      return `/s/${city.en_slug}/center`;
+    }
+    if (type === 'doctor') {
+      return `/s/${city.en_slug}/doctor`;
+    }
+  };
+
+  return (
+    <>
+      <Seo
+        title="نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان"
+        description="پذیرش24، دکتر آنلاین و نوبت دهی سریع از بهترین پزشکان ، درمانگاه ها ، کلینیک ها و بیمارستان های کشور.از طریق این سایت و یا اپلیکیشن پذیرش24 اینترنتی با جستجوی دکتر مورد نظر ، مشاوره تلفنی و یا نوبت بگیرید."
+        jsonlds={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            'url': 'https://www.paziresh24.com/',
+            'potentialAction': {
+              '@type': 'SearchAction',
+              'target': 'https://www.paziresh24.com/s/?text={search_term_string}',
+              'query-input': 'required name=search_term_string',
+            },
+          },
+        ]}
+      />
+
+      <main className="flex flex-col items-center space-y-3 bg-gray">
+        <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">
+          <Logo className="!mr-1" width={30} />
+          <div className="w-full px-4">
+            <Suggestion />
+          </div>
+        </div>
+
+        {appHome.isLoading && (
+          <div className="flex flex-col w-full space-y-3">
+            <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
+              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+            </ScrollContainer>
+            <div className="flex flex-col w-full px-4 space-y-4">
+              <Skeleton w="10rem" h="1rem" rounded="full" />
+              <Skeleton w="100%" h="10rem" rounded="lg" />
+            </div>
+            <div className="flex flex-col w-full px-4 space-y-3">
+              <Skeleton w="100%" h="12rem" rounded="lg" />
+            </div>
+          </div>
+        )}
+        <Transition match={true} animation="bottom" className="flex flex-col w-full space-y-3">
+          {appHome.isSuccess &&
+            appHome.data.data.result.map((section: any, index: number) => (
+              <div className="flex flex-col w-full space-y-3" key={index}>
+                {section.title && (
+                  <div className="flex items-center px-4">
+                    {section.icon && <img src={section.icon} className="ml-2" width={16} />}
+                    <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: section.title }} />
+                  </div>
+                )}
+                {section.type === 'slider' && (
+                  <ScrollContainer className="flex flex-row-reverse justify-start w-full px-4 mb-2 space-x-2">
+                    {section.body?.images?.map((slide: any) => (
+                      <a href={slide.activity.url} key={slide.activity.url}>
+                        <div className="h-40 rounded-xl min-w-[20rem] w-80 bg-slate-100 overflow-hidden">
+                          <img src={slide.image} alt="" />
+                        </div>
+                      </a>
+                    ))}
+                  </ScrollContainer>
+                )}
+                {section.type === 'grid' && (
+                  <div className="grid grid-cols-3 p-3 py-4 mx-4 bg-white border shadow-sm gap-y-5 border-slate-100 rounded-xl">
+                    {section.body.items.map((item: any) => (
+                      <Link
+                        key={item.image.title}
+                        href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
+                      >
+                        <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
+                          <img src={item.image.url} alt="" width={75} />
+                          <Text fontSize="xs" fontWeight="medium">
+                            {item.image.title}
+                          </Text>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+        </Transition>
+      </main>
+    </>
+  );
+};
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <LayoutWithOutFooter shouldShowBrand={false} shouldShowPromoteApp={false}>
+      {page}
+    </LayoutWithOutFooter>
+  );
+};
+
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
+
+export default Home;

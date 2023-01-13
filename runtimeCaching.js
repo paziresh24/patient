@@ -73,6 +73,25 @@ const runtimeCaching = [
       networkTimeoutSeconds: 10, // fall back to cache if api does not response within 10 seconds
     },
   },
+  {
+    urlPattern: ({ url }) => {
+      const isSameOrigin = self.origin === url.origin;
+      if (!isSameOrigin) return false;
+      const pathname = url.pathname;
+      if (pathname.startsWith('/s/')) return false;
+      if (pathname.startsWith('/dr/')) return false;
+      return true;
+    },
+    handler: 'NetworkFirst',
+    options: {
+      cacheName: 'others',
+      expiration: {
+        maxEntries: 32,
+        maxAgeSeconds: 5 * 60 * 60, // 24 hours
+      },
+      networkTimeoutSeconds: 10,
+    },
+  },
 ];
 
 module.exports = runtimeCaching;

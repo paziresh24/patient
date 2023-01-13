@@ -18,14 +18,7 @@ app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
-
-    // if (pathname === '/sw.js' || /^\/(workbox|worker|fallback)-\w+\.js$/.test(pathname)) {
-    //   console.log('kkk');
-    //   const filePath = join(__dirname, '.next', pathname);
-    //   app.serveStatic(req, res, filePath);
-    // } else {
     handle(req, res, parsedUrl);
-    // }
   }).listen(port, err => {
     if (err) throw err;
     console.log(`> Ready on https://localhost:${port} | https://local.paziresh24.com:${port} 🎉`);

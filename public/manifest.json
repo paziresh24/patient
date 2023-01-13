@@ -25,8 +25,8 @@
   ],
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
-  "start_url": "/?application=true",
-  "scope": "/",
+  "start_url": "/apphome/?application=true",
+  "scope": "/apphome",
   "display": "standalone",
   "orientation": "portrait",
   "related_applications": [

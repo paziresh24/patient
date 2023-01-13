@@ -10,6 +10,7 @@ const runtimeCaching = require('./runtimeCaching');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const withPWA = require('next-pwa')({
+  disable: !isProduction,
   dest: 'public',
   register: true,
   runtimeCaching,
