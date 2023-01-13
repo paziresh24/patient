@@ -27,6 +27,11 @@ const Home: NextPageWithLayout = () => {
     }
   };
 
+  const reformatSlids = (slids: any[]) => {
+    const reversed = Array.from(slids).reverse();
+    return reversed;
+  };
+
   return (
     <>
       <Seo
@@ -46,7 +51,7 @@ const Home: NextPageWithLayout = () => {
         ]}
       />
 
-      <main className="flex flex-col items-center space-y-3 bg-gray">
+      <main className="flex flex-col items-center space-y-3">
         <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">
           <Logo className="!mr-1" width={30} />
           <div className="w-full px-4">
@@ -54,22 +59,22 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
 
-        {appHome.isLoading && (
-          <div className="flex flex-col w-full space-y-3">
-            <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
-              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-            </ScrollContainer>
-            <div className="flex flex-col w-full px-4 space-y-4">
-              <Skeleton w="10rem" h="1rem" rounded="full" />
-              <Skeleton w="100%" h="10rem" rounded="lg" />
-            </div>
-            <div className="flex flex-col w-full px-4 space-y-3">
-              <Skeleton w="100%" h="12rem" rounded="lg" />
-            </div>
-          </div>
-        )}
         <Transition match={true} animation="bottom" className="flex flex-col w-full space-y-3">
+          {appHome.isLoading && (
+            <div className="flex flex-col w-full space-y-3">
+              <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
+                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+              </ScrollContainer>
+              <div className="flex flex-col w-full px-4 space-y-4">
+                <Skeleton w="10rem" h="1rem" rounded="full" />
+                <Skeleton w="100%" h="10rem" rounded="lg" />
+              </div>
+              <div className="flex flex-col w-full px-4 space-y-3">
+                <Skeleton w="100%" h="11rem" rounded="lg" />
+              </div>
+            </div>
+          )}
           {appHome.isSuccess &&
             appHome.data.data.result.map((section: any, index: number) => (
               <div className="flex flex-col w-full space-y-3" key={index}>
@@ -80,8 +85,8 @@ const Home: NextPageWithLayout = () => {
                   </div>
                 )}
                 {section.type === 'slider' && (
-                  <ScrollContainer className="flex flex-row-reverse justify-start w-full px-4 mb-2 space-x-2">
-                    {section.body?.images?.map((slide: any) => (
+                  <ScrollContainer className="flex justify-start w-full px-4 mb-2 space-s-2">
+                    {reformatSlids(section.body?.images).map((slide: any) => (
                       <a href={slide.activity.url} key={slide.activity.url}>
                         <div className="h-40 rounded-xl min-w-[20rem] w-80 bg-slate-100 overflow-hidden">
                           <img src={slide.image} alt="" />

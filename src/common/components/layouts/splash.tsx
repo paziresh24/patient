@@ -7,12 +7,12 @@ export const Splash = () => {
   useEffect(() => {
     setTimeout(() => {
       setShow(false);
-    }, 1000);
+    }, 700);
   }, []);
 
   if (!show) return null;
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-white md:hidden z-infinity">
+    <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center h-screen bg-white md:hidden z-infinity">
       <Logo type="compact" />
     </div>
   );

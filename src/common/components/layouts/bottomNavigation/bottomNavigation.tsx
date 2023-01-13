@@ -38,6 +38,7 @@ export const BottomNavigation = () => {
       name: 'خانه',
       icon: <HomeIcon />,
       link: isApplication ? '/apphome' : '/',
+      pattern: isApplication ? '/apphome' : '/',
       privateRoute: false,
     },
     {
@@ -60,12 +61,14 @@ export const BottomNavigation = () => {
         </div>
       ),
       link: '/patient/appointments',
+      pattern: '/patient/appointments',
       privateRoute: true,
     },
     {
       name: 'پروفایل',
       icon: <UserCircle />,
       link: '/patient',
+      pattern: '/patient',
       privateRoute: true,
     },
   ];
@@ -87,8 +90,8 @@ export const BottomNavigation = () => {
         <div
           key={index}
           onClick={() => handleChangeRoute(link, privateRoute)}
-          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-600', {
-            '!text-primary font-bold': router.pathname === link || router.pathname === pattern,
+          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 scale-90 transition-all', {
+            '!text-primary font-bold !scale-100': router.pathname === pattern,
           })}
         >
           {icon}

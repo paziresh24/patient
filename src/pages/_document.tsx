@@ -24,6 +24,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="robots" content="index, follow" />
         <meta name="autor" content="پذیرش24" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
 
         <script
           type="application/ld+json"
