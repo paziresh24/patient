@@ -23,8 +23,8 @@ export const BottomNavigation = () => {
   const isApplication = useApplication();
 
   useEffect(() => {
-    handleGetTurnsCount();
-  }, [router.asPath]);
+    isLogin && handleGetTurnsCount();
+  }, [router.asPath, isLogin]);
 
   const handleGetTurnsCount = async () => {
     const { data } = await getUserActiveTurnsCount.mutateAsync();
@@ -90,8 +90,8 @@ export const BottomNavigation = () => {
         <div
           key={index}
           onClick={() => handleChangeRoute(link, privateRoute)}
-          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 scale-90 transition-all', {
-            '!text-primary font-bold !scale-100': router.pathname === pattern,
+          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all', {
+            '!text-primary font-bold': router.pathname === pattern,
           })}
         >
           {icon}

@@ -1,7 +1,9 @@
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import LoginForm from '@/modules/login/views/loginForm';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { ReactElement } from 'react';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -12,6 +14,10 @@ const LoginPage = () => {
       </div>
     </div>
   );
+};
+
+LoginPage.getLayout = function getLayout(page: ReactElement) {
+  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

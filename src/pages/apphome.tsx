@@ -59,61 +59,60 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
 
-        <Transition match={true} animation="bottom" className="flex flex-col w-full space-y-3">
-          {appHome.isLoading && (
-            <div className="flex flex-col w-full space-y-3">
-              <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
-                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-              </ScrollContainer>
-              <div className="flex flex-col w-full px-4 space-y-4">
-                <Skeleton w="10rem" h="1rem" rounded="full" />
-                <Skeleton w="100%" h="10rem" rounded="lg" />
-              </div>
-              <div className="flex flex-col w-full px-4 space-y-3">
-                <Skeleton w="100%" h="11rem" rounded="lg" />
-              </div>
+        {appHome.isLoading && (
+          <div className="flex flex-col w-full space-y-3">
+            <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
+              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+              <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
+            </ScrollContainer>
+            <div className="flex flex-col w-full px-4 space-y-4 !mt-4">
+              <Skeleton w="10rem" h="1rem" rounded="full" />
+              <Skeleton w="100%" h="9rem" rounded="lg" />
             </div>
-          )}
-          {appHome.isSuccess &&
-            appHome.data.data.result.map((section: any, index: number) => (
-              <div className="flex flex-col w-full space-y-3" key={index}>
-                {section.title && (
-                  <div className="flex items-center px-4">
-                    {section.icon && <img src={section.icon} className="ml-2" width={16} />}
-                    <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: section.title }} />
-                  </div>
-                )}
-                {section.type === 'slider' && (
-                  <ScrollContainer className="flex justify-start w-full px-4 mb-2 space-s-2">
-                    {reformatSlids(section.body?.images).map((slide: any) => (
-                      <a href={slide.activity.url} key={slide.activity.url}>
-                        <div className="h-40 rounded-xl min-w-[20rem] w-80 bg-slate-100 overflow-hidden">
-                          <img src={slide.image} alt="" />
-                        </div>
-                      </a>
-                    ))}
-                  </ScrollContainer>
-                )}
-                {section.type === 'grid' && (
-                  <div className="grid grid-cols-3 p-3 py-4 mx-4 bg-white border shadow-sm gap-y-5 border-slate-100 rounded-xl">
-                    {section.body.items.map((item: any) => (
-                      <Link
-                        key={item.image.title}
-                        href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
-                      >
-                        <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
-                          <img src={item.image.url} alt="" width={75} />
-                          <Text fontSize="xs" fontWeight="medium">
-                            {item.image.title}
-                          </Text>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+            <div className="flex flex-col w-full px-4 space-y-3">
+              <Skeleton w="100%" h="15rem" rounded="lg" />
+            </div>
+          </div>
+        )}
+        <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3">
+          {appHome.data?.data?.result?.map((section: any, index: number) => (
+            <div className="flex flex-col w-full space-y-3" key={index}>
+              {section.title && (
+                <div className="flex items-center px-4">
+                  {section.icon && <img src={section.icon} className="ml-2" width={16} />}
+                  <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: section.title }} />
+                </div>
+              )}
+              {section.type === 'slider' && (
+                <ScrollContainer className="flex justify-start w-full px-4 mb-2 space-s-2">
+                  {reformatSlids(section.body?.images).map((slide: any) => (
+                    <a href={slide.activity.url} key={slide.activity.url}>
+                      <div className="h-40 rounded-xl min-w-[20rem] w-80 bg-slate-100 overflow-hidden">
+                        <img src={slide.image} alt="" />
+                      </div>
+                    </a>
+                  ))}
+                </ScrollContainer>
+              )}
+              {section.type === 'grid' && (
+                <div className="grid grid-cols-3 p-3 py-4 mx-4 bg-white border shadow-sm gap-y-5 border-slate-100 rounded-xl">
+                  {section.body.items.map((item: any) => (
+                    <Link
+                      key={item.image.title}
+                      href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
+                    >
+                      <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
+                        <img src={item.image.url} alt="" width={75} />
+                        <Text fontSize="xs" fontWeight="medium">
+                          {item.image.title}
+                        </Text>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </Transition>
       </main>
     </>
@@ -122,7 +121,7 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithOutFooter shouldShowBrand={false} shouldShowPromoteApp={false}>
+    <LayoutWithOutFooter shouldShowBrand={false} shouldShowPromoteApp={false} {...page.props.config}>
       {page}
     </LayoutWithOutFooter>
   );

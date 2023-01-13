@@ -7,7 +7,7 @@ export const Splash = () => {
   useEffect(() => {
     setTimeout(() => {
       setShow(false);
-    }, 700);
+    }, 500);
   }, []);
 
   if (!show) return null;

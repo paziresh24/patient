@@ -108,7 +108,7 @@ const Search: NextPageWithLayout = () => {
 };
 
 Search.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
+  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
 };
 
 export const getServerSideProps: GetServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

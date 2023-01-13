@@ -16,18 +16,16 @@ import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFo
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useShare from '@/common/hooks/useShare';
-import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import config from 'next/config';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';
 import { NextPageWithLayout } from '../_app';
+const { publicRuntimeConfig } = config();
 
 export const PatinetProfile: NextPageWithLayout = () => {
-  const router = useRouter();
-  const isWebView = useWebView();
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -53,7 +51,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
       {isApplication && <AppBar title="پروفایل من" />}
 
       <div>
-        <Link href="/patient/profile?referrer=profile&isWebView=1">
+        <Link href="/patient/profile?referrer=profile">
           <a>
             <div className="flex items-center p-5 bg-white border-t shadow-sm space-s-5 border-slate-200">
               <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
@@ -79,19 +77,19 @@ export const PatinetProfile: NextPageWithLayout = () => {
           </a>
         </Link>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          <Link href="/patient/appointments?referrer=profile&isWebView=1">
+          <Link href="/patient/appointments?referrer=profile">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <CalenderIcon />
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>
-          <Link href="/patient/bookmarks?referrer=profile&isWebView=1">
+          <Link href="/patient/bookmarks?referrer=profile">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <BookmarkIcon />
               <Text fontWeight="medium">لیست پزشکان من</Text>
             </a>
           </Link>
-          <Link href="/patient/subuser?referrer=profile&isWebView=1">
+          <Link href="/patient/subuser?referrer=profile">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <UsersIcon />
               <Text fontWeight="medium">کاربران زیرمجموعه</Text>
@@ -99,13 +97,13 @@ export const PatinetProfile: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          <Link href="/home/support-form/">
+          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}>
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <HeadphoneIcon />
               <Text fontWeight="medium">پشتیبانی</Text>
             </a>
           </Link>
-          <Link href="/home/fordoctors/">
+          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}>
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <DoctorIcon />
               <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
@@ -122,7 +120,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
             <ShareIcon />
             <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
           </div>
-          <Link href="/logout">
+          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/logout`}>
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <LogoutIcon />
               <Text fontWeight="medium">خروج</Text>
@@ -135,7 +133,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
 };
 
 PatinetProfile.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter>{page}</LayoutWithOutFooter>;
+  return <LayoutWithOutFooter {...page.props.config}>{page}</LayoutWithOutFooter>;
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

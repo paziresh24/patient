@@ -26,7 +26,7 @@ export const QueuePage: NextPageWithLayout = () => {
 };
 
 QueuePage.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter>{page}</LayoutWithHeaderAndFooter>;
+  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

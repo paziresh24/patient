@@ -53,7 +53,11 @@ const Home: NextPageWithLayout = () => {
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter shouldShowBrand={false}>{page}</LayoutWithHeaderAndFooter>;
+  return (
+    <LayoutWithHeaderAndFooter shouldShowBrand={false} {...page.props.config}>
+      {page}
+    </LayoutWithHeaderAndFooter>
+  );
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

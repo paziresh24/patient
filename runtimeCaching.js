@@ -87,7 +87,7 @@ const runtimeCaching = [
       cacheName: 'others',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 5 * 60 * 60, // 24 hours
+        maxAgeSeconds: 5 * 60 * 60, // 5 hours
       },
       networkTimeoutSeconds: 10,
     },

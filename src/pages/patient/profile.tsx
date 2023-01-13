@@ -8,6 +8,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
@@ -22,6 +23,7 @@ import { NextPageWithLayout } from '../_app';
 export const PatinetProfile: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { t } = useTranslation('patient/profile');
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
@@ -58,10 +60,12 @@ export const PatinetProfile: NextPageWithLayout = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {(isWebView || isApplication) && (
+        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
 
       <div className="flex flex-col p-5 space-y-5 bg-white">
-        {!isWebView && (
+        {!isWebView && !isApplication && (
           <Text fontWeight="black" fontSize="xl">
             {t('title')}
           </Text>
@@ -109,7 +113,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
 
 PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter>
+    <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
     </LayoutWithHeaderAndFooter>
   );

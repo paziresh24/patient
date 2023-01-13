@@ -4,9 +4,9 @@ import Provider from '@/components/layouts/provider';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import NextNProgress from 'nextjs-progressbar';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import { DehydratedState, Hydrate } from 'react-query';
-
 import '../styles/globals.css';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -20,6 +20,7 @@ interface AppPropsWithLayout extends ExtendedAppProps<extendAppProps> {
 interface extendAppProps {
   dehydratedState: DehydratedState;
   query: any;
+  config: any;
 }
 
 type ExtendedAppProps<P = {}> = AppProps<P>;
@@ -34,6 +35,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
+      <NextNProgress height={5} color="#00acac" options={{ showSpinner: false }} showOnShallow={false} />
+
       <Head>
         <meta
           name="viewport"
@@ -41,7 +44,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         />
       </Head>
       <Provider>
-        <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />)}</Hydrate>
+        <Hydrate state={pageProps.dehydratedState}>
+          {getLayout(
+            <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />,
+          )}
+        </Hydrate>
       </Provider>
     </>
   );

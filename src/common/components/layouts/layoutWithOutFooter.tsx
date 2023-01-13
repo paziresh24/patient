@@ -9,17 +9,19 @@ export const LayoutWithOutFooter = ({
   shouldShowBrand = true,
   shouldShowPromoteApp = true,
   showBottomNavigation = true,
+  showHeader = true,
 }: {
   children: ReactElement;
   shouldShowBrand?: boolean;
   shouldShowPromoteApp?: boolean;
   showBottomNavigation?: boolean;
+  showHeader?: boolean;
 }) => {
   const customize = useCustomize(state => state.customize);
 
   return (
     <div className={clsx({ 'pb-16 md:pb-0': showBottomNavigation })}>
-      {customize.showHeader && (
+      {customize.showHeader && showHeader && (
         <Header shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />
       )}
       {children}

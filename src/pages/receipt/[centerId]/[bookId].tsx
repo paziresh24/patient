@@ -235,7 +235,11 @@ const ReceiptButtonLoading = () => {
 };
 
 Receipt.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter shouldShowPromoteApp={false}>{page}</LayoutWithOutFooter>;
+  return (
+    <LayoutWithOutFooter shouldShowPromoteApp={false} {...page.props.config}>
+      {page}
+    </LayoutWithOutFooter>
+  );
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

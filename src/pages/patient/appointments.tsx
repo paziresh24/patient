@@ -12,6 +12,7 @@ import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -30,6 +31,7 @@ type BookType = 'book' | 'book_request';
 export const Appointments: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { t } = useTranslation('patient/appointments');
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
@@ -93,10 +95,12 @@ export const Appointments: NextPageWithLayout = () => {
         <title>{t('title')}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {(isWebView || isApplication) && (
+        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
 
       <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
-        {!isWebView && (
+        {!isWebView && !isApplication && (
           <Text fontWeight="black" fontSize="xl" className="mt-5">
             {t('title')}
           </Text>
@@ -185,7 +189,7 @@ export const Appointments: NextPageWithLayout = () => {
 
 Appointments.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter>
+    <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
     </LayoutWithHeaderAndFooter>
   );

@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { BookmarksList } from '@/modules/patient/views/bookmarksList';
@@ -16,6 +17,7 @@ import { NextPageWithLayout } from '../_app';
 export const Bookmarks: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { t } = useTranslation('patient/bookmarks');
 
   return (
@@ -26,10 +28,12 @@ export const Bookmarks: NextPageWithLayout = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
-      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {(isWebView || isApplication) && (
+        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
 
       <div className="flex flex-col p-5 space-y-5 bg-white">
-        {!isWebView && (
+        {!isWebView && !isApplication && (
           <Text fontWeight="black" fontSize="xl">
             {t('title')}
           </Text>
@@ -42,7 +46,7 @@ export const Bookmarks: NextPageWithLayout = () => {
 
 Bookmarks.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter>
+    <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
     </LayoutWithHeaderAndFooter>
   );
