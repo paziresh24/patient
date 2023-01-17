@@ -5,8 +5,9 @@ import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
+import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import UserCard from '../../components/userCard';
@@ -61,14 +62,19 @@ export const SelectUser = (props: SelectUserProps) => {
     if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
       setIsOpenAddUserModal(false);
+      handleSelectUser(res.data.result);
       return;
     }
-    toast.error(res.data.message);
+    if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
-  const handleSelectUser = (id: string) => {
-    setUserSelected(id);
-    onSelect(data?.data?.result?.find((item: any) => item.id === id) ?? userInfo);
+  const handleSelectUser = (user: UserInfo) => {
+    setUserSelected(user.id);
+    onSelect(user);
+  };
+
+  const getUserWithId = (id: string) => {
+    return data?.data?.result?.find((item: any) => item.id === id) ?? userInfo;
   };
 
   return (
@@ -86,11 +92,11 @@ export const SelectUser = (props: SelectUserProps) => {
               isForeigner={userInfo.is_foreigner ?? false}
               gender={userInfo.gender ?? ''}
               refetchData={mutate}
-              onSelect={id => handleSelectUser(id)}
+              onSelect={id => handleSelectUser(getUserWithId(id))}
               select={userInfo.id === userSelected}
               type="user"
             />
-            {data?.data?.result?.map((item: any) => (
+            {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
                 key={item.id}
                 userId={item.id}
@@ -101,7 +107,7 @@ export const SelectUser = (props: SelectUserProps) => {
                 isForeigner={item.is_foreigner == '1'}
                 gender={item.gender}
                 refetchData={mutate}
-                onSelect={id => handleSelectUser(id)}
+                onSelect={id => handleSelectUser(getUserWithId(id))}
                 select={item.id === userSelected}
                 type="subUser"
               />
@@ -116,7 +122,7 @@ export const SelectUser = (props: SelectUserProps) => {
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
-          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
+          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']}
           errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>

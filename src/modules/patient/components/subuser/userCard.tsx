@@ -59,7 +59,7 @@ export const UserCard = memo((props: UserCardProps) => {
       refetchData && refetchData();
       return;
     }
-    toast.error(res.data.message);
+    if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
   return (

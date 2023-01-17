@@ -74,20 +74,15 @@ export const Factor = (props: FactorProps) => {
         )}
       </div>
       {isShowDiscountInput && (
-        <div className="flex flex-col p-5 space-y-3 bg-white md:rounded-lg shadow-card">
-          <Text fontWeight="bold" fontSize="sm">
-            کد تخفیف
-          </Text>
-          <Discount
-            loading={discountLoading}
-            onSubmit={onSubmitDiscount}
-            status={isValidDiscount !== undefined ? (isValidDiscount ? 'successful' : 'unSuccessful') : 'default'}
-            errorMessage={discountErrorMessage}
-          />
-        </div>
+        <Discount
+          loading={discountLoading}
+          onSubmit={onSubmitDiscount}
+          status={isValidDiscount !== undefined ? (isValidDiscount ? 'successful' : 'unSuccessful') : 'default'}
+          errorMessage={discountErrorMessage}
+        />
       )}
       {!isEmpty(rules) && (
-        <div className="flex flex-col space-y-1 p-5 bg-white md:rounded-lg shadow-card">
+        <div className="flex flex-col p-5 space-y-1 bg-white md:rounded-lg shadow-card">
           <Text fontWeight="bold" className="mb-2">
             نکات مهم
           </Text>

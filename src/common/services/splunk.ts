@@ -9,6 +9,12 @@ export const splunkInstance = () =>
     },
   });
 
+export const splunkBookingInstance = () =>
+  splunk.create({
+    baseUrl: 'https://p24splk.paziresh24.com',
+    token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
+  });
+
 export const splunkSearchInstance = () =>
   splunk.create({
     baseUrl: 'https://p24splk.paziresh24.com',

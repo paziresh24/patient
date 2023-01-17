@@ -6,25 +6,25 @@ interface UseOtherTimes {
   centerId: string;
   serviceId: string;
   userCenterId: string;
+  onEvent: (data: string) => void;
 }
 
-export const useOtherTimes = ({ centerId, serviceId, userCenterId }: UseOtherTimes) => {
+export const useOtherTimes = ({ centerId, serviceId, userCenterId, onEvent }: UseOtherTimes) => {
   const getFreeDays = useGetFreeDays();
   const getFreeTimes = useGetFreeTurns();
 
   const getDays = async () => {
-    const {
-      data: {
-        calendar: { turns },
-      },
-    } = await getFreeDays.mutateAsync({
+    const { data } = await getFreeDays.mutateAsync({
       center_id: centerId,
       service_id: serviceId,
       user_center_id: userCenterId,
       return_free_turns: false,
       return_type: 'calendar',
     });
-
+    onEvent(data);
+    const {
+      calendar: { turns },
+    } = data;
     return turns;
   };
 

@@ -16,6 +16,8 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
 
   const handleSubmit = (info: UserInfo) => {
     if (!info?.id) return toast.error('لطفا بیمار مورد نظر خود را انتخاب کنید');
+    if (!info?.name) return toast.error('لطفا اطلاعات خود را تکمیل کنید.');
+
     onSubmit(info);
   };
 

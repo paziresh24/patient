@@ -1,10 +1,13 @@
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
-import { useCenterPayment } from '@/common/apis/services/factor/centerPayment';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import Text from '@/common/components/atom/text/text';
 import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo } from 'react';
@@ -17,7 +20,6 @@ const Factor: NextPageWithLayout = () => {
   } = useRouter();
 
   const getBookDetails = useGetBookDetails();
-  const centerPayment = useCenterPayment();
 
   useEffect(() => {
     if (bookId)
@@ -34,7 +36,7 @@ const Factor: NextPageWithLayout = () => {
       <div className="w-full md:basis-4/6">
         <FactorWrapper bookId={bookId as string} centerId={centerId as string} />
       </div>
-      <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
+      <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6">
         <DoctorInfo
           className="p-4 rounded-lg bg-slate-50"
           avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
@@ -47,6 +49,30 @@ const Factor: NextPageWithLayout = () => {
           })}
           isLoading={getBookDetails.isLoading || getBookDetails.isIdle}
         />
+        {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="10rem" h="1rem" rounded="full" />}
+        {getBookDetails.isSuccess && bookDetailsData && (
+          <div className="flex items-center px-2 py-1 border-r-2 space-s-1 border-slate-200">
+            <Text fontSize="sm">{centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}:</Text>
+            <Text fontSize="sm" fontWeight="medium">
+              {`${moment(bookDetailsData?.book_from * 1000)
+                .locale('fa')
+                .calendar(undefined, {
+                  sameDay: '[امروز]',
+                  nextDay: '[فردا]',
+                  nextWeek: 'dddd',
+                  sameElse: 'dddd',
+                })}
+              ${moment(bookDetailsData?.book_from * 1000)
+                .locale('fa')
+                .format('DD MMMM')}
+                ساعت
+                 ${moment(bookDetailsData?.book_from * 1000)
+                   .locale('fa')
+                   .format('HH:mm')}
+            `}
+            </Text>
+          </div>
+        )}
       </div>
     </div>
   );
