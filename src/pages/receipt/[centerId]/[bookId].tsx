@@ -102,7 +102,7 @@ const Receipt: NextPageWithLayout = () => {
           {!turnStatus.requestedTurn && (
             <>
               {getReceiptDetails.isSuccess ? (
-                <div className="flex flex-col items-center justify-center mt-4 space-y-3">
+                <div className="flex flex-col items-center justify-center space-y-3">
                   {turnStatus.deletedTurn || turnStatus.expiredTurn ? (
                     <ErrorIcon className="text-red-500" />
                   ) : (

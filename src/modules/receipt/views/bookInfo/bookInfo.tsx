@@ -14,22 +14,22 @@ export const BookInfo = (props: PaymentDetailsProps) => {
   const isConsultReceipt = centerId === '5532';
   return (
     <div className="flex flex-col space-y-6">
-      <div className="mt-5 flex flex-col space-y-5 py-5 border border-solid border-slate-200  rounded-lg">
+      <div className="flex flex-col py-5 mt-5 space-y-5 border border-solid rounded-lg border-slate-200">
         {loading && (
           <>
-            <div className="flex justify-between items-center px-5">
+            <div className="flex items-center justify-between px-5">
               <Skeleton w="10rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex justify-between items-center px-5">
+            <div className="flex items-center justify-between px-5">
               <Skeleton w="6rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex justify-between items-center px-5">
+            <div className="flex items-center justify-between px-5">
               <Skeleton w="8rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex justify-between items-center px-5">
+            <div className="flex items-center justify-between px-5">
               <Skeleton w="12rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>

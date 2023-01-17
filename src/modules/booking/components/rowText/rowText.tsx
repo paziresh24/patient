@@ -19,7 +19,7 @@ export const RowText = (props: RowTextProps) => {
       <Text className="whitespace-nowrap" fontWeight={titleFontWeight} fontSize={titleFontSize}>
         {title}
       </Text>
-      <Text fontWeight={valueFontWeight} fontSize={valueFontSize} className="text-end">
+      <Text fontWeight={valueFontWeight} fontSize={valueFontSize}>
         {value}
       </Text>
     </div>
