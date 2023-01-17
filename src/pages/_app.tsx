@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
-      <NextNProgress height={5} color="#00acac" options={{ showSpinner: false }} showOnShallow={false} />
+      <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
 
       <Head>
         <meta

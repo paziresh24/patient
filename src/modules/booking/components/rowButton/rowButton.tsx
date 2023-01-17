@@ -20,7 +20,7 @@ export const RowButton = (props: RowButtonProps) => {
       <Text fontWeight={titleFontWeight} fontSize={titleFontSize}>
         {title}
       </Text>
-      <Button variant={variant} onClick={buttonAction}>
+      <Button size="sm" className="text-xs" variant={variant} onClick={buttonAction}>
         {value}
       </Button>
     </div>

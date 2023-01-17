@@ -1,5 +1,5 @@
 import Button from '@/common/components/atom/button';
-import Skeleton from '@/common/components/atom/skeleton';
+import Loading from '@/common/components/atom/loading/loading';
 import Text from '@/common/components/atom/text';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
@@ -49,7 +49,7 @@ export const Select = (props: SelectProps) => {
             {title}
           </Text>
           {!isLoading && subTitle && <Text fontSize="sm">{subTitle}</Text>}
-          {isLoading && subTitle && <Skeleton h="1rem" w="10rem" rounded="full" className="!mt-2" />}
+          {isLoading && subTitle && <Loading width={25} className="!mt-3" />}
         </div>
       </div>
 

@@ -10,6 +10,7 @@ interface UseFirstFreeTime {
   userCenterId: string;
   enabled?: boolean;
   onError: (errorText: string) => void;
+  onEvent: (data: string) => void;
 }
 
 type FirstFreeTime = {
@@ -19,7 +20,7 @@ type FirstFreeTime = {
   timeId?: string;
 };
 
-export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true, onError }: UseFirstFreeTime) => {
+export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true, onError, onEvent }: UseFirstFreeTime) => {
   const getFreeTurn = useGetFreeTurn();
   const isWebView = useWebView();
   const [data, setData] = useState<FirstFreeTime>({});
@@ -36,6 +37,7 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
       type: isWebView ? 'app' : 'web',
     });
 
+    onEvent(data);
     const { result, status } = data;
 
     if (status === ClinicStatus.SUCCESS) {

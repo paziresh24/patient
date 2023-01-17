@@ -1,3 +1,4 @@
+import Accordion from '@/common/components/atom/accordion/accordion';
 import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
 import clsx from 'clsx';
@@ -21,23 +22,25 @@ export const Discount = (props: DiscountProps) => {
   };
 
   return (
-    <div className="flex w-full items-top space-s-2">
-      <TextField
-        helperText={(status === 'unSuccessful' && errorMessage) || ''}
-        onChange={e => setCode(e.target.value)}
-        error={status === 'unSuccessful'}
-        classNameWrapper="w-3/4"
-        className={clsx({
-          'border-teal-500 border-2 outline-teal-500': status === 'successful',
-          'border-2': status === 'unSuccessful',
-        })}
-        readOnly={status === 'successful'}
-        placeholder="کد تخفیف را وارد کنید ..."
-      />
-      <Button loading={loading} className="!w-1/4" onClick={handleSubmit} disabled={status === 'successful'}>
-        {status === 'successful' ? 'تایید شد' : 'اعمال'}
-      </Button>
-    </div>
+    <Accordion title="کدتخفیف" className="px-1 !bg-white !rounded-none md:!rounded-lg shadow-card">
+      <div className="flex w-full !bg-white items-top space-s-2">
+        <TextField
+          helperText={(status === 'unSuccessful' && errorMessage) || ''}
+          onChange={e => setCode(e.target.value)}
+          error={status === 'unSuccessful'}
+          classNameWrapper="w-3/4"
+          className={clsx({
+            'border-teal-500 border-2 outline-teal-500': status === 'successful',
+            'border-2': status === 'unSuccessful',
+          })}
+          readOnly={status === 'successful'}
+          placeholder="کد تخفیف را وارد کنید ..."
+        />
+        <Button loading={loading} variant="secondary" className="!w-1/4" onClick={handleSubmit} disabled={status === 'successful'}>
+          {status === 'successful' ? 'تایید شد' : 'اعمال'}
+        </Button>
+      </div>
+    </Accordion>
   );
 };
 export default Discount;

@@ -59,7 +59,7 @@ export const TurnRequest = (props: TurnRequestProps) => {
         />
         {uploadRequired && <Uploader title={uploaderTitle} files={files} setFiles={setFiles} />}
         {rules?.length && <RulesBox checkedText={checkboxText} onChecked={setAcceptRules} rules={rules} title={rulesBoxTitle} />}
-        <div className="p-4 flex flex-col md:p-0 fixed md:static bottom-0 w-full md:w-auto right-0  bg-white md:bg-transparent shadow-card md:shadow-none">
+        <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white border-t md:p-0 md:static md:border-none border-slate-100 md:w-auto md:bg-transparent shadow-card md:shadow-none">
           <Button loading={loading} className="self-end w-full md:w-1/5" onClick={handleSubmit}>
             ثبت درخواست
           </Button>

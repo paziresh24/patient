@@ -13,7 +13,13 @@ interface SelectTimeProps extends BaseInfo {
   onSelect: ({ timeId, forceClick }: { timeId: string; forceClick: boolean }) => void;
   loading: boolean;
   onFirstFreeTimeError: (errorText: string) => void;
+  events?: Events;
 }
+
+export type Events = {
+  onFirstFreeTime: (data: any) => void;
+  onOtherFreeTime: (data: any) => void;
+};
 
 enum TimeMode {
   'FIRST_FREE_TURN' = 'FIRST_FREE_TURN',
@@ -21,9 +27,16 @@ enum TimeMode {
 }
 
 export const SelectTimeUi = (props: SelectTimeProps) => {
-  const { onSelect, loading, onFirstFreeTimeError, ...baseInfo } = props;
-  const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo });
-  const firstFreeTime = useFirstFreeTime({ ...baseInfo, enabled: !loading, onError: onFirstFreeTimeError });
+  const { onSelect, loading, onFirstFreeTimeError, events, ...baseInfo } = props;
+
+  const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo, onEvent: data => events?.onOtherFreeTime(data) });
+  const firstFreeTime = useFirstFreeTime({
+    ...baseInfo,
+    enabled: !loading,
+    onError: onFirstFreeTimeError,
+    onEvent: data => events?.onFirstFreeTime(data),
+  });
+
   const suspend = useSuspend();
   const unSuspend = useUnsuspend();
 

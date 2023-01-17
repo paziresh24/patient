@@ -1,4 +1,5 @@
 import useCustomize from '@/common/hooks/useCustomize';
+import useWebView from '@/common/hooks/useWebView';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import BottomNavigation from './bottomNavigation';
@@ -22,6 +23,7 @@ export const LayoutWithHeaderAndFooter = ({
   showFooter?: boolean;
 }) => {
   const customize = useCustomize(state => state.customize);
+  const isWebView = useWebView();
 
   return (
     <div className={clsx({ 'pb-16 md:pb-0': showBottomNavigation })}>
@@ -30,7 +32,7 @@ export const LayoutWithHeaderAndFooter = ({
       )}
       {children}
       {customize.showFooter && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
-      {showBottomNavigation && <BottomNavigation />}
+      {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { search as searchApi } from '@/common/apis/services/search/search';
 import { useStat } from '@/common/apis/services/search/stat';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
+import ErrorIcon from '@/common/components/icons/error';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -94,9 +95,9 @@ const Search: NextPageWithLayout = () => {
                 asPath,
               )}`)
             }
-            variant="secondary"
-            className="!my-5"
-            block
+            variant="text"
+            className="!my-5 gap-2 self-end"
+            icon={<ErrorIcon className="w-5" />}
           >
             گزارش مشکل در جستجو
           </Button>
