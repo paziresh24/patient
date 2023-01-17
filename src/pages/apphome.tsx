@@ -70,7 +70,7 @@ const Home: NextPageWithLayout = () => {
               <Skeleton w="100%" h="9rem" rounded="lg" />
             </div>
             <div className="flex flex-col w-full px-4 space-y-3">
-              <Skeleton w="100%" h="15rem" rounded="lg" />
+              <Skeleton w="100%" h="14rem" rounded="lg" />
             </div>
           </div>
         )}
@@ -102,7 +102,7 @@ const Home: NextPageWithLayout = () => {
                       href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
                     >
                       <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
-                        <img src={item.image.url} alt="" width={75} height={75} />
+                        <img src={item.image.url} alt="" width={70} height={70} />
                         <Text fontSize="xs" fontWeight="medium">
                           {item.image.title}
                         </Text>
