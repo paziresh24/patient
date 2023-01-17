@@ -12,7 +12,7 @@ import LogoutIcon from '@/common/components/icons/logout';
 import ShareIcon from '@/common/components/icons/share';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useShare from '@/common/hooks/useShare';
@@ -133,7 +133,11 @@ export const PatinetProfile: NextPageWithLayout = () => {
 };
 
 PatinetProfile.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithOutFooter {...page.props.config}>{page}</LayoutWithOutFooter>;
+  return (
+    <LayoutWithHeaderAndFooter showFooter={false} {...page.props.config}>
+      {page}
+    </LayoutWithHeaderAndFooter>
+  );
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {

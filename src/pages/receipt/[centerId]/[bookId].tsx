@@ -5,7 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import ErrorIcon from '@/common/components/icons/error';
 import SuccessIcon from '@/common/components/icons/success';
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
@@ -236,9 +236,9 @@ const ReceiptButtonLoading = () => {
 
 Receipt.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithOutFooter shouldShowPromoteApp={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false} {...page.props.config}>
       {page}
-    </LayoutWithOutFooter>
+    </LayoutWithHeaderAndFooter>
   );
 };
 

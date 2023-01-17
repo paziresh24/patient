@@ -1,6 +1,6 @@
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
 import { useCenterPayment } from '@/common/apis/services/factor/centerPayment';
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
@@ -55,9 +55,9 @@ const Factor: NextPageWithLayout = () => {
 
 Factor.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithOutFooter shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config}>
       {page}
-    </LayoutWithOutFooter>
+    </LayoutWithHeaderAndFooter>
   );
 };
 

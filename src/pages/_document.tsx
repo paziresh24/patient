@@ -6,7 +6,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
   return (
-    <Html dir={dir} className="scroll-smooth">
+    <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico"></link>
         <link rel="icon" type="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -14,7 +14,10 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://analytics.google.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://static.hotjar.com" />
+        <link rel="preconnect" href="https://api.paziresh24.com" />
         <meta name="application-name" content="پذیرش۲۴" />
         <meta name="apple-mobile-web-app-title" content="پذیرش۲۴" />
         <meta name="theme-color" content="#3f4079" />
@@ -25,7 +28,9 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="autor" content="پذیرش24" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
-
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

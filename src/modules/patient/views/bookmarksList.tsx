@@ -33,9 +33,9 @@ export const BookmarksList = () => {
       {isSuccess && data?.data?.result.length === 0 && <Text className="text-slate-400">پزشک ذخیره شده ای در لیست شما نیست.</Text>}
       {isSuccess &&
         data?.data?.result?.map((item: DoctorParams) => (
-          <div key={item.id} className="relative flex justify-between px-2 pb-4 border-b border-slate-100 space-s-1">
+          <div key={item.id} className="relative flex flex-col items-end justify-between px-2 pb-4 border-b border-slate-100 space-s-1">
             <Link href={item.doctor_url ?? '#'}>
-              <a>
+              <a className="w-full">
                 <DoctorInfo
                   firstName={item.name}
                   lastName={item.family}
@@ -58,10 +58,7 @@ export const BookmarksList = () => {
                 },
               ]}
               element={
-                <div
-                  className="absolute top-0 flex items-center justify-center w-6 h-6 cursor-pointer left-2"
-                  data-testid="turn-drop-down-button"
-                >
+                <div className="absolute top-0 flex items-center justify-center w-6 h-6 cursor-pointer" data-testid="turn-drop-down-button">
                   <ThreeDotsIcon className="w-4 h-4" />
                 </div>
               }

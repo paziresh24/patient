@@ -1,7 +1,7 @@
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
 import Transition from '@/common/components/atom/transition/transition';
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
@@ -82,9 +82,9 @@ const Booking: NextPageWithLayout = () => {
 
 Booking.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithOutFooter shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config}>
       {page}
-    </LayoutWithOutFooter>
+    </LayoutWithHeaderAndFooter>
   );
 };
 

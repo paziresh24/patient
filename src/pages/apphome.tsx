@@ -3,7 +3,7 @@ import Logo from '@/common/components/atom/logo';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import Transition from '@/common/components/atom/transition/transition';
-import { LayoutWithOutFooter } from '@/common/components/layouts/layoutWithOutFooter';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -102,7 +102,7 @@ const Home: NextPageWithLayout = () => {
                       href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
                     >
                       <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
-                        <img src={item.image.url} alt="" width={75} />
+                        <img src={item.image.url} alt="" width={75} height={75} />
                         <Text fontSize="xs" fontWeight="medium">
                           {item.image.title}
                         </Text>
@@ -121,9 +121,9 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithOutFooter shouldShowBrand={false} shouldShowPromoteApp={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter shouldShowBrand={false} shouldShowPromoteApp={false} {...page.props.config}>
       {page}
-    </LayoutWithOutFooter>
+    </LayoutWithHeaderAndFooter>
   );
 };
 

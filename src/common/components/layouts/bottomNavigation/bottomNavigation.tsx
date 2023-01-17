@@ -90,8 +90,8 @@ export const BottomNavigation = () => {
         <div
           key={index}
           onClick={() => handleChangeRoute(link, privateRoute)}
-          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all', {
-            '!text-primary font-bold': router.pathname === pattern,
+          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
+            '!text-primary font-bold scale-100': router.pathname === pattern,
           })}
         >
           {icon}
