@@ -14,7 +14,6 @@ export const QueuePage: NextPageWithLayout = () => {
     <>
       <Head>
         <title>شماره نوبت من</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="flex flex-col h-[80vh] lg:rounded-3xl lg:m-10 bg-white">
         <div className="self-center w-full space-y-3 lg:p-5 lg:w-3/12">

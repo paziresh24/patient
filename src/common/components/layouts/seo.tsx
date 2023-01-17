@@ -23,8 +23,6 @@ export const Seo = (props: SeoProps) => {
 
   return (
     <Head>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-
       <title>{titleTemplate}</title>
       <meta name="title" content={titleTemplate} />
       <meta name="description" content={description} />

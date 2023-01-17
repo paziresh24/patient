@@ -45,7 +45,6 @@ export const PatinetProfile: NextPageWithLayout = () => {
     <>
       <Head>
         <title>ویرایش اطلاعات من</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
       {isApplication && <AppBar title="پروفایل من" />}
