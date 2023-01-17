@@ -236,7 +236,7 @@ const ReceiptButtonLoading = () => {
 
 Receipt.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter shouldShowPromoteApp={false} {...page.props.config} showFooter={false}>
       {page}
     </LayoutWithHeaderAndFooter>
   );

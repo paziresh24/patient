@@ -1,3 +1,4 @@
+import { dayToSecond } from '@/common/utils/dayToSecond';
 import { deleteCookie, setCookie } from 'cookies-next';
 import create from 'zustand';
 interface SearchStore {
@@ -92,7 +93,10 @@ export const useSearchStore = create<SearchStore>(set => ({
       } catch (error) {
         console.error(error);
       }
-      return setCookie('new-city', city);
+      return setCookie('new-city', city, {
+        maxAge: dayToSecond(730),
+        path: '/',
+      });
     }
     deleteCookie('new-city');
   },

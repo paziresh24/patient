@@ -134,7 +134,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
 
 PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter showFooter={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter {...page.props.config} showFooter={false}>
       {page}
     </LayoutWithHeaderAndFooter>
   );

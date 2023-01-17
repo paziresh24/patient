@@ -46,7 +46,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const buttonStyles = {
   variant: {
     primary: 'bg-primary border border-primary text-white disabled:bg-slate-200 disabled:border-slate-200 disabled:text-slate-500',
-    secondary: 'border border-primary text-primary disabled:border-slate-300 disabled:text-slate-400 hover:bg-primary/5',
+    secondary: 'border border-primary/40 text-primary disabled:border-slate-300 disabled:text-slate-400 hover:bg-primary/5',
     text: 'text-primary disabled:text-slate-400 bg-transparent hover:bg-primary/5',
   },
   loading: {
@@ -92,7 +92,7 @@ export const Button: React.FC<ButtonProps> = props => {
   return (
     <button
       className={clsx(
-        'flex items-center justify-center rounded-lg font-bold gap-1 transition-colors',
+        'flex items-center justify-center rounded-lg font-bold gap-1 transition-all',
         buttonStyles.variant[variant],
         buttonStyles.size[size],
         buttonStyles.theme[theme][variant],

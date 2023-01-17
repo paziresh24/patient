@@ -81,7 +81,7 @@ const Factor: NextPageWithLayout = () => {
 
 Factor.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter shouldShowPromoteApp={false} showBottomNavigation={false} {...page.props.config} showFooter={false}>
       {page}
     </LayoutWithHeaderAndFooter>
   );
