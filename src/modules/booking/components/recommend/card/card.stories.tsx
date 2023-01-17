@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import React from 'react';
-import RecommendCard from './recommendCard';
+import RecommendCard from '../recommend';
 
 export default {
   title: 'Booking/Recommend Card',

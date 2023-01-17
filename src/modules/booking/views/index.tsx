@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 // Apis
 import { useBook } from '@/common/apis/services/booking/book';
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
+import { useSymptoms } from '@/common/apis/services/booking/symptoms';
 import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndConditions';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
@@ -21,6 +22,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import InfoIcon from '@/common/components/icons/info';
 import Recommend from '../components/recommend';
+import SelectSymptoms from '../components/selectSymptoms';
 
 // Booking Steps
 import Wrapper from '../components/wrapper';
@@ -48,7 +50,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
-
+import { Symptoms } from '../types/selectSymptoms';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -103,6 +105,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [user, setUser] = useState<any>({});
   const [timeId, setTimeId] = useState('');
   const book = useBook();
+  const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
@@ -112,6 +115,9 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [insuranceNumber, setInsuranceNumber] = useState('');
   const [recommendModal, setRecommendModal] = useState(false);
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
+  const [selectedSymptoms, setSelectedSymptoms] = useState<Symptoms[]>([]);
+  const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
+  const [symptomSearchText, setSymptomSearchText] = useState('');
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -131,6 +137,15 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
   }, [centers, defaultStep]);
 
+  useEffect(() => {
+    const fetchSymptomsAutoComplete = async () => {
+      const { data } = await symptomsAutoComplete.mutateAsync(symptomSearchText || profile.group_expertises?.[0]?.name);
+      data.length && setSymptoms(data);
+      return data;
+    };
+    profile && fetchSymptomsAutoComplete();
+  }, [symptomSearchText, profile]);
+
   const handleBookAction = async (user: any) => {
     const { insurance_id, insurance_number } = user;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
@@ -149,6 +164,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       ...(user.national_code && { national_code: user.national_code }),
       ...(insurance_id && { insurance_id }),
       ...(insurance_number && { insurance_number }),
+      ...(selectedSymptoms.length && { symptomes: selectedSymptoms.map(symptoms => symptoms.title).toString() }),
     });
     if (data.status === ClinicStatus.SUCCESS) {
       if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
@@ -351,26 +367,43 @@ const BookingSteps = (props: BookingStepsProps) => {
         />
       )}
       {step === 'SELECT_USER' && (
-        <Wrapper
-          title="لطفا بیمار را انتخاب کنید"
-          Component={SelectUserWrapper}
-          data={{
-            loading: book.isLoading,
-            submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
-          }}
-          nextStep={(user: UserInfo) => {
-            setUser(user);
-            if (service?.can_request) {
-              handleChangeStep('BOOK_REQUEST');
-              return;
-            }
-            if (+center.settings?.booking_enable_insurance) {
-              setInsuranceModal(true);
-              return;
-            }
-            handleBookAction(user);
-          }}
-        />
+        <>
+          <Text fontWeight="bold" className="block mb-3">
+            برای درمان چه بیماری به پزشک مراجعه کردید؟
+          </Text>
+          <SelectSymptoms
+            symptoms={symptoms}
+            title="اضافه کردن نام بیماری"
+            placeholder="اضافه کردن نام بیماری"
+            modalTitle="نام بیماری"
+            listTitle=" پیشنهادها"
+            setSelectedSymptoms={setSelectedSymptoms}
+            selectedSymptoms={selectedSymptoms}
+            setSearchText={setSymptomSearchText}
+            searchText={symptomSearchText}
+            className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
+          />
+          <Wrapper
+            title="لطفا بیمار را انتخاب کنید"
+            Component={SelectUserWrapper}
+            data={{
+              loading: book.isLoading,
+              submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
+            }}
+            nextStep={(user: UserInfo) => {
+              setUser(user);
+              if (service?.can_request) {
+                handleChangeStep('BOOK_REQUEST');
+                return;
+              }
+              if (+center.settings?.booking_enable_insurance) {
+                setInsuranceModal(true);
+                return;
+              }
+              handleBookAction(user);
+            }}
+          />
+        </>
       )}
       {step === 'BOOK_REQUEST' && (
         <Wrapper

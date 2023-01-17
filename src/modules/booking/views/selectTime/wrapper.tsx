@@ -28,7 +28,7 @@ export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {
   return (
     <>
       <SelectTime {...rest} onSelect={handleSelect} />
-      <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
+      <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white border-t md:border-none border-slate-100 md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
         <Button className="self-end w-full md:w-1/5" onClick={() => handleSubmit(timeId)}>
           ادامه
         </Button>
