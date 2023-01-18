@@ -3,7 +3,7 @@ import DoctorInfo from './doctorInfo';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'Molecules/DoctorInfo',
+  title: 'MyTurn/DoctorInfo',
   component: DoctorInfo,
 };
 

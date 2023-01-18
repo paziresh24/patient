@@ -16,6 +16,7 @@ export const useSearchRouting = () => {
     previousQueries = true,
     scroll = true,
     pageParam = false,
+    replace = false,
   }: {
     params?: Record<string, string>;
     query?: ParsedUrlQueryInput | null | undefined;
@@ -23,6 +24,7 @@ export const useSearchRouting = () => {
     previousQueries?: boolean;
     scroll?: boolean;
     pageParam?: boolean;
+    replace?: boolean;
   }) => {
     const formattedSlug = [
       overWrite ? params?.city : params?.city ?? slug?.[0],
@@ -31,7 +33,7 @@ export const useSearchRouting = () => {
       .filter(item => item)
       .join('/');
 
-    router.push(
+    router[replace ? 'replace' : 'push'](
       {
         pathname: `/s/${formattedSlug}`,
         query: {

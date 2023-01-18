@@ -30,10 +30,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
    */
   icon?: React.ReactNode;
   /**
-   * The Function to be called when the button is clicked
-   */
-  onClick?: () => void;
-  /**
    * The when button full width
    * @default false
    */
@@ -49,9 +45,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const buttonStyles = {
   variant: {
-    primary: 'bg-primary border border-primary text-white disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-400',
-    secondary: 'border border-slate-400 text-slate-700 disabled:border-slate-300 disabled:text-slate-400 hover:bg-slate-100',
-    text: 'text-primary disabled:text-slate-400 bg-transparent hover:bg-slate-100',
+    primary: 'bg-primary border border-primary text-white disabled:bg-slate-200 disabled:border-slate-200 disabled:text-slate-500',
+    secondary: 'border border-primary/40 text-primary disabled:border-slate-300 disabled:text-slate-400 hover:bg-primary/5',
+    text: 'text-primary disabled:text-slate-400 bg-transparent hover:bg-primary/5',
   },
   loading: {
     primary: 'fill-slate-500',
@@ -65,9 +61,9 @@ const buttonStyles = {
   },
   theme: {
     error: {
-      primary: 'bg-red-500 border-red-50 text-white',
-      secondary: 'border-red-500 text-red-500',
-      text: 'text-red-500',
+      primary: 'bg-red-500 border-red-50 !text-white',
+      secondary: 'border-red-500 !text-red-500 hover:bg-red-50',
+      text: '!text-red-500 hover:bg-red-50',
     },
     simple: {
       primary: '',
@@ -96,7 +92,7 @@ export const Button: React.FC<ButtonProps> = props => {
   return (
     <button
       className={clsx(
-        'flex items-center justify-center rounded-lg font-bold gap-1 transition-colors',
+        'flex items-center justify-center rounded-lg font-bold gap-1 transition-all',
         buttonStyles.variant[variant],
         buttonStyles.size[size],
         buttonStyles.theme[theme][variant],

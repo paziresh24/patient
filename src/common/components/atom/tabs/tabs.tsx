@@ -5,7 +5,7 @@ interface TabsProps {
   children: ReactElement[];
   value: string | number;
   onChange: (value: string | number) => void;
-  className: string;
+  className?: string;
 }
 
 export const Tabs = ({ children, value, onChange, className, ...rest }: TabsProps) => {

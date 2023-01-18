@@ -4,6 +4,7 @@ import TagManager from 'react-gtm-module';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { EntryPoint } from './entryPoint';
+import Splash from './splash';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +39,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
           duration: 3000,
         }}
       />
+      <Splash />
     </QueryClientProvider>
   );
 };

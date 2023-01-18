@@ -9,7 +9,7 @@ export const useGetData = () => {
   const router = useRouter();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const pendingLogin = useUserInfoStore(state => state.pending);
-  const { openLoginModal } = useLoginModalContext();
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   const getProfileData = useGetProfileData(
     {
@@ -23,7 +23,7 @@ export const useGetData = () => {
 
   useEffect(() => {
     if (!pendingLogin && !isLogin) {
-      openLoginModal({
+      handleOpenLoginModal({
         state: true,
       });
     }

@@ -6,13 +6,16 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../_app';
@@ -20,6 +23,7 @@ import { NextPageWithLayout } from '../_app';
 export const PatinetProfile: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { t } = useTranslation('patient/profile');
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
@@ -33,7 +37,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
       province: data.province.value,
       city: data.city.value,
     });
-    if (res.data.status === 1) {
+    if (res.data.status === ClinicStatus.SUCCESS) {
       toast.success('اطلاعات شما با موفقیت ویرایش شد.');
       return setUserInfo({ ...res.data.result });
     }
@@ -45,7 +49,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
     const res = await updateUser.mutateAsync({
       image: file[0],
     });
-    if (res.data.status === 1) return setUserInfo({ ...res.data.result });
+    if (res.data.status === ClinicStatus.SUCCESS) return setUserInfo({ ...res.data.result });
     toast.error(res.data.message);
   };
 
@@ -53,13 +57,14 @@ export const PatinetProfile: NextPageWithLayout = () => {
     <>
       <Head>
         <title>{t('title')}</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {(isWebView || isApplication) && (
+        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
 
       <div className="flex flex-col p-5 space-y-5 bg-white">
-        {!isWebView && (
+        {!isWebView && !isApplication && (
           <Text fontWeight="black" fontSize="xl">
             {t('title')}
           </Text>
@@ -107,15 +112,17 @@ export const PatinetProfile: NextPageWithLayout = () => {
 
 PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter>
+    <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
     </LayoutWithHeaderAndFooter>
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

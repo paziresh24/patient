@@ -10,6 +10,7 @@
     "firstName": "نام",
     "lastName": "نام خانوادگی",
     "nationalCode": "کدملی",
+    "foreigner": "اتباع خارجی",
     "gender": "جنسیت",
     "phoneNumber": "شماره موبایل",
     "province": "استان",

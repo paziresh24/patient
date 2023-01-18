@@ -1,18 +1,9 @@
+import { getCookie } from 'cookies-next';
 import create from 'zustand';
 
-interface IUseUserInfoStore {
+interface UseUserInfoStore {
   isLogin: boolean;
-  info: {
-    name?: string;
-    family?: string;
-    user_id?: string;
-    username?: string;
-    national_code?: string;
-    gender?: 'male' | 'female';
-    city_id?: string;
-    province_id?: string;
-    image?: string;
-  };
+  info: UserInfo;
   turnsCount: {
     presence: number;
   };
@@ -23,8 +14,21 @@ interface IUseUserInfoStore {
   setTurnsCount: (turnsCount: { presence: number }) => void;
 }
 
-export const useUserInfoStore = create<IUseUserInfoStore>(set => ({
-  isLogin: false,
+export type UserInfo = {
+  name?: string;
+  family?: string;
+  id?: string;
+  username?: string;
+  national_code?: string;
+  is_foreigner?: boolean;
+  gender?: 'male' | 'female';
+  city_id?: string;
+  province_id?: string;
+  image?: string;
+};
+
+export const useUserInfoStore = create<UseUserInfoStore>(set => ({
+  isLogin: !!getCookie('certificate'),
   info: {},
   pending: true,
   turnsCount: {
@@ -32,7 +36,10 @@ export const useUserInfoStore = create<IUseUserInfoStore>(set => ({
   },
   setUserInfo: info =>
     set(() => ({
-      info,
+      info: {
+        ...info,
+        is_foreigner: info.is_foreigner == '1',
+      },
       isLogin: true,
     })),
   removeInfo: () => {

@@ -24,8 +24,8 @@ import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
 
 export const UserProfile = () => {
-  const { openLoginModal } = useLoginModalContext();
-  const { t } = useTranslation();
+  const { handleOpenLoginModal } = useLoginModalContext();
+  const { t } = useTranslation('common');
   const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userInfo: state.info,
@@ -66,7 +66,7 @@ export const UserProfile = () => {
   }, [open]);
 
   const handleLogin = () => {
-    openLoginModal({
+    handleOpenLoginModal({
       state: true,
     });
   };
@@ -84,7 +84,7 @@ export const UserProfile = () => {
       {!pending &&
         (isLogin ? (
           <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
-            <div className="text-center cursor-pointer p-3 space-s-2 text-sm md:p-6 md:pl-4 font-medium flex items-center">
+            <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
               {userInfo?.image ? (
                 <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
               ) : (
@@ -98,7 +98,7 @@ export const UserProfile = () => {
             <Transition
               match={open}
               animation="bottom"
-              className="absolute z-50 max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
+              className="absolute max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
                 <a>

@@ -6,6 +6,7 @@
   "pages": {
     "*": ["common", "login", "patient/common"],
     "/": ["home", "search"],
+    "/apphome": ["home", "search"],
     "/s/[[...params]]": ["search"],
     "/patient/profile": ["patient/profile"],
     "/patient/subuser": ["patient/subuser"],

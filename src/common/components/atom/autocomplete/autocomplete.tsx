@@ -103,13 +103,13 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   return (
     <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
-      <div className="relative flex items-center justify-end w-full" onFocus={onClickInput} onKeyDown={(e: any) => onKeyDown(e)}>
+      <div className="relative flex items-center justify-end w-full" onClick={onClickInput} onKeyDown={(e: any) => onKeyDown(e)}>
         <TextField {...inputProps} className={clsx('cursor-pointer !select-none', inputProps.className)} ref={inputRef} readOnly />
         <ChevronIcon
           dir={showSuggestions ? 'top' : 'bottom'}
           className={clsx('absolute mx-5', {
-            'bottom-[1.1rem]': inputProps.size === 'small',
-            'bottom-6': inputProps.size !== 'small',
+            'bottom-[0.9rem]': inputProps.size === 'small',
+            'bottom-[1.1rem]': inputProps.size !== 'small',
           })}
         />
       </div>

@@ -86,7 +86,7 @@ export const CitySelect = (props: CitySelectProps) => {
                 onClick={() => handleClickCity(city.id)}
                 variant="secondary"
                 size="sm"
-                className="!border-slate-300 font-medium"
+                className="!border-slate-300  !text-slate-700 font-medium"
               >
                 {city?.name}
               </Button>

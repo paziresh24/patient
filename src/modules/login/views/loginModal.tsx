@@ -4,13 +4,14 @@ import { useLoginModalContext } from '../context/loginModal';
 const LoginForm = dynamic(() => import('./loginForm'));
 
 export const LoginModal = () => {
-  const { loginModalState, openLoginModal } = useLoginModalContext();
+  const { loginModalState, handleOpenLoginModal } = useLoginModalContext();
 
   return (
     <Modal
       isOpen={loginModalState.state}
       onClose={() =>
-        openLoginModal({
+        loginModalState.closable &&
+        handleOpenLoginModal({
           state: false,
         })
       }
@@ -20,7 +21,7 @@ export const LoginModal = () => {
         title={loginModalState.title}
         description={loginModalState.description}
         postLogin={() => {
-          openLoginModal(prev => ({ ...prev, state: false }));
+          handleOpenLoginModal({ state: false });
           loginModalState.postLogin && loginModalState.postLogin();
         }}
       />

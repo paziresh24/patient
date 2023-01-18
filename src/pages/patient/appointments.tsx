@@ -12,6 +12,7 @@ import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -22,6 +23,7 @@ import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
 import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
@@ -29,12 +31,13 @@ type BookType = 'book' | 'book_request';
 export const Appointments: NextPageWithLayout = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { t } = useTranslation('patient/appointments');
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
-  const { openLoginModal } = useLoginModalContext();
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   const getBooks = useGetBooks({
     page,
@@ -67,7 +70,7 @@ export const Appointments: NextPageWithLayout = () => {
       getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
     }
     if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401)
-      openLoginModal({
+      handleOpenLoginModal({
         state: true,
         postLogin: () => regetchBook(),
       });
@@ -90,12 +93,13 @@ export const Appointments: NextPageWithLayout = () => {
     <>
       <Head>
         <title>{t('title')}</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {isWebView && <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />}
+      {(isWebView || isApplication) && (
+        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
+      )}
 
       <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
-        {!isWebView && (
+        {!isWebView && !isApplication && (
           <Text fontWeight="black" fontSize="xl" className="mt-5">
             {t('title')}
           </Text>
@@ -184,15 +188,17 @@ export const Appointments: NextPageWithLayout = () => {
 
 Appointments.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter>
+    <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
     </LayoutWithHeaderAndFooter>
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
   return {
-    props: {},
+    props: {
+      query: context.query,
+    },
   };
 });
 

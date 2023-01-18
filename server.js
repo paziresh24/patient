@@ -2,6 +2,7 @@ const { createServer } = require('https');
 const fs = require('fs');
 const { parse } = require('url');
 const next = require('next');
+const { join } = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
@@ -16,7 +17,7 @@ const httpsOptions = {
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
     const parsedUrl = parse(req.url, true);
-
+    const { pathname } = parsedUrl;
     handle(req, res, parsedUrl);
   }).listen(port, err => {
     if (err) throw err;

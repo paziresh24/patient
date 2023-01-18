@@ -2,6 +2,7 @@ import { useRegister } from '@/common/apis/services/auth/register';
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { digitsFaToEn, phoneNumberValidator } from '@persian-tools/persian-tools';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
@@ -39,7 +40,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
     const { data: resetPasswordRes } = await resetPassword.mutateAsync({
       cell: +mobileNumberValue,
     });
-    if (resetPasswordRes.status === 1) {
+    if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
       return setStep('otp_code');
     }
     if (resetPasswordRes.status === 39) {

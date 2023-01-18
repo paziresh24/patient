@@ -2,6 +2,8 @@ import { ParsedUrlQuery } from 'querystring';
 import create from 'zustand';
 
 interface Customize {
+  showHeader: boolean;
+  showFooter: boolean;
   showSideBar: boolean;
   headerBrandLogoType: HeaderBrandLogoType;
   showUserProfile: boolean;
@@ -24,6 +26,8 @@ type Toggle = 'on' | 'off';
 
 const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (query: ParsedUrlQuery) => void }>(set => ({
   customize: {
+    showHeader: true,
+    showFooter: true,
     footerType: 'default',
     showPromoteApp: true,
     showUserProfile: true,
@@ -40,18 +44,22 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
+
+    const isApplication = query.application ?? window.matchMedia('(display-mode: standalone)')?.matches;
     const customize = {
-      showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic',
+      showHeader: !isApplication && !query.isWebView,
+      showFooter: !isApplication && !query.isWebView,
+      showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic' && !isApplication,
       headerBrandLogoType: (query['header:brand-logo-type'] as HeaderBrandLogoType) ?? 'default',
       showUserProfile: (query['header:user-profile'] as Toggle) !== 'off',
       showBrandLogoInHomePage: (query['header:brand-logo-in-home-page'] as Toggle) === 'on' || false,
-      showPromoteApp: (query['promote-app'] as Toggle) !== 'off',
+      showPromoteApp: (query['promote-app'] as Toggle) !== 'off' && !isApplication,
       partnerLogo: (query['partner:logo'] as string) || '',
       showPartnerLogoInPrimaryPlace: (query['partner:primary-place'] as Toggle) === 'on',
       partnerTitle: (query['partner:title'] as string) || '',
       partnerSubTitle: (query['partner:sub-title'] as string) || '',
       showSelectCityInSuggestion: (query['suggestion:city-select'] as Toggle) !== 'off',
-      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !query.isWebView,
+      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !query.isWebView && !isApplication,
       footerType: (query['footer:type'] as FooterType) ?? 'default',
       showConsultServices: (query['search:consult'] as Toggle) !== 'off',
     };
