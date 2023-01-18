@@ -2,6 +2,7 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useStat } from '@/common/apis/services/search/stat';
 import Button from '@/common/components/atom/button';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import ErrorIcon from '@/common/components/icons/error';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -78,9 +79,13 @@ const Search: NextPageWithLayout = () => {
             {!isLanding && !isMobile && (
               <div className="items-center justify-between hidden mb-3 md:flex">
                 <Sort />
-                <Text fontSize="sm" fontWeight="semiBold">
-                  {addCommas(total)} نتیجه
-                </Text>
+                {isLoading ? (
+                  <Skeleton w="5rem" h="1rem" rounded="full" />
+                ) : (
+                  <Text fontSize="sm" fontWeight="semiBold">
+                    {addCommas(total)} نتیجه
+                  </Text>
+                )}
               </div>
             )}
             {customize.showConsultServices && <ConsultBanner />}
