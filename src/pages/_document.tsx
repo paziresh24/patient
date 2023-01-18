@@ -20,8 +20,8 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <meta name="application-name" content="پذیرش۲۴" />
         <meta name="apple-mobile-web-app-title" content="پذیرش۲۴" />
-        <meta name="theme-color" content="#3f4079" />
-        <meta name="msapplication-TileColor" content="#2d89ef" />
+        <meta name="theme-color" content="#FFFFFF" />
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="content-language" content="fa" />
         <meta name="Language" content="fa" />
         <meta name="robots" content="index, follow" />
