@@ -105,7 +105,7 @@ export const UserProfile = () => {
                   <div className="flex items-center w-64 p-2 pb-3 space-s-3">
                     <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
                     <div className="flex flex-col space-y-2">
-                      {!userInfo.name ? (
+                      {pending ? (
                         <>
                           <Skeleton h="1rem" w="8rem" rounded="full" />
                           <Skeleton h="1rem" rounded="full" />

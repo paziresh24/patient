@@ -51,7 +51,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
-      value: centerType === CenterType.consult ? bookTime : dateTime,
+      value: dateTime,
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
@@ -68,21 +68,13 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: true,
     },
     {
-      id: 3,
-      name: 'مدت زمان گفتگو',
-      value: `تا ${durationConversation} روز`,
-      shouldShow: centerType === CenterType.consult,
+      id: 4,
+      name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
+      value: waitingTime,
+      shouldShow: !!waitingTime && centerType === CenterType.clinic,
       type: 'Text',
-      isBoldValue: true,
+      isBoldValue: false,
     },
-    // {
-    //   id: 4,
-    //   name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
-    //   value: waitingTime,
-    //   shouldShow: centerType === CenterType.clinic,
-    //   type: 'Text',
-    //   isBoldValue: false,
-    // },
     {
       id: 5,
       name: 'کد پیگیری',
@@ -95,7 +87,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 6,
       name: 'نام مرکز',
       value: centerName,
-      shouldShow: centerType === CenterType.hospital || turnStatus === BookStatus.requested,
+      shouldShow: centerType !== CenterType.consult,
       type: 'Text',
       isBoldValue: false,
     },
@@ -106,7 +98,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       buttonAction: () => {
         return (location.href = 'tel:${centerPhone}');
       },
-      shouldShow: !!centerPhone,
+      shouldShow: !!centerPhone && centerType === CenterType.clinic,
       type: 'Button',
     },
     {
@@ -150,17 +142,10 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 13,
-      name: 'شماره پزشک',
-      value: doctorPhone,
-      shouldShow: centerType === CenterType.consult,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
       id: 14,
       name: 'لینک قبض نوبت',
       value: receiptLink,
+      copyable: true,
       shouldShow: centerType === CenterType.consult,
       type: 'Text',
       isBoldValue: false,
@@ -173,8 +158,15 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
         name: items,
         type: 'Label',
       })),
-      shouldShow: turnStatus !== BookStatus.requested,
+      shouldShow: centerType === CenterType.clinic,
       type: 'Accordion',
+    },
+    {
+      id: 16,
+      name: 'نحوه ویزیت آنلاین',
+      value: rules,
+      shouldShow: centerType === CenterType.consult,
+      type: 'Label',
     },
   ];
 

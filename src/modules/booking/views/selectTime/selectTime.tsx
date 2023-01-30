@@ -14,6 +14,7 @@ interface SelectTimeProps extends BaseInfo {
   loading: boolean;
   onFirstFreeTimeError: (errorText: string) => void;
   events?: Events;
+  showOnlyFirstFreeTime?: boolean;
 }
 
 export type Events = {
@@ -27,7 +28,7 @@ enum TimeMode {
 }
 
 export const SelectTimeUi = (props: SelectTimeProps) => {
-  const { onSelect, loading, onFirstFreeTimeError, events, ...baseInfo } = props;
+  const { onSelect, loading, onFirstFreeTimeError, events, showOnlyFirstFreeTime = false, ...baseInfo } = props;
 
   const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo, onEvent: data => events?.onOtherFreeTime(data) });
   const firstFreeTime = useFirstFreeTime({
@@ -85,21 +86,23 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         selected={timeMode === TimeMode.FIRST_FREE_TURN}
         title={baseInfo.centerId === CENTERS.CONSULT ? 'پاسخگویی پزشک' : 'زودترین زمان نوبت خالی'}
       />
-      <OtherTimes
-        {...otherTimes}
-        onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}
-        selected={timeMode === TimeMode.OTHER_FREE_TURN}
-        onSelectTime={async ({ from, to }) => {
-          const { data } = await suspend.mutateAsync({
-            center_id: baseInfo.centerId,
-            service_id: baseInfo.serviceId,
-            user_center_id: baseInfo.userCenterId,
-            from,
-            to,
-          });
-          handleSelectTime(data.request_code, 'forceClick');
-        }}
-      />
+      {!showOnlyFirstFreeTime && (
+        <OtherTimes
+          {...otherTimes}
+          onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}
+          selected={timeMode === TimeMode.OTHER_FREE_TURN}
+          onSelectTime={async ({ from, to }) => {
+            const { data } = await suspend.mutateAsync({
+              center_id: baseInfo.centerId,
+              service_id: baseInfo.serviceId,
+              user_center_id: baseInfo.userCenterId,
+              from,
+              to,
+            });
+            handleSelectTime(data.request_code, 'forceClick');
+          }}
+        />
+      )}
     </div>
   );
 };

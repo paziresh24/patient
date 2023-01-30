@@ -1,4 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import { orderBy } from 'lodash';
 import CenterCard from '../../components/centerCard/centerCard';
 import { Center } from '../../types/selectCenter';
 
@@ -26,7 +27,7 @@ export const SelectCenter = (props: CenterProps) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      {centers.map((center, index) => (
+      {orderBy(centers, ['isDisable', 'isAvailable']).map((center, index) => (
         <CenterCard key={index} {...center} onClick={handleSelectCenter} />
       ))}
     </div>

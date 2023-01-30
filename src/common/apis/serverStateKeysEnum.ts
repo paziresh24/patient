@@ -7,4 +7,5 @@ export enum ServerStateKeysEnum {
   BaseInfo = 'baseInfo',
   CurrentDateTime = 'currentDateTime',
   Symptoms = 'symptoms',
+  Receipt = 'receipt',
 }

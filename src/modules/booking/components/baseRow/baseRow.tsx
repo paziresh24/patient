@@ -11,6 +11,7 @@ type Data = {
   buttonAction?: () => void;
   shouldShow: boolean;
   isBoldValue?: boolean;
+  copyable?: boolean;
 };
 
 interface BaseRowProps {
@@ -30,6 +31,7 @@ export const BaseRow = (props: BaseRowProps) => {
             titleFontWeight="medium"
             valueFontSize="sm"
             valueFontWeight={data.isBoldValue ? 'bold' : 'medium'}
+            copyable={data.copyable}
           />
         )}
         {data.type === 'Button' && (
@@ -42,9 +44,16 @@ export const BaseRow = (props: BaseRowProps) => {
             variant="secondary"
           />
         )}
-        {data.type === 'Label' && (
-          <Text fontSize="sm" fontWeight={data.isBoldValue ? 'bold' : 'medium'} dangerouslySetInnerHTML={{ __html: data.value }} />
-        )}
+        {data.type === 'Label' &&
+          (Array.isArray(data.value) ? (
+            <div className="flex flex-col space-y-1">
+              {data.value.map(item => (
+                <Text key={item} fontSize="sm" dangerouslySetInnerHTML={{ __html: item }} />
+              ))}
+            </div>
+          ) : (
+            <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: data.value }} />
+          ))}
         {data.type === 'Accordion' && (
           <Accordion className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2" title={data.name}>
             {

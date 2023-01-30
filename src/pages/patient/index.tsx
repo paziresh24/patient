@@ -55,7 +55,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
             <div className="flex items-center p-5 bg-white border-t shadow-sm space-s-5 border-slate-200">
               <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
               <div className="flex flex-col space-y-2">
-                {!userInfo.name ? (
+                {loginPending ? (
                   <>
                     <Skeleton h="1rem" w="8rem" rounded="full" />
                     <Skeleton h="1rem" rounded="full" />

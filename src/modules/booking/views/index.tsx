@@ -242,17 +242,21 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const reformatCentersProperty = (centers: any[]) => {
     return (
-      centers?.map((center: any) => {
-        return {
-          ...center,
-          freeturn: center.freeturn_text,
-          type: center.center_type === 1 ? 'office' : 'hospital',
-          phoneNumbers: center.tell_array,
-          isDisable: !center.is_active,
-          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
-          availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
-        };
-      }) ?? []
+      centers
+        ?.map((center: any) => {
+          return {
+            ...center,
+            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.name,
+            address: center.id === CENTERS.CONSULT ? '' : center.address,
+            freeturn: center.freeturn_text,
+            type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
+            phoneNumbers: center.tell_array,
+            isDisable: !center.is_active,
+            isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
+            availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
+          };
+        })
+        .filter(center => (center.id === '5532' ? !center.isDisable : true)) ?? []
     );
   };
 
@@ -340,6 +344,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             userCenterId: center?.user_center_id,
+            showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
               setRecommendModal(true);
@@ -463,7 +468,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           </Button>
         </div>
       </Modal>
-      <Modal noHeader isOpen={recommendModal} onClose={() => {}} bodyClassName="bg-slate-100 !p-0">
+      <Modal noHeader isOpen={recommendModal} onClose={setRecommendModal} bodyClassName="bg-slate-100 !p-0">
         <div className="flex flex-col space-y-3">
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}

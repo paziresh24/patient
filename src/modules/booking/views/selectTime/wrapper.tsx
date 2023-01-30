@@ -9,6 +9,7 @@ interface SelectTimeWrapperProps extends BaseInfo {
   loading: boolean;
   onFirstFreeTimeError: (errorText: string) => void;
   events?: Events;
+  showOnlyFirstFreeTime?: boolean;
 }
 
 export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {

@@ -42,6 +42,12 @@ export const SelectUser = (props: SelectUserProps) => {
       setUserSelected(userInfo.id);
       onSelect(userInfo);
     }
+
+    return () => {
+      handleOpenLoginModal({
+        state: false,
+      });
+    };
   }, [isLogin, userInfo]);
 
   const handleOpenAddSubuserModal = () => {

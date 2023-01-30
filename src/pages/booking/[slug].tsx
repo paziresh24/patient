@@ -2,6 +2,7 @@ import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile
 import Loading from '@/common/components/atom/loading/loading';
 import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
@@ -24,7 +25,9 @@ const Booking: NextPageWithLayout = () => {
     },
   );
 
-  const aa = useCallback((queries: any) => {
+  const profileData = data?.data?.data;
+
+  const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
     if (payloads.includes('centerId') && payloads.includes('serviceId') && payloads.includes('timeId')) {
       return {
@@ -51,32 +54,34 @@ const Booking: NextPageWithLayout = () => {
   }, []);
 
   return (
-    <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
-      <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
-        {(isLoading || isIdle) && (
-          <div className="self-center p-10">
-            <Loading className="self-center" />
-          </div>
-        )}
-        <Transition match={!!aa(router.query) && !isLoading && !isIdle} animation="bottom">
-          <BookingSteps defaultStep={aa(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
-        </Transition>
+    <>
+      <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} />
+      <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+        <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
+          {(isLoading || isIdle) && (
+            <div className="self-center p-10">
+              <Loading className="self-center" />
+            </div>
+          )}
+          <Transition match={!!queryHandler(router.query) && !isLoading && !isIdle} animation="bottom">
+            <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
+          </Transition>
+        </div>
+        <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
+          <DoctorInfo
+            className="p-4 rounded-lg bg-slate-50"
+            isLoading={isLoading || isIdle}
+            avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
+            fullName={profileData?.display_name}
+            expertise={getDisplayDoctorExpertise({
+              aliasTitle: profileData?.expertises?.[0]?.alias_title,
+              degree: profileData?.expertises?.[0]?.degree?.name,
+              expertise: profileData?.expertises?.[0]?.expertise?.name,
+            })}
+          />
+        </div>
       </div>
-      <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
-        <DoctorInfo
-          className="p-4 rounded-lg bg-slate-50"
-          isLoading={isLoading || isIdle}
-          avatar={publicRuntimeConfig.CLINIC_BASE_URL + data?.data?.data?.image}
-          firstName={data?.data?.data?.name}
-          lastName={data?.data?.data?.family}
-          expertise={getDisplayDoctorExpertise({
-            aliasTitle: data?.data?.data?.expertises?.[0]?.alias_title,
-            degree: data?.data?.data?.expertises?.[0]?.degree?.name,
-            expertise: data?.data?.data?.expertises?.[0]?.expertise?.name,
-          })}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

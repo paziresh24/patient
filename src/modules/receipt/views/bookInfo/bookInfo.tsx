@@ -14,22 +14,22 @@ export const BookInfo = (props: PaymentDetailsProps) => {
   const isConsultReceipt = centerId === '5532';
   return (
     <div className="flex flex-col space-y-6">
-      <div className="flex flex-col py-5 mt-5 space-y-5 border border-solid rounded-lg border-slate-200">
+      <div className="flex flex-col pt-1 mt-5 border border-solid divide-y rounded-lg divide-dashed border-slate-200 divide-slate-100">
         {loading && (
           <>
-            <div className="flex items-center justify-between px-5">
+            <div className="flex items-center justify-between px-5 py-3">
               <Skeleton w="10rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex items-center justify-between px-5">
+            <div className="flex items-center justify-between px-5 py-3">
               <Skeleton w="6rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex items-center justify-between px-5">
+            <div className="flex items-center justify-between px-5 py-3">
               <Skeleton w="8rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
-            <div className="flex items-center justify-between px-5">
+            <div className="flex items-center justify-between px-5 py-3">
               <Skeleton w="12rem" h="1.1rem" rounded="full" />
               <Skeleton w="5rem" h="1.1rem" rounded="full" />
             </div>
@@ -38,25 +38,25 @@ export const BookInfo = (props: PaymentDetailsProps) => {
         {!loading &&
           turnDetailsData({
             data: {
-              bookTime: isConsultReceipt ? turnData.from_book : turnData.book_from,
-              centerName: turnData.center_name,
-              trackingCode: isConsultReceipt ? turnData.ref_id : turnData.book_ref_id,
-              waitingTime: turnData?.rate_info?.waiting_time,
-              centerPhone: turnData?.center_display_number,
-              address: turnData?.center_address,
+              bookTime: turnData.book_time,
+              centerName: turnData.center?.name,
+              trackingCode: turnData.reference_code,
+              waitingTime: turnData?.center?.waiting_time,
+              centerPhone: turnData?.center?.display_number,
+              address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               durationConversation: turnData?.duration_conversation_doctor,
               doctorPhone: turnData?.whatsapp_cell_doctor,
-              receiptLink: turnData?.link_bill,
+              receiptLink: turnData?.share_url,
               centerId: centerId,
               patientInfo: {
-                name: isConsultReceipt ? turnData.fullname_patient : `${turnData.patient_temp_name} ${turnData.patient_temp_family}`,
-                cell: isConsultReceipt ? turnData.cell_patient : turnData?.patient_temp_cell,
-                nationalCode: turnData?.patient_temp_national_code,
-                selectServeis: turnData?.services?.[0].alias_title,
+                name: `${turnData?.patient?.name} ${turnData?.patient?.family}`,
+                cell: turnData?.patient?.cell,
+                nationalCode: turnData?.patient?.national_code,
+                selectServeis: turnData?.services?.[0].title,
               },
               rules: isConsultReceipt
-                ? turnData?.online_visit_channels?.[0].type === VisitChannels.igap
+                ? turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
                   ? [
                       ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
                       '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
@@ -67,9 +67,9 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                     ]
                 : turnData.book_notices,
             },
-            centerType: isConsultReceipt ? CenterType.consult : CenterType.clinic,
+            centerType: turnData.is_online_visit ? CenterType.consult : CenterType.clinic,
           }).map(item => (
-            <div key={item.id} className="px-5">
+            <div key={item.id} className="px-5 py-3">
               <BaseRow data={item} key={item.id} />
             </div>
           ))}

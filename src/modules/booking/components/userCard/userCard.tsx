@@ -5,7 +5,7 @@ import EditIcon from '@/common/components/icons/edit';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import Select from '../select';
 
@@ -37,6 +37,12 @@ export const UserCard = (props: UserCardProps) => {
         : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE'],
     [type],
   );
+
+  useEffect(() => {
+    if (!name) {
+      setIsOpenEditUserModal(true);
+    }
+  }, []);
 
   const handleEditUser = async (data: any) => {
     if (type === 'user') {
