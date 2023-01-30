@@ -347,12 +347,17 @@ const BookingSteps = (props: BookingStepsProps) => {
             showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
+              sendGaEvent({
+                action: 'load-errormodal',
+                category: `${center.city}`,
+                label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
+              });
               setRecommendModal(true);
             },
             events: {
-              onFirstFreeTime: ({ server_name, server_id, status, message, result }: any) =>
+              onFirstFreeTime: ({ server_name, server_id, status, message, result, meta }: any) =>
                 sendFirstFreeTimeEvent({
-                  data: { full_date: result?.full_date, status, message },
+                  data: { full_date: result?.full_date, status, message, meta },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
                 }),
               onOtherFreeTime: ({ status, message }: any) =>

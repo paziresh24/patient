@@ -61,7 +61,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: 'توضیحات',
       value:
         turnStatus === BookStatus.requested
-          ? `${patientInfo.name} عزیز این درخواست به معنی ثبت نوبت نمیباشد. نتیجه درخواست شما پس از بررسی توسط مرکز درمانی از طریق پیامک به شما اطلاع داده می شود. همینطور شما میتوانید وضعیت درخواست خود را از طریق صفحه نوبت های من مشاهده کنید.`
+          ? `بیمار عزیز این درخواست به معنی ثبت نوبت نمیباشد. نتیجه درخواست شما پس از بررسی توسط مرکز درمانی از طریق پیامک به شما اطلاع داده می شود. همینطور شما میتوانید وضعیت درخواست خود را از طریق صفحه نوبت های من مشاهده کنید.`
           : 'زمان نوبت اعلام شده، برای حضور در مرکز درمانی بوده و با زمان ویزیت تفاوت دارد.',
       shouldShow: centerType == CenterType.clinic,
       type: 'Label',
@@ -71,7 +71,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 4,
       name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
       value: waitingTime,
-      shouldShow: !!waitingTime && centerType === CenterType.clinic,
+      shouldShow: !!waitingTime && centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: false,
     },

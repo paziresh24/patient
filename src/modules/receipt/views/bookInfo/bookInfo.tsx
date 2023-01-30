@@ -53,7 +53,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 name: `${turnData?.patient?.name} ${turnData?.patient?.family}`,
                 cell: turnData?.patient?.cell,
                 nationalCode: turnData?.patient?.national_code,
-                selectServeis: turnData?.services?.[0].title,
+                selectServeis: turnData?.services?.[0]?.title,
               },
               rules: isConsultReceipt
                 ? turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap

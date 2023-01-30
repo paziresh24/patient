@@ -19,6 +19,31 @@ export const clinicClient = axios.create({
   withCredentials: true,
 });
 
+clinicClient.interceptors.request.use(
+  config => {
+    config = {
+      ...config,
+      meta: {
+        requestStartedAt: new Date().getTime(),
+      },
+    } as any;
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
+clinicClient.interceptors.response.use(
+  res => {
+    res = { ...res, meta: { responseTime: new Date().getTime() - (res.config as any).meta.requestStartedAt } } as any;
+    return res;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
 paziresh24AppClient.interceptors.response.use(
   res => res,
   async error => {
