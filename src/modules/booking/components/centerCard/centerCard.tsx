@@ -36,12 +36,12 @@ export const CenterCard = (props: CenterCardProps) => {
                 'bg-[#3861FB]/[0.2]': type === 'office' && !isDisable && isAvailable,
                 'bg-[#FF620A]/[0.2]': type === 'hospital' && !isDisable && isAvailable,
                 'bg-[#27BDA0]/[0.2]': type === 'consult' && !isDisable && isAvailable,
-                'bg-slate-200': isDisable || !isAvailable,
+                'bg-slate-200 text-slate-500': isDisable || !isAvailable,
               })}
             >
-              {type === 'office' && <OfficeIcon className={clsx('w-10 h-6', { 'text-slate-500': isDisable })} />}
-              {type === 'hospital' && <HospitalIcon className={clsx('w-10 h-6', { 'text-slate-500': isDisable })} />}
-              {type === 'consult' && <WifiIcon className={clsx('w-10 h-6', { 'text-slate-500': isDisable })} />}
+              {type === 'office' && <OfficeIcon className="w-10 h-6" />}
+              {type === 'hospital' && <HospitalIcon className="w-10 h-6" />}
+              {type === 'consult' && <WifiIcon className="w-10 h-6" />}
             </div>
             <div
               className={clsx('mr-2 flex justify-between items-center text-black w-full p-[0.65rem] rounded-md  text-sm font-medium', {

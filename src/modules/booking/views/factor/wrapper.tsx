@@ -1,4 +1,5 @@
 import { useCenterPayment } from '@/common/apis/services/factor/centerPayment';
+import { useConsultPayment } from '@/common/apis/services/factor/consultPayment';
 import Button from '@/common/components/atom/button/button';
 import { CENTERS } from '@/common/types/centers';
 import getConfig from 'next/config';
@@ -16,6 +17,7 @@ interface FactorWrapperProps {
 const FactorWrapper = (props: FactorWrapperProps) => {
   const { bookId, centerId } = props;
   const centerPayment = useCenterPayment();
+  const consultPayment = useConsultPayment();
 
   const { isLoading, ...invoice } = useInvoice({
     bookId,
@@ -27,9 +29,12 @@ const FactorWrapper = (props: FactorWrapperProps) => {
 
   const handlePaymentAction = async ({ discountToken, bookId }: { discountToken?: string; bookId: string }) => {
     if (bookId) {
-      const { data } = await centerPayment.mutateAsync({ book_id: bookId, ...(discountToken && { discount_token: discountToken }) });
+      const { data } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
+        book_id: bookId,
+        ...(discountToken && { discount_token: discountToken }),
+      });
       if (data.status) {
-        location.assign(publicRuntimeConfig.CLINIC_BASE_URL + data.url);
+        location.assign(data.url);
         return;
       }
       toast.error(data?.message ?? 'یک خطای غیرمنتظره رخ داد.');
