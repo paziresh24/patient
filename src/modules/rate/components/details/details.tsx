@@ -1,3 +1,4 @@
+import RateBadge from '@/common/components/atom/badge';
 import Text from '@/common/components/atom/text/text';
 import LikeIcon from '@/common/components/icons/like';
 import ProgressBar from '../../../../common/components/atom/progressBar/progressBar';
@@ -17,10 +18,12 @@ export const Details = (props: DetailsProps) => {
     <>
       <div className="flex gap-3 items-center justify-center mb-5">
         {satisfaction && (
-          <div className="flex items-center justify-center gap-1 bg-green-500 text-white pt-1 pb-2 px-3 rounded-3xl">
-            <LikeIcon className="w-5 text-white" />
-            <Text className="mt-2">{satisfaction}%</Text>
-          </div>
+          <RateBadge
+            text={`${satisfaction}%`}
+            icon={<LikeIcon className="w-5 text-white" />}
+            parentClassName="!bg-green-500"
+            className="mt-1"
+          />
         )}
         {title && <Text fontWeight="medium">{title}</Text>}
         {count && <Text fontWeight="medium">{`(${count} ${count_text ?? ''})`}</Text>}
