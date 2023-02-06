@@ -210,7 +210,7 @@ const DoctorProfile: NextPageWithLayout<Props> = () => {
         ),
       },
     }),
-    [isDesktop, isMobile],
+    [isDesktop, isMobile, profileData],
   );
 
   return (
