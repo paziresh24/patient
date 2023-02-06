@@ -142,7 +142,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       setService(selectedService);
       defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
       if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id });
+        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, bookRequest: true });
       }
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }

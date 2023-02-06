@@ -35,6 +35,11 @@ const Booking: NextPageWithLayout = () => {
         payload: queries as any,
       };
     }
+    if (payloads.includes('centerId') && payloads.includes('serviceId') && payloads.includes('bookRequest'))
+      return {
+        step: 'SELECT_USER',
+        payload: queries as any,
+      };
     if (payloads.includes('centerId') && payloads.includes('serviceId')) {
       return {
         step: 'SELECT_TIME',
