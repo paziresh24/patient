@@ -10,7 +10,8 @@ export const LoginModal = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
 
   useEffect(() => {
-    if (loginModalState.state) handleOpen;
+    if (loginModalState.state) handleOpen();
+    if (!loginModalState.state) handleClose();
   }, [loginModalState]);
 
   return (
