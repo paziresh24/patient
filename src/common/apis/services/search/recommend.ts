@@ -12,6 +12,7 @@ export const searchRecommendByDoctor = async ({ city, category, doctorId }: Para
   const { data } = await searchClient.get(`/seapi/v1/recommend/${city}/${category}`, {
     params: {
       doctorId,
+      rising_stars: true,
     },
   });
   return data;
