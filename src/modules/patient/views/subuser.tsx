@@ -4,8 +4,9 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
 import useTranslation from 'next-translate/useTranslation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import UserCard from '../components/subuser/userCard';
 import { PatinetProfileForm } from './form';
@@ -13,7 +14,8 @@ import { PatinetProfileForm } from './form';
 export const SubuserList = () => {
   const { data, mutate, isSuccess, isLoading } = useGetSubuser();
   const addSubUser = useAddSubuser();
-  const [isOpenAddUserModal, setIsOpenAddUserModal] = useState(false);
+  const { handleOpen: handleOpenAddModal, handleClose: handleCloseAddModal, modalProps: addModalProps } = useModal();
+
   const { t } = useTranslation('patient/subuser');
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export const SubuserList = () => {
 
   const handleOpenAddSubuserModal = () => {
     addSubUser.reset();
-    setIsOpenAddUserModal(true);
+    handleOpenAddModal();
   };
 
   const handleAddSubuser = async (data: any) => {
@@ -35,7 +37,7 @@ export const SubuserList = () => {
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
-      setIsOpenAddUserModal(false);
+      handleCloseAddModal(false);
       return;
     }
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
@@ -62,7 +64,7 @@ export const SubuserList = () => {
       <Button className="self-center" onClick={handleOpenAddSubuserModal}>
         {t('addUser')}
       </Button>
-      <Modal title={t('newUserModalTitle')} isOpen={isOpenAddUserModal} onClose={setIsOpenAddUserModal}>
+      <Modal title={t('newUserModalTitle')} {...addModalProps}>
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}

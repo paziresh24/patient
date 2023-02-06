@@ -9,6 +9,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
+import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -22,7 +23,7 @@ import clsx from 'clsx';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
@@ -32,7 +33,8 @@ const Receipt: NextPageWithLayout = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-  const [removeModal, setRemoveModal] = useState(false);
+  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
@@ -71,7 +73,7 @@ const Receipt: NextPageWithLayout = () => {
       {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
-            setRemoveModal(false);
+            handleCloseRemoveModal();
             toast.success('نوبت شما با موفقیت لغو شد!');
             router.push('/patient/appointments');
             return;
@@ -84,10 +86,10 @@ const Receipt: NextPageWithLayout = () => {
 
   const handleRemoveBookClick = () => {
     if (!isLogin) {
-      handleOpenLoginModal({ state: true, postLogin: () => setRemoveModal(true) });
+      handleOpenLoginModal({ state: true, postLogin: handleOpenRemoveModal });
       return;
     }
-    setRemoveModal(true);
+    handleOpenRemoveModal();
   };
 
   const handleShareAction = () => {
@@ -204,12 +206,12 @@ const Receipt: NextPageWithLayout = () => {
             isLoading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
           />
         </div>
-        <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+        <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeModalProps}>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
               لغو نوبت
             </Button>
-            <Button theme="error" variant="secondary" block onClick={() => setRemoveModal(false)}>
+            <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
               انصراف
             </Button>
           </div>

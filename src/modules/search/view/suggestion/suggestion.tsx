@@ -111,7 +111,7 @@ export const Suggestion = (props: SuggestionProps) => {
       setIsLoading(false);
       if (userSearchValue)
         sendSuggestionViewEvent({
-          item: searchSuggestion.data?.data,
+          item: searchSuggestion.data,
           cityName: city.name,
           userSearchValue,
         });
@@ -159,7 +159,7 @@ export const Suggestion = (props: SuggestionProps) => {
               />
             ) : undefined
           }
-          items={searchSuggestion.data?.data ?? []}
+          items={searchSuggestion.data ?? []}
           className="border border-solid shadow-md border-slate-200"
           isLoading={isLoading}
         />

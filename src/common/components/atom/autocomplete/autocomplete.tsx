@@ -5,10 +5,11 @@ import ChevronIcon from '../../icons/chevron';
 import Text from '../text';
 import TextField, { TextFieldProps } from '../textField';
 
-export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'value' | 'classNameWrapper'> {
+export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'value' | 'classNameWrapper' | 'defaultValue'> {
   options: Option[];
   onChange?: (value: { target: { value: Option } }) => void;
   value?: Option;
+  defaultValue?: Option;
   classNameWrapper?: string;
 }
 
@@ -18,7 +19,7 @@ type Option = {
 };
 
 export const Autocomplete = (props: AutocompleteProps) => {
-  const { options, onChange, value, classNameWrapper, ...inputProps } = props;
+  const { options, onChange, value, classNameWrapper, defaultValue, ...inputProps } = props;
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState<Option[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -29,6 +30,10 @@ export const Autocomplete = (props: AutocompleteProps) => {
   useEffect(() => {
     if (inputRef.current) inputRef.current.value = value?.label ?? '';
   }, [value]);
+
+  useEffect(() => {
+    if (inputRef.current && defaultValue) inputRef.current.value = defaultValue?.label ?? '';
+  }, []);
 
   const onClose = () => {
     if (showSuggestions) {

@@ -48,12 +48,16 @@ import { CENTERS } from '@/common/types/centers';
 import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
+import useModal from '@/common/hooks/useModal';
+import clsx from 'clsx';
+import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
+  className?: string;
 }
 
 type SELECT_CENTER = {
@@ -89,7 +93,7 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const isWebView = useWebView();
-  const { slug, defaultStep } = props;
+  const { slug, defaultStep, className } = props;
   const { data, isLoading, isIdle } = useGetProfileData(
     {
       slug,
@@ -98,8 +102,8 @@ const BookingSteps = (props: BookingStepsProps) => {
       enabled: !!slug,
     },
   );
-  const centers = data?.data?.data?.centers;
-  const profile = data?.data?.data;
+  const centers = data?.data?.centers;
+  const profile = data?.data;
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
@@ -109,15 +113,22 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const [turnTimeOutModal, setTurnTimeOutModal] = useState(false);
-  const [insuranceModal, setInsuranceModal] = useState(false);
-  const [insuranceName, setInsuranceName] = useState('');
+  
+  const {
+    handleOpen: handleOpenTurnTimeOutModal,
+    handleClose: handleCloseTurnTimeOutModal,
+    modalProps: turnTimeOutModalProps,
+  } = useModal();
+  const { handleOpen: handleOpenInsuranceModal, modalProps: insuranceModalProps } = useModal();
+  const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
+
   const [insuranceNumber, setInsuranceNumber] = useState('');
-  const [recommendModal, setRecommendModal] = useState(false);
+  const [insuranceName, setInsuranceName] = useState('');
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
   const [selectedSymptoms, setSelectedSymptoms] = useState<Symptoms[]>([]);
   const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
   const [symptomSearchText, setSymptomSearchText] = useState('');
+  const { handleBook } = useBooking();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -150,50 +161,43 @@ const BookingSteps = (props: BookingStepsProps) => {
     const { insurance_id, insurance_number } = user;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
-    const { data } = await book.mutateAsync({
-      request_code: timeId,
-      center_id: center?.id!,
-      server_id: center.server_id,
-      is_webview: isWebView ? 1 : 0,
-      first_name: user.name,
-      last_name: user.family,
-      gender: user.gender,
-      cell: user.cell,
-      selected_user_id: user.id,
-      is_foreigner: user.is_foreigner,
-      ...(user.national_code && { national_code: user.national_code }),
-      ...(insurance_id && { insurance_id }),
-      ...(insurance_number && { insurance_number }),
-      ...(selectedSymptoms.length && { symptomes: selectedSymptoms.map(symptoms => symptoms.title).toString() }),
-    });
-    if (data.status === ClinicStatus.SUCCESS) {
-      if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
-
-      sendBookEvent({
-        bookInfo: {
-          ...data.book_info,
+    handleBook(
+      {
+        center,
+        timeId,
+        user,
+        selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
+      },
+      {
+        onSuccess(data) {
+          if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
+          sendBookEvent({
+            bookInfo: {
+              ...data.book_info,
+            },
+            doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
+            userInfo: user,
+          });
+          router.push(`/receipt/${center.id}/${data.book_info.id}`);
         },
-        doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
-        userInfo: user,
-      });
-      return router.push(`/receipt/${center.id}/${data.book_info.id}`);
-    }
-
-    if (data.status === ClinicStatus.EXPIRE_TIME_SLOT) {
-      handleChangeStep('SELECT_TIME');
-    }
-    toast.error(data.message);
-
-    sendGaEvent({
-      action: 'P24DrsPage',
-      category: 'BookError',
-      label: `BookError press submit button - status: ${data.status} message: ${data.message}`,
-    });
-    sendGaEvent({
-      action: 'bookerror',
-      category: center.center_type === 1 ? 'مطب شخصی' : center.name,
-      label: data.status,
-    });
+        onExpire() {
+          handleChangeStep('SELECT_TIME');
+        },
+        onError(data) {
+          toast.error(data.message);
+          sendGaEvent({
+            action: 'P24DrsPage',
+            category: 'BookError',
+            label: `BookError press submit button - status: ${data.status} message: ${data.message}`,
+          });
+          sendGaEvent({
+            action: 'bookerror',
+            category: center.center_type === 1 ? 'مطب شخصی' : center.name,
+            label: data.status,
+          });
+        },
+      },
+    );
   };
 
   const handleBookRequest = async (dataForm: TurnRequestInformation) => {
@@ -250,7 +254,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             address: center.id === CENTERS.CONSULT ? '' : center.address,
             freeturn: center.freeturn_text,
             type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
-            phoneNumbers: center.tell_array,
+            phoneNumbers: center.display_number_array,
             isDisable: !center.is_active,
             isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
             availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
@@ -264,7 +268,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (step === 'SELECT_TIME') {
       clearTimeout(getTurnTimeout.current);
       getTurnTimeout.current = setTimeout(() => {
-        setTurnTimeOutModal(true);
+        handleOpenTurnTimeOutModal();
       }, 300000); // 3 min}
     }
 
@@ -272,7 +276,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [step]);
 
   return (
-    <div className="p-5 bg-white rounded-lg">
+    <div className={clsx('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
         <Wrapper
           title="انتخاب مرکز درمانی"
@@ -352,7 +356,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 category: `${center.city}`,
                 label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
               });
-              setRecommendModal(true);
+              handleOpenRecommendModal();
             },
             events: {
               onFirstFreeTime: ({ server_name, server_id, status, message, result, meta }: any) =>
@@ -407,7 +411,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
               if (+center.settings?.booking_enable_insurance) {
-                setInsuranceModal(true);
+                handleOpenInsuranceModal();
                 return;
               }
               handleBookAction(user);
@@ -438,21 +442,21 @@ const BookingSteps = (props: BookingStepsProps) => {
         />
       )}
 
-      <Modal noHeader isOpen={turnTimeOutModal} onClose={() => {}}>
+      <Modal noHeader {...turnTimeOutModalProps} onClose={() => {}}>
         <div className="flex flex-col space-y-3">
           <Text fontWeight="medium">زمان شما برای دریافت نوبت به پایان رسیده است، لطفا دوباره تلاش کنید.</Text>
           <Button
             block
             onClick={() => {
               handleChangeStep('SELECT_CENTER');
-              setTurnTimeOutModal(false);
+              handleCloseTurnTimeOutModal(false);
             }}
           >
             تلاش مجدد
           </Button>
         </div>
       </Modal>
-      <Modal title="انتخاب بیمه" isOpen={insuranceModal} onClose={setInsuranceModal}>
+      <Modal title="انتخاب بیمه" {...insuranceModalProps}>
         <div className="flex flex-col space-y-3">
           <Autocomplete
             onChange={e => setInsuranceName(e.target.value.value)}
@@ -473,7 +477,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           </Button>
         </div>
       </Modal>
-      <Modal noHeader isOpen={recommendModal} onClose={setRecommendModal} bodyClassName="bg-slate-100 !p-0">
+      <Modal noHeader {...recommendModalProps} bodyClassName="bg-slate-100 !p-0">
         <div className="flex flex-col space-y-3">
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}

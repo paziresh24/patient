@@ -19,6 +19,11 @@ export const clinicClient = axios.create({
   withCredentials: true,
 });
 
+export const contentClient = axios.create({
+  baseURL: publicRuntimeConfig.CONTENT_BASE_URL,
+  withCredentials: true,
+});
+
 clinicClient.interceptors.request.use(
   config => {
     config = {

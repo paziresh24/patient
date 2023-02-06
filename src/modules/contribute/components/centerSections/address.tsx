@@ -1,5 +1,6 @@
 import Modal from '@/common/components/atom/modal';
 import TextField from '@/common/components/atom/textField';
+import useModal from '@/common/hooks/useModal';
 import { Dispatch, SetStateAction, useState } from 'react';
 import AddButton from '../addButton';
 import DislikeButton from '../dislikeButton';
@@ -14,8 +15,16 @@ interface AddressSectionProps {
 
 export const AddressSection = (props: AddressSectionProps) => {
   const { setAddresses, addresses, defaultAddress } = props;
-  const [insertAddressModal, setInsertAddressModal] = useState(false);
-  const [editAddressModal, setEditAddressModal] = useState(false);
+  const {
+    handleOpen: handleOpenInsertAddressModal,
+    handleClose: handleCloseInsertAddressModal,
+    modalProps: insertAddressModalProps,
+  } = useModal();
+  const {
+    handleOpen: handleOpenEditAddressModal,
+    handleClose: handleCloseEditAddressModal,
+    modalProps: editAddressModalProps,
+  } = useModal();
   const [addressDataForEdit, setAddressDataForEdit] = useState<{
     index: number;
     data: CenterInfoData;
@@ -26,15 +35,15 @@ export const AddressSection = (props: AddressSectionProps) => {
 
   const handleAddAddress = (center: CenterInfoData) => {
     setAddresses(prev => [...prev, { ...center, status: 'add', default: false }]);
-    setInsertAddressModal(false);
+    handleCloseInsertAddressModal();
   };
   const handleEditAddress = (center: CenterInfoData, index: number) => {
-    setEditAddressModal(true);
+    handleOpenEditAddressModal();
     setAddressDataForEdit({ index, data: center });
   };
 
   const handleSubmitEditAddress = (center: CenterInfoData) => {
-    setEditAddressModal(false);
+    handleCloseEditAddressModal();
     const newAddresses = addresses.map((item, index) => (index === addressDataForEdit.index ? center : item));
     setAddresses(newAddresses);
   };
@@ -58,7 +67,7 @@ export const AddressSection = (props: AddressSectionProps) => {
           addresses.map(
             (location, index) =>
               location.address && (
-                <div key={location.address} className="flex items-end space-s-2 w-full">
+                <div key={location.address} className="flex items-end w-full space-s-2">
                   <TextField
                     label={index === 0 ? 'آدرس فعلی مرکز درمانی' : 'آدرس جدید مرکز درمانی'}
                     size="small"
@@ -69,12 +78,12 @@ export const AddressSection = (props: AddressSectionProps) => {
                     className="shadow-[0px_1px_19px_-2px_#0000001A] border-[#D7DFFE]"
                   />
                   {location.default && (
-                    <div className="flex flex-col justify-center grid gap-2 relative top-2">
+                    <div className="relative flex grid flex-col justify-center gap-2 top-2">
                       <LikeButton onClick={() => handleAddressStatus(location, 'like')} fill={getStatus(location) === 'like'} />
                       <DislikeButton
                         onClick={() => {
                           handleAddressStatus(location, 'dislike');
-                          (location.status === 'like' || !location.status) && setInsertAddressModal(true);
+                          (location.status === 'like' || !location.status) && handleOpenInsertAddressModal();
                         }}
                         fill={getStatus(location) === 'dislike'}
                       />
@@ -83,12 +92,12 @@ export const AddressSection = (props: AddressSectionProps) => {
                 </div>
               ),
           )}
-        {addresses.every(item => !item.address) && <AddButton text="افزودن آدرس جدید" onClick={() => setInsertAddressModal(true)} />}
+        {addresses.every(item => !item.address) && <AddButton text="افزودن آدرس جدید" onClick={() => handleOpenInsertAddressModal()} />}
       </div>
-      <Modal title="آدرس پیشنهادی شما" isOpen={insertAddressModal} onClose={setInsertAddressModal}>
+      <Modal title="آدرس پیشنهادی شما" {...insertAddressModalProps}>
         <EditCenterInfo
           onSubmit={handleAddAddress}
-          onCancel={() => setInsertAddressModal(false)}
+          onCancel={() => handleCloseInsertAddressModal()}
           defaultValues={{
             city: defaultAddress.city,
             province: defaultAddress.province,
@@ -97,10 +106,10 @@ export const AddressSection = (props: AddressSectionProps) => {
           }}
         />
       </Modal>
-      <Modal title="آدرس پیشنهادی شما" isOpen={editAddressModal} onClose={setEditAddressModal}>
+      <Modal title="آدرس پیشنهادی شما" {...editAddressModalProps}>
         <EditCenterInfo
           onSubmit={handleSubmitEditAddress}
-          onCancel={() => setEditAddressModal(false)}
+          onCancel={() => handleCloseEditAddressModal()}
           defaultValues={{
             address: addressDataForEdit.data.address,
             city: addressDataForEdit.data.city,

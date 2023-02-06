@@ -1,14 +1,12 @@
-import Button from '@/common/components/atom/button/button';
 import Divider from '@/common/components/atom/divider/divider';
-import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import HospitalIcon from '@/common/components/icons/hospital';
 import OfficeIcon from '@/common/components/icons/office';
 import WifiIcon from '@/common/components/icons/wifi';
 import clsx from 'clsx';
-import { useState } from 'react';
 import { Center } from '../../types/selectCenter';
+import PhoneNumberList from '../phoneNumberList/phoneNumberList';
 
 interface CenterCardProps extends Center {
   onClick: (center: Center) => void;
@@ -18,9 +16,6 @@ export const CenterCard = (props: CenterCardProps) => {
   const { onClick, ...center } = props;
   const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true } = center;
 
-  const phoneTitle = `تماس تلفنی با ${type === 'hospital' ? 'مرکز درمانی' : 'مطب پزشک'}`;
-
-  const [phoneNumberModal, setPhoneNumberModal] = useState(false);
   return (
     <>
       <div
@@ -92,41 +87,11 @@ export const CenterCard = (props: CenterCardProps) => {
               <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-400">
                 نوبت دهی اینترنتی در این {type === 'office' ? 'مطب' : 'مرکز'} غیر فعال است.
               </Text>
-              {!!phoneNumbers?.length && (
-                <Button
-                  block
-                  size="sm"
-                  onClick={() => setPhoneNumberModal(true)}
-                  className="!bg-white !border-[#5c8afe] !text-[#3861FB] mt-4 pointer-events-auto"
-                >
-                  {phoneTitle}
-                </Button>
-              )}
+              <PhoneNumberList phoneNumbers={phoneNumbers} type={type} />
             </div>
           </>
         )}
       </div>
-      <Modal
-        title={phoneTitle}
-        isOpen={phoneNumberModal}
-        onClose={() => {
-          setPhoneNumberModal(false);
-        }}
-      >
-        <div className="flex flex-col space-y-2">
-          {phoneNumbers?.map((cell, index) => (
-            <Button
-              key={index}
-              block
-              size="sm"
-              onClick={() => (location.href = `tel:${cell}`)}
-              className="!bg-white !border-[#5c8afe] !text-[#3861FB]"
-            >
-              {cell}
-            </Button>
-          ))}
-        </div>
-      </Modal>
     </>
   );
 };

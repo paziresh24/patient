@@ -1,0 +1,266 @@
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
+import { suggestion, useSearchSuggestion } from '@/common/apis/services/search/suggestion';
+import Text from '@/common/components/atom/text/text';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
+import useShare from '@/common/hooks/useShare';
+import Biography from '@/modules/profile/views/biography/biography';
+import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
+import Head from '@/modules/profile/views/head/head';
+import ListOfDoctors from '@/modules/profile/views/listOfDoctors/listOfDoctors';
+import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
+import axios from 'axios';
+import config from 'next/config';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { ReactElement, useState } from 'react';
+import { dehydrate, QueryClient } from 'react-query';
+import { NextPageWithLayout } from '../_app';
+
+const { publicRuntimeConfig } = config();
+
+const CenterProfile: NextPageWithLayout = () => {
+  const { query, ...router } = useRouter();
+  const share = useShare();
+  const slug = query.slug as string;
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedExpertise, setSelectedExpertise] = useState('');
+
+  const profile = useSlugProfile(
+    { slug },
+    {
+      keepPreviousData: true,
+      refetchOnMount: false,
+    },
+  );
+  const profileData = profile.data?.result?.data;
+  const doctors = useSearchSuggestion(
+    {
+      query: searchQuery,
+      center_id: profileData.id,
+      expertise: selectedExpertise,
+    },
+    {
+      refetchOnMount: false,
+    },
+  );
+  const expertises = useSearchSuggestion(
+    {
+      query: '',
+      center_id: profileData.id,
+      return_expertise: true,
+    },
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین | پذیرش24`;
+  const ducmentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
+    profileData.city ? `در ${profileData.city}` : ''
+  } با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش24`;
+
+  const handleShare = () => {
+    const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
+    share({
+      title: documentTitle,
+      text: `${profileData.name} در پذیرش۲۴`,
+      url,
+    });
+  };
+
+  const about = `<p>
+   این صفحه به عنوان وب سایت نوبت دهی اینترنتی
+   <strong>${profileData.name}</strong>
+   جهت مشاهده خدمات و دریافت نوبت آنلاین پزشکانی که در این مرکز
+   درمانی در حال ارائه خدمات درمانی هستند از طریق
+   <a href="/" class="font-bold">پذیرش ۲۴</a>
+   طراحی و ارائه شده است. البته ممکن است در حال حاضر رزرو نوبت برخی
+   از پزشکان فوق غیرفعال باشد که این موضوع وابسته به تصمیم مرکز در
+   ارائه نوبت گیری بوده است؛ با این وجود شما می توانید از قابلیت
+   <a href="/consult" class="font-bold">مشاوره آنلاین پذیرش۲۴</a>
+   استفاده کنید. بیش از 500 پزشک متخصص، آماده ارائه خدمات مشاوره
+   پزشکی به صورت تلفنی و متنی هستند. همچنین برای کاربری بهتر و راحت
+   تر مشاوره می توانید
+   <a href="/app" class="font-bold">اپلیکیشن پذیرش۲۴</a>
+   را دانلود و نصب کنید.
+</p>
+<p>
+   به طور معمول شما در این صفحه امکان مشاهده رزومه، آدرس مطب ،
+   شماره تلفن تماس، پیج اینستاگرام ادرس کانال تلگرام و سایر راه
+   های ارتباطی با دکتر که از ایشان در دسترس می باشد را خواهید داشت.
+</p>
+<p>
+   همچنین میتوانید در بخش نظرات، تجربه خود در ارتباط با خدمات ${profileData.name} را به اشتراک گذاشته و نظرات دیگر
+   کاربران را در مورد این مرکز و پزشکان آن بخوانید.
+</p>
+<p>
+   ما قدردان اعتماد شما به
+   <a class="font-bold" href="/">پذیرش۲۴</a>
+   به عنوان گسترده ترین ابزار الکترونیک ارتباط بین پزشک و بیمار
+   هستیم. لطفا در صورتی که اطلاعات ارائه شده در این صفحه نیاز به
+   اصلاح دارد با مراجعه به
+   <a class="font-bold" href="/home/support-form/">صفحه پشتیبانی</a>
+   و یا تذکر به پزشک و یا پرسنل مرکز درمانی این موضوع را به ما
+   اطلاع دهید.
+</p>`;
+
+  return (
+    <>
+      <Seo title={documentTitle} description={ducmentDescription} canonicalUrl={publicRuntimeConfig.CLINIC_BASE_URL + router.pathname} />
+      <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+        <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+          <Head
+            pageViewCount={profileData?.number_of_visits}
+            displayName={profileData?.name}
+            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
+            title={`${profileData?.group_expertises?.length} تخصص پزشکی`}
+            subTitle={`پزشک فعال: ${profileData?.doctors?.length}`}
+            serviceList={profileData?.expertises?.map((expertise: any) => expertise.alias_title)}
+            toolBarItems={[
+              {
+                type: 'share',
+                action: handleShare,
+              },
+            ]}
+            className="shadow-card md:rounded-lg"
+          />
+          <Text fontWeight="bold" className="px-4 md:px-0">
+            لیست پزشکان
+          </Text>
+          <div className="px-4 md:p-0">
+            <ListOfDoctors
+              doctors={doctors.data?.[0]?.items ?? []}
+              expertises={
+                expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
+                  label: expertise.name,
+                  value: expertise.name,
+                })) ?? []
+              }
+              loading={doctors.isLoading}
+              onSelectExpertise={setSelectedExpertise}
+              onSearch={setSearchQuery}
+            />
+          </div>
+          <div className="flex flex-col w-full space-y-3 md:hidden md:basis-5/12">
+            <Text fontWeight="bold" className="px-4 md:px-0">
+              آدرس و تلفن تماس
+            </Text>
+            <CentersInfo
+              className="bg-white md:rounded-lg"
+              centers={[
+                {
+                  address: profileData.address,
+                  city: profileData.city,
+                  slug: profileData.slug,
+                  phoneNumbers: profileData.tell,
+                  location: profileData.map,
+                  description: profileData.desk,
+                },
+              ]}
+            />
+          </div>
+          {profileData.biography && (
+            <>
+              <Text fontWeight="bold" className="px-4 md:px-0">
+                درباره مرکز درمانی
+              </Text>
+              <Biography biography={profileData.biography} className="bg-white md:rounded-lg" />
+            </>
+          )}
+          <ProfileSeoBox about={about} />
+        </div>
+        <div className="flex-col hidden w-full space-y-3 md:flex md:basis-5/12">
+          <Text fontWeight="bold" className="px-4 md:px-0">
+            آدرس و تلفن تماس
+          </Text>
+          <CentersInfo
+            className="bg-white md:rounded-lg"
+            centers={[
+              {
+                address: profileData.address,
+                city: profileData.city,
+                slug: profileData.slug,
+                phoneNumbers: profileData.tell,
+                location: profileData.map,
+                description: profileData.desk,
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+CenterProfile.getLayout = function getLayout(page: ReactElement) {
+  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
+};
+
+const dateStripped = (obj: any) => {
+  let newObj: any = {};
+  Object.keys(obj).forEach(key => {
+    let value = obj[key];
+    if (value !== null) {
+      // If array, loop...
+      if (Array.isArray(value)) {
+        value = value.map(item => dateStripped(item));
+      }
+      // ...if property is date/time, stringify/parse...
+      else if (typeof value === 'object' && typeof value.getMonth === 'function') {
+        value = JSON.parse(JSON.stringify(value));
+      }
+      // ...and if a deep object, loop.
+      else if (typeof value === 'object') {
+        value = dateStripped(value);
+      }
+    }
+    newObj[key] = value;
+  });
+  return newObj;
+};
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const { slug, ...query } = context.query;
+
+  const slugFormmated = slug as string;
+  try {
+    const queryClient = new QueryClient();
+    const { result } = await queryClient.fetchQuery(
+      [
+        ServerStateKeysEnum.SlugProfile,
+        {
+          slug: slugFormmated,
+        },
+      ],
+      () =>
+        slugProfile({
+          slug: slugFormmated,
+        }),
+    );
+
+    await queryClient.fetchQuery([ServerStateKeysEnum.SearchSuggestion, { query: '', center_id: result?.data?.id, expertise: '' }], () =>
+      suggestion({ query: '', center_id: result?.data?.id, expertise: '' }),
+    );
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+        query,
+        slug: slugFormmated,
+      },
+    };
+  } catch (error) {
+    console.dir(error);
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404)
+        return {
+          notFound: true,
+        };
+    }
+    throw new TypeError(JSON.stringify(error));
+  }
+};
+
+export default CenterProfile;

@@ -55,9 +55,9 @@ const buttonStyles = {
     text: 'fill-slate-500',
   },
   size: {
-    sm: 'px-3 h-10 text-sm',
-    md: 'px-4 h-12 text-sm',
-    lg: 'px-5 h-14 text-md',
+    sm: 'px-3 h-10 min-h-[2.5] text-sm',
+    md: 'px-4 h-12 min-h-[3rem] text-sm',
+    lg: 'px-5 h-14 min-h-[3.5rem] text-md',
   },
   theme: {
     error: {

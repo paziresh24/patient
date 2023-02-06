@@ -8,4 +8,7 @@ export enum ServerStateKeysEnum {
   CurrentDateTime = 'currentDateTime',
   Symptoms = 'symptoms',
   Receipt = 'receipt',
+  IsBookmark = 'isBookmark',
+  SlugProfile = 'slugProfile',
+  InternalLinks = 'internalLinks',
 }

@@ -3,9 +3,10 @@ import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
 import Modal from '@/common/components/atom/modal';
 import EditIcon from '@/common/components/icons/edit';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import Select from '../select';
 
@@ -28,7 +29,8 @@ export const UserCard = (props: UserCardProps) => {
 
   const editSubuser = useEditSubuser();
   const updateUser = useUpdateUser();
-  const [isOpenEditUserModal, setIsOpenEditUserModal] = useState(false);
+  const { handleOpen, modalProps } = useModal();
+
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const fields: FormFields = useMemo(
     () =>
@@ -40,7 +42,7 @@ export const UserCard = (props: UserCardProps) => {
 
   useEffect(() => {
     if (!name) {
-      setIsOpenEditUserModal(true);
+      handleOpen();
     }
   }, []);
 
@@ -53,7 +55,7 @@ export const UserCard = (props: UserCardProps) => {
         is_foreigner_web: data.is_foreigner,
       });
       if (res.data.status === ClinicStatus.SUCCESS) {
-        setIsOpenEditUserModal(false);
+        handleOpen();
         setUserInfo(res.data.result);
         return;
       }
@@ -84,12 +86,12 @@ export const UserCard = (props: UserCardProps) => {
         actionText="ویرایش"
         actionIcon={<EditIcon width={18} height={18} />}
         action={() => {
-          setIsOpenEditUserModal(true);
+          handleOpen();
           editSubuser.reset();
           updateUser.reset();
         }}
       />
-      <Modal title="ویرایش کاربر" isOpen={isOpenEditUserModal} onClose={setIsOpenEditUserModal}>
+      <Modal title="ویرایش کاربر" {...modalProps}>
         <PatinetProfileForm
           fields={fields}
           defaultValues={{

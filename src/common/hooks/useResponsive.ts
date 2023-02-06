@@ -19,7 +19,7 @@ export const useResponsive = () => {
   }, []);
 
   return {
-    isDesktop: isClient ? isDesktop : true,
+    isDesktop: isClient ? isDesktop : false,
     isTablet: isClient ? isTablet : false,
     isMobile: isClient ? isMobile : false,
   };

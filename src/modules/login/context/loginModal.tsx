@@ -34,7 +34,7 @@ const LoginModalProvider = ({ children }: any) => {
   });
 
   const handleOpenLoginModal = (state: State) => {
-    setLoginModalState(prev => ({ ...prev, ...state }));
+    setLoginModalState({ ...state, closable: state.closable ?? true });
   };
 
   return (

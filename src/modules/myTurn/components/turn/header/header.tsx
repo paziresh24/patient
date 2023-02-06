@@ -1,4 +1,5 @@
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -12,7 +13,6 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
@@ -36,7 +36,8 @@ interface TurnHeaderProps {
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
   const router = useRouter();
-  const [removeModal, setRemoveModal] = useState(false);
+  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+
   const { removeBook } = useBookStore();
   const { shareTurn, removeBookApi } = useBookAction();
 
@@ -53,7 +54,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
-            setRemoveModal(false);
+            handleCloseRemoveModal();
             return;
           }
           toast.error(data.data.message);
@@ -94,7 +95,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 2,
       name: 'لغو نوبت',
       icon: <TrashIcon />,
-      action: () => setRemoveModal(true),
+      action: () => handleOpenRemoveModal(),
       testId: 'drop-down__remove-button',
       shouldShow: shouldShowRemoveTurn,
     },
@@ -124,7 +125,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
       />
 
-      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeModalProps}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
             لغو نوبت
@@ -133,7 +134,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
             theme="error"
             variant="secondary"
             block
-            onClick={() => setRemoveModal(false)}
+            onClick={() => handleCloseRemoveModal()}
             data-testid="modal__cancel-remove-turn-button"
           >
             انصراف

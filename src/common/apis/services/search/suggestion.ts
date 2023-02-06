@@ -6,22 +6,25 @@ import { useQuery } from 'react-query';
 export interface Params {
   query: string;
   city_id?: string;
+  expertise?: string;
+  center_id?: string;
   university?: string;
+  return_expertise?: boolean;
 }
 
-export const Suggestion = ({ query, city_id, university }: Params) => {
-  return searchClient.get(`/seapi/v1/suggestion`, {
+export const suggestion = async ({ query, ...params }: Params) => {
+  const { data } = await searchClient.get(`/seapi/v1/suggestion`, {
     params: {
       q: query,
-      city_id,
-      university,
+      ...params,
     },
   });
+  return data;
 };
 
 export const useSearchSuggestion = (params: Params, options?: any) => {
   const university = useServerQuery(state => state.queries?.university);
   params = { ...params, ...(university && { university }) };
 
-  return useQuery([ServerStateKeysEnum.SearchSuggestion, params], () => Suggestion(params), options);
+  return useQuery([ServerStateKeysEnum.SearchSuggestion, params], () => suggestion(params), options);
 };

@@ -25,7 +25,7 @@ const Booking: NextPageWithLayout = () => {
     },
   );
 
-  const profileData = data?.data?.data;
+  const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);

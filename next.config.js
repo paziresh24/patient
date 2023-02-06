@@ -33,6 +33,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
+    CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,
     PAZIRESH24_API: process.env.PAZIRESH24_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,

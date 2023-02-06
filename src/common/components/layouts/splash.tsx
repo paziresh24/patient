@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Logo from '../atom/logo/logo';
 
 export const Splash = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {

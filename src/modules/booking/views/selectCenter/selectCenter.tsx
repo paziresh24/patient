@@ -27,8 +27,8 @@ export const SelectCenter = (props: CenterProps) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      {orderBy(centers, ['isDisable', o => !o.isAvailable]).map((center, index) => (
-        <CenterCard key={index} {...center} onClick={handleSelectCenter} />
+      {orderBy(centers, ['isDisable', o => !o.isAvailable]).map(center => (
+        <CenterCard key={center.id} {...center} onClick={handleSelectCenter} />
       ))}
     </div>
   );

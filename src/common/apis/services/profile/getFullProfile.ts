@@ -6,8 +6,9 @@ export interface Params {
   slug: string;
 }
 
-export const getProfileData = ({ slug }: Params) => {
-  return paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`);
+export const getProfileData = async ({ slug }: Params) => {
+  const { data } = await paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`);
+  return data;
 };
 
 export const useGetProfileData = (params: Params, options?: any) => {

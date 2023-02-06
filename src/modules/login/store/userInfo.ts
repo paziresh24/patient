@@ -25,6 +25,7 @@ export type UserInfo = {
   city_id?: string;
   province_id?: string;
   image?: string;
+  cell?: string;
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>(set => ({
