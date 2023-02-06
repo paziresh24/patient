@@ -28,7 +28,7 @@ const nextConfig = {
     return config;
   },
   swcMinify: true,
-  reactStrictMode: true,
+  reactStrictMode: false,
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,

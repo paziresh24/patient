@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useLockScroll from './useLockScroll';
 import useVirtualBack from './useVirtualBack';
 
 export const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { lockScroll, openScroll } = useLockScroll();
+
+  useEffect(() => {
+    return () => {
+      document.querySelectorAll('#modal').length === 0 && openScroll();
+      removeBack();
+    };
+  });
 
   const handleOpen = () => {
     setIsOpen(true);
