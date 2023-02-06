@@ -2,14 +2,12 @@ import { isEmpty } from 'lodash';
 import { toast } from 'react-hot-toast';
 
 // Apis
-import { useBook } from '@/common/apis/services/booking/book';
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
 import { useSymptoms } from '@/common/apis/services/booking/symptoms';
 import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndConditions';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import useWebView from '@/common/hooks/useWebView';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
@@ -92,7 +90,6 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
-  const isWebView = useWebView();
   const { slug, defaultStep, className } = props;
   const { data, isLoading, isIdle } = useGetProfileData(
     {
@@ -108,7 +105,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
   const [timeId, setTimeId] = useState('');
-  const book = useBook();
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
@@ -128,7 +124,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Symptoms[]>([]);
   const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
   const [symptomSearchText, setSymptomSearchText] = useState('');
-  const { handleBook } = useBooking();
+  const { handleBook, isLoading: bookLoading } = useBooking();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -401,7 +397,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
             data={{
-              loading: book.isLoading,
+              loading: bookLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
             }}
             nextStep={(user: UserInfo) => {
@@ -469,7 +465,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           />
           <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه" />
           <Button
-            loading={book.isLoading}
+            loading={bookLoading}
             block
             onClick={() => handleBookAction({ ...user, insurance_id: insuranceName, insurance_number: insuranceNumber })}
           >
