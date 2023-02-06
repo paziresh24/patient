@@ -15,6 +15,7 @@ export const Result = () => {
   const {
     query: { params, ...query },
     asPath,
+    ...router
   } = useRouter();
 
   const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters, search } = useSearch();
@@ -90,7 +91,7 @@ export const Result = () => {
               outline: item.outline,
 
               action: () => {
-                window.location.assign(item.url);
+                router.push(item.url);
               },
             }))}
             sendEventWhenClick={() => handleCardEvent(item)}

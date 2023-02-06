@@ -5,8 +5,8 @@ import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import SearchCard from '@/modules/search/components/card/card';
+import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
-
 interface ListOfDoctorsProps {
   doctors: any[];
   expertises: {
@@ -21,6 +21,7 @@ interface ListOfDoctorsProps {
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   const { doctors, expertises, onSearch, onSelectExpertise, loading = false } = props;
   const [page, setPage] = useState(1);
+  const router = useRouter();
 
   const sliceData = useMemo(() => doctors.slice(0, page * 5), [page, doctors]);
 
@@ -95,7 +96,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                   text: 'دریافت نوبت',
                   ...(doctor.freeturn_text && { description: `اولین نوبت: ${doctor.freeturn_text}` }),
                   action: () => {
-                    window.location.assign(doctor.url);
+                    router.push(doctor.url);
                   },
                   outline: false,
                 },
