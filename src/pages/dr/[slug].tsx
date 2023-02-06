@@ -62,7 +62,9 @@ const DoctorProfile: NextPageWithLayout<Props> = () => {
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const isBulk = useMemo(
-    () => profileData.centers.filter((center: any) => center.status === 2).length === profileData.centers.length,
+    () =>
+      profileData.centers.every((center: any) => center.status === 2) ||
+      profileData.centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
     [profileData],
   );
 
