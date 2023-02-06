@@ -48,7 +48,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const [timeId, setTimeId] = useState('');
   const { handleBook: handleBooking, isLoading } = useBooking();
   const router = useRouter();
-  const usSuspend = useUnsuspend();
+  const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
 
@@ -85,6 +85,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       },
       {
         onSuccess(data) {
+          handleCloseBoolingModal();
           if (data.payment.reqiure_payment === '1') return router.push(`/factor/${CENTERS.CONSULT}/${data.book_info.id}`);
           router.push(`/receipt/${CENTERS.CONSULT}/${data.book_info.id}`);
         },
@@ -93,7 +94,8 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
           checkLogin(handleOpenBooking);
         },
         onError(data) {
-          usSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
+          handleCloseBoolingModal();
+          unSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
           return toast.error(data.message);
         },
       },
@@ -115,7 +117,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         title="انتخاب کاربر برای گفتگو با پزشک"
         {...bookingModalProps}
         onClose={() => {
-          usSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
+          unSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
           bookingModalProps.onClose();
         }}
       >

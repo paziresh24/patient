@@ -24,7 +24,11 @@ export const Presence = memo((props: PresenceProps) => {
     modalProps: selectCenterModalProps,
   } = useModal();
 
-  const { handleOpen: handleOpenSelectServiceModal, modalProps: selectServiceModalProps } = useModal();
+  const {
+    handleOpen: handleOpenSelectServiceModal,
+    handleClose: handleCloseSelectServiceModal,
+    modalProps: selectServiceModalProps,
+  } = useModal();
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
 
@@ -78,6 +82,7 @@ export const Presence = memo((props: PresenceProps) => {
 
   const handleOnBookByService = useCallback(
     (service: any) => {
+      handleCloseSelectServiceModal();
       return onBook({ centerId: selectedCenter.id, serviceId: service.id });
     },
     [selectedCenter],
