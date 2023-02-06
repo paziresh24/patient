@@ -37,7 +37,7 @@ export const SubuserList = () => {
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
-      handleCloseAddModal(false);
+      handleCloseAddModal();
       return;
     }
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);

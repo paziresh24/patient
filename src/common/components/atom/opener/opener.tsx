@@ -4,13 +4,13 @@ import ChevronIcon from '../../icons/chevron';
 import Button from '../button';
 
 interface OpenerProps extends HTMLAttributes<HTMLDivElement> {
-  openButtonText: string;
-  closeButtonText: string;
+  openButtonText?: string;
+  closeButtonText?: string;
   height?: number;
 }
 
 export const Opener = (props: OpenerProps) => {
-  const { openButtonText, closeButtonText, children, className, height = 80, ...rest } = props;
+  const { openButtonText = 'open', closeButtonText = 'close', children, className, height = 80, ...rest } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   return (

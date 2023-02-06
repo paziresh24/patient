@@ -113,7 +113,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  
+
   const {
     handleOpen: handleOpenTurnTimeOutModal,
     handleClose: handleCloseTurnTimeOutModal,
@@ -449,7 +449,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             block
             onClick={() => {
               handleChangeStep('SELECT_CENTER');
-              handleCloseTurnTimeOutModal(false);
+              handleCloseTurnTimeOutModal();
             }}
           >
             تلاش مجدد
