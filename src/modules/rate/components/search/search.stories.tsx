@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import React, { useState } from 'react';
-import RateSearch from './rateSearch';
+import RateSearch from './search';
 
 export default {
   title: 'RATE/RateSearch',
