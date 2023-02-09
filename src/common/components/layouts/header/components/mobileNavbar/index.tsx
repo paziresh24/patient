@@ -64,7 +64,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     }
   }, [menuItemExpertise.status]);
   return (
-    <div ref={ref} className="block w-full text-sm z-infinity lg:hidden">
+    <div ref={ref} className="block w-full text-sm z-infinity md:hidden">
       <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
           {customize.showSideBar && (
@@ -84,15 +84,16 @@ const MobileNavbar = (props: MobileNavbarProps) => {
               </a>
             </Link>
           )}
+          {customize.showPartnerLogoInPrimaryPlace && <hr className="h-8 border border-dashed rounded-full border-slate-300" />}
+          <HeaderLogo
+            showPartnerLogo={!customize.showPartnerLogoInPrimaryPlace}
+            partnerLogo={customize.partnerLogo}
+            brandType={customize.headerBrandLogoType}
+            size="mobile"
+          />
         </div>
 
-        <HeaderLogo
-          showPartnerLogo={!customize.showPartnerLogoInPrimaryPlace}
-          partnerLogo={customize.partnerLogo}
-          brandType={customize.headerBrandLogoType}
-          size="mobile"
-        />
-        <div className="flex items-center space-s-0">
+        <div className="flex items-center space-s-3">
           {showSearchSuggestionButton && <ButtonSuggestion />}
           {customize.showUserProfile && <UserProfile />}
         </div>

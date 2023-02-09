@@ -168,7 +168,10 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
-          if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
+          if (data.payment.reqiure_payment === '1') {
+            if (center.server_id === 1) return router.push(`/factor/${center.id}/${data.book_info.id}`);
+            location.assign(`${data.bookInfo?.payment?.redirect_url}`);
+          }
           sendBookEvent({
             bookInfo: {
               ...data.book_info,

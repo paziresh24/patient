@@ -199,7 +199,11 @@ const CenterProfile: NextPageWithLayout = () => {
 };
 
 CenterProfile.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
+  return (
+    <LayoutWithHeaderAndFooter showSearchSuggestionButton={true} {...page.props.config}>
+      {page}
+    </LayoutWithHeaderAndFooter>
+  );
 };
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {

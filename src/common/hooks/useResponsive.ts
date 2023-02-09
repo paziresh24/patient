@@ -8,10 +8,8 @@ export const useResponsive = () => {
     maxWidth: 767,
   });
 
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
-
   const isDesktop = useMediaQuery({
-    minWidth: 992,
+    minWidth: 768,
   });
 
   useEffect(() => {
@@ -20,7 +18,6 @@ export const useResponsive = () => {
 
   return {
     isDesktop: isClient ? isDesktop : false,
-    isTablet: isClient ? isTablet : false,
     isMobile: isClient ? isMobile : false,
   };
 };

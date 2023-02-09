@@ -89,7 +89,7 @@ export const UserProfile = () => {
       {!pending &&
         (isLogin ? (
           <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
-            <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
+            <div className="flex items-center py-3 text-sm font-medium text-center cursor-pointer space-s-2 md:py-6 md:pl-4">
               {userInfo?.image ? (
                 <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
               ) : (
