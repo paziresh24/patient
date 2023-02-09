@@ -79,7 +79,7 @@ export const CitySelect = (props: CitySelectProps) => {
       >
         <Text fontSize="sm">{city?.name}</Text>
       </Button>
-      <Modal title="انتخاب استان/شهر" {...modalProps}>
+      <Modal fullScreen title="انتخاب استان/شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
           <div className="flex flex-wrap gap-2">
             {popularCities.map(city => (

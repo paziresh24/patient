@@ -5,9 +5,10 @@ import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
-import { PatinetProfileForm } from '@/modules/patient/views/form';
+import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import clsx from 'clsx';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -21,12 +22,13 @@ interface SelectUserProps {
 
 export const SelectUser = (props: SelectUserProps) => {
   const { onSelect, className } = props;
+  const university = useServerQuery(state => state.queries.university);
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { data, mutate, isSuccess, isLoading, isIdle } = useGetSubuser();
   const addSubUser = useAddSubuser();
-  const { handleOpen: handleOpenAddUserModal, modalProps: addUserModalProps } = useModal();
+  const { handleOpen: handleOpenAddUserModal, handleClose: handleCloseAddUserModal, modalProps: addUserModalProps } = useModal();
 
   const [userSelected, setUserSelected] = useState(userInfo.id);
 
@@ -71,7 +73,7 @@ export const SelectUser = (props: SelectUserProps) => {
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
-      handleOpenAddUserModal();
+      handleCloseAddUserModal();
       handleSelectUser(res.data.result);
       return;
     }
@@ -132,7 +134,11 @@ export const SelectUser = (props: SelectUserProps) => {
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
-          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']}
+          fields={
+            ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'].filter(item =>
+              university ? item !== 'IS_FOREIGNER' : true,
+            ) as FormFields
+          }
           errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>

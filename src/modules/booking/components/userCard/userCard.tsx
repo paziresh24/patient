@@ -4,6 +4,7 @@ import Modal from '@/common/components/atom/modal';
 import EditIcon from '@/common/components/icons/edit';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { useEffect, useMemo } from 'react';
@@ -26,16 +27,19 @@ interface UserCardProps {
 
 export const UserCard = (props: UserCardProps) => {
   const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type } = props;
+  const university = useServerQuery(state => state.queries.university);
 
   const editSubuser = useEditSubuser();
   const updateUser = useUpdateUser();
-  const { handleOpen, modalProps } = useModal();
+  const { handleOpen, handleClose, modalProps } = useModal();
 
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
-  const fields: FormFields = useMemo(
+  const fields = useMemo(
     () =>
       type === 'subUser'
-        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']
+        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'].filter(item =>
+            university ? item !== 'IS_FOREIGNER' : true,
+          )
         : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE'],
     [type],
   );
@@ -55,7 +59,7 @@ export const UserCard = (props: UserCardProps) => {
         is_foreigner_web: data.is_foreigner,
       });
       if (res.data.status === ClinicStatus.SUCCESS) {
-        handleOpen();
+        handleClose();
         setUserInfo(res.data.result);
         return;
       }
@@ -93,7 +97,7 @@ export const UserCard = (props: UserCardProps) => {
       />
       <Modal title="ویرایش کاربر" {...modalProps}>
         <PatinetProfileForm
-          fields={fields}
+          fields={fields as FormFields}
           defaultValues={{
             NAME: name,
             FAMILY: family,

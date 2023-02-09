@@ -21,6 +21,8 @@ interface Customize {
   showGalleryProfile: boolean;
   showTermsAndConditions: boolean;
   bookMark: boolean;
+  showShareApp: boolean;
+  showSupplierRegister: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -49,6 +51,8 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showGalleryProfile: true,
     showTermsAndConditions: true,
     bookMark: true,
+    showShareApp: true,
+    showSupplierRegister: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
@@ -73,7 +77,9 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       showActivityProfile: (query['profile:activity'] as Toggle) !== 'off',
       showGalleryProfile: (query['profile:gallery'] as Toggle) !== 'off',
       showTermsAndConditions: (query['terms-and-conditions'] as Toggle) !== 'off',
-      bookMark: (query['bookMark'] as Toggle) !== 'off',
+      bookMark: (query['bookmark'] as Toggle) !== 'off',
+      showShareApp: (query['share-app'] as Toggle) !== 'off',
+      showSupplierRegister: (query['show-supplier-register'] as Toggle) !== 'off',
     };
 
     return set(state => ({

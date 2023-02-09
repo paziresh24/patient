@@ -18,11 +18,13 @@ import useCustomize from '@/common/hooks/useCustomize';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
+import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
+const { publicRuntimeConfig } = config();
 
 export const UserProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -141,7 +143,11 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  <MenuItem name={t('patient/common:menu.support')} link="/home/support-form/" icon={<HeadphoneIcon />} />
+                  <MenuItem
+                    name={t('patient/common:menu.support')}
+                    link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
+                    icon={<HeadphoneIcon />}
+                  />
                   <MenuItem name={t('patient/common:menu.logout')} link="/logout" icon={<LogoutIcon />} />
                 </MenuList>
               </div>

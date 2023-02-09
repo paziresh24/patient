@@ -106,23 +106,27 @@ export const PatinetProfile: NextPageWithLayout = () => {
               <Text fontWeight="medium">پشتیبانی</Text>
             </a>
           </Link>
-          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}>
-            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
-              <DoctorIcon />
-              <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
-            </a>
-          </Link>
+          {customize.showSupplierRegister && (
+            <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}>
+              <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
+                <DoctorIcon />
+                <Text fontWeight="medium">پزشک یا منشی هستید؟</Text>
+              </a>
+            </Link>
+          )}
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          <div
-            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
-            onClick={() => {
-              share({ url: 'https://www.paziresh24.com/app' });
-            }}
-          >
-            <ShareIcon />
-            <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
-          </div>
+          {customize.showShareApp && (
+            <div
+              className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
+              onClick={() => {
+                share({ url: 'https://www.paziresh24.com/app' });
+              }}
+            >
+              <ShareIcon />
+              <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
+            </div>
+          )}
           <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/logout`}>
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <LogoutIcon />

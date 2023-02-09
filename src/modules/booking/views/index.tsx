@@ -46,8 +46,10 @@ import { CENTERS } from '@/common/types/centers';
 import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
+import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import clsx from 'clsx';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
@@ -92,6 +94,7 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
+  const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
   const { data, isLoading, isIdle } = useGetProfileData(
     {
@@ -127,6 +130,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
   const [symptomSearchText, setSymptomSearchText] = useState('');
   const { handleBook, isLoading: bookLoading } = useBooking();
+  const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -157,13 +161,20 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const handleBookAction = async (user: any) => {
     const { insurance_id, insurance_number } = user;
+    const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
+    console.log(userConfimation);
     handleBook(
       {
         center,
         timeId,
-        user,
+        user: {
+          ...user,
+          name: userConfimation?.first_name ?? user.name,
+          family: userConfimation?.last_name ?? user.family,
+          gender: userConfimation?.gender ?? user.gender,
+        },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
       {
@@ -407,17 +418,26 @@ const BookingSteps = (props: BookingStepsProps) => {
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
             data={{
-              loading: bookLoading,
+              loading: bookLoading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
             }}
-            nextStep={(user: UserInfo) => {
+            nextStep={async (user: UserInfo) => {
               setUser(user);
               if (service?.can_request) {
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
-              if (+center.settings?.booking_enable_insurance) {
+              console.log(user);
+
+              if (university) {
+                if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
+                await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                handleOpenInsuranceModal();
+                return;
+              }
+
+              if (+center?.settings?.booking_enable_insurance) {
                 handleOpenInsuranceModal();
                 return;
               }
@@ -472,9 +492,15 @@ const BookingSteps = (props: BookingStepsProps) => {
               label: center?.insurances?.find((item: any) => item.id === insuranceName)?.name,
               value: insuranceName,
             }}
-            options={center?.insurances?.map((item: any) => ({ label: item.name, value: item.id }))}
+            options={center?.insurances
+              ?.filter((item: any) =>
+                university && getNationalCodeConfirmation.isSuccess
+                  ? getNationalCodeConfirmation.data?.data?.insurances?.some((insurance: any) => insurance.insurer?.value === item.name)
+                  : true,
+              )
+              .map((item: any) => ({ label: item.name, value: item.id }))}
           />
-          <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه" />
+          <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه (اختیاری)" />
           <Button
             loading={bookLoading}
             block
