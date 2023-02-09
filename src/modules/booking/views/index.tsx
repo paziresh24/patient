@@ -46,6 +46,7 @@ import { CENTERS } from '@/common/types/centers';
 import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
+import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import clsx from 'clsx';
 import useBooking from '../hooks/booking';
@@ -90,6 +91,7 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
+  const { customize } = useCustomize();
   const { slug, defaultStep, className } = props;
   const { data, isLoading, isIdle } = useGetProfileData(
     {
@@ -176,11 +178,16 @@ const BookingSteps = (props: BookingStepsProps) => {
           });
           router.push(`/receipt/${center.id}/${data.book_info.id}`);
         },
-        onExpire() {
+        onExpire(data) {
+          toast.error(data.message, {
+            duration: 10000,
+          });
           handleChangeStep('SELECT_TIME');
         },
         onError(data) {
-          toast.error(data.message);
+          toast.error(data.message, {
+            duration: 10000,
+          });
           sendGaEvent({
             action: 'P24DrsPage',
             category: 'BookError',
@@ -399,6 +406,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             data={{
               loading: bookLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
+              showTermsAndConditions: customize.showTermsAndConditions,
             }}
             nextStep={(user: UserInfo) => {
               setUser(user);
@@ -478,15 +486,23 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          <Text fontSize="sm" className="px-5 leading-6">
-            برترین پزشکان{' '}
-            <Text fontWeight="bold">
-              {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
-            </Text>{' '}
-            از دیدگاه بیماران
-          </Text>
-          {profile && (
-            <Recommend doctorId={profile.id} city={profile.city_en_slug} category={profile.expertises[0]?.expertise_groups[0].en_slug} />
+          {profile?.should_recommend_other_doctors && (
+            <>
+              <Text fontSize="sm" className="px-5 leading-6">
+                برترین پزشکان{' '}
+                <Text fontWeight="bold">
+                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
+                </Text>{' '}
+                از دیدگاه بیماران
+              </Text>
+              {profile && (
+                <Recommend
+                  doctorId={profile.id}
+                  city={profile.city_en_slug}
+                  category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                />
+              )}
+            </>
           )}
         </div>
       </Modal>

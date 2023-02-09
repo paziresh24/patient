@@ -1,7 +1,8 @@
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import Logo from '../atom/logo/logo';
+import HeaderLogo from './header/components/logo/logo';
 
-export const Splash = () => {
+export const Splash = ({ partnerLogo }: { partnerLogo: string }) => {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
@@ -12,8 +13,12 @@ export const Splash = () => {
 
   if (!show) return null;
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center h-screen bg-white md:hidden z-infinity">
-      <Logo type="compact" />
+    <div
+      className={clsx('fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center h-screen bg-white z-infinity', {
+        'md:hidden': !partnerLogo,
+      })}
+    >
+      <HeaderLogo showPartnerLogo={!!partnerLogo} partnerLogo={partnerLogo} brandType="compact" size="desktop" />
     </div>
   );
 };

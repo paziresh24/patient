@@ -15,6 +15,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
+import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -32,6 +33,7 @@ export const PatinetProfile: NextPageWithLayout = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const isApplication = useApplication();
   const share = useShare();
+  const { customize } = useCustomize();
 
   useEffect(() => {
     !isLogin &&
@@ -82,12 +84,14 @@ export const PatinetProfile: NextPageWithLayout = () => {
               <Text fontWeight="medium">نوبت های من</Text>
             </a>
           </Link>
-          <Link href="/patient/bookmarks?referrer=profile">
-            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
-              <BookmarkIcon />
-              <Text fontWeight="medium">لیست پزشکان من</Text>
-            </a>
-          </Link>
+          {customize.bookMark && (
+            <Link href="/patient/bookmarks?referrer=profile">
+              <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
+                <BookmarkIcon />
+                <Text fontWeight="medium">لیست پزشکان من</Text>
+              </a>
+            </Link>
+          )}
           <Link href="/patient/subuser?referrer=profile">
             <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
               <UsersIcon />

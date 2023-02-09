@@ -16,7 +16,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-const Provider = ({ children }: { children: React.ReactNode }) => {
+const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   useEffect(() => {
     TagManager.initialize({
       gtmId: 'GTM-P5RPLDP',
@@ -39,7 +39,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
           duration: 3000,
         }}
       />
-      <Splash />
+      <Splash partnerLogo={pageProps?.query?.['partner:logo']} />
     </QueryClientProvider>
   );
 };

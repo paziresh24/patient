@@ -14,6 +14,7 @@ export const LayoutWithHeaderAndFooter = ({
   showBottomNavigation = true,
   showHeader = true,
   showFooter = true,
+  showSearchSuggestionButton = false,
 }: {
   children: ReactNode;
   shouldShowBrand?: boolean;
@@ -21,6 +22,7 @@ export const LayoutWithHeaderAndFooter = ({
   showBottomNavigation?: boolean;
   showHeader?: boolean;
   showFooter?: boolean;
+  showSearchSuggestionButton?: boolean;
 }) => {
   const customize = useCustomize(state => state.customize);
   const isWebView = useWebView();
@@ -28,7 +30,11 @@ export const LayoutWithHeaderAndFooter = ({
   return (
     <div className={clsx({ 'pb-16 md:pb-0': showBottomNavigation })}>
       {customize.showHeader && showHeader && (
-        <Header shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />
+        <Header
+          showSearchSuggestionButton={showSearchSuggestionButton}
+          shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand}
+          shouldShowPromoteApp={shouldShowPromoteApp}
+        />
       )}
       {children}
       {customize.showFooter && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}

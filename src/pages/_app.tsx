@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import NextNProgress from 'nextjs-progressbar';
 import { ReactElement, ReactNode, useEffect } from 'react';
+import 'react-photo-view/dist/react-photo-view.css';
 import { DehydratedState, Hydrate } from 'react-query';
 import '../styles/globals.css';
 
@@ -43,7 +44,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <Provider>
+      <Provider pageProps={pageProps}>
         <Hydrate state={pageProps.dehydratedState}>
           {getLayout(
             <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />,

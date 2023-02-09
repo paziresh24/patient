@@ -4,7 +4,7 @@
   "localeDetection": false,
   "logBuild": false,
   "pages": {
-    "*": ["common", "login", "patient/common"],
+    "*": ["common", "login", "patient/common", "search"],
     "/": ["home", "search"],
     "/apphome": ["home", "search"],
     "/s/[[...params]]": ["search"],

@@ -69,7 +69,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     },
     {
       id: 4,
-      name: ` میانگین زمان انتظار در ${centerType === CenterType.clinic ? 'مطب' : 'بیمارستان'}`,
+      name: ` میانگین زمان انتظار در مرکز`,
       value: waitingTime,
       shouldShow: !!waitingTime && centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
       type: 'Text',

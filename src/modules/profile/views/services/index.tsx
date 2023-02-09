@@ -13,7 +13,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
   const router = useRouter();
   return (
     <>
-      {!isBulk && doctor.id === '540' && (
+      {!isBulk && doctor?.id === '540' && (
         <External
           title="ویزیت آنلاین (غیر فعال)"
           buttonText="ورود به سایت دکتر پروفسور محمد تقی نوربالا"
@@ -22,8 +22,8 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
         />
       )}
       {!isBulk &&
-        doctor.consult_active_booking &&
-        doctor.centers
+        doctor?.consult_active_booking &&
+        doctor?.centers
           .find((center: any) => center.id === CENTERS.CONSULT)
           ?.services?.map((service: any) => (
             <OnlineVisitWrapper
@@ -50,7 +50,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
               }}
             />
           ))}
-      {!isBulk && doctor.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+      {!isBulk && doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
         <Presence
           centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
           waitingTime={doctor.waiting_time_info?.waiting_time_title}
@@ -58,30 +58,27 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
         />
       )}
       {isBulk && (
+        <Card className="!rounded-none md:!rounded-lg">
+          <Text fontWeight="bold" fontSize="sm">
+            نوبت‌دهی اینترنتی این پزشک غیرفعال می‌باشد!
+          </Text>
+          <PhoneNumberList phoneNumbers={doctor.centers[0].display_number_array} />
+        </Card>
+      )}
+      {doctor?.expertises?.[0] && doctor?.should_recommend_other_doctors && (
         <>
-          <Card className="!rounded-none md:!rounded-lg">
-            <Text fontWeight="bold" fontSize="sm">
-              نوبت‌دهی اینترنتی این پزشک غیرفعال می‌باشد!
+          <Text fontWeight="bold" className="px-4 leading-6 md:px-0">
+            برترین پزشکان {doctor.expertises[0].expertise_groups[0].name} {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
+            <Text fontWeight="medium" fontSize="sm">
+              از دیدگاه بیماران
             </Text>
-            <PhoneNumberList phoneNumbers={doctor.centers[0].display_number_array} />
-          </Card>
-          {doctor.expertises[0] && doctor.should_recommend_other_doctors && (
-            <>
-              <Text fontWeight="bold" className="px-4 leading-6 md:px-0">
-                برترین پزشکان {doctor.expertises[0].expertise_groups[0].name}{' '}
-                {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
-                <Text fontWeight="medium" fontSize="sm">
-                  از دیدگاه بیماران
-                </Text>
-              </Text>
-              <Recommend
-                doctorId={doctor.id}
-                city={doctor.city_en_slug}
-                category={doctor.expertises[0]?.expertise_groups[0].en_slug}
-                className="px-0 "
-              />
-            </>
-          )}
+          </Text>
+          <Recommend
+            doctorId={doctor.id}
+            city={doctor.city_en_slug}
+            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
+            className="px-0 "
+          />
         </>
       )}
     </>

@@ -1,9 +1,9 @@
+import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import config from 'next/config';
 import { useRouter } from 'next/router';
-import { ToolBarItems } from '../components/head/toolBar';
 import { useBookmarkController } from './useBookmarkController';
 const { publicRuntimeConfig } = config();
 
@@ -19,9 +19,10 @@ export const useToolBarController = ({ slug, displayName, documentTitle }: useTo
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const { customize } = useCustomize();
 
-  const toolBarItems: ToolBarItems = [
-    {
+  const toolBarItems = [
+    customize.bookMark && {
       type: 'bookmark',
       action: () => {
         if (!isLogin)
@@ -51,7 +52,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle }: useTo
         router.push(`/patient/contribute?slug=${slug}`);
       },
     },
-  ];
+  ].filter(Boolean);
 
   return toolBarItems;
 };

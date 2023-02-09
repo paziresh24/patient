@@ -145,7 +145,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
             </Text>{' '}
             از دیدگاه بیماران
           </Text>
-          {<Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />}
+          <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
         </div>
       </Modal>
     </>

@@ -2,6 +2,7 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import useCustomize from '@/common/hooks/useCustomize';
+import ButtonSuggestion from '@/modules/search/view/suggestion/button';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -15,9 +16,10 @@ const { publicRuntimeConfig } = getConfig();
 
 interface MobileNavbarProps {
   shouldShowBrand?: boolean;
+  showSearchSuggestionButton?: boolean;
 }
 const MobileNavbar = (props: MobileNavbarProps) => {
-  const { shouldShowBrand = true } = props;
+  const { shouldShowBrand = true, showSearchSuggestionButton = false } = props;
   const [open, setOpen] = useState(false);
   const [expertiseItems, setExpertiseItems] = useState([]);
   const ref = useRef(null);
@@ -90,7 +92,10 @@ const MobileNavbar = (props: MobileNavbarProps) => {
           brandType={customize.headerBrandLogoType}
           size="mobile"
         />
-        {customize.showUserProfile && <UserProfile />}
+        <div className="flex items-center space-s-0">
+          {showSearchSuggestionButton && <ButtonSuggestion />}
+          {customize.showUserProfile && <UserProfile />}
+        </div>
         <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} isOpen={open} />
       </div>
     </div>

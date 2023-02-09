@@ -14,6 +14,7 @@ import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
@@ -35,6 +36,7 @@ export const UserProfile = () => {
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
   const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
+  const { customize } = useCustomize();
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
@@ -48,18 +50,21 @@ export const UserProfile = () => {
       badge: !!turnsCount.presence && (
         <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
       ),
+      shouldShow: true,
     },
     {
       name: t('patient/common:menu.bookmarks'),
       icon: <BookmarkIcon />,
       link: '/patient/bookmarks',
+      shouldShow: customize.bookMark,
     },
     {
       name: t('patient/common:menu.subuser'),
       icon: <UsersIcon />,
       link: '/patient/subuser',
+      shouldShow: true,
     },
-  ];
+  ].filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();

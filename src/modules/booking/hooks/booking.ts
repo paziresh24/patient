@@ -27,7 +27,7 @@ export const useBooking = () => {
       onError,
     }: {
       onSuccess?: (data: any) => void;
-      onExpire?: () => void;
+      onExpire?: (data: any) => void;
       onError?: (data: any) => void;
     },
   ) => {
@@ -49,7 +49,7 @@ export const useBooking = () => {
     });
 
     if (data.status === ClinicStatus.SUCCESS && onSuccess) return onSuccess(data);
-    if (data.status === ClinicStatus.EXPIRE_TIME_SLOT && onExpire) return onExpire();
+    if (data.status === ClinicStatus.EXPIRE_TIME_SLOT && onExpire) return onExpire(data);
     return onError && onError(data);
   };
 

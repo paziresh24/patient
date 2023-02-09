@@ -3,6 +3,7 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChevronIcon from '@/components/icons/chevron';
+import ButtonSuggestion from '@/modules/search/view/suggestion/button';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
@@ -28,10 +29,11 @@ enum MegaMenuItem {
 interface HeaderProps {
   shouldShowBrand?: boolean;
   shouldShowPromoteApp?: boolean;
+  showSearchSuggestionButton?: boolean;
 }
 
 const Header = (props: HeaderProps) => {
-  const { shouldShowBrand = true, shouldShowPromoteApp = true } = props;
+  const { shouldShowBrand = true, shouldShowPromoteApp = true, showSearchSuggestionButton } = props;
   const [open, setOpen] = useState(false);
   const { isDesktop } = useResponsive();
   const [menu, setMenu] = useState(MegaMenuItem.CONSULT);
@@ -127,10 +129,13 @@ const Header = (props: HeaderProps) => {
                 </ul>
               </nav>
             )}
-            {customize.showUserProfile && <UserProfile />}
+            <div className="flex items-center space-s-0">
+              {showSearchSuggestionButton && <ButtonSuggestion />}
+              {customize.showUserProfile && <UserProfile />}
+            </div>
           </div>
         )}
-        <MobileNavbar shouldShowBrand={shouldShowBrand} />
+        <MobileNavbar showSearchSuggestionButton={showSearchSuggestionButton} shouldShowBrand={shouldShowBrand} />
       </header>
     </>
   );

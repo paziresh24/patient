@@ -6,6 +6,7 @@ import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
@@ -14,6 +15,7 @@ import { ReactElement } from 'react';
 export const PatientProfileLayout = ({ children }: { children: ReactElement }) => {
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
+  const { customize } = useCustomize();
 
   const { t } = useTranslation('patient/common');
 
@@ -53,12 +55,14 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
               <Text fontWeight="medium">{t('menu.myTurns')}</Text>
             </a>
           </Link>
-          <Link href="/patient/bookmarks">
-            <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
-              <BookmarkIcon />
-              <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
-            </a>
-          </Link>
+          {customize.bookMark && (
+            <Link href="/patient/bookmarks">
+              <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
+                <BookmarkIcon />
+                <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
+              </a>
+            </Link>
+          )}
           <Link href="/patient/subuser">
             <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
               <UsersIcon />

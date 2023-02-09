@@ -3,6 +3,7 @@ import Card from '@/common/components/atom/card/card';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import useModal from '@/common/hooks/useModal';
+import useWebView from '@/common/hooks/useWebView';
 import { CENTERS } from '@/common/types/centers';
 import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
 import SelectService from '@/modules/booking/views/selectService/selectService';
@@ -17,6 +18,7 @@ interface PresenceProps {
 
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook } = props;
+  const isWebView = useWebView();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
     handleOpen: handleOpenSelectCenterModal,
@@ -70,7 +72,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status) {
+    if (center.is_only_in_app.status && !isWebView) {
       handleOpenSelectDownloadAppModal();
       return;
     }
