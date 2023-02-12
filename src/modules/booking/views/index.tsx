@@ -160,10 +160,11 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    const { insurance_id, insurance_number } = user;
+    const { insurance_id, insurance_referral_code, insurance_number } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if ((+center.settings?.booking_enable_insurance || university) && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
+    if ((+center.settings?.booking_enable_insurance || university) && !insurance_id && !insurance_referral_code)
+      return toast.error('لطفا بیمه خود را انتخاب کنید.');
     handleBook(
       {
         center,
@@ -174,6 +175,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           family: userConfimation?.last_name ?? user.family,
           gender: userConfimation?.gender ?? user.gender,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
+          insurance_referral_code: insurance_referral_code !== -1 ? insurance_referral_code : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
@@ -293,19 +295,20 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [step]);
 
   const getInsuranceList = () => {
-    const list: any[] =
-      center?.insurances
-        ?.filter((item: any) =>
-          university && getNationalCodeConfirmation.isSuccess
-            ? getNationalCodeConfirmation.data?.data?.insurances?.some((insurance: any) => insurance.insurer?.value === item.name)
-            : true,
-        )
-        ?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+    let insurances: any[] = [];
+    if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
+      insurances = getNationalCodeConfirmation.data?.data?.insurances.map((insurance: any) => ({
+        label: insurance.insurer?.value + ' ' + insurance.insurerBox?.value,
+        value: insurance.insurer?.coded_string + '.' + insurance.insurerBox?.coded_string,
+      }));
+    } else {
+      insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+    }
 
-    list.push({ label: 'آزاد', value: -1 });
-
-    return list;
+    insurances.push({ label: 'آزاد', value: -1 });
+    return insurances;
   };
+
   return (
     <div className={clsx('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
@@ -503,7 +506,15 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Button
             loading={bookLoading}
             block
-            onClick={() => handleBookAction({ ...user, insurance_id: insuranceName, insurance_number: insuranceNumber })}
+            onClick={() =>
+              handleBookAction({
+                ...user,
+                ...(!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)
+                  ? { insurance_referral_code: insuranceName }
+                  : { insurance_id: insuranceName }),
+                insurance_number: insuranceNumber,
+              })
+            }
           >
             ثبت نوبت
           </Button>
