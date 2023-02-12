@@ -10,6 +10,8 @@ export const paziresh24AppClient = axios.create({
   withCredentials: true,
 });
 
+paziresh24AppClient.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
+
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
   withCredentials: true,
@@ -42,8 +44,6 @@ clinicClient.interceptors.request.use(
 
 clinicClient.interceptors.response.use(
   res => {
-    const token = getCookie('token');
-    if (token) res.headers['Authorization'] = 'Bearer ' + token;
     res = { ...res, meta: { responseTime: new Date().getTime() - (res.config as any).meta.requestStartedAt } } as any;
     return res;
   },
