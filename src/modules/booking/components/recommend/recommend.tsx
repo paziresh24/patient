@@ -7,6 +7,7 @@ interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
   category: string;
   city: string;
   doctorId: string;
+  centerId?: string;
 }
 
 export const Recommend = ({ className, ...props }: RecommendProps) => {

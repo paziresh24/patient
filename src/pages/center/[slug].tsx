@@ -142,6 +142,7 @@ const CenterProfile: NextPageWithLayout = () => {
                   value: expertise.name,
                 })) ?? []
               }
+              showRateAndReviews={customize.showRateAndReviews}
               loading={doctors.isLoading}
               onSelectExpertise={setSelectedExpertise}
               onSearch={setSearchQuery}

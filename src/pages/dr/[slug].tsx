@@ -82,27 +82,28 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             <Services className="md:hidden" doctor={doctor} isBulk={isBulk} slug={slug} />
           </div>
         ),
-        CenterInfo: ({ doctor }) => (
-          <div id="center-info_serction" className="flex flex-col space-y-3 md:hidden">
-            <Text fontWeight="bold" className="px-4 md:px-0">
-              آدرس و تلفن تماس
-            </Text>
-            <CentersInfo
-              className="bg-white md:rounded-lg"
-              centers={profileData.centers
-                .filter((center: any) => center.id !== CENTERS.CONSULT)
-                .map((center: any) => ({
-                  address: center.address,
-                  city: center.city,
-                  slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
-                  description: center.description,
-                  phoneNumbers: center.display_number_array,
-                  name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
-                  location: center.map,
-                }))}
-            />
-          </div>
-        ),
+        CenterInfo: ({ doctor }) =>
+          doctor.centers?.length > 0 && (
+            <div id="center-info_serction" className="flex flex-col space-y-3 md:hidden">
+              <Text fontWeight="bold" className="px-4 md:px-0">
+                آدرس و تلفن تماس
+              </Text>
+              <CentersInfo
+                className="bg-white md:rounded-lg"
+                centers={profileData.centers
+                  .filter((center: any) => center.id !== CENTERS.CONSULT)
+                  .map((center: any) => ({
+                    address: center.address,
+                    city: center.city,
+                    slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
+                    description: center.description,
+                    phoneNumbers: center?.display_number_array,
+                    name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
+                    location: center.map,
+                  }))}
+              />
+            </div>
+          ),
         OwnPage: ({ doctor }) => {
           if (!isBulk) return null;
           return (
@@ -194,27 +195,28 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (!isDesktop) return null;
           return <Services doctor={doctor} isBulk={isBulk} slug={slug} />;
         },
-        CenterInfo: ({ doctor }) => (
-          <div className="flex-col hidden space-y-3 md:flex">
-            <Text fontWeight="bold" className="px-4 md:px-0">
-              آدرس و تلفن تماس
-            </Text>
-            <CentersInfo
-              className="bg-white md:rounded-lg"
-              centers={profileData.centers
-                .filter((center: any) => center.id !== CENTERS.CONSULT)
-                .map((center: any) => ({
-                  address: center.address,
-                  city: center.city,
-                  slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
-                  description: center.description,
-                  phoneNumbers: center.display_number_array,
-                  name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
-                  location: center.map,
-                }))}
-            />
-          </div>
-        ),
+        CenterInfo: ({ doctor }) =>
+          doctor.centers?.length > 0 && (
+            <div className="flex-col hidden space-y-3 md:flex">
+              <Text fontWeight="bold" className="px-4 md:px-0">
+                آدرس و تلفن تماس
+              </Text>
+              <CentersInfo
+                className="bg-white md:rounded-lg"
+                centers={profileData.centers
+                  .filter((center: any) => center.id !== CENTERS.CONSULT)
+                  .map((center: any) => ({
+                    address: center.address,
+                    city: center.city,
+                    slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
+                    description: center.description,
+                    phoneNumbers: center?.display_number_array,
+                    name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
+                    location: center.map,
+                  }))}
+              />
+            </div>
+          ),
       },
     }),
     [isDesktop, isMobile, profileData],

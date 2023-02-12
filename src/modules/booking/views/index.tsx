@@ -163,8 +163,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     const { insurance_id, insurance_number } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
-    console.log(userConfimation);
+    if ((+center.settings?.booking_enable_insurance || university) && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
     handleBook(
       {
         center,
@@ -174,6 +173,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           name: userConfimation?.first_name ?? user.name,
           family: userConfimation?.last_name ?? user.family,
           gender: userConfimation?.gender ?? user.gender,
+          insurance_id: insurance_id !== -1 ? insurance_id : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
@@ -292,6 +292,20 @@ const BookingSteps = (props: BookingStepsProps) => {
     return () => clearTimeout(getTurnTimeout.current);
   }, [step]);
 
+  const getInsuranceList = () => {
+    const list: any[] =
+      center?.insurances
+        ?.filter((item: any) =>
+          university && getNationalCodeConfirmation.isSuccess
+            ? getNationalCodeConfirmation.data?.data?.insurances?.some((insurance: any) => insurance.insurer?.value === item.name)
+            : true,
+        )
+        ?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+
+    list.push({ label: 'آزاد', value: -1 });
+
+    return list;
+  };
   return (
     <div className={clsx('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
@@ -428,7 +442,6 @@ const BookingSteps = (props: BookingStepsProps) => {
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
-              console.log(user);
 
               if (university) {
                 if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
@@ -485,21 +498,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       </Modal>
       <Modal title="انتخاب بیمه" {...insuranceModalProps}>
         <div className="flex flex-col space-y-3">
-          <Autocomplete
-            onChange={e => setInsuranceName(e.target.value.value)}
-            label="نام بیمه"
-            value={{
-              label: center?.insurances?.find((item: any) => item.id === insuranceName)?.name,
-              value: insuranceName,
-            }}
-            options={center?.insurances
-              ?.filter((item: any) =>
-                university && getNationalCodeConfirmation.isSuccess
-                  ? getNationalCodeConfirmation.data?.data?.insurances?.some((insurance: any) => insurance.insurer?.value === item.name)
-                  : true,
-              )
-              .map((item: any) => ({ label: item.name, value: item.id }))}
-          />
+          <Autocomplete onChange={e => setInsuranceName(e.target.value.value)} label="نام بیمه" options={getInsuranceList()} />
           <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه (اختیاری)" />
           <Button
             loading={bookLoading}
@@ -529,6 +528,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                   doctorId={profile.id}
                   city={profile.city_en_slug}
                   category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                  centerId={university ? center.id : null}
                 />
               )}
             </>

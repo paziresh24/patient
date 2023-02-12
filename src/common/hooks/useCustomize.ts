@@ -23,6 +23,7 @@ interface Customize {
   bookMark: boolean;
   showShareApp: boolean;
   showSupplierRegister: boolean;
+  showRateAndReviews: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -53,6 +54,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     bookMark: true,
     showShareApp: true,
     showSupplierRegister: true,
+    showRateAndReviews: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
@@ -80,6 +82,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       bookMark: (query['bookmark'] as Toggle) !== 'off',
       showShareApp: (query['share-app'] as Toggle) !== 'off',
       showSupplierRegister: (query['show-supplier-register'] as Toggle) !== 'off',
+      showRateAndReviews: (query['show-rate-and-reviews'] as Toggle) !== 'off',
     };
 
     return set(state => ({
