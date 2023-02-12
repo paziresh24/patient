@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 interface Params {
   return_type: 'book' | 'book_request';
   page: number;
+  university?: string;
 }
 
 export const getBooks = (params: Params) => {
