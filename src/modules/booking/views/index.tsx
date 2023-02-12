@@ -528,7 +528,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                   doctorId={profile.id}
                   city={profile.city_en_slug}
                   category={profile.expertises[0]?.expertise_groups[0].en_slug}
-                  centerId={university ? center.id : null}
+                  centerId={university ? center?.id : null}
                 />
               )}
             </>
