@@ -82,8 +82,9 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             <Services className="md:hidden" doctor={doctor} isBulk={isBulk} slug={slug} />
           </div>
         ),
-        CenterInfo: ({ doctor }) =>
-          doctor.centers?.length > 0 && (
+        CenterInfo: ({ doctor }) => {
+          if (doctor.centers?.length === 0) return null;
+          return (
             <div id="center-info_serction" className="flex flex-col space-y-3 md:hidden">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 آدرس و تلفن تماس
@@ -103,7 +104,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                   }))}
               />
             </div>
-          ),
+          );
+        },
         OwnPage: ({ doctor }) => {
           if (!isBulk) return null;
           return (
@@ -195,8 +197,9 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (!isDesktop) return null;
           return <Services doctor={doctor} isBulk={isBulk} slug={slug} />;
         },
-        CenterInfo: ({ doctor }) =>
-          doctor.centers?.length > 0 && (
+        CenterInfo: ({ doctor }) => {
+          if (doctor.centers?.length === 0) return null;
+          return (
             <div className="flex-col hidden space-y-3 md:flex">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 آدرس و تلفن تماس
@@ -216,7 +219,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                   }))}
               />
             </div>
-          ),
+          );
+        },
       },
     }),
     [isDesktop, isMobile, profileData],

@@ -81,8 +81,8 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       showTermsAndConditions: (query['terms-and-conditions'] as Toggle) !== 'off',
       bookMark: (query['bookmark'] as Toggle) !== 'off',
       showShareApp: (query['share-app'] as Toggle) !== 'off',
-      showSupplierRegister: (query['show-supplier-register'] as Toggle) !== 'off',
-      showRateAndReviews: (query['show-rate-and-reviews'] as Toggle) !== 'off',
+      showSupplierRegister: (query['supplier-register'] as Toggle) !== 'off',
+      showRateAndReviews: (query['rate-and-reviews'] as Toggle) !== 'off',
     };
 
     return set(state => ({
