@@ -11,31 +11,36 @@ interface Reply extends Omit<Card, 'details' | 'recommend' | 'symptoms' | 'tag' 
 }
 
 type MessageBoxProps = {
-  isShow: boolean;
   placeholder?: string;
   submitText?: string;
-  onChange: (value: string) => void;
+  isLoading?: boolean;
+  onChange: (value: any) => void;
   onSubmit: () => void;
 };
 
-interface Feedbacks extends Card {
+export interface Feedbacks extends Card {
   reply?: Reply[];
   firstReply?: boolean;
   messageBox?: MessageBoxProps;
-  replyModalTitle?: string;
+  replyModal?: {
+    title: string;
+    id: number;
+    isShow: boolean;
+    onClose: () => void;
+  };
 }
 
-interface FeedbackCardProps {
-  feedback: Feedbacks[];
+export interface FeedbackParams {
+  feedback: Feedbacks;
   className?: string;
 }
 
 export const Feedback = (props: Omit<Feedbacks, 'firstReply'>) => {
-  const { description, id, name, avatar, className, details, options, recommend, symptoms, tag, messageBox } = props;
+  const { description, id, name, avatar, className, details, options, recommend, symptomes, tag, messageBox } = props;
   const [inputFocus, setInputFocus] = useState(false);
   return (
     <>
-      <div className="relative">
+      <div className="relative w-full">
         <RateCard
           id={id}
           description={description}
@@ -44,17 +49,18 @@ export const Feedback = (props: Omit<Feedbacks, 'firstReply'>) => {
           options={options}
           avatar={avatar}
           recommend={recommend}
-          symptoms={symptoms}
+          symptomes={symptomes}
           tag={tag}
           className={className}
         />
-        {messageBox?.isShow && (
+        {messageBox && (
           <div className="px-3">
             <MessageBox
-              placeholder={messageBox.placeholder}
-              submitText={messageBox.submitText}
-              onChange={e => messageBox.onChange}
-              submitHandled={messageBox.onSubmit}
+              placeholder={messageBox?.placeholder}
+              submitText={messageBox?.submitText}
+              isLoading={messageBox?.isLoading}
+              onChange={(e: any) => messageBox.onChange(e)}
+              submitHandled={messageBox?.onSubmit}
               onFocus={() => setInputFocus(true)}
               onBlur={() => setInputFocus(false)}
               className={clsx({ '!border-blue-500': inputFocus })}
@@ -96,80 +102,76 @@ export const NestedReply = (props: Reply) => {
   );
 };
 
-export const FeedbackCard = (props: FeedbackCardProps) => {
+export const FeedbackCard = (props: FeedbackParams) => {
   const { feedback, className } = props;
-  const [ShowModal, setShowModal] = useState(true);
   return (
     <>
-      {feedback.map(rate => (
-        <>
-          <div
-            key={rate.id}
-            className={clsx('w-full flex flex-col items-center h-auto  bg-white border-y p-3 border-[#efefef]', className)}
-          >
-            <Feedback
-              description={rate.description}
-              id={rate.id}
-              name={rate.name}
-              reply={rate.reply}
-              avatar={rate.avatar}
-              className={rate.className}
-              details={rate.details}
-              options={rate.options}
-              recommend={rate.recommend}
-              symptoms={rate.symptoms}
-              tag={rate.tag}
-              messageBox={rate.messageBox}
-            />
-            {rate.reply?.length && rate.firstReply && (
-              <Replies
-                description={rate.reply[0].description}
-                id={rate.reply[0].id}
-                name={rate.reply[0].name}
-                avatar={rate.reply[0].avatar}
-                className={'rounded-lg !bg-[#ececec99] my-3'}
-                options={rate.reply[0].options}
+      <div
+        key={feedback.id}
+        className={clsx('w-full flex flex-col items-center h-auto  bg-white border-y p-2 border-[#efefef]', className)}
+      >
+        <Feedback
+          description={feedback.description}
+          id={feedback.id}
+          name={feedback.name}
+          reply={feedback.reply}
+          avatar={feedback.avatar}
+          className={feedback.className}
+          details={feedback.details}
+          options={feedback.options}
+          recommend={feedback.recommend}
+          symptomes={feedback.symptomes}
+          tag={feedback.tag}
+          messageBox={feedback.messageBox}
+        />
+        {!!feedback.reply?.length && feedback.firstReply && (
+          <Replies
+            description={feedback.reply[0].description}
+            id={feedback.reply[0].id}
+            name={feedback.reply[0].name}
+            avatar={feedback.reply[0].avatar}
+            className={'rounded-lg !bg-[#ececec99] my-3'}
+            options={feedback.reply[0].options}
+          />
+        )}
+        <Modal
+          key={feedback.replyModal?.id}
+          title={feedback.replyModal?.title}
+          isOpen={feedback.replyModal?.isShow!}
+          onClose={() => feedback.replyModal?.onClose()}
+          fullScreen
+          bodyClassName="!px-0 !pt-0 !pb-16"
+        >
+          <Feedback
+            description={feedback.description}
+            id={feedback.id}
+            name={feedback.name}
+            avatar={feedback.avatar}
+            className={feedback.className}
+            details={feedback.details}
+            options={feedback.options?.filter(option => option.inModal)}
+            recommend={feedback.recommend}
+            symptomes={feedback.symptomes}
+            tag={feedback.tag}
+            messageBox={feedback.messageBox}
+          />
+          <Divider className="my-3" />
+          {feedback.reply?.map(items => (
+            <>
+              <NestedReply
+                key={items.id}
+                description={items.description}
+                id={items.id}
+                name={items.name}
+                avatar={items.avatar}
+                options={items.options}
+                reply={items.reply}
+                className={'border-y border-[#efefef] rounded-lg !bg-[#ececec99] my-3'}
               />
-            )}
-          </div>
-          <Modal
-            title={rate.replyModalTitle}
-            isOpen={ShowModal}
-            onClose={() => setShowModal(false)}
-            fullScreen
-            bodyClassName="!px-0 !pt-0 !pb-16"
-          >
-            <Feedback
-              description={rate.description}
-              id={rate.id}
-              name={rate.name}
-              avatar={rate.avatar}
-              className={rate.className}
-              details={rate.details}
-              options={rate.options?.filter(option => option.type === 'menu' || (option.type === 'button' && option.name === 'پسندیدن'))}
-              recommend={rate.recommend}
-              symptoms={rate.symptoms}
-              tag={rate.tag}
-              messageBox={rate.messageBox}
-            />
-            <Divider className="my-3" />
-            {rate.reply?.map(items => (
-              <>
-                <NestedReply
-                  key={items.id}
-                  description={items.description}
-                  id={items.id}
-                  name={items.name}
-                  avatar={items.avatar}
-                  options={items.options}
-                  reply={items.reply}
-                  className={'border-y border-[#efefef] rounded-lg !bg-[#ececec99] my-3'}
-                />
-              </>
-            ))}
-          </Modal>
-        </>
-      ))}
+            </>
+          ))}
+        </Modal>
+      </div>
     </>
   );
 };

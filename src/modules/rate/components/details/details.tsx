@@ -2,15 +2,7 @@ import RateBadge from '@/common/components/atom/badge';
 import Text from '@/common/components/atom/text/text';
 import LikeIcon from '@/common/components/icons/like';
 import ProgressBar from '../../../../common/components/atom/progressBar/progressBar';
-import { information } from '../../type/detailsInformation';
-
-interface DetailsProps {
-  satisfaction?: number;
-  title?: string;
-  count?: number;
-  count_text?: string;
-  information: information[];
-}
+import { DetailsProps } from '../../type/rate';
 
 export const Details = (props: DetailsProps) => {
   const { satisfaction, title, count, count_text, information } = props;

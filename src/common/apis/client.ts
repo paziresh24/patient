@@ -5,17 +5,17 @@ import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
 
 export const paziresh24AppClient = axios.create({
-  baseURL: publicRuntimeConfig.PAZIRESH24_API,
+  baseURL: 'https://api.paziresh24.com',
   withCredentials: true,
 });
 
 export const searchClient = axios.create({
-  baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
+  baseURL: 'https://www.paziresh24.com',
   withCredentials: true,
 });
 
 export const clinicClient = axios.create({
-  baseURL: publicRuntimeConfig.CLINIC_BASE_URL,
+  baseURL: 'https://www.paziresh24.com',
   withCredentials: true,
 });
 
