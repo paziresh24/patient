@@ -7,7 +7,7 @@ import { CardProps } from '@/modules/rate/type/card';
 import clsx from 'clsx';
 
 export const Card = (props: CardProps) => {
-  const { id, avatar, name, tag, options, details, description, symptoms, className, recommend } = props;
+  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
   return (
     <>
       <div id={id} className={clsx('w-full h-auto bg-white p-4', className)}>
@@ -16,7 +16,9 @@ export const Card = (props: CardProps) => {
             <Avatar src={avatar} name={name} width={60} height={60} />
             <div className="mr-4">
               <div className="flex items-center gap-1">
-                <Text fontWeight="bold">{name}</Text>
+                <Text fontWeight="bold" fontSize="sm">
+                  {name}
+                </Text>
                 {tag &&
                   tag.map(item => (
                     <Badge
@@ -49,8 +51,8 @@ export const Card = (props: CardProps) => {
           )}
         </div>
         <div className="mt-6 flex flex-col gap-3">
-          {!!symptoms && (
-            <Text className="block" fontSize="sm" fontWeight="extraBold">{`${symptoms.text} :  ${symptoms.items.join('، ')}`}</Text>
+          {!!symptomes && (
+            <Text className="block" fontSize="sm" fontWeight="extraBold">{`${symptomes.text} :  ${symptomes.items.join('، ')}`}</Text>
           )}
           {!!recommend && (
             <Text
@@ -65,8 +67,8 @@ export const Card = (props: CardProps) => {
           <Text
             fontSize="sm"
             fontWeight="medium"
-            className="text-justify block leading-7"
-            dangerouslySetInnerHTML={{ __html: description }}
+            className="text-justify block leading-7 [&>em]:text-blue-700 [&>em]:not-italic"
+            dangerouslySetInnerHTML={{ __html: description ?? '' }}
           />
         </div>
         <div className={clsx('mt-8 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
