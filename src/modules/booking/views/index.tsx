@@ -448,7 +448,14 @@ const BookingSteps = (props: BookingStepsProps) => {
 
               if (university) {
                 if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
-                await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                if (data?.insurances?.length === 1) {
+                  const insurance = data?.insurances[0];
+                  return handleBookAction({
+                    ...user,
+                    insurance_referral_code: insurance.insurer?.coded_string + '.' + insurance.insurerBox?.coded_string,
+                  });
+                }
                 handleOpenInsuranceModal();
                 return;
               }
