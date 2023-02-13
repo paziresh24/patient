@@ -38,9 +38,13 @@ const Home: NextPageWithLayout = () => {
 
       <main className="h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6">
         {!customize.partnerTitle && <Logo className="text-2xl md:text-3xl" width={55} />}
-        {customize.partnerTitle && <Text fontWeight="bold">{customize.partnerTitle}</Text>}
+        {customize.partnerTitle && (
+          <Text fontWeight="bold" className="text-primary md:text-lg">
+            {customize.partnerTitle}
+          </Text>
+        )}
         {customize.partnerSubTitle && (
-          <Text fontWeight="bold" fontSize="sm" className="text-primary">
+          <Text fontWeight="bold" fontSize="sm">
             {customize.partnerSubTitle}
           </Text>
         )}

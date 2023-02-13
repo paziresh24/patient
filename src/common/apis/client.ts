@@ -10,7 +10,7 @@ export const paziresh24AppClient = axios.create({
   withCredentials: true,
 });
 
-paziresh24AppClient.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
+if (getCookie('token')) paziresh24AppClient.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
 
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL,

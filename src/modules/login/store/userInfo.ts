@@ -1,5 +1,8 @@
-import { getCookie } from 'cookies-next';
+import { getCookie, removeCookies } from 'cookies-next';
+import config from 'next/config';
 import create from 'zustand';
+
+const { publicRuntimeConfig } = config();
 
 interface UseUserInfoStore {
   isLogin: boolean;
@@ -12,6 +15,7 @@ interface UseUserInfoStore {
   removeInfo: () => void;
   setPending: (state: boolean) => void;
   setTurnsCount: (turnsCount: { presence: number }) => void;
+  logout: () => void;
 }
 
 export type UserInfo = {
@@ -28,7 +32,7 @@ export type UserInfo = {
   cell?: string;
 };
 
-export const useUserInfoStore = create<UseUserInfoStore>(set => ({
+export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   isLogin: !!getCookie('certificate'),
   info: {},
   pending: true,
@@ -60,5 +64,12 @@ export const useUserInfoStore = create<UseUserInfoStore>(set => ({
       ...state,
       turnsCount,
     }));
+  },
+  logout: () => {
+    removeCookies('certificate');
+    removeCookies('token');
+    get().removeInfo();
+    console.log(publicRuntimeConfig);
+    location.assign(`${publicRuntimeConfig.CLINIC_BASE_URL}/logout?url=${location.href}`);
   },
 }));
