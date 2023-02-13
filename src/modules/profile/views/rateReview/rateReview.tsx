@@ -25,8 +25,17 @@ import toast from 'react-hot-toast';
 import { useRateFilter } from '../../hooks/useSearchFeedback';
 
 interface RateReviewProps {
-  doctorCenter: { id: string; name: string }[];
-  doctorId: string;
+  doctor: {
+    center: { id: string; name: string }[];
+    id: string;
+    name: string;
+    image?: string;
+    group_expertises?: string;
+    group_expertises_slug?: string;
+    expertise?: string;
+    slug: string;
+    city: string[];
+  };
   serverId: string;
   rateDetails: {
     satisfaction: number;
@@ -41,8 +50,8 @@ interface RateReviewProps {
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctorCenter, doctorId, serverId, rateDetails } = props;
-  const { isLoading } = useGetFeedbackData({ doctor_id: doctorId, server_id: serverId });
+  const { doctor, serverId, rateDetails } = props;
+  const { isLoading } = useGetFeedbackData({ doctor_id: doctor.id, server_id: serverId });
   const [rateFilter, setRateFilter] = useState<{ label: string; value: 'my_feedbacks' | 'has_nobat' | 'center_id' | 'all' }>({
     label: 'همه نظرات',
     value: 'all',
@@ -60,7 +69,7 @@ export const RateReview = (props: RateReviewProps) => {
   const feedbacksData = useFeedbackDataStore(state => state.data);
   const { isDesktop } = useResponsive();
   const [replyDetails, setReplyDetails] = useState<{ text: string; id: string }[]>([]);
-  const { rateSearch, rateSortFilter, rateFilterType, showMore } = useRateFilter(doctorId, serverId);
+  const { rateSearch, rateSortFilter, rateFilterType, showMore } = useRateFilter(doctor.id, serverId);
   const { isLogin, userInfo } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userInfo: state.info,
@@ -209,7 +218,7 @@ export const RateReview = (props: RateReviewProps) => {
     };
   }, []);
   const rateSearchInputs = useMemo(() => {
-    const centerOption = doctorCenter.map((center: any) => center && { label: center.name, value: center.id });
+    const centerOption = doctor.center.map((center: any) => center && { label: center.name, value: center.id });
     return [
       {
         id: 1,
@@ -313,7 +322,8 @@ export const RateReview = (props: RateReviewProps) => {
       {
         id: 1,
         text: 'ثبت نظر',
-        action: () => (location.href = 'https://wwww.paziresh24.com'),
+        action: () =>
+          (location.href = `https://www.paziresh24.com/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`),
       },
     ],
   };
@@ -353,9 +363,9 @@ export const RateReview = (props: RateReviewProps) => {
           controller={submitRateDetails}
           isLoading={isLoading}
         />
-        <div className="mx-4 mb-3">
+        <div className="mx-4 my-3">
           {!!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
-            <Button variant="secondary" block className="self-center block " onClick={showMore}>
+            <Button variant="secondary" block className="self-center block outline-none" onClick={showMore}>
               نمایش بیشتر
             </Button>
           )}

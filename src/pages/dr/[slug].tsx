@@ -169,9 +169,19 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           );
         },
         RateReview: ({ doctor }) => {
-          const doctorCenter = doctor.centers
-            .filter((center: any) => center.id !== '5532')
-            .map((center: any) => center && { id: center.id, name: center.name });
+          const doctorInfo = {
+            center: doctor.centers
+              .filter((center: any) => center.id !== '5532')
+              .map((center: any) => center && { id: center.id, name: center.name }),
+            id: doctor.id,
+            name: doctor.display_name,
+            image: doctor.image,
+            group_expertises: doctor.group_expertises[0].name ?? 'سایر',
+            group_expertises_slug: doctor.group_expertises[0].en_slug ?? 'other',
+            expertise: doctor?.expertises?.[0]?.expertise?.name,
+            slug: doctor.slug,
+            city: doctor.centers.map((center: any) => center.city),
+          };
           const doctorRateDetails = {
             satisfaction: doctor.feedbacks.details.satisfaction,
             count: doctor.feedbacks.details.number_of_feedbacks,
@@ -196,9 +206,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
               },
             ],
           };
-          return (
-            <RateReview doctorId={doctor.id} serverId={doctor.server_id} rateDetails={doctorRateDetails} doctorCenter={doctorCenter} />
-          );
+          return <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} />;
         },
         ProfileSeoBox: ({ doctor }) => {
           const internalLinks = useInternalLinks(
