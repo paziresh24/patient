@@ -154,7 +154,7 @@ export const UserProfile = () => {
             </Transition>
           </div>
         ) : (
-          <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
+          <Button className="!px-2 !text-xs md:!text-sm md:!px-4" size="sm" variant="secondary" onClick={handleLogin}>
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}
