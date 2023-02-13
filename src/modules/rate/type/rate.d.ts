@@ -30,10 +30,16 @@ export type DetailsProps = {
   information: information[];
 };
 
+type Controller = {
+  text: string;
+  buttons: { id: number; text: string; action: () => void }[];
+};
+
 interface RateProps {
   details: DetailsProps;
   filters: FilterInputParams[];
   search: SearchInputParams;
   feedbacks: FeedbackParams[];
+  controller?: Controller;
   isLoading?: boolean;
 }

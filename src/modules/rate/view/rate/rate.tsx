@@ -4,35 +4,44 @@ import Divider from '@/common/components/atom/divider/divider';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import clsx from 'clsx';
 import Details from '../../components/details/details';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
 
 export const Rate = (props: RateProps) => {
-  const { details, filters, search, feedbacks, isLoading } = props;
+  const { details, filters, search, feedbacks, isLoading, controller } = props;
   return (
     <>
       <div className="w-full h-auto">
         {details && (
-          <Details
-            satisfaction={details.satisfaction}
-            count={details.count}
-            count_text={details.count_text}
-            title={details.title}
-            information={details.information}
-          />
+          <div className="p-4">
+            <Details
+              satisfaction={details.satisfaction}
+              count={details.count}
+              count_text={details.count_text}
+              title={details.title}
+              information={details.information}
+            />
+          </div>
         )}
-        <div className="w-full flex justify-between items-center mt-12">
-          <Text fontSize="sm" fontWeight="medium">
-            نظر خود را به اشتراک بگذارید:
-          </Text>
-          <Button variant="secondary" className="px-12">
-            ثبت نظر
-          </Button>
-        </div>
+        {controller && (
+          <div className="w-full flex justify-between items-center mt-12 px-4">
+            <Text fontSize="sm" fontWeight="medium">
+              {controller.text}
+            </Text>
+            {controller.buttons.map(button => (
+              <div key={button.id} className="flex gap-2">
+                <Button onClick={() => button.action()} variant="secondary" className="px-12">
+                  {button.text}
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
         <Divider className="my-8" />
         <div className="flex flex-col gap-3">
-          <div className="flex justify-between gap-3 w-full">
+          <div className="flex justify-between gap-3 w-full px-4">
             {filters.length &&
               filters.map(option => (
                 <div key={option.id} className="w-3/6">
@@ -41,7 +50,7 @@ export const Rate = (props: RateProps) => {
               ))}
           </div>
           {search && (
-            <div className="relative border border-slate-300 outline-primary rounded-lg bg-white">
+            <div className="relative border border-slate-300 outline-primary rounded-lg bg-white mx-4">
               {search.icon && <span>{search.icon}</span>}
               <TextField
                 placeholder={search.placeholder}
@@ -51,9 +60,17 @@ export const Rate = (props: RateProps) => {
               />
             </div>
           )}
-          {isLoading && <RateLoading />}
-          {feedbacks?.length && !isLoading && feedbacks.map((feedback, index) => <FeedbackCard key={index} feedback={feedback} />)}
-          {!feedbacks?.length && !isLoading && <NotFound />}
+          <div className={clsx('mt-4', { '!mt-0': !feedbacks.length })}>
+            {!!feedbacks?.length &&
+              !isLoading &&
+              feedbacks.map((feedback, index) => <FeedbackCard className="border-b-0 mb-1" key={index + 1} feedback={feedback} />)}
+            {isLoading && <RateLoading />}
+            {!feedbacks?.length && !isLoading && (
+              <div className="p-4">
+                <NotFound />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -62,17 +79,15 @@ export const Rate = (props: RateProps) => {
 
 const NotFound = () => {
   return (
-    <>
-      <div className="h-[10rem] w-full rounded-xl flex justify-center items-center bg-zinc-300">
-        <Text fontSize="sm" fontWeight="extraBold">
-          موردی یافت نشد !
-        </Text>
-      </div>
-    </>
+    <div className="h-[10rem] w-full rounded-xl flex justify-center items-center bg-zinc-100">
+      <Text fontSize="sm" fontWeight="extraBold">
+        موردی یافت نشد !
+      </Text>
+    </div>
   );
 };
 
-const RateLoading = () => {
+export const RateLoading = () => {
   return (
     <>
       <div className=" bg-white p-3 rounded-lg">

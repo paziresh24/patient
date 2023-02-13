@@ -19,6 +19,7 @@ import Biography from '@/modules/profile/views/biography/biography';
 import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
 import Gallery from '@/modules/profile/views/gallery/gallery';
 import Head from '@/modules/profile/views/head/head';
+import RateReview from '@/modules/profile/views/rateReview/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
@@ -165,6 +166,38 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
               </Text>
               <Gallery items={reformmatedItems} className="bg-white md:rounded-lg" />
             </div>
+          );
+        },
+        RateReview: ({ doctor }) => {
+          const doctorCenter = doctor.centers
+            .filter((center: any) => center.id !== '5532')
+            .map((center: any) => center && { id: center.id, name: center.name });
+          const doctorRateDetails = {
+            satisfaction: doctor.feedbacks.details.satisfaction,
+            count: doctor.feedbacks.details.number_of_feedbacks,
+            information: [
+              {
+                id: 1,
+                title: 'برخورد مناسب پزشک',
+                satisfaction: doctor.feedbacks.details.doctor_encounter * 20,
+                avg_star: doctor.feedbacks.details.doctor_encounter,
+              },
+              {
+                id: 2,
+                title: 'توضیح پزشک در هنگام ویزیت',
+                satisfaction: doctor.feedbacks.details.explanation_of_issue * 20,
+                avg_star: doctor.feedbacks.details.explanation_of_issue,
+              },
+              {
+                id: 3,
+                title: 'مهارت و تخصص پزشک',
+                satisfaction: doctor.feedbacks.details.quality_of_treatment * 20,
+                avg_star: doctor.feedbacks.details.quality_of_treatment,
+              },
+            ],
+          };
+          return (
+            <RateReview doctorId={doctor.id} serverId={doctor.server_id} rateDetails={doctorRateDetails} doctorCenter={doctorCenter} />
           );
         },
         ProfileSeoBox: ({ doctor }) => {

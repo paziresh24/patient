@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { Feedbacks } from '../components/feedbackCard/feedbackCard';
+import { Feedbacks } from '../../rate/components/feedbackCard/feedbackCard';
 
 interface FeedbackDataStore {
   data: Partial<Feedbacks[]>;

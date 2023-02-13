@@ -135,7 +135,6 @@ export const FeedbackCard = (props: FeedbackParams) => {
           />
         )}
         <Modal
-          key={feedback.replyModal?.id}
           title={feedback.replyModal?.title}
           isOpen={feedback.replyModal?.isShow!}
           onClose={() => feedback.replyModal?.onClose()}
@@ -144,7 +143,7 @@ export const FeedbackCard = (props: FeedbackParams) => {
         >
           <Feedback
             description={feedback.description}
-            id={feedback.id}
+            id={feedback.id * 2}
             name={feedback.name}
             avatar={feedback.avatar}
             className={feedback.className}
