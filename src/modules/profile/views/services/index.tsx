@@ -68,7 +68,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           <PhoneNumberList phoneNumbers={doctor.centers?.[0]?.display_number_array} />
         </Card>
       )}
-      {doctor?.expertises?.[0] && doctor?.should_recommend_other_doctors && doctor.centers[0] && (
+      {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (
         <>
           <Text fontWeight="bold" className="px-4 leading-6 md:px-0">
             برترین پزشکان {doctor.expertises[0].expertise_groups[0].name} {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
@@ -76,12 +76,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
               از دیدگاه بیماران
             </Text>
           </Text>
-          <Recommend
-            doctorId={doctor.id}
-            city={doctor.city_en_slug}
-            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
-            centerId={university ? doctor.centers[0]?.id : null}
-          />
+          <Recommend doctorId={doctor.id} city={doctor.city_en_slug} category={doctor.expertises[0]?.expertise_groups[0].en_slug} />
         </>
       )}
     </>

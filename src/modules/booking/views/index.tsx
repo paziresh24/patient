@@ -525,7 +525,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {profile?.should_recommend_other_doctors && (
+          {profile?.should_recommend_other_doctors && !university && (
             <>
               <Text fontSize="sm" className="px-5 leading-6">
                 برترین پزشکان{' '}
