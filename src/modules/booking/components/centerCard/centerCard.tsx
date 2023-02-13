@@ -3,7 +3,7 @@ import Text from '@/common/components/atom/text/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import HospitalIcon from '@/common/components/icons/hospital';
 import OfficeIcon from '@/common/components/icons/office';
-import WifiIcon from '@/common/components/icons/wifi';
+import PhoneIcon from '@/common/components/icons/phone';
 import clsx from 'clsx';
 import { Center } from '../../types/selectCenter';
 import PhoneNumberList from '../phoneNumberList/phoneNumberList';
@@ -36,7 +36,7 @@ export const CenterCard = (props: CenterCardProps) => {
             >
               {type === 'office' && <OfficeIcon className="w-10 h-6" />}
               {type === 'hospital' && <HospitalIcon className="w-10 h-6" />}
-              {type === 'consult' && <WifiIcon className="w-10 h-6" />}
+              {type === 'consult' && <PhoneIcon className="w-10 h-6" />}
             </div>
             <div
               className={clsx('mr-2 flex justify-between items-center text-black w-full p-[0.65rem] rounded-md  text-sm font-medium', {
@@ -69,7 +69,7 @@ export const CenterCard = (props: CenterCardProps) => {
           <>
             <Divider />
             <div className="w-full p-4">
-              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-400">
+              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-500">
                 زمان نوبت دهی پزشک به پایان رسیده است!
               </Text>
             </div>
@@ -84,7 +84,7 @@ export const CenterCard = (props: CenterCardProps) => {
           <>
             <Divider />
             <div className="w-full p-4">
-              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-400">
+              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-500">
                 نوبت دهی اینترنتی در این {type === 'office' ? 'مطب' : 'مرکز'} غیر فعال است.
               </Text>
               <PhoneNumberList phoneNumbers={phoneNumbers} type={type} />

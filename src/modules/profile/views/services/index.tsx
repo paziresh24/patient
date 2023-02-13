@@ -58,6 +58,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
           waitingTime={doctor.waiting_time_info?.waiting_time_title}
           onBook={({ centerId, serviceId }) => router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`)}
+          displayName={doctor.display_name}
         />
       )}
       {isBulk && (

@@ -269,7 +269,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         ?.map((center: any) => {
           return {
             ...center,
-            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.name,
+            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${profile.display_name}` : center.name,
             address: center.id === CENTERS.CONSULT ? '' : center.address,
             freeturn: center.freeturn_text,
             type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
@@ -298,7 +298,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     let insurances: any[] = [];
     if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
       insurances = getNationalCodeConfirmation.data?.data?.insurances.map((insurance: any) => ({
-        label: insurance.insurer?.value + ' ' + insurance.insurerBox?.value,
+        label: insurance.insurer?.value,
         value: insurance.insurer?.coded_string + '.' + insurance.insurerBox?.coded_string,
       }));
     } else {

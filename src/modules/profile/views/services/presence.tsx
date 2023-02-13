@@ -14,10 +14,11 @@ interface PresenceProps {
   centers: any[];
   waitingTime?: string;
   onBook: ({ centerId, serviceId }: { centerId: string; serviceId: string }) => void;
+  displayName: string;
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const { centers, waitingTime, onBook } = props;
+  const { centers, waitingTime, onBook, displayName } = props;
   const isWebView = useWebView();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
@@ -40,7 +41,7 @@ export const Presence = memo((props: PresenceProps) => {
         ?.map((center: any) => {
           return {
             ...center,
-            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.name,
+            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${displayName}` : center.name,
             address: center.id === CENTERS.CONSULT ? '' : center.address,
             freeturn: center.freeturn_text,
             type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
