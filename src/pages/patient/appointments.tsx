@@ -174,7 +174,7 @@ export const Appointments: NextPageWithLayout = () => {
               }}
             />
           ))}
-        {!isLoading && getBooks.data?.status !== 204 && (
+        {!isLoading && !getBooks.isError && (
           <div ref={ref} className="flex justify-center w-full py-8">
             <Loading />
           </div>
