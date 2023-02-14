@@ -46,7 +46,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle }: useTo
         });
       },
     },
-    {
+    customize.showContribute && {
       type: 'edit',
       action: () => {
         router.push(`/patient/contribute?slug=${slug}`);

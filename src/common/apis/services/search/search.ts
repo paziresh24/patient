@@ -1,12 +1,10 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { useRouter } from 'next/router';
-import { ParsedUrlQuery } from 'querystring';
 import { useQuery } from 'react-query';
 
 export interface Params {
-  query?: ParsedUrlQuery;
+  query?: any;
   route: string;
   headers?: any;
 }
@@ -21,14 +19,11 @@ export const search = async ({ route, query, headers }: Params) => {
   return data;
 };
 
-export const useSearch = () => {
-  const {
-    query: { params, ...query },
-  } = useRouter();
+export const useSearch = ({ route, query }: Params, option?: any) => {
   const university = useServerQuery(state => state.queries?.university);
 
   const searchParams = {
-    route: (params as string[])?.join('/') ?? '',
+    route,
     query: {
       ...query,
       ...(university && { university }),
@@ -38,5 +33,6 @@ export const useSearch = () => {
   return useQuery([ServerStateKeysEnum.Search, searchParams], () => search(searchParams), {
     keepPreviousData: true,
     refetchOnMount: false,
+    ...option,
   });
 };

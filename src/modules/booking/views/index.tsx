@@ -297,10 +297,12 @@ const BookingSteps = (props: BookingStepsProps) => {
   const getInsuranceList = () => {
     let insurances: any[] = [];
     if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
-      insurances = getNationalCodeConfirmation.data?.data?.insurances.map((insurance: any) => ({
-        label: insurance.insurer?.value,
-        value: insurance.insurer?.coded_string + '.' + insurance.insurerBox?.coded_string,
-      }));
+      insurances = getNationalCodeConfirmation.data?.data?.insurances
+        ?.filter((insurance: any) => insurance.insurerBox?.coded_string)
+        .map((insurance: any) => ({
+          label: insurance.insurer?.value,
+          value: insurance.insurerBox?.coded_string,
+        }));
     } else {
       insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
     }
@@ -449,11 +451,11 @@ const BookingSteps = (props: BookingStepsProps) => {
               if (university) {
                 if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
                 const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
-                if (data?.insurances?.length === 1) {
+                if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
                   const insurance = data?.insurances[0];
                   return handleBookAction({
                     ...user,
-                    insurance_referral_code: insurance.insurer?.coded_string + '.' + insurance.insurerBox?.coded_string,
+                    insurance_referral_code: insurance.insurerBox?.coded_string,
                   });
                 }
                 handleOpenInsuranceModal();

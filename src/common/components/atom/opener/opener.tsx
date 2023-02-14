@@ -7,10 +7,11 @@ interface OpenerProps extends HTMLAttributes<HTMLDivElement> {
   openButtonText?: string;
   closeButtonText?: string;
   height?: number;
+  contentClassName?: string;
 }
 
 export const Opener = (props: OpenerProps) => {
-  const { openButtonText = 'open', closeButtonText = 'close', children, className, height = 80, ...rest } = props;
+  const { openButtonText = 'open', closeButtonText = 'close', children, className, height = 80, contentClassName, ...rest } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -21,6 +22,7 @@ export const Opener = (props: OpenerProps) => {
           {
             'after:!shadow-none h-full': isOpen,
           },
+          contentClassName,
         )}
         style={{ ...(!isOpen && { maxHeight: height }) }}
       >

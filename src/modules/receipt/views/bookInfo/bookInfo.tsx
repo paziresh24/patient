@@ -1,4 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton';
+import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
@@ -12,6 +13,8 @@ interface PaymentDetailsProps {
 export const BookInfo = (props: PaymentDetailsProps) => {
   const { loading = false, turnData, centerId } = props;
   const isConsultReceipt = centerId === '5532';
+  const { customize } = useCustomize();
+
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col pt-1 mt-5 border border-solid divide-y rounded-lg divide-dashed border-slate-200 divide-slate-100">
@@ -55,17 +58,19 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 nationalCode: turnData?.patient?.national_code,
                 selectServeis: turnData?.services?.[0]?.title,
               },
-              rules: isConsultReceipt
-                ? turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
-                  ? [
-                      ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
-                      '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
-                    ]
-                  : [
-                      'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
-                      ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
-                    ]
-                : turnData.book_notices,
+              ...(customize.showTermsAndConditions && {
+                rules: isConsultReceipt
+                  ? turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
+                    ? [
+                        ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
+                        '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
+                      ]
+                    : [
+                        'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
+                        ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
+                      ]
+                  : turnData.book_notices,
+              }),
             },
             centerType: turnData.is_online_visit ? CenterType.consult : CenterType.clinic,
           }).map(item => (

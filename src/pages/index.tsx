@@ -5,16 +5,22 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import { NextPageWithLayout } from './_app';
+const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
 const Home: NextPageWithLayout = () => {
   const { isMobile } = useResponsive();
+
+  const university = useServerQuery(state => state.queries.university);
+
   const customize = useCustomize(state => state.customize);
 
   return (
@@ -36,7 +42,11 @@ const Home: NextPageWithLayout = () => {
         ]}
       />
 
-      <main className="h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6">
+      <main
+        className={clsx('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
+          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': university,
+        })}
+      >
         {!customize.partnerTitle && <Logo className="text-2xl md:text-3xl" width={55} />}
         {customize.partnerTitle && (
           <Text fontWeight="bold" className="text-primary md:text-lg">
@@ -50,6 +60,7 @@ const Home: NextPageWithLayout = () => {
         )}
         <Suggestion />
         <RecentSearch />
+        {university && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
     </>

@@ -25,6 +25,7 @@ interface Customize {
   showSupplierRegister: boolean;
   showRateAndReviews: boolean;
   showSupport: boolean;
+  showContribute: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -56,6 +57,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showShareApp: true,
     showSupplierRegister: true,
     showRateAndReviews: true,
+    showContribute: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
@@ -85,6 +87,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       showSupplierRegister: (query['supplier-register'] as Toggle) !== 'off',
       showRateAndReviews: (query['rate-and-reviews'] as Toggle) !== 'off',
       showSupport: (query['support'] as Toggle) !== 'off',
+      showContribute: (query['contribute'] as Toggle) !== 'off',
     };
 
     return set(state => ({
