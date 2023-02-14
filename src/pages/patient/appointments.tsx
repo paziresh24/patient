@@ -29,7 +29,7 @@ import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments: NextPageWithLayout = () => {
+export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) => {
   const { query } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
@@ -44,7 +44,7 @@ export const Appointments: NextPageWithLayout = () => {
   const getBooks = useGetBooks({
     page,
     return_type: type,
-    university,
+    university: queryServer?.university ?? university,
   });
 
   const [ref, inView] = useInView({
@@ -65,7 +65,7 @@ export const Appointments: NextPageWithLayout = () => {
   useEffect(() => {
     regetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, type, university]);
+  }, [page, type]);
 
   useEffect(() => {
     if (getBooks.isSuccess) {
