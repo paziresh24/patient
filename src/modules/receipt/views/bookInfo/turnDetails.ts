@@ -158,7 +158,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
         name: items,
         type: 'Label',
       })),
-      shouldShow: rules && centerType === CenterType.clinic,
+      shouldShow: !!rules && centerType === CenterType.clinic,
       type: 'Accordion',
     },
     {
