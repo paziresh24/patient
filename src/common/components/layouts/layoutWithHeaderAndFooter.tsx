@@ -36,7 +36,7 @@ export const LayoutWithHeaderAndFooter = ({
           shouldShowPromoteApp={shouldShowPromoteApp}
         />
       )}
-      {children}
+      <div style={{ minHeight: 'calc(100vh - 8.8125rem)' }}>{children}</div>
       {customize.showFooter && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
       {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>

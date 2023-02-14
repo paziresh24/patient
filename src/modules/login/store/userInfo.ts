@@ -69,6 +69,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     removeCookies('certificate');
     removeCookies('token');
     get().removeInfo();
-    location.assign(`${publicRuntimeConfig.CLINIC_BASE_URL}/logout?url=${location.href}`);
+    location.assign(`${publicRuntimeConfig.CLINIC_BASE_URL}/logout?url=${location.origin}`);
   },
 }));
