@@ -8,6 +8,7 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 import Queue from '../../queue';
 import { OnlineVisitChannels } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
@@ -27,7 +28,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, onlineVisitChannels } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
-
+  const router = useRouter();
   const isBookForToday = isToday(new Date(bookTime));
 
   const showPrescription = () => {
@@ -35,7 +36,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
+    router.push(`/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (

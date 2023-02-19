@@ -19,7 +19,7 @@ export const queryClient = new QueryClient({
 const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   useEffect(() => {
     TagManager.initialize({
-      gtmId: 'GTM-P5RPLDP',
+      gtmId: pageProps.query?.['gtm:id'] ?? pageProps.query?.university ? 'GTM-56C68BQ' : 'GTM-P5RPLDP',
     });
   }, []);
 

@@ -20,6 +20,7 @@ import { CenterType } from '@/modules/myTurn/types/centerType';
 import { VisitChannels } from '@/modules/receipt/constants/onlineVisitChannels';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import clsx from 'clsx';
+import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -33,12 +34,13 @@ const Receipt: NextPageWithLayout = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
+  const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
-    pincode: pincode as string,
+    pincode: userId ? md5(userId) : (pincode as string),
   });
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',

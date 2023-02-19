@@ -1,5 +1,6 @@
 import Card from '@/common/components/atom/card/card';
 import Text from '@/common/components/atom/text/text';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
 import PhoneNumberList from '@/modules/booking/components/phoneNumberList/phoneNumberList';
 import Recommend from '@/modules/booking/components/recommend/recommend';
@@ -11,6 +12,8 @@ import Presence from './presence';
 
 export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isBulk: boolean; slug: string; className?: string }) => {
   const router = useRouter();
+  const university = useServerQuery(state => state.queries.university);
+
   return (
     <>
       {!isBulk && doctor?.id === '540' && (
@@ -55,6 +58,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
           waitingTime={doctor.waiting_time_info?.waiting_time_title}
           onBook={({ centerId, serviceId }) => router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`)}
+          displayName={doctor.display_name}
         />
       )}
       {isBulk && (
@@ -62,10 +66,10 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           <Text fontWeight="bold" fontSize="sm">
             نوبت‌دهی اینترنتی این پزشک غیرفعال می‌باشد!
           </Text>
-          <PhoneNumberList phoneNumbers={doctor.centers[0].display_number_array} />
+          <PhoneNumberList phoneNumbers={doctor.centers?.[0]?.display_number_array} />
         </Card>
       )}
-      {doctor?.expertises?.[0] && doctor?.should_recommend_other_doctors && (
+      {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (
         <>
           <Text fontWeight="bold" className="px-4 leading-6 md:px-0">
             برترین پزشکان {doctor.expertises[0].expertise_groups[0].name} {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
@@ -73,12 +77,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
               از دیدگاه بیماران
             </Text>
           </Text>
-          <Recommend
-            doctorId={doctor.id}
-            city={doctor.city_en_slug}
-            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
-            className="px-0 "
-          />
+          <Recommend doctorId={doctor.id} city={doctor.city_en_slug} category={doctor.expertises[0]?.expertise_groups[0].en_slug} />
         </>
       )}
     </>

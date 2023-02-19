@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
@@ -49,13 +50,26 @@ clinicClient.interceptors.response.use(
   },
 );
 
+paziresh24AppClient.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
 paziresh24AppClient.interceptors.response.use(
   res => res,
   async error => {
     const originalRequest = error.config;
     if (error.response?.status === 401) {
       try {
-        await refresh();
+        const { data } = await refresh();
+        if (data.access_token) setCookie('token', data.access_token);
         return paziresh24AppClient(originalRequest);
       } catch (error) {
         if (axios.isAxiosError(error)) {

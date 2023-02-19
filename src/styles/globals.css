@@ -130,6 +130,10 @@ body {
   font-family: iransansx, tahoma;
 }
 
+button {
+  font-family: iransansx, tahoma !important;
+}
+
 @supports (font-variation-settings: normal) {
   * {
     font-family: 'iransansxv', tahoma;

@@ -34,6 +34,7 @@ export const UserProfile = () => {
     userInfo: state.info,
     pending: state.pending,
   }));
+  const logout = useUserInfoStore(state => state.logout);
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
   const turnsCount = useUserInfoStore(state => state.turnsCount);
@@ -143,18 +144,20 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  <MenuItem
-                    name={t('patient/common:menu.support')}
-                    link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
-                    icon={<HeadphoneIcon />}
-                  />
-                  <MenuItem name={t('patient/common:menu.logout')} link="/logout" icon={<LogoutIcon />} />
+                  {customize.showSupport && (
+                    <MenuItem
+                      name={t('patient/common:menu.support')}
+                      link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
+                      icon={<HeadphoneIcon />}
+                    />
+                  )}
+                  <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
                 </MenuList>
               </div>
             </Transition>
           </div>
         ) : (
-          <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
+          <Button className="!px-2 !text-xs md:!text-sm md:!px-4" size="sm" variant="secondary" onClick={handleLogin}>
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}

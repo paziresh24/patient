@@ -16,10 +16,11 @@ interface ListOfDoctorsProps {
   onSearch: (query: string) => void;
   onSelectExpertise: (expertise: string) => void;
   loading?: boolean;
+  showRateAndReviews?: boolean;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
-  const { doctors, expertises, onSearch, onSelectExpertise, loading = false } = props;
+  const { doctors, expertises, onSearch, onSelectExpertise, loading = false, showRateAndReviews = true } = props;
   const [page, setPage] = useState(1);
   const router = useRouter();
 
@@ -74,10 +75,12 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                 avatar: doctor.image,
                 url: doctor.url,
                 expertise: doctor.sub_title,
-                rate: {
-                  count: doctor.rates_count,
-                  satisfaction: doctor.calculated_rate,
-                },
+                ...(showRateAndReviews && {
+                  rate: {
+                    count: doctor.rates_count,
+                    satisfaction: doctor.calculated_rate,
+                  },
+                }),
                 viewCount: convertLongToCompactNumber(doctor.number_of_vist),
               }}
               details={{

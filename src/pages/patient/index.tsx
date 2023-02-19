@@ -29,6 +29,7 @@ const { publicRuntimeConfig } = config();
 export const PatinetProfile: NextPageWithLayout = () => {
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
+  const logout = useUserInfoStore(state => state.logout);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const isApplication = useApplication();
@@ -100,12 +101,14 @@ export const PatinetProfile: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}>
-            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
-              <HeadphoneIcon />
-              <Text fontWeight="medium">پشتیبانی</Text>
-            </a>
-          </Link>
+          {customize.showSupport && (
+            <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}>
+              <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
+                <HeadphoneIcon />
+                <Text fontWeight="medium">پشتیبانی</Text>
+              </a>
+            </Link>
+          )}
           {customize.showSupplierRegister && (
             <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}>
               <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
@@ -127,12 +130,13 @@ export const PatinetProfile: NextPageWithLayout = () => {
               <Text fontWeight="medium">معرفی پذیرش24 به دوستان</Text>
             </div>
           )}
-          <Link href={`${publicRuntimeConfig.CLINIC_BASE_URL}/logout`}>
-            <a className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100">
-              <LogoutIcon />
-              <Text fontWeight="medium">خروج</Text>
-            </a>
-          </Link>
+          <div
+            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100 cursor-pointer"
+            onClick={logout}
+          >
+            <LogoutIcon />
+            <Text fontWeight="medium">خروج</Text>
+          </div>
         </div>
       </div>
     </>

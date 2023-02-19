@@ -19,7 +19,7 @@ export const MenuItem = (props: MenuItemProps) => {
   return (
     <li className={clsx('font-medium', className)}>
       <Component href={link} prefetch={false} {...rest}>
-        <a className="relative flex items-center justify-between py-3" onClick={rest.onClick}>
+        <a className="relative flex items-center cursor-pointer justify-between py-3" onClick={rest.onClick}>
           <div className="flex items-center space-s-2">
             {icon}
             <Text fontSize="sm">{name}</Text>

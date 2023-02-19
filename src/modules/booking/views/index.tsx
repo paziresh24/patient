@@ -160,11 +160,11 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    const { insurance_id, insurance_number } = user;
+    const { insurance_id, insurance_referral_code, insurance_number } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
-    console.log(userConfimation);
+    if ((+center.settings?.booking_enable_insurance || university) && !insurance_id && !insurance_referral_code)
+      return toast.error('لطفا بیمه خود را انتخاب کنید.');
     handleBook(
       {
         center,
@@ -174,6 +174,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           name: userConfimation?.first_name ?? user.name,
           family: userConfimation?.last_name ?? user.family,
           gender: userConfimation?.gender ?? user.gender,
+          insurance_id: insurance_id !== -1 ? insurance_id : null,
+          insurance_referral_code: insurance_referral_code !== -1 ? insurance_referral_code : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
@@ -267,7 +269,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         ?.map((center: any) => {
           return {
             ...center,
-            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.name,
+            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${profile.display_name}` : center.name,
             address: center.id === CENTERS.CONSULT ? '' : center.address,
             freeturn: center.freeturn_text,
             type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
@@ -291,6 +293,23 @@ const BookingSteps = (props: BookingStepsProps) => {
 
     return () => clearTimeout(getTurnTimeout.current);
   }, [step]);
+
+  const getInsuranceList = () => {
+    let insurances: any[] = [];
+    if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
+      insurances = getNationalCodeConfirmation.data?.data?.insurances
+        ?.filter((insurance: any) => insurance.insurerBox?.coded_string)
+        .map((insurance: any) => ({
+          label: insurance.insurer?.value,
+          value: insurance.insurerBox?.coded_string,
+        }));
+    } else {
+      insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+    }
+
+    insurances.push({ label: 'آزاد', value: -1 });
+    return insurances;
+  };
 
   return (
     <div className={clsx('p-5 bg-white rounded-lg', className)}>
@@ -428,11 +447,17 @@ const BookingSteps = (props: BookingStepsProps) => {
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
-              console.log(user);
 
               if (university) {
                 if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
-                await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
+                  const insurance = data?.insurances[0];
+                  return handleBookAction({
+                    ...user,
+                    insurance_referral_code: insurance.insurerBox?.coded_string,
+                  });
+                }
                 handleOpenInsuranceModal();
                 return;
               }
@@ -485,26 +510,20 @@ const BookingSteps = (props: BookingStepsProps) => {
       </Modal>
       <Modal title="انتخاب بیمه" {...insuranceModalProps}>
         <div className="flex flex-col space-y-3">
-          <Autocomplete
-            onChange={e => setInsuranceName(e.target.value.value)}
-            label="نام بیمه"
-            value={{
-              label: center?.insurances?.find((item: any) => item.id === insuranceName)?.name,
-              value: insuranceName,
-            }}
-            options={center?.insurances
-              ?.filter((item: any) =>
-                university && getNationalCodeConfirmation.isSuccess
-                  ? getNationalCodeConfirmation.data?.data?.insurances?.some((insurance: any) => insurance.insurer?.value === item.name)
-                  : true,
-              )
-              .map((item: any) => ({ label: item.name, value: item.id }))}
-          />
+          <Autocomplete onChange={e => setInsuranceName(e.target.value.value)} label="نام بیمه" options={getInsuranceList()} />
           <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه (اختیاری)" />
           <Button
             loading={bookLoading}
             block
-            onClick={() => handleBookAction({ ...user, insurance_id: insuranceName, insurance_number: insuranceNumber })}
+            onClick={() =>
+              handleBookAction({
+                ...user,
+                ...(!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)
+                  ? { insurance_referral_code: insuranceName }
+                  : { insurance_id: insuranceName }),
+                insurance_number: insuranceNumber,
+              })
+            }
           >
             ثبت نوبت
           </Button>
@@ -515,7 +534,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {profile?.should_recommend_other_doctors && (
+          {profile?.should_recommend_other_doctors && !university && (
             <>
               <Text fontSize="sm" className="px-5 leading-6">
                 برترین پزشکان{' '}
@@ -529,6 +548,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                   doctorId={profile.id}
                   city={profile.city_en_slug}
                   category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                  centerId={university ? center?.id : null}
                 />
               )}
             </>

@@ -1,3 +1,4 @@
+import useCustomize from '@/common/hooks/useCustomize';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { useRouter } from 'next/router';
@@ -25,6 +26,7 @@ interface TurnBodyProps {
 export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo } = props;
   const router = useRouter();
+  const { customize } = useCustomize();
 
   const shouldShowLocation = centerType !== CenterType.consult;
   const shouldShowRate =
@@ -39,7 +41,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
       <TurnDetails items={detailsData} onClick={handleClickCard} />
 
       {shouldShowLocation && <Location address={location.address} lat={location.lat} lng={location.lng} />}
-      {shouldShowRate && <Rate link={feedbackUrl} />}
+      {shouldShowRate && customize.showRateAndReviews && <Rate link={feedbackUrl} />}
     </>
   );
 };

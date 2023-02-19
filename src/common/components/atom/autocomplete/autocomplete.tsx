@@ -82,14 +82,15 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   if (showSuggestions) {
     suggestionsListComponent = (
-      <ul className="absolute w-full mt-1 bg-white rounded-lg shadow-md z-infinity max-h-[15rem] overflow-auto">
+      <ul className="absolute w-full mt-1 bg-white divide-y divide-slate-100 rounded-lg shadow-md z-infinity max-h-[15rem] overflow-auto">
         {filteredSuggestions.length ? (
           filteredSuggestions.map((suggestion, index) => {
             return (
               <li
                 key={suggestion.value}
                 className={clsx('p-3 cursor-pointer', {
-                  'bg-slate-100': index === activeSuggestion,
+                  'bg-slate-50': activeSuggestion > 1 && index === activeSuggestion,
+                  'bg-slate-100': suggestion.value === value?.value,
                 })}
                 onClick={() => onClick(suggestion)}
               >

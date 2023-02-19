@@ -23,6 +23,9 @@ interface Customize {
   bookMark: boolean;
   showShareApp: boolean;
   showSupplierRegister: boolean;
+  showRateAndReviews: boolean;
+  showSupport: boolean;
+  showContribute: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -53,6 +56,8 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     bookMark: true,
     showShareApp: true,
     showSupplierRegister: true,
+    showRateAndReviews: true,
+    showContribute: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
@@ -79,7 +84,10 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       showTermsAndConditions: (query['terms-and-conditions'] as Toggle) !== 'off',
       bookMark: (query['bookmark'] as Toggle) !== 'off',
       showShareApp: (query['share-app'] as Toggle) !== 'off',
-      showSupplierRegister: (query['show-supplier-register'] as Toggle) !== 'off',
+      showSupplierRegister: (query['supplier-register'] as Toggle) !== 'off',
+      showRateAndReviews: (query['rate-and-reviews'] as Toggle) !== 'off',
+      showSupport: (query['support'] as Toggle) !== 'off',
+      showContribute: (query['contribute'] as Toggle) !== 'off',
     };
 
     return set(state => ({
