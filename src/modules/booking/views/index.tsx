@@ -418,9 +418,9 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
-          {center.user_center_desk && (
+          {center?.user_center_desk && (
             <div className="p-3 rounded-lg bg-slate-100 mb-5">
-              <Text fontSize="sm">{center.user_center_desk}</Text>
+              <Text fontSize="sm">{center?.user_center_desk}</Text>
             </div>
           )}
           <Text fontWeight="bold" className="block mb-3">
