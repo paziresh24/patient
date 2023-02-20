@@ -163,7 +163,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if ((+center.settings?.booking_enable_insurance || university) && !insurance_id && !insurance_referral_code)
+    if (+center.settings?.booking_enable_insurance && !insurance_id && !insurance_referral_code)
       return toast.error('لطفا بیمه خود را انتخاب کنید.');
     handleBook(
       {
@@ -418,6 +418,11 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
+          {center.user_center_desk && (
+            <div className="p-3 rounded-lg bg-slate-100 mb-5">
+              <Text fontSize="sm">{center.user_center_desk}</Text>
+            </div>
+          )}
           <Text fontWeight="bold" className="block mb-3">
             برای درمان چه بیماری به پزشک مراجعه کردید؟
           </Text>
@@ -448,24 +453,24 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
 
-              if (university) {
-                if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
-                try {
+              try {
+                if (university) {
+                  if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
                   const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
-                  if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
-                    const insurance = data?.insurances[0];
-                    return handleBookAction({
-                      ...user,
-                      insurance_referral_code: insurance.insurerBox?.coded_string,
-                    });
+                  if (data) {
+                    if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
+                      const insurance = data?.insurances[0];
+                      return handleBookAction({
+                        ...user,
+                        insurance_referral_code: insurance.insurerBox?.coded_string,
+                      });
+                    }
+                    handleOpenInsuranceModal();
+                    return;
                   }
-                  handleOpenInsuranceModal();
-                  return;
-                } catch (e) {
-                  handleOpenInsuranceModal();
-                  return;
                 }
-              }
+                // eslint-disable-next-line no-empty
+              } catch (e) {}
 
               if (+center?.settings?.booking_enable_insurance) {
                 handleOpenInsuranceModal();
