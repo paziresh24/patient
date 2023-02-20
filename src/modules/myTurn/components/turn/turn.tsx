@@ -30,15 +30,7 @@ export const Turn: React.FC<TurnProps> = props => {
       className="space-y-2 md:shadow-none !rounded-none md:!rounded-lg md:border border-solid border-slate-200 relative"
       data-testid="turn-card"
     >
-      <TurnHeader
-        id={id}
-        doctorInfo={doctorInfo}
-        centerType={centerType}
-        centerId={centerInfo.centerId}
-        trackingCode={turnDetails.trackingCode}
-        nationalCode={patientInfo.nationalCode}
-        status={status}
-      />
+      <TurnHeader id={id} centerId={centerInfo.centerId} doctorInfo={doctorInfo} status={status} />
 
       <TurnBody
         id={id}
@@ -54,6 +46,9 @@ export const Turn: React.FC<TurnProps> = props => {
       <TurnFooter
         id={id}
         centerType={centerType}
+        centerId={centerInfo.centerId}
+        trackingCode={turnDetails.trackingCode}
+        nationalCode={patientInfo.nationalCode}
         pdfLink={prescription?.pdf}
         slug={doctorInfo.slug}
         status={status}
