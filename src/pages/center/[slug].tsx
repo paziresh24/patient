@@ -21,7 +21,7 @@ import { NextPageWithLayout } from '../_app';
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile: NextPageWithLayout = () => {
+const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
@@ -42,7 +42,7 @@ const CenterProfile: NextPageWithLayout = () => {
       query: searchQuery,
       center_id: profileData.id,
       expertise: selectedExpertise,
-      withoutUniversity: true,
+      university,
     },
     {
       refetchOnMount: false,
@@ -209,6 +209,7 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { slug, ...query } = context.query;
+  const university = query.university as string;
 
   const slugFormmated = slug as string;
   try {
@@ -245,8 +246,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     await queryClient.fetchQuery(
-      [ServerStateKeysEnum.SearchSuggestion, { query: '', center_id: result?.data?.id, expertise: '', withoutUniversity: true }],
-      () => suggestion({ query: '', center_id: result?.data?.id, expertise: '', withoutUniversity: true }),
+      [ServerStateKeysEnum.SearchSuggestion, { query: '', center_id: result?.data?.id, expertise: '', ...(university && { university }) }],
+      () => suggestion({ query: '', center_id: result?.data?.id, expertise: '', ...(university && { university }) }),
     );
 
     return {
