@@ -104,7 +104,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       setRemoveModal(true);
       splunkInstance().sendEvent({
         group: 'my-turn',
-        type: 'delete-turn',
+        type: 'delete-turn-footer',
         event: {
           terminal_id: getCookie('terminal_id'),
           doctorName,
