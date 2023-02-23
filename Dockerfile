@@ -5,8 +5,8 @@ ENV DOCKER_BUILDKIT 1
 ENV NEXT_TELEMETRY_DISABLED 1
 
 COPY package.json package-lock.json ./ 
-RUN yarn config set registry https://registry.npmjs.org/
 RUN yarn config set "strict-ssl" false -g
+RUN yarn add https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.0.tgz
 RUN yarn
 
 COPY . .
