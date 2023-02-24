@@ -10,10 +10,9 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useCallback } from 'react';
-import { NextPageWithLayout } from '../_app';
 const { publicRuntimeConfig } = getConfig();
 
-const Booking: NextPageWithLayout = () => {
+const Booking = () => {
   const router = useRouter();
   const { data, isLoading, isIdle } = useGetProfileData(
     {

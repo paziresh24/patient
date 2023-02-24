@@ -44,24 +44,26 @@ const MegaMenuContent = ({ items, onClose }: MegaMenuContentProps) => {
         {items.map((menu, index) => {
           return (
             <div key={index}>
-              <Link href={menu.link ?? '#'}>
-                <a
-                  className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
-                    'font-bold': !!menu.sub_menu,
-                  })}
-                  onClick={onClose}
-                >
-                  {menu.title}
-                </a>
+              <Link
+                href={menu.link ?? '#'}
+                className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
+                  'font-bold': !!menu.sub_menu,
+                })}
+                onClick={onClose}
+              >
+                {menu.title}
               </Link>
 
               {menu.sub_menu &&
                 menu.sub_menu.map((item, index) => {
                   return (
-                    <Link key={index} href={item.link ?? '#'}>
-                      <a onClick={onClose} className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5">
-                        {item.title}
-                      </a>
+                    <Link
+                      key={index}
+                      href={item.link ?? '#'}
+                      onClick={onClose}
+                      className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5"
+                    >
+                      {item.title}
                     </Link>
                   );
                 })}

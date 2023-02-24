@@ -22,10 +22,9 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
 
-const Receipt: NextPageWithLayout = () => {
+const Receipt = () => {
   const {
     query: { bookId, centerId },
     ...router

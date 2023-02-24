@@ -12,10 +12,9 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
-import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
 
-const Factor: NextPageWithLayout = () => {
+const Factor = () => {
   const {
     query: { bookId, centerId },
   } = useRouter();

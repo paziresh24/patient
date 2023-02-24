@@ -102,15 +102,13 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
 
   return (
     <div className="relative flex flex-col items-end">
-      <Link href={`/dr/${doctorInfo.slug}`}>
-        <a className="self-start w-9/12">
-          <DoctorInfo
-            avatar={doctorInfo.avatar}
-            firstName={doctorInfo.firstName}
-            lastName={doctorInfo.lastName}
-            expertise={doctorInfo.expertise}
-          />
-        </a>
+      <Link href={`/dr/${doctorInfo.slug}`} className="self-start w-9/12">
+        <DoctorInfo
+          avatar={doctorInfo.avatar}
+          firstName={doctorInfo.firstName}
+          lastName={doctorInfo.lastName}
+          expertise={doctorInfo.expertise}
+        />
       </Link>
 
       {status !== BookStatus.notVisited && <TagStatus status={status} className="mx-5" />}

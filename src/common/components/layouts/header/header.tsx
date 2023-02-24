@@ -60,13 +60,11 @@ const Header = (props: HeaderProps) => {
             {shouldShowBrand && (
               <>
                 <Link href="/" shallow>
-                  <a>
-                    <HeaderLogo
-                      showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
-                      partnerLogo={customize.partnerLogo}
-                      brandType={customize.headerBrandLogoType}
-                    />
-                  </a>
+                  <HeaderLogo
+                    showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
+                    partnerLogo={customize.partnerLogo}
+                    brandType={customize.headerBrandLogoType}
+                  />
                 </Link>
                 <HeaderLogo
                   showPartnerLogo={!customize.showPartnerLogoInPrimaryPlace}

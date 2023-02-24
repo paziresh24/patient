@@ -72,14 +72,12 @@ const MobileNavbar = (props: MobileNavbarProps) => {
           )}
           {shouldShowBrand && (
             <Link href="/" shallow>
-              <a>
-                <HeaderLogo
-                  showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
-                  partnerLogo={customize.partnerLogo}
-                  brandType={customize.headerBrandLogoType}
-                  size="mobile"
-                />
-              </a>
+              <HeaderLogo
+                showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
+                partnerLogo={customize.partnerLogo}
+                brandType={customize.headerBrandLogoType}
+                size="mobile"
+              />
             </Link>
           )}
         </div>

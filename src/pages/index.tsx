@@ -10,10 +10,9 @@ import Suggestion from '@/modules/search/view/suggestion';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
-import { NextPageWithLayout } from './_app';
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
-const Home: NextPageWithLayout = () => {
+const Home = () => {
   const { isMobile } = useResponsive();
   const customize = useCustomize(state => state.customize);
 

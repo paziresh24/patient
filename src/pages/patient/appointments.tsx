@@ -24,11 +24,10 @@ import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments: NextPageWithLayout = () => {
+export const Appointments = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();

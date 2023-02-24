@@ -29,9 +29,8 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
 
-const Search: NextPageWithLayout = () => {
+const Search = () => {
   const { isMobile } = useResponsive();
   const {
     asPath,

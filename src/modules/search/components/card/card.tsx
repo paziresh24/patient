@@ -73,32 +73,28 @@ export const SearchCard = (props: SearchCardProps) => {
   return (
     <Card className={clsx('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
-        <Link href={baseInfo.url}>
-          <a onClick={sendEventWhenClick}>
-            <div className="relative">
-              <Avatar
-                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
-                alt={imageAlt}
-                width={80}
-                height={80}
-                className={clsx('border-2 border-slate-200', {
-                  'border-primary': baseInfo?.isVerify,
-                })}
-                as={Image}
-                {...avatarLazyLoading}
-              />
-              {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
-            </div>
-          </a>
+        <Link href={baseInfo.url} onClick={sendEventWhenClick}>
+          <div className="relative">
+            <Avatar
+              src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+              alt={imageAlt}
+              width={80}
+              height={80}
+              className={clsx('border-2 border-slate-200', {
+                'border-primary': baseInfo?.isVerify,
+              })}
+              as={Image}
+              {...avatarLazyLoading}
+            />
+            {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
+          </div>
         </Link>
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
-            <Link href={baseInfo.url}>
-              <a className="w-4/5" onClick={sendEventWhenClick}>
-                <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
-                  {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
-                </Text>
-              </a>
+            <Link href={baseInfo.url} className="w-4/5" onClick={sendEventWhenClick}>
+              <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
+                {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+              </Text>
             </Link>
             {!!baseInfo?.viewCount && (
               <div className="absolute flex items-center space-s-1 rtl:left-5 ltr:right-5 top-5">

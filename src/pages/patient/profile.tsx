@@ -18,9 +18,8 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import { toast } from 'react-hot-toast';
-import { NextPageWithLayout } from '../_app';
 
-export const PatinetProfile: NextPageWithLayout = () => {
+export const PatinetProfile = () => {
   const { query } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
