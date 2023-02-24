@@ -3,7 +3,7 @@ import Card from '@/common/components/atom/card';
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import getConfig from 'next/config';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import Link from 'next/link';
 const { publicRuntimeConfig } = getConfig();
 

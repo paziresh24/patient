@@ -3,7 +3,7 @@ import Text from '@/common/components/atom/text';
 import Android from '@/common/components/icons/android';
 import Apple from '@/common/components/icons/apple';
 import useTranslation from 'next-translate/useTranslation';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import promoteImage from './image/app-mockup.png';
 
 const Promote = () => {

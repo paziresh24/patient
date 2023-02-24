@@ -1,7 +1,7 @@
 import Text from '@/components/atom/text';
 import clsx from 'clsx';
 import useTranslation from 'next-translate/useTranslation';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import logoSvg from './logo.svg';
 
 interface LogoProps {

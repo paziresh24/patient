@@ -11,7 +11,7 @@ import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
 import clsx from 'clsx';
 import getConfig from 'next/config';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import Badge, { BadgeProps } from '../badge';
