@@ -23,6 +23,7 @@ export interface TurnProps {
   };
   patientInfo: {
     nationalCode: string;
+    cell: string;
   };
   turnDetails: {
     bookTime: number;

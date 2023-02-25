@@ -152,6 +152,7 @@ export const Appointments: NextPageWithLayout = () => {
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
+                cell: turn.patient_info.cell,
               }}
               turnDetails={{
                 bookTime: turn.from,

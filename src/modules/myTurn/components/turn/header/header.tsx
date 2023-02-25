@@ -1,4 +1,5 @@
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { splunkInstance } from '@/common/services/splunk';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -10,6 +11,7 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { getCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -29,12 +31,15 @@ interface TurnHeaderProps {
   centerId: string;
   nationalCode: string;
   trackingCode: string;
+  doctorName: string;
+  expertise: string;
+  phoneNumber: string;
   status: BookStatus;
   centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, doctorName, expertise, phoneNumber } = props;
   const router = useRouter();
   const [removeModal, setRemoveModal] = useState(false);
   const { removeBook } = useBookStore();
@@ -75,6 +80,20 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
+  const showRemoveTurnModal = () => {
+    setRemoveModal(true);
+    splunkInstance().sendEvent({
+      group: 'my-turn',
+      type: 'delete-turn-header',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        phoneNumber,
+      },
+    });
+  };
+
   const menuItems = [
     {
       id: 0,
@@ -94,7 +113,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 2,
       name: 'لغو نوبت',
       icon: <TrashIcon />,
-      action: () => setRemoveModal(true),
+      action: showRemoveTurnModal,
       testId: 'drop-down__remove-button',
       shouldShow: shouldShowRemoveTurn,
     },
@@ -123,7 +142,6 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         }
         items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
       />
-
       <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
