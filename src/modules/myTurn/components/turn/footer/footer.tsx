@@ -60,6 +60,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
+  const isEnableFectureFlagging = useFeatureIsOn('delete-book');
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
 
@@ -99,74 +100,50 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     );
   };
 
-  const RemoveTurnButton = () => {
-    const showRemoveTurnModal = () => {
-      setRemoveModal(true);
-      splunkInstance().sendEvent({
-        group: 'my-turn',
-        type: 'delete-turn-footer',
-        event: {
-          terminal_id: getCookie('terminal_id'),
-          doctorName,
-          expertise,
-          phoneNumber,
+  const removeBookAction = () => {
+    removeBookApi.mutate(
+      {
+        center_id: centerId,
+        reference_code: trackingCode,
+        national_code: nationalCode,
+      },
+      {
+        onSuccess: data => {
+          if (data.data.status === ClinicStatus.SUCCESS) {
+            removeBook({ bookId: id });
+            setRemoveModal(false);
+            return;
+          }
+          toast.error(data.data.message);
         },
-      });
-    };
-    const removeBookAction = () => {
-      removeBookApi.mutate(
-        {
-          center_id: centerId,
-          reference_code: trackingCode,
-          national_code: nationalCode,
-        },
-        {
-          onSuccess: data => {
-            if (data.data.status === ClinicStatus.SUCCESS) {
-              removeBook({ bookId: id });
-              setRemoveModal(false);
-              return;
-            }
-            toast.error(data.data.message);
-          },
-        },
-      );
-    };
-    return (
-      <>
-        <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
-          لغو نوبت
-        </Button>
-        <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
-          <div className="flex space-s-2">
-            <Button
-              theme="error"
-              block
-              onClick={removeBookAction}
-              loading={removeBookApi.isLoading}
-              data-testid="modal__remove-turn-button"
-            >
-              لغو نوبت
-            </Button>
-            <Button
-              theme="error"
-              variant="secondary"
-              block
-              onClick={() => setRemoveModal(false)}
-              data-testid="modal__cancel-remove-turn-button"
-            >
-              انصراف
-            </Button>
-          </div>
-        </Modal>
-      </>
+      },
     );
+  };
+
+  const showRemoveTurnModal = () => {
+    setRemoveModal(true);
+    splunkInstance().sendEvent({
+      group: 'my-turn',
+      type: 'delete-turn-footer',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        phoneNumber,
+      },
+    });
   };
 
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {useFeatureIsOn('delete-book') && shouldShowRemoveTurn && <RemoveTurnButton />}
+      {isEnableFectureFlagging && shouldShowRemoveTurn && (
+        <>
+          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+            لغو نوبت
+          </Button>
+        </>
+      )}
 
       {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
       {(status === BookStatus.expired ||
@@ -188,6 +165,22 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
       <Modal onClose={setQueueModal} isOpen={queueModal} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
+      </Modal>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+        <div className="flex space-s-2">
+          <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
+            لغو نوبت
+          </Button>
+          <Button
+            theme="error"
+            variant="secondary"
+            block
+            onClick={() => setRemoveModal(false)}
+            data-testid="modal__cancel-remove-turn-button"
+          >
+            انصراف
+          </Button>
+        </div>
       </Modal>
     </>
   );

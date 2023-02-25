@@ -80,7 +80,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
-  const deleteTurn = () => {
+  const showRemoveTurnModal = () => {
     setRemoveModal(true);
     splunkInstance().sendEvent({
       group: 'my-turn',
@@ -113,7 +113,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 2,
       name: 'لغو نوبت',
       icon: <TrashIcon />,
-      action: deleteTurn,
+      action: showRemoveTurnModal,
       testId: 'drop-down__remove-button',
       shouldShow: shouldShowRemoveTurn,
     },
