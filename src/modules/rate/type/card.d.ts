@@ -11,10 +11,11 @@ export type Options = {
   type: 'menu' | 'controller' | 'button';
   icon?: React.ReactNode;
   inModal?: boolean;
+  prefix?: string;
 };
 
 export type Card = {
-  id?: string | number | any;
+  id?: string;
   avatar?: any;
   name?: string;
   tag?: Tags[];

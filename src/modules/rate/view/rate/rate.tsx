@@ -10,12 +10,13 @@ import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
 
 export const Rate = (props: RateProps) => {
-  const { details, filters, search, feedbacks, isLoading, controller } = props;
+  const { details, filters, search, feedbacks, isLoading, controller, message } = props;
+
   return (
     <>
       <div className="w-full h-auto">
-        {details && (
-          <div className="p-4">
+        {!!details.count && (
+          <div className="p-4 pb-0">
             <Details
               satisfaction={details.satisfaction}
               count={details.count}
@@ -25,8 +26,8 @@ export const Rate = (props: RateProps) => {
             />
           </div>
         )}
-        {controller && (
-          <div className="w-full flex justify-between items-center mt-12 px-4">
+        {!!controller && (
+          <div className="flex items-center justify-between w-full px-4 my-4">
             <Text fontSize="sm" fontWeight="medium">
               {controller.text}
             </Text>
@@ -39,39 +40,50 @@ export const Rate = (props: RateProps) => {
             ))}
           </div>
         )}
-        <Divider className="my-8" />
-        <div className="flex flex-col gap-3">
-          <div className="flex justify-between gap-3 w-full px-4">
-            {filters.length &&
-              filters.map(option => (
-                <div key={option.id} className="w-3/6">
-                  <Autocomplete onChange={e => option.onChange(e.target.value)} options={option.options} value={option.value} />
+        {!!details.count && (
+          <>
+            <Divider className="mb-5" />
+            {!message && (
+              <div className="flex flex-col gap-3">
+                <div className="flex justify-between w-full gap-3 px-4">
+                  {filters.length &&
+                    filters.map(option => (
+                      <div key={option.id} className="w-3/6">
+                        <Autocomplete onChange={e => option.onChange(e.target.value)} options={option.options} value={option.value} />
+                      </div>
+                    ))}
                 </div>
-              ))}
-          </div>
-          {search && (
-            <div className="relative border border-slate-300 outline-primary rounded-lg bg-white mx-4">
-              {search.icon && <span>{search.icon}</span>}
-              <TextField
-                placeholder={search.placeholder}
-                onChange={(e: any) => search.onChange(e)}
-                value={search.value}
-                className={search.className}
-              />
-            </div>
-          )}
-          <div className={clsx('mt-4', { '!mt-0': !feedbacks.length })}>
-            {!!feedbacks?.length &&
-              !isLoading &&
-              feedbacks.map((feedback, index) => <FeedbackCard className="border-b-0 mb-1" key={index + 1} feedback={feedback} />)}
-            {isLoading && <RateLoading />}
-            {!feedbacks?.length && !isLoading && (
-              <div className="p-4">
-                <NotFound />
+                {search && (
+                  <div className="relative mx-4 bg-white border rounded-lg border-slate-300 outline-primary">
+                    {search.icon && <span>{search.icon}</span>}
+                    <TextField
+                      placeholder={search.placeholder}
+                      onChange={(e: any) => search.onChange(e)}
+                      value={search.value}
+                      className={search.className}
+                    />
+                  </div>
+                )}
+                <div className={clsx('mt-2', { '!mt-0': !feedbacks.length })}>
+                  {!!feedbacks?.length &&
+                    !isLoading &&
+                    feedbacks.map((feedback, index) => <FeedbackCard className="border-b-0" key={index + 1} feedback={feedback} />)}
+                  {isLoading && <RateLoading />}
+                  {!feedbacks?.length && !isLoading && (
+                    <div className="p-4">
+                      <NotFound />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-          </div>
-        </div>
+            {message && (
+              <div className="p-4 pt-0 text-center">
+                <Text fontWeight="medium">{message}</Text>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </>
   );
@@ -79,7 +91,7 @@ export const Rate = (props: RateProps) => {
 
 const NotFound = () => {
   return (
-    <div className="h-[10rem] w-full rounded-xl flex justify-center items-center bg-zinc-100">
+    <div className="h-[10rem] w-full rounded-xl flex justify-center items-center bg-slate-100">
       <Text fontSize="sm" fontWeight="extraBold">
         موردی یافت نشد !
       </Text>
@@ -90,12 +102,12 @@ const NotFound = () => {
 export const RateLoading = () => {
   return (
     <>
-      <div className=" bg-white p-3 rounded-lg">
+      <div className="p-3 bg-white rounded-lg ">
         <div className="flex w-full gap-3">
           <div>
             <Skeleton w="4rem" h="4rem" rounded="full" />
           </div>
-          <div className="w-full flex flex-col justify-around">
+          <div className="flex flex-col justify-around w-full">
             <Skeleton w="20%" h="1rem" rounded="md" />
             <Skeleton w="49%" h="1rem" rounded="md" />
           </div>

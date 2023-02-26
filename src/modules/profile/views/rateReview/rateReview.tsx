@@ -4,12 +4,15 @@ import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import TextField from '@/common/components/atom/textField/textField';
+import Text from '@/common/components/atom/text';
 import DislikeIcon from '@/common/components/icons/dislike';
 import HeartIcon from '@/common/components/icons/heart';
+import InfoIcon from '@/common/components/icons/info';
 import LikeIcon from '@/common/components/icons/like';
-import PersonseIcon from '@/common/components/icons/persons';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
+import ShareIcon from '@/common/components/icons/share';
+import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -20,9 +23,8 @@ import Rate from '@/modules/rate/view/rate';
 import clsx from 'clsx';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useRateFilter } from '../../hooks/useSearchFeedback';
 
 interface RateReviewProps {
   doctor: {
@@ -47,11 +49,16 @@ interface RateReviewProps {
       avg_star: number;
     }[];
   };
+  className?: string;
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails } = props;
-  const { isLoading } = useGetFeedbackData({ doctor_id: doctor.id, server_id: serverId });
+  const { doctor, serverId, rateDetails, className } = props;
+  const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
+    doctor_id: doctor.id,
+    server_id: serverId,
+  });
+  const toggleLike = useFeedbackDataStore(state => state.toggleLike);
   const [rateFilter, setRateFilter] = useState<{ label: string; value: 'my_feedbacks' | 'has_nobat' | 'center_id' | 'all' }>({
     label: 'همه نظرات',
     value: 'all',
@@ -61,15 +68,13 @@ export const RateReview = (props: RateReviewProps) => {
     label: 'مرتبط ترین',
     value: 'default_order',
   });
-  const [showModal, setShowModal] = useState(false);
+  const { handleClose, handleOpen, modalProps } = useModal();
+  const { handleOpen: handleOpenReportModal, modalProps: reportModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
-  const [likedFeedback, setLikedFeedback] = useState<{ id: string; isLiked: boolean }[]>([]);
-  const [reportText, setReportText] = useState('');
   const feedbacksData = useFeedbackDataStore(state => state.data);
   const { isDesktop } = useResponsive();
   const [replyDetails, setReplyDetails] = useState<{ text: string; id: string }[]>([]);
-  const { rateSearch, rateSortFilter, rateFilterType, showMore } = useRateFilter(doctor.id, serverId);
   const { isLogin, userInfo } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userInfo: state.info,
@@ -77,6 +82,8 @@ export const RateReview = (props: RateReviewProps) => {
   const likeFeedback = useLikeFeedback();
   const replyFeedback = useReplyfeedback();
   const { handleOpenLoginModal } = useLoginModalContext();
+  const replyText = useRef<HTMLInputElement>();
+  const reportText = useRef<HTMLInputElement>();
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -88,8 +95,8 @@ export const RateReview = (props: RateReviewProps) => {
         options: [
           {
             id: reply.id,
-            name: 'پاسخ دادن',
-            action: () => showReportModal(reply.id, reply.description, reply.is_doctor, 'reply'),
+            name: 'پاسخ',
+            action: () => showReplyModal(reply.id, reply.description, reply.is_doctor),
             type: 'button',
             icon: <ReplyIcon />,
           },
@@ -103,6 +110,7 @@ export const RateReview = (props: RateReviewProps) => {
     return feedbacksData?.map(
       (feedback: any) =>
         feedback && {
+          type: 'parent',
           name: feedback.user_name,
           id: feedback.id,
           description: feedback.description,
@@ -112,6 +120,7 @@ export const RateReview = (props: RateReviewProps) => {
             id: feedback.id,
             title: 'نظرات',
             isShow: feedbackReplyModalDetails.find(reply => reply.id === feedback.id)?.isShow ?? false,
+            handleOpen: () => showReplyModal(feedback.id, feedback.description, feedback.is_doctor),
             onClose: () =>
               setFeedbackReplyModalDetails(
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
@@ -120,25 +129,19 @@ export const RateReview = (props: RateReviewProps) => {
           options: [
             {
               id: 1,
-              name: 'گزارش نظر',
-              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor, 'feedback'),
+              name: 'گزارش',
+              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
               type: 'menu',
+              icon: <InfoIcon width={22} height={22} />,
               inModal: true,
             },
             {
               id: 2,
-              name: 'اشتراک نظر',
+              name: 'اشتراک گذاری',
               action: () => shareCommenthandler(feedback.id),
               type: 'menu',
+              icon: <ShareIcon width={22} height={22} />,
               inModal: true,
-            },
-            feedback.reply.length > 1 && {
-              id: 3,
-              name: 'نمایش نظرات بیماران',
-              action: () => setShowReplyModal(feedback.id),
-              type: 'controller',
-              icon: <PersonseIcon className="w-[1.1rem]" />,
-              inModal: false,
             },
             {
               id: 4,
@@ -147,16 +150,21 @@ export const RateReview = (props: RateReviewProps) => {
               type: 'button',
               icon: (
                 <HeartIcon
-                  className={clsx('[&>path]:stroke-black [&>path]:text-white', {
-                    '[&>path]:fill-red-600 [&>path]:stroke-red-600': likedFeedback.find(card => card.id === feedback.id)?.isLiked,
+                  width={20}
+                  height={20}
+                  className={clsx('[&>path]:stroke-slate-800 [&>path]:text-white', {
+                    '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
                   })}
                 />
               ),
+              prefix: feedback?.like > 0 && feedback?.like,
               inModal: true,
             },
           ],
           details: compact([feedback?.center_name, feedback.formatted_date]),
-          ...(feedback.symptomes?.length && { symptomes: { text: 'علائم بیماری', items: [feedback.symptomes] } }),
+          ...(feedback.feedback_symptomes?.length && {
+            symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
+          }),
           recommend: {
             text: feedback.recommended === '1' ? 'پزشک را توصیه می‌کنم' : 'پزشک را توصیه نمیکنم',
             isRecommend: feedback.recommended === '1',
@@ -164,12 +172,13 @@ export const RateReview = (props: RateReviewProps) => {
               feedback.recommended === '1' ? (
                 <LikeIcon style={{ transform: 'rotateY(180deg)' }} className=" w-5 mb-[0.1rem]" />
               ) : (
-                <DislikeIcon className=" w-5 mt-2" />
+                <DislikeIcon className="w-5 mt-2 " />
               ),
           },
           reply: feedback.reply?.map((feedback: any) => {
             const nestedReply = replysStructure(feedback.reply, feedback.user_name);
             return {
+              type: 'reply',
               id: feedback.id,
               name: feedback.user_name,
               description: feedback.description,
@@ -177,8 +186,8 @@ export const RateReview = (props: RateReviewProps) => {
               options: [
                 {
                   id: feedback.id,
-                  name: 'پاسخ دادن',
-                  action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor, 'reply'),
+                  name: 'پاسخ',
+                  action: () => showReplyModal(feedback.id, feedback.description, feedback.is_doctor),
                   type: 'button',
                   icon: <ReplyIcon />,
                 },
@@ -186,17 +195,14 @@ export const RateReview = (props: RateReviewProps) => {
               reply: nestedReply,
             };
           }),
-          firstReply: true,
           messageBox: {
-            placeholder: 'نظر خود را بنویسید',
+            placeholder: 'نظر خود را بنویسید...',
             submitText: 'ارسال',
-            onChange: (e: any) => setReplies(feedback.id, e.target.value),
-            onSubmit: () => submitReplyHandler(feedback.id),
-            isLoading: replyFeedback.isLoading,
+            onSubmit: (text: string) => submitReplyHandler(feedback.id, text),
           },
         },
     );
-  }, [feedbacksData, likedFeedback, feedbackReplyModalDetails, replyDetails]);
+  }, [feedbacksData, feedbackReplyModalDetails, replyDetails]);
 
   const changeFilterSelect = (e: any) => {
     setRateFilter(e);
@@ -217,6 +223,7 @@ export const RateReview = (props: RateReviewProps) => {
       information: rateDetails.information,
     };
   }, []);
+
   const rateSearchInputs = useMemo(() => {
     const centerOption = doctor.center.map((center: any) => center && { label: center.name, value: center.id });
     return [
@@ -242,13 +249,13 @@ export const RateReview = (props: RateReviewProps) => {
         onChange: (e: any) => changeSortSelect(e),
       },
     ];
-  }, []);
+  }, [rateFilter, rateSort, doctor.center]);
 
   const searchInputParams = useMemo(() => {
     return {
       placeholder: 'جستجوی نام بیماری و ... در نظرات',
       onChange: (e: any) => rateSearch(e.target.value),
-      icon: <SearchIcon className="absolute top-3 left-2 cursor-pointer bg-white" />,
+      icon: <SearchIcon className="absolute bg-white cursor-pointer top-3 left-3 text-slate-600" />,
       className: 'placeholder:text-sm !text-sm !border-0',
     };
   }, []);
@@ -265,35 +272,35 @@ export const RateReview = (props: RateReviewProps) => {
       : setFeedbackReplyModalDetails([...feedbackReplyModalDetails, { id: id, isShow: true }]);
   };
 
-  const setLikes = (id: string) => {
-    likedFeedback.some(feedback => feedback.id === id)
-      ? setLikedFeedback(likedFeedback.map(feedback => (feedback.id === id ? { id: id, isLiked: !feedback.isLiked } : feedback)))
-      : setLikedFeedback([{ id: id, isLiked: true }]);
-  };
-
-  const showReportModal = (id: string, description: string, isDoctor: boolean, type: 'feedback' | 'reply') => {
+  const showReportModal = (id: string, description: string, isDoctor: boolean) => {
     setFeedbackDetails({
-      title: type === 'feedback' ? 'گزارش نظر' : 'ثبت پاسخ',
       id: id,
-      ...(type === 'feedback' && { description: description }),
+      description: description,
       isDoctor: isDoctor,
-      type: type,
     });
-    setShowModal(true);
+    handleOpenReportModal();
   };
 
-  const submitReportFeedbackhandler = async () => {
+  const showReplyModal = (id: string, description: string, isDoctor: boolean) => {
+    setFeedbackDetails({
+      id: id,
+      isDoctor: isDoctor,
+    });
+    handleOpen();
+  };
+
+  const submitReportFeedbackhandler = async (text: string) => {
     if (!isLogin)
       return handleOpenLoginModal({
         state: true,
       });
-    if (reportText.length < 10) return toast.error('حداقل مقدار مجاز ۱۰ کاراکتر می باشد.');
+    if (text.length < 10) return toast.error('حداقل مقدار مجاز ۱۰ کاراکتر می باشد.');
     await splunkInstance().sendEvent({
       group: 'report',
       type: 'report-group',
       event: {
         data: {
-          report: reportText,
+          report: text,
           url: location.href,
           current_comment: feedbackDetails.description,
           comment_id: feedbackDetails.feedbackId,
@@ -303,8 +310,8 @@ export const RateReview = (props: RateReviewProps) => {
         },
       },
     });
-    toast.success('نظر شما با موفقیت ثبت شد!');
-    setShowModal(false);
+    toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
+    handleClose();
   };
 
   const shareCommenthandler = (id: string) => {
@@ -313,11 +320,10 @@ export const RateReview = (props: RateReviewProps) => {
       text: `اشتراک گذاری نظر`,
       url,
     });
-    toast.success('لینک کپی شد.');
   };
 
   const submitRateDetails = {
-    text: 'لطفا نظر خود را وارد کنید',
+    text: 'نظر خود را به اشتراک بگذارید:',
     buttons: [
       {
         id: 1,
@@ -329,81 +335,79 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   const likeFeedbackHandler = async (id: string) => {
-    setLikes(id);
+    toggleLike(id);
     await likeFeedback.mutateAsync({
       feedback_id: id,
     });
-
-    if (likeFeedback.status) toast.success('درخواست با موفقیت انجام شد');
   };
 
-  const submitReplyHandler = async (id: string) => {
+  const submitReplyHandler = async (id: string, text: string) => {
     if (!isLogin)
       return handleOpenLoginModal({
         state: true,
       });
-    const findReply = replyDetails.find((reply: any) => reply.id === id);
-    if (!findReply?.text) return toast.error('لطفا متنی را وارد کنید');
+    if (!text) return toast.error('لطفا متنی را وارد کنید');
     await replyFeedback.mutate({
-      description: findReply?.text,
+      description: text,
       doctor_id: '540',
       server_id: '1',
       feedback_id: id,
     });
-    if (replyFeedback.status) toast.success('نظر شما با موفقیت ثبت شد');
+    handleClose();
+    if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
   };
   return (
     <>
-      <div className="w-full bg-white">
+      <div className={clsx('w-full bg-white', className)}>
         <Rate
           details={details}
           filters={rateSearchInputs}
           search={searchInputParams}
           feedbacks={feedbackInfo}
           controller={submitRateDetails}
-          isLoading={isLoading}
+          isLoading={!showMoreButtonLoading && isLoading}
+          message={message}
         />
-        <div className="mx-4 my-3">
-          {!!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
-            <Button variant="secondary" block className="self-center block outline-none" onClick={showMore}>
+        {!message && (showMoreButtonLoading || !isLoading) && !!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
+          <div className="p-4">
+            <Button variant="secondary" block className="self-center block outline-none" onClick={showMore} loading={showMoreButtonLoading}>
               نمایش بیشتر
             </Button>
-          )}
-        </div>
-        <Modal title={feedbackDetails?.title ?? ''} isOpen={showModal} onClose={() => setShowModal(false)}>
+          </div>
+        )}
+
+        <Modal title="گزارش نظر" {...reportModalProps}>
+          <TextField
+            multiLine
+            placeholder="لطفا علت و شرح گزارش نظر این کاربر را اعلام کنید تا تیم پشتیبانی پذیرش24 بر اساس پیشنهاد شما، نظر کاربر را مجددا بررسی نماید."
+            className="h-[10rem]"
+            ref={reportText}
+          />
+          <Button onClick={() => submitReportFeedbackhandler(reportText.current?.value!)} block className="mt-4">
+            ارسال گزارش
+          </Button>
+        </Modal>
+        <Modal title="پاسخ به نظر" {...modalProps} noHeader={!isDesktop}>
           {isDesktop ? (
             <>
               <TextField
                 multiLine
-                placeholder="لطفا متن خود را وارد کنید"
-                onChange={e =>
-                  feedbackDetails?.type === 'feedback' ? setReportText(e.target.value) : setReplies(feedbackDetails.id, e.target.value)
-                }
+                placeholder="نظر خود را بنویسید..."
+                onChange={e => setReplies(feedbackDetails.id, e.target.value)}
                 className="h-[10rem]"
+                autoFocus
+                ref={replyText}
               />
-              <Button
-                onClick={() =>
-                  feedbackDetails?.type === 'feedback' ? submitReportFeedbackhandler() : submitReplyHandler(feedbackDetails.id)
-                }
-                block
-                className="mt-4"
-              >
-                {feedbackDetails?.type === 'feedback' ? 'ثبت درخواست' : 'ثبت پاسخ'}
+              <Button onClick={() => submitReplyHandler(feedbackDetails.id, replyText.current?.value!)} block className="mt-4">
+                ثبت پاسخ
               </Button>
             </>
           ) : (
             <MessageBox
-              onChange={e =>
-                feedbackDetails?.type === 'feedback' ? setReportText(e.target.value) : setReplies(feedbackDetails.id, e.target.value)
-              }
               placeholder="لطفا متن خود را وارد کنید"
               submitText="ارسال"
-              submitHandled={() =>
-                feedbackDetails?.type === 'feedback' ? submitReportFeedbackhandler() : submitReplyHandler(feedbackDetails.id)
-              }
-              onFocus={() => setInputFocus(true)}
-              onBlur={() => setInputFocus(false)}
-              className={clsx({ '!border-blue-500': inputFocus })}
+              submitHandled={text => submitReplyHandler(feedbackDetails.id, text)}
+              autoFocus
             />
           )}
         </Modal>

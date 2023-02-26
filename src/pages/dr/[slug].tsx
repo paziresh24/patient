@@ -30,6 +30,7 @@ import { ReactElement, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
 import { NextPageWithLayout } from '../_app';
+import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 
 const { publicRuntimeConfig } = config();
 
@@ -172,6 +173,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           );
         },
         RateReview: ({ doctor }) => {
+          if (!customize.showRateAndReviews) return null;
+
           const doctorInfo = {
             center: doctor.centers
               .filter((center: any) => center.id !== '5532')
@@ -209,7 +212,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
               },
             ],
           };
-          return <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} />;
+          return <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} className="md:rounded-lg" />;
         },
         ProfileSeoBox: ({ doctor }) => {
           const internalLinks = useInternalLinks(
@@ -287,6 +290,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             )}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
+            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
           />
           <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-between">
             <div onClick={() => scrollIntoViewWithOffset('#services_serction', 90)}>
@@ -403,6 +408,26 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           links,
         }),
     );
+
+    try {
+      await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.Feedbacks,
+          {
+            doctor_id: data.id,
+            server_id: data.server_id,
+          },
+        ],
+        () =>
+          getFeedbacks({
+            doctor_id: data.id,
+            server_id: data.server_id,
+          }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),

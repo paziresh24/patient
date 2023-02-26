@@ -41,5 +41,6 @@ interface RateProps {
   search: SearchInputParams;
   feedbacks: FeedbackParams[];
   controller?: Controller;
+  message?: string;
   isLoading?: boolean;
 }

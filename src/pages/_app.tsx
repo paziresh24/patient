@@ -37,7 +37,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
-
       <Head>
         <meta
           name="viewport"

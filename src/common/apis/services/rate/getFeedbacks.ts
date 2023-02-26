@@ -13,10 +13,11 @@ export interface FeedbackParams {
   page?: number;
 }
 
-export const getFeedbacks = (params: FeedbackParams) => {
-  return paziresh24AppClient.get(`/mizaan/v1/search/feedbacks/`, {
+export const getFeedbacks = async (params: FeedbackParams) => {
+  const { data } = await paziresh24AppClient.get(`/mizaan/v1/search/feedbacks/`, {
     params,
   });
+  return data;
 };
 
 export const useGetFeedbacks = (params: FeedbackParams, options?: any) => {

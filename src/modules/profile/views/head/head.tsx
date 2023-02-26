@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
 import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
+import RateBadge from '@/components/atom/badge/badge';
+import LikeIcon from '@/components/icons/like';
 
 interface HeadProps {
   image: string;
@@ -16,10 +18,12 @@ interface HeadProps {
   pageViewCount?: number;
   toolBarItems?: ToolBarItems;
   className?: string;
+  satisfaction?: string;
+  rateCount?: string;
 }
 
 export const Head = (props: HeadProps) => {
-  const { displayName, image, title, subTitle, serviceList, pageViewCount, toolBarItems, className } = props;
+  const { displayName, image, title, subTitle, serviceList, pageViewCount, toolBarItems, className, satisfaction, rateCount } = props;
   return (
     <div className={clsx('py-4 space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
@@ -49,6 +53,16 @@ export const Head = (props: HeadProps) => {
             </Chips>
           ))}
         </ScrollContainer>
+      )}
+      {satisfaction && (
+        <RateBadge
+          text={`${satisfaction}%`}
+          icon={<LikeIcon className="w-5 text-white" />}
+          parentClassName="!bg-green-600"
+          className="mt-1"
+          fontSize="sm"
+          caption={`رضایت (${rateCount} نظر)`}
+        />
       )}
     </div>
   );
