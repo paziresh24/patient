@@ -1,12 +1,10 @@
-import clsx from 'clsx';
 import { InputHTMLAttributes, useRef } from 'react';
-import Loading from '../loading/loading';
 import Text from '../text/text';
 
 interface MessageBoxProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   className?: string;
   submitText?: string;
-  submitHandled?: () => void;
+  submitHandled?: (value: string) => void;
   isLoading?: boolean;
   height?: string;
 }
@@ -23,23 +21,23 @@ export const MessageBox = (props: MessageBoxProps) => {
 
   return (
     <>
-      <div
-        className={clsx(
-          'h-full flex w-full bg-transparent text-sm md:text-base appearance-none p-[0.1rem] border !border-slate-300 items-center rounded-lg placeholder:text-sm border-1',
-          { 'bg-slate-200 opacity-50 pointer-events-none': isLoading },
-          className,
-        )}
-      >
-        {isLoading && <Loading className="absolute w-full" />}
+      <div className="relative flex items-center">
         <textarea
           ref={ref}
           style={{ height: height }}
-          className="w-full p-2 outline-none placeholder:text-sm resize-none bg-transparent placeholder:pt-[0.1rem] text-sm"
+          className="h-full p-2 pl-14 px-3 no-scroll placeholder:text-sm resize-none bg-transparent placeholder:pt-[0.1rem] text-sm flex w-full focus:outline-primary md:text-base appearance-none border !border-slate-300 items-center rounded-lg"
           {...inputProps}
           onInput={inputHandled}
         />
         {submitText && (
-          <Text onClick={submitHandled} fontSize="sm" className="ml-2 text-[#0077db] cursor-pointer">
+          <Text
+            onClick={() => {
+              submitHandled && submitHandled(ref.current.value! ?? '');
+            }}
+            fontSize="sm"
+            fontWeight="medium"
+            className="ml-3 text-[#0077db] cursor-pointer absolute left-0"
+          >
             {submitText}
           </Text>
         )}

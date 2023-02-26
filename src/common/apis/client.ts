@@ -8,6 +8,7 @@ const { publicRuntimeConfig } = getConfig();
 export const paziresh24AppClient = axios.create({
   baseURL: publicRuntimeConfig.PAZIRESH24_API,
   withCredentials: true,
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
 
 export const searchClient = axios.create({

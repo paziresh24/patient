@@ -21,8 +21,6 @@ export const DropDown: React.FC<DropDownProps> = props => {
       document.body.classList.add('md:pr-[0.3rem]');
       return document.body.classList.add('overflow-hidden');
     }
-    document.body.classList.remove('overflow-hidden');
-    document.body.classList.remove('md:pr-[0.3rem]');
   }, [dropDown]);
 
   return (
@@ -34,7 +32,7 @@ export const DropDown: React.FC<DropDownProps> = props => {
       )}
       {dropDown && (
         <>
-          <div className="absolute mx-1 top-2 bg-white shadow-lg border border-slate-100 w-40 rounded-xl z-20">
+          <div className="absolute z-20 w-40 mx-1 bg-white border shadow-lg top-2 border-slate-100 rounded-xl">
             <div className="flex flex-col p-2">
               {items.map(({ id, action, name, icon, testId }) => (
                 <div
@@ -42,6 +40,8 @@ export const DropDown: React.FC<DropDownProps> = props => {
                   className="flex items-center p-2 cursor-pointer space-s-2"
                   onClick={() => {
                     setDropDown(false);
+                    document.body.classList.remove('overflow-hidden');
+                    document.body.classList.remove('md:pr-[0.3rem]');
                     action();
                   }}
                   data-testid={testId}
@@ -59,6 +59,8 @@ export const DropDown: React.FC<DropDownProps> = props => {
             onClick={e => {
               e.stopPropagation();
               setDropDown(false);
+              document.body.classList.remove('overflow-hidden');
+              document.body.classList.remove('md:pr-[0.3rem]');
             }}
           />
         </>

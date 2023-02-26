@@ -19,6 +19,7 @@ import Biography from '@/modules/profile/views/biography/biography';
 import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
 import Gallery from '@/modules/profile/views/gallery/gallery';
 import Head from '@/modules/profile/views/head/head';
+import RateReview from '@/modules/profile/views/rateReview/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
@@ -29,6 +30,7 @@ import { ReactElement, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
 import { NextPageWithLayout } from '../_app';
+import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 
 const { publicRuntimeConfig } = config();
 
@@ -170,6 +172,48 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             </div>
           );
         },
+        RateReview: ({ doctor }) => {
+          if (!customize.showRateAndReviews) return null;
+
+          const doctorInfo = {
+            center: doctor.centers
+              .filter((center: any) => center.id !== '5532')
+              .map((center: any) => center && { id: center.id, name: center.name }),
+            id: doctor.id,
+            name: doctor.display_name,
+            image: doctor.image,
+            group_expertises: doctor.group_expertises[0].name ?? 'سایر',
+            group_expertises_slug: doctor.group_expertises[0].en_slug ?? 'other',
+            expertise: doctor?.expertises?.[0]?.expertise?.name,
+            slug: doctor.slug,
+            city: doctor.centers.map((center: any) => center.city),
+          };
+          const doctorRateDetails = {
+            satisfaction: doctor.feedbacks.details.satisfaction,
+            count: doctor.feedbacks.details.number_of_feedbacks,
+            information: [
+              {
+                id: 1,
+                title: 'برخورد مناسب پزشک',
+                satisfaction: doctor.feedbacks.details.doctor_encounter * 20,
+                avg_star: doctor.feedbacks.details.doctor_encounter,
+              },
+              {
+                id: 2,
+                title: 'توضیح پزشک در هنگام ویزیت',
+                satisfaction: doctor.feedbacks.details.explanation_of_issue * 20,
+                avg_star: doctor.feedbacks.details.explanation_of_issue,
+              },
+              {
+                id: 3,
+                title: 'مهارت و تخصص پزشک',
+                satisfaction: doctor.feedbacks.details.quality_of_treatment * 20,
+                avg_star: doctor.feedbacks.details.quality_of_treatment,
+              },
+            ],
+          };
+          return <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} className="md:rounded-lg" />;
+        },
         ProfileSeoBox: ({ doctor }) => {
           const internalLinks = useInternalLinks(
             { links: getSearchLinks({ ...doctor }) },
@@ -246,6 +290,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             )}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
+            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
           />
           <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-between">
             <div onClick={() => scrollIntoViewWithOffset('#services_serction', 90)}>
@@ -362,6 +408,26 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           links,
         }),
     );
+
+    try {
+      await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.Feedbacks,
+          {
+            doctor_id: data.id,
+            server_id: data.server_id,
+          },
+        ],
+        () =>
+          getFeedbacks({
+            doctor_id: data.id,
+            server_id: data.server_id,
+          }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),

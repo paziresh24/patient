@@ -1,176 +1,95 @@
-import Divider from '@/common/components/atom/divider/divider';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
+import PersonseIcon from '@/common/components/icons/persons';
+import useModal from '@/common/hooks/useModal';
 import clsx from 'clsx';
-import { useState } from 'react';
-import { Card } from '../../type/card';
+import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
+import useResponsive from '@/hooks/useResponsive';
 
-interface Reply extends Omit<Card, 'details' | 'recommend' | 'symptoms' | 'tag' | 'text'> {
+interface Reply extends Omit<Card, 'details' | 'recommend' | 'symptomes' | 'tag' | 'text'> {
   reply?: Reply[];
 }
 
 type MessageBoxProps = {
-  isShow: boolean;
   placeholder?: string;
   submitText?: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  isLoading?: boolean;
+  onSubmit: (value: string) => void;
 };
 
-interface Feedbacks extends Card {
+export interface Feedbacks extends Card {
   reply?: Reply[];
   firstReply?: boolean;
   messageBox?: MessageBoxProps;
-  replyModalTitle?: string;
+  replyModal?: {
+    title: string;
+    id: number;
+    isShow: boolean;
+    onClose: () => void;
+    handleOpen: () => void;
+  };
 }
 
-interface FeedbackCardProps {
-  feedback: Feedbacks[];
+export interface FeedbackParams {
+  feedback: Feedbacks;
   className?: string;
 }
 
-export const Feedback = (props: Omit<Feedbacks, 'firstReply'>) => {
-  const { description, id, name, avatar, className, details, options, recommend, symptoms, tag, messageBox } = props;
-  const [inputFocus, setInputFocus] = useState(false);
+export const Feedback = (props: { replyClassName?: string } & Feedbacks) => {
+  const { reply, firstReply, className, replyClassName, messageBox, ...feedback } = props;
+  const { isMobile } = useResponsive();
   return (
     <>
-      <div className="relative">
-        <RateCard
-          id={id}
-          description={description}
-          details={details}
-          name={name}
-          options={options}
-          avatar={avatar}
-          recommend={recommend}
-          symptoms={symptoms}
-          tag={tag}
-          className={className}
-        />
-        {messageBox?.isShow && (
-          <div className="px-3">
-            <MessageBox
-              placeholder={messageBox.placeholder}
-              submitText={messageBox.submitText}
-              onChange={e => messageBox.onChange}
-              submitHandled={messageBox.onSubmit}
-              onFocus={() => setInputFocus(true)}
-              onBlur={() => setInputFocus(false)}
-              className={clsx({ '!border-blue-500': inputFocus })}
-            />
+      <div className="relative flex flex-col pt-4 w-full space-y-3">
+        <RateCard {...feedback} className={className} />
+        {messageBox && (
+          <div className="px-4" onClick={isMobile ? feedback.replyModal?.handleOpen : undefined}>
+            <MessageBox placeholder={messageBox?.placeholder} submitText={messageBox?.submitText} submitHandled={messageBox?.onSubmit} />
           </div>
         )}
+        <div className={clsx('w-full px-4', replyClassName)}>
+          {!!reply?.length &&
+            reply
+              .slice(0, firstReply ? 1 : reply.length)
+              .map(item => <Feedback key={item.id} {...item} className={'rounded-lg !bg-slate-100 p-4'} replyClassName="!p-0 !pr-5" />)}
+        </div>
       </div>
     </>
   );
 };
 
-export const Replies = (props: Reply) => {
-  const { description, id, name, avatar, className, options } = props;
-  return (
-    <div className="px-3 w-full">
-      <RateCard id={id} description={description} name={name} options={options} avatar={avatar} className={className} />
-    </div>
-  );
-};
-
-export const NestedReply = (props: Reply) => {
-  const { description, id, name, avatar, options, reply, className } = props;
-  return (
-    <>
-      <Replies description={description} id={id} name={name} avatar={avatar} options={options} className={className} />
-      {reply?.map(reply => (
-        <NestedReply
-          key={reply.id}
-          description={reply.description}
-          id={reply.id}
-          name={reply.name}
-          avatar={reply.avatar}
-          options={reply.options}
-          reply={reply.reply}
-          className={clsx('!w-[97%] mr-auto', className)}
-        />
-      ))}
-    </>
-  );
-};
-
-export const FeedbackCard = (props: FeedbackCardProps) => {
+export const FeedbackCard = (props: FeedbackParams) => {
   const { feedback, className } = props;
-  const [ShowModal, setShowModal] = useState(true);
+  const { handleOpen, modalProps } = useModal();
+
   return (
-    <>
-      {feedback.map(rate => (
-        <>
-          <div
-            key={rate.id}
-            className={clsx('w-full flex flex-col items-center h-auto  bg-white border-y p-3 border-[#efefef]', className)}
-          >
-            <Feedback
-              description={rate.description}
-              id={rate.id}
-              name={rate.name}
-              reply={rate.reply}
-              avatar={rate.avatar}
-              className={rate.className}
-              details={rate.details}
-              options={rate.options}
-              recommend={rate.recommend}
-              symptoms={rate.symptoms}
-              tag={rate.tag}
-              messageBox={rate.messageBox}
-            />
-            {rate.reply?.length && rate.firstReply && (
-              <Replies
-                description={rate.reply[0].description}
-                id={rate.reply[0].id}
-                name={rate.reply[0].name}
-                avatar={rate.reply[0].avatar}
-                className={'rounded-lg !bg-[#ececec99] my-3'}
-                options={rate.reply[0].options}
-              />
-            )}
-          </div>
-          <Modal
-            title={rate.replyModalTitle}
-            isOpen={ShowModal}
-            onClose={() => setShowModal(false)}
-            fullScreen
-            bodyClassName="!px-0 !pt-0 !pb-16"
-          >
-            <Feedback
-              description={rate.description}
-              id={rate.id}
-              name={rate.name}
-              avatar={rate.avatar}
-              className={rate.className}
-              details={rate.details}
-              options={rate.options?.filter(option => option.type === 'menu' || (option.type === 'button' && option.name === 'پسندیدن'))}
-              recommend={rate.recommend}
-              symptoms={rate.symptoms}
-              tag={rate.tag}
-              messageBox={rate.messageBox}
-            />
-            <Divider className="my-3" />
-            {rate.reply?.map(items => (
-              <>
-                <NestedReply
-                  key={items.id}
-                  description={items.description}
-                  id={items.id}
-                  name={items.name}
-                  avatar={items.avatar}
-                  options={items.options}
-                  reply={items.reply}
-                  className={'border-y border-[#efefef] rounded-lg !bg-[#ececec99] my-3'}
-                />
-              </>
-            ))}
-          </Modal>
-        </>
-      ))}
-    </>
+    <div
+      key={feedback.id}
+      className={clsx('w-full flex space-y-3 flex-col items-center h-auto bg-white border-y border-[#efefef]', className)}
+    >
+      <Feedback
+        {...feedback}
+        firstReply
+        options={
+          [
+            ...feedback.options!,
+            feedback?.reply?.length! > 1 && {
+              id: 3,
+              name: 'نمایش نظرات بیماران',
+              action: handleOpen,
+              type: 'controller',
+              icon: <PersonseIcon className="w-[1.1rem]" />,
+              inModal: false,
+            },
+          ].filter(Boolean) as Options[]
+        }
+      />
+
+      <Modal title={feedback.replyModal?.title} {...modalProps} fullScreen bodyClassName="!pt-0 !px-0 !pb-16">
+        <Feedback firstReply={false} {...feedback} options={feedback.options?.filter(option => option.inModal)} />
+      </Modal>
+    </div>
   );
 };
 
