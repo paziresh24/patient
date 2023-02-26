@@ -1,5 +1,6 @@
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -11,6 +12,7 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { getCookie } from 'cookies-next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
@@ -29,12 +31,15 @@ interface TurnHeaderProps {
   centerId: string;
   nationalCode: string;
   trackingCode: string;
+  doctorName: string;
+  expertise: string;
+  phoneNumber: string;
   status: BookStatus;
   centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, doctorName, expertise, phoneNumber } = props;
   const router = useRouter();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -76,6 +81,20 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
+  const showRemoveTurnModal = () => {
+    handleOpenRemoveModal();
+    splunkInstance().sendEvent({
+      group: 'my-turn',
+      type: 'delete-turn-header',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        phoneNumber,
+      },
+    });
+  };
+
   const menuItems = [
     {
       id: 0,
@@ -95,7 +114,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       id: 2,
       name: 'لغو نوبت',
       icon: <TrashIcon />,
-      action: () => handleOpenRemoveModal(),
+      action: showRemoveTurnModal,
       testId: 'drop-down__remove-button',
       shouldShow: shouldShowRemoveTurn,
     },

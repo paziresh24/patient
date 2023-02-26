@@ -155,6 +155,7 @@ export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) =>
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
+                cell: turn.patient_info.cell,
               }}
               turnDetails={{
                 bookTime: turn.from,

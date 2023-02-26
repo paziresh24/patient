@@ -37,6 +37,9 @@ export const Turn: React.FC<TurnProps> = props => {
         centerId={centerInfo.centerId}
         trackingCode={turnDetails.trackingCode}
         nationalCode={patientInfo.nationalCode}
+        doctorName={`${doctorInfo.firstName} ${doctorInfo.lastName}`}
+        expertise={doctorInfo.expertise ?? 'سایر'}
+        phoneNumber={patientInfo.cell}
         status={status}
       />
 
@@ -54,6 +57,12 @@ export const Turn: React.FC<TurnProps> = props => {
       <TurnFooter
         id={id}
         centerType={centerType}
+        centerId={centerInfo.centerId}
+        trackingCode={turnDetails.trackingCode}
+        nationalCode={patientInfo.nationalCode}
+        doctorName={`${doctorInfo.firstName} ${doctorInfo.lastName}`}
+        expertise={doctorInfo.expertise ?? 'سایر'}
+        phoneNumber={patientInfo.cell}
         pdfLink={prescription?.pdf}
         slug={doctorInfo.slug}
         status={status}
