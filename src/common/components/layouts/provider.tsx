@@ -39,7 +39,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
           duration: 3000,
         }}
       />
-      <Splash partnerLogo={pageProps?.query?.['partner:logo']} />
+      {pageProps.pageProps?.query?.university && <Splash partnerLogo={pageProps?.query?.['partner:logo']} />}
     </QueryClientProvider>
   );
 };

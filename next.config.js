@@ -38,6 +38,8 @@ const nextConfig = {
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
     PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,
+    GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
+    GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],

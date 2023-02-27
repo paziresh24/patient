@@ -115,7 +115,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
           dir={showSuggestions ? 'top' : 'bottom'}
           className={clsx('absolute mx-5', {
             'bottom-[0.9rem]': inputProps.size === 'small',
-            'bottom-[1.3rem]': inputProps.size !== 'small',
+            'bottom-[1.1rem]': inputProps.size !== 'small',
           })}
         />
       </div>

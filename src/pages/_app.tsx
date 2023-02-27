@@ -1,14 +1,36 @@
 import useCustomize from '@/common/hooks/useCustomize';
 import useServerQuery from '@/common/hooks/useServerQuery';
+import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
+import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
+import { getCookie } from 'cookies-next';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import getConfig from 'next/config';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import { DehydratedState, Hydrate } from 'react-query';
 import '../styles/globals.css';
+const { publicRuntimeConfig } = getConfig();
+
+const growthbook = new GrowthBook({
+  apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
+  clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
+  trackingCallback: (experiment, result) => {
+    splunkInstance().sendEvent({
+      group: 'growth-book',
+      type: 'growth-book-event',
+      event: {
+        experiment,
+        result,
+        terminal_id: getCookie('terminal_id'),
+      },
+    });
+  },
+});
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -27,7 +49,15 @@ interface extendAppProps {
 type ExtendedAppProps<P = {}> = AppProps<P>;
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const router = useRouter();
   const getLayout = Component.getLayout ?? (page => page);
+
+  useEffect(() => {
+    growthbook.loadFeatures({ autoRefresh: true });
+    growthbook.setAttributes({
+      id: getCookie('terminal_id'),
+    });
+  }, []);
 
   useEffect(() => {
     useCustomize.getState().setCustomize(pageProps.query);
@@ -37,7 +67,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
-
       <Head>
         <meta
           name="viewport"
@@ -47,7 +76,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <Provider pageProps={pageProps}>
         <Hydrate state={pageProps.dehydratedState}>
           {getLayout(
-            <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />,
+            <GrowthBookProvider growthbook={growthbook}>
+              <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />
+              ,
+            </GrowthBookProvider>,
           )}
         </Hydrate>
       </Provider>

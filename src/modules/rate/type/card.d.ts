@@ -10,16 +10,18 @@ export type Options = {
   action: () => void;
   type: 'menu' | 'controller' | 'button';
   icon?: React.ReactNode;
+  inModal?: boolean;
+  prefix?: string;
 };
 
 export type Card = {
-  id: string | number | any;
+  id?: string;
   avatar?: any;
-  name: string;
+  name?: string;
   tag?: Tags[];
   options?: Options[];
   details?: string[];
-  symptoms?: {
+  symptomes?: {
     text: string;
     items: string[];
   };
@@ -28,7 +30,7 @@ export type Card = {
     isRecommend: Boolean;
     icon?: React.ReactNode;
   };
-  description: string;
+  description?: string;
   className?: string;
 };
 

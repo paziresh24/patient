@@ -1,3 +1,4 @@
+import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
@@ -9,23 +10,28 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import useWebView from '@/common/hooks/useWebView';
+import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
+import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import Activity from '@/modules/profile/views/activity/activity';
 import Biography from '@/modules/profile/views/biography/biography';
 import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
 import Gallery from '@/modules/profile/views/gallery/gallery';
 import Head from '@/modules/profile/views/head/head';
+import RateReview from '@/modules/profile/views/rateReview/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
 import config from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
 import { NextPageWithLayout } from '../_app';
@@ -44,14 +50,28 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     initialInView: true,
   });
   const { isMobile, isDesktop } = useResponsive();
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+  const isWebView = useWebView();
+
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
     {
       keepPreviousData: true,
-      refetchOnMount: false,
     },
   );
   const profileData = profile.data?.data;
+
+  useEffect(() => {
+    if (profileData) {
+      pageViewEvent({
+        doctor: profileData,
+        isWebView: !!isWebView,
+      });
+    }
+  }, [profileData]);
+  console.log(profileData);
+
   const doctorExpertise = getDisplayDoctorExpertise({
     aliasTitle: profileData?.expertises?.[0]?.alias_title,
     degree: profileData?.expertises?.[0]?.degree?.name,
@@ -111,7 +131,21 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           return (
             <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
               <Text fontWeight="medium">درخواست احراز هویت و دریافت مالکیت صفحه</Text>
-              <Button onClick={() => location.assign('https://dr.paziresh24.com/auth/?q=profile')} variant="secondary">
+              <Button
+                onClick={() => {
+                  splunkInstance().sendEvent({
+                    group: 'register',
+                    type: 'doctor-profile',
+                    event: {
+                      action: 'click',
+                      current_url: location.href,
+                      phone_number: isLogin ? userInfo.cell : null,
+                    },
+                  });
+                  location.assign('https://dr.paziresh24.com/auth/?q=profile');
+                }}
+                variant="secondary"
+              >
                 من {doctor.display_name} هستم
               </Button>
             </div>
@@ -167,6 +201,55 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                 گالری
               </Text>
               <Gallery items={reformmatedItems} className="bg-white md:rounded-lg" />
+            </div>
+          );
+        },
+        RateReview: ({ doctor }) => {
+          if (!customize.showRateAndReviews) return null;
+
+          const doctorInfo = {
+            center: doctor.centers
+              .filter((center: any) => center.id !== '5532')
+              .map((center: any) => center && { id: center.id, name: center.name }),
+            id: doctor.id,
+            name: doctor.display_name,
+            image: doctor.image,
+            group_expertises: doctor.group_expertises[0].name ?? 'سایر',
+            group_expertises_slug: doctor.group_expertises[0].en_slug ?? 'other',
+            expertise: doctor?.expertises?.[0]?.expertise?.name,
+            slug: doctor.slug,
+            city: doctor.centers.map((center: any) => center.city),
+          };
+          const doctorRateDetails = {
+            satisfaction: doctor.feedbacks.details.satisfaction,
+            count: doctor.feedbacks.details.number_of_feedbacks,
+            information: [
+              {
+                id: 1,
+                title: 'برخورد مناسب پزشک',
+                satisfaction: doctor.feedbacks.details.doctor_encounter * 20,
+                avg_star: doctor.feedbacks.details.doctor_encounter,
+              },
+              {
+                id: 2,
+                title: 'توضیح پزشک در هنگام ویزیت',
+                satisfaction: doctor.feedbacks.details.explanation_of_issue * 20,
+                avg_star: doctor.feedbacks.details.explanation_of_issue,
+              },
+              {
+                id: 3,
+                title: 'مهارت و تخصص پزشک',
+                satisfaction: doctor.feedbacks.details.quality_of_treatment * 20,
+                avg_star: doctor.feedbacks.details.quality_of_treatment,
+              },
+            ],
+          };
+          return (
+            <div id="reviews_serction" className="flex flex-col space-y-3">
+              <Text fontWeight="bold" className="px-4 md:px-0">
+                نظرات در مورد {doctor.display_name}
+              </Text>
+              <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} className="md:rounded-lg" />
             </div>
           );
         },
@@ -246,6 +329,8 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             )}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
+            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
           />
           <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-between">
             <div onClick={() => scrollIntoViewWithOffset('#services_serction', 90)}>
@@ -362,6 +447,26 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           links,
         }),
     );
+
+    try {
+      await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.Feedbacks,
+          {
+            doctor_id: data.id,
+            server_id: data.server_id,
+          },
+        ],
+        () =>
+          getFeedbacks({
+            doctor_id: data.id,
+            server_id: data.server_id,
+          }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),

@@ -11,4 +11,5 @@ export enum ServerStateKeysEnum {
   IsBookmark = 'isBookmark',
   SlugProfile = 'slugProfile',
   InternalLinks = 'internalLinks',
+  Feedbacks = 'feedbacks',
 }

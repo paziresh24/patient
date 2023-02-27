@@ -8,19 +8,27 @@ interface BadgeProps {
   fontWeight?: 'bold' | 'thin' | 'extraLight' | 'light' | 'normal' | 'medium' | 'semiBold' | 'extraBold' | 'black';
   className?: string;
   parentClassName?: string;
+  caption?: string;
 }
 
 export const Badge = (props: BadgeProps) => {
-  const { text, icon, fontSize, fontWeight, className, parentClassName } = props;
+  const { text, icon, fontSize, fontWeight, className, parentClassName, caption } = props;
   return (
-    <>
-      <div className={clsx('flex items-center justify-center gap-1 bg-current text-white pt-1 pb-2 px-3 rounded-3xl', parentClassName)}>
+    <div className="flex items-center justify-center space-s-2">
+      <div className={clsx('flex items-center justify-center gap-1 bg-current text-white py-1 px-3 rounded-3xl', parentClassName)}>
         {icon && <span>{icon}</span>}
         <Text fontSize={fontSize} fontWeight={fontWeight} className={className}>
           {text}
         </Text>
       </div>
-    </>
+      {caption && (
+        <div className="space-s-1">
+          <Text fontSize="sm" fontWeight="medium">
+            {caption}
+          </Text>
+        </div>
+      )}
+    </div>
   );
 };
 
