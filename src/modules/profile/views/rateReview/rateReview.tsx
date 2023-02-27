@@ -4,7 +4,6 @@ import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import TextField from '@/common/components/atom/textField/textField';
-import Text from '@/common/components/atom/text';
 import DislikeIcon from '@/common/components/icons/dislike';
 import HeartIcon from '@/common/components/icons/heart';
 import InfoIcon from '@/common/components/icons/info';
@@ -63,7 +62,6 @@ export const RateReview = (props: RateReviewProps) => {
     label: 'همه نظرات',
     value: 'all',
   });
-  const [inputFocus, setInputFocus] = useState(false);
   const [rateSort, setRateSort] = useState<{ label: string; value: 'default_order' | 'like' | 'created_at' }>({
     label: 'مرتبط ترین',
     value: 'default_order',

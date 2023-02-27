@@ -2,10 +2,10 @@ import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import PersonseIcon from '@/common/components/icons/persons';
 import useModal from '@/common/hooks/useModal';
+import useResponsive from '@/hooks/useResponsive';
 import clsx from 'clsx';
 import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
-import useResponsive from '@/hooks/useResponsive';
 
 interface Reply extends Omit<Card, 'details' | 'recommend' | 'symptomes' | 'tag' | 'text'> {
   reply?: Reply[];
@@ -41,7 +41,7 @@ export const Feedback = (props: { replyClassName?: string } & Feedbacks) => {
   const { isMobile } = useResponsive();
   return (
     <>
-      <div className="relative flex flex-col pt-4 w-full space-y-3">
+      <div className="relative flex flex-col w-full space-y-3">
         <RateCard {...feedback} className={className} />
         {messageBox && (
           <div className="px-4" onClick={isMobile ? feedback.replyModal?.handleOpen : undefined}>
@@ -52,7 +52,15 @@ export const Feedback = (props: { replyClassName?: string } & Feedbacks) => {
           {!!reply?.length &&
             reply
               .slice(0, firstReply ? 1 : reply.length)
-              .map(item => <Feedback key={item.id} {...item} className={'rounded-lg !bg-slate-100 p-4'} replyClassName="!p-0 !pr-5" />)}
+              .map(item => (
+                <Feedback
+                  key={item.id}
+                  {...item}
+                  reply={firstReply ? undefined : item.reply}
+                  className={'rounded-lg !bg-slate-100 p-4'}
+                  replyClassName="!p-0 !pr-5"
+                />
+              ))}
         </div>
       </div>
     </>
@@ -66,7 +74,7 @@ export const FeedbackCard = (props: FeedbackParams) => {
   return (
     <div
       key={feedback.id}
-      className={clsx('w-full flex space-y-3 flex-col items-center h-auto bg-white border-y border-[#efefef]', className)}
+      className={clsx('w-full flex space-y-3 flex-col items-center h-auto bg-white border-y pt-4 border-[#efefef]', className)}
     >
       <Feedback
         {...feedback}
@@ -86,7 +94,7 @@ export const FeedbackCard = (props: FeedbackParams) => {
         }
       />
 
-      <Modal title={feedback.replyModal?.title} {...modalProps} fullScreen bodyClassName="!pt-0 !px-0 !pb-16">
+      <Modal title={feedback.replyModal?.title} {...modalProps} fullScreen bodyClassName="!px-0 !pb-16">
         <Feedback firstReply={false} {...feedback} options={feedback.options?.filter(option => option.inModal)} />
       </Modal>
     </div>

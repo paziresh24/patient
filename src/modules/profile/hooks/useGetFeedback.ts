@@ -3,7 +3,6 @@ import omit from 'lodash/omit';
 import { useEffect, useState } from 'react';
 import { FeedbackParams, useGetFeedbacks } from '../../../common/apis/services/rate/getFeedbacks';
 import { useFeedbackDataStore } from '../store/feedbackData';
-import { useRouter } from 'next/router';
 
 export const useGetFeedbackData = (filterItem: FeedbackParams) => {
   const setFeedbackInfo = useFeedbackDataStore(state => state.setData);
@@ -70,6 +69,6 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
     rateSortFilter,
     rateFilterType,
     showMore,
-    message: getFeedbacks.data.status === 'ERROR' && getFeedbacks.data.message,
+    message: getFeedbacks?.data?.status === 'ERROR' && getFeedbacks.data?.message,
   };
 };

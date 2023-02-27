@@ -1,3 +1,4 @@
+import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
@@ -9,10 +10,14 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import useWebView from '@/common/hooks/useWebView';
+import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
+import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import Activity from '@/modules/profile/views/activity/activity';
 import Biography from '@/modules/profile/views/biography/biography';
@@ -26,11 +31,10 @@ import axios from 'axios';
 import config from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
 import { NextPageWithLayout } from '../_app';
-import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 
 const { publicRuntimeConfig } = config();
 
@@ -46,14 +50,28 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     initialInView: true,
   });
   const { isMobile, isDesktop } = useResponsive();
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+  const isWebView = useWebView();
+
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
     {
       keepPreviousData: true,
-      refetchOnMount: false,
     },
   );
   const profileData = profile.data?.data;
+
+  useEffect(() => {
+    if (profileData) {
+      pageViewEvent({
+        doctor: profileData,
+        isWebView: !!isWebView,
+      });
+    }
+  }, [profileData]);
+  console.log(profileData);
+
   const doctorExpertise = getDisplayDoctorExpertise({
     aliasTitle: profileData?.expertises?.[0]?.alias_title,
     degree: profileData?.expertises?.[0]?.degree?.name,
@@ -113,7 +131,21 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           return (
             <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
               <Text fontWeight="medium">درخواست احراز هویت و دریافت مالکیت صفحه</Text>
-              <Button onClick={() => location.assign('https://dr.paziresh24.com/auth/?q=profile')} variant="secondary">
+              <Button
+                onClick={() => {
+                  splunkInstance().sendEvent({
+                    group: 'register',
+                    type: 'doctor-profile',
+                    event: {
+                      action: 'click',
+                      current_url: location.href,
+                      phone_number: isLogin ? userInfo.cell : null,
+                    },
+                  });
+                  location.assign('https://dr.paziresh24.com/auth/?q=profile');
+                }}
+                variant="secondary"
+              >
                 من {doctor.display_name} هستم
               </Button>
             </div>
@@ -212,7 +244,14 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
               },
             ],
           };
-          return <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} className="md:rounded-lg" />;
+          return (
+            <div id="reviews_serction" className="flex flex-col space-y-3">
+              <Text fontWeight="bold" className="px-4 md:px-0">
+                نظرات در مورد {doctor.display_name}
+              </Text>
+              <RateReview doctor={doctorInfo} serverId={doctor.server_id} rateDetails={doctorRateDetails} className="md:rounded-lg" />
+            </div>
+          );
         },
         ProfileSeoBox: ({ doctor }) => {
           const internalLinks = useInternalLinks(

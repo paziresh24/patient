@@ -16,7 +16,7 @@ export const Rate = (props: RateProps) => {
     <>
       <div className="w-full h-auto">
         {!!details.count && (
-          <div className="p-4 pb-0">
+          <div className="p-4 pb-0 space-y-3">
             <Details
               satisfaction={details.satisfaction}
               count={details.count}
