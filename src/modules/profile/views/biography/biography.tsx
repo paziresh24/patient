@@ -2,6 +2,7 @@ import Opener from '@/common/components/atom/opener/opener';
 import Text from '@/common/components/atom/text/text';
 import AtomIcon from '@/common/components/icons/atom';
 import AwardIcon from '@/common/components/icons/award';
+import ChatIcon from '@/common/components/icons/chat';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import clsx from 'clsx';
@@ -11,11 +12,12 @@ interface BiographyProps {
   biography?: string;
   awards?: string;
   scientific?: string;
+  onlineVisitServices?: string;
   className?: string;
 }
 
 export const Biography = (props: BiographyProps) => {
-  const { biography, awards, scientific, className } = props;
+  const { biography, awards, scientific, onlineVisitServices, className } = props;
 
   const needShowMore = useMemo(() => {
     const bio = (biography ?? '') + (awards ?? '') + (scientific ?? '');
@@ -62,7 +64,18 @@ export const Biography = (props: BiographyProps) => {
             </div>
             <Text className="leading-6" align="justify" fontSize="sm" dangerouslySetInnerHTML={{ __html: scientific }} />
           </div>
-        )}{' '}
+        )}
+        {onlineVisitServices && (
+          <div className="flex flex-col space-y-3">
+            <div className="flex items-center space-s-1">
+              <ChatIcon className="w-6 h-6" />
+              <Text fontWeight="bold" fontSize="sm">
+                خدمات ویزیت آنلاین
+              </Text>
+            </div>
+            <Text className="leading-6" align="justify" fontSize="sm" dangerouslySetInnerHTML={{ __html: onlineVisitServices }} />
+          </div>
+        )}
       </div>
     </Wrapper>
   );

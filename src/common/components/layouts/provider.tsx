@@ -19,7 +19,7 @@ export const queryClient = new QueryClient({
 const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   useEffect(() => {
     TagManager.initialize({
-      gtmId: pageProps.query?.['gtm:id'] ?? pageProps.query?.university ? 'GTM-56C68BQ' : 'GTM-P5RPLDP',
+      gtmId: pageProps.query?.['gtm:id'] ?? 'GTM-P5RPLDP',
     });
   }, []);
 
@@ -39,7 +39,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
           duration: 3000,
         }}
       />
-      {pageProps.pageProps?.query?.university && <Splash partnerLogo={pageProps?.query?.['partner:logo']} />}
+      {pageProps?.query?.university && <Splash partnerLogo={pageProps?.query?.['partner:logo']} />}
     </QueryClientProvider>
   );
 };

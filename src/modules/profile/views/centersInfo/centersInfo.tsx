@@ -8,9 +8,11 @@ import { openGoogleMap } from '@/common/utils/openGoogleMap';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
 interface CentersInfoProps {
   centers: {
+    id: string;
     name?: string;
     phoneNumbers: string | string[];
     address: string;
@@ -23,20 +25,36 @@ interface CentersInfoProps {
     slug: string;
   }[];
   className?: string;
+  onEventPhoneNumber?: (centerId: string) => void;
+  onEventAddress?: (centerId: string) => void;
 }
 
 export const CentersInfo = (props: CentersInfoProps) => {
-  const { centers, className } = props;
+  const { centers, className, onEventPhoneNumber, onEventAddress } = props;
+
+  const DescriptionWrapper = ({ children, length }: { children: ReactNode; length: number }) => {
+    if (length >= 140) {
+      return (
+        <Opener closeButtonText="بستن" openButtonText="ادامه" className="space-y-0 shadow-slate-50">
+          {children}
+        </Opener>
+      );
+    }
+    return <div>{children}</div>;
+  };
+
   return (
     <div className={clsx('p-3 flex flex-col space-y-2', className)}>
       {centers.map((center, index) => (
         <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
           {center.name && (
-            <Link href={center.slug} scroll>
-              <a>
-                <Text fontWeight="bold">{center.name}</Text>
-              </a>
-            </Link>
+            <div className="flex justify-between">
+              <Link href={center.slug} scroll>
+                <a>
+                  <Text fontWeight="bold">{center.name}</Text>
+                </a>
+              </Link>
+            </div>
           )}
           {(center.address || center.city) && (
             <div className="!mt-1">
@@ -53,14 +71,14 @@ export const CentersInfo = (props: CentersInfoProps) => {
             </div>
           )}
           {center.description && (
-            <Opener closeButtonText="بستن" openButtonText="ادامه" className="space-y-0 shadow-slate-50">
-              <div className="flex space-s-2">
+            <DescriptionWrapper length={center.description.length}>
+              <div className="flex space-s-1">
                 <QuotesIcon className="min-w-fit" width={18} height={18} />
-                <Text align="justify" fontSize="sm">
+                <Text align="justify" fontSize="sm" className="leading-6">
                   {center.description}
                 </Text>
               </div>
-            </Opener>
+            </DescriptionWrapper>
           )}
           {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
             <div className="flex flex-col space-y-2">
@@ -68,7 +86,10 @@ export const CentersInfo = (props: CentersInfoProps) => {
                 <Button
                   variant="secondary"
                   icon={<PhoneIcon width={20} height={20} />}
-                  onClick={() => (location.href = `tel:${center.phoneNumbers}`)}
+                  onClick={() => {
+                    onEventPhoneNumber?.(center.id);
+                    location.href = `tel:${center.phoneNumbers}`;
+                  }}
                 >
                   {center.phoneNumbers}
                 </Button>
@@ -79,13 +100,23 @@ export const CentersInfo = (props: CentersInfoProps) => {
                     key={phoneNumber}
                     variant="secondary"
                     icon={<PhoneIcon width={20} height={20} />}
-                    onClick={() => (location.href = `tel:${phoneNumber}`)}
+                    onClick={() => {
+                      onEventPhoneNumber?.(center.id);
+                      location.href = `tel:${phoneNumber}`;
+                    }}
                   >
                     {phoneNumber}
                   </Button>
                 ))}
               {center.location.lat && (
-                <Button variant="secondary" icon={<LocationIcon width={20} height={20} />} onClick={() => openGoogleMap(center.location)}>
+                <Button
+                  variant="secondary"
+                  icon={<LocationIcon width={20} height={20} />}
+                  onClick={() => {
+                    onEventAddress?.(center.id);
+                    openGoogleMap(center.location);
+                  }}
+                >
                   مشاهده در نقشه و مسیریابی
                 </Button>
               )}

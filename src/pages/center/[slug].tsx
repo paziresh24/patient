@@ -6,6 +6,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
+import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import Biography from '@/modules/profile/views/biography/biography';
 import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
 import Head from '@/modules/profile/views/head/head';
@@ -130,25 +131,44 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
             ]}
             className="shadow-card md:rounded-lg"
           />
-          <Text fontWeight="bold" className="px-4 md:px-0">
-            لیست پزشکان
-          </Text>
-          <div className="px-4 md:p-0">
-            <ListOfDoctors
-              doctors={doctors.data?.[0]?.items ?? []}
-              expertises={
-                expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
-                  label: expertise.name,
-                  value: expertise.name,
-                })) ?? []
-              }
-              showRateAndReviews={customize.showRateAndReviews}
-              loading={doctors.isLoading}
-              onSelectExpertise={setSelectedExpertise}
-              onSearch={setSearchQuery}
-            />
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
+            <div onClick={() => scrollIntoViewWithOffset('#doctors-list_section', 90)}>
+              <Text fontSize="sm" fontWeight="medium">
+                لیست پزشکان
+              </Text>
+            </div>
+            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
+              <Text fontSize="sm" fontWeight="medium">
+                آدرس و تلفن
+              </Text>
+            </div>
+            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
+              <Text fontSize="sm" fontWeight="medium">
+                درباره مرکز
+              </Text>
+            </div>
+          </nav>
+          <div id="doctors-list_section" className="flex flex-col w-full space-y-3">
+            <Text fontWeight="bold" className="px-4 md:px-0">
+              لیست پزشکان
+            </Text>
+            <div id="doctors-list_section" className="px-4 md:p-0">
+              <ListOfDoctors
+                doctors={doctors.data?.[0]?.items ?? []}
+                expertises={
+                  expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
+                    label: expertise.name,
+                    value: expertise.name,
+                  })) ?? []
+                }
+                showRateAndReviews={customize.showRateAndReviews}
+                loading={doctors.isLoading}
+                onSelectExpertise={setSelectedExpertise}
+                onSearch={setSearchQuery}
+              />
+            </div>
           </div>
-          <div className="flex flex-col w-full space-y-3 md:hidden md:basis-5/12">
+          <div id="center-info_section" className="flex flex-col w-full space-y-3 md:hidden">
             <Text fontWeight="bold" className="px-4 md:px-0">
               آدرس و تلفن تماس
             </Text>
@@ -156,6 +176,7 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
               className="bg-white md:rounded-lg"
               centers={[
                 {
+                  id: profileData.id,
                   address: profileData.address,
                   city: profileData.city,
                   slug: profileData.slug,
@@ -167,12 +188,12 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
             />
           </div>
           {profileData.biography && (
-            <>
+            <div className="flex flex-col w-full space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره مرکز درمانی
               </Text>
               <Biography biography={profileData.biography} className="bg-white md:rounded-lg" />
-            </>
+            </div>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
         </div>
@@ -184,6 +205,7 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
             className="bg-white md:rounded-lg"
             centers={[
               {
+                id: profileData.id,
                 address: profileData.address,
                 city: profileData.city,
                 slug: profileData.slug,

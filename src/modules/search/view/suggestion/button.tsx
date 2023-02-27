@@ -11,7 +11,7 @@ export const ButtonSuggestion = () => {
       <SearchIcon className="cursor-pointer" onClick={() => setIsOpenSuggestion(true)} />
       {isOpenSuggestion && (
         <div className="fixed left-0 right-0 flex items-center justify-center md:top-36 z-infinity">
-          <Suggestion overlay />
+          <Suggestion overlay autoFocus />
         </div>
       )}
     </>

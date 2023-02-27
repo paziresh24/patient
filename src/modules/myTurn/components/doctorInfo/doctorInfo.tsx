@@ -28,7 +28,7 @@ export const DoctorInfo: React.FC<DoctorInfoProps> = props => {
               {fullName ?? `${firstName} ${lastName}`}
             </Text>
             {expertise && (
-              <Text fontSize="xs" className="mt-2 line-clamp-1" data-testid="doctor-info__expertise">
+              <Text fontSize="xs" className="mt-2 line-clamp-2" data-testid="doctor-info__expertise">
                 {expertise}
               </Text>
             )}

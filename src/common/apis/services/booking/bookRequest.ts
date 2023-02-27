@@ -14,7 +14,7 @@ interface Params {
   cell: string;
   gender: 'male' | 'female';
   description: string;
-  files: any[];
+  files?: any[];
 }
 
 export const bookRequest = (params: Params) => {

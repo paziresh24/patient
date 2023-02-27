@@ -17,10 +17,11 @@ const SuggestionContent = dynamic(() => import('../../components/suggestion/sugg
 interface SuggestionProps {
   overlay?: boolean;
   defaultOpen?: boolean;
+  autoFocus?: boolean;
 }
 
 export const Suggestion = (props: SuggestionProps) => {
-  const { overlay = false, defaultOpen = false } = props;
+  const { overlay = false, defaultOpen = false, autoFocus } = props;
   const router = useRouter();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
@@ -146,6 +147,7 @@ export const Suggestion = (props: SuggestionProps) => {
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
         readOnly={isMobile}
+        autoFocus={autoFocus}
       />
       {isOpenSuggestion && (
         <SuggestionContent

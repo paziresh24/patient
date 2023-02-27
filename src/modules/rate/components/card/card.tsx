@@ -63,7 +63,7 @@ export const Card = (props: CardProps) => {
           <Text
             fontSize="sm"
             fontWeight="medium"
-            className="text-justify block leading-7 [&>em]:text-blue-700 [&>em]:not-italic"
+            className="text-justify block leading-7 [&>em]:text-blue-700 [&>em]:not-italic break-words"
             dangerouslySetInnerHTML={{ __html: description ?? '' }}
           />
         </div>

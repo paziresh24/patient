@@ -1,5 +1,7 @@
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import Text from '@/common/components/atom/text/text';
 import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
@@ -10,13 +12,13 @@ import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useCallback } from 'react';
+import { ReactElement, useCallback, useMemo } from 'react';
 import { NextPageWithLayout } from '../_app';
 const { publicRuntimeConfig } = getConfig();
 
 const Booking: NextPageWithLayout = () => {
   const router = useRouter();
-  const { data, isLoading, isIdle } = useGetProfileData(
+  const { data, isLoading, isIdle, isSuccess } = useGetProfileData(
     {
       slug: router.query?.slug?.toString() ?? '/',
     },
@@ -58,6 +60,11 @@ const Booking: NextPageWithLayout = () => {
     };
   }, []);
 
+  const centerName = useMemo(() => {
+    const center = profileData?.centers?.find((center: any) => center.id === router.query.centerId);
+    return center?.center_type === 1 ? `مطب ${profileData.display_name}` : center?.name;
+  }, [router.query.centerId, profileData]);
+
   return (
     <>
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} />
@@ -72,7 +79,7 @@ const Booking: NextPageWithLayout = () => {
             <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
           </Transition>
         </div>
-        <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
+        <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
             isLoading={isLoading || isIdle}
@@ -84,6 +91,20 @@ const Booking: NextPageWithLayout = () => {
               expertise: profileData?.expertises?.[0]?.expertise?.name,
             })}
           />
+
+          {router.query.centerId && (
+            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+              <Text fontSize="xs" className="opacity-70">
+                مرکز
+              </Text>
+              {(isLoading || isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
+              {isSuccess && (
+                <Text fontSize="sm" fontWeight="medium">
+                  {centerName}
+                </Text>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
