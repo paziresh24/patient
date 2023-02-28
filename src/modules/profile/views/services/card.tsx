@@ -24,7 +24,7 @@ interface ServiceCardProps {
 export const ServiceCard = (props: ServiceCardProps) => {
   const { header, footer, body } = props;
   return (
-    <Card className="p-0 py-4 space-y-3 !rounded-none md:!rounded-lg">
+    <Card className="!p-0 !py-4 space-y-3 !rounded-none md:!rounded-lg">
       {header && (
         <div className="flex items-center justify-between px-4 pb-4 border-b-2 border-slate-100">
           <div className="flex items-center space-s-2">
