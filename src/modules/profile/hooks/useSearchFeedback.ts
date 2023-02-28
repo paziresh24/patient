@@ -3,9 +3,11 @@ import omit from 'lodash/omit';
 import { useState } from 'react';
 import { FeedbackParams, getFeedbacks } from '../../../common/apis/services/rate/getFeedbacks';
 import { useFeedbackDataStore } from '../store/feedbackData';
+import { useProfileSplunkEvent } from './useProfileEvent';
 
 export const useRateFilter = (doctor_id: string, server_id: string) => {
   const setFeedbackInfo = useFeedbackDataStore(state => state.setData);
+  const { rateSplunkEvent } = useProfileSplunkEvent();
   const [page, setPage] = useState<number>(1);
   const feedbacks = useFeedbackDataStore(state => state.data);
   const [filterParams, setFilterParams] = useState<FeedbackParams>({
@@ -24,11 +26,13 @@ export const useRateFilter = (doctor_id: string, server_id: string) => {
     !text && delete filterParams.search;
     setFilterParams(prve => ({ ...prve, ...(text.trim() && { search: text }) }));
     getSearchFeedback({ ...filterParams, ...(text.trim() && { search: text }) });
+    rateSplunkEvent('search', { search_term: text });
   }, 250);
 
   const rateSortFilter = debounce((order: string) => {
     setFilterParams(prve => ({ ...prve, order_by: order }));
     getSearchFeedback({ ...filterParams, order_by: order });
+    rateSplunkEvent('sort', { order: order });
   }, 10);
 
   const rateFilterType = debounce((type: 'my_feedbacks' | 'has_nobat' | 'all') => {
@@ -40,11 +44,13 @@ export const useRateFilter = (doctor_id: string, server_id: string) => {
     };
     setFilterParams({ ...removeFilters, ...(filterTypes[type] ?? { center_id: type }) });
     getSearchFeedback({ ...removeFilters, ...(filterTypes[type] ?? { center_id: type }) });
+    rateSplunkEvent('filter', { filter_by: type });
   }, 10);
 
   const showMore = () => {
     getSearchFeedback({ ...filterParams, page: page + 1 }, true);
     setPage(prve => prve + 1);
+    rateSplunkEvent('show more');
   };
 
   return { rateSearch, rateSortFilter, rateFilterType, showMore };

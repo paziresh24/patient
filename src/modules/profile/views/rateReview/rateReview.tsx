@@ -17,6 +17,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
+import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Rate from '@/modules/rate/view/rate';
 import clsx from 'clsx';
@@ -58,6 +59,7 @@ export const RateReview = (props: RateReviewProps) => {
     server_id: serverId,
   });
   const toggleLike = useFeedbackDataStore(state => state.toggleLike);
+  const { rateSplunkEvent } = useProfileSplunkEvent();
   const [rateFilter, setRateFilter] = useState<{ label: string; value: 'my_feedbacks' | 'has_nobat' | 'center_id' | 'all' }>({
     label: 'همه نظرات',
     value: 'all',
@@ -94,7 +96,7 @@ export const RateReview = (props: RateReviewProps) => {
           {
             id: reply.id,
             name: 'پاسخ',
-            action: () => showReplyModal(reply.id, reply.description, reply.is_doctor),
+            action: () => showReplyModal(reply.id, reply.is_doctor),
             type: 'button',
             icon: <ReplyIcon />,
           },
@@ -118,7 +120,7 @@ export const RateReview = (props: RateReviewProps) => {
             id: feedback.id,
             title: 'نظرات',
             isShow: feedbackReplyModalDetails.find(reply => reply.id === feedback.id)?.isShow ?? false,
-            handleOpen: () => showReplyModal(feedback.id, feedback.description, feedback.is_doctor),
+            handleOpen: () => showReplyModal(feedback.id, feedback.is_doctor),
             onClose: () =>
               setFeedbackReplyModalDetails(
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
@@ -185,7 +187,7 @@ export const RateReview = (props: RateReviewProps) => {
                 {
                   id: feedback.id,
                   name: 'پاسخ',
-                  action: () => showReplyModal(feedback.id, feedback.description, feedback.is_doctor),
+                  action: () => showReplyModal(feedback.id, feedback.is_doctor),
                   type: 'button',
                   icon: <ReplyIcon />,
                 },
@@ -264,13 +266,8 @@ export const RateReview = (props: RateReviewProps) => {
       : setReplyDetails([...replyDetails, { text: text, id: id }]);
   };
 
-  const setShowReplyModal = (id: string) => {
-    feedbackReplyModalDetails.some(feedback => feedback.id === id)
-      ? setFeedbackReplyModalDetails(feedbackReplyModalDetails.map(reply => (reply.id === id ? { id: id, isShow: true } : reply)))
-      : setFeedbackReplyModalDetails([...feedbackReplyModalDetails, { id: id, isShow: true }]);
-  };
-
   const showReportModal = (id: string, description: string, isDoctor: boolean) => {
+    rateSplunkEvent('report');
     setFeedbackDetails({
       id: id,
       description: description,
@@ -279,7 +276,8 @@ export const RateReview = (props: RateReviewProps) => {
     handleOpenReportModal();
   };
 
-  const showReplyModal = (id: string, description: string, isDoctor: boolean) => {
+  const showReplyModal = (id: string, isDoctor: boolean) => {
+    rateSplunkEvent('reply first reply box');
     setFeedbackDetails({
       id: id,
       isDoctor: isDoctor,
@@ -313,6 +311,7 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   const shareCommenthandler = (id: string) => {
+    rateSplunkEvent('share');
     const url = `${location.href}#comment-${id}`;
     navigator.share({
       text: `اشتراک گذاری نظر`,
@@ -326,13 +325,16 @@ export const RateReview = (props: RateReviewProps) => {
       {
         id: 1,
         text: 'ثبت نظر',
-        action: () =>
-          (location.href = `https://www.paziresh24.com/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`),
+        action: () => {
+          rateSplunkEvent('post');
+          location.href = `https://www.paziresh24.com/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
+        },
       },
     ],
   };
 
   const likeFeedbackHandler = async (id: string) => {
+    rateSplunkEvent('like');
     toggleLike(id);
     await likeFeedback.mutateAsync({
       feedback_id: id,
@@ -353,6 +355,7 @@ export const RateReview = (props: RateReviewProps) => {
     });
     handleClose();
     if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
+    feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
   };
   return (
     <>

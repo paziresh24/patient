@@ -10,7 +10,15 @@ export interface DoctorParams {
   centers?: Center[];
   server_id?: string;
   group_expertises?: GroupExpertises;
+  feedbacks: Feedback;
 }
+
+export type Feedback = {
+  details: {
+    satisfaction?: number;
+    number_of_feedbacks?: number;
+  };
+};
 
 export type Expertises = Array<{
   alias_title?: string;
