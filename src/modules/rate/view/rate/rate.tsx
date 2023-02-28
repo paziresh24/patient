@@ -91,7 +91,7 @@ export const Rate = (props: RateProps) => {
 
 const NotFound = () => {
   return (
-    <div className="h-[10rem] w-full rounded-xl flex justify-center items-center bg-slate-100">
+    <div className="h-[5rem] w-full rounded-xl flex justify-center items-center bg-slate-100">
       <Text fontSize="sm" fontWeight="extraBold">
         موردی یافت نشد !
       </Text>

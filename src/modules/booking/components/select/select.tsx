@@ -9,6 +9,7 @@ interface SelectProps {
   onSelect: () => void;
   title: string;
   subTitle?: string;
+  topTitle?: string;
   isLoading?: boolean;
   actionText?: string;
   action?: () => void;
@@ -16,7 +17,7 @@ interface SelectProps {
 }
 
 export const Select = (props: SelectProps) => {
-  const { onSelect, selected, subTitle, title, isLoading, action, actionText, actionIcon } = props;
+  const { onSelect, selected, subTitle, topTitle, title, isLoading, action, actionText, actionIcon } = props;
   return (
     <div
       className={clsx(
@@ -45,11 +46,14 @@ export const Select = (props: SelectProps) => {
           )}
         </div>
         <div className="flex flex-col space-y-1">
-          <Text fontWeight="bold" fontSize="sm">
-            {title}
-          </Text>
-          {!isLoading && subTitle && <Text fontSize="sm">{subTitle}</Text>}
-          {isLoading && subTitle && <Loading width={25} className="!mt-3" />}
+          {topTitle && <Text fontSize="sm">{topTitle}</Text>}
+          {isLoading && <Loading width={25} className="!mt-3" />}
+          {!isLoading && (
+            <Text fontWeight="bold" fontSize="sm">
+              {title}
+            </Text>
+          )}
+          {subTitle && <Text fontSize="sm">{subTitle}</Text>}
         </div>
       </div>
 

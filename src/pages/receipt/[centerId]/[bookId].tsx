@@ -24,7 +24,7 @@ import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
@@ -36,6 +36,11 @@ const Receipt: NextPageWithLayout = () => {
   } = useRouter();
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const {
+    handleOpen: handleOpenWaitingTimeModal,
+    handleClose: handleCloseWaitingTimeModal,
+    modalProps: WaitingTimeModalProps,
+  } = useModal();
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -56,6 +61,14 @@ const Receipt: NextPageWithLayout = () => {
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
 
   const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
+
+  useEffect(() => {
+    if (getReceiptDetails.isSuccess) {
+      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
+        handleOpenWaitingTimeModal();
+      }
+    }
+  }, [getReceiptDetails.status]);
 
   const turnStatus = {
     deletedTurn: bookDetailsData.is_deleted,
@@ -215,6 +228,14 @@ const Receipt: NextPageWithLayout = () => {
             </Button>
             <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
               انصراف
+            </Button>
+          </div>
+        </Modal>
+        <Modal title="احتمال معطلی بیش از یک ساعت!" {...WaitingTimeModalProps}>
+          <div className="flex flex-col space-y-3">
+            <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
+            <Button block onClick={() => handleCloseWaitingTimeModal()}>
+              مشاهده رسید نوبت
             </Button>
           </div>
         </Modal>

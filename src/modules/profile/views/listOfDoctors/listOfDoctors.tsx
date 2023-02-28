@@ -47,6 +47,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
             label: 'همه تخصص ها',
             value: '',
           }}
+          searchable
           placeholder="همه تخصص ها"
         />
       </div>

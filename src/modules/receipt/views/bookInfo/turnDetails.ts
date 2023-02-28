@@ -1,7 +1,9 @@
+import InfoIcon from '@/common/components/icons/info';
 import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
 import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { createElement } from 'react';
 
 type Patient = {
   name: string;
@@ -64,6 +66,9 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
           ? `بیمار عزیز این درخواست به معنی ثبت نوبت نمیباشد. نتیجه درخواست شما پس از بررسی توسط مرکز درمانی از طریق پیامک به شما اطلاع داده می شود. همینطور شما میتوانید وضعیت درخواست خود را از طریق صفحه نوبت های من مشاهده کنید.`
           : 'زمان نوبت اعلام شده، برای حضور در مرکز درمانی بوده و با زمان ویزیت تفاوت دارد.',
       shouldShow: centerType == CenterType.clinic,
+      icon: createElement(InfoIcon, {
+        className: 'text-orange-500',
+      }),
       type: 'Label',
       isBoldValue: true,
     },
@@ -72,14 +77,6 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: ` میانگین زمان انتظار در مرکز`,
       value: waitingTime,
       shouldShow: !!waitingTime && centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
-      id: 5,
-      name: 'کد پیگیری',
-      value: trackingCode,
-      shouldShow: true,
       type: 'Text',
       isBoldValue: false,
     },
@@ -110,32 +107,8 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
-      id: 9,
-      name: 'نام بیمار',
-      value: patientInfo.name,
-      shouldShow: turnStatus !== BookStatus.requested,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
-      id: 10,
-      name: 'شماره بیمار',
-      value: patientInfo.cell,
-      shouldShow: turnStatus !== BookStatus.requested,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
-      id: 11,
-      name: 'کدملی بیمار',
-      value: patientInfo.nationalCode,
-      shouldShow: centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
       id: 12,
-      name: 'سرویس انتخاب شده',
+      name: 'خدمت انتخاب شده',
       value: patientInfo.selectServeis,
       shouldShow: centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
       type: 'Text',
@@ -149,6 +122,29 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       shouldShow: centerType === CenterType.consult,
       type: 'Text',
       isBoldValue: false,
+    },
+    {
+      id: 15,
+      name: 'اطلاعات بیمار',
+      value: [
+        {
+          name: 'نام بیمار',
+          value: patientInfo.name,
+          type: 'Text',
+        },
+        {
+          name: 'کدملی',
+          value: patientInfo.nationalCode,
+          type: 'Text',
+        },
+        {
+          name: 'شماره موبایل',
+          value: patientInfo.cell,
+          type: 'Text',
+        },
+      ],
+      shouldShow: turnStatus !== BookStatus.requested,
+      type: 'Accordion',
     },
     {
       id: 15,

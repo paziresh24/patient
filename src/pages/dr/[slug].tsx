@@ -2,10 +2,12 @@ import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
+import { usePageView } from '@/common/apis/services/profile/pageView';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import AwardIcon from '@/common/components/icons/award';
 import ChatIcon from '@/common/components/icons/chat';
+import EditIcon from '@/common/components/icons/edit';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -28,7 +30,9 @@ import RateReview from '@/modules/profile/views/rateReview/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
+import { getCookie } from 'cookies-next';
 import config from 'next/config';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
@@ -45,6 +49,7 @@ interface Props {
 const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
+  const addPageView = usePageView();
   const slug = query.slug as string;
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
@@ -61,16 +66,26 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     },
   );
   const profileData = profile.data?.data;
+  const isBulk = useMemo(
+    () =>
+      profileData?.centers?.every((center: any) => center.status === 2) ||
+      profileData?.centers?.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
+    [profileData],
+  );
 
   useEffect(() => {
     if (profileData) {
       pageViewEvent({
         doctor: profileData,
+        isBulk,
         isWebView: !!isWebView,
       });
+      addPageView.mutate({
+        doctorId: profileData.id,
+        serverId: profileData.server_id,
+      });
     }
-  }, [profileData]);
-  console.log(profileData);
+  }, [profileData, isBulk]);
 
   const doctorExpertise = getDisplayDoctorExpertise({
     aliasTitle: profileData?.expertises?.[0]?.alias_title,
@@ -83,13 +98,6 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
   } نوبت دهی آنلاین و شماره تلفن | پذیرش24`;
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
-  const isBulk = useMemo(
-    () =>
-      profileData?.centers?.every((center: any) => center.status === 2) ||
-      profileData?.centers?.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
-    [profileData],
-  );
-
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle });
   const layout: {
     content: Record<string, ({ doctor }: { doctor: any }) => ReactElement | null>;
@@ -98,14 +106,14 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     () => ({
       content: {
         Services: ({ doctor }) => (
-          <div id="services_serction" ref={servicesRef} className="flex flex-col space-y-3 md:hidden">
+          <div id="services_section" ref={servicesRef} className="flex flex-col space-y-3 md:hidden">
             <Services className="md:hidden" doctor={doctor} isBulk={isBulk} slug={slug} />
           </div>
         ),
         CenterInfo: ({ doctor }) => {
           if (doctor.centers?.length === 0) return null;
           return (
-            <div id="center-info_serction" className="flex flex-col space-y-3 md:hidden">
+            <div id="center-info_section" className="flex flex-col space-y-3 md:hidden">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 آدرس و تلفن تماس
               </Text>
@@ -114,6 +122,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                 centers={profileData.centers
                   .filter((center: any) => center.id !== CENTERS.CONSULT)
                   .map((center: any) => ({
+                    id: center.id,
                     address: center.address,
                     city: center.city,
                     slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
@@ -122,6 +131,66 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
                     location: center.map,
                   }))}
+                onEventPhoneNumber={centerId => {
+                  const center = doctor.centers.find((center: any) => center.id === centerId);
+                  splunkInstance().sendEvent({
+                    group: 'doctor profile',
+                    type: 'see center phone',
+                    event: {
+                      data: {
+                        doctor: {
+                          name: doctor.name,
+                          family: doctor.family,
+                          server_id: doctor.server_id,
+                          slug,
+                          id: doctor.id,
+                          expertise: doctor.expertises[0].expertise.name,
+                          group_expertise: doctor.group_expertises[0].name,
+                        },
+                        center: {
+                          center_status: center?.status,
+                          center_type: center?.center_type,
+                          center_name: center?.name,
+                          city_en_slug: center?.city_en_slug,
+                        },
+                        user: {
+                          terminal_id: getCookie('terminal_id'),
+                          cell: userInfo.cell,
+                        },
+                      },
+                    },
+                  });
+                }}
+                onEventAddress={centerId => {
+                  const center = doctor.centers.find((center: any) => center.id === centerId);
+                  splunkInstance().sendEvent({
+                    group: 'doctor profile',
+                    type: 'see center map',
+                    event: {
+                      data: {
+                        doctor: {
+                          name: doctor.name,
+                          family: doctor.family,
+                          server_id: doctor.server_id,
+                          slug,
+                          id: doctor.id,
+                          expertise: doctor.expertises[0].expertise.name,
+                          group_expertise: doctor.group_expertises[0].name,
+                        },
+                        center: {
+                          center_status: center?.status,
+                          center_type: center?.center_type,
+                          center_name: center?.name,
+                          city_en_slug: center?.city_en_slug,
+                        },
+                        user: {
+                          terminal_id: getCookie('terminal_id'),
+                          cell: userInfo.cell,
+                        },
+                      },
+                    },
+                  });
+                }}
               />
             </div>
           );
@@ -153,13 +222,14 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
         },
         Biography: ({ doctor }) => {
           const { biography, awards, scientific } = doctor;
-          if (!biography && !awards && !scientific) return null;
+          const onlineVisitServices = doctor.centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_desk_raw;
+          if (!biography && !awards && !scientific && !onlineVisitServices) return null;
           return (
-            <div id="about_serction" className="flex flex-col space-y-3">
+            <div id="about_section" className="flex flex-col space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره پزشک
               </Text>
-              <Biography {...{ biography, awards, scientific }} className="bg-white md:rounded-lg" />
+              <Biography {...{ biography, awards, scientific, onlineVisitServices }} className="bg-white md:rounded-lg" />
             </div>
           );
         },
@@ -245,7 +315,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             ],
           };
           return (
-            <div id="reviews_serction" className="flex flex-col space-y-3">
+            <div id="reviews_section" className="flex flex-col space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 نظرات در مورد {doctor.display_name}
               </Text>
@@ -270,28 +340,43 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
               } جهت مشاهده خدمات و دریافت نوبت آنلاین مطب شخصی، کلینیک، درمانگاه و بیمارستان هایی که ایشان در حال ارائه خدمات درمانی هستند از طریق پذیرش24 طراحی و ارائه شده است. البته ممکن است در حال حاضر امکان رزرو نوبت از همه مراکز فوق ممکن نباشد که این موضوع وابسته به تصمیم ${
                 doctor.gender === 0 ? '' : doctor.gender == 1 ? 'آقای' : 'خانم'
               } دکتر در ارائه نوبت گیری از درگاه های فوق بوده است.`}
-              breadcrumbs={createBreadcrumb(internalLinks.data, doctor.display_name, router.asPath)}
+              breadcrumbs={createBreadcrumb(internalLinks?.data, doctor.display_name, router.asPath)}
             />
           );
         },
       },
       sideBar: {
         Services: ({ doctor }) => {
-          if (!isDesktop) return null;
-          return <Services doctor={doctor} isBulk={isBulk} slug={slug} />;
+          // if (!isDesktop) return null;
+          return (
+            <div className="flex-col hidden w-full space-y-3 md:flex">
+              <Services doctor={doctor} isBulk={isBulk} slug={slug} />
+            </div>
+          );
         },
         CenterInfo: ({ doctor }) => {
           if (doctor.centers?.length === 0) return null;
           return (
             <div className="flex-col hidden space-y-3 md:flex">
-              <Text fontWeight="bold" className="px-4 md:px-0">
-                آدرس و تلفن تماس
-              </Text>
+              <div className="flex justify-between">
+                <Text fontWeight="bold" className="px-4 md:px-0">
+                  آدرس و تلفن تماس
+                </Text>
+                <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
+                  <a>
+                    <Text fontSize="sm" className="flex font-medium gap-x-1 text-primary">
+                      <EditIcon width={18} height={18} />
+                      گزارش تلفن و آدرس صحیح
+                    </Text>
+                  </a>
+                </Link>
+              </div>
               <CentersInfo
                 className="bg-white md:rounded-lg"
                 centers={profileData.centers
                   .filter((center: any) => center.id !== CENTERS.CONSULT)
                   .map((center: any) => ({
+                    id: center.id,
                     address: center.address,
                     city: center.city,
                     slug: center.center_type === 1 ? `/dr/${slug}` : `/center/${center.slug}`,
@@ -300,6 +385,66 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     name: center.center_type !== 1 ? center.name : `مطب ${doctor?.display_name}`,
                     location: center.map,
                   }))}
+                onEventPhoneNumber={centerId => {
+                  const center = doctor.centers.find((center: any) => center.id === centerId);
+                  splunkInstance().sendEvent({
+                    group: 'doctor profile',
+                    type: 'see center phone',
+                    event: {
+                      data: {
+                        doctor: {
+                          name: doctor.name,
+                          family: doctor.family,
+                          server_id: doctor.server_id,
+                          slug,
+                          id: doctor.id,
+                          expertise: doctor.expertises[0].expertise.name,
+                          group_expertise: doctor.group_expertises[0].name,
+                        },
+                        center: {
+                          center_status: center?.status,
+                          center_type: center?.center_type,
+                          center_name: center?.name,
+                          city_en_slug: center?.city_en_slug,
+                        },
+                        user: {
+                          terminal_id: getCookie('terminal_id'),
+                          cell: userInfo.cell,
+                        },
+                      },
+                    },
+                  });
+                }}
+                onEventAddress={centerId => {
+                  const center = doctor.centers.find((center: any) => center.id === centerId);
+                  splunkInstance().sendEvent({
+                    group: 'doctor profile',
+                    type: 'see center map',
+                    event: {
+                      data: {
+                        doctor: {
+                          name: doctor.name,
+                          family: doctor.family,
+                          server_id: doctor.server_id,
+                          slug,
+                          id: doctor.id,
+                          expertise: doctor.expertises[0].expertise.name,
+                          group_expertise: doctor.group_expertises[0].name,
+                        },
+                        center: {
+                          center_status: center?.status,
+                          center_type: center?.center_type,
+                          center_name: center?.name,
+                          city_en_slug: center?.city_en_slug,
+                        },
+                        user: {
+                          terminal_id: getCookie('terminal_id'),
+                          cell: userInfo.cell,
+                        },
+                      },
+                    },
+                  });
+                }}
               />
             </div>
           );
@@ -332,23 +477,23 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
             rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
           />
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-between">
-            <div onClick={() => scrollIntoViewWithOffset('#services_serction', 90)}>
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
+            <div onClick={() => scrollIntoViewWithOffset('#services_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 دریافت نوبت
               </Text>
             </div>
-            <div onClick={() => scrollIntoViewWithOffset('#center-info_serction', 90)}>
+            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 آدرس و تلفن
               </Text>
             </div>
-            <div onClick={() => scrollIntoViewWithOffset('#about_serction', 90)}>
+            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 درباره پزشک
               </Text>
             </div>
-            <div onClick={() => scrollIntoViewWithOffset('#reviews_serction', 90)}>
+            <div onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 نظرات
               </Text>
@@ -362,7 +507,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
         </div>
         {isMobile && !inViewServices && (
           <div className="fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100">
-            <Button onClick={() => scrollIntoViewWithOffset('#services_serction', 90)} block>
+            <Button onClick={() => scrollIntoViewWithOffset('#services_section', 90)} block>
               دریافت نوبت
             </Button>
           </div>
@@ -379,7 +524,7 @@ const getSearchLinks = ({ centers, group_expertises }: any) => {
 };
 
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
-  const reformmatedBreadcrumb = links.map(link => ({ href: link.orginalLink, text: link.title }));
+  const reformmatedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
 
   reformmatedBreadcrumb.unshift({
     href: '/',
@@ -435,18 +580,22 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
     const links = getSearchLinks({ centers: data.centers, group_expertises: data.group_expertises });
 
-    await queryClient.fetchQuery(
-      [
-        ServerStateKeysEnum.InternalLinks,
-        {
-          links,
-        },
-      ],
-      () =>
-        internalLinks({
-          links,
-        }),
-    );
+    try {
+      await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.InternalLinks,
+          {
+            links,
+          },
+        ],
+        () =>
+          internalLinks({
+            links,
+          }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
     try {
       await queryClient.fetchQuery(

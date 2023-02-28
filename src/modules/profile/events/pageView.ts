@@ -1,8 +1,24 @@
+import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { splunkInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
 import { compact, some, uniq } from 'lodash';
 
-export const pageViewEvent = ({ doctor, isWebView }: { doctor: any; isWebView: boolean }) => {
+export const pageViewEvent = ({ doctor, isWebView, isBulk }: { doctor: any; isWebView: boolean; isBulk: boolean }) => {
+  if (doctor.centers.every((center: any) => !center.is_active)) {
+    sendGaEvent({ action: 'activation-Doc', category: 'profile-notactive', label: 'activation' });
+  }
+  sendGaEvent({ action: 'P24DrsPage', category: 'DrsPageLoaded', label: 'DrsPageLoaded' });
+  sendGaEvent({ action: 'P24DrsPage', category: 'expertise', label: doctor?.group_expertises[0]?.name });
+  sendGaEvent({ action: 'P24DrsPage', category: 'city', label: doctor.centers?.[0]?.city });
+  sendGaEvent({
+    action: 'P24doctorspage',
+    category: doctor.centers?.[0]?.city,
+    label: doctor.expertises[0]?.expertise_groups?.[0]?.name,
+  });
+  sendGaEvent({ action: 'P24DrsPage', category: doctor.centers?.[0]?.city, label: doctor?.group_expertises?.[0]?.name });
+  if (isBulk) {
+    sendGaEvent({ action: 'bulkprofile', category: 'load', label: 'load' });
+  }
   splunkInstance().sendEvent({
     group: 'doctor profile',
     type: 'doctor profile page view',
@@ -10,10 +26,10 @@ export const pageViewEvent = ({ doctor, isWebView }: { doctor: any; isWebView: b
       data: {
         center_type_main_name: doctor?.centers.map((center: any) => center.name),
         non_bulk_centers_type: some(doctor.centers, ['center_type', 1])
-          ? doctor.centers.filter((center: any) => center.center_status === 1)?.map((center: any) => center.center_type_name)
+          ? doctor.centers.filter((center: any) => center.status === 1)?.map((center: any) => center.center_type_name)
           : 'blank',
-        centers_type_with_active_booking: some(doctor.centers, ['active_booking', true])
-          ? doctor?.centers.filter((center: any) => center.active_booking === true).map((center: any) => center.center_type_name)
+        centers_type_with_active_booking: some(doctor.centers, ['is_active', true])
+          ? doctor?.centers.filter((center: any) => center.is_active).map((center: any) => center.center_type_name)
           : 'blank',
         terminal_id: getCookie('terminal_id'),
         expertises: doctor?.expertises?.map((expertise: any) => expertise?.expertise?.name),

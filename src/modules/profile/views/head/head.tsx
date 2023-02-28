@@ -2,12 +2,13 @@ import Chips from '@/common/components/atom/chips/chips';
 import Text from '@/common/components/atom/text/text';
 import EyeIcon from '@/common/components/icons/eye';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import RateBadge from '@/components/atom/badge/badge';
+import LikeIcon from '@/components/icons/like';
 import clsx from 'clsx';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
 import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
-import RateBadge from '@/components/atom/badge/badge';
-import LikeIcon from '@/components/icons/like';
 
 interface HeadProps {
   image: string;
@@ -25,7 +26,7 @@ interface HeadProps {
 export const Head = (props: HeadProps) => {
   const { displayName, image, title, subTitle, serviceList, pageViewCount, toolBarItems, className, satisfaction, rateCount } = props;
   return (
-    <div className={clsx('py-4 space-y-3 bg-white', className)}>
+    <div className={clsx('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
         <div className="flex justify-between">
           {toolBarItems && <ToolBar items={toolBarItems} />}
@@ -55,14 +56,16 @@ export const Head = (props: HeadProps) => {
         </ScrollContainer>
       )}
       {satisfaction && (
-        <RateBadge
-          text={`${satisfaction}%`}
-          icon={<LikeIcon className="w-5 text-white" />}
-          parentClassName="!bg-green-600"
-          className="mt-1"
-          fontSize="sm"
-          caption={`رضایت (${rateCount} نظر)`}
-        />
+        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
+          <RateBadge
+            text={`${satisfaction}%`}
+            icon={<LikeIcon className="w-5 text-white" />}
+            parentClassName="!bg-green-600"
+            className="mt-1"
+            fontSize="sm"
+            caption={`رضایت (${rateCount} نظر)`}
+          />
+        </div>
       )}
     </div>
   );

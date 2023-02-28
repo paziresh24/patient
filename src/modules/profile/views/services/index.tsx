@@ -2,7 +2,6 @@ import Card from '@/common/components/atom/card/card';
 import Text from '@/common/components/atom/text/text';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
-import PhoneNumberList from '@/modules/booking/components/phoneNumberList/phoneNumberList';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
@@ -64,9 +63,8 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
       {isBulk && (
         <Card className="!rounded-none md:!rounded-lg">
           <Text fontWeight="bold" fontSize="sm">
-            نوبت‌دهی اینترنتی این پزشک غیرفعال می‌باشد!
+            نوبت دهی این پزشک در پذیرش24 غیر فعال می باشد. شما میتوانید از پزشکان حاذق در این حوزه نوبت بگیرید.
           </Text>
-          <PhoneNumberList phoneNumbers={doctor.centers?.[0]?.display_number_array} />
         </Card>
       )}
       {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (

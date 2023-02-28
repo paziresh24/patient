@@ -12,8 +12,8 @@ export const FreeTurn = (props: FreeTurnProps) => {
   const { title, timeText, loading, onSelect, selected } = props;
   return (
     <Select
-      title={`${title}:`}
-      subTitle={timeText ?? 'زمان نوبت خالی وجود ندارد'}
+      topTitle={`${title}:`}
+      title={timeText ?? 'زمان نوبت خالی وجود ندارد'}
       isLoading={loading}
       selected={selected}
       onSelect={onSelect}

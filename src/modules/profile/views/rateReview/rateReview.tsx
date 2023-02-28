@@ -159,7 +159,7 @@ export const RateReview = (props: RateReviewProps) => {
               inModal: true,
             },
           ],
-          details: compact([feedback?.center_name, feedback.formatted_date]),
+          details: compact([feedback.formatted_date, feedback?.center_name]),
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
           }),

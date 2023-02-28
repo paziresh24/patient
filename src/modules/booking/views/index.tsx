@@ -47,6 +47,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
+import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
@@ -132,6 +133,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [symptomSearchText, setSymptomSearchText] = useState('');
   const { handleBook, isLoading: bookLoading } = useBooking();
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
+  const unsuspend = useUnsuspend();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -226,7 +228,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       service_id: service.id,
       server_id: center.server_id,
       user_center_id: center.user_center_id,
-      files: dataForm.files!,
+      ...(dataForm.files && { files: dataForm.files }),
       description: dataForm.description,
       gender: user.gender,
       cell: user.username,
@@ -292,7 +294,13 @@ const BookingSteps = (props: BookingStepsProps) => {
       }, 300000); // 3 min}
     }
 
-    return () => clearTimeout(getTurnTimeout.current);
+    return () => {
+      clearTimeout(getTurnTimeout.current);
+      unsuspend.mutate({
+        center_id: router.query?.centerId! as string,
+        request_code: timeId,
+      });
+    };
   }, [step]);
 
   const getInsuranceList = () => {
@@ -420,7 +428,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       {step === 'SELECT_USER' && (
         <>
           {center?.user_center_desk && (
-            <div className="p-3 rounded-lg bg-slate-100 mb-5">
+            <div className="p-3 mb-5 rounded-lg bg-slate-100">
               <Text fontSize="sm">{center?.user_center_desk}</Text>
             </div>
           )}
@@ -498,7 +506,6 @@ const BookingSteps = (props: BookingStepsProps) => {
           }}
           nextStep={(data: TurnRequestInformation) => {
             if (!data.description) return toast.error('لطفا توضیحات را تکمیل کنید.');
-            if (isEmpty(data.files)) return toast.error('لطفا فایل مورد نظر خود را انتخاب کنید.');
             if (!data.checkedRules) return toast.error('لطفا قوانین را بپذیرید.');
             handleBookRequest(data);
           }}
@@ -540,7 +547,15 @@ const BookingSteps = (props: BookingStepsProps) => {
           </Button>
         </div>
       </Modal>
-      <Modal noHeader {...recommendModalProps} bodyClassName="bg-slate-100 !p-0">
+      <Modal
+        noHeader
+        {...recommendModalProps}
+        onClose={() => {
+          recommendModalProps.onClose();
+          router.push(`/dr/${slug}`);
+        }}
+        bodyClassName="bg-slate-100 !p-0"
+      >
         <div className="flex flex-col space-y-3">
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}
@@ -559,7 +574,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                   doctorId={profile.id}
                   city={profile.city_en_slug}
                   category={profile.expertises[0]?.expertise_groups[0].en_slug}
-                  centerId={university ? center?.id : null}
+                  centerId={center?.id}
                 />
               )}
             </>

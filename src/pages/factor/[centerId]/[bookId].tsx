@@ -53,19 +53,34 @@ const Factor: NextPageWithLayout = () => {
             })}
             isLoading={getBookDetails.isLoading || getBookDetails.isIdle}
           />
-          {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="10rem" h="1rem" rounded="full" />}
-          {getBookDetails.isSuccess && bookDetailsData && (
-            <div className="flex items-center px-2 py-1 border-r-2 space-s-1 border-slate-200">
-              <Text fontSize="sm">{centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}:</Text>
-              <Text fontSize="sm" fontWeight="medium">
-                {`${moment(bookDetailsData?.book_from * 1000)
-                  .locale('fa')
-                  .calendar(undefined, {
-                    sameDay: '[امروز]',
-                    nextDay: '[فردا]',
-                    nextWeek: 'dddd',
-                    sameElse: 'dddd',
-                  })}
+          <div>
+            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+              <Text fontSize="xs" className="opacity-70">
+                مرکز
+              </Text>
+              {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />}
+              {getBookDetails.isSuccess && (
+                <Text fontSize="sm" fontWeight="medium">
+                  {bookDetailsData?.center_name}
+                </Text>
+              )}
+            </div>
+            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+              <Text fontSize="xs" className="opacity-70">
+                {centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}:
+              </Text>
+              {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />}
+
+              {getBookDetails.isSuccess && (
+                <Text fontSize="sm" fontWeight="medium">
+                  {`${moment(bookDetailsData?.book_from * 1000)
+                    .locale('fa')
+                    .calendar(undefined, {
+                      sameDay: '[امروز]',
+                      nextDay: '[فردا]',
+                      nextWeek: 'dddd',
+                      sameElse: 'dddd',
+                    })}
               ${moment(bookDetailsData?.book_from * 1000)
                 .locale('fa')
                 .format('DD MMMM')}
@@ -74,9 +89,10 @@ const Factor: NextPageWithLayout = () => {
                    .locale('fa')
                    .format('HH:mm')}
             `}
-              </Text>
+                </Text>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>
