@@ -54,7 +54,7 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
       query: '',
       center_id: profileData.id,
       return_expertise: true,
-      withoutUniversity: true,
+      university,
     },
     {
       keepPreviousData: true,
