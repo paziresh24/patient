@@ -66,7 +66,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isBookForToday = isToday(new Date(bookTime));
   const isEnableFectureFlagging = useFeatureIsOn('delete-book');
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
+  const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
 
   const showPrescription = () => {
     window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
