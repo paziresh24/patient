@@ -19,6 +19,7 @@
     "visited": "visited",
     "requested": "Pending",
     "not_visited": "Not Visited",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "accepted": "Accepted"
   }
 }

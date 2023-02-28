@@ -14,14 +14,17 @@ import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
+import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
+const { publicRuntimeConfig } = config();
 
 export const UserProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -31,10 +34,12 @@ export const UserProfile = () => {
     userInfo: state.info,
     pending: state.pending,
   }));
+  const logout = useUserInfoStore(state => state.logout);
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
   const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
+  const { customize } = useCustomize();
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
@@ -48,18 +53,21 @@ export const UserProfile = () => {
       badge: !!turnsCount.presence && (
         <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
       ),
+      shouldShow: true,
     },
     {
       name: t('patient/common:menu.bookmarks'),
       icon: <BookmarkIcon />,
       link: '/patient/bookmarks',
+      shouldShow: customize.bookMark,
     },
     {
       name: t('patient/common:menu.subuser'),
       icon: <UsersIcon />,
       link: '/patient/subuser',
+      shouldShow: true,
     },
-  ];
+  ].filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
@@ -84,7 +92,7 @@ export const UserProfile = () => {
       {!pending &&
         (isLogin ? (
           <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
-            <div className="flex items-center p-3 text-sm font-medium text-center cursor-pointer space-s-2 md:p-6 md:pl-4">
+            <div className="flex items-center py-3 text-sm font-medium text-center cursor-pointer space-s-2 md:py-6 md:pl-4">
               {userInfo?.image ? (
                 <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
               ) : (
@@ -105,7 +113,7 @@ export const UserProfile = () => {
                   <div className="flex items-center w-64 p-2 pb-3 space-s-3">
                     <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
                     <div className="flex flex-col space-y-2">
-                      {!userInfo.name ? (
+                      {pending ? (
                         <>
                           <Skeleton h="1rem" w="8rem" rounded="full" />
                           <Skeleton h="1rem" rounded="full" />
@@ -136,14 +144,20 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  <MenuItem name={t('patient/common:menu.support')} link="/home/support-form/" icon={<HeadphoneIcon />} />
-                  <MenuItem name={t('patient/common:menu.logout')} link="/logout" icon={<LogoutIcon />} />
+                  {customize.showSupport && (
+                    <MenuItem
+                      name={t('patient/common:menu.support')}
+                      link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
+                      icon={<HeadphoneIcon />}
+                    />
+                  )}
+                  <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
                 </MenuList>
               </div>
             </Transition>
           </div>
         ) : (
-          <Button className="!px-4" size="sm" variant="secondary" onClick={handleLogin}>
+          <Button className="!px-2 !text-xs md:!text-sm md:!px-4" size="sm" variant="secondary" onClick={handleLogin}>
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}

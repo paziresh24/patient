@@ -9,11 +9,7 @@ export const getDisplayDoctorExpertise = ({ aliasTitle, degree, expertise }: Get
     return aliasTitle;
   }
 
-  if (degree && expertise) {
-    return `${degree} ${expertise}`;
-  }
-
-  return;
+  return `${degree} ${expertise}`;
 };
 
 export default getDisplayDoctorExpertise;

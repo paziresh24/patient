@@ -4,6 +4,7 @@ import TagManager from 'react-gtm-module';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { EntryPoint } from './entryPoint';
+import Splash from './splash';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,10 +16,10 @@ export const queryClient = new QueryClient({
   },
 });
 
-const Provider = ({ children }: { children: React.ReactNode }) => {
+const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   useEffect(() => {
     TagManager.initialize({
-      gtmId: 'GTM-P5RPLDP',
+      gtmId: pageProps.query?.['gtm:id'] ?? 'GTM-P5RPLDP',
     });
   }, []);
 
@@ -38,6 +39,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
           duration: 3000,
         }}
       />
+      {pageProps?.query?.university && <Splash partnerLogo={pageProps?.query?.['partner:logo']} />}
     </QueryClientProvider>
   );
 };

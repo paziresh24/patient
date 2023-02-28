@@ -2,7 +2,9 @@ import { useCtr } from '@/common/apis/services/search/ctr';
 import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import Card from '../../components/card';
@@ -15,12 +17,15 @@ export const Result = () => {
   const {
     query: { params, ...query },
     asPath,
+    ...router
   } = useRouter();
 
   const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters, search } = useSearch();
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
   const sendCtrEvent = useCtr();
+  const isSpa = useFeatureIsOn('profile|booking:react_version');
+  const university = useServerQuery(state => state.queries.university);
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
@@ -88,11 +93,12 @@ export const Result = () => {
               text: item.title,
               description: item.top_title,
               outline: item.outline,
-
               action: () => {
+                if (isSpa || !!university) return router.push(item.url);
                 window.location.assign(item.url);
               },
             }))}
+            isSpa={isSpa || !!university}
             sendEventWhenClick={() => handleCardEvent(item)}
           />
         ),

@@ -28,11 +28,12 @@ const nextConfig = {
     return config;
   },
   swcMinify: true,
-  reactStrictMode: true,
+  reactStrictMode: false,
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
+    CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,
     PAZIRESH24_API: process.env.PAZIRESH24_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
@@ -45,6 +46,15 @@ const nextConfig = {
   },
   sentry: {
     hideSourceMaps: true,
+  },
+  async redirects() {
+    return [
+      {
+        source: '/receipt/:id/',
+        destination: '/receipt/5532/:id/',
+        permanent: true,
+      },
+    ];
   },
 };
 

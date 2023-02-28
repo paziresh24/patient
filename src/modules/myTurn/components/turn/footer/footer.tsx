@@ -1,6 +1,7 @@
 import ChatIcon from '@/common/components/icons/chat';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
@@ -14,6 +15,7 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Queue from '../../queue';
@@ -55,6 +57,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     phoneNumber,
   } = props;
   const { t } = useTranslation('patient/appointments');
+  const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
+  const router = useRouter();
   const [queueModal, setQueueModal] = useState(false);
   const { removeBookApi } = useBookAction();
   const { removeBook } = useBookStore();
@@ -69,7 +73,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
+    router.push(`/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -77,7 +81,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       variant="secondary"
       size="sm"
       block={true}
-      onClick={() => setQueueModal(true)}
+      onClick={() => handleOpenQueueModal()}
       icon={<MegaphoneIcon />}
       data-testid="footer__queue_button"
     >
@@ -163,7 +167,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         </div>
       )}
 
-      <Modal onClose={setQueueModal} isOpen={queueModal} bodyClassName="p-0" noHeader>
+      <Modal {...queueModalProps} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
       </Modal>
       <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>

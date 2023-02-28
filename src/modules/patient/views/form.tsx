@@ -157,7 +157,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
           <div className="flex flex-col space-y-2">
             <TextField
               error={!!errors.national_code}
-              type="number"
+              inputMode="numeric"
               helperText={errors.national_code?.message}
               {...register('national_code', { required: !watch('is_foreigner') })}
               label={t('userForm.nationalCode')}

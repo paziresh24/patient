@@ -6,6 +6,6 @@ export type Center = {
   isDisable: boolean;
   isAvailable?: boolean;
   availableTime?: string;
-  type: 'office' | 'hospital';
+  type: 'office' | 'hospital' | 'consult';
   phoneNumbers?: string[];
 };

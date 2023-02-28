@@ -130,6 +130,10 @@ body {
   font-family: iransansx, tahoma;
 }
 
+button {
+  font-family: iransansx, tahoma !important;
+}
+
 @supports (font-variation-settings: normal) {
   * {
     font-family: 'iransansxv', tahoma;
@@ -169,4 +173,8 @@ body {
 
 input[type='range']::-webkit-slider-thumb {
   @apply w-5 h-5 bg-white border-[6px] border-solid rounded-full appearance-none pointer-events-auto border-primary cursor-pointer;
+}
+
+.PhotoView-Portal {
+  direction: ltr;
 }

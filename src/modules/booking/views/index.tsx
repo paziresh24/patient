@@ -2,16 +2,14 @@ import { isEmpty } from 'lodash';
 import { toast } from 'react-hot-toast';
 
 // Apis
-import { useBook } from '@/common/apis/services/booking/book';
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
 import { useSymptoms } from '@/common/apis/services/booking/symptoms';
 import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndConditions';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import useWebView from '@/common/hooks/useWebView';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -48,12 +46,20 @@ import { CENTERS } from '@/common/types/centers';
 import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
+import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
+import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import useCustomize from '@/common/hooks/useCustomize';
+import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
+import clsx from 'clsx';
+import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
+  className?: string;
 }
 
 type SELECT_CENTER = {
@@ -88,8 +94,9 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
-  const isWebView = useWebView();
-  const { slug, defaultStep } = props;
+  const { customize } = useCustomize();
+  const university = useServerQuery(state => state.queries.university);
+  const { slug, defaultStep, className } = props;
   const { data, isLoading, isIdle } = useGetProfileData(
     {
       slug,
@@ -98,26 +105,35 @@ const BookingSteps = (props: BookingStepsProps) => {
       enabled: !!slug,
     },
   );
-  const centers = data?.data?.data?.centers;
-  const profile = data?.data?.data;
+  const centers = data?.data?.centers;
+  const profile = data?.data;
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
   const [timeId, setTimeId] = useState('');
-  const book = useBook();
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const [turnTimeOutModal, setTurnTimeOutModal] = useState(false);
-  const [insuranceModal, setInsuranceModal] = useState(false);
-  const [insuranceName, setInsuranceName] = useState('');
+  const isBookRequestCenter = useMemo(() => service?.can_request && center?.id !== '591', [service, center]);
+
+  const {
+    handleOpen: handleOpenTurnTimeOutModal,
+    handleClose: handleCloseTurnTimeOutModal,
+    modalProps: turnTimeOutModalProps,
+  } = useModal();
+  const { handleOpen: handleOpenInsuranceModal, modalProps: insuranceModalProps } = useModal();
+  const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
+
   const [insuranceNumber, setInsuranceNumber] = useState('');
-  const [recommendModal, setRecommendModal] = useState(false);
+  const [insuranceName, setInsuranceName] = useState('');
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
   const [selectedSymptoms, setSelectedSymptoms] = useState<Symptoms[]>([]);
   const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
   const [symptomSearchText, setSymptomSearchText] = useState('');
+  const { handleBook, isLoading: bookLoading } = useBooking();
+  const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
+  const unsuspend = useUnsuspend();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -130,8 +146,8 @@ const BookingSteps = (props: BookingStepsProps) => {
       setCenter(selectedCenter);
       setService(selectedService);
       defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
-      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id });
+      if (defaultStep.step === 'SELECT_TIME' && isBookRequestCenter) {
+        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, bookRequest: true });
       }
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }
@@ -147,53 +163,63 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    const { insurance_id, insurance_number } = user;
+    const { insurance_id, insurance_referral_code } = user;
+    const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
-    const { data } = await book.mutateAsync({
-      request_code: timeId,
-      center_id: center?.id!,
-      server_id: center.server_id,
-      is_webview: isWebView ? 1 : 0,
-      first_name: user.name,
-      last_name: user.family,
-      gender: user.gender,
-      cell: user.cell,
-      selected_user_id: user.id,
-      is_foreigner: user.is_foreigner,
-      ...(user.national_code && { national_code: user.national_code }),
-      ...(insurance_id && { insurance_id }),
-      ...(insurance_number && { insurance_number }),
-      ...(selectedSymptoms.length && { symptomes: selectedSymptoms.map(symptoms => symptoms.title).toString() }),
-    });
-    if (data.status === ClinicStatus.SUCCESS) {
-      if (data.payment.reqiure_payment === '1') return router.push(`/factor/${center.id}/${data.book_info.id}`);
-
-      sendBookEvent({
-        bookInfo: {
-          ...data.book_info,
+    if (+center.settings?.booking_enable_insurance && !insurance_id && !insurance_referral_code)
+      return toast.error('لطفا بیمه خود را انتخاب کنید.');
+    handleBook(
+      {
+        center,
+        timeId,
+        user: {
+          ...user,
+          name: userConfimation?.first_name ?? user.name,
+          family: userConfimation?.last_name ?? user.family,
+          gender: userConfimation?.gender ?? user.gender,
+          insurance_id: insurance_id !== -1 ? insurance_id : null,
+          insurance_referral_code: insurance_referral_code !== -1 ? insurance_referral_code : null,
         },
-        doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
-        userInfo: user,
-      });
-      return router.push(`/receipt/${center.id}/${data.book_info.id}`);
-    }
-
-    if (data.status === ClinicStatus.EXPIRE_TIME_SLOT) {
-      handleChangeStep('SELECT_TIME');
-    }
-    toast.error(data.message);
-
-    sendGaEvent({
-      action: 'P24DrsPage',
-      category: 'BookError',
-      label: `BookError press submit button - status: ${data.status} message: ${data.message}`,
-    });
-    sendGaEvent({
-      action: 'bookerror',
-      category: center.center_type === 1 ? 'مطب شخصی' : center.name,
-      label: data.status,
-    });
+        selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
+      },
+      {
+        onSuccess(data) {
+          if (data.payment.reqiure_payment === '1') {
+            if (center.server_id === 1) return router.push(`/factor/${center.id}/${data.book_info.id}`);
+            location.assign(`${data.bookInfo?.payment?.redirect_url}`);
+          }
+          sendBookEvent({
+            bookInfo: {
+              ...data.book_info,
+            },
+            doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
+            userInfo: user,
+          });
+          router.push(`/receipt/${center.id}/${data.book_info.id}`);
+        },
+        onExpire(data) {
+          toast.error(data.message, {
+            duration: 10000,
+          });
+          handleChangeStep('SELECT_TIME');
+        },
+        onError(data) {
+          toast.error(data.message, {
+            duration: 10000,
+          });
+          sendGaEvent({
+            action: 'P24DrsPage',
+            category: 'BookError',
+            label: `BookError press submit button - status: ${data.status} message: ${data.message}`,
+          });
+          sendGaEvent({
+            action: 'bookerror',
+            category: center.center_type === 1 ? 'مطب شخصی' : center.name,
+            label: data.status,
+          });
+        },
+      },
+    );
   };
 
   const handleBookRequest = async (dataForm: TurnRequestInformation) => {
@@ -202,7 +228,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       service_id: service.id,
       server_id: center.server_id,
       user_center_id: center.user_center_id,
-      files: dataForm.files!,
+      ...(dataForm.files && { files: dataForm.files }),
       description: dataForm.description,
       gender: user.gender,
       cell: user.username,
@@ -242,17 +268,21 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const reformatCentersProperty = (centers: any[]) => {
     return (
-      centers?.map((center: any) => {
-        return {
-          ...center,
-          freeturn: center.freeturn_text,
-          type: center.center_type === 1 ? 'office' : 'hospital',
-          phoneNumbers: center.tell_array,
-          isDisable: !center.is_active,
-          isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
-          availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
-        };
-      }) ?? []
+      centers
+        ?.map((center: any) => {
+          return {
+            ...center,
+            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${profile.display_name}` : center.name,
+            address: center.id === CENTERS.CONSULT ? '' : center.address,
+            freeturn: center.freeturn_text,
+            type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
+            phoneNumbers: center.display_number_array,
+            isDisable: !center.is_active,
+            isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
+            availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
+          };
+        })
+        .filter(center => (center.id === '5532' ? !center.isDisable : true)) ?? []
     );
   };
 
@@ -260,15 +290,38 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (step === 'SELECT_TIME') {
       clearTimeout(getTurnTimeout.current);
       getTurnTimeout.current = setTimeout(() => {
-        setTurnTimeOutModal(true);
+        handleOpenTurnTimeOutModal();
       }, 300000); // 3 min}
     }
 
-    return () => clearTimeout(getTurnTimeout.current);
+    return () => {
+      clearTimeout(getTurnTimeout.current);
+      unsuspend.mutate({
+        center_id: router.query?.centerId! as string,
+        request_code: timeId,
+      });
+    };
   }, [step]);
 
+  const getInsuranceList = () => {
+    let insurances: any[] = [];
+    if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
+      insurances = getNationalCodeConfirmation.data?.data?.insurances
+        ?.filter((insurance: any) => insurance.insurerBox?.coded_string)
+        .map((insurance: any) => ({
+          label: insurance.insurer?.value,
+          value: insurance.insurerBox?.coded_string,
+        }));
+    } else {
+      insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+    }
+
+    insurances.push({ label: 'آزاد', value: -1 });
+    return insurances;
+  };
+
   return (
-    <div className="p-5 bg-white rounded-lg">
+    <div className={clsx('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
         <Wrapper
           title="انتخاب مرکز درمانی"
@@ -291,7 +344,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 serviceId: service.id,
               };
               setService(service);
-              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
+              if (service?.can_request && center?.id !== '591') return handleChangeStep('SELECT_USER', payload);
               return handleChangeStep('SELECT_TIME', payload);
             }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
@@ -340,14 +393,20 @@ const BookingSteps = (props: BookingStepsProps) => {
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             userCenterId: center?.user_center_id,
+            showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
-              setRecommendModal(true);
+              sendGaEvent({
+                action: 'load-errormodal',
+                category: `${center.city}`,
+                label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
+              });
+              handleOpenRecommendModal();
             },
             events: {
-              onFirstFreeTime: ({ server_name, server_id, status, message, result }: any) =>
+              onFirstFreeTime: ({ server_name, server_id, status, message, result, meta }: any) =>
                 sendFirstFreeTimeEvent({
-                  data: { full_date: result?.full_date, status, message },
+                  data: { full_date: result?.full_date, status, message, meta },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
                 }),
               onOtherFreeTime: ({ status, message }: any) =>
@@ -368,6 +427,11 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
+          {center?.user_center_desk && (
+            <div className="p-3 mb-5 rounded-lg bg-slate-100">
+              <Text fontSize="sm">{center?.user_center_desk}</Text>
+            </div>
+          )}
           <Text fontWeight="bold" className="block mb-3">
             برای درمان چه بیماری به پزشک مراجعه کردید؟
           </Text>
@@ -387,17 +451,38 @@ const BookingSteps = (props: BookingStepsProps) => {
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
             data={{
-              loading: book.isLoading,
+              loading: bookLoading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
+              showTermsAndConditions: customize.showTermsAndConditions,
             }}
-            nextStep={(user: UserInfo) => {
+            nextStep={async (user: UserInfo) => {
               setUser(user);
-              if (service?.can_request) {
+              if (isBookRequestCenter) {
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
-              if (+center.settings?.booking_enable_insurance) {
-                setInsuranceModal(true);
+
+              try {
+                if (university) {
+                  if (+user?.is_foreigner!) return toast.error('امکان ثبت نوبت برای اتباع خارجی وجود ندارد.');
+                  const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
+                  if (data) {
+                    if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
+                      const insurance = data?.insurances[0];
+                      return handleBookAction({
+                        ...user,
+                        insurance_referral_code: insurance.insurerBox?.coded_string,
+                      });
+                    }
+                    handleOpenInsuranceModal();
+                    return;
+                  }
+                }
+                // eslint-disable-next-line no-empty
+              } catch (e) {}
+
+              if (+center?.settings?.booking_enable_insurance) {
+                handleOpenInsuranceModal();
                 return;
               }
               handleBookAction(user);
@@ -421,62 +506,78 @@ const BookingSteps = (props: BookingStepsProps) => {
           }}
           nextStep={(data: TurnRequestInformation) => {
             if (!data.description) return toast.error('لطفا توضیحات را تکمیل کنید.');
-            if (isEmpty(data.files)) return toast.error('لطفا فایل مورد نظر خود را انتخاب کنید.');
             if (!data.checkedRules) return toast.error('لطفا قوانین را بپذیرید.');
             handleBookRequest(data);
           }}
         />
       )}
 
-      <Modal noHeader isOpen={turnTimeOutModal} onClose={() => {}}>
+      <Modal noHeader {...turnTimeOutModalProps} onClose={() => {}}>
         <div className="flex flex-col space-y-3">
           <Text fontWeight="medium">زمان شما برای دریافت نوبت به پایان رسیده است، لطفا دوباره تلاش کنید.</Text>
           <Button
             block
             onClick={() => {
               handleChangeStep('SELECT_CENTER');
-              setTurnTimeOutModal(false);
+              handleCloseTurnTimeOutModal();
             }}
           >
             تلاش مجدد
           </Button>
         </div>
       </Modal>
-      <Modal title="انتخاب بیمه" isOpen={insuranceModal} onClose={setInsuranceModal}>
+      <Modal title="انتخاب بیمه" {...insuranceModalProps}>
         <div className="flex flex-col space-y-3">
-          <Autocomplete
-            onChange={e => setInsuranceName(e.target.value.value)}
-            label="نام بیمه"
-            value={{
-              label: center?.insurances?.find((item: any) => item.id === insuranceName)?.name,
-              value: insuranceName,
-            }}
-            options={center?.insurances?.map((item: any) => ({ label: item.name, value: item.id }))}
-          />
-          <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه" />
+          <Autocomplete onChange={e => setInsuranceName(e.target.value.value)} label="نام بیمه" options={getInsuranceList()} />
+          <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه (اختیاری)" />
           <Button
-            loading={book.isLoading}
+            loading={bookLoading}
             block
-            onClick={() => handleBookAction({ ...user, insurance_id: insuranceName, insurance_number: insuranceNumber })}
+            onClick={() =>
+              handleBookAction({
+                ...user,
+                ...(!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)
+                  ? { insurance_referral_code: insuranceName }
+                  : { insurance_id: insuranceName }),
+                insurance_number: insuranceNumber,
+              })
+            }
           >
             ثبت نوبت
           </Button>
         </div>
       </Modal>
-      <Modal noHeader isOpen={recommendModal} onClose={() => {}} bodyClassName="bg-slate-100 !p-0">
+      <Modal
+        noHeader
+        {...recommendModalProps}
+        onClose={() => {
+          recommendModalProps.onClose();
+          router.push(`/dr/${slug}`);
+        }}
+        bodyClassName="bg-slate-100 !p-0"
+      >
         <div className="flex flex-col space-y-3">
           <Text className="p-5 leading-7 bg-white" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          <Text fontSize="sm" className="px-5 leading-6">
-            برترین پزشکان{' '}
-            <Text fontWeight="bold">
-              {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
-            </Text>{' '}
-            از دیدگاه بیماران
-          </Text>
-          {profile && (
-            <Recommend doctorId={profile.id} city={profile.city_en_slug} category={profile.expertises[0]?.expertise_groups[0].en_slug} />
+          {profile?.should_recommend_other_doctors && !university && (
+            <>
+              <Text fontSize="sm" className="px-5 leading-6">
+                برترین پزشکان{' '}
+                <Text fontWeight="bold">
+                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
+                </Text>{' '}
+                از دیدگاه بیماران
+              </Text>
+              {profile && (
+                <Recommend
+                  doctorId={profile.id}
+                  city={profile.city_en_slug}
+                  category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                  centerId={center?.id}
+                />
+              )}
+            </>
           )}
         </div>
       </Modal>

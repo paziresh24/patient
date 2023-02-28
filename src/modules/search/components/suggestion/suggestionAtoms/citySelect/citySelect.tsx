@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
 import LocationIcon from '@/common/components/icons/location';
+import useModal from '@/common/hooks/useModal';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
@@ -23,7 +24,8 @@ type locationParam = {
 
 export const CitySelect = (props: CitySelectProps) => {
   const { city, onChange } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const { handleOpen, handleClose, modalProps } = useModal();
+
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
   const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>('provinces');
@@ -44,7 +46,7 @@ export const CitySelect = (props: CitySelectProps) => {
       citiesData.current = getCitiesAndProvince.data.data.result.city;
       setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
     }
-  }, [getCitiesAndProvince.status, isOpen]);
+  }, [getCitiesAndProvince.status, modalProps.isOpen]);
 
   const handleClickProvince = (provinceId: string) => {
     setStepSelect('cities');
@@ -59,7 +61,7 @@ export const CitySelect = (props: CitySelectProps) => {
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
       en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? 'ir',
     });
-    setIsOpen(false);
+    handleClose();
   };
 
   const handleBackToProvince = () => {
@@ -72,12 +74,12 @@ export const CitySelect = (props: CitySelectProps) => {
       <Button
         variant="text"
         icon={<LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />}
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         className="!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg"
       >
         <Text fontSize="sm">{city?.name}</Text>
       </Button>
-      <Modal title="انتخاب استان/شهر" fullScreen isOpen={isOpen} onClose={setIsOpen}>
+      <Modal fullScreen title="انتخاب استان/شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
           <div className="flex flex-wrap gap-2">
             {popularCities.map(city => (

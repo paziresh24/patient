@@ -3,12 +3,13 @@ import Chips from '@/common/components/atom/chips';
 import Divider from '@/common/components/atom/divider';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import useModal from '@/common/hooks/useModal';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
 import { addCommas } from '@persian-tools/persian-tools';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import AdvancedSearch from '../advancedSearch';
 import RadioFilter from '../advancedSearch/sections/radio';
 import MobileCategories from '../mobileCategories';
@@ -17,10 +18,10 @@ import { freeturnItems } from '../sort';
 export const MobileToolbar = () => {
   const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory } = useSearch();
   const city = useSearchStore(state => state.city);
-  const [filtersModal, setFiltersModal] = useState(false);
-  const [sortsModal, setSortsModal] = useState(false);
-  const [freeturnModal, setFreeTurnModal] = useState(false);
-  const [categoryModal, setCategoryModal] = useState(false);
+  const { handleOpen: handleOpenFiltersModal, handleClose: handleCloseFiltersModal, modalProps: filtersModalProps } = useModal();
+  const { handleOpen: handleOpenSortsModal, handleClose: handleCloseSortsModal, modalProps: sortsModalProps } = useModal();
+  const { handleOpen: handleOpenFreeturnModal, handleClose: handleCloseFreeturnModal, modalProps: freeturnModalProps } = useModal();
+  const { handleOpen: handleOpenCategoryModal, handleClose: handleCloseCategoryModal, modalProps: categoryModalProps } = useModal();
   const { changeRoute } = useSearchRouting();
 
   const { filters } = useFilterChange();
@@ -35,7 +36,7 @@ export const MobileToolbar = () => {
 
   const handleRemoveAllFilters = () => {
     changeRoute({ previousQueries: false });
-    setFiltersModal(false);
+    handleCloseFiltersModal();
   };
 
   const suggestionTags = () => {
@@ -107,7 +108,7 @@ export const MobileToolbar = () => {
               ></path>
             </svg>
           }
-          onClick={() => setFiltersModal(true)}
+          onClick={handleOpenFiltersModal}
         >
           جستجوی پیشرفته
         </Chips>
@@ -135,7 +136,7 @@ export const MobileToolbar = () => {
               ></path>
             </svg>
           }
-          onClick={() => setSortsModal(true)}
+          onClick={handleOpenSortsModal}
         >
           مرتب سازی:{' '}
           {orderItemsFormmated.find(item => item.value === filters['sortBy'])?.title ??
@@ -166,16 +167,16 @@ export const MobileToolbar = () => {
               ></path>
             </svg>
           }
-          onClick={() => setFreeTurnModal(true)}
+          onClick={handleOpenFreeturnModal}
         >
           نزدیک ترین نوبت:{' '}
           {freeturnItemsFormmated.find(item => item.value === filters['freeturn'])?.title ??
             freeturnItemsFormmated.find(item => item.value === 'all')?.title}
         </Chips>
       </div>
-      <Modal fullScreen title="فیلترها" isOpen={filtersModal} onClose={setFiltersModal}>
+      <Modal fullScreen title="فیلترها" {...filtersModalProps}>
         <div className="space-y-3 pb-36">
-          <div className="flex justify-between" onClick={() => setCategoryModal(true)}>
+          <div className="flex justify-between" onClick={handleOpenCategoryModal}>
             <Text fontSize="sm" fontWeight="bold">
               تخصص ها
             </Text>
@@ -186,7 +187,7 @@ export const MobileToolbar = () => {
           <Divider />
           <AdvancedSearch className="!p-0 !shadow-none" />
           <div className="fixed bottom-0 right-0 flex w-full p-4 bg-white border-t md:static border-slate-200 space-s-3">
-            <Button block loading={isLoading} onClick={() => setFiltersModal(false)}>
+            <Button block loading={isLoading} onClick={handleCloseFiltersModal}>
               مشاهده {addCommas(total)} نتیجه
             </Button>
             <Button block variant="secondary" onClick={handleRemoveAllFilters}>
@@ -195,21 +196,16 @@ export const MobileToolbar = () => {
           </div>
         </div>
       </Modal>
-      <Modal
-        title={selectedSubCategory?.title ?? selectedCategory?.title ?? 'انتخاب تخصص'}
-        isOpen={categoryModal}
-        onClose={setCategoryModal}
-        fullScreen
-      >
+      <Modal title={selectedSubCategory?.title ?? selectedCategory?.title ?? 'انتخاب تخصص'} {...categoryModalProps} fullScreen>
         <div className="pb-36">
-          <MobileCategories className="!max-h-full shadow-none !p-0" onClickSubCategory={() => setCategoryModal(false)} />
+          <MobileCategories className="!max-h-full shadow-none !p-0" onClickSubCategory={handleCloseCategoryModal} />
         </div>
       </Modal>
-      <Modal title="مرتب سازی" isOpen={sortsModal} onClose={setSortsModal}>
-        <RadioFilter items={orderItemsFormmated} name="sortBy" onChange={() => setSortsModal(false)} />
+      <Modal title="مرتب سازی" {...sortsModalProps}>
+        <RadioFilter items={orderItemsFormmated} name="sortBy" onChange={handleCloseSortsModal} />
       </Modal>
-      <Modal title="نزدیک ترین نوبت" isOpen={freeturnModal} onClose={setFreeTurnModal}>
-        <RadioFilter items={freeturnItemsFormmated} name="freeturn" onChange={() => setFreeTurnModal(false)} />
+      <Modal title="نزدیک ترین نوبت" {...freeturnModalProps}>
+        <RadioFilter items={freeturnItemsFormmated} name="freeturn" onChange={handleCloseFreeturnModal} />
       </Modal>
     </>
   );

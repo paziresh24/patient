@@ -16,10 +16,12 @@ import { Section } from '../../types/suggestion';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
+  defaultOpen?: boolean;
+  autoFocus?: boolean;
 }
 
 export const Suggestion = (props: SuggestionProps) => {
-  const { overlay = false } = props;
+  const { overlay = false, defaultOpen = false, autoFocus } = props;
   const router = useRouter();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
@@ -40,7 +42,7 @@ export const Suggestion = (props: SuggestionProps) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickAway(ref, () => !isMobile && handleClose());
+  useClickAway(ref, () => !isMobile && !overlay && handleClose());
   const handleClose = () => {
     setIsOpenSuggestion(false);
     openScroll();
@@ -69,6 +71,7 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   useEffect(() => {
+    if (defaultOpen) setIsOpenSuggestion(true);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
       if (getCityInCookie) {
@@ -111,7 +114,7 @@ export const Suggestion = (props: SuggestionProps) => {
       setIsLoading(false);
       if (userSearchValue)
         sendSuggestionViewEvent({
-          item: searchSuggestion.data?.data,
+          item: searchSuggestion.data,
           cityName: city.name,
           userSearchValue,
         });
@@ -144,6 +147,7 @@ export const Suggestion = (props: SuggestionProps) => {
           'hover:md:shadow-lg': !isOpenSuggestion,
         }}
         readOnly={isMobile}
+        autoFocus={autoFocus}
       />
       {isOpenSuggestion && (
         <SuggestionContent
@@ -159,7 +163,7 @@ export const Suggestion = (props: SuggestionProps) => {
               />
             ) : undefined
           }
-          items={searchSuggestion.data?.data ?? []}
+          items={searchSuggestion.data ?? []}
           className="border border-solid shadow-md border-slate-200"
           isLoading={isLoading}
         />

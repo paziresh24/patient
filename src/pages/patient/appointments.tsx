@@ -13,6 +13,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import useWebView from '@/common/hooks/useWebView';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -28,7 +29,7 @@ import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments: NextPageWithLayout = () => {
+export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) => {
   const { query } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
@@ -38,10 +39,12 @@ export const Appointments: NextPageWithLayout = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
   const { handleOpenLoginModal } = useLoginModalContext();
+  const university = useServerQuery(state => state.queries.university);
 
   const getBooks = useGetBooks({
     page,
     return_type: type,
+    university: queryServer?.university ?? university,
   });
 
   const [ref, inView] = useInView({

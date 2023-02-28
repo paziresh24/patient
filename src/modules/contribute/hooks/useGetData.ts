@@ -31,7 +31,7 @@ export const useGetData = () => {
 
   useEffect(() => {
     if (getProfileData.isSuccess) {
-      setProfileData(getProfileData.data?.data?.data);
+      setProfileData(getProfileData.data?.data);
     }
   }, [getProfileData.status]);
 
