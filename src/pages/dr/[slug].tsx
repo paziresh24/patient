@@ -242,14 +242,13 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
         },
         Biography: ({ doctor }) => {
           const { biography, awards, scientific } = doctor;
-          const onlineVisitServices = doctor.centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_desk_raw;
-          if (!biography && !awards && !scientific && !onlineVisitServices) return null;
+          if (!biography && !awards && !scientific) return null;
           return (
             <div id="about_section" className="flex flex-col space-y-3">
               <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                 درباره پزشک
               </Text>
-              <Biography {...{ biography, awards, scientific, onlineVisitServices }} className="bg-white md:rounded-lg" />
+              <Biography {...{ biography, awards, scientific }} className="bg-white md:rounded-lg" />
             </div>
           );
         },
