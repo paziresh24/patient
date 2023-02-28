@@ -27,7 +27,7 @@ const nextConfig = {
 
     return config;
   },
-  swcMinify: false,
+  swcMinify: true,
   reactStrictMode: false,
   trailingSlash: true,
   publicRuntimeConfig: {
