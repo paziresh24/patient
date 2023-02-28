@@ -9,7 +9,7 @@ import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile
 
 // Hooks
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -115,7 +115,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const isBookRequestCenter = useMemo(() => service?.can_request && center?.id !== '591', [service, center]);
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -146,7 +145,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       setCenter(selectedCenter);
       setService(selectedService);
       defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
-      if (defaultStep.step === 'SELECT_TIME' && isBookRequestCenter) {
+      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
         return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, bookRequest: true });
       }
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
@@ -344,7 +343,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 serviceId: service.id,
               };
               setService(service);
-              if (service?.can_request && center?.id !== '591') return handleChangeStep('SELECT_USER', payload);
+              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
               return handleChangeStep('SELECT_TIME', payload);
             }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
@@ -457,7 +456,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             }}
             nextStep={async (user: UserInfo) => {
               setUser(user);
-              if (isBookRequestCenter) {
+              if (service?.can_request) {
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
