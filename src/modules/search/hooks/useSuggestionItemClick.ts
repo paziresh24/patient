@@ -1,3 +1,4 @@
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import suggestionEvents from '../functions/suggestionEvents';
 import { useSearchStore } from '../store/search';
@@ -9,6 +10,7 @@ export const useSuggestionItem = () => {
   const { setUserSearchValue, city, userSearchValue } = useSearchStore();
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { addRecentSearch } = useRecentSearch();
+  const isSpa = useFeatureIsOn('profile|booking:react_version');
 
   const handleItemEvent = (item: Item, index: number) => {
     suggestionEvents.itemClick({
@@ -27,6 +29,9 @@ export const useSuggestionItem = () => {
     } else if (item.absolute_url) {
       window.location.href = item.url ?? '#';
     } else {
+      if (item.url?.startsWith('/dr') && !isSpa) {
+        return (window.location.href = item.url ?? '#');
+      }
       router.push(item.url ?? '/s', undefined, { ...(item.url?.startsWith('/s') && { shallow: true }), scroll: true });
       setIsOpenSuggestion(false);
       setTimeout(() => setUserSearchValue(''), 0);
