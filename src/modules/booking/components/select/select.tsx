@@ -23,7 +23,7 @@ export const Select = (props: SelectProps) => {
       className={clsx(
         'cursor-pointer flex items-center justify-between p-4 border border-solid transition-all border-slate-200 rounded-lg',
         {
-          'border-primary': selected,
+          '!border-primary': selected,
         },
       )}
       onClick={onSelect}
@@ -31,7 +31,7 @@ export const Select = (props: SelectProps) => {
       <div className="flex items-center space-s-3">
         <div
           className={clsx('w-5 flex justify-center items-center h-5 rounded-full border border-solid border-slate-200 transition-all', {
-            'border-primary bg-primary': selected,
+            '!border-primary bg-primary': selected,
           })}
         >
           {selected && (
