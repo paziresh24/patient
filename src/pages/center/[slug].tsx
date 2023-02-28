@@ -188,7 +188,7 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
             />
           </div>
           {profileData.biography && (
-            <div className="flex flex-col w-full space-y-3">
+            <div id="about_section" className="flex flex-col w-full space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره مرکز درمانی
               </Text>
