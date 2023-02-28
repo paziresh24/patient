@@ -10,7 +10,7 @@ export interface DoctorParams {
   centers?: Center[];
   server_id?: string;
   group_expertises?: GroupExpertises;
-  feedbacks: Feedback;
+  feedbacks?: Feedback;
 }
 
 export type Feedback = {
