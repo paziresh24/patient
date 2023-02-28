@@ -17,9 +17,11 @@ import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
+import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import Activity from '@/modules/profile/views/activity/activity';
 import Biography from '@/modules/profile/views/biography/biography';
@@ -35,7 +37,7 @@ import config from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
 import { NextPageWithLayout } from '../_app';
@@ -54,9 +56,13 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
+  const [rateRef, inViewRate] = useInView();
   const { isMobile, isDesktop } = useResponsive();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
+  const setProfileData = useProfileDataStore(state => state.setData);
+  const sendRateTriggered = useRef(false);
+  const { rateSplunkEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
 
   const profile = useGetProfileData(
@@ -74,6 +80,13 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
   );
 
   useEffect(() => {
+    if (inViewRate && !sendRateTriggered.current) {
+      sendRateTriggered.current = true;
+      return rateSplunkEvent('scroll To doctor feedbacks box');
+    }
+  }, [inViewRate]);
+
+  useEffect(() => {
     if (profileData) {
       pageViewEvent({
         doctor: profileData,
@@ -84,6 +97,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
         doctorId: profileData.id,
         serverId: profileData.server_id,
       });
+      setProfileData(profileData);
     }
   }, [profileData, isBulk]);
 
@@ -315,7 +329,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
             ],
           };
           return (
-            <div id="reviews_section" className="flex flex-col space-y-3">
+            <div id="reviews_section" className="flex flex-col space-y-3" ref={rateRef}>
               <Text fontWeight="bold" className="px-4 md:px-0">
                 نظرات در مورد {doctor.display_name}
               </Text>
