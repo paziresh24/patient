@@ -65,11 +65,14 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       group: 'doctor profile',
       type: 'doctor profile press online visit book button',
       event: {
-        terminal_id: getCookie('terminal_id'),
-        user_agent: window.navigator.userAgent,
-        page_url: window.location.pathname,
-        referrer: document.referrer,
-        doctor_id: doctorId,
+        version: 'react',
+        data: {
+          terminal_id: getCookie('terminal_id'),
+          user_agent: window.navigator.userAgent,
+          page_url: window.location.pathname,
+          referrer: document.referrer,
+          doctor_id: doctorId,
+        },
       },
     });
     sendGaEvent({ action: 'booking-consult', category: 'click-start-whatsapp-consult', label: 'click-start-whatsapp-consult' });

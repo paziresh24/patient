@@ -47,6 +47,15 @@ const nextConfig = {
   sentry: {
     hideSourceMaps: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/receipt/:id/',
+        destination: '/receipt/5532/:id/',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const sentryWebpackPluginOptions = {

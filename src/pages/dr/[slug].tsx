@@ -16,6 +16,7 @@ import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
@@ -114,7 +115,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (doctor.centers?.length === 0) return null;
           return (
             <div id="center-info_section" className="flex flex-col space-y-3 md:hidden">
-              <Text fontWeight="bold" className="px-4 md:px-0">
+              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                 آدرس و تلفن تماس
               </Text>
               <CentersInfo
@@ -137,6 +138,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
+                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -167,6 +169,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
+                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -206,9 +209,12 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     group: 'register',
                     type: 'doctor-profile',
                     event: {
-                      action: 'click',
-                      current_url: location.href,
-                      phone_number: isLogin ? userInfo.cell : null,
+                      version: 'react',
+                      data: {
+                        action: 'click',
+                        current_url: location.href,
+                        phone_number: isLogin ? userInfo.cell : null,
+                      },
                     },
                   });
                   location.assign('https://dr.paziresh24.com/auth/?q=profile');
@@ -226,7 +232,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (!biography && !awards && !scientific && !onlineVisitServices) return null;
           return (
             <div id="about_section" className="flex flex-col space-y-3">
-              <Text fontWeight="bold" className="px-4 md:px-0">
+              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                 درباره پزشک
               </Text>
               <Biography {...{ biography, awards, scientific, onlineVisitServices }} className="bg-white md:rounded-lg" />
@@ -241,7 +247,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (!customize.showActivityProfile) return null;
           return (
             <div className="flex flex-col space-y-3">
-              <Text fontWeight="bold" className="px-4 md:px-0">
+              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                 فعالیت ها {doctor.display_name}
               </Text>
               <Activity
@@ -267,7 +273,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (!items?.length) return null;
           return (
             <div className="flex flex-col space-y-3">
-              <Text fontWeight="bold" className="px-4 md:px-0">
+              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                 گالری
               </Text>
               <Gallery items={reformmatedItems} className="bg-white md:rounded-lg" />
@@ -347,7 +353,6 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
       },
       sideBar: {
         Services: ({ doctor }) => {
-          // if (!isDesktop) return null;
           return (
             <div className="flex-col hidden w-full space-y-3 md:flex">
               <Services doctor={doctor} isBulk={isBulk} slug={slug} />
@@ -359,17 +364,19 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           return (
             <div className="flex-col hidden space-y-3 md:flex">
               <div className="flex justify-between">
-                <Text fontWeight="bold" className="px-4 md:px-0">
+                <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                   آدرس و تلفن تماس
                 </Text>
-                <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
-                  <a>
-                    <Text fontSize="sm" className="flex font-medium gap-x-1 text-primary">
-                      <EditIcon width={18} height={18} />
-                      گزارش تلفن و آدرس صحیح
-                    </Text>
-                  </a>
-                </Link>
+                {customize.showContribute && (
+                  <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
+                    <a>
+                      <Text fontSize="xs" className="flex font-medium gap-x-1 text-primary">
+                        <EditIcon width={17} height={17} />
+                        گزارش تلفن و آدرس صحیح
+                      </Text>
+                    </a>
+                  </Link>
+                )}
               </div>
               <CentersInfo
                 className="bg-white md:rounded-lg"
@@ -391,6 +398,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
+                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -421,6 +429,7 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
+                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -454,9 +463,60 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     [isDesktop, isMobile, profileData],
   );
 
+  const getJsonlds = () => {
+    const center = profileData.centers.find((cn: any) => cn.id !== '5532');
+
+    return [
+      {
+        '@context': 'http://www.schema.org',
+        '@type': 'Physician',
+        'priceRange': '$$',
+        'name': profileData.display_name,
+        'description': profileData.biography ? removeHtmlTagInString(profileData.biography) : '',
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'isAcceptingNewPatients': true,
+        'medicalSpecialty': !profileData.group_expertises ? profileData.group_expertises[0].name : doctorExpertise,
+        'duns': profileData.medical_code,
+        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
+        'address': {
+          '@type': 'PostalAddress',
+          'addressCountry': {
+            '@type': 'Country',
+            'name': 'IRN',
+          },
+          'addressLocality': center?.city,
+          'addressRegion': center?.province,
+          'streetAddress': center?.address,
+        },
+        'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
+        'ratingValue': profileData.feedbacks.details.avg_star,
+        'bestRating': 5,
+      },
+      {
+        '@context': 'http://www.schema.org',
+        '@type': 'Person',
+        'jobTitle': 'physician',
+        'telephone': profileData?.display_number,
+        'name': profileData.display_name,
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
+        'address': {
+          '@type': 'PostalAddress',
+          'addressCountry': {
+            '@type': 'Country',
+            'name': 'IRN',
+          },
+          'addressLocality': center?.city,
+          'addressRegion': center?.province,
+          'streetAddress': center?.address,
+        },
+      },
+    ];
+  };
+
   return (
     <>
-      <Seo title={documentTitle} description={ducmentDescription} canonicalUrl={publicRuntimeConfig.CLINIC_BASE_URL + router.pathname} />
+      <Seo title={documentTitle} description={ducmentDescription} jsonlds={getJsonlds()} />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head

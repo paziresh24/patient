@@ -120,6 +120,16 @@ Booking.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  const { id, center_id } = context.query;
+  if (id && center_id) {
+    return {
+      redirect: {
+        statusCode: 302,
+        destination: `/receipt/${center_id}/${id}`,
+      },
+    };
+  }
+
   return {
     props: {
       query: context.query,
