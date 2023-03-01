@@ -1,5 +1,5 @@
 import Text from '@/components/atom/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
 import Image from 'next/future/image';
 import logoSvg from './logo.svg';
@@ -20,7 +20,7 @@ export const Logo: React.FC<LogoProps> = props => {
     <div className="flex items-center space-s-2">
       <Image src={logoSvg.src} alt="پذیرش 24" width={width || 60} height={height || 60} priority />
       {type === 'default' && (
-        <Text className={clsx('text-brand', className)} fontSize={fontSize} fontWeight="black">
+        <Text className={classNames('text-brand', className)} fontSize={fontSize} fontWeight="black">
           {t('brandName')}
         </Text>
       )}

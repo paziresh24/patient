@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { HTMLAttributes } from 'react';
 
 interface DividerProps extends HTMLAttributes<HTMLHRElement> {
@@ -12,7 +12,9 @@ export const Divider = (props: DividerProps) => {
   const borderWidth = orientation === 'horizontal' ? width ?? '100%' : width ?? '1px';
   const borderHeight = orientation === 'horizontal' ? height ?? '1px' : height ?? '100%';
 
-  return <hr className={clsx('bg-slate-200 border-none', className)} style={{ width: borderWidth, height: borderHeight }} {...rest} />;
+  return (
+    <hr className={classNames('bg-slate-200 border-none', className)} style={{ width: borderWidth, height: borderHeight }} {...rest} />
+  );
 };
 
 export default Divider;

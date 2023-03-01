@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
 import LocationIcon from '@/common/components/icons/location';
 import useModal from '@/common/hooks/useModal';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
 
@@ -120,7 +120,7 @@ export const CitySelect = (props: CitySelectProps) => {
                   onClick={() => (city.isProvince ? handleClickProvince(city.id) : handleClickCity(city.id))}
                 >
                   <Text
-                    className={clsx({
+                    className={classNames({
                       'font-bold': city.is_capital === '1',
                     })}
                   >

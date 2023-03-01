@@ -1,7 +1,7 @@
 import { useSuspend } from '@/common/apis/services/booking/suspend';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import { CENTERS } from '@/common/types/centers';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useEffect, useState } from 'react';
 import FreeTurn from '../../components/selectTime/freeTurn';
 import OtherTimes from '../../components/selectTime/otherTimes';
@@ -75,7 +75,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
 
   return (
     <div
-      className={clsx('flex flex-col space-y-3', {
+      className={classNames('flex flex-col space-y-3', {
         'animate-pulse opacity-75 pointer-events-none': suspend.isLoading,
       })}
     >

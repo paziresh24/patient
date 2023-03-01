@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 
 type Text0wnProps<E extends React.ElementType> = {
   children?: React.ReactNode;
@@ -60,7 +60,7 @@ export const Text = <E extends React.ElementType = 'span'>({
   const Component = as || 'span';
   return (
     <Component
-      className={clsx(className, {
+      className={classNames(className, {
         [textStyles.size[fontSize!]]: fontSize,
         [textStyles.weight[fontWeight!]]: fontWeight,
         [textStyles.align[align!]]: align,

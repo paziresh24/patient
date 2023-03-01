@@ -20,7 +20,7 @@ import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Rate from '@/modules/rate/view/rate';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
 import { useMemo, useRef, useState } from 'react';
@@ -152,7 +152,7 @@ export const RateReview = (props: RateReviewProps) => {
                 <HeartIcon
                   width={20}
                   height={20}
-                  className={clsx('[&>path]:stroke-slate-800 [&>path]:text-white', {
+                  className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
                     '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
                   })}
                 />
@@ -359,7 +359,7 @@ export const RateReview = (props: RateReviewProps) => {
   };
   return (
     <>
-      <div className={clsx('w-full bg-white', className)}>
+      <div className={classNames('w-full bg-white', className)}>
         <Rate
           details={details}
           filters={rateSearchInputs}

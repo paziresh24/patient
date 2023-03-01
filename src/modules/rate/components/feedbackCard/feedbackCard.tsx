@@ -3,7 +3,7 @@ import Modal from '@/common/components/atom/modal/modal';
 import PersonseIcon from '@/common/components/icons/persons';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/hooks/useResponsive';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
 
@@ -48,7 +48,7 @@ export const Feedback = (props: { replyClassName?: string } & Feedbacks) => {
             <MessageBox placeholder={messageBox?.placeholder} submitText={messageBox?.submitText} submitHandled={messageBox?.onSubmit} />
           </div>
         )}
-        <div className={clsx('w-full px-4', replyClassName)}>
+        <div className={classNames('w-full px-4', replyClassName)}>
           {!!reply?.length &&
             reply
               .slice(0, firstReply ? 1 : reply.length)
@@ -74,7 +74,7 @@ export const FeedbackCard = (props: FeedbackParams) => {
   return (
     <div
       key={feedback.id}
-      className={clsx('w-full flex space-y-3 flex-col items-center h-auto bg-white border-y pt-4 border-[#efefef]', className)}
+      className={classNames('w-full flex space-y-3 flex-col items-center h-auto bg-white border-y pt-4 border-[#efefef]', className)}
     >
       <Feedback
         {...feedback}

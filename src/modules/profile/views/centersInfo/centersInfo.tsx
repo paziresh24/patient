@@ -5,7 +5,7 @@ import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
 import { ReactNode } from 'react';
@@ -44,7 +44,7 @@ export const CentersInfo = (props: CentersInfoProps) => {
   };
 
   return (
-    <div className={clsx('p-3 flex flex-col space-y-2', className)}>
+    <div className={classNames('p-3 flex flex-col space-y-2', className)}>
       {centers.map((center, index) => (
         <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
           {center.name && (

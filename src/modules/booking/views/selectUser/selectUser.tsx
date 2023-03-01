@@ -9,7 +9,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -90,7 +90,7 @@ export const SelectUser = (props: SelectUserProps) => {
   };
 
   return (
-    <div className={clsx('flex flex-col space-y-6', className)}>
+    <div className={classNames('flex flex-col space-y-6', className)}>
       <div className="flex flex-col w-full space-y-3">
         {(isLoading || isIdle) && <SubUserLoading />}
         {isSuccess && (

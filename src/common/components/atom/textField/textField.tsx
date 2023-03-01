@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ForwardedRef, forwardRef, InputHTMLAttributes } from 'react';
 import Text from '../text';
 
@@ -27,7 +27,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
 
   return (
     <div
-      className={clsx(
+      className={classNames(
         'flex flex-col space-y-3 w-full border-slate-300 outline-primary',
         {
           'text-red-600 border-red-200 !outline-red-200 ': error,
@@ -43,7 +43,11 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
       <Component
         ref={ref}
         autoComplete="off"
-        className={clsx('rounded-lg border border-solid border-inherit outline-inherit w-full transition-all', inputSize[size], className)}
+        className={classNames(
+          'rounded-lg border border-solid border-inherit outline-inherit w-full transition-all',
+          inputSize[size],
+          className,
+        )}
         {...inputProps}
       />
       {helperText && <span className="text-xs">{helperText}</span>}

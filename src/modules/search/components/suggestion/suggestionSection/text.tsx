@@ -2,7 +2,7 @@ import Text from '@/common/components/atom/text';
 import { categoryIcons } from '@/modules/search/constants/suggestion/categoryIcons';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import style from './section.module.css';
 
 interface TextSectionProps {
@@ -18,7 +18,7 @@ export const TextSection = (props: TextSectionProps) => {
       {items?.map((item, index) => (
         <div
           key={item.position}
-          className={clsx('flex p-1 cursor-pointer space-s-2 items-center', style.wrapper)}
+          className={classNames('flex p-1 cursor-pointer space-s-2 items-center', style.wrapper)}
           onClick={() => handleItemClick(item, index)}
         >
           <>

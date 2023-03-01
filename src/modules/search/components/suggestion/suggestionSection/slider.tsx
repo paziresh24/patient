@@ -2,7 +2,7 @@
 import Text from '@/common/components/atom/text';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
@@ -23,7 +23,7 @@ export const SliderSection = (props: SliderSectionProps) => {
             onClick={() => handleItemClick(item, index)}
           >
             <div
-              className={clsx({
+              className={classNames({
                 'before:content before:bg-green-500 before:w-3 before:rounded-full before:border-2 before:bottom-3 before:right-2 before:border-white before:h-3 before:absolute before:z-30':
                   item.is_online,
               })}

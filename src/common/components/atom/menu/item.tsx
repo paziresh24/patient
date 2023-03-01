@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Link, { LinkProps } from 'next/link';
 import { ReactNode } from 'react';
 import Text from '../text';
@@ -17,7 +17,7 @@ export const MenuItem = (props: MenuItemProps) => {
   const Component = link ? Link : 'div';
 
   return (
-    <li className={clsx('font-medium', className)}>
+    <li className={classNames('font-medium', className)}>
       <Component href={link} prefetch={false} {...rest}>
         <a className="relative flex items-center cursor-pointer justify-between py-3" onClick={rest.onClick}>
           <div className="flex items-center space-s-2">

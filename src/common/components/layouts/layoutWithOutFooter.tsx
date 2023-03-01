@@ -1,5 +1,5 @@
 import useCustomize from '@/common/hooks/useCustomize';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ReactElement } from 'react';
 import BottomNavigation from './bottomNavigation';
 import Header from './header';
@@ -20,7 +20,7 @@ export const LayoutWithOutFooter = ({
   const customize = useCustomize(state => state.customize);
 
   return (
-    <div className={clsx({ 'pb-16 md:pb-0': showBottomNavigation })}>
+    <div className={classNames({ 'pb-16 md:pb-0': showBottomNavigation })}>
       {customize.showHeader && showHeader && (
         <Header shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand} shouldShowPromoteApp={shouldShowPromoteApp} />
       )}

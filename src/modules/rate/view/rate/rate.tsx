@@ -4,7 +4,7 @@ import Divider from '@/common/components/atom/divider/divider';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Details from '../../components/details/details';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
@@ -64,7 +64,7 @@ export const Rate = (props: RateProps) => {
                     />
                   </div>
                 )}
-                <div className={clsx('mt-2', { '!mt-0': !feedbacks.length })}>
+                <div className={classNames('mt-2', { '!mt-0': !feedbacks.length })}>
                   {!!feedbacks?.length &&
                     !isLoading &&
                     feedbacks.map((feedback, index) => <FeedbackCard className="border-b-0" key={index + 1} feedback={feedback} />)}

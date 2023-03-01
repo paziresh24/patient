@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField/textField';
 import AddIcon from '@/common/components/icons/add';
 import useModal from '@/common/hooks/useModal';
 import { Symptoms } from '@/modules/booking/types/selectSymptoms';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import reject from 'lodash/reject';
 import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'react-hot-toast';
@@ -84,7 +84,7 @@ export const SelecSymptoms = (props: SelecSymptomsProps) => {
             {listTitle}
           </Text>
           {symptoms.map(data => (
-            <div key={data.id} onClick={() => handleSelectSymptoms(data)} className={clsx('cursor-pointer', style.wrapper)}>
+            <div key={data.id} onClick={() => handleSelectSymptoms(data)} className={classNames('cursor-pointer', style.wrapper)}>
               <Text
                 fontSize="sm"
                 fontWeight="medium"

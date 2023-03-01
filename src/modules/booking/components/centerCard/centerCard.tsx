@@ -4,7 +4,7 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import HospitalIcon from '@/common/components/icons/hospital';
 import OfficeIcon from '@/common/components/icons/office';
 import PhoneIcon from '@/common/components/icons/phone';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { Center } from '../../types/selectCenter';
 import PhoneNumberList from '../phoneNumberList/phoneNumberList';
 
@@ -20,14 +20,14 @@ export const CenterCard = (props: CenterCardProps) => {
     <>
       <div
         onClick={() => !isDisable && isAvailable && onClick(center)}
-        className={clsx('w-full rounded-lg border border-slate-200 cursor-pointer shadow-sm', {
+        className={classNames('w-full rounded-lg border border-slate-200 cursor-pointer shadow-sm', {
           'cursor-auto': isDisable || !isAvailable,
         })}
       >
         <div className="p-4">
           <div className="flex items-center w-full">
             <div
-              className={clsx('py-[0.5rem] rounded-md', {
+              className={classNames('py-[0.5rem] rounded-md', {
                 'bg-[#3861FB]/[0.2]': type === 'office' && !isDisable && isAvailable,
                 'bg-[#FF620A]/[0.2]': type === 'hospital' && !isDisable && isAvailable,
                 'bg-[#27BDA0]/[0.2]': type === 'consult' && !isDisable && isAvailable,
@@ -39,12 +39,15 @@ export const CenterCard = (props: CenterCardProps) => {
               {type === 'consult' && <PhoneIcon className="w-10 h-6" />}
             </div>
             <div
-              className={clsx('mr-2 flex justify-between items-center text-black w-full p-[0.65rem] rounded-md  text-sm font-medium', {
-                'bg-[#3861FB]/[0.2]': type === 'office' && !isDisable && isAvailable,
-                'bg-[#FF620A]/[0.2]': type === 'hospital' && !isDisable && isAvailable,
-                'bg-[#27BDA0]/[0.2]': type === 'consult' && !isDisable && isAvailable,
-                'bg-slate-200 !text-slate-500': isDisable || !isAvailable,
-              })}
+              className={classNames(
+                'mr-2 flex justify-between items-center text-black w-full p-[0.65rem] rounded-md  text-sm font-medium',
+                {
+                  'bg-[#3861FB]/[0.2]': type === 'office' && !isDisable && isAvailable,
+                  'bg-[#FF620A]/[0.2]': type === 'hospital' && !isDisable && isAvailable,
+                  'bg-[#27BDA0]/[0.2]': type === 'consult' && !isDisable && isAvailable,
+                  'bg-slate-200 !text-slate-500': isDisable || !isAvailable,
+                },
+              )}
             >
               <Text className="line-clamp-1">{name}</Text>
               <ChevronIcon dir="left" className="min-w-fit" />

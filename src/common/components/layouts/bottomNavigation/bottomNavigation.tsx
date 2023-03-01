@@ -3,7 +3,7 @@ import useApplication from '@/common/hooks/useApplication';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
 import Text from '../../atom/text/text';
@@ -90,7 +90,7 @@ export const BottomNavigation = () => {
         <div
           key={index}
           onClick={() => handleChangeRoute(link, privateRoute)}
-          className={clsx('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
+          className={classNames('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
             '!text-primary font-bold scale-100': router.pathname === pattern,
           })}
         >

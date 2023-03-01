@@ -1,6 +1,6 @@
 import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import { useSearchStore } from '../../store/search';
@@ -26,7 +26,7 @@ export const SearchBar = (props: SearchBarProps) => {
 
   return (
     <div
-      className={clsx(
+      className={classNames(
         'w-full bg-white rounded-full border border-solid border-slate-200 py-1 px-3 pl-2 flex items-center transition-shadow space-s-1',
         className,
       )}

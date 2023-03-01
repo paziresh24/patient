@@ -3,7 +3,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import InfoIcon from '@/common/components/icons/info';
 import useModal from '@/common/hooks/useModal';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { categoryIcons } from '../../constants/suggestion/categoryIcons';
 
 export interface BadgeProps {
@@ -27,7 +27,7 @@ export const Badge = (props: BadgeProps) => {
   return (
     <>
       <Chips
-        className={clsx(
+        className={classNames(
           'md:!p-2 h-8 cursor-default md:h-10 !px-2 md:!px-2 !rounded-md flex justify-center items-center',
           badgeStyles.type[type],
           {

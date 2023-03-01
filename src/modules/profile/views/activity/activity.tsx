@@ -1,5 +1,5 @@
 import Text from '@/common/components/atom/text/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ReactNode } from 'react';
 
 interface ActivityProps {
@@ -14,7 +14,7 @@ export const Activity = (props: ActivityProps) => {
   const { items, className } = props;
 
   return (
-    <div className={clsx('flex flex-col p-4 space-y-2', className)}>
+    <div className={classNames('flex flex-col p-4 space-y-2', className)}>
       {items.map(item => (
         <div key={item.text} className="flex items-center p-4 rounded-lg space-s-2 bg-slate-100">
           {item.icon}

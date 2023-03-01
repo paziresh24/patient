@@ -1,5 +1,5 @@
 import ChevronIcon from '@/common/components/icons/chevron';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { MenuItem } from './menuItem';
@@ -26,7 +26,7 @@ const SidebarNav = ({ menu }: { menu: MenuItem }) => {
       </div>
 
       {menu?.sub_menu && open && (
-        <ul className={clsx('font-normal overflow-auto max-h-64')}>
+        <ul className={classNames('font-normal overflow-auto max-h-64')}>
           {menu.sub_menu.map((item, index) => {
             return <SidebarItem key={index} title={item.title} link={item.link} sub_menu={item?.sub_menu} />;
           })}

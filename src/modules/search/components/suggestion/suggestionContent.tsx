@@ -1,5 +1,5 @@
 import useResponsive from '@/common/hooks/useResponsive';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { createElement, HTMLAttributes, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { ComponentSection, Item, Section } from '../../types/suggestion';
@@ -40,14 +40,14 @@ export const SuggestionContent = (props: SuggestionContentProps) => {
 
   return wrapper(
     <div
-      className={clsx(
+      className={classNames(
         'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:h-96 md:top-16 w-full flex flex-col bg-slate-100 md:rounded-bl-xl md:rounded-br-xl',
         className,
       )}
     >
       {searchInput && <div className="top-0 z-20 p-2 bg-white shadow-sm stiky">{searchInput}</div>}
       <div
-        className={clsx(
+        className={classNames(
           'invisible relative z-50 h-[1px] rounded-full bg-gradient-to-r from-transparent via-slate-400 to-transparent w-56 animate-progress',
           {
             '!visible': isLoading,

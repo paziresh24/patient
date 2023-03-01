@@ -1,5 +1,5 @@
 import Text from '@/common/components/atom/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import chunk from 'lodash/chunk';
 import { useMemo } from 'react';
 import { useSearch } from '../../hooks/useSearch';
@@ -22,7 +22,7 @@ export const Onboard = () => {
             {items.map((item, index, self) => (
               <div
                 key={index}
-                className={clsx(
+                className={classNames(
                   'relative inline-flex flex-col md:min-h-[3rem] space-y-1 before:content before:border before:top-8 before:bottom-0 before:bg-slate-800 before:-right-6 before:rounded-full before:border-slate-800 before:absolute',
                   {
                     'before:hidden': allIndex === allSelf.length - 1 && index === self.length - 1,

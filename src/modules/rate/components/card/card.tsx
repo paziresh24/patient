@@ -4,13 +4,13 @@ import DropDown from '@/common/components/atom/dropDown/dropDown';
 import Text from '@/common/components/atom/text/text';
 import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import { CardProps } from '@/modules/rate/type/card';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 
 export const Card = (props: CardProps) => {
   const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
   return (
     <>
-      <div id={id} className={clsx('w-full h-auto bg-white !px-4', className)}>
+      <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
         <div className="flex justify-between w-full">
           <div className="flex items-center">
             <Avatar src={avatar} name={name} width={details?.length ? 55 : 40} height={details?.length ? 55 : 40} />
@@ -46,7 +46,7 @@ export const Card = (props: CardProps) => {
             <Text
               fontSize="sm"
               fontWeight="bold"
-              className={clsx('text-red-500 flex gap-1 items-center', { '!text-green-700': recommend?.isRecommend })}
+              className={classNames('text-red-500 flex gap-1 items-center', { '!text-green-700': recommend?.isRecommend })}
             >
               {recommend?.text}
               {recommend?.icon && recommend?.icon}
@@ -67,7 +67,7 @@ export const Card = (props: CardProps) => {
             dangerouslySetInnerHTML={{ __html: description ?? '' }}
           />
         </div>
-        <div className={clsx('mt-1 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
+        <div className={classNames('mt-1 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
           {options
             ?.filter(option => option.type === 'controller')
             ?.map(option => (
