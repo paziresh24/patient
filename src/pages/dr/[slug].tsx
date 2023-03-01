@@ -65,7 +65,6 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
   const sendRateTriggered = useRef(false);
   const { rateSplunkEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
-
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
     {
@@ -73,6 +72,12 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
     },
   );
   const profileData = profile.data?.data;
+  const internalLinks = useInternalLinks(
+    { links: getSearchLinks({ ...profileData }) },
+    {
+      refetchOnMount: false,
+    },
+  );
   const isBulk = useMemo(
     () =>
       profileData?.centers?.every((center: any) => center.status === 2) ||
@@ -343,13 +348,6 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           );
         },
         ProfileSeoBox: ({ doctor }) => {
-          const internalLinks = useInternalLinks(
-            { links: getSearchLinks({ ...doctor }) },
-            {
-              keepPreviousData: true,
-              refetchOnMount: false,
-            },
-          );
           if (!customize.showSeoBoxs) return null;
           return (
             <ProfileSeoBox
