@@ -15,6 +15,7 @@ import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
 import axios from 'axios';
 import config from 'next/config';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
@@ -114,6 +115,13 @@ const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
   return (
     <>
       <Seo title={documentTitle} description={ducmentDescription} canonicalUrl={publicRuntimeConfig.CLINIC_BASE_URL + router.pathname} />
+      <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
+        {`(function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "g1qw1smpmx");`}
+      </Script>
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head

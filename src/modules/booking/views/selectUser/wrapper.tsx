@@ -1,6 +1,6 @@
 import Button from '@/common/components/atom/button';
-import { UserInfo } from '@/modules/login/store/userInfo';
 import classNames from '@/common/utils/classNames';
+import { UserInfo } from '@/modules/login/store/userInfo';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import SelectUser from './selectUser';

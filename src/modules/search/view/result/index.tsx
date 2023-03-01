@@ -60,6 +60,8 @@ export const Result = () => {
     });
   };
 
+  console.log(isSpa || !!university);
+
   return (
     <div className="flex flex-col w-full space-y-3">
       {!isLoading && result.length === 0 && <NotFound />}
@@ -94,11 +96,11 @@ export const Result = () => {
               description: item.top_title,
               outline: item.outline,
               action: () => {
-                if (isSpa || !!university) return router.push(item.url);
+                if (isSpa || !!university || !!query?.['new-version']) return router.push(item.url);
                 window.location.assign(item.url);
               },
             }))}
-            isSpa={isSpa || !!university}
+            isSpa={isSpa || !!university || !!query?.['new-version']}
             sendEventWhenClick={() => handleCardEvent(item)}
           />
         ),

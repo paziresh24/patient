@@ -5,11 +5,10 @@ import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
-import useServerQuery from '@/common/hooks/useServerQuery';
+import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
-import classNames from '@/common/utils/classNames';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -22,7 +21,6 @@ interface SelectUserProps {
 
 export const SelectUser = (props: SelectUserProps) => {
   const { onSelect, className } = props;
-  const university = useServerQuery(state => state.queries.university);
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -134,11 +132,7 @@ export const SelectUser = (props: SelectUserProps) => {
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
-          fields={
-            ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'].filter(item =>
-              university ? item !== 'IS_FOREIGNER' : true,
-            ) as FormFields
-          }
+          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'] as FormFields}
           errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>
