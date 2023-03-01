@@ -553,15 +553,16 @@ const BookingSteps = (props: BookingStepsProps) => {
           recommendModalProps.onClose();
           router.push(`/dr/${slug}`);
         }}
-        bodyClassName="bg-slate-100 !p-0"
+        bodyClassName="bg-slate-100"
+        className="bg-slate-100"
       >
-        <div className="flex flex-col space-y-3">
-          <Text className="p-5 leading-7 bg-white" fontWeight="bold">
+        <div className="flex flex-col space-y-5">
+          <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
           {profile?.should_recommend_other_doctors && !university && (
-            <>
-              <Text fontSize="sm" className="px-5 leading-6">
+            <div className="flex flex-col space-y-3">
+              <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}
                 <Text fontWeight="bold">
                   {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
@@ -576,7 +577,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                   centerId={center?.id}
                 />
               )}
-            </>
+            </div>
           )}
         </div>
       </Modal>

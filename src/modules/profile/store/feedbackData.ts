@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { Feedbacks } from '../../rate/components/feedbackCard/feedbackCard';
 
 interface FeedbackDataStore {

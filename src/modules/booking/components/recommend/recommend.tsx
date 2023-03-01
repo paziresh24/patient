@@ -18,7 +18,7 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
   return (
     <div className={className}>
       {isLoading ? (
-        <div className="flex pb-5 pr-5 overflow-auto space-s-3">
+        <div className="flex pb-5 overflow-auto space-s-3">
           <Skeleton w="22rem" h="16rem" rounded="lg" className="min-w-[22rem]" />
           <Skeleton w="22rem" h="16rem" rounded="lg" />
         </div>
@@ -31,7 +31,6 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
               displayExpertise: doctor.display_expertise,
               displayName: doctor.display_name,
               medicalCode: doctor.medical_code,
-              experience: doctor.experience,
               freeturn: doctor.freeturn,
               isBulk: doctor.is_bluk,
               ratesCount: doctor.rates_count,

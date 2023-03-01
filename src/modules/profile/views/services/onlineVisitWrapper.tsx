@@ -152,19 +152,21 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
           />
         </div>
       </Modal>
-      <Modal noHeader {...recommendModalProps} bodyClassName="bg-slate-100 !p-0">
-        <div className="flex flex-col space-y-3">
-          <Text className="p-5 leading-7 bg-white" fontWeight="bold">
+      <Modal noHeader {...recommendModalProps} bodyClassName="bg-slate-100" className="bg-slate-100">
+        <div className="flex flex-col space-y-5">
+          <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {freeTurn.data?.data?.message}
           </Text>
-          <Text fontSize="sm" className="px-5 leading-6">
-            برترین پزشکان{' '}
-            <Text fontWeight="bold">
-              {expertise?.name} {city?.name ? `در ${city?.name}` : null}
-            </Text>{' '}
-            از دیدگاه بیماران
-          </Text>
-          <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
+          <div className="flex flex-col space-y-3">
+            <Text fontSize="sm" className="px-5 leading-6">
+              برترین پزشکان{' '}
+              <Text fontWeight="bold">
+                {expertise?.name} {city?.name ? `در ${city?.name}` : null}
+              </Text>{' '}
+              از دیدگاه بیماران
+            </Text>
+            <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
+          </div>
         </div>
       </Modal>
     </>

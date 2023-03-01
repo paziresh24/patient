@@ -1,6 +1,6 @@
 import { getCookie, removeCookies } from 'cookies-next';
 import config from 'next/config';
-import create from 'zustand';
+import { create } from 'zustand';
 
 const { publicRuntimeConfig } = config();
 

@@ -12,11 +12,12 @@ interface ModalProps {
   title?: string;
   fullScreen?: boolean;
   bodyClassName?: string;
+  className?: string;
   noHeader?: boolean;
 }
 
 export const Modal = (props: ModalProps) => {
-  const { title, isOpen, onClose, children, fullScreen, bodyClassName, noHeader = false } = props;
+  const { title, isOpen, onClose, children, fullScreen, bodyClassName, className, noHeader = false } = props;
   const { isMobile } = useResponsive();
 
   return (
@@ -32,9 +33,13 @@ export const Modal = (props: ModalProps) => {
           match={isOpen}
           animation={fullScreen && isMobile ? 'right' : 'bottom'}
           duration={300}
-          className={classNames('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto', {
-            'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
-          })}
+          className={classNames(
+            'bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto',
+            {
+              'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
+            },
+            className,
+          )}
           onClick={e => e.stopPropagation()}
         >
           {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-300" />}
