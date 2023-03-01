@@ -4,6 +4,7 @@ import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
@@ -21,7 +22,7 @@ const Factor: NextPageWithLayout = () => {
   const {
     query: { bookId, centerId },
   } = useRouter();
-
+  const university = useServerQuery(state => state.queries.university);
   const getBookDetails = useGetBookDetails();
 
   useEffect(() => {
@@ -37,13 +38,15 @@ const Factor: NextPageWithLayout = () => {
   return (
     <>
       <Seo title="فاکتور نوبت" />
-      <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-        {`(function(c,l,a,r,i,t,y){
+      {!university && (
+        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
+          {`(function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "g1qw1smpmx");`}
-      </Script>
+        </Script>
+      )}
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full md:basis-4/6">
           <FactorWrapper bookId={bookId as string} centerId={centerId as string} />
