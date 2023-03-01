@@ -4,7 +4,7 @@ import AtomIcon from '@/common/components/icons/atom';
 import AwardIcon from '@/common/components/icons/award';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useMemo } from 'react';
 
 interface BiographyProps {
@@ -27,7 +27,7 @@ export const Biography = (props: BiographyProps) => {
   return (
     <Wrapper
       {...(needShowMore && { height: 200, openButtonText: 'مشاهده بیشتر', closeButtonText: 'مشاهده کمتر' })}
-      className={clsx('p-4', className)}
+      className={classNames('p-4', className)}
     >
       <div className="flex flex-col space-y-3">
         {biography && (

@@ -376,17 +376,17 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
           if (doctor.centers?.length === 0) return null;
           return (
             <div className="flex-col hidden space-y-3 md:flex">
-              <div className="flex justify-between">
+              <div className="flex items-center justify-between">
                 <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                   آدرس و تلفن تماس
                 </Text>
                 {customize.showContribute && (
                   <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
                     <a>
-                      <Text fontSize="xs" className="flex font-medium gap-x-1 text-primary">
+                      <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
                         <EditIcon width={17} height={17} />
                         گزارش تلفن و آدرس صحیح
-                      </Text>
+                      </Button>
                     </a>
                   </Link>
                 )}

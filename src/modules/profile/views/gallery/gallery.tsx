@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 interface GalleryProps {
@@ -10,7 +10,7 @@ export const Gallery = (props: GalleryProps) => {
   const { items, className } = props;
 
   return (
-    <div className={clsx('p-4 pb-3', className)}>
+    <div className={classNames('p-4 pb-3', className)}>
       <PhotoProvider>
         <div className="flex pb-1 overflow-auto rounded-lg space-s-3">
           {items.map((item, index) => (

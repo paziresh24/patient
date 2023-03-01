@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ForwardedRef, forwardRef, InputHTMLAttributes, useRef } from 'react';
 import Text from '../text';
 
@@ -16,7 +16,7 @@ const FileUploader = forwardRef((props: FileProps, ref: ForwardedRef<any>) => {
   return (
     <>
       <div
-        className={clsx(
+        className={classNames(
           'w-full h-[4rem] rounded-lg flex cursor-pointer justify-center items-center bg-[#f8fafb] border !border-solid border-slate-300',
           classNameWrapper,
         )}

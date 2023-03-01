@@ -1,6 +1,6 @@
 import Button from '@/common/components/atom/button';
 import { UserInfo } from '@/modules/login/store/userInfo';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import SelectUser from './selectUser';
@@ -32,7 +32,7 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
     <div className="flex flex-col space-y-3">
       <SelectUser className={className} onSelect={handleSelect} />
       <div
-        className={clsx(
+        className={classNames(
           'fixed bottom-0 right-0 flex flex-col w-full p-4 space-y-3 bg-white border-t md:border-none border-slate-100 md:space-y-0 md:items-center md:justify-between md:flex-row md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none',
           {
             'md:!justify-end': !showTermsAndConditions,

@@ -1,5 +1,5 @@
 import ChevronIcon from '@/common/components/icons/chevron';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -46,7 +46,7 @@ const MegaMenuContent = ({ items, onClose }: MegaMenuContentProps) => {
             <div key={index}>
               <Link href={menu.link ?? '#'}>
                 <a
-                  className={clsx(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
+                  className={classNames(`text-slate-700 mb-2 mt-1 block text-sm line-clamp-1 w-4/5`, {
                     'font-bold': !!menu.sub_menu,
                   })}
                   onClick={onClose}

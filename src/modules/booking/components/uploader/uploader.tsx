@@ -1,7 +1,7 @@
 import FileUploader from '@/common/components/atom/fileUploader';
 import Text from '@/common/components/atom/text';
 import CloseIcon from '@/common/components/icons/close';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { Dispatch, SetStateAction } from 'react';
 
 interface FileUploaderProp {
@@ -32,7 +32,7 @@ export const Uploader = (props: FileUploaderProp) => {
           {title}
         </Text>
       )}
-      <div className={clsx('bg-none', { ' bg-[#f8fafb] border rounded-lg !border-solid border-slate-300': !!files.length })}>
+      <div className={classNames('bg-none', { ' bg-[#f8fafb] border rounded-lg !border-solid border-slate-300': !!files.length })}>
         <FileUploader
           classNameWrapper={files.length > 0 ? '!bg-none !border-none' : ''}
           onChange={handleFileChange}

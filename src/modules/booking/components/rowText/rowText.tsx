@@ -1,6 +1,6 @@
 import Text from '@/common/components/atom/text/text';
 import CopyIcon from '@/common/components/icons/copy';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useCopyToClipboard } from 'react-use';
 
 interface RowTextProps {
@@ -19,14 +19,14 @@ export const RowText = (props: RowTextProps) => {
   const [, copyToClipboard] = useCopyToClipboard();
 
   return (
-    <div className={clsx('flex items-center justify-between space-s-3', className)}>
+    <div className={classNames('flex items-center justify-between space-s-3', className)}>
       <Text className="whitespace-nowrap" fontWeight={titleFontWeight} fontSize={titleFontSize}>
         {title}
       </Text>
       <Text
         fontWeight={valueFontWeight}
         fontSize={valueFontSize}
-        className={clsx('flex items-center gap-1', {
+        className={classNames('flex items-center gap-1', {
           'cursor-pointer': copyable,
         })}
         onClick={() => copyable && copyToClipboard(value)}

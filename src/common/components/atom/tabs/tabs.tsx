@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ReactElement, useEffect, useState } from 'react';
 
 interface TabsProps {
@@ -26,11 +26,11 @@ export const Tabs = ({ children, value, onChange, className, ...rest }: TabsProp
   };
 
   return (
-    <div className={clsx('flex', [className])}>
+    <div className={classNames('flex', [className])}>
       {children.map((tab, i) => (
         <button
           key={tab.props.value}
-          className={clsx(
+          className={classNames(
             'p-4 text-sm font-medium text-neutral-600',
             {
               'border-b-2 border-solid border-primary !text-primary': i === selected,

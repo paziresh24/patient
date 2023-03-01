@@ -51,7 +51,7 @@ import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -320,7 +320,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   return (
-    <div className={clsx('p-5 bg-white rounded-lg', className)}>
+    <div className={classNames('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
         <Wrapper
           title="انتخاب مرکز درمانی"

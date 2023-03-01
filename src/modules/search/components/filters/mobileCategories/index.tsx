@@ -2,7 +2,7 @@ import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import ChevronIcon from '@/common/components/icons/chevron';
 import { Category, useSearch } from '@/modules/search/hooks/useSearch';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { Fragment, useState } from 'react';
 
 export const MobileCategories = ({ className, onClickSubCategory }: { className?: string; onClickSubCategory?: () => void }) => {
@@ -10,7 +10,7 @@ export const MobileCategories = ({ className, onClickSubCategory }: { className?
   const [showSubCategory, setShowSubCategory] = useState<Category | undefined>(selectedCategory);
 
   return (
-    <div className={clsx('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card max-h-[24rem]', className)}>
+    <div className={classNames('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card max-h-[24rem]', className)}>
       <MenuList className="overflow-auto scrollBar">
         {showSubCategory && (
           <MenuItem
@@ -26,7 +26,7 @@ export const MobileCategories = ({ className, onClickSubCategory }: { className?
             <Fragment key={item.title}>
               <MenuItem
                 name={item.title}
-                className={clsx({
+                className={classNames({
                   'text-primary !font-extrabold': selectedCategory?.value === item.value,
                 })}
                 onClick={() => {
@@ -48,7 +48,7 @@ export const MobileCategories = ({ className, onClickSubCategory }: { className?
                   key={sub.title}
                   name={sub.title}
                   link={sub.url}
-                  className={clsx({
+                  className={classNames({
                     'text-primary': selectedSubCategory?.value === sub.value,
                   })}
                   shallow

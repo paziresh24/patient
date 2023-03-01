@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import ChevronIcon from '../../icons/chevron';
@@ -94,7 +94,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
             return (
               <li
                 key={suggestion.value}
-                className={clsx('p-3 cursor-pointer', {
+                className={classNames('p-3 cursor-pointer', {
                   'bg-slate-50': activeSuggestion > 0 && index === activeSuggestion,
                   'bg-slate-100': suggestion.value === value?.value,
                 })}
@@ -114,11 +114,11 @@ export const Autocomplete = (props: AutocompleteProps) => {
   }
 
   return (
-    <div className={clsx('relative', classNameWrapper)} ref={wrapperRef}>
+    <div className={classNames('relative', classNameWrapper)} ref={wrapperRef}>
       <div className="relative flex items-center justify-end w-full" onClick={onClickInput} onKeyDown={(e: any) => onKeyDown(e)}>
         <TextField
           {...inputProps}
-          className={clsx('cursor-pointer !select-none', inputProps.className)}
+          className={classNames('cursor-pointer !select-none', inputProps.className)}
           ref={inputRef}
           readOnly={searchable ? !showSuggestions : true}
           onBlur={() => {
@@ -132,7 +132,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
         />
         <ChevronIcon
           dir={showSuggestions ? 'top' : 'bottom'}
-          className={clsx('absolute mx-5', {
+          className={classNames('absolute mx-5', {
             'bottom-[0.9rem]': inputProps.size === 'small',
             'bottom-[1.1rem]': inputProps.size !== 'small',
           })}

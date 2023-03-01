@@ -8,7 +8,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
@@ -43,7 +43,7 @@ const Home: NextPageWithLayout = () => {
       />
 
       <main
-        className={clsx('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
+        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
           'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': university,
         })}
       >

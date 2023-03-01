@@ -1,6 +1,6 @@
 import useCustomize from '@/common/hooks/useCustomize';
 import useWebView from '@/common/hooks/useWebView';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ReactNode } from 'react';
 import BottomNavigation from './bottomNavigation';
 import Footer from './footer';
@@ -28,7 +28,7 @@ export const LayoutWithHeaderAndFooter = ({
   const isWebView = useWebView();
 
   return (
-    <div className={clsx({ 'pb-16 md:pb-0': showBottomNavigation })}>
+    <div className={classNames({ 'pb-16 md:pb-0': showBottomNavigation })}>
       {customize.showHeader && showHeader && (
         <Header
           showSearchSuggestionButton={showSearchSuggestionButton}

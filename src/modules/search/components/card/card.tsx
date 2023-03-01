@@ -9,7 +9,7 @@ import LikeIcon from '@/common/components/icons/like';
 import LocationIcon from '@/common/components/icons/location';
 import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import Image from 'next/future/image';
 import Link from 'next/link';
@@ -72,7 +72,7 @@ export const SearchCard = (props: SearchCardProps) => {
   );
 
   return (
-    <Card className={clsx('relative justify-between !p-3 md:!p-4', className)}>
+    <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
         {isSpa && (
           <Link href={baseInfo.url}>
@@ -83,7 +83,7 @@ export const SearchCard = (props: SearchCardProps) => {
                   alt={imageAlt}
                   width={80}
                   height={80}
-                  className={clsx('border-2 border-slate-200', {
+                  className={classNames('border-2 border-slate-200', {
                     'border-primary': baseInfo?.isVerify,
                   })}
                   as={Image}
@@ -102,7 +102,7 @@ export const SearchCard = (props: SearchCardProps) => {
                 alt={imageAlt}
                 width={80}
                 height={80}
-                className={clsx('border-2 border-slate-200', {
+                className={classNames('border-2 border-slate-200', {
                   'border-primary': baseInfo?.isVerify,
                 })}
                 as={Image}

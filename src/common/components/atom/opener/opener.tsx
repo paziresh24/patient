@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { HTMLAttributes, useState } from 'react';
 import ChevronIcon from '../../icons/chevron';
 import Button from '../button';
@@ -15,9 +15,9 @@ export const Opener = (props: OpenerProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={clsx('flex space-y-1 flex-col shadow-white', className)} {...rest}>
+    <div className={classNames('flex space-y-1 flex-col shadow-white', className)} {...rest}>
       <div
-        className={clsx(
+        className={classNames(
           'w-full relative overflow-hidden flex flex-col after:w-full after:shadow-[0_0px_40px_35px] after:shadow-inherit  after:absolute after:bottom-0 after:transition-shadow transition-all',
           {
             'after:!shadow-none h-full': isOpen,

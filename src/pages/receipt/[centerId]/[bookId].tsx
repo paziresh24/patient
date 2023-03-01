@@ -19,7 +19,7 @@ import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { VisitChannels } from '@/modules/receipt/constants/onlineVisitChannels';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -137,7 +137,7 @@ const Receipt: NextPageWithLayout = () => {
                     )}
                     <Text
                       fontWeight="bold"
-                      className={clsx('text-green-600', {
+                      className={classNames('text-green-600', {
                         'text-red-500': turnStatus.deletedTurn || turnStatus.expiredTurn,
                       })}
                     >

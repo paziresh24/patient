@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Text from '../text/text';
 
 interface BadgeProps {
@@ -15,7 +15,7 @@ export const Badge = (props: BadgeProps) => {
   const { text, icon, fontSize, fontWeight, className, parentClassName, caption } = props;
   return (
     <div className="flex items-center justify-center space-s-2">
-      <div className={clsx('flex items-center justify-center gap-1 bg-current text-white py-1 px-3 rounded-3xl', parentClassName)}>
+      <div className={classNames('flex items-center justify-center gap-1 bg-current text-white py-1 px-3 rounded-3xl', parentClassName)}>
         {icon && <span>{icon}</span>}
         <Text fontSize={fontSize} fontWeight={fontWeight} className={className}>
           {text}

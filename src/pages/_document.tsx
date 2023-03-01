@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
 
@@ -63,7 +63,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         />
       </Head>
       <body
-        className={clsx('bg-slate-100', {
+        className={classNames('bg-slate-100', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

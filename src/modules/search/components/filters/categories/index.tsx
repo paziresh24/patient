@@ -1,6 +1,6 @@
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import { useSearch } from '@/modules/search/hooks/useSearch';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import isEmpty from 'lodash/isEmpty';
 import { Fragment } from 'react';
 
@@ -9,7 +9,7 @@ export const Categories = ({ className }: { className?: string }) => {
 
   if (isEmpty(categories)) return null;
   return (
-    <div className={clsx('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card max-h-[24rem]', className)}>
+    <div className={classNames('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card max-h-[24rem]', className)}>
       <MenuList className="overflow-auto scrollBar">
         {categories?.map(
           item =>
@@ -18,7 +18,7 @@ export const Categories = ({ className }: { className?: string }) => {
                 <MenuItem
                   name={item.title}
                   link={item.url}
-                  className={clsx({
+                  className={classNames({
                     'text-primary hidden md:flex sticky top-0 !bg-white z-10 !font-extrabold': selectedCategory?.value === item.value,
                   })}
                   shallow
@@ -31,7 +31,7 @@ export const Categories = ({ className }: { className?: string }) => {
                         key={sub.title}
                         name={sub.title}
                         link={sub.url}
-                        className={clsx({
+                        className={classNames({
                           'text-primary': selectedSubCategory?.value === sub.value,
                         })}
                         shallow

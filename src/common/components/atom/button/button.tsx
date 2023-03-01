@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ButtonHTMLAttributes } from 'react';
 import Loading from '../loading';
 
@@ -91,7 +91,7 @@ export const Button: React.FC<ButtonProps> = props => {
 
   return (
     <button
-      className={clsx(
+      className={classNames(
         'flex items-center justify-center rounded-lg font-bold gap-1 transition-all',
         buttonStyles.variant[variant],
         buttonStyles.size[size],

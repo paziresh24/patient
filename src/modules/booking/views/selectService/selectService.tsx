@@ -1,6 +1,6 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { Service } from '../../types/selectService';
 export interface SelectServiceProps {
   services: Service[];
@@ -29,7 +29,7 @@ export const SelectService = (props: SelectServiceProps) => {
           <div
             key={service.id}
             onClick={() => handleSelectService(service)}
-            className={clsx(
+            className={classNames(
               'w-full h-auto rounded-md whitespace-nowrap overflow-hidden text-ellipsis block p-4 bg-[#3861FB]/[0.1] cursor-pointer',
               {
                 'bg-[#0F1D40]/[0.1] pointer-events-none': service.isDisable,

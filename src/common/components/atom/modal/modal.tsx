@@ -1,5 +1,5 @@
 import useResponsive from '@/common/hooks/useResponsive';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import dynamic from 'next/dynamic';
 import CloseIcon from '../../icons/close';
 import ClientOnlyPortal from '../../layouts/clientOnlyPortal';
@@ -32,7 +32,7 @@ export const Modal = (props: ModalProps) => {
           match={isOpen}
           animation={fullScreen && isMobile ? 'right' : 'bottom'}
           duration={300}
-          className={clsx('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto', {
+          className={classNames('bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto', {
             'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
           })}
           onClick={e => e.stopPropagation()}
@@ -44,7 +44,7 @@ export const Modal = (props: ModalProps) => {
               <CloseIcon onClick={onClose} />
             </div>
           )}
-          <div className={clsx('p-5 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
+          <div className={classNames('p-5 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>

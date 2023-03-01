@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Checkbox from '../checkbox';
 import Text from '../text';
 
@@ -16,13 +16,13 @@ export const RulesBox = (props: RulesProp) => {
 
   return (
     <>
-      <div className={clsx('w-full', classNameWrapper)}>
+      <div className={classNames('w-full', classNameWrapper)}>
         {!!title && (
           <Text fontWeight="medium" fontSize="sm" className="text-black block mb-2">
             {title}
           </Text>
         )}
-        <div className={clsx('w-full bg-slate-100 p-3 rounded-lg', className)}>
+        <div className={classNames('w-full bg-slate-100 p-3 rounded-lg', className)}>
           <ul className="flex flex-col space-y-1 list-disc mr-5">
             {rules.map((rule, index) => (
               <li key={index} className="text-sm font-medium leading-7" dangerouslySetInnerHTML={{ __html: rule }} />
