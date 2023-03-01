@@ -1,5 +1,5 @@
 import { Center, DoctorParams } from '@/common/types/doctorParams';
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface ProfileDataStore {
   data: Partial<DoctorParams>;

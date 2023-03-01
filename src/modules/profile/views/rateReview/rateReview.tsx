@@ -14,13 +14,13 @@ import ShareIcon from '@/common/components/icons/share';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Rate from '@/modules/rate/view/rate';
-import classNames from '@/common/utils/classNames';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
 import { useMemo, useRef, useState } from 'react';
@@ -371,7 +371,7 @@ export const RateReview = (props: RateReviewProps) => {
         />
         {!message && (showMoreButtonLoading || !isLoading) && !!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
           <div className="p-4">
-            <Button variant="secondary" block className="self-center block outline-none" onClick={showMore} loading={showMoreButtonLoading}>
+            <Button variant="secondary" block onClick={showMore} loading={showMoreButtonLoading}>
               نمایش بیشتر
             </Button>
           </div>

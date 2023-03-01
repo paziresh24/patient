@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 export const useServerQuery = create<{ queries: any; setQueries: (queries: any) => void }>(set => ({
   queries: {},

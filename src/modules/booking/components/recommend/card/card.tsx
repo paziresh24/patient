@@ -8,7 +8,6 @@ type Recommends = {
   displayExpertise?: string;
   displayName: string;
   medicalCode?: string;
-  experience?: number;
   freeturn?: string;
   isBulk: true;
   ratesCount: number;
@@ -27,7 +26,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
   const router = useRouter();
   return (
     <>
-      <ScrollContainer className="flex w-full px-5 pb-5 select-none no-scroll space-s-3">
+      <ScrollContainer className="flex w-full pl-5 rounded-lg select-none no-scroll space-s-3">
         {listOfDoctors?.map(doctor => (
           <Card
             key={doctor.id}
@@ -38,7 +37,6 @@ export const RecommendCard = (props: RecommendCardProps) => {
               avatar: doctor.image,
               url: doctor.url,
               expertise: doctor.displayExpertise,
-              experience: doctor.experience,
               isVerify: !doctor.isBulk,
               rate: {
                 count: doctor.ratesCount,
