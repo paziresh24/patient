@@ -4,7 +4,6 @@ import Modal from '@/common/components/atom/modal';
 import EditIcon from '@/common/components/icons/edit';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { useEffect, useMemo } from 'react';
@@ -27,7 +26,6 @@ interface UserCardProps {
 
 export const UserCard = (props: UserCardProps) => {
   const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type } = props;
-  const university = useServerQuery(state => state.queries.university);
 
   const editSubuser = useEditSubuser();
   const updateUser = useUpdateUser();
@@ -37,9 +35,7 @@ export const UserCard = (props: UserCardProps) => {
   const fields = useMemo(
     () =>
       type === 'subUser'
-        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'].filter(item =>
-            university ? item !== 'IS_FOREIGNER' : true,
-          )
+        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']
         : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE'],
     [type],
   );
