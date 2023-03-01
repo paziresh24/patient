@@ -60,8 +60,6 @@ export const Result = () => {
     });
   };
 
-  console.log(isSpa || !!university);
-
   return (
     <div className="flex flex-col w-full space-y-3">
       {!isLoading && result.length === 0 && <NotFound />}
