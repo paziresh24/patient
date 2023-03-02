@@ -1,7 +1,7 @@
 import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading/loading';
 import Text from '@/common/components/atom/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ReactNode } from 'react';
 
 interface SelectProps {
@@ -9,6 +9,7 @@ interface SelectProps {
   onSelect: () => void;
   title: string;
   subTitle?: string;
+  topTitle?: string;
   isLoading?: boolean;
   actionText?: string;
   action?: () => void;
@@ -16,22 +17,25 @@ interface SelectProps {
 }
 
 export const Select = (props: SelectProps) => {
-  const { onSelect, selected, subTitle, title, isLoading, action, actionText, actionIcon } = props;
+  const { onSelect, selected, subTitle, topTitle, title, isLoading, action, actionText, actionIcon } = props;
   return (
     <div
-      className={clsx(
+      className={classNames(
         'cursor-pointer flex items-center justify-between p-4 border border-solid transition-all border-slate-200 rounded-lg',
         {
-          'border-primary': selected,
+          '!border-primary': selected,
         },
       )}
       onClick={onSelect}
     >
       <div className="flex items-center space-s-3">
         <div
-          className={clsx('w-5 flex justify-center items-center h-5 rounded-full border border-solid border-slate-200 transition-all', {
-            'border-primary bg-primary': selected,
-          })}
+          className={classNames(
+            'w-5 flex justify-center items-center h-5 rounded-full border border-solid border-slate-200 transition-all',
+            {
+              '!border-primary bg-primary': selected,
+            },
+          )}
         >
           {selected && (
             <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,11 +49,14 @@ export const Select = (props: SelectProps) => {
           )}
         </div>
         <div className="flex flex-col space-y-1">
-          <Text fontWeight="bold" fontSize="sm">
-            {title}
-          </Text>
-          {!isLoading && subTitle && <Text fontSize="sm">{subTitle}</Text>}
-          {isLoading && subTitle && <Loading width={25} className="!mt-3" />}
+          {topTitle && <Text fontSize="sm">{topTitle}</Text>}
+          {isLoading && <Loading width={25} className="!mt-3" />}
+          {!isLoading && (
+            <Text fontWeight="bold" fontSize="sm">
+              {title}
+            </Text>
+          )}
+          {subTitle && <Text fontSize="sm">{subTitle}</Text>}
         </div>
       </div>
 

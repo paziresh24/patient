@@ -2,7 +2,7 @@ import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton';
 import { Tab, Tabs } from '@/common/components/atom/tabs';
 import Text from '@/common/components/atom/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import moment from 'jalali-moment';
 import isEmpty from 'lodash/isEmpty';
 import range from 'lodash/range';
@@ -63,7 +63,7 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
         {isEmpty(days) && <FreeDaysLoading />}
         {days?.map((turn: number, index: number) => (
           <div
-            className={clsx('cursor-pointer min-w-fit flex flex-col border border-solid border-slate-200 rounded-lg pl-6 py-2 p-3', {
+            className={classNames('cursor-pointer min-w-fit flex flex-col border border-solid border-slate-200 rounded-lg pl-6 py-2 p-3', {
               'bg-primary bg-opacity-5 border-primary border-opacity-30 text-primary': selectedDay === turn,
             })}
             key={turn}
@@ -87,15 +87,19 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
           </div>
         ))}
       </div>
-      <div className="w-full border border-solid rounded-lg md:h-80 border-slate-200">
+      <div className="w-full overflow-auto border border-solid rounded-lg md:h-80 border-slate-200">
         {(!isEmpty(times?.morning) || !isEmpty(times?.evening)) && (
-          <Tabs value={tabState} onChange={(value: any) => setTabState(value)} className="border-b border-solid border-slate-200">
+          <Tabs
+            value={tabState}
+            onChange={(value: any) => setTabState(value)}
+            className="sticky top-0 bg-white border-b border-solid border-slate-200"
+          >
             <Tab value="morning" label="صبح" className="w-full" />
             <Tab value="evening" label="عصر" className="w-full" />
           </Tabs>
         )}
         {!isLoading && isEmpty(times?.[tabState]) && (
-          <div className="flex items-center justify-center w-full h-full py-8 md:py-0 md:!pb-11">
+          <div className="flex items-center justify-center w-full py-5 h-2/3 md:pt-10">
             <Text fontWeight="bold" fontSize="sm">
               نوبت پزشک در این روز به پایان رسیده است.
             </Text>
@@ -107,7 +111,7 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
           </div>
         )}
         {!isEmpty(times?.[tabState]) && (
-          <div className="flex flex-wrap h-64 gap-3 p-3 m-1 overflow-auto">
+          <div className="flex flex-wrap gap-3 p-3 m-1">
             {times?.[tabState]?.map((turn: any) => (
               <div
                 key={turn.from}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
@@ -7,6 +8,7 @@ const { publicRuntimeConfig } = getConfig();
 export const paziresh24AppClient = axios.create({
   baseURL: publicRuntimeConfig.PAZIRESH24_API,
   withCredentials: true,
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
 
 export const searchClient = axios.create({
@@ -19,13 +21,56 @@ export const clinicClient = axios.create({
   withCredentials: true,
 });
 
+export const contentClient = axios.create({
+  baseURL: publicRuntimeConfig.CONTENT_BASE_URL,
+  withCredentials: true,
+});
+
+clinicClient.interceptors.request.use(
+  config => {
+    config = {
+      ...config,
+      meta: {
+        requestStartedAt: new Date().getTime(),
+      },
+    } as any;
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
+clinicClient.interceptors.response.use(
+  res => {
+    res = { ...res, meta: { responseTime: new Date().getTime() - (res.config as any).meta.requestStartedAt } } as any;
+    return res;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
+paziresh24AppClient.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
 paziresh24AppClient.interceptors.response.use(
   res => res,
   async error => {
     const originalRequest = error.config;
     if (error.response?.status === 401) {
       try {
-        await refresh();
+        const { data } = await refresh();
+        if (data.access_token) setCookie('token', data.access_token);
         return paziresh24AppClient(originalRequest);
       } catch (error) {
         if (axios.isAxiosError(error)) {

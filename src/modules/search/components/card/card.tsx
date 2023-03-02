@@ -9,7 +9,7 @@ import LikeIcon from '@/common/components/icons/like';
 import LocationIcon from '@/common/components/icons/location';
 import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -50,10 +50,11 @@ interface SearchCardProps {
   sendEventWhenClick?: () => void;
   avatarPriority?: boolean;
   className?: string;
+  isSpa?: boolean;
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type, sendEventWhenClick, avatarPriority, className } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick, avatarPriority, className, isSpa = true } = props;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
@@ -71,31 +72,60 @@ export const SearchCard = (props: SearchCardProps) => {
   );
 
   return (
-    <Card className={clsx('relative justify-between !p-3 md:!p-4', className)}>
+    <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
-        <Link href={baseInfo.url} onClick={sendEventWhenClick}>
-          <div className="relative">
-            <Avatar
-              src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
-              alt={imageAlt}
-              width={80}
-              height={80}
-              className={clsx('border-2 border-slate-200', {
-                'border-primary': baseInfo?.isVerify,
-              })}
-              as={Image}
-              {...avatarLazyLoading}
-            />
-            {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
-          </div>
-        </Link>
+        {isSpa && (
+          <Link onClick={sendEventWhenClick} href={baseInfo.url}>
+            <div className="relative">
+              <Avatar
+                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+                alt={imageAlt}
+                width={80}
+                height={80}
+                className={classNames('border-2 border-slate-200', {
+                  'border-primary': baseInfo?.isVerify,
+                })}
+                as={Image}
+                {...avatarLazyLoading}
+              />
+              {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
+            </div>
+          </Link>
+        )}
+        {!isSpa && (
+          <a href={baseInfo.url} onClick={sendEventWhenClick}>
+            <div className="relative">
+              <Avatar
+                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+                alt={imageAlt}
+                width={80}
+                height={80}
+                className={classNames('border-2 border-slate-200', {
+                  'border-primary': baseInfo?.isVerify,
+                })}
+                as={Image}
+                {...avatarLazyLoading}
+              />
+              {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
+            </div>
+          </a>
+        )}
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
-            <Link href={baseInfo.url} className="w-4/5" onClick={sendEventWhenClick}>
-              <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
-                {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
-              </Text>
-            </Link>
+            {isSpa && (
+              <Link className="w-4/5" onClick={sendEventWhenClick} href={baseInfo.url}>
+                <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
+                  {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+                </Text>
+              </Link>
+            )}
+            {!isSpa && (
+              <a href={baseInfo.url} className="w-4/5" onClick={sendEventWhenClick}>
+                <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
+                  {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+                </Text>
+              </a>
+            )}
             {!!baseInfo?.viewCount && (
               <div className="absolute flex items-center space-s-1 rtl:left-5 ltr:right-5 top-5">
                 <Text fontSize="xs">{baseInfo?.viewCount}</Text>

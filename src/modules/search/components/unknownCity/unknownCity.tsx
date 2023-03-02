@@ -1,10 +1,11 @@
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { getCookie } from 'cookies-next';
 import isEmpty from 'lodash/isEmpty';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
@@ -15,7 +16,7 @@ export const UnknownCity = () => {
   const isWebView = useWebView();
   const city = useSearchStore(state => state.city);
   const { searchCity } = useSearch();
-  const [unknownCityModal, setUnknownCityModal] = useState(false);
+  const { handleOpen, handleClose, modalProps } = useModal();
   const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
 
   useEffect(() => {
@@ -29,17 +30,16 @@ export const UnknownCity = () => {
   }, [searchCity]);
 
   const handleCheckUserCity = () => {
-    setUnknownCityModal(
-      !isEmpty(currentCity) && !isEmpty(searchCity) && currentCity.en_slug !== 'ir' && searchCity.en_slug !== currentCity?.en_slug,
-    );
+    if (!isEmpty(currentCity) && !isEmpty(searchCity) && currentCity.en_slug !== 'ir' && searchCity.en_slug !== currentCity?.en_slug)
+      handleOpen();
   };
 
   return (
-    <Modal noHeader isOpen={unknownCityModal} onClose={setUnknownCityModal}>
+    <Modal noHeader {...modalProps}>
       <Text fontWeight="medium" className="leading-8">
         شما قبلاً «{city?.name}» را برای مشاهده نتایج در پذیرش24 انتخاب کردید. لطفا شهر مورد نظر خود را انتخاب کنید.
       </Text>
-      <div className="flex space-s-3 mt-5">
+      <div className="flex mt-5 space-s-3">
         <Button
           block
           variant="secondary"
@@ -50,7 +50,7 @@ export const UnknownCity = () => {
               },
             });
             setCity(city);
-            setUnknownCityModal(false);
+            handleClose();
           }}
         >
           {city?.name}
@@ -59,7 +59,7 @@ export const UnknownCity = () => {
           block
           onClick={() => {
             setCity(searchCity);
-            setUnknownCityModal(false);
+            handleClose();
           }}
         >
           {searchCity?.name}

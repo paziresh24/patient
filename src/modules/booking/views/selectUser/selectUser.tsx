@@ -4,9 +4,11 @@ import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
+import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
-import { PatinetProfileForm } from '@/modules/patient/views/form';
+import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -14,16 +16,18 @@ import UserCard from '../../components/userCard';
 
 interface SelectUserProps {
   onSelect: (user: any) => void;
+  className?: string;
 }
 
 export const SelectUser = (props: SelectUserProps) => {
-  const { onSelect } = props;
+  const { onSelect, className } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { data, mutate, isSuccess, isLoading, isIdle } = useGetSubuser();
   const addSubUser = useAddSubuser();
-  const [isOpenAddUserModal, setIsOpenAddUserModal] = useState(false);
+  const { handleOpen: handleOpenAddUserModal, handleClose: handleCloseAddUserModal, modalProps: addUserModalProps } = useModal();
+
   const [userSelected, setUserSelected] = useState(userInfo.id);
 
   useEffect(() => {
@@ -42,11 +46,17 @@ export const SelectUser = (props: SelectUserProps) => {
       setUserSelected(userInfo.id);
       onSelect(userInfo);
     }
+
+    return () => {
+      handleOpenLoginModal({
+        state: false,
+      });
+    };
   }, [isLogin, userInfo]);
 
   const handleOpenAddSubuserModal = () => {
     addSubUser.reset();
-    setIsOpenAddUserModal(true);
+    handleOpenAddUserModal();
   };
 
   const handleAddSubuser = async (data: any) => {
@@ -61,7 +71,7 @@ export const SelectUser = (props: SelectUserProps) => {
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
       mutate();
-      setIsOpenAddUserModal(false);
+      handleCloseAddUserModal();
       handleSelectUser(res.data.result);
       return;
     }
@@ -78,7 +88,7 @@ export const SelectUser = (props: SelectUserProps) => {
   };
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className={classNames('flex flex-col space-y-6', className)}>
       <div className="flex flex-col w-full space-y-3">
         {(isLoading || isIdle) && <SubUserLoading />}
         {isSuccess && (
@@ -118,11 +128,11 @@ export const SelectUser = (props: SelectUserProps) => {
       <Button className="self-center" variant="secondary" onClick={handleOpenAddSubuserModal}>
         دریافت نوبت برای فرد دیگر
       </Button>
-      <Modal title="کاربر جدید" isOpen={isOpenAddUserModal} onClose={setIsOpenAddUserModal}>
+      <Modal title="کاربر جدید" {...addUserModalProps}>
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
-          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']}
+          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'] as FormFields}
           errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 
 interface SkeletonProps {
   w?: string;
@@ -24,7 +24,7 @@ export const Skeleton: React.FC<SkeletonProps> = props => {
   return (
     <div
       style={{ width: w, height: h }}
-      className={clsx('animate-pulse duration-75 bg-slate-200', skeletonStyles.rounded[rounded], className)}
+      className={classNames('animate-pulse duration-75 bg-slate-200', skeletonStyles.rounded[rounded], className)}
     />
   );
 };

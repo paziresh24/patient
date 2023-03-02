@@ -1,13 +1,23 @@
 import ChatIcon from '@/common/components/icons/chat';
+import TrashIcon from '@/common/components/icons/trash';
+import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
+import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { getCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import Queue from '../../queue';
 import { OnlineVisitChannels } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
@@ -20,22 +30,50 @@ interface TurnFooterProps {
   centerType: CenterType;
   hasPaging: boolean;
   bookTime: number;
+  centerId: string;
+  nationalCode: string;
+  trackingCode: string;
+  phoneNumber: string;
+  doctorName: string;
+  expertise: string;
   onlineVisitChannels?: OnlineVisitChannels;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
-  const { id, slug, status, pdfLink, centerType, hasPaging, bookTime, onlineVisitChannels } = props;
+  const {
+    id,
+    slug,
+    status,
+    pdfLink,
+    centerType,
+    hasPaging,
+    bookTime,
+    onlineVisitChannels,
+    centerId,
+    nationalCode,
+    trackingCode,
+    expertise,
+    doctorName,
+    phoneNumber,
+  } = props;
   const { t } = useTranslation('patient/appointments');
+  const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
+  const router = useRouter();
   const [queueModal, setQueueModal] = useState(false);
-
+  const { removeBookApi } = useBookAction();
+  const { removeBook } = useBookStore();
+  const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
+  const isEnableFectureFlagging = useFeatureIsOn('delete-book');
+
+  const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
 
   const showPrescription = () => {
     window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
   };
 
   const reBook = () => {
-    window.open(`${publicRuntimeConfig.CLINIC_BASE_URL}/dr/${slug}`);
+    router.push(`/dr/${slug}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -43,7 +81,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       variant="secondary"
       size="sm"
       block={true}
-      onClick={() => setQueueModal(true)}
+      onClick={() => handleOpenQueueModal()}
       icon={<MegaphoneIcon />}
       data-testid="footer__queue_button"
     >
@@ -66,9 +104,50 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     );
   };
 
+  const removeBookAction = () => {
+    removeBookApi.mutate(
+      {
+        center_id: centerId,
+        reference_code: trackingCode,
+        national_code: nationalCode,
+      },
+      {
+        onSuccess: data => {
+          if (data.data.status === ClinicStatus.SUCCESS) {
+            removeBook({ bookId: id });
+            setRemoveModal(false);
+            return;
+          }
+          toast.error(data.data.message);
+        },
+      },
+    );
+  };
+
+  const showRemoveTurnModal = () => {
+    setRemoveModal(true);
+    splunkInstance().sendEvent({
+      group: 'my-turn',
+      type: 'delete-turn-footer',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        phoneNumber,
+      },
+    });
+  };
+
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
+      {isEnableFectureFlagging && shouldShowRemoveTurn && (
+        <>
+          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+            لغو نوبت
+          </Button>
+        </>
+      )}
 
       {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
       {(status === BookStatus.expired ||
@@ -88,8 +167,24 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         </div>
       )}
 
-      <Modal onClose={setQueueModal} isOpen={queueModal} bodyClassName="p-0" noHeader>
+      <Modal {...queueModalProps} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
+      </Modal>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+        <div className="flex space-s-2">
+          <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
+            لغو نوبت
+          </Button>
+          <Button
+            theme="error"
+            variant="secondary"
+            block
+            onClick={() => setRemoveModal(false)}
+            data-testid="modal__cancel-remove-turn-button"
+          >
+            انصراف
+          </Button>
+        </div>
       </Modal>
     </>
   );

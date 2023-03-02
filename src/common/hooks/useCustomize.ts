@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from 'querystring';
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface Customize {
   showHeader: boolean;
@@ -17,6 +17,15 @@ interface Customize {
   showSeoBoxs: boolean;
   footerType: FooterType;
   showConsultServices: boolean;
+  showActivityProfile: boolean;
+  showGalleryProfile: boolean;
+  showTermsAndConditions: boolean;
+  bookMark: boolean;
+  showShareApp: boolean;
+  showSupplierRegister: boolean;
+  showRateAndReviews: boolean;
+  showSupport: boolean;
+  showContribute: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -41,6 +50,14 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showBrandLogoInHomePage: false,
     showPartnerLogoInPrimaryPlace: false,
     showConsultServices: true,
+    showActivityProfile: true,
+    showGalleryProfile: true,
+    showTermsAndConditions: true,
+    bookMark: true,
+    showShareApp: true,
+    showSupplierRegister: true,
+    showRateAndReviews: true,
+    showContribute: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
@@ -62,6 +79,15 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !query.isWebView && !isApplication,
       footerType: (query['footer:type'] as FooterType) ?? 'default',
       showConsultServices: (query['search:consult'] as Toggle) !== 'off',
+      showActivityProfile: (query['profile:activity'] as Toggle) !== 'off',
+      showGalleryProfile: (query['profile:gallery'] as Toggle) !== 'off',
+      showTermsAndConditions: (query['terms-and-conditions'] as Toggle) !== 'off',
+      bookMark: (query['bookmark'] as Toggle) !== 'off',
+      showShareApp: (query['share-app'] as Toggle) !== 'off',
+      showSupplierRegister: (query['supplier-register'] as Toggle) !== 'off',
+      showRateAndReviews: (query['rate-and-reviews'] as Toggle) !== 'off',
+      showSupport: (query['support'] as Toggle) !== 'off',
+      showContribute: (query['contribute'] as Toggle) !== 'off',
     };
 
     return set(state => ({

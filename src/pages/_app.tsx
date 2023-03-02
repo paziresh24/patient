@@ -7,13 +7,14 @@ import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps } from 'next/app';
 import getConfig from 'next/config';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
-import type { NextRouter } from 'next/router';
+import { NextRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import 'react-photo-view/dist/react-photo-view.css';
 import { Hydrate } from 'react-query';
 import '../styles/globals.css';
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -61,7 +62,7 @@ function MyApp(props: AppProps) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
-    <Provider>
+    <Provider pageProps={pageProps}>
       <GrowthBookProvider growthbook={growthbook}>
         <Hydrate state={pageProps.dehydratedState}>
           <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />

@@ -5,7 +5,7 @@ import Checkbox from '@/common/components/atom/checkbox';
 import TextField from '@/common/components/atom/textField';
 import cities from '@/common/constants/places/city.json';
 import provinces from '@/common/constants/places/province.json';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
 import { memo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -157,12 +157,12 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
           <div className="flex flex-col space-y-2">
             <TextField
               error={!!errors.national_code}
-              type="number"
+              inputMode="numeric"
               helperText={errors.national_code?.message}
               {...register('national_code', { required: !watch('is_foreigner') })}
               label={t('userForm.nationalCode')}
               disabled={watch('is_foreigner')}
-              classNameWrapper={clsx({
+              classNameWrapper={classNames({
                 'opacity-40': watch('is_foreigner'),
               })}
             />

@@ -1,6 +1,6 @@
 import Chips from '@/components/atom/chips';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
 
 export interface TagStatusProps {
@@ -16,7 +16,7 @@ export const TagStatus: React.FC<TagStatusProps> = props => {
   const { t } = useTranslation('patient/appointments');
 
   return (
-    <Chips className={clsx(className, 'absolute top-2')} data-testid="tag-status">
+    <Chips className={classNames(className, 'absolute top-2')} data-testid="tag-status">
       {t(`turnStatus.${[status as BookStatus]}`)}
     </Chips>
   );

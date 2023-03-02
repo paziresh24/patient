@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { memo, useEffect, useRef, useState } from 'react';
 import Text from '../text';
 
@@ -60,7 +60,7 @@ export const Timer: React.FC<TimerProps> = props => {
   }, []);
 
   return (
-    <Text fontWeight="bold" className={clsx('text-secondary', className)}>
+    <Text fontWeight="bold" className={classNames('text-secondary', className)}>
       {timer}
     </Text>
   );

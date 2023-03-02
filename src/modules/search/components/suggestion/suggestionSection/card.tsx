@@ -2,7 +2,7 @@
 import Text from '@/common/components/atom/text';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import style from './section.module.css';
 const { publicRuntimeConfig } = getConfig();
@@ -20,7 +20,7 @@ export const CardSection = (props: CardSectionProps) => {
       {items?.map((item, index) => (
         <div
           key={index}
-          className={clsx('flex items-center cursor-pointer py-1 px-3 rounded-lg space-s-3', style.wrapper)}
+          className={classNames('flex items-center cursor-pointer py-1 px-3 rounded-lg space-s-3', style.wrapper)}
           onClick={() => handleItemClick(item, index)}
         >
           <div>

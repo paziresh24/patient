@@ -95,7 +95,12 @@ export const useSearch = () => {
   } = useRouter();
 
   const baseInfo = useGetBaseInfo({ table: ['city', 'province'] });
-  const searchRequest = useSearchRequest();
+  const searchRequest = useSearchRequest({
+    route: (params as string[])?.join('/') ?? '',
+    query: {
+      ...query,
+    },
+  });
 
   const {
     search = { result: [], is_landing: false, pagination: { limit: 20, page: 1 }, total: 0, query_id: '' },

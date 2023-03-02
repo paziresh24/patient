@@ -1,4 +1,5 @@
 import Card from '@/modules/search/components/card';
+import { useRouter } from 'next/router';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
 type Recommends = {
@@ -7,7 +8,6 @@ type Recommends = {
   displayExpertise?: string;
   displayName: string;
   medicalCode?: string;
-  experience?: number;
   freeturn?: string;
   isBulk: true;
   ratesCount: number;
@@ -23,9 +23,10 @@ interface RecommendCardProps {
 
 export const RecommendCard = (props: RecommendCardProps) => {
   const { listOfDoctors } = props;
+  const router = useRouter();
   return (
     <>
-      <ScrollContainer className="flex w-full px-5 pb-5 select-none no-scroll space-s-3">
+      <ScrollContainer className="flex w-full pl-5 rounded-lg select-none no-scroll space-s-3">
         {listOfDoctors?.map(doctor => (
           <Card
             key={doctor.id}
@@ -36,7 +37,6 @@ export const RecommendCard = (props: RecommendCardProps) => {
               avatar: doctor.image,
               url: doctor.url,
               expertise: doctor.displayExpertise,
-              experience: doctor.experience,
               isVerify: !doctor.isBulk,
               rate: {
                 count: doctor.ratesCount,
@@ -50,7 +50,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
               text: item.title,
               description: item.description,
               action: () => {
-                window.location.assign(doctor.url);
+                router.push(doctor.url);
               },
             }))}
           />

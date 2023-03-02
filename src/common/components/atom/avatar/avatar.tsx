@@ -1,6 +1,6 @@
+import classNames from '@/common/utils/classNames';
 import { randomColor } from '@/common/utils/randomColor';
-import clsx from 'clsx';
-import { ImageProps } from 'next/image';
+import { ImageProps } from 'next/future/image';
 import Text from '../text';
 
 /* eslint-disable @next/next/no-img-element */
@@ -34,14 +34,14 @@ export const Avatar: React.FC<AvatarProps> = props => {
       height={height}
       alt={alt}
       style={{ minWidth: width, height }}
-      className={clsx('rounded-full bg-gray', className)}
+      className={classNames('rounded-full bg-gray', className)}
       src={src}
       {...rest}
     />
   ) : (
     <div
       style={{ width, height, ...(name?.trim() && { backgroundColor: randomColor(name ?? '') }) }}
-      className={clsx('rounded-full flex justify-center items-center bg-gray', className)}
+      className={classNames('rounded-full flex justify-center items-center bg-gray', className)}
     >
       {name?.trim() && (
         <Text className="text-white tracking-tighter" fontWeight="medium">

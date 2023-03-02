@@ -1,5 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
+import { getCookie } from 'cookies-next';
 import { useMutation } from 'react-query';
 
 interface Params {
@@ -13,6 +14,7 @@ export const removeBook = (params: Params) => {
     '/api/deleteBook',
     formData({
       ...params,
+      certificate: getCookie('certificate'),
     }),
   );
 };

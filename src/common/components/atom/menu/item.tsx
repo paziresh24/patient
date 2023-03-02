@@ -1,6 +1,6 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import Link, { LinkProps } from 'next/link';
-import { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Text from '../text';
 
 interface MenuItemProps extends Omit<LinkProps, 'href'> {
@@ -17,9 +17,15 @@ export const MenuItem = (props: MenuItemProps) => {
   const Component = link ? Link : ('div' as any);
 
   return (
-    <li className={clsx('font-medium', className)}>
-      <Component href={link} prefetch={false} {...rest} className="relative flex items-center justify-between py-3" onClick={rest.onClick}>
-        <div className="flex items-center space-s-2 whitespace-nowrap">
+    <li className={classNames('font-medium', className)}>
+      <Component
+        href={link}
+        prefetch={false}
+        {...rest}
+        className="relative flex items-center cursor-pointer justify-between py-3"
+        onClick={rest.onClick}
+      >
+        <div className="flex items-center space-s-2">
           {icon}
           <Text fontSize="sm">{name}</Text>
         </div>

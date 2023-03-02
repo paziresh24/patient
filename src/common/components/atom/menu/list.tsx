@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { HTMLAttributes, ReactNode } from 'react';
 
 interface MenuListProps extends HTMLAttributes<HTMLUListElement> {
@@ -7,7 +7,7 @@ interface MenuListProps extends HTMLAttributes<HTMLUListElement> {
 
 export const MenuList = (props: MenuListProps) => {
   const { children, className } = props;
-  return <ul className={clsx('list-none flex flex-col', className)}>{children}</ul>;
+  return <ul className={classNames('list-none flex flex-col', className)}>{children}</ul>;
 };
 
 export default MenuList;

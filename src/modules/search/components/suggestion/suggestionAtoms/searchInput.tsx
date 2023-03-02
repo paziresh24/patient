@@ -1,7 +1,7 @@
 import BackIcon from '@/common/components/icons/back';
 import CloseIcon from '@/common/components/icons/close';
 import SearchIcon from '@/common/components/icons/search';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { InputHTMLAttributes } from 'react';
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -23,7 +23,7 @@ export const SearchInput = (props: SearchInputProps) => {
       )}
 
       <input
-        className={clsx('h-full w-full bg-transparent outline-none text-sm md:text-base appearance-none', className)}
+        className={classNames('h-full w-full bg-transparent outline-none text-sm md:text-base appearance-none', className)}
         {...inputProps}
         autoComplete="off"
         data-hj-allow

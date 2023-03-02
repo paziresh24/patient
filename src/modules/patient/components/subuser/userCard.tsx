@@ -7,8 +7,9 @@ import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useModal from '@/common/hooks/useModal';
 import useTranslation from 'next-translate/useTranslation';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { toast } from 'react-hot-toast';
 import { PatinetProfileForm } from '../../views/form';
 
@@ -25,10 +26,11 @@ interface UserCardProps {
 export const UserCard = memo((props: UserCardProps) => {
   const { userId, name, family, cell, nationalCode, gender, refetchData } = props;
   const { t } = useTranslation();
-  const [isOpenRemoveModal, setIsOpenRemoveModal] = useState(false);
+  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+
   const removeSubuser = useRemoveSubuser();
   const editSubuser = useEditSubuser();
-  const [isOpenEditUserModal, setIsOpenEditUserModal] = useState(false);
+  const { handleOpen: handleOpenEditModal, handleClose: handleCloseEditModal, modalProps: editModalProps } = useModal();
 
   const handleRemove = async () => {
     const { data } = await removeSubuser.mutateAsync({
@@ -36,7 +38,7 @@ export const UserCard = memo((props: UserCardProps) => {
     });
 
     if (data.status === ClinicStatus.SUCCESS) {
-      setIsOpenRemoveModal(false);
+      handleCloseRemoveModal();
       refetchData && refetchData();
       return;
     }
@@ -45,7 +47,7 @@ export const UserCard = memo((props: UserCardProps) => {
 
   const handleOpenEditUserModal = () => {
     editSubuser.reset();
-    setIsOpenEditUserModal(true);
+    handleOpenEditModal();
   };
 
   const handleEditUser = async (data: any) => {
@@ -55,7 +57,7 @@ export const UserCard = memo((props: UserCardProps) => {
       id: userId,
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
-      setIsOpenEditUserModal(false);
+      handleCloseEditModal();
       refetchData && refetchData();
       return;
     }
@@ -82,22 +84,22 @@ export const UserCard = memo((props: UserCardProps) => {
           <Button onClick={handleOpenEditUserModal} size="sm" variant="secondary" icon={<EditIcon />}>
             {t('common:words.edit')}
           </Button>
-          <Button onClick={() => setIsOpenRemoveModal(true)} size="sm" variant="secondary" icon={<TrashIcon />}>
+          <Button onClick={() => handleOpenRemoveModal()} size="sm" variant="secondary" icon={<TrashIcon />}>
             {t('common:words.delete')}
           </Button>
         </div>
       </div>
-      <Modal title={t('patient/subuser:removeUserModalTitle')} isOpen={isOpenRemoveModal} onClose={setIsOpenRemoveModal}>
+      <Modal title={t('patient/subuser:removeUserModalTitle')} {...removeModalProps}>
         <div className="flex space-s-3">
           <Button block onClick={handleRemove} loading={removeSubuser.isLoading}>
             {t('common:words.delete')}
           </Button>
-          <Button block variant="secondary" onClick={() => setIsOpenRemoveModal(false)}>
+          <Button block variant="secondary" onClick={() => handleCloseRemoveModal()}>
             {t('common:words.cancel')}
           </Button>
         </div>
       </Modal>
-      <Modal title={t('patient/subuser:editUserModalTitle')} isOpen={isOpenEditUserModal} onClose={setIsOpenEditUserModal}>
+      <Modal title={t('patient/subuser:editUserModalTitle')} {...editModalProps}>
         <PatinetProfileForm
           fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
           defaultValues={{

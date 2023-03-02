@@ -19,6 +19,7 @@
     "visited": "ویزیت شده",
     "requested": "درحال بررسی",
     "not_visited": "ویزیت نشده",
-    "rejected": "رد شده"
+    "rejected": "رد شده",
+    "accepted": "تایید شده"
   }
 }

@@ -1,6 +1,7 @@
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
+import useModal from '@/common/hooks/useModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -18,14 +19,19 @@ interface PhoneNumberSectionProps {
 export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   const { phoneNumbers, setPhoneNumbers } = props;
   const [phoneDataForEdit, setPhoneDataForEdit] = useState<string | null>(null);
-  const [addPhoneModal, setAddPhoneModal] = useState<boolean>(false);
+  const {
+    handleOpen: handleOpenAddPhoneModalModal,
+    handleClose: handleCloseAddPhoneModalModal,
+    modalProps: addPhoneModalProps,
+  } = useModal();
+
   const userData = useUserInfoStore(state => state.info);
 
   const handleAddPhoneNumber = (phoneNumberValue: PhoneData) => {
     if (phoneNumbers.every(items => items.cell !== phoneNumberValue) && phoneNumberValue != userData?.username) {
       phoneDataForEdit && handlePhoneStatus(phoneNumbers.find(items => items.cell == phoneDataForEdit)!, 'dislike');
       setPhoneNumbers(prev => [...prev, { cell: phoneNumberValue, default: false, status: 'add' }]);
-      setAddPhoneModal(false);
+      handleCloseAddPhoneModalModal();
       return;
     }
     phoneNumberValue == userData?.username
@@ -34,7 +40,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   };
 
   const editPhoneNumber = (value: string) => {
-    setAddPhoneModal(true);
+    handleOpenAddPhoneModalModal();
     setPhoneDataForEdit(value);
   };
 
@@ -53,7 +59,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
       <div className="flex flex-col items-start space-y-3">
         {phoneNumbers.length > 0 && (
           <>
-            <div className="flex flex-col space-y-3 w-full">
+            <div className="flex flex-col w-full space-y-3">
               <Text fontSize="sm" fontWeight="medium">
                 شماره تماس مرکز درمانی
               </Text>
@@ -69,7 +75,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                     }}
                   />
                   {phoneNumber.default && (
-                    <div className="flex flex-col justify-center grid gap-2">
+                    <div className="flex grid flex-col justify-center gap-2">
                       <LikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'like');
@@ -79,7 +85,7 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
                       <DislikeButton
                         onClick={() => {
                           handlePhoneStatus(phoneNumber, 'dislike');
-                          (phoneNumber.status === 'like' || !phoneNumber.status) && setAddPhoneModal(true);
+                          (phoneNumber.status === 'like' || !phoneNumber.status) && handleOpenAddPhoneModalModal();
                         }}
                         fill={getStatus(phoneNumber) === 'dislike'}
                       />
@@ -93,21 +99,21 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
         {(phoneNumbers.some(item => !item?.default) || phoneNumbers.length >= 0) && (
           <AddButton
             text={phoneNumbers.length > 0 ? 'افزودن شماره تماس دیگر' : 'افزودن شماره تماس جدید'}
-            onClick={() => setAddPhoneModal(true)}
+            onClick={() => handleOpenAddPhoneModalModal()}
           />
         )}
       </div>
       <Modal
         title="شماره تماس پیشنهادی شما"
-        isOpen={addPhoneModal}
+        {...addPhoneModalProps}
         onClose={() => {
-          setAddPhoneModal(false);
+          addPhoneModalProps.onClose();
           setPhoneDataForEdit(null);
         }}
       >
         <PhoneCenter
           onSubmit={handleAddPhoneNumber}
-          onCancel={() => setAddPhoneModal(false)}
+          onCancel={() => handleCloseAddPhoneModalModal()}
           {...(phoneDataForEdit && { defaultPhone: phoneDataForEdit })}
         />
       </Modal>

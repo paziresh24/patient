@@ -30,14 +30,14 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
   }, [enabled]);
 
   const getFirstFreeTime = async (): Promise<FirstFreeTime> => {
-    const { data } = await getFreeTurn.mutateAsync({
+    const { data, meta } = (await getFreeTurn.mutateAsync({
       center_id: centerId,
       service_id: serviceId,
       user_center_id: userCenterId,
       type: isWebView ? 'app' : 'web',
-    });
+    })) as any;
 
-    onEvent(data);
+    onEvent({ ...data, meta });
     const { result, status } = data;
 
     if (status === ClinicStatus.SUCCESS) {

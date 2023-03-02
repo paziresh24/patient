@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
@@ -32,6 +33,7 @@ export const OtpCode = (props: OtpCodeProps) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const [password, setPassword] = useState('');
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
+  const university = useServerQuery(state => state.queries.university);
 
   const handleLogin = async (password: string) => {
     try {
@@ -47,6 +49,12 @@ export const OtpCode = (props: OtpCodeProps) => {
           path: '/',
           maxAge: dayToSecond(60),
         });
+
+        if (university)
+          setCookie('token', data.token, {
+            path: '/',
+            maxAge: dayToSecond(60),
+          });
 
         if (window?.Android) window.Android.login(data.certificate);
 

@@ -1,6 +1,6 @@
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 
 interface RowButtonProps {
   title: string;
@@ -16,7 +16,7 @@ export const RowButton = (props: RowButtonProps) => {
   const { title, value, className, titleFontWeight, titleFontSize, buttonAction, variant } = props;
 
   return (
-    <div className={clsx('flex items-center justify-between', className)}>
+    <div className={classNames('flex items-center justify-between', className)}>
       <Text fontWeight={titleFontWeight} fontSize={titleFontSize}>
         {title}
       </Text>

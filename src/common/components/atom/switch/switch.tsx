@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useState } from 'react';
 
 export type SwitchProps = InputHTMLAttributes<HTMLInputElement>;
@@ -25,12 +25,15 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
       ></input>
       <div
         onClick={() => setIsChecked(prev => !prev)}
-        className={clsx('w-[54px] h-[30px] flex items-center bg-slate-200 rounded-full p-[4px] duration-300 ease-in-out cursor-pointer', {
-          '!bg-primary': isChecked,
-        })}
+        className={classNames(
+          'w-[54px] h-[30px] flex items-center bg-slate-200 rounded-full p-[4px] duration-300 ease-in-out cursor-pointer',
+          {
+            '!bg-primary': isChecked,
+          },
+        )}
       >
         <div
-          className={clsx('bg-white w-[22px] h-[22px] rounded-full shadow-md duration-300 ease-in-out', {
+          className={classNames('bg-white w-[22px] h-[22px] rounded-full shadow-md duration-300 ease-in-out', {
             '-translate-x-6': isChecked,
           })}
         ></div>

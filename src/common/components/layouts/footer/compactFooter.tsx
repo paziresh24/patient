@@ -7,9 +7,9 @@ const CompactFooter = () => {
   const { t } = useTranslation('common');
 
   return (
-    <footer className="p-5 bg-white text-slate-700 border-t border-slate-100">
+    <footer className="p-5 bg-white border-t text-slate-700 border-slate-100">
       <Text as="p" align="center" fontSize="sm" fontWeight="bold">
-        {t('footer.copyRightText')}
+        {t('footer.copyRightTextByBrand')}
       </Text>
     </footer>
   );

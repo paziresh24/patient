@@ -4,10 +4,11 @@ import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import AddIcon from '@/common/components/icons/add';
+import useModal from '@/common/hooks/useModal';
 import { Symptoms } from '@/modules/booking/types/selectSymptoms';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import reject from 'lodash/reject';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'react-hot-toast';
 import style from './section.module.css';
 
@@ -37,7 +38,7 @@ export const SelecSymptoms = (props: SelecSymptomsProps) => {
     listTitle,
     className,
   } = props;
-  const [isOpenSelectSickness, setIsOpenSelectSickness] = useState(false);
+  const { handleOpen, modalProps } = useModal();
 
   const handleSelectSymptoms = (symptomsInfo: Symptoms) => {
     selectedSymptoms.some(symptoms => symptoms.id === symptomsInfo.id)
@@ -70,17 +71,11 @@ export const SelecSymptoms = (props: SelecSymptomsProps) => {
     <div className="flex flex-col space-y-3">
       <SelectedSymptomsChips />
       <div>
-        <Text fontSize="sm" fontWeight="medium" className={className} onClick={() => setIsOpenSelectSickness(true)}>
+        <Text fontSize="sm" fontWeight="medium" className={className} onClick={handleOpen}>
           <AddIcon />
           {title}
         </Text>
-        <Modal
-          fullScreen
-          title={modalTitle}
-          isOpen={isOpenSelectSickness}
-          onClose={setIsOpenSelectSickness}
-          bodyClassName="!pb-16 !px-0 !pt-0"
-        >
+        <Modal fullScreen title={modalTitle} {...modalProps} bodyClassName="!pb-16 !px-0 !pt-0">
           <div className="flex flex-col p-4 space-y-1">
             <SelectedSymptomsChips />
             <TextField value={searchText} onChange={e => setSearchText(e.target.value)} placeholder={placeholder} />
@@ -89,7 +84,7 @@ export const SelecSymptoms = (props: SelecSymptomsProps) => {
             {listTitle}
           </Text>
           {symptoms.map(data => (
-            <div key={data.id} onClick={() => handleSelectSymptoms(data)} className={clsx('cursor-pointer', style.wrapper)}>
+            <div key={data.id} onClick={() => handleSelectSymptoms(data)} className={classNames('cursor-pointer', style.wrapper)}>
               <Text
                 fontSize="sm"
                 fontWeight="medium"

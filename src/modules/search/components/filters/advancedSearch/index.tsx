@@ -1,6 +1,6 @@
 import Divider from '@/common/components/atom/divider';
 import { useSearch } from '@/modules/search/hooks/useSearch';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import RadioFilter from './sections/radio';
 import SwitchFilter from './sections/switch';
 
@@ -9,7 +9,7 @@ export const AdvancedSearch = ({ className }: { className?: string }) => {
 
   if (filters.length === 0) return null;
   return (
-    <div className={clsx('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card', className)}>
+    <div className={classNames('flex-col p-5 space-y-3 bg-white rounded-lg shadow-card', className)}>
       {filters
         .filter(item => ['radio', 'switch'].includes(item.type))
         .map((item, index, filtedArray) => (

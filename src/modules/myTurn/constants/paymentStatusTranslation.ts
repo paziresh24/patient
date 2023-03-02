@@ -1,6 +1,6 @@
 export const PAYMENT_STATUS_TRANSLATION = {
   unpaid: 'پرداخت نشده',
-  paying: 'در حال پرداخت',
+  paying: 'در انتظار پرداخت',
   paid: 'پرداخت شده',
   refunded: 'استرداد شده',
   refund_queue: 'در صف استرداد',

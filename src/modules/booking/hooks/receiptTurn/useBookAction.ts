@@ -18,7 +18,7 @@ export const useBookAction = () => {
   };
 
   const centerMap = ({ lat, lon }: { lat: string; lon: string }) => {
-    window.location.href = `https://maps.google.com/maps?daddr=${lat},${lon}&amp;ll=${isWebView ? '&openInBrowser=1' : ''}`;
+    window.open(`https://maps.google.com/maps?daddr=${lat},${lon}&amp;ll=${isWebView ? '&openInBrowser=1' : ''}`);
   };
 
   return { shareTurn, removeBookApi, centerMap };

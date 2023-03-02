@@ -1,7 +1,7 @@
 import Accordion from '@/common/components/atom/accordion/accordion';
 import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -29,7 +29,7 @@ export const Discount = (props: DiscountProps) => {
           onChange={e => setCode(e.target.value)}
           error={status === 'unSuccessful'}
           classNameWrapper="w-3/4"
-          className={clsx({
+          className={classNames({
             'border-teal-500 border-2 outline-teal-500': status === 'successful',
             'border-2': status === 'unSuccessful',
           })}

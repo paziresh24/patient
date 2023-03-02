@@ -2,7 +2,7 @@ import Text from '@/common/components/atom/text';
 import { categoryIcons } from '@/modules/search/constants/suggestion/categoryIcons';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 import style from './section.module.css';
 
 interface SearchSectionProps {
@@ -18,7 +18,7 @@ export const SearchSection = (props: SearchSectionProps) => {
       {items?.map((item, index) => (
         <div
           key={index}
-          className={clsx('bg-slate-100 cursor-pointer p-2 py-4 text-sm font-medium flex items-center space-s-2 pr-4', style.wrapper)}
+          className={classNames('bg-slate-100 cursor-pointer p-2 py-4 text-sm font-medium flex items-center space-s-2 pr-4', style.wrapper)}
           onClick={() => handleItemClick(item, index)}
         >
           {categoryIcons['search-icon']()}
