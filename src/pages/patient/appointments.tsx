@@ -15,12 +15,14 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import useWebView from '@/common/hooks/useWebView';
+import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
@@ -40,6 +42,17 @@ export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) =>
   const [type, setType] = useState<BookType>('book');
   const { handleOpenLoginModal } = useLoginModalContext();
   const university = useServerQuery(state => state.queries.university);
+  const isEnableFectureFlagging = useFeatureIsOn('delete-book');
+
+  useEffect(() => {
+    splunkInstance().sendEvent({
+      group: 'appointments-page',
+      type: 'page-view',
+      event: {
+        action: isEnableFectureFlagging ? 'footer' : 'header',
+      },
+    });
+  }, [isEnableFectureFlagging]);
 
   const getBooks = useGetBooks({
     page,
