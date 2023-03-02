@@ -9,18 +9,25 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import classNames from '@/common/utils/classNames';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
 const Home = () => {
   const { isMobile } = useResponsive();
+  const router = useRouter();
 
   const university = useServerQuery(state => state.queries.university);
 
   const customize = useCustomize(state => state.customize);
+
+  useEffect(() => {
+    // Prefetch the search page
+    router.prefetch('/s/[[...params]]');
+  }, []);
 
   return (
     <>
