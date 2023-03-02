@@ -63,7 +63,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         />
       </Head>
       <body
-        className={classNames('bg-slate-100', {
+        className={classNames('bg-slate-100 antialiased', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

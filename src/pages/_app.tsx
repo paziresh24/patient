@@ -2,6 +2,7 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
+import localFont from '@next/font/local';
 // @ts-ignore
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
@@ -15,6 +16,13 @@ import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import { Hydrate } from 'react-query';
 import '../styles/globals.css';
+
+const iransansFont = localFont({
+  src: '../fonts/iran-sans.woff',
+  variable: '--font-iran-sans',
+  preload: true,
+  display: 'swap',
+});
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -63,15 +71,20 @@ function MyApp(props: AppProps) {
   const getLayout = Component.getLayout ?? (page => page);
   return (
     <Provider pageProps={pageProps}>
+      <style jsx global>{`
+        :root {
+          --font-iran-sans: ${iransansFont.style.fontFamily};
+        }
+      `}</style>
+      <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
+      <Head>
+        <meta
+          name="viewport"
+          content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
       <GrowthBookProvider growthbook={growthbook}>
         <Hydrate state={pageProps.dehydratedState}>
-          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
-          <Head>
-            <meta
-              name="viewport"
-              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-            />
-          </Head>
           {getLayout(
             <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />,
             router,

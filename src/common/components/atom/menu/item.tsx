@@ -19,9 +19,11 @@ export const MenuItem = (props: MenuItemProps) => {
   return (
     <li className={classNames('font-medium', className)}>
       <Component
-        href={link}
-        prefetch={false}
         {...rest}
+        {...(link && {
+          href: link,
+          prefetch: false,
+        })}
         className="relative flex items-center cursor-pointer justify-between py-3"
         onClick={rest.onClick}
       >

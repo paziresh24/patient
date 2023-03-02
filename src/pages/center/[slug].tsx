@@ -19,11 +19,10 @@ import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
+const CenterProfile = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();

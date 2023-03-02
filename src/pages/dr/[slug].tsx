@@ -42,15 +42,10 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
 
 const { publicRuntimeConfig } = config();
 
-interface Props {
-  slug: string;
-}
-
-const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any) => {
+const DoctorProfile = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
   const addPageView = usePageView();
@@ -107,6 +102,11 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
       setProfileData(profileData);
     }
   }, [profileData, isBulk]);
+
+  useEffect(() => {
+    // Prefetch the booking page
+    router.prefetch('/booking/[slug]');
+  }, []);
 
   const doctorExpertise = getDisplayDoctorExpertise({
     aliasTitle: profileData?.expertises?.[0]?.alias_title,

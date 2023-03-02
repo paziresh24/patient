@@ -14,7 +14,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useCallback, useMemo } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
 const Booking = () => {
@@ -61,6 +61,13 @@ const Booking = () => {
       step: 'SELECT_CENTER',
       payload: queries as any,
     };
+  }, []);
+
+  useEffect(() => {
+    // Prefetch the factor page
+    router.prefetch('/factor/[centerId]/[bookId]');
+    // Prefetch the receipt page
+    router.prefetch('/receipt/[centerId]/[bookId]');
   }, []);
 
   const centerName = useMemo(() => {

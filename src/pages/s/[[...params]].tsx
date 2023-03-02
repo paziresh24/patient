@@ -35,6 +35,7 @@ const Search = () => {
   const {
     asPath,
     query: { params },
+    ...router
   } = useRouter();
   const isWebView = useWebView();
 
@@ -63,6 +64,11 @@ const Search = () => {
       ...(!isLanding && { centerTypeFilterPresence: 1 }),
     });
   }, [asPath]);
+
+  useEffect(() => {
+    // Prefetch the doctor profile page
+    router.prefetch('/dr/[slug]');
+  }, []);
 
   return (
     <>

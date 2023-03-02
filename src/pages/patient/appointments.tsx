@@ -31,7 +31,7 @@ import { GetServerSidePropsContext } from 'next/types';
 type BookType = 'book' | 'book_request';
 
 export const Appointments = ({ query: queryServer }: any) => {
-  const { query } = useRouter();
+  const { query, ...router } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { t } = useTranslation('patient/appointments');
@@ -68,6 +68,11 @@ export const Appointments = ({ query: queryServer }: any) => {
       getBooks.remove();
       handleChangeType('book');
     };
+  }, []);
+
+  useEffect(() => {
+    // Prefetch the receipt page
+    router.prefetch('/receipt/[centerId]/[bookId]');
   }, []);
 
   useEffect(() => {

@@ -73,6 +73,11 @@ const Receipt = () => {
     }
   }, [getReceiptDetails.status]);
 
+  useEffect(() => {
+    // Prefetch the doctor profile page
+    router.prefetch('/patient/appointments');
+  }, []);
+
   const turnStatus = {
     deletedTurn: bookDetailsData.is_deleted,
     expiredTurn: bookDetailsData.book_status === 'expired',
