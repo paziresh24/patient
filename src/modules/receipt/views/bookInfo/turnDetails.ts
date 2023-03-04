@@ -73,6 +73,14 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: true,
     },
     {
+      id: 3,
+      name: 'مدت زمان گفتگو',
+      value: `تا ${durationConversation} روز`,
+      shouldShow: centerType === CenterType.consult && durationConversation,
+      type: 'Text',
+      isBoldValue: true,
+    },
+    {
       id: 4,
       name: ` میانگین زمان انتظار در مرکز`,
       value: waitingTime,
