@@ -376,7 +376,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           title={center?.id === CENTERS.CONSULT ? 'انتخاب زمان گفتگو' : 'انتخاب زمان نوبت'}
           Component={SelectTimeWrapper}
           TopComponent={
-            profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) && (
+            profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
+            customize.showRateAndReviews && (
               <>
                 <Text fontSize="sm" fontWeight="medium" className="text-orange-700">
                   <InfoIcon className="inline ml-1" />

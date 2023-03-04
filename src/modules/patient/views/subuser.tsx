@@ -56,6 +56,7 @@ export const SubuserList = () => {
               family={item.family}
               cell={item.cell}
               nationalCode={item.national_code}
+              isForeigner={item.is_foreigner ?? false}
               gender={item.gender}
               refetchData={mutate}
             />
@@ -68,7 +69,7 @@ export const SubuserList = () => {
         <PatinetProfileForm
           loading={addSubUser.isLoading}
           onSubmit={handleAddSubuser}
-          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
+          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']}
           errorsField={{ ...addSubUser.data?.data?.details }}
         />
       </Modal>
