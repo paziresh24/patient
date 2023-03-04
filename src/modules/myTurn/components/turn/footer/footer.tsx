@@ -43,6 +43,7 @@ interface TurnFooterProps {
   serviceId: string;
   userCenterId: string;
   activePaymentStatus: boolean;
+  patientName: string;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -64,6 +65,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     serviceId,
     userCenterId,
     activePaymentStatus,
+    patientName,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -74,7 +76,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
-  const isEnableFectureFlagging = useFeatureIsOn('delete-book');
+  const isShowRemoveButton = useFeatureIsOn('delete-book');
+  const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
+
+  console.log(isShowMoveBookButton);
+
   const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
@@ -160,27 +166,40 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       bookId: id,
       from,
     });
+    toast.success('جابجایی نوبت با موفقیت انجام شد.');
+  };
+
+  const handleMoveButton = () => {
+    handleOpenMoveTurnModal();
+
+    splunkInstance().sendEvent({
+      group: 'move-book',
+      type: 'button',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        patient: {
+          phoneNumber: phoneNumber,
+          name: patientName,
+        },
+      },
+    });
   };
 
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       <div className="flex items-center space-s-3">
-        {isEnableFectureFlagging && shouldShowRemoveTurn && (
+        {isShowRemoveButton && shouldShowRemoveTurn && (
           <>
             <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
               لغو نوبت
             </Button>
           </>
         )}
-        {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
-          <Button
-            variant="secondary"
-            size="sm"
-            block={true}
-            icon={<RefreshIcon width={23} height={23} />}
-            onClick={() => handleOpenMoveTurnModal()}
-          >
+        {isShowMoveBookButton && status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
+          <Button variant="secondary" size="sm" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
         )}
@@ -216,6 +235,38 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           handleMove={({ timeId, timeStamp }) => handleMoveTurn({ timeId, from: timeStamp })}
           currentDate={bookTime}
           loading={moveBookApi.isLoading}
+          events={{
+            onFirstFreeTime() {
+              splunkInstance().sendEvent({
+                group: 'move-book',
+                type: 'frist-free-time',
+                event: {
+                  terminal_id: getCookie('terminal_id'),
+                  doctorName,
+                  expertise,
+                  patient: {
+                    phoneNumber: phoneNumber,
+                    name: patientName,
+                  },
+                },
+              });
+            },
+            onOtherFreeTime() {
+              splunkInstance().sendEvent({
+                group: 'move-book',
+                type: 'other-free-time',
+                event: {
+                  terminal_id: getCookie('terminal_id'),
+                  doctorName,
+                  expertise,
+                  patient: {
+                    phoneNumber: phoneNumber,
+                    name: patientName,
+                  },
+                },
+              });
+            },
+          }}
         />
       </Modal>
       <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>

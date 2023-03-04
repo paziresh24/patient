@@ -15,10 +15,11 @@ interface MoveTurnProps {
   currentDate: number;
   handleMove: ({ timeId, timeStamp }: { timeId: string; timeStamp: number }) => void;
   loading?: boolean;
+  events: any;
 }
 
 export const MoveTurn = (props: MoveTurnProps) => {
-  const { handleMove, currentDate, loading, ...turnInfo } = props;
+  const { handleMove, currentDate, loading, events, ...turnInfo } = props;
   const [freeTurnInfo, setFreeTurnInfo] = useState<{ timeId?: string; timeStamp?: number; timeText?: string }>({});
   const { handleOpen: handleOpenConfirmModal, handleClose: handleCloseConfirmModal, modalProps: confirmModalProps } = useModal();
 
@@ -32,6 +33,7 @@ export const MoveTurn = (props: MoveTurnProps) => {
           setFreeTurnInfo({ timeId, timeStamp, timeText });
           handleOpenConfirmModal();
         }}
+        events={events}
         onFirstFreeTimeError={errorText => toast.error(errorText)}
       />
       <Modal {...confirmModalProps} noHeader bodyClassName="space-y-3">
