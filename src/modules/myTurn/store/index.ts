@@ -5,6 +5,7 @@ interface BooksStore {
   addBooks: (books: any[]) => void;
   setBooks: (books: any[]) => void;
   removeBook: ({ bookId }: { bookId: string }) => void;
+  moveBook: ({ bookId, from }: { bookId: string; from: number }) => void;
 }
 
 export const useBookStore = create<BooksStore>(set => ({
@@ -20,6 +21,11 @@ export const useBookStore = create<BooksStore>(set => ({
   removeBook: ({ bookId }) => {
     set(state => ({
       books: state.books.map(book => (book.book_id === bookId ? { ...book, delete: 1 } : book)),
+    }));
+  },
+  moveBook: ({ bookId, from }) => {
+    set(state => ({
+      books: state.books.map(book => (book.book_id === bookId ? { ...book, from } : book)),
     }));
   },
 }));

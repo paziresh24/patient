@@ -415,7 +415,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 }),
             },
           }}
-          nextStep={(timeId: string) => {
+          nextStep={({ timeId }: { timeId: string }) => {
             sendGaEvent({ action: 'P24DrsPage', category: 'submit book time', label: 'submit book time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'select-earliest-time', label: 'select-earliest-time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'NextButtonToLoginorReg', label: 'NextButtonToLoginorReg' });

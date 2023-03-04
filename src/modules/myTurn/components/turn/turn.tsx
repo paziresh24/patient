@@ -69,6 +69,9 @@ export const Turn: React.FC<TurnProps> = props => {
         hasPaging={centerInfo.hasPaging}
         bookTime={turnDetails.bookTime}
         onlineVisitChannels={doctorInfo.onlineVisitChannels}
+        serviceId={centerInfo.serviceId}
+        userCenterId={centerInfo.userCenterId}
+        activePaymentStatus={centerInfo.activePaymentStatus}
       />
     </Card>
   );

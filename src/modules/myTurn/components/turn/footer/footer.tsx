@@ -1,4 +1,6 @@
+import { useMoveBook } from '@/common/apis/services/booking/moveBook';
 import ChatIcon from '@/common/components/icons/chat';
+import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
@@ -18,6 +20,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
 import { OnlineVisitChannels } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
@@ -37,6 +40,9 @@ interface TurnFooterProps {
   doctorName: string;
   expertise: string;
   onlineVisitChannels?: OnlineVisitChannels;
+  serviceId: string;
+  userCenterId: string;
+  activePaymentStatus: boolean;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -55,16 +61,21 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     expertise,
     doctorName,
     phoneNumber,
+    serviceId,
+    userCenterId,
+    activePaymentStatus,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
+  const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
+
   const router = useRouter();
-  const [queueModal, setQueueModal] = useState(false);
   const { removeBookApi } = useBookAction();
-  const { removeBook } = useBookStore();
+  const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
   const isEnableFectureFlagging = useFeatureIsOn('delete-book');
+  const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
 
@@ -105,7 +116,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const removeBookAction = () => {
-    removeBookApi.mutate(
+    return removeBookApi.mutateAsync(
       {
         center_id: centerId,
         reference_code: trackingCode,
@@ -138,16 +149,42 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     });
   };
 
+  const handleMoveTurn = async ({ timeId, from }: { timeId: string; from: number }) => {
+    await moveBookApi.mutateAsync({
+      center_id: centerId,
+      reference_code: trackingCode,
+      request_code: timeId,
+    });
+    handleCloseMoveTurnModal();
+    moveBook({
+      bookId: id,
+      from,
+    });
+  };
+
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {isEnableFectureFlagging && shouldShowRemoveTurn && (
-        <>
-          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
-            لغو نوبت
+      <div className="flex items-center space-s-3">
+        {isEnableFectureFlagging && shouldShowRemoveTurn && (
+          <>
+            <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+              لغو نوبت
+            </Button>
+          </>
+        )}
+        {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
+          <Button
+            variant="secondary"
+            size="sm"
+            block={true}
+            icon={<RefreshIcon width={23} height={23} />}
+            onClick={() => handleOpenMoveTurnModal()}
+          >
+            جابجایی نوبت
           </Button>
-        </>
-      )}
+        )}
+      </div>
 
       {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
       {(status === BookStatus.expired ||
@@ -169,6 +206,17 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
       <Modal {...queueModalProps} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
+      </Modal>
+
+      <Modal {...moveTurnModalProps} title="انتخاب تاريخ جابجایی نوبت" bodyClassName="space-y-3 pb-24 md:pb-5">
+        <MoveTurn
+          centerId={centerId}
+          serviceId={serviceId}
+          userCenterId={userCenterId}
+          handleMove={({ timeId, timeStamp }) => handleMoveTurn({ timeId, from: timeStamp })}
+          currentDate={bookTime}
+          loading={moveBookApi.isLoading}
+        />
       </Modal>
       <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
         <div className="flex space-s-2">
