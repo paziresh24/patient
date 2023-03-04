@@ -75,7 +75,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             centerType: turnData.is_online_visit ? CenterType.consult : CenterType.clinic,
           }).map(item => (
             <div key={item.id} className="px-5 py-3">
-              <BaseRow data={item} key={item.id} />
+              <BaseRow data={item as any} key={item.id} />
             </div>
           ))}
       </div>

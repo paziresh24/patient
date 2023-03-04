@@ -20,11 +20,12 @@ interface UserCardProps {
   nationalCode: string;
   userId: string;
   gender: string;
+  isForeigner: boolean;
   refetchData?: () => void;
 }
 
 export const UserCard = memo((props: UserCardProps) => {
-  const { userId, name, family, cell, nationalCode, gender, refetchData } = props;
+  const { userId, name, family, cell, nationalCode, gender, isForeigner, refetchData } = props;
   const { t } = useTranslation();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -101,13 +102,14 @@ export const UserCard = memo((props: UserCardProps) => {
       </Modal>
       <Modal title={t('patient/subuser:editUserModalTitle')} {...editModalProps}>
         <PatinetProfileForm
-          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL']}
+          fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']}
           defaultValues={{
             NAME: name,
             FAMILY: family,
             NATIONAL_CODE: nationalCode,
             GENDER: gender,
             CELL: cell,
+            IS_FOREIGNER: isForeigner,
           }}
           onSubmit={handleEditUser}
           loading={editSubuser.isLoading}
