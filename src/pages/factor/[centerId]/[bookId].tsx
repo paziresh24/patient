@@ -61,15 +61,17 @@ const Factor = () => {
               degree: bookDetailsData?.expertises?.[0]?.degree?.name,
               expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
             })}
-            isLoading={getBookDetails.isLoading || getBookDetails.isIdle}
+            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
           />
           <div>
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
               <Text fontSize="xs" className="opacity-70">
                 مرکز
               </Text>
-              {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />}
-              {getBookDetails.isSuccess && (
+              {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
+                <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
+              )}
+              {getBookDetails.isSuccess && bookDetailsData && (
                 <Text fontSize="sm" fontWeight="medium">
                   {bookDetailsData?.center_name}
                 </Text>
@@ -79,25 +81,27 @@ const Factor = () => {
               <Text fontSize="xs" className="opacity-70">
                 {centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}:
               </Text>
-              {(getBookDetails.isLoading || getBookDetails.isIdle) && <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />}
+              {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
+                <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />
+              )}
 
-              {getBookDetails.isSuccess && (
+              {getBookDetails.isSuccess && bookDetailsData && (
                 <Text fontSize="sm" fontWeight="medium">
                   {`${moment(bookDetailsData?.book_from * 1000)
-                    .locale('fa')
-                    .calendar(undefined, {
+                    ?.locale('fa')
+                    ?.calendar(undefined, {
                       sameDay: '[امروز]',
                       nextDay: '[فردا]',
                       nextWeek: 'dddd',
                       sameElse: 'dddd',
                     })}
               ${moment(bookDetailsData?.book_from * 1000)
-                .locale('fa')
-                .format('DD MMMM')}
+                ?.locale('fa')
+                ?.format('DD MMMM')}
                 ساعت
                  ${moment(bookDetailsData?.book_from * 1000)
-                   .locale('fa')
-                   .format('HH:mm')}
+                   ?.locale('fa')
+                   ?.format('HH:mm')}
             `}
                 </Text>
               )}
