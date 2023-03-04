@@ -6,7 +6,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
   return (
-    <Html lang="fa-IR" dir={dir} className="scroll-smooth">
+    <Html lang="fa-IR" dir={dir}>
       <Head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico"></link>
         <link rel="icon" type="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -63,7 +63,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         />
       </Head>
       <body
-        className={classNames('bg-slate-100', {
+        className={classNames('bg-slate-100 antialiased scroll-smooth', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

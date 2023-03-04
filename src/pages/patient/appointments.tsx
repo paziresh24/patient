@@ -27,12 +27,11 @@ import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { NextPageWithLayout } from '../_app';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) => {
-  const { query } = useRouter();
+export const Appointments = ({ query: queryServer }: any) => {
+  const { query, ...router } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { t } = useTranslation('patient/appointments');
@@ -69,6 +68,11 @@ export const Appointments: NextPageWithLayout = ({ query: queryServer }: any) =>
       getBooks.remove();
       handleChangeType('book');
     };
+  }, []);
+
+  useEffect(() => {
+    // Prefetch the receipt page
+    router.prefetch('/receipt/[centerId]/[bookId]');
   }, []);
 
   useEffect(() => {

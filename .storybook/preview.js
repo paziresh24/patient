@@ -1,4 +1,4 @@
-import * as NextImage from 'next/future/image';
+import * as NextImage from 'next/image';
 import Provider from '../src/common/components/layouts/provider';
 import '../src/styles/globals.css';
 import './rtl.css';

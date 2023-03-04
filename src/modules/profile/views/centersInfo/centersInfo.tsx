@@ -1,14 +1,15 @@
 import Button from '@/common/components/atom/button/button';
-import Opener from '@/common/components/atom/opener/opener';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
-import { openGoogleMap } from '@/common/utils/openGoogleMap';
 import classNames from '@/common/utils/classNames';
-import { isEmpty } from 'lodash';
+import { openGoogleMap } from '@/common/utils/openGoogleMap';
+import isEmpty from 'lodash/isEmpty';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 
 interface CentersInfoProps {
   centers: {
@@ -50,9 +51,7 @@ export const CentersInfo = (props: CentersInfoProps) => {
           {center.name && (
             <div className="flex justify-between">
               <Link href={center.slug} scroll>
-                <a>
-                  <Text fontWeight="bold">{center.name}</Text>
-                </a>
+                <Text fontWeight="bold">{center.name}</Text>
               </Link>
             </div>
           )}

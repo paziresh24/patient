@@ -11,9 +11,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
-import ConsultBanner from '@/modules/search/components/consultBanner';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
-import Sort from '@/modules/search/components/filters/sort';
 import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
@@ -26,16 +24,19 @@ import { addCommas } from '@persian-tools/persian-tools';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import getConfig from 'next/config';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
+const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
+const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
-const Search: NextPageWithLayout = () => {
+const Search = () => {
   const { isMobile } = useResponsive();
   const {
     asPath,
     query: { params },
+    ...router
   } = useRouter();
   const isWebView = useWebView();
 
@@ -64,6 +65,11 @@ const Search: NextPageWithLayout = () => {
       ...(!isLanding && { centerTypeFilterPresence: 1 }),
     });
   }, [asPath]);
+
+  useEffect(() => {
+    // Prefetch the doctor profile page
+    router.prefetch('/dr/[slug]');
+  }, []);
 
   return (
     <>

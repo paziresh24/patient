@@ -9,5 +9,3 @@ interface Window {
 }
 
 declare const window: Window;
-
-declare module 'https://framer.com/m/*';

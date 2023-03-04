@@ -11,7 +11,7 @@ import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
-import Image from 'next/future/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import Badge, { BadgeProps } from '../badge';
@@ -75,23 +75,21 @@ export const SearchCard = (props: SearchCardProps) => {
     <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
         {isSpa && (
-          <Link href={baseInfo.url}>
-            <a onClick={sendEventWhenClick}>
-              <div className="relative">
-                <Avatar
-                  src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
-                  alt={imageAlt}
-                  width={80}
-                  height={80}
-                  className={classNames('border-2 border-slate-200', {
-                    'border-primary': baseInfo?.isVerify,
-                  })}
-                  as={Image}
-                  {...avatarLazyLoading}
-                />
-                {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
-              </div>
-            </a>
+          <Link onClick={sendEventWhenClick} href={baseInfo.url}>
+            <div className="relative">
+              <Avatar
+                src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+                alt={imageAlt}
+                width={80}
+                height={80}
+                className={classNames('border-2 border-slate-200', {
+                  'border-primary': baseInfo?.isVerify,
+                })}
+                as={Image}
+                {...avatarLazyLoading}
+              />
+              {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
+            </div>
           </Link>
         )}
         {!isSpa && (
@@ -115,12 +113,10 @@ export const SearchCard = (props: SearchCardProps) => {
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
             {isSpa && (
-              <Link href={baseInfo.url}>
-                <a className="w-4/5" onClick={sendEventWhenClick}>
-                  <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
-                    {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
-                  </Text>
-                </a>
+              <Link className="w-4/5" onClick={sendEventWhenClick} href={baseInfo.url}>
+                <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
+                  {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+                </Text>
               </Link>
             )}
             {!isSpa && (

@@ -1,11 +1,11 @@
 import Chips from '@/common/components/atom/chips/chips';
 import Text from '@/common/components/atom/text/text';
 import EyeIcon from '@/common/components/icons/eye';
+import classNames from '@/common/utils/classNames';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import RateBadge from '@/components/atom/badge/badge';
 import LikeIcon from '@/components/icons/like';
-import classNames from '@/common/utils/classNames';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
 import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
@@ -55,7 +55,7 @@ export const Head = (props: HeadProps) => {
           ))}
         </ScrollContainer>
       )}
-      {satisfaction && (
+      {!!satisfaction && (
         <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
           <RateBadge
             text={`${satisfaction}%`}

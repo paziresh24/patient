@@ -40,11 +40,9 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
         {menuItem.map((item, index) => {
           return (
             <li key={index}>
-              <Link href={item.link ?? '#'}>
-                <a className="flex items-center px-3 py-3 text-sm cursor-pointer space-s-2">
-                  {item.icon && item.icon}
-                  <Text>{item.title}</Text>
-                </a>
+              <Link href={item.link ?? '#'} className="flex items-center px-3 py-3 text-sm cursor-pointer space-s-2">
+                {item.icon && item.icon}
+                <Text>{item.title}</Text>
               </Link>
             </li>
           );

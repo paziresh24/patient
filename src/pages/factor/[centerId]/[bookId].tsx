@@ -15,10 +15,9 @@ import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
-import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
 
-const Factor: NextPageWithLayout = () => {
+const Factor = () => {
   const {
     query: { bookId, centerId },
   } = useRouter();

@@ -11,15 +11,13 @@ interface BreadcrumbItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 export const BreadcrumbItem = ({ href, text, showChevron = true, chevronDir, ...rest }: BreadcrumbItemProps) => {
   return (
-    <Link href={href} shallow scroll>
-      <a {...rest}>
-        <div className="flex items-center px-1 space-s-2 text-slate-600">
-          <Text fontSize="xs" fontWeight="medium">
-            {text}
-          </Text>
-          {showChevron && <ChevronIcon dir={chevronDir} />}
-        </div>
-      </a>
+    <Link href={href} shallow scroll {...rest}>
+      <div className="flex items-center px-1 space-s-2 text-slate-600">
+        <Text fontSize="xs" fontWeight="medium">
+          {text}
+        </Text>
+        {showChevron && <ChevronIcon dir={chevronDir} />}
+      </div>
     </Link>
   );
 };

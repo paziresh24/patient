@@ -6,9 +6,8 @@ import { withCSR } from '@/common/hoc/withCsr';
 import Queue from '@/modules/myTurn/components/queue';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
-import { NextPageWithLayout } from '../_app';
 
-export const QueuePage: NextPageWithLayout = () => {
+export const QueuePage = () => {
   const { query } = useRouter();
   return (
     <>

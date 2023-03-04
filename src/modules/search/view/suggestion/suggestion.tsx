@@ -8,12 +8,12 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import { SearchBar } from '../../components/suggestion/searchBar';
 import suggestionEvents from '../../functions/suggestionEvents';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
 import { Section } from '../../types/suggestion';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
+const SearchBar = dynamic(() => import('../../components/suggestion/searchBar'));
 interface SuggestionProps {
   overlay?: boolean;
   defaultOpen?: boolean;
@@ -169,7 +169,7 @@ export const Suggestion = (props: SuggestionProps) => {
         />
       )}
       {isOpenSuggestion && overlay && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 bg-slate-900 bg-opacity-60" onClick={handleClose} />
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 bg-slate-900 bg-opacity-60" id="modal" onClick={handleClose} />
       )}
     </div>
   );

@@ -28,10 +28,9 @@ import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
-import { NextPageWithLayout } from '../../_app';
 const { publicRuntimeConfig } = getConfig();
 
-const Receipt: NextPageWithLayout = () => {
+const Receipt = () => {
   const {
     query: { bookId, centerId, pincode },
     ...router
@@ -73,6 +72,11 @@ const Receipt: NextPageWithLayout = () => {
       }
     }
   }, [getReceiptDetails.status]);
+
+  useEffect(() => {
+    // Prefetch the doctor profile page
+    router.prefetch('/patient/appointments');
+  }, []);
 
   const turnStatus = {
     deletedTurn: bookDetailsData.is_deleted,

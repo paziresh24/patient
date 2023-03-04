@@ -12,9 +12,8 @@ import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import ScrollContainer from 'react-indiana-drag-scroll';
-import { NextPageWithLayout } from './_app';
 
-const Home: NextPageWithLayout = () => {
+const Home = () => {
   const appHome = useGetAppHome();
   const city = useSearchStore(state => state.city);
 

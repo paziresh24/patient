@@ -1,10 +1,11 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import useResponsive from '@/common/hooks/useResponsive';
 import isEmpty from 'lodash/isEmpty';
-import AdvancedSearch from '../../components/filters/advancedSearch';
-import Categories from '../../components/filters/categories';
-import SelectedFilters from '../../components/filters/selectedFilters';
+import dynamic from 'next/dynamic';
 import { useSearch } from '../../hooks/useSearch';
+const AdvancedSearch = dynamic(() => import('../../components/filters/advancedSearch'));
+const Categories = dynamic(() => import('../../components/filters/categories'));
+const SelectedFilters = dynamic(() => import('../../components/filters/selectedFilters'));
 
 interface FilterProps {
   isLoading: boolean;

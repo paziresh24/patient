@@ -1,29 +1,29 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
 import { suggestion, useSearchSuggestion } from '@/common/apis/services/search/suggestion';
-import Text from '@/common/components/atom/text/text';
+import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import Biography from '@/modules/profile/views/biography/biography';
-import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
-import Head from '@/modules/profile/views/head/head';
-import ListOfDoctors from '@/modules/profile/views/listOfDoctors/listOfDoctors';
-import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
+import CentersInfo from '@/modules/profile/views/centersInfo';
+import Head from '@/modules/profile/views/head';
+import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
+import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import axios from 'axios';
 import config from 'next/config';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
+const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile: NextPageWithLayout = ({ query: { university } }: any) => {
+const CenterProfile = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();

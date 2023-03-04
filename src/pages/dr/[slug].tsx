@@ -3,7 +3,7 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
 import { usePageView } from '@/common/apis/services/profile/pageView';
-import Button from '@/common/components/atom/button/button';
+import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text/text';
 import AwardIcon from '@/common/components/icons/award';
 import ChatIcon from '@/common/components/icons/chat';
@@ -24,17 +24,15 @@ import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
-import Activity from '@/modules/profile/views/activity/activity';
-import Biography from '@/modules/profile/views/biography/biography';
-import CentersInfo from '@/modules/profile/views/centersInfo/centersInfo';
-import Gallery from '@/modules/profile/views/gallery/gallery';
+import Activity from '@/modules/profile/views/activity';
 import Head from '@/modules/profile/views/head/head';
-import RateReview from '@/modules/profile/views/rateReview/rateReview';
-import ProfileSeoBox from '@/modules/profile/views/seoBox/seoBox';
+import RateReview from '@/modules/profile/views/rateReview';
+import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -42,15 +40,13 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { dehydrate, QueryClient } from 'react-query';
-import { NextPageWithLayout } from '../_app';
+const CentersInfo = dynamic(() => import('@/modules/profile/views/centersInfo'));
+const Gallery = dynamic(() => import('@/modules/profile/views/gallery'));
+const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-interface Props {
-  slug: string;
-}
-
-const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any) => {
+const DoctorProfile = ({ query: { university } }: any) => {
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
   const addPageView = usePageView();
@@ -107,6 +103,11 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
       setProfileData(profileData);
     }
   }, [profileData, isBulk]);
+
+  useEffect(() => {
+    // Prefetch the booking page
+    router.prefetch('/booking/[slug]');
+  }, []);
 
   const doctorExpertise = getDisplayDoctorExpertise({
     aliasTitle: profileData?.expertises?.[0]?.alias_title,
@@ -381,12 +382,10 @@ const DoctorProfile: NextPageWithLayout<Props> = ({ query: { university } }: any
                 </Text>
                 {customize.showContribute && (
                   <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
-                    <a>
-                      <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
-                        <EditIcon width={17} height={17} />
-                        گزارش تلفن و آدرس صحیح
-                      </Button>
-                    </a>
+                    <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
+                      <EditIcon width={17} height={17} />
+                      گزارش تلفن و آدرس صحیح
+                    </Button>
                   </Link>
                 )}
               </div>

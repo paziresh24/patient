@@ -1,6 +1,6 @@
-import { randomColor } from '@/common/utils/randomColor';
 import classNames from '@/common/utils/classNames';
-import { ImageProps } from 'next/future/image';
+import { randomColor } from '@/common/utils/randomColor';
+import { ImageProps } from 'next/image';
 import Text from '../text';
 
 /* eslint-disable @next/next/no-img-element */

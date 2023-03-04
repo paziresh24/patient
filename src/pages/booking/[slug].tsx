@@ -14,11 +14,10 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useCallback, useMemo } from 'react';
-import { NextPageWithLayout } from '../_app';
+import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
-const Booking: NextPageWithLayout = () => {
+const Booking = () => {
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
 
@@ -62,6 +61,13 @@ const Booking: NextPageWithLayout = () => {
       step: 'SELECT_CENTER',
       payload: queries as any,
     };
+  }, []);
+
+  useEffect(() => {
+    // Prefetch the factor page
+    router.prefetch('/factor/[centerId]/[bookId]');
+    // Prefetch the receipt page
+    router.prefetch('/receipt/[centerId]/[bookId]');
   }, []);
 
   const centerName = useMemo(() => {

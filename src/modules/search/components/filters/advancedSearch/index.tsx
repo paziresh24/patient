@@ -1,8 +1,9 @@
 import Divider from '@/common/components/atom/divider';
-import { useSearch } from '@/modules/search/hooks/useSearch';
 import classNames from '@/common/utils/classNames';
-import RadioFilter from './sections/radio';
-import SwitchFilter from './sections/switch';
+import { useSearch } from '@/modules/search/hooks/useSearch';
+import dynamic from 'next/dynamic';
+const RadioFilter = dynamic(() => import('./sections/radio'));
+const SwitchFilter = dynamic(() => import('./sections/switch'));
 
 export const AdvancedSearch = ({ className }: { className?: string }) => {
   const { filters } = useSearch();

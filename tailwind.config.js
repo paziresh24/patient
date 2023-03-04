@@ -1,11 +1,17 @@
-/* eslint-disable no-undef */
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: [''],
+        'sans': ['var(--font-iran-sans)', ...fontFamily.sans],
+        'iran-sans': ['var(--font-iran-sans)', ...fontFamily.sans],
+      },
+      screens: {
+        pwa: { raw: '(display-mode: standalone)' },
       },
       colors: {
         primary: '#3861fb',
@@ -31,6 +37,31 @@ module.exports = {
       animation: {
         progress: 'progress 2s linear infinite',
       },
+      maxHeight: theme => ({
+        0: '0',
+        ...theme('spacing'),
+        full: '100%',
+        screen: '100vh',
+      }),
+      minHeight: theme => ({
+        0: '0',
+        ...theme('spacing'),
+        full: '100%',
+        screen: '100vh',
+      }),
+      minWidth: theme => ({
+        0: '0',
+        ...theme('spacing'),
+        full: '100%',
+        screen: '100vw',
+      }),
+      maxWidth: (theme, { breakpoints }) => ({
+        0: '0',
+        ...theme('spacing'),
+        ...breakpoints(theme('screens')),
+        full: '100%',
+        screen: '100vw',
+      }),
     },
   },
   plugins: [require('@tailwindcss/line-clamp'), require('tailwindcss-rtl')],

@@ -34,19 +34,17 @@ export const BookmarksList = () => {
       {isSuccess &&
         data?.data?.result?.map((item: DoctorParams) => (
           <div key={item.id} className="relative flex flex-col items-end justify-between px-2 pb-4 border-b border-slate-100 space-s-1">
-            <Link href={item.doctor_url ?? '#'}>
-              <a className="w-full">
-                <DoctorInfo
-                  firstName={item.name}
-                  lastName={item.family}
-                  avatar={publicRuntimeConfig.CLINIC_BASE_URL + item.image}
-                  expertise={getDisplayDoctorExpertise({
-                    aliasTitle: item.expertises?.[0]?.alias_title ?? '',
-                    degree: item.expertises?.[0]?.degree?.name ?? '',
-                    expertise: item.expertises?.[0]?.expertise?.name ?? '',
-                  })}
-                />
-              </a>
+            <Link href={item.doctor_url ?? '#'} className="w-full">
+              <DoctorInfo
+                firstName={item.name}
+                lastName={item.family}
+                avatar={publicRuntimeConfig.CLINIC_BASE_URL + item.image}
+                expertise={getDisplayDoctorExpertise({
+                  aliasTitle: item.expertises?.[0]?.alias_title ?? '',
+                  degree: item.expertises?.[0]?.degree?.name ?? '',
+                  expertise: item.expertises?.[0]?.expertise?.name ?? '',
+                })}
+              />
             </Link>
             <DropDown
               items={[

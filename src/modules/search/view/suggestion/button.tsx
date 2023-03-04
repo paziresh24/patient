@@ -1,6 +1,7 @@
 import SearchIcon from '@/common/components/icons/search';
+import dynamic from 'next/dynamic';
 import { useSearchStore } from '../../store/search';
-import Suggestion from './suggestion';
+const Suggestion = dynamic(() => import('./suggestion'));
 
 export const ButtonSuggestion = () => {
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);

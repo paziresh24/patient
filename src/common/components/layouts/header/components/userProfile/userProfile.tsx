@@ -109,29 +109,27 @@ export const UserProfile = () => {
               className="absolute max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
-                <a>
-                  <div className="flex items-center w-64 p-2 pb-3 space-s-3">
-                    <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
-                    <div className="flex flex-col space-y-2">
-                      {pending ? (
-                        <>
-                          <Skeleton h="1rem" w="8rem" rounded="full" />
-                          <Skeleton h="1rem" rounded="full" />
-                        </>
-                      ) : (
-                        <>
-                          <div className="flex items-center">
-                            <Text fontSize="sm" fontWeight="bold" className="line-clamp-1">
-                              {userInfo?.name ?? ''} {userInfo?.family ?? ''}
-                            </Text>
-                            <EditIcon className="w-5 h-5" />
-                          </div>
-                          <Text fontSize="xs">{userInfo.username}</Text>
-                        </>
-                      )}
-                    </div>
+                <div className="flex items-center w-64 p-2 pb-3 space-s-3">
+                  <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
+                  <div className="flex flex-col space-y-2">
+                    {pending ? (
+                      <>
+                        <Skeleton h="1rem" w="8rem" rounded="full" />
+                        <Skeleton h="1rem" rounded="full" />
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center">
+                          <Text fontSize="sm" fontWeight="bold" className="line-clamp-1">
+                            {userInfo?.name ?? ''} {userInfo?.family ?? ''}
+                          </Text>
+                          <EditIcon className="w-5 h-5" />
+                        </div>
+                        <Text fontSize="xs">{userInfo.username}</Text>
+                      </>
+                    )}
                   </div>
-                </a>
+                </div>
               </Link>
               <Divider />
               <div className="flex flex-col p-3 pb-0">

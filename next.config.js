@@ -2,9 +2,6 @@
 
 const nextTranslate = require('next-translate');
 const { withSentryConfig } = require('@sentry/nextjs');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
 const runtimeCaching = require('./runtimeCaching');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -16,6 +13,16 @@ const withPWA = require('next-pwa')({
   runtimeCaching,
 });
 
+const plugins = [nextTranslate, withPWA];
+
+if (process.env.ANALYZE === 'true') {
+  // only load dependency if env `ANALYZE` was set
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+  });
+  plugins.push(withBundleAnalyzer);
+}
+
 const nextConfig = {
   webpack: (config, { webpack }) => {
     config.plugins.push(
@@ -25,10 +32,19 @@ const nextConfig = {
       }),
     );
 
+    /**
+     * TODO: Find more possible barrels for this project.
+     *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
+     **/
+    config.module.rules.push({
+      test: [/lib\/.*.tsx?/i],
+      sideEffects: false,
+    });
+
     return config;
   },
   swcMinify: true,
-  reactStrictMode: false,
+  reactStrictMode: true,
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -42,10 +58,8 @@ const nextConfig = {
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
   },
   images: {
+    unoptimized: true,
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
-  },
-  sentry: {
-    hideSourceMaps: true,
   },
   async redirects() {
     return [
@@ -62,16 +76,13 @@ const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-module.exports = (phase, defaultConfig) => {
-  const plugins = [nextTranslate, withBundleAnalyzer, withPWA, config => withSentryConfig(config, sentryWebpackPluginOptions)];
+const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-  const config = plugins.reduce(
-    (acc, plugin) => {
-      const update = plugin(acc);
-      return typeof update === 'function' ? update(phase, defaultConfig) : update;
-    },
-    { ...nextConfig },
-  );
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  nextConfig.sentry = {
+    hideSourceMaps: true,
+  };
+}
 
-  return config;
-};
+// Sentry should be the last thing to export to catch everything right
+module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;

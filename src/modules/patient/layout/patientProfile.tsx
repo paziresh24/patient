@@ -23,51 +23,43 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
     <div className="max-w-screen-xl min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:pt-10 md:space-s-8">
       <div className="hidden col-span-3 px-5 bg-white rounded-lg shadow-sm md:sticky md:top-10 h-fit md:pb-2 md:block">
         <Link href="/patient/profile">
-          <a>
-            <div className="flex items-center p-5 px-0 space-s-5">
-              <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
-              <div className="flex flex-col space-y-2">
-                {loginPending ? (
-                  <>
-                    <Skeleton h="1rem" w="8rem" rounded="full" />
-                    <Skeleton h="1rem" rounded="full" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center">
-                      <Text fontWeight="bold" className="line-clamp-1">
-                        {userInfo.name ?? ''} {userInfo.family ?? ''}
-                      </Text>
-                      <EditIcon className="w-5 h-5" />
-                    </div>
-                    <Text fontSize="sm">{userInfo.username}</Text>
-                  </>
-                )}
-              </div>
+          <div className="flex items-center p-5 px-0 space-s-5">
+            <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
+            <div className="flex flex-col space-y-2">
+              {loginPending ? (
+                <>
+                  <Skeleton h="1rem" w="8rem" rounded="full" />
+                  <Skeleton h="1rem" rounded="full" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center">
+                    <Text fontWeight="bold" className="line-clamp-1">
+                      {userInfo.name ?? ''} {userInfo.family ?? ''}
+                    </Text>
+                    <EditIcon className="w-5 h-5" />
+                  </div>
+                  <Text fontSize="sm">{userInfo.username}</Text>
+                </>
+              )}
             </div>
-          </a>
+          </div>
         </Link>
         <Divider />
         <div className="flex overflow-auto space-s-5 md:space-s-0 md:flex-col">
-          <Link href="/patient/appointments">
-            <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
-              <CalenderIcon />
-              <Text fontWeight="medium">{t('menu.myTurns')}</Text>
-            </a>
+          <Link href="/patient/appointments" className="flex items-center py-4 space-s-3 whitespace-nowrap">
+            <CalenderIcon />
+            <Text fontWeight="medium">{t('menu.myTurns')}</Text>
           </Link>
           {customize.bookMark && (
-            <Link href="/patient/bookmarks">
-              <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
-                <BookmarkIcon />
-                <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
-              </a>
+            <Link href="/patient/bookmarks" className="flex items-center py-4 space-s-3 whitespace-nowrap">
+              <BookmarkIcon />
+              <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
             </Link>
           )}
-          <Link href="/patient/subuser">
-            <a className="flex items-center py-4 space-s-3 whitespace-nowrap">
-              <UsersIcon />
-              <Text fontWeight="medium">{t('menu.subuser')}</Text>
-            </a>
+          <Link href="/patient/subuser" className="flex items-center py-4 space-s-3 whitespace-nowrap">
+            <UsersIcon />
+            <Text fontWeight="medium">{t('menu.subuser')}</Text>
           </Link>
         </div>
       </div>
