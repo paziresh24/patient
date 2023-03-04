@@ -1,14 +1,15 @@
 import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
+import dynamic from 'next/dynamic';
 import { createElement, HTMLAttributes, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { ComponentSection, Item, Section } from '../../types/suggestion';
-import CategoryBar from './suggestionAtoms/categoryBar';
-import CardSection from './suggestionSection/card';
-import SearchSection from './suggestionSection/search';
-import SliderSection from './suggestionSection/slider';
-import TextSection from './suggestionSection/text';
-import TreeSection from './suggestionSection/tree';
+const CategoryBar = dynamic(() => import('./suggestionAtoms/categoryBar'));
+const CardSection = dynamic(() => import('./suggestionSection/card'));
+const SearchSection = dynamic(() => import('./suggestionSection/search'));
+const SliderSection = dynamic(() => import('./suggestionSection/slider'));
+const TextSection = dynamic(() => import('./suggestionSection/text'));
+const TreeSection = dynamic(() => import('./suggestionSection/tree'));
 
 interface SuggestionContentProps extends HTMLAttributes<HTMLDivElement> {
   items: Section[];

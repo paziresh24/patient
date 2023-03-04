@@ -1,7 +1,7 @@
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
 import { CENTERS } from '@/common/types/centers';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 

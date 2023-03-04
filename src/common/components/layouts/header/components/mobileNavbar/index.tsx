@@ -3,7 +3,6 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import ButtonSuggestion from '@/modules/search/view/suggestion/button';
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -12,7 +11,6 @@ import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from '../../
 import HeaderLogo from '../logo/logo';
 import UserProfile from '../userProfile';
 const Sidebar = dynamic(() => import('./sidebar'));
-const { publicRuntimeConfig } = getConfig();
 
 interface MobileNavbarProps {
   shouldShowBrand?: boolean;

@@ -9,7 +9,7 @@ import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import UserCard from '../../components/userCard';

@@ -1,5 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
 import CenterCard from '../../components/centerCard/centerCard';
 import { Center } from '../../types/selectCenter';
 

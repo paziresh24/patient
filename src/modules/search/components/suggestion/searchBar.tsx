@@ -52,3 +52,5 @@ export const SearchBar = (props: SearchBarProps) => {
     </div>
   );
 };
+
+export default SearchBar;

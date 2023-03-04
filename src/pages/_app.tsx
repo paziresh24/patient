@@ -3,6 +3,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import localFont from '@next/font/local';
+import { Hydrate } from 'react-query';
 // @ts-ignore
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
@@ -14,11 +15,10 @@ import { NextRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
 import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
-import { Hydrate } from 'react-query';
 import '../styles/globals.css';
 
 const iransansFont = localFont({
-  src: '../fonts/iran-sans.woff',
+  src: '../fonts/IRANSansXV.woff2',
   variable: '--font-iran-sans',
   preload: true,
   display: 'swap',

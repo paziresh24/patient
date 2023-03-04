@@ -1,7 +1,9 @@
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { splunkInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
-import { compact, some, uniq } from 'lodash';
+import compact from 'lodash/compact';
+import some from 'lodash/some';
+import uniq from 'lodash/uniq';
 
 export const pageViewEvent = ({ doctor, isWebView, isBulk }: { doctor: any; isWebView: boolean; isBulk: boolean }) => {
   if (doctor.centers.every((center: any) => !center.is_active)) {

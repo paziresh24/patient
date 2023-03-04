@@ -3,22 +3,20 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChevronIcon from '@/components/icons/chevron';
-import ButtonSuggestion from '@/modules/search/view/suggestion/button';
 import useTranslation from 'next-translate/useTranslation';
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import HeaderLogo from './components/logo/logo';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
+const ButtonSuggestion = dynamic(() => import('@/modules/search/view/suggestion/button'));
 const Transition = dynamic(() => import('../../atom/transition'));
 const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
 const MegaMenuContent = dynamic(() => import('./components/megaMenu/megaMenuContent'));
 const SubMenu = dynamic(() => import('./components/subMenu'));
 const UserProfile = dynamic(() => import('./components/userProfile'));
 const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
-const { publicRuntimeConfig } = getConfig();
 
 enum MegaMenuItem {
   CONSULT = 'consult',

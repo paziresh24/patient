@@ -6,12 +6,17 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import Card from '../../components/card';
-import CategoryCard from '../../components/categoryCard';
-import NotFound from '../../components/notFound';
 import { Result as ResultType, useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
+const CategoryCard = dynamic(() => import('../../components/categoryCard'), {
+  loading: () => <Loading line />,
+});
+const Card = dynamic(() => import('../../components/card'), {
+  loading: () => <Loading />,
+});
+const NotFound = dynamic(() => import('../../components/notFound'));
 
 export const Result = () => {
   const {
@@ -113,7 +118,7 @@ export const Result = () => {
   );
 };
 
-const Loading = ({ line }: { line: boolean }) => {
+const Loading = ({ line = false }: { line?: boolean }) => {
   return (
     <>
       <Skeleton w="100%" h={line ? '3.6rem' : '15rem'} rounded="lg" />

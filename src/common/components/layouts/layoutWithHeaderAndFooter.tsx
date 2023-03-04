@@ -1,11 +1,12 @@
 import useCustomize from '@/common/hooks/useCustomize';
 import useWebView from '@/common/hooks/useWebView';
 import classNames from '@/common/utils/classNames';
+import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
-import BottomNavigation from './bottomNavigation';
 import Footer from './footer';
 import CompactFooter from './footer/compactFooter';
 import Header from './header';
+const BottomNavigation = dynamic(() => import('./bottomNavigation'));
 
 export const LayoutWithHeaderAndFooter = ({
   children,

@@ -1,14 +1,15 @@
 import Button from '@/common/components/atom/button/button';
-import Opener from '@/common/components/atom/opener/opener';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
 import classNames from '@/common/utils/classNames';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 
 interface CentersInfoProps {
   centers: {

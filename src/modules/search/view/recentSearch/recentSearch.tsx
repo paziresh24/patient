@@ -16,7 +16,6 @@ export const RecentSearch = () => {
     setIsOpenSuggestion(true);
   };
 
-  if (!recent.length) return <div className="h-[68px] md:h-6"></div>;
   return (
     <div className="flex flex-col space-y-5 md:space-y-0 md:space-s-2 md:flex-row w-full lg:w-[50rem] md:overflow-auto items-center">
       <Text fontWeight="semiBold" className="whitespace-nowrap">
