@@ -56,7 +56,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         {...discount}
         centerId={centerId}
         bookId={bookId}
-        loading={isLoading}
+        loading={isLoading || !invoice.price}
         onSubmitDiscount={handleDiscountSubmit}
         onPayment={handlePaymentAction}
         isShowDiscountInput={centerId === CENTERS.CONSULT}

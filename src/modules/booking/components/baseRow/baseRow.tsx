@@ -4,14 +4,14 @@ import RowButton from '@/modules/booking/components/rowButton/rowButton';
 import RowText from '@/modules/booking/components/rowText/rowText';
 import { ReactNode } from 'react';
 
-type Data = {
-  id: number;
-  name: string;
+export type Data = {
+  id?: number;
+  name?: string;
   icon?: ReactNode;
   value?: string | { name: string; value?: string; id: number }[] | any;
-  type: string;
+  type?: string;
   buttonAction?: () => void;
-  shouldShow: boolean;
+  shouldShow?: boolean;
   isBoldValue?: boolean;
   copyable?: boolean;
 };
@@ -27,7 +27,7 @@ export const BaseRow = (props: BaseRowProps) => {
       <div>
         {data.type === 'Text' && (
           <RowText
-            title={data.name}
+            title={data.name ?? ''}
             value={data.value}
             titleFontSize="sm"
             titleFontWeight="medium"
@@ -38,7 +38,7 @@ export const BaseRow = (props: BaseRowProps) => {
         )}
         {data.type === 'Button' && (
           <RowButton
-            title={data.name}
+            title={data.name ?? ''}
             value={data.value}
             buttonAction={data.buttonAction}
             titleFontSize="sm"
@@ -60,14 +60,14 @@ export const BaseRow = (props: BaseRowProps) => {
             </div>
           ))}
         {data.type === 'Accordion' && (
-          <Accordion className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2" title={data.name}>
+          <Accordion className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2" title={data.name ?? ''}>
             {
               <div className="flex flex-col gap-4">
                 {data.value?.map((item: Omit<Data, 'shouldShow'>) => (
                   <div key={item.id}>
                     {item.type === 'Text' && (
                       <RowText
-                        title={item.name}
+                        title={item.name ?? ''}
                         value={item.value}
                         titleFontSize="sm"
                         titleFontWeight="medium"
@@ -77,7 +77,7 @@ export const BaseRow = (props: BaseRowProps) => {
                     )}
                     {item.type === 'Button' && (
                       <RowButton
-                        title={item.name}
+                        title={item.name ?? ''}
                         value={item.value}
                         buttonAction={item.buttonAction}
                         titleFontSize="sm"
@@ -85,7 +85,7 @@ export const BaseRow = (props: BaseRowProps) => {
                         variant="secondary"
                       />
                     )}
-                    {item.type === 'Label' && <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.name }} />}
+                    {item.type === 'Label' && <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.name ?? '' }} />}
                   </div>
                 ))}
               </div>

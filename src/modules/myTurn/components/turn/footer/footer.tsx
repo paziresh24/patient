@@ -13,6 +13,7 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
@@ -44,6 +45,7 @@ interface TurnFooterProps {
   userCenterId: string;
   activePaymentStatus: boolean;
   patientName: string;
+  paymentStatus: PaymentStatus;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -66,6 +68,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     userCenterId,
     activePaymentStatus,
     patientName,
+    paymentStatus,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -81,7 +84,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const moveBookApi = useMoveBook();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
+  const shouldShowRemoveTurn =
+    status === BookStatus.notVisited && centerType !== CenterType.consult && paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
     window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
@@ -185,6 +189,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     });
   };
 
+  const redirectToFactor = () => {
+    router.push(`/factor/${centerId}/${id}`);
+  };
+
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
@@ -203,7 +211,16 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         )}
       </div>
 
-      {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
+      {paymentStatus === PaymentStatus.paying && (
+        <Button variant="primary" size="sm" block={true} onClick={redirectToFactor}>
+          نهایی کردن نوبت
+        </Button>
+      )}
+
+      {centerType === CenterType.consult && paymentStatus !== PaymentStatus.paying && status !== BookStatus.deleted && (
+        <CunsultPrimaryButton />
+      )}
+
       {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
