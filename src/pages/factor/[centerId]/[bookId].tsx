@@ -66,20 +66,20 @@ const Factor = () => {
           <div>
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
               <Text fontSize="xs" className="opacity-70">
-                مرکز
+                {centerId === CENTERS.CONSULT ? 'خدمت' : 'مرکز'}
               </Text>
               {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
                 <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
               )}
               {getBookDetails.isSuccess && bookDetailsData && (
                 <Text fontSize="sm" fontWeight="medium">
-                  {bookDetailsData?.center_name}
+                  {centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : bookDetailsData?.center_name}
                 </Text>
               )}
             </div>
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
               <Text fontSize="xs" className="opacity-70">
-                {centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}:
+                {centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}
               </Text>
               {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
                 <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />

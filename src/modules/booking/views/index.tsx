@@ -41,6 +41,7 @@ import { reformattedDoctorInfoForEvent } from '../functions/reformattedDoctorInf
 // Constants
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { CENTERS } from '@/common/types/centers';
+import messengers from '@/modules/profile/constants/messengers.json';
 
 // Global Store
 import { UserInfo } from '@/modules/login/store/userInfo';
@@ -427,7 +428,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
-          {center?.user_center_desk && (
+          {center?.user_center_desk && center?.id !== CENTERS.CONSULT && (
             <div className="p-3 mb-5 rounded-lg bg-slate-100">
               <Text fontSize="sm">{center?.user_center_desk}</Text>
             </div>
@@ -447,6 +448,16 @@ const BookingSteps = (props: BookingStepsProps) => {
             searchText={symptomSearchText}
             className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
           />
+          {center?.id === CENTERS.CONSULT && (
+            <div className="p-2 rounded-md bg-slate-100 mb-3">
+              <Text
+                fontSize="sm"
+                dangerouslySetInnerHTML={{
+                  __html: messengers[profile?.online_visit_channels?.[0]?.type === 'igap' ? 'igap' : 'phone']?.description,
+                }}
+              />
+            </div>
+          )}
           <Wrapper
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
@@ -551,7 +562,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         {...recommendModalProps}
         onClose={() => {
           recommendModalProps.onClose();
-          router.push(`/dr/${slug}`);
+          router.replace(`/dr/${slug}`);
         }}
         bodyClassName="bg-slate-100"
         className="bg-slate-100"

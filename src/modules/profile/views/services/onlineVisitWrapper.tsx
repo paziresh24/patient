@@ -42,7 +42,7 @@ interface OnlineVisitWrapperProps {
 }
 
 export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
-  const { channelType, doctorId, price, title, userCenterId, id, duration, city, expertise } = props;
+  const { channelType, doctorId, price, title, userCenterId, slug, id, duration, city, expertise } = props;
   const { handleOpen: handleOpenBookingModal, handleClose: handleCloseBoolingModal, modalProps: bookingModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
 
@@ -121,6 +121,10 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     );
   };
 
+  const redirectBookingPage = () => {
+    router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
+  };
+
   return (
     <>
       <OnlineVisit
@@ -130,7 +134,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         title={removeHtmlTagInString((title ?? 'ویزیت آنلاین') + ` (${messengers[channelType]?.name})`)}
         price={price}
         loading={freeTurn.isLoading}
-        onBook={() => checkLogin(handleOpenBooking)}
+        onBook={redirectBookingPage}
       />
       <Modal
         title="انتخاب کاربر برای گفتگو با پزشک"
