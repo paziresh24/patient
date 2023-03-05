@@ -10,9 +10,19 @@ import useOtherTimes from '../../hooks/selectTime/useOtherTimes';
 import { BaseInfo } from '../../types/baseInfo';
 
 interface SelectTimeProps extends BaseInfo {
-  onSelect: ({ timeId, forceClick }: { timeId: string; forceClick: boolean }) => void;
-  loading: boolean;
-  onFirstFreeTimeError: (errorText: string) => void;
+  onSelect: ({
+    timeId,
+    timeStamp,
+    timeText,
+    forceClick,
+  }: {
+    timeId: string;
+    timeStamp: number;
+    timeText: string;
+    forceClick: boolean;
+  }) => void;
+  loading?: boolean;
+  onFirstFreeTimeError?: (errorText: string) => void;
   events?: Events;
   showOnlyFirstFreeTime?: boolean;
 }
@@ -45,7 +55,11 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
 
   useEffect(() => {
     if (firstFreeTime.isSuccess) {
-      handleSelectTime(firstFreeTime.timeId!);
+      handleSelectTime({
+        timeId: firstFreeTime.timeId!,
+        timeStamp: firstFreeTime.timeStamp!,
+        timeText: firstFreeTime.timeText!,
+      });
     }
   }, [firstFreeTime.isSuccess]);
 
@@ -54,7 +68,14 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       if (timeMode === TimeMode.FIRST_FREE_TURN) return null;
       setTimeMode(TimeMode.FIRST_FREE_TURN);
       const data = await firstFreeTime.getFirstFreeTime();
-      handleSelectTime(data.timeId!, 'forceClick');
+      handleSelectTime(
+        {
+          timeId: firstFreeTime.timeId!,
+          timeStamp: firstFreeTime.timeStamp!,
+          timeText: firstFreeTime.timeText!,
+        },
+        'forceClick',
+      );
     },
     OTHER_FREE_TURN: () => {
       if (timeMode === TimeMode.FIRST_FREE_TURN) {
@@ -64,13 +85,28 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         });
         getDays();
         setTimeMode(TimeMode.OTHER_FREE_TURN);
-        handleSelectTime('');
+        handleSelectTime({
+          timeId: '',
+          timeStamp: 0,
+          timeText: '',
+        });
       }
     },
   };
 
-  const handleSelectTime = async (timeId: string, forceClick?: string) => {
-    onSelect({ timeId, forceClick: !!forceClick });
+  const handleSelectTime = async (
+    {
+      timeId,
+      timeStamp,
+      timeText,
+    }: {
+      timeId: string;
+      timeStamp: number;
+      timeText: string;
+    },
+    forceClick?: string,
+  ) => {
+    onSelect({ timeId, timeStamp, timeText, forceClick: !!forceClick });
   };
 
   return (
@@ -99,7 +135,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
               from,
               to,
             });
-            handleSelectTime(data.request_code, 'forceClick');
+            handleSelectTime({ timeId: data.request_code, timeStamp: from, timeText: '' }, 'forceClick');
           }}
         />
       )}

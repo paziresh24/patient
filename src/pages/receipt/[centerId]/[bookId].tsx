@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import ErrorIcon from '@/common/components/icons/error';
 import SuccessIcon from '@/common/components/icons/success';
+import TrashIcon from '@/common/components/icons/trash';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
@@ -197,7 +198,7 @@ const Receipt = () => {
                     <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
                       نوبت های من
                     </Button>
-                    <Button block variant="secondary" onClick={handleRemoveBookClick}>
+                    <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                       لغو نوبت
                     </Button>
                   </div>

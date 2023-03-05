@@ -157,6 +157,8 @@ export const Appointments = ({ query: queryServer }: any) => {
                 centerType: turn.center?.center_type,
                 hasPaging: turn.center?.settings?.booking_paging_from_clinic,
                 activePaymentStatus: turn.center?.active_online_payment_status === '1',
+                userCenterId: turn.center?.user_center_id,
+                serviceId: turn.service_id,
               }}
               doctorInfo={{
                 avatar: turn.doctor_info?.image,

@@ -9,8 +9,8 @@ interface UseFirstFreeTime {
   serviceId: string;
   userCenterId: string;
   enabled?: boolean;
-  onError: (errorText: string) => void;
-  onEvent: (data: string) => void;
+  onError?: (errorText: string) => void;
+  onEvent?: (data: string) => void;
 }
 
 type FirstFreeTime = {
@@ -37,7 +37,7 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
       type: isWebView ? 'app' : 'web',
     })) as any;
 
-    onEvent({ ...data, meta });
+    onEvent && onEvent({ ...data, meta });
     const { result, status } = data;
 
     if (status === ClinicStatus.SUCCESS) {
@@ -46,13 +46,14 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
       setData(dataFormatted);
       return dataFormatted;
     }
-    onError(data.message);
+    onError && onError(data.message);
     setData({});
     return {};
   };
 
   return {
     timeText: data?.full_date,
+    timeStamp: data?.from,
     timeId: data?.timeId,
     loading: getFreeTurn.isLoading || getFreeTurn.isIdle,
     isSuccess: getFreeTurn.isSuccess,
