@@ -66,6 +66,7 @@ export const Turn: React.FC<TurnProps> = props => {
         pdfLink={prescription?.pdf}
         slug={doctorInfo.slug}
         status={status}
+        paymentStatus={paymentStatus}
         hasPaging={centerInfo.hasPaging}
         bookTime={turnDetails.bookTime}
         onlineVisitChannels={doctorInfo.onlineVisitChannels}
