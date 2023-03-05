@@ -79,8 +79,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isShowRemoveButton = useFeatureIsOn('delete-book');
   const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
 
-  console.log(isShowMoveBookButton);
-
   const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn = status === BookStatus.notVisited && centerType !== CenterType.consult;
@@ -206,14 +204,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       </div>
 
       {centerType === CenterType.consult && status !== BookStatus.deleted && <CunsultPrimaryButton />}
-      {(status === BookStatus.expired ||
-        status === BookStatus.visited ||
-        status === BookStatus.deleted ||
-        status === BookStatus.rejected) && (
+      {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
           <Button variant="secondary" size="sm" block={true} onClick={reBook}>
-            {t('turnAction.rebook')}{' '}
+            {t('turnAction.rebook')}
           </Button>
           {pdfLink && (
             <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>
