@@ -79,7 +79,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
-  const isShowRemoveButton = useFeatureIsOn('delete-book');
   const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
 
   const moveBookApi = useMoveBook();
