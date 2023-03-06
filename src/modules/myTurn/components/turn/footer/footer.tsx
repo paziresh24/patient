@@ -197,12 +197,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       <div className="flex items-center space-s-3">
-        {isShowRemoveButton && shouldShowRemoveTurn && (
-          <>
-            <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
-              لغو نوبت
-            </Button>
-          </>
+        {shouldShowRemoveTurn && (
+          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+            لغو نوبت
+          </Button>
         )}
         {isShowMoveBookButton && status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
           <Button variant="secondary" size="sm" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
