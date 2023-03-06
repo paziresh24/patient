@@ -84,7 +84,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn =
-    status === BookStatus.notVisited && centerType !== CenterType.consult && paymentStatus !== PaymentStatus.paying;
+    status === BookStatus.notVisited &&  paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
     window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
