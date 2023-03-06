@@ -37,9 +37,6 @@ export const Turn: React.FC<TurnProps> = props => {
         centerId={centerInfo.centerId}
         trackingCode={turnDetails.trackingCode}
         nationalCode={patientInfo.nationalCode}
-        doctorName={`${doctorInfo.firstName} ${doctorInfo.lastName}`}
-        expertise={doctorInfo.expertise ?? 'سایر'}
-        phoneNumber={patientInfo.cell}
         status={status}
       />
 
