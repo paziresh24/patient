@@ -19,8 +19,8 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import MassengerButton from '@/modules/myTurn/components/massengerButton/massengerButton';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { VisitChannels } from '@/modules/receipt/constants/onlineVisitChannels';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import md5 from 'md5';
 import getConfig from 'next/config';
@@ -216,19 +216,7 @@ const Receipt = () => {
               نوبت های من
             </Button>
           )}
-          {centerType === 'consult' &&
-            bookDetailsData.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap &&
-            !turnStatus.expiredTurn && (
-              <div className="flex flex-col space-y-3">
-                <Button
-                  block
-                  variant="secondary"
-                  onClick={() => (window.location = bookDetailsData.doctor?.online_visit_channels[0]?.channel_link)}
-                >
-                  شروع گفتگو با پزشک در آی گپ
-                </Button>
-              </div>
-            )}
+          {centerType === 'consult' && <MassengerButton channels={bookDetailsData.doctor?.online_visit_channels} />}
         </div>
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
