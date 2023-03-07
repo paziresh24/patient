@@ -7,6 +7,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useServerQuery from '@/common/hooks/useServerQuery';
+import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
@@ -114,12 +115,12 @@ const Booking = () => {
           {router.query.centerId && (
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
               <Text fontSize="xs" className="opacity-70">
-                مرکز
+                {router.query.centerId === CENTERS.CONSULT ? 'خدمت' : 'مرکز'}
               </Text>
               {(isLoading || isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
-                  {centerName}
+                  {router.query.centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : centerName}
                 </Text>
               )}
             </div>
