@@ -122,6 +122,14 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       type: 'Text',
       isBoldValue: false,
     },
+    // {
+    //   id: 13,
+    //   name: 'شماره پزشک',
+    //   value: doctorPhone,
+    //   shouldShow: centerType === CenterType.consult,
+    //   type: 'Text',
+    //   isBoldValue: false,
+    // },
     {
       id: 14,
       name: 'لینک قبض نوبت',

@@ -1,5 +1,4 @@
 import { useMoveBook } from '@/common/apis/services/booking/moveBook';
-import ChatIcon from '@/common/components/icons/chat';
 import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
@@ -21,6 +20,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import MassengerButton from '../../massengerButton/massengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
 import { OnlineVisitChannels } from '../turnType';
@@ -97,7 +97,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const ClinicPrimaryButton = hasPaging && (
     <Button
       variant="secondary"
-      size="sm"
       block={true}
       onClick={() => handleOpenQueueModal()}
       icon={<MegaphoneIcon />}
@@ -106,21 +105,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       دریافت شماره نوبت
     </Button>
   );
-
-  const CunsultPrimaryButton = () => {
-    if (!onlineVisitChannels) return null;
-    const channelsText = {
-      igap: 'آی گپ',
-      whatsapp: 'واتس اپ',
-    };
-    const channel = onlineVisitChannels?.[0];
-    if (!channel) return null;
-    return (
-      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel?.channel_link)} icon={<ChatIcon />}>
-        گفتگو با پزشک در {channelsText[channel?.type]}
-      </Button>
-    );
-  };
 
   const removeBookAction = () => {
     return removeBookApi.mutateAsync(
@@ -167,6 +151,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       bookId: id,
       from,
     });
+    splunkInstance().sendEvent({
+      group: 'move-book',
+      type: 'confirm',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        patient: {
+          phoneNumber: phoneNumber,
+          name: patientName,
+        },
+      },
+    });
     toast.success('جابجایی نوبت با موفقیت انجام شد.');
   };
 
@@ -197,35 +194,36 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
-          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+          <Button theme="error" variant="secondary" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
             لغو نوبت
           </Button>
         )}
         {isShowMoveBookButton && status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
-          <Button variant="secondary" size="sm" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
+          <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
         )}
       </div>
 
       {paymentStatus === PaymentStatus.paying && (
-        <Button variant="primary" size="sm" block={true} onClick={redirectToFactor}>
+        <Button variant="primary" block={true} onClick={redirectToFactor}>
           نهایی کردن نوبت
         </Button>
       )}
 
-      {centerType === CenterType.consult && paymentStatus !== PaymentStatus.paying && status !== BookStatus.deleted && (
-        <CunsultPrimaryButton />
-      )}
+      {centerType === CenterType.consult &&
+        paymentStatus !== PaymentStatus.paying &&
+        status !== BookStatus.deleted &&
+        onlineVisitChannels && <MassengerButton channels={onlineVisitChannels} />}
 
       {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
-          <Button variant="secondary" size="sm" block={true} onClick={reBook}>
+          <Button variant="secondary" block={true} onClick={reBook}>
             {t('turnAction.rebook')}
           </Button>
           {pdfLink && (
-            <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>
+            <Button variant="secondary" block={true} onClick={showPrescription}>
               مشاهده نسخه
             </Button>
           )}
