@@ -76,12 +76,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
   const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
+  const { handleOpen: handleOpenTurnDesciription, modalProps: turnDesciriptionProp } = useModal();
+  const { handleOpen: handleOpenRemoveTurn, handleClose: handleCloseRemoveTurnModal, modalProps: removeTurnProp } = useModal();
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
-  const [turnDesciriptionModal, setTurnDesciriptionModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
   const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
 
@@ -106,7 +107,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
     if (pdfLink) return window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
 
-    setTurnDesciriptionModal(true);
+    handleOpenTurnDesciription();
   };
 
   const reBook = () => {
@@ -136,7 +137,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
-            setRemoveModal(false);
+            handleCloseRemoveTurnModal();
             return;
           }
           toast.error(data.data.message);
@@ -146,7 +147,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const showRemoveTurnModal = () => {
-    setRemoveModal(true);
+    handleOpenRemoveTurn();
     splunkInstance().sendEvent({
       group: 'my-turn',
       type: 'delete-turn-footer',
@@ -295,7 +296,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }}
         />
       </Modal>
-      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeTurnProp}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
             لغو نوبت
@@ -311,7 +312,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           </Button>
         </div>
       </Modal>
-      <Modal title="توضیحات درمان" onClose={() => setTurnDesciriptionModal(false)} isOpen={turnDesciriptionModal}>
+      <Modal {...turnDesciriptionProp} title="توضیحات درمان">
         <Text fontSize="sm">{description}</Text>
       </Modal>
     </>
