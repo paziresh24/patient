@@ -243,21 +243,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           currentDate={bookTime}
           loading={moveBookApi.isLoading}
           events={{
-            onFirstFreeTime() {
-              splunkInstance().sendEvent({
-                group: 'move-book',
-                type: 'frist-free-time',
-                event: {
-                  terminal_id: getCookie('terminal_id'),
-                  doctorName,
-                  expertise,
-                  patient: {
-                    phoneNumber: phoneNumber,
-                    name: patientName,
-                  },
-                },
-              });
-            },
             onOtherFreeTime() {
               splunkInstance().sendEvent({
                 group: 'move-book',

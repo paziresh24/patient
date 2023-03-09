@@ -16,7 +16,7 @@ export const Info = (props: InfoProps) => {
       <div className="flex items-center space-s-3">
         <Avatar width={85} height={85} className="border-2 border-slate-200" src={image} />
         <div className="flex flex-col space-y-2">
-          <Text fontSize="lg" fontWeight="bold">
+          <Text as="h1" fontSize="lg" fontWeight="bold">
             {displayName}
           </Text>
           {title && (

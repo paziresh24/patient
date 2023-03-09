@@ -3,8 +3,8 @@ import Chips from '@/common/components/atom/chips/chips';
 import DropDown from '@/common/components/atom/dropDown/dropDown';
 import Text from '@/common/components/atom/text/text';
 import ThreeDotsIcon from '@/common/components/icons/threeDots';
-import { CardProps } from '@/modules/rate/type/card';
 import classNames from '@/common/utils/classNames';
+import { CardProps } from '@/modules/rate/type/card';
 
 export const Card = (props: CardProps) => {
   const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
@@ -63,11 +63,11 @@ export const Card = (props: CardProps) => {
           <Text
             fontSize="sm"
             fontWeight="medium"
-            className="text-justify block leading-7 [&>em]:text-blue-700 [&>em]:not-italic break-words"
+            className="text-justify block [&>em]:text-blue-700  [&>em]:not-italic break-words !leading-7"
             dangerouslySetInnerHTML={{ __html: description ?? '' }}
           />
         </div>
-        <div className={classNames('mt-1 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
+        <div className={classNames('mt-2 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
           {options
             ?.filter(option => option.type === 'controller')
             ?.map(option => (

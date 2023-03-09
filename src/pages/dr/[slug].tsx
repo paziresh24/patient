@@ -15,6 +15,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -586,7 +587,11 @@ const DoctorProfile = ({ query: { university } }: any) => {
           {profileData && Object.entries(layout.sideBar).map(([key, Component]) => <Component key={key} doctor={profileData} />)}
         </div>
         {isMobile && !inViewServices && (
-          <div className="fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100">
+          <div
+            className={classNames('fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100', {
+              'bottom-0': isWebView,
+            })}
+          >
             <Button onClick={() => scrollIntoViewWithOffset('#services_section', 90)} block>
               دریافت نوبت
             </Button>
