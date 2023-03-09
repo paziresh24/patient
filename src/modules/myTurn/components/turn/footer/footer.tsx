@@ -311,7 +311,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           </Button>
         </div>
       </Modal>
-      <Modal title="توضیحات درمان" onClose={setTurnDesciriptionModal} isOpen={turnDesciriptionModal}>
+      <Modal title="توضیحات درمان" onClose={() => setTurnDesciriptionModal(false)} isOpen={turnDesciriptionModal}>
         <Text fontSize="sm">{description}</Text>
       </Modal>
     </>
