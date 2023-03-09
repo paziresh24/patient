@@ -4,7 +4,6 @@ import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
@@ -12,7 +11,6 @@ import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
 const { publicRuntimeConfig } = getConfig();
@@ -21,7 +19,6 @@ const Factor = () => {
   const {
     query: { bookId, centerId },
   } = useRouter();
-  const university = useServerQuery(state => state.queries.university);
   const getBookDetails = useGetBookDetails();
 
   useEffect(() => {
@@ -37,15 +34,6 @@ const Factor = () => {
   return (
     <>
       <Seo title="فاکتور نوبت" />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full md:basis-4/6">
           <FactorWrapper bookId={bookId as string} centerId={centerId as string} />

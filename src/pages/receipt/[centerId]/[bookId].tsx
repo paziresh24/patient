@@ -12,7 +12,6 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import useShare from '@/common/hooks/useShare';
 import classNames from '@/common/utils/classNames';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -25,7 +24,6 @@ import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -36,7 +34,6 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-  const university = useServerQuery(state => state.queries.university);
 
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
@@ -132,15 +129,6 @@ const Receipt = () => {
   return (
     <>
       <Seo title="رسید نوبت" />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt">

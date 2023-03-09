@@ -6,21 +6,18 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
 const Booking = () => {
   const router = useRouter();
-  const university = useServerQuery(state => state.queries.university);
 
   const { data, isLoading, isIdle, isSuccess } = useGetProfileData(
     {
@@ -79,15 +76,6 @@ const Booking = () => {
   return (
     <>
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
           {(isLoading || isIdle) && (
