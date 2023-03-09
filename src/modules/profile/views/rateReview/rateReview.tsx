@@ -128,14 +128,6 @@ export const RateReview = (props: RateReviewProps) => {
           },
           options: [
             {
-              id: 1,
-              name: 'گزارش',
-              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
-              type: 'menu',
-              icon: <InfoIcon width={22} height={22} />,
-              inModal: true,
-            },
-            {
               id: 2,
               name: 'اشتراک گذاری',
               action: () => shareCommenthandler(feedback.id),
@@ -158,6 +150,14 @@ export const RateReview = (props: RateReviewProps) => {
                 />
               ),
               prefix: feedback?.like > 0 && feedback?.like,
+              inModal: true,
+            },
+            {
+              id: 1,
+              name: 'گزارش',
+              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
+              type: 'button',
+              icon: <InfoIcon width={22} height={22} />,
               inModal: true,
             },
           ],

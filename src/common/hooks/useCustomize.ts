@@ -1,5 +1,6 @@
 import { ParsedUrlQuery } from 'querystring';
 import { create } from 'zustand';
+import { useWebViewStore } from './useWebView';
 
 interface Customize {
   showHeader: boolean;
@@ -61,11 +62,11 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
-
+    const isWebView = useWebViewStore.getState().isWebView;
     const isApplication = query.application ?? window.matchMedia('(display-mode: standalone)')?.matches;
     const customize = {
-      showHeader: !isApplication && !query.isWebView,
-      showFooter: !isApplication && !query.isWebView,
+      showHeader: !isApplication && !isWebView,
+      showFooter: !isApplication && !isWebView,
       showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic' && !isApplication,
       headerBrandLogoType: (query['header:brand-logo-type'] as HeaderBrandLogoType) ?? 'default',
       showUserProfile: (query['header:user-profile'] as Toggle) !== 'off',
@@ -76,7 +77,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       partnerTitle: (query['partner:title'] as string) || '',
       partnerSubTitle: (query['partner:sub-title'] as string) || '',
       showSelectCityInSuggestion: (query['suggestion:city-select'] as Toggle) !== 'off',
-      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !query.isWebView && !isApplication,
+      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !isWebView && !isApplication,
       footerType: (query['footer:type'] as FooterType) ?? 'default',
       showConsultServices: (query['search:consult'] as Toggle) !== 'off',
       showActivityProfile: (query['profile:activity'] as Toggle) !== 'off',

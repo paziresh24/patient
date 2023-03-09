@@ -15,6 +15,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -35,7 +36,6 @@ import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -117,7 +117,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
   const doctorCity = profileData?.centers?.find((center: any) => center.id !== '5532')?.city;
   const documentTitle = `${profileData?.display_name}، ${doctorExpertise} ${
     doctorCity ? `${doctorCity}،` : ''
-  } نوبت دهی آنلاین و شماره تلفن | پذیرش24`;
+  } نوبت دهی آنلاین و شماره تلفن`;
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle });
@@ -159,7 +159,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -190,7 +189,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -230,7 +228,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'register',
                     type: 'doctor-profile',
                     event: {
-                      version: 'react',
                       data: {
                         action: 'click',
                         current_url: location.href,
@@ -409,7 +406,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -440,7 +436,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -528,15 +523,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
   return (
     <>
       <Seo title={documentTitle} description={ducmentDescription} jsonlds={getJsonlds()} />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
@@ -586,7 +572,11 @@ const DoctorProfile = ({ query: { university } }: any) => {
           {profileData && Object.entries(layout.sideBar).map(([key, Component]) => <Component key={key} doctor={profileData} />)}
         </div>
         {isMobile && !inViewServices && (
-          <div className="fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100">
+          <div
+            className={classNames('fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100', {
+              'bottom-0': isWebView,
+            })}
+          >
             <Button onClick={() => scrollIntoViewWithOffset('#services_section', 90)} block>
               دریافت نوبت
             </Button>

@@ -4,7 +4,6 @@ import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -29,7 +28,6 @@ export const Result = () => {
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
   const sendCtrEvent = useCtr();
-  const isSpa = useFeatureIsOn('profile|booking:react_version');
   const university = useServerQuery(state => state.queries.university);
 
   const handleNextPage = () => {
@@ -98,12 +96,8 @@ export const Result = () => {
               text: item.title,
               description: item.top_title,
               outline: item.outline,
-              action: () => {
-                if (isSpa || !!university || !!query?.['new-version']) return router.push(item.url);
-                window.location.assign(item.url);
-              },
+              action: () => router.push(item.url),
             }))}
-            isSpa={isSpa || !!university || !!query?.['new-version']}
             sendEventWhenClick={() => handleCardEvent(item)}
           />
         ),

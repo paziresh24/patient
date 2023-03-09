@@ -18,7 +18,7 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
   return (
     <div className={className}>
       {isLoading ? (
-        <div className="flex pb-5 overflow-auto space-s-3">
+        <div className="flex pb-5 overflow-auto no-scroll space-s-3">
           <Skeleton w="22rem" h="16rem" rounded="lg" className="min-w-[22rem]" />
           <Skeleton w="22rem" h="16rem" rounded="lg" />
         </div>

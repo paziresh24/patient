@@ -4,6 +4,7 @@ import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
+import { CENTERS } from '@/common/types/centers';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
@@ -187,6 +188,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const redirectToFactor = () => {
     router.push(`/factor/${centerId}/${id}`);
+    splunkInstance().sendEvent({
+      group: 'basket_butten',
+      type: centerId === CENTERS.CONSULT ? 'consult' : 'office',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        patient: {
+          phoneNumber: phoneNumber,
+          name: patientName,
+        },
+      },
+    });
   };
 
   return (
@@ -243,21 +257,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           currentDate={bookTime}
           loading={moveBookApi.isLoading}
           events={{
-            onFirstFreeTime() {
-              splunkInstance().sendEvent({
-                group: 'move-book',
-                type: 'frist-free-time',
-                event: {
-                  terminal_id: getCookie('terminal_id'),
-                  doctorName,
-                  expertise,
-                  patient: {
-                    phoneNumber: phoneNumber,
-                    name: patientName,
-                  },
-                },
-              });
-            },
             onOtherFreeTime() {
               splunkInstance().sendEvent({
                 group: 'move-book',

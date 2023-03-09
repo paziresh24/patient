@@ -66,7 +66,6 @@ export const Presence = memo((props: PresenceProps) => {
       group: 'doctor profile',
       type: 'doctor profile press book button',
       event: {
-        version: 'react',
         data: {
           terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
@@ -111,7 +110,6 @@ export const Presence = memo((props: PresenceProps) => {
       group: 'doctor profile',
       type: 'doctor profile select service button',
       event: {
-        version: 'react',
         data: {
           terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
@@ -133,7 +131,6 @@ export const Presence = memo((props: PresenceProps) => {
         group: 'doctor profile',
         type: 'doctor profile select service button',
         event: {
-          version: 'react',
           data: {
             terminal_id: getCookie('terminal_id'),
             user_agent: window.navigator.userAgent,
