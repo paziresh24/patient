@@ -77,7 +77,7 @@ export const Card = (props: CardProps) => {
                 {option.name}
               </Text>
             ))}
-          <div className="flex gap-2">
+          <div className="flex space-s-3">
             {options
               ?.filter(option => option.type === 'button')
               ?.map(option => (

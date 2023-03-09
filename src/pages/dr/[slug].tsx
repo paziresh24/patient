@@ -117,7 +117,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
   const doctorCity = profileData?.centers?.find((center: any) => center.id !== '5532')?.city;
   const documentTitle = `${profileData?.display_name}، ${doctorExpertise} ${
     doctorCity ? `${doctorCity}،` : ''
-  } نوبت دهی آنلاین و شماره تلفن | پذیرش24`;
+  } نوبت دهی آنلاین و شماره تلفن`;
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle });
