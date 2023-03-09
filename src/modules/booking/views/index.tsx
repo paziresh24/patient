@@ -163,6 +163,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
+    if (center.id === CENTERS.CONSULT && !user.massengerType) return toast.error('لطفا پیامرسان خود را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });

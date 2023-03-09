@@ -1,6 +1,9 @@
 import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser';
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
+import igapIcon from '@/common/assets/massagers/igap.png';
+import whatsappIcon from '@/common/assets/massagers/whatsapp.png';
 import Modal from '@/common/components/atom/modal';
+import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
@@ -20,7 +23,7 @@ interface UserCardProps {
   isForeigner: boolean;
   refetchData?: () => void;
   select: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, payload?: Record<string, unknown>) => void;
   type: 'user' | 'subUser';
 }
 
@@ -76,13 +79,19 @@ export const UserCard = (props: UserCardProps) => {
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
+  const handleSelect = (massengerType?: string) => {
+    onSelect(userId, {
+      ...(massengerType && { massengerType }),
+    });
+  };
+
   return (
     <>
       <Select
         title={`${name} ${family}`}
         subTitle={cell}
         selected={select}
-        onSelect={() => onSelect(userId)}
+        onSelect={handleSelect}
         actionText="ویرایش"
         actionIcon={<EditIcon width={18} height={18} />}
         action={() => {
@@ -90,7 +99,49 @@ export const UserCard = (props: UserCardProps) => {
           editSubuser.reset();
           updateUser.reset();
         }}
-      />
+      >
+        {select && (
+          <>
+            <Text fontWeight="medium" fontSize="sm">
+              از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
+            </Text>
+            <div className="flex items-center mt-3 space-s-3">
+              <div className="w-full">
+                <input
+                  onChange={e => e.target.checked && handleSelect('igap')}
+                  className="peer hidden absolute"
+                  type="radio"
+                  name="messagenrs"
+                  id="igap"
+                />
+                <label
+                  htmlFor="igap"
+                  className="flex transition-colors peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary  cursor-pointer items-center justify-center w-full py-2 border rounded-lg space-s-2 border-slate-200 text-slate-400"
+                >
+                  <img src={igapIcon.src} width={28} height={28} alt="" />
+                  <Text fontWeight="medium">آی گپ</Text>
+                </label>
+              </div>
+              <div className="w-full">
+                <input
+                  onChange={e => e.target.checked && handleSelect('whatsapp')}
+                  className="hidden peer absolute"
+                  type="radio"
+                  name="messagenrs"
+                  id="whatsapp"
+                />
+                <label
+                  htmlFor="whatsapp"
+                  className="flex transition-colors peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary cursor-pointer items-center justify-center w-full py-2 border rounded-lg space-s-2 border-slate-200 text-slate-400"
+                >
+                  <img src={whatsappIcon.src} width={28} height={28} alt="" />
+                  <Text fontWeight="medium">واتساپ</Text>
+                </label>
+              </div>
+            </div>
+          </>
+        )}
+      </Select>
       <Modal title="ویرایش کاربر" {...modalProps}>
         <PatinetProfileForm
           fields={fields as FormFields}

@@ -44,7 +44,7 @@ export const SelectUser = (props: SelectUserProps) => {
     if (isLogin && userInfo) {
       mutate();
       setUserSelected(userInfo.id);
-      onSelect(userInfo);
+      handleSelectUser(userInfo);
     }
 
     return () => {
@@ -78,9 +78,9 @@ export const SelectUser = (props: SelectUserProps) => {
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
-  const handleSelectUser = (user: UserInfo) => {
+  const handleSelectUser = (user: UserInfo, massengerType?: string) => {
     setUserSelected(user.id);
-    onSelect(user);
+    onSelect({ ...user, massengerType: massengerType });
   };
 
   const getUserWithId = (id: string) => {
@@ -102,7 +102,7 @@ export const SelectUser = (props: SelectUserProps) => {
               isForeigner={userInfo.is_foreigner ?? false}
               gender={userInfo.gender ?? ''}
               refetchData={mutate}
-              onSelect={id => handleSelectUser(getUserWithId(id))}
+              onSelect={(id, payload) => handleSelectUser(getUserWithId(id), payload?.massengerType as string)}
               select={userInfo.id === userSelected}
               type="user"
             />

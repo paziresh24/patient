@@ -1,6 +1,6 @@
+import igapIcon from '@/common/assets/massagers/igap.png';
 import PhoneIcon from '@/common/components/icons/phone';
 import { addCommas } from '@persian-tools/persian-tools';
-import igapIcon from '../../assets/igap.png';
 import { ServiceCard } from './card';
 
 interface OnlineVisitProps {

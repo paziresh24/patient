@@ -42,6 +42,7 @@ export const useBooking = () => {
       cell: user.cell,
       selected_user_id: user.id,
       is_foreigner: user.is_foreigner,
+      ...(user.massengerType && { online_visit: user.massengerType }),
       ...(user.national_code && { national_code: user.national_code }),
       ...(user.insurance_id && { insurance_id: user.insurance_id }),
       ...(user.insurance_referral_code && { insurance_referral_code: user.insurance_referral_code }),
@@ -53,7 +54,6 @@ export const useBooking = () => {
     if (data.status === ClinicStatus.EXPIRE_TIME_SLOT && onExpire) return onExpire(data);
     return onError && onError(data);
   };
-
   return { handleBook, isLoading: book.isLoading };
 };
 
