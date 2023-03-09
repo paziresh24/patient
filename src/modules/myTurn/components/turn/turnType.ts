@@ -33,6 +33,7 @@ export interface TurnProps {
     trackingCode: string;
     centerName: string;
     patientName: string;
+    description: string;
   };
   location: {
     address: string;

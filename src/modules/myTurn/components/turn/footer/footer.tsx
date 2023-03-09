@@ -1,4 +1,5 @@
 import { useMoveBook } from '@/common/apis/services/booking/moveBook';
+import Text from '@/common/components/atom/text/text';
 import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
@@ -47,6 +48,7 @@ interface TurnFooterProps {
   activePaymentStatus: boolean;
   patientName: string;
   paymentStatus: PaymentStatus;
+  description: string;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -70,10 +72,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     activePaymentStatus,
     patientName,
     paymentStatus,
+    description,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
   const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
+  const { handleOpen: handleOpenTurnDesciription, modalProps: turnDesciriptionProp } = useModal();
+  const { handleOpen: handleOpenRemoveTurn, handleClose: handleCloseRemoveTurnModal, modalProps: removeTurnProp } = useModal();
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
@@ -85,10 +90,25 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || centerType === CenterType.consult) && paymentStatus !== PaymentStatus.paying;
+    (status === BookStatus.notVisited || (centerType === CenterType.consult && status !== BookStatus.deleted)) &&
+    paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
-    window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
+    splunkInstance().sendEvent({
+      group: 'my-booking',
+      type: 'treatment-details',
+      event: {
+        doctorName,
+        expertise,
+        phoneNumber,
+        nationalCode,
+        action: pdfLink ? 'prescription' : 'description',
+      },
+    });
+
+    if (pdfLink) return window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
+
+    handleOpenTurnDesciription();
   };
 
   const reBook = () => {
@@ -118,7 +138,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
-            setRemoveModal(false);
+            handleCloseRemoveTurnModal();
             return;
           }
           toast.error(data.data.message);
@@ -128,7 +148,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const showRemoveTurnModal = () => {
-    setRemoveModal(true);
+    handleOpenRemoveTurn();
     splunkInstance().sendEvent({
       group: 'my-turn',
       type: 'delete-turn-footer',
@@ -236,9 +256,9 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           <Button variant="secondary" block={true} onClick={reBook}>
             {t('turnAction.rebook')}
           </Button>
-          {pdfLink && (
+          {(pdfLink || !!description) && (
             <Button variant="secondary" block={true} onClick={showPrescription}>
-              مشاهده نسخه
+              جزئیات و نسخه
             </Button>
           )}
         </div>
@@ -275,7 +295,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }}
         />
       </Modal>
-      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeTurnProp}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
             لغو نوبت
@@ -290,6 +310,9 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             انصراف
           </Button>
         </div>
+      </Modal>
+      <Modal {...turnDesciriptionProp} title="توضیحات درمان">
+        <Text fontSize="sm">{description}</Text>
       </Modal>
     </>
   );
