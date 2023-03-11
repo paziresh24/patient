@@ -1,5 +1,6 @@
 import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
+import { useReportFeedback } from '@/common/apis/services/rate/report';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
@@ -69,7 +70,7 @@ export const RateReview = (props: RateReviewProps) => {
     value: 'default_order',
   });
   const { handleClose, handleOpen, modalProps } = useModal();
-  const { handleOpen: handleOpenReportModal, modalProps: reportModalProps } = useModal();
+  const { handleOpen: handleOpenReportModal, handleClose: handleCloseReportModal, modalProps: reportModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
   const feedbacksData = useFeedbackDataStore(state => state.data);
@@ -84,6 +85,7 @@ export const RateReview = (props: RateReviewProps) => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const replyText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
+  const reportFeedback = useReportFeedback();
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -291,7 +293,7 @@ export const RateReview = (props: RateReviewProps) => {
         state: true,
       });
     if (text.length < 10) return toast.error('حداقل مقدار مجاز ۱۰ کاراکتر می باشد.');
-    await splunkInstance().sendEvent({
+    splunkInstance().sendEvent({
       group: 'report',
       type: 'report-group',
       event: {
@@ -299,15 +301,20 @@ export const RateReview = (props: RateReviewProps) => {
           report: text,
           url: location.href,
           current_comment: feedbackDetails.description,
-          comment_id: feedbackDetails.feedbackId,
+          comment_id: feedbackDetails.id,
           terminal_id: getCookie('terminal_id'),
           phone: userInfo.username ?? null,
           is_doctor: feedbackDetails.isDoctor,
         },
       },
     });
+
+    await reportFeedback.mutateAsync({
+      feedback_id: feedbackDetails.id,
+    });
+
     toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
-    handleClose();
+    handleCloseReportModal();
   };
 
   const shareCommenthandler = (id: string) => {
@@ -384,7 +391,12 @@ export const RateReview = (props: RateReviewProps) => {
             className="h-[10rem]"
             ref={reportText}
           />
-          <Button onClick={() => submitReportFeedbackhandler(reportText.current?.value!)} block className="mt-4">
+          <Button
+            loading={reportFeedback.isLoading}
+            onClick={() => submitReportFeedbackhandler(reportText.current?.value!)}
+            block
+            className="mt-4"
+          >
             ارسال گزارش
           </Button>
         </Modal>
