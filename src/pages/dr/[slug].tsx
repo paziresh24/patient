@@ -3,7 +3,9 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
 import { usePageView } from '@/common/apis/services/profile/pageView';
+import Avatar from '@/common/components/atom/avatar/avatar';
 import Button from '@/common/components/atom/button';
+import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import AwardIcon from '@/common/components/icons/award';
 import ChatIcon from '@/common/components/icons/chat';
@@ -11,11 +13,13 @@ import EditIcon from '@/common/components/icons/edit';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
+import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
+import { dayToSecond } from '@/common/utils/dayToSecond';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -31,7 +35,7 @@ import RateReview from '@/modules/profile/views/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -54,6 +58,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
+  const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
   const [rateRef, inViewRate] = useInView();
   const { isMobile, isDesktop } = useResponsive();
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -101,6 +106,13 @@ const DoctorProfile = ({ query: { university } }: any) => {
         serverId: profileData.server_id,
       });
       setProfileData(profileData);
+      if (document.referrer.includes('google.') && !getCookie('isBeenBefore')) {
+        handleOpenBeenBeforeModal();
+        setCookie('isBeenBefore', true, {
+          maxAge: dayToSecond(60),
+          path: '/',
+        });
+      }
     }
   }, [profileData, isBulk]);
 
@@ -594,6 +606,31 @@ const DoctorProfile = ({ query: { university } }: any) => {
           </div>
         )}
       </div>
+      <Modal noHeader {...beenBeforeModalProps} bodyClassName="space-y-4 flex flex-col items-center">
+        <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image} width={90} height={90} />
+        <Text fontWeight="semiBold">آیا تاکنون توسط {profileData.display_name} ویزیت شده‌اید؟</Text>
+        <div className="flex space-s-3 w-full">
+          <Button
+            block
+            onClick={() =>
+              window.location.assign(
+                `https://www.paziresh24.com/comment/?doctorName=${profileData.display_name}&image=${profileData.image}&group_expertises=${
+                  profileData?.group_expertises?.[0]?.name ?? 'سایر'
+                }&group_expertises_slug=${profileData?.group_expertises?.[0]?.en_slug ?? 'other'}&expertise=${
+                  profileData?.expertises?.[0]?.expertise?.name
+                }&doctor_id=${profileData.id}&server_id=${profileData.serverId}&doctor_city=${
+                  profileData.centers.find((center: any) => center.city)[0]
+                }&doctor_slug=${profileData.slug}`,
+              )
+            }
+          >
+            بله
+          </Button>
+          <Button variant="secondary" block onClick={handleCloseBeenBeforeModal}>
+            خیر
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };
