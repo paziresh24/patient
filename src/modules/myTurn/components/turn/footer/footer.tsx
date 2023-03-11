@@ -256,7 +256,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           </Button>
           {(pdfLink || !!description) && (
             <Button variant="secondary" block={true} onClick={showPrescription}>
-              جزئیات و نسخه
+              {pdfLink ? 'مشاهده نسخه' : 'توضیحات درمان'}
             </Button>
           )}
         </div>
