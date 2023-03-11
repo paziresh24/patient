@@ -8,7 +8,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   return (
     <Html lang="fa-IR" dir={dir}>
       <Head>
-        <link rel="icon" type="image/x-icon" href="/favicon.ico"></link>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -24,8 +24,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="content-language" content="fa" />
         <meta name="Language" content="fa" />
-        <meta name="robots" content="index, follow" />
-        <meta name="autor" content="پذیرش24" />
+        <meta name="author" content="پذیرش24" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-tap-highlight" content="no" />
