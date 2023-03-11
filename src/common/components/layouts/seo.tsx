@@ -9,6 +9,13 @@ interface SeoProps {
   children?: ReactNode;
   jsonlds?: any[];
   canonicalUrl?: string;
+  openGraph?: {
+    image?: {
+      src: string;
+      type: string;
+      alt: string;
+    };
+  };
 }
 
 const getPathFromUrl = (url: string): string => {
@@ -16,7 +23,7 @@ const getPathFromUrl = (url: string): string => {
 };
 
 export const Seo = (props: SeoProps) => {
-  const { title, description, jsonlds, canonicalUrl, children } = props;
+  const { title, description, jsonlds, canonicalUrl, openGraph, children } = props;
   const { asPath } = useRouter();
 
   const titleTemplate = `${title ?? ''} | پذیرش24`;
@@ -26,19 +33,18 @@ export const Seo = (props: SeoProps) => {
       <title>{titleTemplate}</title>
       <meta name="title" content={titleTemplate} />
       <meta name="description" content={description} />
-
       <link rel="canonical" href={canonicalUrl ?? `https://www.paziresh24.com${getPathFromUrl(asPath)}`} />
-
+      <meta name="robots" content="index, follow" />
       <meta property="og:title" content={titleTemplate} />
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content="پذیرش24" />
       <meta property="og:url" content={`https://www.paziresh24.com${asPath}`} />
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="fa_IR" />
-      <meta property="og:image" content={`https://www.paziresh24.com${logo.src}`} />
-      <meta property="og:image:secure_url" content={`https://www.paziresh24.com${logo.src}`} />
-      <meta property="og:image:type" content="image/svg+xml" />
-      <meta property="og:image:alt" content="پذیرش24" />
+      <meta property="og:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
+      <meta property="og:image:secure_url" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
+      <meta property="og:image:type" content={openGraph?.image?.type ?? 'image/svg+xml'} />
+      <meta property="og:image:alt" content={openGraph?.image?.alt ?? 'پذیرش24'} />
       <meta property="dc.title" content={titleTemplate} />
       <meta property="dc.description" content={description} />
       <meta property="dc.type" content="website" />
@@ -49,17 +55,15 @@ export const Seo = (props: SeoProps) => {
       <meta property="twitter:creator" content="پذیرش24" />
       <meta property="twitter:site" content="پذیرش24" />
       <meta property="twitter:url" content={`https://www.paziresh24.com${asPath}`} />
-      <meta property="twitter:image" content={`https://www.paziresh24.com${logo.src}`} />
-      <meta property="twitter:image:alt" content="پذیرش24" />
+      <meta property="twitter:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
+      <meta property="twitter:image:alt" content={openGraph?.image?.alt ?? 'پذیرش24'} />
       <meta property="twitter:card" content="summary" />
       <meta itemProp="name" content={titleTemplate} />
       <meta itemProp="description" content={description} />
-      <meta itemProp="image" content={`https://www.paziresh24.com${logo.src}`} />
-
+      <meta itemProp="image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
       {jsonlds?.map((item, index) => (
         <script type="application/ld+json" key={index} dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }} />
       ))}
-
       {children}
     </Head>
   );

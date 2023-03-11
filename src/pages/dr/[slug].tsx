@@ -478,11 +478,11 @@ const DoctorProfile = ({ query: { university } }: any) => {
         '@type': 'Physician',
         'priceRange': '$$',
         'name': profileData.display_name,
-        'description': profileData.biography ? removeHtmlTagInString(profileData.biography) : '',
+        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
-        'medicalSpecialty': !profileData.group_expertises ? profileData.group_expertises[0].name : doctorExpertise,
-        'duns': profileData.medical_code,
+        'medicalSpecialty': !profileData?.group_expertises ? profileData.group_expertises?.[0]?.name : doctorExpertise,
+        'duns': profileData?.medical_code,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
           '@type': 'PostalAddress',
@@ -502,7 +502,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'telephone': profileData?.display_number,
+        'telephone': center?.display_number,
         'name': profileData.display_name,
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
@@ -522,7 +522,18 @@ const DoctorProfile = ({ query: { university } }: any) => {
 
   return (
     <>
-      <Seo title={documentTitle} description={ducmentDescription} jsonlds={getJsonlds()} />
+      <Seo
+        title={documentTitle}
+        description={ducmentDescription}
+        jsonlds={getJsonlds()}
+        openGraph={{
+          image: {
+            src: publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image,
+            alt: profileData?.display_name,
+            type: 'image/jpg',
+          },
+        }}
+      />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head

@@ -233,10 +233,10 @@ export const RateReview = (props: RateReviewProps) => {
         id: 1,
         options: [
           { label: 'همه نظرات', value: 'all' },
-          { label: 'نظرات من', value: 'my_feedbacks' },
+          isLogin && { label: 'نظرات من', value: 'my_feedbacks' },
           { label: 'بیماران دارای نوبت', value: 'has_nobat' },
           ...centerOption,
-        ],
+        ].filter(Boolean),
         value: rateFilter,
         onChange: (e: any) => changeFilterSelect(e),
       },
