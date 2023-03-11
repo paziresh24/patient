@@ -13,7 +13,6 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
@@ -79,7 +78,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
-  const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
 
   const moveBookApi = useMoveBook();
 
@@ -198,7 +196,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             لغو نوبت
           </Button>
         )}
-        {isShowMoveBookButton && status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
+        {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
           <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
