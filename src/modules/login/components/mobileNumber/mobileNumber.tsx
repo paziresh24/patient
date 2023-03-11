@@ -69,6 +69,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
         autoFocus
         type="tel"
         inputMode="numeric"
+        disabled={register.isLoading || resetPassword.isLoading}
       />
 
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
