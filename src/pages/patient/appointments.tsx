@@ -169,6 +169,7 @@ export const Appointments = ({ query: queryServer }: any) => {
                 trackingCode: turn.ref_id,
                 centerName: turn.center?.name,
                 patientName: `${turn.patient_info?.name ?? ''} ${turn.patient_info?.family ?? ''}`,
+                description: turn.comment ?? '',
               }}
               location={{
                 lat: turn.center?.map?.lat,

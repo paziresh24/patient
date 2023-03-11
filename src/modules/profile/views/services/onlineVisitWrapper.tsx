@@ -65,7 +65,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       group: 'doctor profile',
       type: 'doctor profile press online visit book button',
       event: {
-        version: 'react',
         data: {
           terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
@@ -122,6 +121,19 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   };
 
   const redirectBookingPage = () => {
+    splunkInstance().sendEvent({
+      group: 'doctor profile',
+      type: 'doctor profile press online visit book button',
+      event: {
+        data: {
+          terminal_id: getCookie('terminal_id'),
+          user_agent: window.navigator.userAgent,
+          page_url: window.location.pathname,
+          referrer: document.referrer,
+          doctor_id: doctorId,
+        },
+      },
+    });
     router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
   };
 

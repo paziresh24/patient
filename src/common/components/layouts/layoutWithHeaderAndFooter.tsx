@@ -30,7 +30,7 @@ export const LayoutWithHeaderAndFooter = ({
 
   return (
     <div className={classNames({ 'pb-16 md:pb-0': showBottomNavigation })}>
-      {customize.showHeader && showHeader && (
+      {customize.showHeader && !isWebView && showHeader && (
         <Header
           showSearchSuggestionButton={showSearchSuggestionButton}
           shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand}
@@ -38,7 +38,7 @@ export const LayoutWithHeaderAndFooter = ({
         />
       )}
       <div style={{ minHeight: 'calc(100vh - 8.8125rem)' }}>{children}</div>
-      {customize.showFooter && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
+      {customize.showFooter && !isWebView && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
       {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>
   );

@@ -75,7 +75,12 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
               از دیدگاه بیماران
             </Text>
           </Text>
-          <Recommend doctorId={doctor.id} city={doctor.city_en_slug} category={doctor.expertises[0]?.expertise_groups[0].en_slug} />
+          <Recommend
+            doctorId={doctor.id}
+            city={doctor.city_en_slug}
+            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
+            className="pr-4 md:pr-0"
+          />
         </>
       )}
     </>

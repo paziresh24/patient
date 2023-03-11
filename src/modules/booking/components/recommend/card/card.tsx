@@ -26,7 +26,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
   const router = useRouter();
   return (
     <>
-      <ScrollContainer className="flex w-full pl-5 rounded-lg select-none no-scroll space-s-3">
+      <ScrollContainer className="flex w-full pl-5 !overflow-auto rounded-lg select-none no-scroll space-s-3 no-scroll">
         {listOfDoctors?.map(doctor => (
           <Card
             key={doctor.id}
