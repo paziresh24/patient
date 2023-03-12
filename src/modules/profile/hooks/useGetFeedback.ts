@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FeedbackParams, useGetFeedbacks } from '../../../common/apis/services/rate/getFeedbacks';
 import { useFeedbackDataStore } from '../store/feedbackData';
 
@@ -21,24 +21,22 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
     },
   );
 
-  const sliceFeedbacks = (feedbacks: any[]) => {
-    const feedbackId = window.location.hash.split('-');
-    return feedbackId ? feedbacks.filter(item => item.id === feedbackId) : feedbacks;
-  };
-
   useEffect(() => {
     if (getFeedbacks.data) {
       setFeedbackInfo(page > 1 ? [...feedbackInfo, ...(getFeedbacks.data?.result ?? [])] : getFeedbacks.data?.result ?? []);
     }
   }, [getFeedbacks.data, getFeedbacks.status]);
 
-  const rateSearch = debounce((text: string) => {
-    setPage(1);
-    setFilterParams(prev => {
-      if (text.trim()) return { ...prev, search: text.trim() };
-      return omit(prev, 'search');
-    });
-  }, 250);
+  const rateSearch = useCallback(
+    debounce((text: string) => {
+      setPage(1);
+      setFilterParams(prev => {
+        if (text.trim()) return { ...prev, search: text.trim() };
+        return omit(prev, 'search');
+      });
+    }, 250),
+    [],
+  );
 
   const rateSortFilter = debounce((order: string) => {
     setPage(1);
