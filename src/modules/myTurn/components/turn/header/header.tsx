@@ -10,6 +10,7 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
@@ -29,11 +30,12 @@ interface TurnHeaderProps {
   nationalCode: string;
   trackingCode: string;
   status: BookStatus;
+  paymentStatus: PaymentStatus;
   centerType: CenterType;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status } = props;
+  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus } = props;
   const router = useRouter();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -104,15 +106,19 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       </Link>
 
       {status !== BookStatus.notVisited && <TagStatus status={status} className="mx-5" />}
-
-      <DropDown
-        element={
-          <div className="absolute flex items-center justify-center w-8 h-8 -mx-3 cursor-pointer top-1" data-testid="turn-drop-down-button">
-            <ThreeDotsIcon color="#000" />
-          </div>
-        }
-        items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
-      />
+      {paymentStatus !== PaymentStatus.paying && (
+        <DropDown
+          element={
+            <div
+              className="absolute flex items-center justify-center w-8 h-8 -mx-3 cursor-pointer top-1"
+              data-testid="turn-drop-down-button"
+            >
+              <ThreeDotsIcon color="#000" />
+            </div>
+          }
+          items={menuItems.filter(item => item.shouldShow).map(({ shouldShow, ...item }) => ({ ...item }))}
+        />
+      )}
 
       <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeModalProps}>
         <div className="flex space-s-2">

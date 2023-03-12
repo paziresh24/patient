@@ -1,6 +1,7 @@
 import useCustomize from '@/common/hooks/useCustomize';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import { useRouter } from 'next/router';
 import Location from '../../location/location';
 import Rate from '../../rate/rate';
@@ -21,10 +22,11 @@ interface TurnBodyProps {
     slug: string;
   };
   centerId: string;
+  paymentStatus: PaymentStatus;
 }
 
 export const TurnBody: React.FC<TurnBodyProps> = props => {
-  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo } = props;
+  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo, paymentStatus } = props;
   const router = useRouter();
   const { customize } = useCustomize();
 
@@ -33,7 +35,10 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
     centerType !== CenterType.consult && (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
 
   const handleClickCard = () => {
-    router.push(`/receipt/${centerId}/${id}`);
+    if (paymentStatus !== PaymentStatus.paying) {
+      router.push(`/receipt/${centerId}/${id}`);
+      return;
+    }
   };
 
   return (
