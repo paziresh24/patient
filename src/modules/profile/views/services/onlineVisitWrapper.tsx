@@ -165,6 +165,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
             submitButtonText="ادامه"
             onSubmit={handleBook}
             loading={isLoading}
+            shouldShowMassengers={false}
           />
         </div>
       </Modal>
