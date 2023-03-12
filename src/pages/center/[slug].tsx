@@ -6,6 +6,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
@@ -15,7 +16,6 @@ import axios from 'axios';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
@@ -62,7 +62,7 @@ const CenterProfile = ({ query: { university } }: any) => {
     },
   );
 
-  const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین | پذیرش24`;
+  const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
   const ducmentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
     profileData.city ? `در ${profileData.city}` : ''
   } با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش24`;
@@ -112,18 +112,64 @@ const CenterProfile = ({ query: { university } }: any) => {
    اطلاع دهید.
 </p>`;
 
+  const getJsonlds = () => {
+    return [
+      {
+        '@context': 'http://www.schema.org',
+        '@type': 'Physician',
+        'priceRange': '$$',
+        'name': profileData.name,
+        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'isAcceptingNewPatients': true,
+        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
+        'address': {
+          '@type': 'PostalAddress',
+          'addressCountry': {
+            '@type': 'Country',
+            'name': 'IRN',
+          },
+          'addressLocality': profileData?.city,
+          'addressRegion': profileData?.province,
+          'streetAddress': profileData?.address,
+        },
+      },
+      {
+        '@context': 'http://www.schema.org',
+        '@type': 'Person',
+        'jobTitle': 'physician',
+        'telephone': profileData?.tell,
+        'name': profileData.name,
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
+        'address': {
+          '@type': 'PostalAddress',
+          'addressCountry': {
+            '@type': 'Country',
+            'name': 'IRN',
+          },
+          'addressLocality': profileData?.city,
+          'addressRegion': profileData?.province,
+          'streetAddress': profileData?.address,
+        },
+      },
+    ];
+  };
+
   return (
     <>
-      <Seo title={documentTitle} description={ducmentDescription} canonicalUrl={publicRuntimeConfig.CLINIC_BASE_URL + router.pathname} />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
+      <Seo
+        title={documentTitle}
+        description={ducmentDescription}
+        jsonlds={getJsonlds()}
+        openGraph={{
+          image: {
+            src: publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image,
+            alt: profileData?.name,
+            type: 'image/jpg',
+          },
+        }}
+      />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head

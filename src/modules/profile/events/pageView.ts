@@ -25,7 +25,6 @@ export const pageViewEvent = ({ doctor, isWebView, isBulk }: { doctor: any; isWe
     group: 'doctor profile',
     type: 'doctor profile page view',
     event: {
-      version: 'react',
       data: {
         center_type_main_name: doctor?.centers.map((center: any) => center.name),
         non_bulk_centers_type: some(doctor.centers, ['center_type', 1])

@@ -3,7 +3,9 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData, useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks, useInternalLinks } from '@/common/apis/services/profile/internalLinks';
 import { usePageView } from '@/common/apis/services/profile/pageView';
+import Avatar from '@/common/components/atom/avatar/avatar';
 import Button from '@/common/components/atom/button';
+import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import AwardIcon from '@/common/components/icons/award';
 import ChatIcon from '@/common/components/icons/chat';
@@ -11,10 +13,13 @@ import EditIcon from '@/common/components/icons/edit';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
+import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import classNames from '@/common/utils/classNames';
+import { dayToSecond } from '@/common/utils/dayToSecond';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -24,18 +29,18 @@ import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
+import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Activity from '@/modules/profile/views/activity';
 import Head from '@/modules/profile/views/head/head';
 import RateReview from '@/modules/profile/views/rateReview';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import Services from '@/modules/profile/views/services';
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -46,7 +51,9 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university } }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
+  useFeedbackDataStore.getState().data = initialFeedbackDate;
+
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
   const addPageView = usePageView();
@@ -54,6 +61,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
+  const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
   const [rateRef, inViewRate] = useInView();
   const { isMobile, isDesktop } = useResponsive();
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -101,6 +109,14 @@ const DoctorProfile = ({ query: { university } }: any) => {
         serverId: profileData.server_id,
       });
       setProfileData(profileData);
+      window.doctor = profileData;
+      if (document.referrer.includes('google.') && !getCookie('isBeenBefore')) {
+        handleOpenBeenBeforeModal();
+        setCookie('isBeenBefore', true, {
+          maxAge: dayToSecond(60),
+          path: '/',
+        });
+      }
     }
   }, [profileData, isBulk]);
 
@@ -117,7 +133,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
   const doctorCity = profileData?.centers?.find((center: any) => center.id !== '5532')?.city;
   const documentTitle = `${profileData?.display_name}، ${doctorExpertise} ${
     doctorCity ? `${doctorCity}،` : ''
-  } نوبت دهی آنلاین و شماره تلفن | پذیرش24`;
+  } نوبت دهی آنلاین و شماره تلفن`;
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle });
@@ -159,7 +175,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -190,7 +205,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -230,7 +244,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'register',
                     type: 'doctor-profile',
                     event: {
-                      version: 'react',
                       data: {
                         action: 'click',
                         current_url: location.href,
@@ -359,7 +372,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
               } جهت مشاهده خدمات و دریافت نوبت آنلاین مطب شخصی، کلینیک، درمانگاه و بیمارستان هایی که ایشان در حال ارائه خدمات درمانی هستند از طریق پذیرش24 طراحی و ارائه شده است. البته ممکن است در حال حاضر امکان رزرو نوبت از همه مراکز فوق ممکن نباشد که این موضوع وابسته به تصمیم ${
                 doctor.gender === 0 ? '' : doctor.gender == 1 ? 'آقای' : 'خانم'
               } دکتر در ارائه نوبت گیری از درگاه های فوق بوده است.`}
-              breadcrumbs={createBreadcrumb(internalLinks?.data, doctor.display_name, router.asPath)}
             />
           );
         },
@@ -409,7 +421,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center phone',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -440,7 +451,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
                     group: 'doctor profile',
                     type: 'see center map',
                     event: {
-                      version: 'react',
                       data: {
                         doctor: {
                           name: doctor.name,
@@ -483,11 +493,11 @@ const DoctorProfile = ({ query: { university } }: any) => {
         '@type': 'Physician',
         'priceRange': '$$',
         'name': profileData.display_name,
-        'description': profileData.biography ? removeHtmlTagInString(profileData.biography) : '',
+        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
-        'medicalSpecialty': !profileData.group_expertises ? profileData.group_expertises[0].name : doctorExpertise,
-        'duns': profileData.medical_code,
+        'medicalSpecialty': !profileData?.group_expertises ? profileData.group_expertises?.[0]?.name : doctorExpertise,
+        'duns': profileData?.medical_code,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
           '@type': 'PostalAddress',
@@ -507,7 +517,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'telephone': profileData?.display_number,
+        'telephone': center?.display_number,
         'name': profileData.display_name,
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
@@ -527,16 +537,18 @@ const DoctorProfile = ({ query: { university } }: any) => {
 
   return (
     <>
-      <Seo title={documentTitle} description={ducmentDescription} jsonlds={getJsonlds()} />
-      {!university && (
-        <Script id="clarity-new-version" strategy="lazyOnload" type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "g1qw1smpmx");`}
-        </Script>
-      )}
+      <Seo
+        title={documentTitle}
+        description={ducmentDescription}
+        jsonlds={getJsonlds()}
+        openGraph={{
+          image: {
+            src: publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image,
+            alt: profileData?.display_name,
+            type: 'image/jpg',
+          },
+        }}
+      />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
@@ -586,13 +598,42 @@ const DoctorProfile = ({ query: { university } }: any) => {
           {profileData && Object.entries(layout.sideBar).map(([key, Component]) => <Component key={key} doctor={profileData} />)}
         </div>
         {isMobile && !inViewServices && (
-          <div className="fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100">
+          <div
+            className={classNames('fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100', {
+              'bottom-0': isWebView,
+            })}
+          >
             <Button onClick={() => scrollIntoViewWithOffset('#services_section', 90)} block>
               دریافت نوبت
             </Button>
           </div>
         )}
       </div>
+      <Modal noHeader {...beenBeforeModalProps} bodyClassName="space-y-4 flex flex-col items-center">
+        <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image} width={90} height={90} />
+        <Text fontWeight="semiBold">آیا تاکنون توسط {profileData.display_name} ویزیت شده‌اید؟</Text>
+        <div className="flex w-full space-s-3">
+          <Button
+            block
+            onClick={() =>
+              window.location.assign(
+                `https://www.paziresh24.com/comment/?doctorName=${profileData.display_name}&image=${profileData.image}&group_expertises=${
+                  profileData?.group_expertises?.[0]?.name ?? 'سایر'
+                }&group_expertises_slug=${profileData?.group_expertises?.[0]?.en_slug ?? 'other'}&expertise=${
+                  profileData?.expertises?.[0]?.expertise?.name
+                }&doctor_id=${profileData.id}&server_id=${profileData.serverId}&doctor_city=${
+                  profileData.centers.find((center: any) => center.city)[0]
+                }&doctor_slug=${profileData.slug}`,
+              )
+            }
+          >
+            بله
+          </Button>
+          <Button variant="secondary" block onClick={handleCloseBeenBeforeModal}>
+            خیر
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };
@@ -678,7 +719,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
-      await queryClient.fetchQuery(
+      const feedbackData = await queryClient.fetchQuery(
         [
           ServerStateKeysEnum.Feedbacks,
           {
@@ -692,6 +733,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             server_id: data.server_id,
           }),
       );
+      useFeedbackDataStore.getState().setData(feedbackData?.result ?? []);
     } catch (error) {
       console.log(error);
     }
@@ -701,6 +743,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         dehydratedState: dehydrate(queryClient),
         query,
         slug: slugFormmated,
+        initialFeedbackDate: useFeedbackDataStore.getState().data,
       },
     };
   } catch (error) {

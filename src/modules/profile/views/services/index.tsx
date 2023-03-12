@@ -68,15 +68,20 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
         </Card>
       )}
       {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (
-        <>
-          <Text fontWeight="bold" className="px-4 leading-6 md:px-0">
+        <div className="flex flex-col space-y-3 md:hidden">
+          <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
             برترین پزشکان {doctor.expertises[0].expertise_groups[0].name} {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
             <Text fontWeight="medium" fontSize="sm">
               از دیدگاه بیماران
             </Text>
           </Text>
-          <Recommend doctorId={doctor.id} city={doctor.city_en_slug} category={doctor.expertises[0]?.expertise_groups[0].en_slug} />
-        </>
+          <Recommend
+            doctorId={doctor.id}
+            city={doctor.city_en_slug}
+            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
+            className="pr-4 md:pr-0"
+          />
+        </div>
       )}
     </>
   );

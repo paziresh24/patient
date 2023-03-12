@@ -1,10 +1,11 @@
 import { useMoveBook } from '@/common/apis/services/booking/moveBook';
-import ChatIcon from '@/common/components/icons/chat';
+import Text from '@/common/components/atom/text/text';
 import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
+import { CENTERS } from '@/common/types/centers';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
@@ -14,13 +15,13 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import MassengerButton from '../../massengerButton/massengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
 import { OnlineVisitChannels } from '../turnType';
@@ -46,6 +47,7 @@ interface TurnFooterProps {
   activePaymentStatus: boolean;
   patientName: string;
   paymentStatus: PaymentStatus;
+  description: string;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -69,25 +71,42 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     activePaymentStatus,
     patientName,
     paymentStatus,
+    description,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
   const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
+  const { handleOpen: handleOpenTurnDesciription, modalProps: turnDesciriptionProp } = useModal();
+  const { handleOpen: handleOpenRemoveTurn, handleClose: handleCloseRemoveTurnModal, modalProps: removeTurnProp } = useModal();
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
   const [removeModal, setRemoveModal] = useState(false);
   const isBookForToday = isToday(new Date(bookTime));
-  const isShowMoveBookButton = useFeatureIsOn('move-book-butten');
 
   const moveBookApi = useMoveBook();
 
   const shouldShowRemoveTurn =
-    status === BookStatus.notVisited && centerType !== CenterType.consult && paymentStatus !== PaymentStatus.paying;
+    (status === BookStatus.notVisited || (centerType === CenterType.consult && status !== BookStatus.deleted)) &&
+    paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
-    window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
+    splunkInstance().sendEvent({
+      group: 'my-booking',
+      type: 'treatment-details',
+      event: {
+        doctorName,
+        expertise,
+        phoneNumber,
+        nationalCode,
+        action: pdfLink ? 'prescription' : 'description',
+      },
+    });
+
+    if (pdfLink) return window.open(`${publicRuntimeConfig.PRESCRIPTION_API}/pdfs/${pdfLink}`);
+
+    handleOpenTurnDesciription();
   };
 
   const reBook = () => {
@@ -97,7 +116,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const ClinicPrimaryButton = hasPaging && (
     <Button
       variant="secondary"
-      size="sm"
       block={true}
       onClick={() => handleOpenQueueModal()}
       icon={<MegaphoneIcon />}
@@ -106,21 +124,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       دریافت شماره نوبت
     </Button>
   );
-
-  const CunsultPrimaryButton = () => {
-    if (!onlineVisitChannels) return null;
-    const channelsText = {
-      igap: 'آی گپ',
-      whatsapp: 'واتس اپ',
-    };
-    const channel = onlineVisitChannels?.[0];
-    if (!channel) return null;
-    return (
-      <Button variant="secondary" size="sm" block={true} onClick={() => window.open(channel?.channel_link)} icon={<ChatIcon />}>
-        گفتگو با پزشک در {channelsText[channel?.type]}
-      </Button>
-    );
-  };
 
   const removeBookAction = () => {
     return removeBookApi.mutateAsync(
@@ -133,7 +136,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
-            setRemoveModal(false);
+            handleCloseRemoveTurnModal();
             return;
           }
           toast.error(data.data.message);
@@ -143,7 +146,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const showRemoveTurnModal = () => {
-    setRemoveModal(true);
+    handleOpenRemoveTurn();
     splunkInstance().sendEvent({
       group: 'my-turn',
       type: 'delete-turn-footer',
@@ -166,6 +169,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     moveBook({
       bookId: id,
       from,
+    });
+    splunkInstance().sendEvent({
+      group: 'move-book',
+      type: 'confirm',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        patient: {
+          phoneNumber: phoneNumber,
+          name: patientName,
+        },
+      },
     });
     toast.success('جابجایی نوبت با موفقیت انجام شد.');
   };
@@ -190,6 +206,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const redirectToFactor = () => {
     router.push(`/factor/${centerId}/${id}`);
+    splunkInstance().sendEvent({
+      group: 'basket_butten',
+      type: centerId === CENTERS.CONSULT ? 'consult' : 'office',
+      event: {
+        terminal_id: getCookie('terminal_id'),
+        doctorName,
+        expertise,
+        patient: {
+          phoneNumber: phoneNumber,
+          name: patientName,
+        },
+      },
+    });
   };
 
   return (
@@ -197,36 +226,37 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
-          <Button theme="error" variant="secondary" size="sm" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
+          <Button theme="error" variant="secondary" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
             لغو نوبت
           </Button>
         )}
-        {isShowMoveBookButton && status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
-          <Button variant="secondary" size="sm" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
+        {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
+          <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
         )}
       </div>
 
       {paymentStatus === PaymentStatus.paying && (
-        <Button variant="primary" size="sm" block={true} onClick={redirectToFactor}>
+        <Button variant="primary" block={true} onClick={redirectToFactor}>
           نهایی کردن نوبت
         </Button>
       )}
 
-      {centerType === CenterType.consult && paymentStatus !== PaymentStatus.paying && status !== BookStatus.deleted && (
-        <CunsultPrimaryButton />
-      )}
+      {centerType === CenterType.consult &&
+        paymentStatus !== PaymentStatus.paying &&
+        status !== BookStatus.deleted &&
+        onlineVisitChannels && <MassengerButton channels={onlineVisitChannels} />}
 
       {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
-          <Button variant="secondary" size="sm" block={true} onClick={reBook}>
+          <Button variant="secondary" block={true} onClick={reBook}>
             {t('turnAction.rebook')}
           </Button>
-          {pdfLink && (
-            <Button variant="secondary" size="sm" block={true} onClick={showPrescription}>
-              مشاهده نسخه
+          {(pdfLink || !!description) && (
+            <Button variant="secondary" block={true} onClick={showPrescription}>
+              {pdfLink ? 'مشاهده نسخه' : 'توضیحات درمان'}
             </Button>
           )}
         </div>
@@ -245,21 +275,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           currentDate={bookTime}
           loading={moveBookApi.isLoading}
           events={{
-            onFirstFreeTime() {
-              splunkInstance().sendEvent({
-                group: 'move-book',
-                type: 'frist-free-time',
-                event: {
-                  terminal_id: getCookie('terminal_id'),
-                  doctorName,
-                  expertise,
-                  patient: {
-                    phoneNumber: phoneNumber,
-                    name: patientName,
-                  },
-                },
-              });
-            },
             onOtherFreeTime() {
               splunkInstance().sendEvent({
                 group: 'move-book',
@@ -278,7 +293,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }}
         />
       </Modal>
-      <Modal title="آیا از لغو نوبت مطمئن هستید؟" onClose={setRemoveModal} isOpen={removeModal}>
+      <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeTurnProp}>
         <div className="flex space-s-2">
           <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
             لغو نوبت
@@ -293,6 +308,9 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             انصراف
           </Button>
         </div>
+      </Modal>
+      <Modal {...turnDesciriptionProp} title="توضیحات درمان">
+        <Text fontSize="sm">{description}</Text>
       </Modal>
     </>
   );

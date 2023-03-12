@@ -38,12 +38,14 @@ export const Turn: React.FC<TurnProps> = props => {
         trackingCode={turnDetails.trackingCode}
         nationalCode={patientInfo.nationalCode}
         status={status}
+        paymentStatus={paymentStatus}
       />
 
       <TurnBody
         id={id}
         doctorInfo={doctorInfo}
         centerId={centerInfo.centerId}
+        paymentStatus={paymentStatus}
         centerType={centerType}
         detailsData={detailsData}
         location={location}
@@ -62,6 +64,7 @@ export const Turn: React.FC<TurnProps> = props => {
         phoneNumber={patientInfo.cell}
         patientName={turnDetails.patientName}
         pdfLink={prescription?.pdf}
+        description={turnDetails.description}
         slug={doctorInfo.slug}
         status={status}
         paymentStatus={paymentStatus}

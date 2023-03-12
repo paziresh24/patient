@@ -6,6 +6,7 @@ interface Window {
     updateCity: any;
     rateApp: any;
   };
+  doctor: any;
 }
 
 declare const window: Window;

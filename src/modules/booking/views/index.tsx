@@ -450,7 +450,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
           />
           {center?.id === CENTERS.CONSULT && (
-            <div className="p-2 rounded-md bg-slate-100 mb-3">
+            <div className="p-2 mb-3 rounded-md bg-slate-100">
               <Text
                 fontSize="sm"
                 dangerouslySetInnerHTML={{
@@ -572,7 +572,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {profile?.should_recommend_other_doctors && !university && (
+          {!university && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}
