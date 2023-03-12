@@ -204,7 +204,15 @@ const Receipt = () => {
               نوبت های من
             </Button>
           )}
-          {centerType === 'consult' && <MassengerButton channels={bookDetailsData.doctor?.online_visit_channels} />}
+          {centerType === 'consult' && (
+            <MassengerButton
+              channel={
+                bookDetailsData.selected_online_visit_channel?.type
+                  ? bookDetailsData.selected_online_visit_channel
+                  : bookDetailsData.doctor?.online_visit_channels[0]
+              }
+            />
+          )}
         </div>
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo

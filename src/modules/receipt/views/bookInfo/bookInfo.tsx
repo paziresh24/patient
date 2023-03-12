@@ -1,4 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton';
+import { Massenger, massengers } from '@/common/constants/massengers';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -49,7 +50,12 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               durationConversation: turnData?.duration_conversation_doctor,
-              doctorPhone: turnData?.whatsapp_cell_doctor,
+              doctorPhone: turnData.selected_online_visit_channel?.type
+                ? turnData.selected_online_visit_channel.channel
+                : turnData.doctor?.online_visit_channels?.[0]?.channel,
+              onlineChannel: turnData.selected_online_visit_channel?.type
+                ? turnData.selected_online_visit_channel?.type
+                : turnData.doctor?.online_visit_channels?.[0]?.type,
               receiptLink: turnData?.share_url,
               centerId: centerId,
               patientInfo: {
@@ -60,7 +66,13 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               },
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
-                  ? turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
+                  ? turnData.selected_online_visit_channel?.type
+                    ? [
+                        `لطفا در <b>${
+                          massengers[turnData.selected_online_visit_channel?.type as Massenger]
+                        }</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.`,
+                      ]
+                    : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
                     ? [
                         ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
                         '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',

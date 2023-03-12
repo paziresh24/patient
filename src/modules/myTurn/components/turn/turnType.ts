@@ -21,7 +21,7 @@ export interface TurnProps {
     lastName: string;
     expertise?: string;
     slug: string;
-    onlineVisitChannels?: OnlineVisitChannels;
+    onlineVisitChannel?: OnlineVisitChannel;
   };
   patientInfo: {
     nationalCode: string;
@@ -46,8 +46,8 @@ export interface TurnProps {
   };
 }
 
-export type OnlineVisitChannels = {
+export type OnlineVisitChannel = {
   type: 'igap' | 'whatsapp';
   channel: string;
   channel_link: string;
-}[];
+};

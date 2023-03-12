@@ -3,6 +3,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { Massenger, massengers } from '@/common/constants/massengers';
 import { withCSR } from '@/common/hoc/withCsr';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
@@ -52,22 +53,46 @@ const Factor = () => {
             isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
           />
           <div>
-            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
-              <Text fontSize="xs" className="opacity-70">
-                {centerId === CENTERS.CONSULT ? 'خدمت' : 'مرکز'}
-              </Text>
-              {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
-                <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
-              )}
-              {getBookDetails.isSuccess && bookDetailsData && (
-                <Text fontSize="sm" fontWeight="medium">
-                  {centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : bookDetailsData?.center_name}
+            {centerId !== CENTERS.CONSULT && (
+              <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+                <Text fontSize="xs" className="opacity-70">
+                  مرکز
                 </Text>
-              )}
-            </div>
+                {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
+                  <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
+                )}
+                {getBookDetails.isSuccess && bookDetailsData && (
+                  <Text fontSize="sm" fontWeight="medium">
+                    {bookDetailsData?.center_name}
+                  </Text>
+                )}
+              </div>
+            )}
+            {centerId === CENTERS.CONSULT && bookDetailsData?.book_params?.online_channel && (
+              <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+                <Text fontSize="xs" className="opacity-70">
+                  نام پیام رسان
+                </Text>
+                {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
+                  <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
+                )}
+                {getBookDetails.isSuccess && bookDetailsData && (
+                  <Text fontSize="sm" fontWeight="medium" className="flex items-center">
+                    <img
+                      src={massengers[bookDetailsData?.book_params?.online_channel as Massenger]?.icon}
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="ml-1"
+                    />
+                    {massengers[bookDetailsData?.book_params?.online_channel as Massenger]?.name}
+                  </Text>
+                )}
+              </div>
+            )}
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
               <Text fontSize="xs" className="opacity-70">
-                {centerId === CENTERS.CONSULT ? 'زمان تماس با شما' : 'زمان نوبت'}
+                {centerId === CENTERS.CONSULT ? 'زمان گفتگو با شما' : 'زمان نوبت'}
               </Text>
               {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
                 <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />

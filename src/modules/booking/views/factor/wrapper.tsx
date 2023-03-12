@@ -73,7 +73,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
           className="self-end w-full md:w-44"
           loading={centerPayment.isLoading || consultPayment.isLoading}
         >
-          {centerId === CENTERS.CONSULT ? 'پرداخت و شروع گفتگو' : 'پرداخت و ثبت نوبت'}
+          {centerId === CENTERS.CONSULT ? 'پرداخت و رزرو گفتگو' : 'پرداخت و ثبت نوبت'}
         </Button>
       </div>
     </div>
