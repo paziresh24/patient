@@ -69,11 +69,7 @@ export const Rate = (props: RateProps) => {
                     !isLoading &&
                     feedbacks.map((feedback, index) => <FeedbackCard className="border-b-0" key={index + 1} feedback={feedback} />)}
                   {isLoading && <RateLoading />}
-                  {!feedbacks?.length && !isLoading && (
-                    <div className="p-4">
-                      <NotFound />
-                    </div>
-                  )}
+                  {!feedbacks?.length && !isLoading && <NotFound />}
                 </div>
               </div>
             )}
@@ -91,7 +87,7 @@ export const Rate = (props: RateProps) => {
 
 const NotFound = () => {
   return (
-    <div className="h-[5rem] w-full rounded-xl flex justify-center items-center bg-slate-100">
+    <div className="h-[5rem] p-4 w-full rounded-xl flex justify-center items-center bg-slate-100">
       <Text fontSize="sm" fontWeight="extraBold">
         موردی یافت نشد !
       </Text>

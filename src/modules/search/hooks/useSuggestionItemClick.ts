@@ -27,9 +27,6 @@ export const useSuggestionItem = () => {
     } else if (item.absolute_url) {
       window.location.href = item.url ?? '#';
     } else {
-      if (item.url?.startsWith('/dr')) {
-        return (window.location.href = item.url ?? '#');
-      }
       router.push(item.url ?? '/s', undefined, { ...(item.url?.startsWith('/s') && { shallow: true }), scroll: true });
       setIsOpenSuggestion(false);
       setTimeout(() => setUserSearchValue(''), 0);

@@ -29,6 +29,7 @@ import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
+import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Activity from '@/modules/profile/views/activity';
 import Head from '@/modules/profile/views/head/head';
 import RateReview from '@/modules/profile/views/rateReview';
@@ -50,7 +51,9 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university } }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
+  useFeedbackDataStore.getState().data = initialFeedbackDate;
+
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
   const addPageView = usePageView();
@@ -106,6 +109,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
         serverId: profileData.server_id,
       });
       setProfileData(profileData);
+      window.doctor = profileData;
       if (document.referrer.includes('google.') && !getCookie('isBeenBefore')) {
         handleOpenBeenBeforeModal();
         setCookie('isBeenBefore', true, {
@@ -368,7 +372,6 @@ const DoctorProfile = ({ query: { university } }: any) => {
               } جهت مشاهده خدمات و دریافت نوبت آنلاین مطب شخصی، کلینیک، درمانگاه و بیمارستان هایی که ایشان در حال ارائه خدمات درمانی هستند از طریق پذیرش24 طراحی و ارائه شده است. البته ممکن است در حال حاضر امکان رزرو نوبت از همه مراکز فوق ممکن نباشد که این موضوع وابسته به تصمیم ${
                 doctor.gender === 0 ? '' : doctor.gender == 1 ? 'آقای' : 'خانم'
               } دکتر در ارائه نوبت گیری از درگاه های فوق بوده است.`}
-              breadcrumbs={createBreadcrumb(internalLinks?.data, doctor.display_name, router.asPath)}
             />
           );
         },
@@ -609,7 +612,7 @@ const DoctorProfile = ({ query: { university } }: any) => {
       <Modal noHeader {...beenBeforeModalProps} bodyClassName="space-y-4 flex flex-col items-center">
         <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image} width={90} height={90} />
         <Text fontWeight="semiBold">آیا تاکنون توسط {profileData.display_name} ویزیت شده‌اید؟</Text>
-        <div className="flex space-s-3 w-full">
+        <div className="flex w-full space-s-3">
           <Button
             block
             onClick={() =>
@@ -716,7 +719,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
 
     try {
-      await queryClient.fetchQuery(
+      const feedbackData = await queryClient.fetchQuery(
         [
           ServerStateKeysEnum.Feedbacks,
           {
@@ -730,6 +733,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             server_id: data.server_id,
           }),
       );
+      useFeedbackDataStore.getState().setData(feedbackData?.result ?? []);
     } catch (error) {
       console.log(error);
     }
@@ -739,6 +743,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         dehydratedState: dehydrate(queryClient),
         query,
         slug: slugFormmated,
+        initialFeedbackDate: useFeedbackDataStore.getState().data,
       },
     };
   } catch (error) {

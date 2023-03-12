@@ -571,7 +571,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {university && (
+          {!university && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}
