@@ -72,8 +72,8 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 13,
       name: 'شماره پزشک',
-      value: `0${doctorPhone}`,
-      shouldShow: centerType === CenterType.consult,
+      value: doctorPhone,
+      shouldShow: centerType === CenterType.consult && doctorPhone,
       type: 'Text',
       isBoldValue: false,
     },
