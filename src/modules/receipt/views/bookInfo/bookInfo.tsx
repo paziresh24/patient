@@ -68,9 +68,9 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 rules: isConsultReceipt
                   ? turnData.selected_online_visit_channel?.type
                     ? [
-                        `لطفا در <b>${
-                          massengers[turnData.selected_online_visit_channel?.type as Massenger]
-                        }</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.`,
+                        `لطفا <b>قبض نوبت</b> خود را در <b>${
+                          massengers[turnData.selected_online_visit_channel?.type as Massenger].name
+                        }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
                     : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
                     ? [
