@@ -17,17 +17,17 @@ import UserCard from '../../components/userCard';
 interface SelectUserProps {
   onSelect: (user: any) => void;
   className?: string;
+  shouldShowMassengers: boolean;
 }
 
 export const SelectUser = (props: SelectUserProps) => {
-  const { onSelect, className } = props;
+  const { onSelect, className, shouldShowMassengers } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { data, mutate, isSuccess, isLoading, isIdle } = useGetSubuser();
   const addSubUser = useAddSubuser();
   const { handleOpen: handleOpenAddUserModal, handleClose: handleCloseAddUserModal, modalProps: addUserModalProps } = useModal();
-
   const [userSelected, setUserSelected] = useState(userInfo.id);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export const SelectUser = (props: SelectUserProps) => {
 
   const handleSelectUser = (user: UserInfo, massengerType?: string) => {
     setUserSelected(user.id);
-    onSelect({ ...user, massengerType: massengerType });
+    onSelect({ ...user, ...(massengerType && { massengerType }) });
   };
 
   const getUserWithId = (id: string) => {
@@ -105,6 +105,7 @@ export const SelectUser = (props: SelectUserProps) => {
               onSelect={(id, payload) => handleSelectUser(getUserWithId(id), payload?.massengerType as string)}
               select={userInfo.id === userSelected}
               type="user"
+              shouldShowMassengers={shouldShowMassengers}
             />
             {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
@@ -120,6 +121,7 @@ export const SelectUser = (props: SelectUserProps) => {
                 onSelect={id => handleSelectUser(getUserWithId(id))}
                 select={item.id === userSelected}
                 type="subUser"
+                shouldShowMassengers={shouldShowMassengers}
               />
             ))}
           </>

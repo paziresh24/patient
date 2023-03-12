@@ -1,4 +1,5 @@
 import InfoIcon from '@/common/components/icons/info';
+import { Massenger, massengers } from '@/common/constants/massengers';
 import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
 import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -18,6 +19,7 @@ interface TurnDetailsDataParam {
     turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
+    onlineChannel?: Massenger;
     durationConversation?: string;
     centerName: string;
     receiptLink?: string;
@@ -34,6 +36,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
   const {
     bookTime,
     trackingCode,
+    onlineChannel,
     waitingTime,
     centerName,
     centerPhone,
@@ -51,12 +54,28 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
 
   const lists = [
     {
+      id: 17,
+      name: 'نام پیام رسان',
+      value: onlineChannel && massengers[onlineChannel].name,
+      shouldShow: centerType === CenterType.consult && onlineChannel,
+      type: 'Text',
+      isBoldValue: true,
+    },
+    {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
       value: dateTime,
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
+    },
+    {
+      id: 13,
+      name: 'شماره پزشک',
+      value: `0${doctorPhone}`,
+      shouldShow: centerType === CenterType.consult,
+      type: 'Text',
+      isBoldValue: false,
     },
     {
       id: 2,
@@ -122,14 +141,6 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       type: 'Text',
       isBoldValue: false,
     },
-    // {
-    //   id: 13,
-    //   name: 'شماره پزشک',
-    //   value: doctorPhone,
-    //   shouldShow: centerType === CenterType.consult,
-    //   type: 'Text',
-    //   isBoldValue: false,
-    // },
     {
       id: 14,
       name: 'لینک قبض نوبت',

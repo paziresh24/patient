@@ -1,18 +1,17 @@
 import Button from '@/common/components/atom/button';
-import ChatIcon from '@/common/components/icons/chat';
-import { OnlineVisitChannels } from '../turn/turnType';
+import { massengers } from '@/common/constants/massengers';
+import { OnlineVisitChannel } from '../turn/turnType';
 
-export const MassengerButton = ({ channels }: { channels: OnlineVisitChannels }) => {
-  if (!channels) return null;
-  const channelsText = {
-    igap: 'آی گپ',
-    whatsapp: 'واتس اپ',
-  };
-  const channel = channels?.[0];
+export const MassengerButton = ({ channel }: { channel: OnlineVisitChannel }) => {
   if (!channel) return null;
   return (
-    <Button variant="secondary" block={true} onClick={() => window.open(channel?.channel_link)} icon={<ChatIcon />}>
-      گفتگو با پزشک در {channelsText[channel?.type]}
+    <Button
+      variant="secondary"
+      block={true}
+      onClick={() => window.open(channel?.channel_link)}
+      icon={<img src={massengers[channel?.type]?.icon} width={24} height={24} alt="" className="ml-1" />}
+    >
+      شروع گفتگو با پزشک در {massengers[channel?.type].name}
     </Button>
   );
 };

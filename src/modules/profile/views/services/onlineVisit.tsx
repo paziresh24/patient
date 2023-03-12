@@ -31,7 +31,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
       footer={{
         actions: [
           {
-            text: 'شروع گفتگو',
+            text: 'رزرو گفتگو',
             onClick: onBook,
             loading: loading,
           },

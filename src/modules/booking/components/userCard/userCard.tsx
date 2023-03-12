@@ -25,10 +25,12 @@ interface UserCardProps {
   select: boolean;
   onSelect: (id: string, payload?: Record<string, unknown>) => void;
   type: 'user' | 'subUser';
+  shouldShowMassengers: boolean;
 }
 
 export const UserCard = (props: UserCardProps) => {
-  const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type } = props;
+  const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type, shouldShowMassengers } =
+    props;
 
   const editSubuser = useEditSubuser();
   const updateUser = useUpdateUser();
@@ -100,7 +102,7 @@ export const UserCard = (props: UserCardProps) => {
           updateUser.reset();
         }}
       >
-        {select && (
+        {select && shouldShowMassengers && (
           <>
             <Text fontWeight="medium" fontSize="sm">
               از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
@@ -109,14 +111,14 @@ export const UserCard = (props: UserCardProps) => {
               <div className="w-full">
                 <input
                   onChange={e => e.target.checked && handleSelect('igap')}
-                  className="peer hidden absolute"
+                  className="absolute hidden peer"
                   type="radio"
                   name="messagenrs"
                   id="igap"
                 />
                 <label
                   htmlFor="igap"
-                  className="flex transition-colors peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary  cursor-pointer items-center justify-center w-full py-2 border rounded-lg space-s-2 border-slate-200 text-slate-400"
+                  className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
                 >
                   <img src={igapIcon.src} width={28} height={28} alt="" />
                   <Text fontWeight="medium">آی گپ</Text>
@@ -125,14 +127,14 @@ export const UserCard = (props: UserCardProps) => {
               <div className="w-full">
                 <input
                   onChange={e => e.target.checked && handleSelect('whatsapp')}
-                  className="hidden peer absolute"
+                  className="absolute hidden peer"
                   type="radio"
                   name="messagenrs"
                   id="whatsapp"
                 />
                 <label
                   htmlFor="whatsapp"
-                  className="flex transition-colors peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary cursor-pointer items-center justify-center w-full py-2 border rounded-lg space-s-2 border-slate-200 text-slate-400"
+                  className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
                 >
                   <img src={whatsappIcon.src} width={28} height={28} alt="" />
                   <Text fontWeight="medium">واتساپ</Text>

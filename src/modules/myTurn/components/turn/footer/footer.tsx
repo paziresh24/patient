@@ -24,7 +24,7 @@ import { toast } from 'react-hot-toast';
 import MassengerButton from '../../massengerButton/massengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
-import { OnlineVisitChannels } from '../turnType';
+import { OnlineVisitChannel } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -41,7 +41,7 @@ interface TurnFooterProps {
   phoneNumber: string;
   doctorName: string;
   expertise: string;
-  onlineVisitChannels?: OnlineVisitChannels;
+  onlineVisitChannel?: OnlineVisitChannel;
   serviceId: string;
   userCenterId: string;
   activePaymentStatus: boolean;
@@ -59,7 +59,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     centerType,
     hasPaging,
     bookTime,
-    onlineVisitChannels,
+    onlineVisitChannel,
     centerId,
     nationalCode,
     trackingCode,
@@ -224,6 +224,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
+      {centerType === CenterType.consult &&
+        paymentStatus !== PaymentStatus.paying &&
+        status !== BookStatus.deleted &&
+        onlineVisitChannel && <MassengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button theme="error" variant="secondary" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
@@ -242,11 +246,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           نهایی کردن نوبت
         </Button>
       )}
-
-      {centerType === CenterType.consult &&
-        paymentStatus !== PaymentStatus.paying &&
-        status !== BookStatus.deleted &&
-        onlineVisitChannels && <MassengerButton channels={onlineVisitChannels} />}
 
       {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
         <div className="flex gap-2">
