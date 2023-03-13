@@ -101,11 +101,7 @@ const Search = () => {
         <SearchSeoBox />
         {!isWebView && (
           <Button
-            onClick={() =>
-              (window.location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form-search/?p24refer=${decodeURIComponent(
-                asPath,
-              )}`)
-            }
+            onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
             variant="text"
             className="!my-5 gap-2 self-end"
             icon={<ErrorIcon className="w-5" />}
