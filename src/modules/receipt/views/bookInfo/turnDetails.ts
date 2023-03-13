@@ -142,6 +142,14 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: false,
     },
     {
+      id: 12,
+      name: 'کد پیگیری',
+      value: trackingCode,
+      shouldShow: centerType === CenterType.consult && trackingCode,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
       id: 14,
       name: 'لینک قبض نوبت',
       value: receiptLink,

@@ -2,10 +2,10 @@ import { Client } from '@elastic/elasticsearch';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const client = new Client({
-  node: 'http://192.168.216.72:9200',
+  node: process.env.ELASTIC_URL,
   auth: {
-    username: 'elastic',
-    password: 'Elastic_25015015',
+    username: process.env.ELASTIC_USERNAME ?? '',
+    password: process.env.ELASTIC_PASSWORD ?? '',
   },
 });
 
