@@ -73,6 +73,9 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [{ source: '/patient/api/:path*', destination: '/api/:path*' }];
+  },
 };
 
 const sentryWebpackPluginOptions = {

@@ -96,7 +96,7 @@ function MyApp(props: AppProps) {
 }
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
-  if (metric.label === 'custom') return;
+  if (metric.label === 'custom' && !publicRuntimeConfig.IS_PRODUCTION) return;
 
   const body = JSON.stringify({
     ...metric,
@@ -106,7 +106,7 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
       url: window.location.pathname,
     },
   });
-  const url = '/api/webvitals';
+  const url = '/patient/api/webvitals/';
 
   if (navigator.sendBeacon) {
     navigator.sendBeacon(url, body);
