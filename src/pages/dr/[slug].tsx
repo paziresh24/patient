@@ -493,6 +493,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
         '@type': 'Physician',
         'priceRange': '$$',
         'name': profileData.display_name,
+        'telephone': center?.display_number,
         'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
@@ -517,8 +518,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'telephone': center?.display_number,
         'name': profileData.display_name,
+        'telephone': center?.display_number,
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {

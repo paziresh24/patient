@@ -119,6 +119,7 @@ const CenterProfile = ({ query: { university } }: any) => {
         '@type': 'Physician',
         'priceRange': '$$',
         'name': profileData.name,
+        'telephone': profileData?.tell,
         'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
@@ -138,8 +139,8 @@ const CenterProfile = ({ query: { university } }: any) => {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'telephone': profileData?.tell,
         'name': profileData.name,
+        'telephone': profileData?.tell,
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
