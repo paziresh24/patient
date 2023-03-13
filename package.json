@@ -17,6 +17,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "8.6.0",
     "@growthbook/growthbook-react": "0.11.2",
     "@next/bundle-analyzer": "12.3.1",
     "@next/font": "13.2.3",
