@@ -1,7 +1,7 @@
 import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser';
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
-import igapIcon from '@/common/assets/massagers/igap.png';
-import whatsappIcon from '@/common/assets/massagers/whatsapp.png';
+import igapIcon from '@/common/assets/messenger/igap.png';
+import whatsappIcon from '@/common/assets/messenger/whatsapp.png';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
@@ -25,11 +25,11 @@ interface UserCardProps {
   select: boolean;
   onSelect: (id: string, payload?: Record<string, unknown>) => void;
   type: 'user' | 'subUser';
-  shouldShowMassengers: boolean;
+  shouldShowMessengers: boolean;
 }
 
 export const UserCard = (props: UserCardProps) => {
-  const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type, shouldShowMassengers } =
+  const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type, shouldShowMessengers } =
     props;
 
   const editSubuser = useEditSubuser();
@@ -81,9 +81,9 @@ export const UserCard = (props: UserCardProps) => {
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
-  const handleSelect = (massengerType?: string) => {
+  const handleSelect = (messengerType?: string) => {
     onSelect(userId, {
-      ...(massengerType && { massengerType }),
+      ...(messengerType && { messengerType: messengerType }),
     });
   };
 
@@ -102,7 +102,7 @@ export const UserCard = (props: UserCardProps) => {
           updateUser.reset();
         }}
       >
-        {select && shouldShowMassengers && (
+        {select && shouldShowMessengers && (
           <>
             <Text fontWeight="medium" fontSize="sm">
               از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟

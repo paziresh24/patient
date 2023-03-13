@@ -21,7 +21,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import MassengerButton from '../../massengerButton/massengerButton';
+import MessengerButton from '../../messengerButton/messengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
 import { OnlineVisitChannel } from '../turnType';
@@ -227,7 +227,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {centerType === CenterType.consult &&
         paymentStatus !== PaymentStatus.paying &&
         status !== BookStatus.deleted &&
-        onlineVisitChannel && <MassengerButton channel={onlineVisitChannel} />}
+        onlineVisitChannel && <MessengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button theme="error" variant="secondary" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
