@@ -52,6 +52,7 @@ import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
+import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import useBooking from '../hooks/booking';
@@ -117,7 +118,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const massengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
+  const messengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -165,7 +166,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    if (center.id === CENTERS.CONSULT && !user.massengerType && massengerSelectDoctorIds.includes(profile?.id))
+    if (center.id === CENTERS.CONSULT && !user.messengerType && messengerSelectDoctorIds?.includes?.(profile?.id))
       return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
@@ -188,6 +189,14 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
+          if (user.messengerType)
+            splunkBookingInstance().sendEvent({
+              group: 'patient-visit-online',
+              type: 'app',
+              event: {
+                action: user.messengerType,
+              },
+            });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
             location.assign(`${data.bookInfo?.payment?.redirect_url}`);
@@ -469,7 +478,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               loading: bookLoading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
-              shouldShowMassengers: massengerSelectDoctorIds.includes(profile?.id),
+              shouldShowMessengers: messengerSelectDoctorIds?.includes?.(profile?.id),
             }}
             nextStep={async (user: UserInfo) => {
               setUser(user);

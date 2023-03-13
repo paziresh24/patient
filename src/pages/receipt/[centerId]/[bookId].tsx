@@ -18,7 +18,7 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import MassengerButton from '@/modules/myTurn/components/massengerButton/massengerButton';
+import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import md5 from 'md5';
@@ -205,7 +205,7 @@ const Receipt = () => {
             </Button>
           )}
           {centerType === 'consult' && (
-            <MassengerButton
+            <MessengerButton
               channel={
                 bookDetailsData.selected_online_visit_channel?.type
                   ? bookDetailsData.selected_online_visit_channel

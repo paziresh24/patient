@@ -42,7 +42,7 @@ export const useBooking = () => {
       cell: user.cell,
       selected_user_id: user.id,
       is_foreigner: user.is_foreigner,
-      ...(user.massengerType && { online_channel: user.massengerType }),
+      ...(user.messengerType && { online_channel: user.messengerType }),
       ...(user.national_code && { national_code: user.national_code }),
       ...(user.insurance_id && { insurance_id: user.insurance_id }),
       ...(user.insurance_referral_code && { insurance_referral_code: user.insurance_referral_code }),

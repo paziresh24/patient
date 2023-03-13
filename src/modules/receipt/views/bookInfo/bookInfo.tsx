@@ -1,5 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton';
-import { Massenger, massengers } from '@/common/constants/massengers';
+import { Messenger, messengers } from '@/common/constants/messengers';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -69,7 +69,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                   ? turnData.selected_online_visit_channel?.type
                     ? [
                         `لطفا <b>قبض نوبت</b> خود را در <b>${
-                          massengers[turnData.selected_online_visit_channel?.type as Massenger].name
+                          messengers[turnData.selected_online_visit_channel?.type as Messenger].name
                         }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
                     : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap

@@ -1,5 +1,5 @@
 import InfoIcon from '@/common/components/icons/info';
-import { Massenger, massengers } from '@/common/constants/massengers';
+import { Messenger, messengers } from '@/common/constants/messengers';
 import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
 import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -19,7 +19,7 @@ interface TurnDetailsDataParam {
     turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
-    onlineChannel?: Massenger;
+    onlineChannel?: Messenger;
     durationConversation?: string;
     centerName: string;
     receiptLink?: string;
@@ -56,7 +56,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && massengers[onlineChannel].name,
+      value: onlineChannel && messengers[onlineChannel].name,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,

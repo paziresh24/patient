@@ -1,4 +1,4 @@
-import igapIcon from '@/common/assets/massagers/igap.png';
+import igapIcon from '@/common/assets/messenger/igap.png';
 import PhoneIcon from '@/common/components/icons/phone';
 import { addCommas } from '@persian-tools/persian-tools';
 import { ServiceCard } from './card';

@@ -3,7 +3,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { Massenger, massengers } from '@/common/constants/massengers';
+import { Messenger, messengers } from '@/common/constants/messengers';
 import { withCSR } from '@/common/hoc/withCsr';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
@@ -79,13 +79,13 @@ const Factor = () => {
                 {getBookDetails.isSuccess && bookDetailsData && (
                   <Text fontSize="sm" fontWeight="medium" className="flex items-center">
                     <img
-                      src={massengers[bookDetailsData?.book_params?.online_channel as Massenger]?.icon}
+                      src={messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.icon}
                       width={24}
                       height={24}
                       alt=""
                       className="ml-1"
                     />
-                    {massengers[bookDetailsData?.book_params?.online_channel as Massenger]?.name}
+                    {messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.name}
                   </Text>
                 )}
               </div>

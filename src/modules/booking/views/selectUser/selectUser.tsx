@@ -17,11 +17,11 @@ import UserCard from '../../components/userCard';
 interface SelectUserProps {
   onSelect: (user: any) => void;
   className?: string;
-  shouldShowMassengers: boolean;
+  shouldShowMessengers: boolean;
 }
 
 export const SelectUser = (props: SelectUserProps) => {
-  const { onSelect, className, shouldShowMassengers } = props;
+  const { onSelect, className, shouldShowMessengers } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -78,9 +78,9 @@ export const SelectUser = (props: SelectUserProps) => {
     if (res.data.status !== ClinicStatus.FORM_VALIDATION) toast.error(res.data.message);
   };
 
-  const handleSelectUser = (user: UserInfo, massengerType?: string) => {
+  const handleSelectUser = (user: UserInfo, messengerType?: string) => {
     setUserSelected(user.id);
-    onSelect({ ...user, ...(massengerType && { massengerType }) });
+    onSelect({ ...user, ...(messengerType && { messengerType }) });
   };
 
   const getUserWithId = (id: string) => {
@@ -102,10 +102,10 @@ export const SelectUser = (props: SelectUserProps) => {
               isForeigner={userInfo.is_foreigner ?? false}
               gender={userInfo.gender ?? ''}
               refetchData={mutate}
-              onSelect={(id, payload) => handleSelectUser(getUserWithId(id), payload?.massengerType as string)}
+              onSelect={(id, payload) => handleSelectUser(getUserWithId(id), payload?.messengerType as string)}
               select={userInfo.id === userSelected}
               type="user"
-              shouldShowMassengers={shouldShowMassengers}
+              shouldShowMessengers={shouldShowMessengers}
             />
             {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
@@ -121,7 +121,7 @@ export const SelectUser = (props: SelectUserProps) => {
                 onSelect={id => handleSelectUser(getUserWithId(id))}
                 select={item.id === userSelected}
                 type="subUser"
-                shouldShowMassengers={shouldShowMassengers}
+                shouldShowMessengers={shouldShowMessengers}
               />
             ))}
           </>
