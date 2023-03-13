@@ -7,7 +7,7 @@ import { Hydrate } from 'react-query';
 // @ts-ignore
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
-import type { AppProps as NextAppProps } from 'next/app';
+import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
 import getConfig from 'next/config';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
@@ -93,6 +93,26 @@ function MyApp(props: AppProps) {
       </GrowthBookProvider>
     </Provider>
   );
+}
+
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  if (metric.label === 'custom') return;
+
+  const body = JSON.stringify({
+    ...metric,
+    attribution: {
+      ...metric.attribution,
+      userAgent: window.navigator.userAgent,
+      url: window.location.pathname,
+    },
+  });
+  const url = '/api/webvitals';
+
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(url, body);
+  } else {
+    fetch(url, { body, method: 'POST', keepalive: true });
+  }
 }
 
 export default MyApp;

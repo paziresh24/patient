@@ -24,6 +24,9 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
+  experimental: {
+    webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+  },
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.DefinePlugin({
