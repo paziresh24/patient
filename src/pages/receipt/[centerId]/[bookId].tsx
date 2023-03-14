@@ -208,8 +208,8 @@ const Receipt = () => {
             <MessengerButton
               channel={
                 bookDetailsData.selected_online_visit_channel?.type
-                  ? bookDetailsData.selected_online_visit_channel
-                  : bookDetailsData.doctor?.online_visit_channels[0]
+                  ? bookDetailsData?.selected_online_visit_channel
+                  : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
               }
             />
           )}
