@@ -69,7 +69,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                   ? turnData.selected_online_visit_channel?.type
                     ? [
                         `لطفا <b>قبض نوبت</b> خود را در <b>${
-                          messengers[turnData.selected_online_visit_channel?.type as Messenger].name
+                          messengers[turnData.selected_online_visit_channel?.type as Messenger]?.name
                         }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
                     : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap

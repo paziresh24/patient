@@ -18,7 +18,7 @@ export const MessengerButton = ({ channel }: { channel: OnlineVisitChannel }) =>
       }}
       icon={<img src={messengers[channel?.type]?.icon} width={24} height={24} alt="" className="ml-1" />}
     >
-      شروع گفتگو با پزشک در {messengers[channel?.type].name}
+      شروع گفتگو با پزشک در {messengers[channel?.type]?.name}
     </Button>
   );
 };

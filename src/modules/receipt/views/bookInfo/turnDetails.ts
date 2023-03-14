@@ -56,7 +56,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && messengers[onlineChannel].name,
+      value: onlineChannel && messengers[onlineChannel]?.name,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,
