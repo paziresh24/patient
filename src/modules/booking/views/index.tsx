@@ -461,7 +461,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             searchText={symptomSearchText}
             className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
           />
-          {center?.id === CENTERS.CONSULT && !massengerSelectDoctorIds.includes(profile?.id) && (
+          {center?.id === CENTERS.CONSULT && !messengerSelectDoctorIds.includes(profile?.id) && (
             <div className="p-2 mb-3 rounded-md bg-slate-100">
               <Text
                 fontSize="sm"

@@ -41,19 +41,22 @@
   }
 }
 
-body {
-  color: #2b2f33;
+* {
   -moz-font-feature-settings: 'ss02';
   -webkit-font-feature-settings: 'ss02';
   font-feature-settings: 'ss02';
+}
+
+body {
+  color: #2b2f33;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.dont-fa-number-font {
-  -moz-font-feature-settings: unset;
-  -webkit-font-feature-settings: unset;
-  font-feature-settings: unset;
+.dont-fa-number-font * {
+  -moz-font-feature-settings: normal !important;
+  -webkit-font-feature-settings: normal !important;
+  font-feature-settings: normal !important;
 }
 
 button {
