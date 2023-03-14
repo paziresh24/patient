@@ -96,7 +96,7 @@ function MyApp(props: AppProps) {
 }
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
-  if (metric.label === 'custom' && !publicRuntimeConfig.IS_PRODUCTION) return;
+  if (metric.label === 'custom' || !publicRuntimeConfig.IS_PRODUCTION) return;
 
   const body = JSON.stringify({
     ...metric,
