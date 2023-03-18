@@ -6,7 +6,6 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import Recommend from '@/modules/booking/components/recommend/recommend';
@@ -16,10 +15,10 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import doctorMessengers from '@/modules/profile/constants/doctorMessengers.json';
 import messengers from '@/modules/profile/constants/messengers.json';
-import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
@@ -45,7 +44,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const { channelType, doctorId, price, title, userCenterId, slug, id, duration, city, expertise } = props;
   const { handleOpen: handleOpenBookingModal, handleClose: handleCloseBoolingModal, modalProps: bookingModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
-
+  const { profileEvent } = useProfileSplunkEvent();
   const freeTurn = useGetFreeTurn();
   const isWebView = useWebView();
   const [timeId, setTimeId] = useState('');
@@ -61,19 +60,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   };
 
   const handleOpenBooking = async () => {
-    splunkInstance().sendEvent({
-      group: 'doctor profile',
-      type: 'doctor profile press online visit book button',
-      event: {
-        data: {
-          terminal_id: getCookie('terminal_id'),
-          user_agent: window.navigator.userAgent,
-          page_url: window.location.pathname,
-          referrer: document.referrer,
-          doctor_id: doctorId,
-        },
-      },
-    });
+    profileEvent('doctor profile press online visit book button');
     sendGaEvent({ action: 'booking-consult', category: 'click-start-whatsapp-consult', label: 'click-start-whatsapp-consult' });
 
     const { data } = await freeTurn.mutateAsync({
@@ -121,19 +108,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   };
 
   const redirectBookingPage = () => {
-    splunkInstance().sendEvent({
-      group: 'doctor profile',
-      type: 'doctor profile press online visit book button',
-      event: {
-        data: {
-          terminal_id: getCookie('terminal_id'),
-          user_agent: window.navigator.userAgent,
-          page_url: window.location.pathname,
-          referrer: document.referrer,
-          doctor_id: doctorId,
-        },
-      },
-    });
+    profileEvent('doctor profile press online visit book button');
     router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
   };
 

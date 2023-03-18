@@ -11,6 +11,7 @@ export interface FeedbackParams {
   has_nobat?: boolean;
   center_id?: string;
   page?: number;
+  no_page_limit?: boolean;
 }
 
 export const getFeedbacks = async (params: FeedbackParams) => {

@@ -51,7 +51,7 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDataWithoutPagination }: any) => {
   useFeedbackDataStore.getState().data = initialFeedbackDate;
 
   const { query, ...router } = useRouter();
@@ -68,7 +68,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
   const userInfo = useUserInfoStore(state => state.info);
   const setProfileData = useProfileDataStore(state => state.setData);
   const sendRateTriggered = useRef(false);
-  const { rateSplunkEvent } = useProfileSplunkEvent();
+  const { rateSplunkEvent, recommendEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
@@ -117,6 +117,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
           path: '/',
         });
       }
+      if (profileData.should_recommend_other_doctors) recommendEvent('loadrecommend');
     }
   }, [profileData, isBulk]);
 
@@ -486,6 +487,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
 
   const getJsonlds = () => {
     const center = profileData.centers.find((cn: any) => cn.id !== '5532');
+    const date = new Date();
 
     return [
       {
@@ -510,9 +512,29 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
-        'ratingValue': profileData.feedbacks.details.avg_star,
-        'bestRating': 5,
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'bestRating': 5,
+          'worstRating': 0,
+          'ratingValue': profileData.feedbacks.details.avg_star,
+          'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
+        },
+        'review':
+          feedbackDataWithoutPagination?.map((item: any) => ({
+            '@type': 'Review',
+            'author': {
+              '@type': 'Person',
+              'name': item.user_name,
+            },
+            'description': item.description,
+            'reviewRating': {
+              '@type': 'Rating',
+              'bestRating': 5,
+              'worstRating': 0,
+              'datePublished': `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`,
+              'ratingValue': item.avg_star === '0.0' || item.avg_star === 0.0 ? '0.5' : item.avg_star,
+            },
+          })) ?? [],
       },
       {
         '@context': 'http://www.schema.org',
@@ -670,6 +692,8 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const isCSR = context.req.url?.startsWith?.('/_next');
+
   const { slug, ...query } = context.query;
   const university = query.university as string;
 
@@ -718,6 +742,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     } catch (error) {
       console.log(error);
     }
+    let feedbackDataWithoutPagination;
 
     try {
       const feedbackData = await queryClient.fetchQuery(
@@ -734,6 +759,23 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             server_id: data.server_id,
           }),
       );
+      if (!isCSR)
+        feedbackDataWithoutPagination = await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Feedbacks,
+            {
+              doctor_id: data.id,
+              server_id: data.server_id,
+              no_page_limit: true,
+            },
+          ],
+          () =>
+            getFeedbacks({
+              doctor_id: data.id,
+              server_id: data.server_id,
+              no_page_limit: true,
+            }),
+        );
       useFeedbackDataStore.getState().setData(feedbackData?.result ?? []);
     } catch (error) {
       console.log(error);
@@ -745,6 +787,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         query,
         slug: slugFormmated,
         initialFeedbackDate: useFeedbackDataStore.getState().data,
+        feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
       },
     };
   } catch (error) {

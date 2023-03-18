@@ -478,7 +478,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               loading: bookLoading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
-              shouldShowMessengers: messengerSelectDoctorIds?.includes?.(profile?.id),
+              shouldShowMessengers: messengerSelectDoctorIds?.includes?.(profile?.id) && center?.id === CENTERS.CONSULT,
             }}
             nextStep={async (user: UserInfo) => {
               setUser(user);

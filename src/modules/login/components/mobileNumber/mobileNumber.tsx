@@ -27,7 +27,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    if (!phoneNumberValidator(mobileNumberValue)) {
+    if (!phoneNumberValidator(mobileNumberValue) && !mobileNumberValue.startsWith('0996')) {
       setIsFieldError(true);
       return;
     }
@@ -57,8 +57,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
         label={t('steps.first.phoneNumberFieldLable')}
         onChange={e =>
           e.target.value.startsWith('9') && e.target.value.length >= 3
-            ? setMobileNumberValue(digitsFaToEn(`0${e.target.value}`))
-            : setMobileNumberValue(digitsFaToEn(e.target.value))
+            ? setMobileNumberValue(digitsFaToEn(`0${e.target.value.trim()}`))
+            : setMobileNumberValue(digitsFaToEn(e.target.value.trim()))
         }
         value={mobileNumberValue}
         style={{ direction: 'ltr' }}

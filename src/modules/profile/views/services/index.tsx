@@ -5,6 +5,7 @@ import { CENTERS } from '@/common/types/centers';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
+import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import External from './external';
 import { OnlineVisitWrapper } from './onlineVisitWrapper';
 import Presence from './presence';
@@ -12,6 +13,7 @@ import Presence from './presence';
 export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isBulk: boolean; slug: string; className?: string }) => {
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
+  const { recommendEvent } = useProfileSplunkEvent();
 
   return (
     <>
@@ -80,6 +82,11 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
             city={doctor.city_en_slug}
             category={doctor.expertises[0]?.expertise_groups[0].en_slug}
             className="pr-4 md:pr-0"
+            clickRecommendEvent={doctor => {
+              recommendEvent('clickrecommend', {
+                recommendations: doctor,
+              });
+            }}
           />
         </div>
       )}

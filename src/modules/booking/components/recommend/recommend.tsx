@@ -8,9 +8,10 @@ interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
   city: string;
   doctorId: string;
   centerId?: string;
+  clickRecommendEvent?: (doctor: any) => void;
 }
 
-export const Recommend = ({ className, ...props }: RecommendProps) => {
+export const Recommend = ({ className, clickRecommendEvent, ...props }: RecommendProps) => {
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
@@ -45,6 +46,7 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
               ],
             })) ?? []
           }
+          clickRecommendEvent={(id: string) => clickRecommendEvent?.(data?.data?.find((doctor: any) => doctor.id === id))}
         />
       )}
     </div>
