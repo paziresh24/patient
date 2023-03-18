@@ -1,6 +1,6 @@
 import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser';
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
-import igapIcon from '@/common/assets/messenger/igap.png';
+import eitaaIcon from '@/common/assets/messenger/eitaa.png';
 import whatsappIcon from '@/common/assets/messenger/whatsapp.png';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
@@ -110,18 +110,18 @@ export const UserCard = (props: UserCardProps) => {
             <div className="flex items-center mt-3 space-s-3">
               <div className="w-full">
                 <input
-                  onChange={e => e.target.checked && handleSelect('igap')}
+                  onChange={e => e.target.checked && handleSelect('eitaa')}
                   className="absolute hidden peer"
                   type="radio"
                   name="messagenrs"
-                  id="igap"
+                  id="eitaa"
                 />
                 <label
-                  htmlFor="igap"
+                  htmlFor="eitaa"
                   className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
                 >
-                  <img src={igapIcon.src} width={28} height={28} alt="" />
-                  <Text fontWeight="medium">آی گپ</Text>
+                  <img src={eitaaIcon.src} width={28} height={28} alt="" />
+                  <Text fontWeight="medium">ایتا</Text>
                 </label>
               </div>
               <div className="w-full">
