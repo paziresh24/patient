@@ -10,7 +10,9 @@ import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
+import Select from '@/modules/booking/components/select/select';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -82,14 +84,12 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
-  const [removeModal, setRemoveModal] = useState(false);
+  const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const isBookForToday = isToday(new Date(bookTime));
-
   const moveBookApi = useMoveBook();
-
+  const isOnlineVisitTurn = centerType === CenterType.consult;
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || (centerType === CenterType.consult && status !== BookStatus.deleted)) &&
-    paymentStatus !== PaymentStatus.paying;
+    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted)) && paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
     splunkInstance().sendEvent({
@@ -137,6 +137,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
+            isOnlineVisitTurn &&
+              splunkInstance().sendEvent({
+                group: 'my-turn',
+                type: 'delete-turn-reason',
+                event: {
+                  terminal_id: getCookie('terminal_id'),
+                  doctorName,
+                  expertise,
+                  phoneNumber,
+                  reason: reasonDeleteTurn,
+                  isVisited: status === BookStatus.visited,
+                },
+              });
             return;
           }
           toast.error(data.data.message);
@@ -224,14 +237,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {centerType === CenterType.consult &&
-        paymentStatus !== PaymentStatus.paying &&
-        status !== BookStatus.deleted &&
-        onlineVisitChannel && <MessengerButton channel={onlineVisitChannel} />}
+      {isOnlineVisitTurn && paymentStatus !== PaymentStatus.paying && status !== BookStatus.deleted && onlineVisitChannel && (
+        <MessengerButton channel={onlineVisitChannel} />
+      )}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
-          <Button theme="error" variant="secondary" block={true} onClick={showRemoveTurnModal} icon={<TrashIcon />}>
-            لغو نوبت
+          <Button
+            theme="error"
+            variant="secondary"
+            block={true}
+            onClick={showRemoveTurnModal}
+            icon={status === BookStatus.notVisited && <TrashIcon />}
+          >
+            {isOnlineVisitTurn && status === BookStatus.visited ? 'استرداد وجه' : 'لغو نوبت'}
           </Button>
         )}
         {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
@@ -292,21 +310,51 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }}
         />
       </Modal>
-      <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeTurnProp}>
-        <div className="flex space-s-2">
-          <Button theme="error" block onClick={removeBookAction} loading={removeBookApi.isLoading} data-testid="modal__remove-turn-button">
-            لغو نوبت
-          </Button>
-          <Button
-            theme="error"
-            variant="secondary"
-            block
-            onClick={() => setRemoveModal(false)}
-            data-testid="modal__cancel-remove-turn-button"
-          >
-            انصراف
-          </Button>
-        </div>
+      <Modal
+        title={
+          isOnlineVisitTurn
+            ? `علت ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} شما چه میباشد؟`
+            : 'آیا از لغو نوبت مطمئن هستید؟'
+        }
+        {...removeTurnProp}
+      >
+        <>
+          {isOnlineVisitTurn && (
+            <div className="space-y-3 mb-4">
+              {(status === BookStatus.notVisited ? deleteTurnQuestion.befor_visit : deleteTurnQuestion.affter_visit).map(
+                (question: any) => (
+                  <Select
+                    key={question.id}
+                    selected={reasonDeleteTurn === question.value}
+                    onSelect={() => setReasonDeleteTurn(question.value)}
+                    title={question.text}
+                  />
+                ),
+              )}
+            </div>
+          )}
+          <div className="flex space-s-2">
+            <Button
+              theme="error"
+              block
+              onClick={removeBookAction}
+              loading={removeBookApi.isLoading}
+              data-testid="modal__remove-turn-button"
+              disabled={isOnlineVisitTurn && !reasonDeleteTurn}
+            >
+              {isOnlineVisitTurn && status === BookStatus.visited ? 'استرداد وجه' : 'لغو نوبت'}
+            </Button>
+            <Button
+              theme="error"
+              variant="secondary"
+              block
+              onClick={handleCloseRemoveTurnModal}
+              data-testid="modal__cancel-remove-turn-button"
+            >
+              انصراف
+            </Button>
+          </div>
+        </>
       </Modal>
       <Modal {...turnDesciriptionProp} title="توضیحات درمان">
         <Text fontSize="sm">{description}</Text>
