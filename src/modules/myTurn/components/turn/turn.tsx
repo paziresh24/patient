@@ -1,4 +1,5 @@
 import Card from '@/components/atom/card';
+import omit from 'lodash/omit';
 import useTranslation from 'next-translate/useTranslation';
 import { useMemo } from 'react';
 import TurnBody from './body';
@@ -15,7 +16,7 @@ export const Turn: React.FC<TurnProps> = props => {
   const detailsData = useMemo(
     () =>
       turnDetailsData({
-        data: turnDetails,
+        data: omit(turnDetails, ['respiteDeleteTurn']),
         centerType,
         status,
         paymentStatus,
@@ -74,6 +75,7 @@ export const Turn: React.FC<TurnProps> = props => {
         serviceId={centerInfo.serviceId}
         userCenterId={centerInfo.userCenterId}
         activePaymentStatus={centerInfo.activePaymentStatus}
+        respiteDeleteTurn={turnDetails.respiteDeleteTurn}
       />
     </Card>
   );
