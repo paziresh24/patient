@@ -137,7 +137,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
-            isOnlineVisitTurn &&
+            if (isOnlineVisitTurn) {
               splunkInstance().sendEvent({
                 group: 'my-turn',
                 type: 'delete-turn-reason',
@@ -150,7 +150,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                   isVisited: status === BookStatus.visited,
                 },
               });
-            return;
+              return;
+            }
           }
           toast.error(data.data.message);
         },
