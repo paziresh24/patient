@@ -1,0 +1,56 @@
+{
+  "befor_visit": [
+    {
+      "id": 1,
+      "text": "پزشک رو اشتباه انتخاب کردم",
+      "value": "wrong_doctor"
+    },
+    {
+      "id": 2,
+      "text": "زمان برایم مناسب نیست",
+      "value": "wrong_time"
+    },
+    {
+      "id": 3,
+      "text": "به دلایل شخصی",
+      "value": "personal reason"
+    },
+    {
+      "id": 4,
+      "text": "سایر",
+      "value": "others"
+    }
+  ],
+  "affter_visit": [
+    {
+      "id": 1,
+      "text": "پزشک پاسخ من را نداد",
+      "value": "no_answer"
+    },
+    {
+      "id": 2,
+      "text": "ویزیتم نا تمام ماند",
+      "value": "visit_not_end"
+    },
+    {
+      "id": 3,
+      "text": "پزشک دیر جواب داد",
+      "value": "response_delay"
+    },
+    {
+      "id": 4,
+      "text": "توضیحات پزشک نامناسب بود",
+      "value": "wrong_description"
+    },
+    {
+      "id": 5,
+      "text": "پزشک نسخه رو ارسال نکرد",
+      "value": "Failure_send_prescription"
+    },
+    {
+      "id": 6,
+      "text": "رفتار پزشک نامناسب بود",
+      "value": "Inappropriate_behavior_doctor"
+    }
+  ]
+}
