@@ -341,6 +341,10 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   const likeFeedbackHandler = async (id: string) => {
+    if (!isLogin)
+      return handleOpenLoginModal({
+        state: true,
+      });
     rateSplunkEvent('like');
     toggleLike(id);
     await likeFeedback.mutateAsync({

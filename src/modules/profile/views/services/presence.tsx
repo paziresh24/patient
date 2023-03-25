@@ -5,12 +5,11 @@ import Text from '@/common/components/atom/text/text';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
 import SelectService from '@/modules/booking/views/selectService/selectService';
-import { getCookie } from 'cookies-next';
 import { memo, useCallback, useState } from 'react';
+import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import { ServiceCard } from './card';
 
 interface PresenceProps {
@@ -23,6 +22,7 @@ interface PresenceProps {
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
   const isWebView = useWebView();
+  const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
     handleOpen: handleOpenSelectCenterModal,
@@ -62,24 +62,13 @@ export const Presence = memo((props: PresenceProps) => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
     sendGaEvent({ action: 'newprofile', category: 'button-book', label: displayName });
 
-    splunkInstance().sendEvent({
-      group: 'doctor profile',
-      type: 'doctor profile press book button',
-      event: {
-        data: {
-          terminal_id: getCookie('terminal_id'),
-          user_agent: window.navigator.userAgent,
-          doctor_name: displayName,
-          page_url: window.location.pathname,
-          referrer: document.referrer,
-          centers_name: centers.map(center => center.name),
-          centers_address: centers.map(center => center.address),
-          centers_phone: centers.map(center => center.tell),
-          city: centers.map(center => center.city),
-          centers_statuses: centers.map(center => center.status),
-          centers_types: centers.map(center => center.type),
-        },
-      },
+    profileEvent('doctor profile press book button', {
+      centers_name: centers.map(center => center.name),
+      centers_address: centers.map(center => center.address),
+      centers_phone: centers.map(center => center.tell),
+      city: centers.map(center => center.city),
+      centers_statuses: centers.map(center => center.status),
+      centers_types: centers.map(center => center.type),
     });
 
     if (centers.length === 1) {
@@ -106,20 +95,9 @@ export const Presence = memo((props: PresenceProps) => {
 
     if (center?.services?.length === 1) return onBook({ centerId: center.id, serviceId: center.services[0].id });
 
-    splunkInstance().sendEvent({
-      group: 'doctor profile',
-      type: 'doctor profile select service button',
-      event: {
-        data: {
-          terminal_id: getCookie('terminal_id'),
-          user_agent: window.navigator.userAgent,
-          doctor_name: displayName,
-          page_url: window.location.pathname,
-          referrer: document.referrer,
-          selected_center_name: center?.name,
-          freeturn_text: center?.freeturn_text,
-        },
-      },
+    profileEvent('doctor profile select center button', {
+      selected_center_name: center?.name,
+      freeturn_text: center?.freeturn_text,
     });
 
     handleOpenSelectServiceModal();
@@ -127,20 +105,9 @@ export const Presence = memo((props: PresenceProps) => {
 
   const handleOnBookByService = useCallback(
     (service: any) => {
-      splunkInstance().sendEvent({
-        group: 'doctor profile',
-        type: 'doctor profile select service button',
-        event: {
-          data: {
-            terminal_id: getCookie('terminal_id'),
-            user_agent: window.navigator.userAgent,
-            doctor_name: displayName,
-            page_url: window.location.pathname,
-            referrer: document.referrer,
-            service_id: service?.id,
-            service_alias_title: service?.alias_title,
-          },
-        },
+      profileEvent('doctor profile select service button', {
+        service_id: service?.id,
+        service_alias_title: service?.alias_title,
       });
 
       handleCloseSelectServiceModal();

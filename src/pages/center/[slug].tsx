@@ -6,6 +6,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
+import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
@@ -17,7 +18,7 @@ import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
@@ -61,6 +62,18 @@ const CenterProfile = ({ query: { university } }: any) => {
       keepPreviousData: true,
     },
   );
+
+  useEffect(() => {
+    if (profileData) {
+      splunkInstance().sendEvent({
+        group: 'center_profile',
+        type: 'load_center_profile',
+        event: {
+          data: profileData,
+        },
+      });
+    }
+  }, [profileData]);
 
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
   const ducmentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${

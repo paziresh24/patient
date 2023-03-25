@@ -12,10 +12,12 @@ export const useProfileSplunkEvent = () => {
       event: {
         data: {
           terminal_id: getCookie('terminal'),
+          user_agent: window.navigator.userAgent,
+          page_url: window.location.pathname,
+          referrer: document.referrer,
           group_expertises: profileData.group_expertises?.[0]?.name ?? 'سایر',
           doctor_name: profileData.display_name,
           city: uniq(profileData?.centers?.map(item => item.city)),
-          page_Url: location.href,
           rate: profileData?.feedbacks?.details?.satisfaction,
           rate_count: profileData?.feedbacks?.details?.number_of_feedbacks,
           ...eventData,
@@ -24,5 +26,43 @@ export const useProfileSplunkEvent = () => {
     });
   };
 
-  return { rateSplunkEvent };
+  const profileEvent = (eventType: string, eventData?: any) => {
+    splunkInstance().sendEvent({
+      group: 'doctor profile',
+      type: eventType,
+      event: {
+        data: {
+          terminal_id: getCookie('terminal'),
+          user_agent: window.navigator.userAgent,
+          page_url: window.location.pathname,
+          referrer: document.referrer,
+          group_expertises: profileData.group_expertises?.[0]?.name ?? 'سایر',
+          doctor_name: profileData.display_name,
+          server_id: profileData.server_id,
+          ...eventData,
+        },
+      },
+    });
+  };
+
+  const recommendEvent = (eventType: string, eventData?: any) => {
+    splunkInstance().sendEvent({
+      group: 'recommend',
+      type: eventType,
+      event: {
+        data: {
+          terminal_id: getCookie('terminal'),
+          user_agent: window.navigator.userAgent,
+          page_url: window.location.pathname,
+          referrer: document.referrer,
+          group_expertises: profileData.group_expertises?.[0]?.name ?? 'سایر',
+          doctor_name: profileData.display_name,
+          server_id: profileData.server_id,
+          ...eventData,
+        },
+      },
+    });
+  };
+
+  return { rateSplunkEvent, profileEvent, recommendEvent };
 };

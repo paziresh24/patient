@@ -8,12 +8,15 @@ interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
   city: string;
   doctorId: string;
   centerId?: string;
+  clickRecommendEvent?: (doctor: any) => void;
 }
 
-export const Recommend = ({ className, ...props }: RecommendProps) => {
+export const Recommend = ({ className, clickRecommendEvent, ...props }: RecommendProps) => {
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
+
+  const doctors = data?.data ?? [];
 
   return (
     <div className={className}>
@@ -25,7 +28,7 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
       ) : (
         <RecommendCard
           listOfDoctors={
-            data?.data?.map((doctor: any) => ({
+            doctors?.map((doctor: any) => ({
               image: doctor.image,
               displayAddress: doctor.display_address,
               displayExpertise: doctor.display_expertise,
@@ -45,6 +48,7 @@ export const Recommend = ({ className, ...props }: RecommendProps) => {
               ],
             })) ?? []
           }
+          clickRecommendEvent={(id: string) => clickRecommendEvent?.(doctors?.find((doctor: any) => doctor.id === id))}
         />
       )}
     </div>
