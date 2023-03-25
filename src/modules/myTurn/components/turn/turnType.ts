@@ -1,3 +1,4 @@
+import { Messenger } from '@/common/constants/messengers';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '../../types/paymentStatus';
@@ -47,7 +48,7 @@ export interface TurnProps {
 }
 
 export type OnlineVisitChannel = {
-  type: 'igap' | 'whatsapp';
+  type: Messenger;
   channel: string;
   channel_link: string;
 };
