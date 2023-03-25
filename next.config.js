@@ -61,7 +61,6 @@ const nextConfig = {
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
   },
   images: {
-    unoptimized: true,
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
   },
   async redirects() {

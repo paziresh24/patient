@@ -16,6 +16,8 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
     ...props,
   });
 
+  const doctors = data?.data ?? [];
+
   return (
     <div className={className}>
       {isLoading ? (
@@ -26,7 +28,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
       ) : (
         <RecommendCard
           listOfDoctors={
-            data?.data?.map((doctor: any) => ({
+            doctors?.map((doctor: any) => ({
               image: doctor.image,
               displayAddress: doctor.display_address,
               displayExpertise: doctor.display_expertise,
@@ -46,7 +48,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               ],
             })) ?? []
           }
-          clickRecommendEvent={(id: string) => clickRecommendEvent?.(data?.data?.find((doctor: any) => doctor.id === id))}
+          clickRecommendEvent={(id: string) => clickRecommendEvent?.(doctors?.find((doctor: any) => doctor.id === id))}
         />
       )}
     </div>
