@@ -157,8 +157,8 @@ export const Appointments = ({ query: queryServer }: any) => {
                   expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
                 }),
                 slug: turn.doctor_info?.slug,
-                onlineVisitChannel: turn.doctor_info?.selected_online_visit_channel?.type
-                  ? turn.doctor_info?.selected_online_visit_channel
+                onlineVisitChannel: turn?.selected_online_visit_channel?.type
+                  ? turn?.selected_online_visit_channel
                   : turn.doctor_info?.online_visit_channels.filter((item: any) => !(item.type as string).endsWith('_number'))[0],
               }}
               patientInfo={{

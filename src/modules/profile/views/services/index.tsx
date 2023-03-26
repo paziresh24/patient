@@ -2,8 +2,8 @@ import Card from '@/common/components/atom/card/card';
 import Text from '@/common/components/atom/text/text';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
+import humanizeTime from '@/common/utils/humanizeTime';
 import Recommend from '@/modules/booking/components/recommend/recommend';
-import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
 import External from './external';
 import { OnlineVisitWrapper } from './onlineVisitWrapper';
@@ -34,9 +34,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
               title={service.desk}
               price={service.free_price}
               duration={
-                doctor.group_expertises[0].id === 21 || doctor.group_expertises[0].id === 47
-                  ? moment.duration(service.duration).locale('fa').humanize()
-                  : undefined
+                doctor.group_expertises[0].id === 21 || doctor.group_expertises[0].id === 47 ? humanizeTime(service.duration) : undefined
               }
               doctorId={doctor.id}
               slug={slug}

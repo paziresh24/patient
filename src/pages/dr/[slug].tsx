@@ -149,7 +149,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
           </div>
         ),
         CenterInfo: ({ doctor }) => {
-          if (doctor.centers?.length === 0) return null;
+          if (doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)?.length === 0) return null;
           return (
             <div id="center-info_section" className="flex flex-col space-y-3 md:hidden">
               <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
@@ -385,7 +385,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate }: any) => {
           );
         },
         CenterInfo: ({ doctor }) => {
-          if (doctor.centers?.length === 0) return null;
+          if (doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)?.length === 0) return null;
           return (
             <div className="flex-col hidden space-y-3 md:flex">
               <div className="flex items-center justify-between">
