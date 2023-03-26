@@ -18,10 +18,11 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import { getCookie } from 'cookies-next';
+import shuffle from 'lodash/shuffle';
 import useTranslation from 'next-translate/useTranslation';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import MessengerButton from '../../messengerButton/messengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
@@ -88,6 +89,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
+  const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
+  const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const shouldShowRemoveTurn =
     (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted)) && paymentStatus !== PaymentStatus.paying;
 
@@ -150,8 +153,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                   isVisited: status === BookStatus.visited,
                 },
               });
-              return;
             }
+            return;
           }
           toast.error(data.data.message);
         },
@@ -250,7 +253,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             onClick={showRemoveTurnModal}
             icon={status === BookStatus.notVisited && <TrashIcon />}
           >
-            {isOnlineVisitTurn && status === BookStatus.visited ? 'استرداد وجه' : 'لغو نوبت'}
+            {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'استرداد وجه' : 'لغو نوبت'}
           </Button>
         )}
         {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
@@ -322,16 +325,14 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         <>
           {isOnlineVisitTurn && (
             <div className="space-y-3 mb-4">
-              {(status === BookStatus.notVisited ? deleteTurnQuestion.befor_visit : deleteTurnQuestion.affter_visit).map(
-                (question: any) => (
-                  <Select
-                    key={question.id}
-                    selected={reasonDeleteTurn === question.value}
-                    onSelect={() => setReasonDeleteTurn(question.value)}
-                    title={question.text}
-                  />
-                ),
-              )}
+              {(status === BookStatus.notVisited ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
+                <Select
+                  key={question.id}
+                  selected={reasonDeleteTurn === question.value}
+                  onSelect={() => setReasonDeleteTurn(question.value)}
+                  title={question.text}
+                />
+              ))}
             </div>
           )}
           <div className="flex space-s-2">
@@ -343,7 +344,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               data-testid="modal__remove-turn-button"
               disabled={isOnlineVisitTurn && !reasonDeleteTurn}
             >
-              {isOnlineVisitTurn && status === BookStatus.visited ? 'استرداد وجه' : 'لغو نوبت'}
+              {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'استرداد وجه' : 'لغو نوبت'}
             </Button>
             <Button
               theme="error"
