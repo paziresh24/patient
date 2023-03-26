@@ -62,6 +62,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
     initialInView: true,
   });
   const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
+  const { handleOpen: handleOpenViewAsModal, handleClose: handleCloseViewAsModal, modalProps: viewAsModalProps } = useModal();
+
   const [rateRef, inViewRate] = useInView();
   const { isMobile, isDesktop } = useResponsive();
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -591,6 +593,10 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
             className="w-full shadow-card md:rounded-lg"
             satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
             rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
+            editable
+            infoEditAction={() => {
+              handleOpenViewAsModal();
+            }}
           />
           <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
             <div onClick={() => scrollIntoViewWithOffset('#services_section', 90)}>
@@ -656,6 +662,12 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
             خیر
           </Button>
         </div>
+      </Modal>
+      <Modal {...viewAsModalProps} title="ویرایش اطلاعات فردی" fullScreen bodyClassName="p-0">
+        <iframe
+          src="http://localhost:4030/profile/info?isWebView=1&secretary_phone=off&biography=off&sticky=on"
+          className="w-full h-full"
+        />
       </Modal>
     </>
   );

@@ -34,7 +34,7 @@ export const Modal = (props: ModalProps) => {
           animation={fullScreen && isMobile ? 'right' : 'bottom'}
           duration={300}
           className={classNames(
-            'bg-white w-full rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto',
+            'bg-white w-full flex flex-col rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto',
             {
               'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
             },
@@ -49,7 +49,7 @@ export const Modal = (props: ModalProps) => {
               <CloseIcon onClick={onClose} />
             </div>
           )}
-          <div className={classNames('p-5 h-full overflow-auto no-scroll', bodyClassName)}>{children}</div>
+          <div className={classNames('p-5 flex-grow overflow-auto no-scroll', bodyClassName)}>{children}</div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>

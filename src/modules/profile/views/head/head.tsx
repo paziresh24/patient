@@ -21,10 +21,25 @@ interface HeadProps {
   className?: string;
   satisfaction?: string;
   rateCount?: string;
+  editable?: boolean;
+  infoEditAction?: () => void;
 }
 
 export const Head = (props: HeadProps) => {
-  const { displayName, image, title, subTitle, serviceList, pageViewCount, toolBarItems, className, satisfaction, rateCount } = props;
+  const {
+    displayName,
+    image,
+    title,
+    subTitle,
+    serviceList,
+    pageViewCount,
+    toolBarItems,
+    className,
+    satisfaction,
+    rateCount,
+    editable,
+    infoEditAction,
+  } = props;
   return (
     <div className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
@@ -37,7 +52,7 @@ export const Head = (props: HeadProps) => {
             </div>
           )}
         </div>
-        <Info image={image} displayName={displayName} title={title} subTitle={subTitle} />
+        <Info image={image} displayName={displayName} title={title} subTitle={subTitle} editable={editable} editAction={infoEditAction} />
       </div>
       {serviceList && (
         <ScrollContainer
