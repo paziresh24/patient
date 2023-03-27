@@ -157,9 +157,7 @@ export const Appointments = ({ query: queryServer }: any) => {
                   expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
                 }),
                 slug: turn.doctor_info?.slug,
-                onlineVisitChannel: turn?.selected_online_visit_channel?.type
-                  ? turn?.selected_online_visit_channel
-                  : turn.doctor_info?.online_visit_channels.filter((item: any) => !(item.type as string).endsWith('_number'))[0],
+                onlineVisitChannel: turn?.selected_online_visit_channel?.type ? turn?.selected_online_visit_channel : undefined,
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
