@@ -47,7 +47,7 @@ export const Head = (props: HeadProps) => {
         >
           {serviceList.map(service => (
             <Chips
-              className="!bg-transparent border text-center min-w-fit !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
+              className="!bg-transparent border text-center min-w-fit w-max !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
               key={service}
             >
               {service}

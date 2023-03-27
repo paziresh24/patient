@@ -72,7 +72,7 @@ export const CentersInfo = (props: CentersInfoProps) => {
           {center.description && (
             <DescriptionWrapper length={center.description.length}>
               <div className="flex space-s-1">
-                <QuotesIcon className="min-w-fit" width={18} height={18} />
+                <QuotesIcon className="min-w-fit w-max" width={18} height={18} />
                 <Text align="justify" fontSize="sm" className="leading-6">
                   {center.description}
                 </Text>
