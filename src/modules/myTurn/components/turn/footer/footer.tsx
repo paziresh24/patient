@@ -317,8 +317,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       <Modal
         title={
           isOnlineVisitTurn
-            ? `علت ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} شما چه میباشد؟`
-            : 'آیا از لغو نوبت مطمئن هستید؟'
+            ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+            : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
       >
