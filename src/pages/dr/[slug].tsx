@@ -288,11 +288,11 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
                 className="bg-white md:rounded-lg"
                 items={[
                   doctor.followConsultBoosk && {
-                    icon: <ChatIcon className="min-w-fit" />,
+                    icon: <ChatIcon className="min-w-fit w-max" />,
                     text: `<b>${doctor.followConsultBoosk}</b> مشاوره فعال`,
                   },
                   {
-                    icon: <AwardIcon className="min-w-fit" />,
+                    icon: <AwardIcon className="min-w-fit w-max" />,
                     text: `پذیرش24 بیش از ${doctor.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${doctor.display_name} را داشته است.`,
                   },
                 ].filter(Boolean)}
@@ -373,6 +373,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
               } جهت مشاهده خدمات و دریافت نوبت آنلاین مطب شخصی، کلینیک، درمانگاه و بیمارستان هایی که ایشان در حال ارائه خدمات درمانی هستند از طریق پذیرش24 طراحی و ارائه شده است. البته ممکن است در حال حاضر امکان رزرو نوبت از همه مراکز فوق ممکن نباشد که این موضوع وابسته به تصمیم ${
                 doctor.gender === 0 ? '' : doctor.gender == 1 ? 'آقای' : 'خانم'
               } دکتر در ارائه نوبت گیری از درگاه های فوق بوده است.`}
+              breadcrumbs={createBreadcrumb(internalLinks?.data, doctor.display_name, router.asPath)}
             />
           );
         },
