@@ -13,8 +13,8 @@ import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import doctorMessengers from '@/modules/profile/constants/doctorMessengers.json';
 import messengers from '@/modules/profile/constants/messengers.json';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -53,6 +53,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -116,7 +117,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     <>
       <OnlineVisit
         channel={channelType}
-        messengers={doctorMessengers.find(({ id }: any) => id === doctorId)?.messengers}
+        messengers={doctorMessenger.find(({ id }: any) => id === doctorId)?.messengers}
         duration={duration}
         title={removeHtmlTagInString((title ?? 'ویزیت آنلاین') + ` (${messengers[channelType]?.name})`)}
         price={price}
