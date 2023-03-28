@@ -117,9 +117,9 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     <>
       <OnlineVisit
         channel={channelType}
-        messengers={doctorMessenger.find(({ id }: any) => id === doctorId)?.messengers}
+        messengers={doctorMessenger.find(({ id }: any) => id === doctorId)?.messengers ?? ['‌ایتا', 'واتساپ']}
         duration={duration}
-        title={removeHtmlTagInString((title ?? 'ویزیت آنلاین') + ` (${messengers[channelType]?.name})`)}
+        title={removeHtmlTagInString(title ?? 'ویزیت آنلاین')}
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
