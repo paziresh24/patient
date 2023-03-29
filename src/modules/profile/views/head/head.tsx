@@ -41,7 +41,7 @@ export const Head = (props: HeadProps) => {
       </div>
       {serviceList && (
         <ScrollContainer
-          className={classNames('flex space-s-1 px-4 items-center', {
+          className={classNames('flex space-s-1 px-4 items-center md:max-w-[46rem]', {
             'justify-center': serviceList.length === 1,
           })}
         >
