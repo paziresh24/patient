@@ -54,6 +54,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
+  const messengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -117,9 +118,11 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     <>
       <OnlineVisit
         channel={channelType}
-        messengers={doctorMessenger.find(({ id }: any) => id === doctorId)?.messengers ?? ['‌ایتا', 'واتساپ']}
+        messengers={doctorMessenger.find(({ id }: any) => id === doctorId)?.messengers}
         duration={duration}
-        title={removeHtmlTagInString(title ?? 'ویزیت آنلاین')}
+        title={removeHtmlTagInString(
+          (title ?? 'ویزیت آنلاین') + (!messengerSelectDoctorIds?.includes(doctorId) ? ` (${messengers[channelType]?.name})` : ''),
+        )}
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
