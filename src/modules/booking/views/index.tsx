@@ -308,14 +308,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       }, 300000); // 3 min}
     }
 
-    window.addEventListener('beforeunload', event => {
-      unsuspend.mutate({
-        center_id: router.query?.centerId! as string,
-        request_code: timeId,
-      });
-      event.returnValue = `Are you sure you want to leave?`;
-    });
-
     return () => {
       clearTimeout(getTurnTimeout.current);
       unsuspend.mutate({
