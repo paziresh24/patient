@@ -199,7 +199,8 @@ const BookingSteps = (props: BookingStepsProps) => {
             });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
-            location.assign(`${data.bookInfo?.payment?.redirect_url}`);
+            location.replace(`${data?.payment?.redirect_url}`);
+            return;
           }
           sendBookEvent({
             bookInfo: {
@@ -306,6 +307,14 @@ const BookingSteps = (props: BookingStepsProps) => {
         handleOpenTurnTimeOutModal();
       }, 300000); // 3 min}
     }
+
+    window.addEventListener('beforeunload', event => {
+      unsuspend.mutate({
+        center_id: router.query?.centerId! as string,
+        request_code: timeId,
+      });
+      event.returnValue = `Are you sure you want to leave?`;
+    });
 
     return () => {
       clearTimeout(getTurnTimeout.current);

@@ -41,13 +41,13 @@ export const Head = (props: HeadProps) => {
       </div>
       {serviceList && (
         <ScrollContainer
-          className={classNames('flex space-s-1 px-4 items-center', {
+          className={classNames('flex space-s-1 px-4 items-center md:max-w-[46rem]', {
             'justify-center': serviceList.length === 1,
           })}
         >
           {serviceList.map(service => (
             <Chips
-              className="!bg-transparent border text-center min-w-fit !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
+              className="!bg-transparent border text-center min-w-fit w-max !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
               key={service}
             >
               {service}

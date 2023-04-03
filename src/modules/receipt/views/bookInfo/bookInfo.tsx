@@ -42,7 +42,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
         {!loading &&
           turnDetailsData({
             data: {
-              bookTime: turnData.book_time,
+              bookTime: turnData.book_time_string,
               centerName: turnData.center?.name,
               trackingCode: turnData.reference_code,
               waitingTime: turnData?.center?.waiting_time,
