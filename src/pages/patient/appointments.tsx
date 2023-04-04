@@ -164,7 +164,7 @@ export const Appointments = ({ query: queryServer }: any) => {
                 cell: turn.patient_info.cell,
               }}
               turnDetails={{
-                bookTime: turn.from,
+                bookTime: turn.book_time_string,
                 waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                 trackingCode: turn.ref_id,
                 centerName: turn.center?.name,
