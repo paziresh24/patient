@@ -38,7 +38,7 @@ export const useBooking = () => {
       is_webview: isWebView ? 1 : 0,
       first_name: user.name,
       last_name: user.family,
-      gender: user.gender,
+      ...(user.gender && { gender: user.gender }),
       cell: user.cell,
       selected_user_id: user.id,
       is_foreigner: user.is_foreigner,
