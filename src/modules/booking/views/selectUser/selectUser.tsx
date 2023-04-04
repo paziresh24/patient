@@ -118,7 +118,7 @@ export const SelectUser = (props: SelectUserProps) => {
                 isForeigner={item.is_foreigner == '1'}
                 gender={item.gender}
                 refetchData={mutate}
-                onSelect={id => handleSelectUser(getUserWithId(id))}
+                onSelect={(id, payload) => handleSelectUser(getUserWithId(id), payload?.messengerType as string)}
                 select={item.id === userSelected}
                 type="subUser"
                 shouldShowMessengers={shouldShowMessengers}
