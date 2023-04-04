@@ -513,13 +513,15 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        'aggregateRating': {
-          '@type': 'AggregateRating',
-          'bestRating': 5,
-          'worstRating': 0,
-          'ratingValue': profileData.feedbacks.details.avg_star,
-          'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
-        },
+        ...(feedbackDataWithoutPagination.length > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            'bestRating': 5,
+            'worstRating': 0,
+            'ratingValue': profileData.feedbacks.details.avg_star,
+            'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
+          },
+        }),
         'review':
           feedbackDataWithoutPagination?.map((item: any) => ({
             '@type': 'Review',
@@ -555,6 +557,28 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
+      },
+      {
+        '@context': 'http://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'item': {
+              '@id': `${publicRuntimeConfig.CLINIC_BASE_URL}/`,
+              'name': 'پذیرش۲۴',
+            },
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'item': {
+              '@id': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
+              'name': profileData.display_name,
+            },
+          },
+        ],
       },
     ];
   };
