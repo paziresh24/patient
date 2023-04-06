@@ -1,14 +1,11 @@
 import { useMoveBook } from '@/common/apis/services/booking/moveBook';
-import Alert from '@/common/components/atom/alert/alert';
 import Text from '@/common/components/atom/text/text';
 import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
-import WarningIcon from '@/common/components/icons/warning';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
-import differenceTime from '@/common/utils/differenceBetweenSpecialTimeAndCurrentTime';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
@@ -48,7 +45,6 @@ interface TurnFooterProps {
   doctorName: string;
   expertise: string;
   onlineVisitChannel?: OnlineVisitChannel;
-  respiteDeleteTurn?: string;
   serviceId: string;
   userCenterId: string;
   activePaymentStatus: boolean;
@@ -79,7 +75,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     patientName,
     paymentStatus,
     description,
-    respiteDeleteTurn,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -340,16 +335,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
-          {centerType === CenterType.clinic &&
-            paymentStatus === PaymentStatus.paid &&
-            differenceTime(bookTime * 1000) < +respiteDeleteTurn! && (
-              <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
-                <WarningIcon className="w-8" />
-                <Text fontSize="sm" fontWeight="bold">
-                  {`زمان نوبت شما کمتر از ${respiteDeleteTurn} ساعت دیگر است و وجه پرداختی شما عودت داده نخواهد شد.`}
-                </Text>
-              </Alert>
-            )}
           <div className="flex space-s-2">
             <Button
               theme="error"
