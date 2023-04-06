@@ -1,18 +1,24 @@
 {
   "steps": {
-    "first": {
+    "mobileNumber": {
       "title": "ورود/ثبت نام",
       "description": "لطفا شماره موبايل خود را وارد کنيد",
       "phoneNumberFieldLable": "شماره موبایل",
       "exampleHint": "مثال:*******0912",
       "action": "دریافت کد تایید"
     },
-    "second": {
+    "otpCode": {
       "title": "کد تایید",
-      "description": "لطفا کد ارسال شده به شماره {{mobileNumber}} را وارد نمایید.",
+      "description": "لطفا کد ارسال شده به شماره {{mobileNumber}} را وارد کنید.",
       "changeMobileNumber": "ویرایش شماره موبایل",
       "voiceCallWay": "تماس صوتی",
       "resend": "ارسال مجدد",
+      "action": "ورود"
+    },
+    "password": {
+      "title": "کلمه عبور",
+      "description": "رمز عبور خود را وارد کنید.",
+      "changeMobileNumber": "ویرایش شماره موبایل",
       "action": "ورود"
     }
   }

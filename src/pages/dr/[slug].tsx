@@ -7,9 +7,13 @@ import Avatar from '@/common/components/atom/avatar/avatar';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
+import AddIcon from '@/common/components/icons/add';
 import AwardIcon from '@/common/components/icons/award';
+import CalenderIcon from '@/common/components/icons/calender';
 import ChatIcon from '@/common/components/icons/chat';
 import EditIcon from '@/common/components/icons/edit';
+import InfoIcon from '@/common/components/icons/info';
+import ReceiptIcon from '@/common/components/icons/receipt';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -26,6 +30,7 @@ import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
+import EditButton from '@/modules/profile/components/viewAs/editButton';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
@@ -42,9 +47,9 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo, useRef } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { dehydrate, QueryClient } from 'react-query';
+import { QueryClient, dehydrate } from 'react-query';
 const CentersInfo = dynamic(() => import('@/modules/profile/views/centersInfo'));
 const Gallery = dynamic(() => import('@/modules/profile/views/gallery'));
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
@@ -62,6 +67,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
     initialInView: true,
   });
   const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
+  const { handleOpen: handleOpenViewAsModal, handleClose: handleCloseViewAsModal, modalProps: viewAsModalProps } = useModal();
+  const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const [rateRef, inViewRate] = useInView();
   const { isMobile, isDesktop } = useResponsive();
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -70,6 +77,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
   const sendRateTriggered = useRef(false);
   const { rateSplunkEvent, recommendEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
+  const [editable, setEditable] = useState(false);
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
     {
@@ -122,6 +130,22 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
   }, [profileData, isBulk]);
 
   useEffect(() => {
+    if (!!userInfo.is_doctor && slug === userInfo?.profile?.slug) {
+      setEditable(true);
+      splunkInstance().sendEvent({
+        group: 'profile',
+        type: 'view-as',
+        event: {
+          action: 'page-view',
+          doctor: profileData.display_name,
+          slug,
+          terminal_id: getCookie('terminal_id'),
+        },
+      });
+    }
+  }, [userInfo, slug]);
+
+  useEffect(() => {
     // Prefetch the booking page
     router.prefetch('/booking/[slug]');
   }, []);
@@ -137,7 +161,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
   } نوبت دهی آنلاین و شماره تلفن`;
   const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
-  const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle });
+  const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle, editable });
   const layout: {
     content: Record<string, ({ doctor }: { doctor: any }) => ReactElement | null>;
     sideBar: Record<string, ({ doctor }: { doctor: any }) => ReactElement | null>;
@@ -263,19 +287,60 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
         },
         Biography: ({ doctor }) => {
           const { biography, awards, scientific } = doctor;
-          if (!biography && !awards && !scientific) return null;
+          if (!biography && !awards && !scientific && !editable) return null;
           return (
             <div id="about_section" className="flex flex-col space-y-3">
-              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
-                درباره پزشک
-              </Text>
-              <Biography {...{ biography, awards, scientific }} className="bg-white md:rounded-lg" />
+              <div className="flex items-center justify-between px-4 md:px-0">
+                <Text as="h2" fontWeight="bold">
+                  درباره پزشک
+                </Text>
+                {editable && biography && <EditButton onClick={() => handleViewAs('biography')} />}
+              </div>
+
+              {!biography && !awards && !scientific && editable && (
+                <div
+                  onClick={() => handleViewAs('biography')}
+                  className="flex items-center justify-center p-5 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer md:mx-0 hover:bg-slate-200/30 space-s-2 text-slate-400 border-slate-200"
+                >
+                  <AddIcon className="w-5 h-5" />
+                  <Text fontWeight="medium">نوشتن بیوگرافی</Text>
+                </div>
+              )}
+              {(biography || awards || scientific) && (
+                <Biography {...{ biography, awards, scientific }} className="bg-white md:rounded-lg" />
+              )}
             </div>
           );
         },
         Video: ({ doctor: { aparat_video_code } }) => {
           if (!aparat_video_code || aparat_video_code === '0') return null;
           return <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: aparat_video_code }} />;
+        },
+        Gallery: ({ doctor }) => {
+          const items = doctor.centers.find((center: any) => center.center_type === 1)?.gallery ?? [];
+          const reformmatedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
+          if (!customize.showGalleryProfile) return null;
+          if (!items?.length && !editable && !doctor.centers.some((center: any) => center.center_type === 1)) return null;
+          return (
+            <div className="flex flex-col space-y-3">
+              <div className="flex items-center justify-between px-4 md:px-0">
+                <Text as="h2" fontWeight="bold">
+                  گالری
+                </Text>
+                {editable && items?.length > 0 && <EditButton onClick={() => handleViewAs('gallery')} />}
+              </div>
+              {items?.length === 0 && editable && (
+                <div
+                  onClick={() => handleViewAs('gallery')}
+                  className="flex items-center justify-center p-5 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer md:mx-0 hover:bg-slate-200/30 space-s-2 text-slate-400 border-slate-200"
+                >
+                  <AddIcon className="w-5 h-5" />
+                  <Text fontWeight="medium">افزودن تصویر</Text>
+                </div>
+              )}
+              {items?.length > 0 && <Gallery items={reformmatedItems} className="bg-white md:rounded-lg" />}
+            </div>
+          );
         },
         Activity: ({ doctor }) => {
           if (!customize.showActivityProfile) return null;
@@ -297,20 +362,6 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
                   },
                 ].filter(Boolean)}
               />
-            </div>
-          );
-        },
-        Gallery: ({ doctor }) => {
-          const items = doctor.centers.find((center: any) => center.center_type === 1)?.gallery;
-          const reformmatedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image);
-          if (!customize.showGalleryProfile) return null;
-          if (!items?.length) return null;
-          return (
-            <div className="flex flex-col space-y-3">
-              <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
-                گالری
-              </Text>
-              <Gallery items={reformmatedItems} className="bg-white md:rounded-lg" />
             </div>
           );
         },
@@ -394,7 +445,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
                 <Text as="h2" fontWeight="bold" className="px-4 md:px-0">
                   آدرس و تلفن تماس
                 </Text>
-                {customize.showContribute && (
+                {customize.showContribute && !editable && (
                   <Link href={`/patient/contribute/?slug=${slug}&test_src=profile_eslah`}>
                     <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
                       <EditIcon width={17} height={17} />
@@ -483,7 +534,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
         },
       },
     }),
-    [isDesktop, isMobile, profileData],
+    [isDesktop, isMobile, profileData, editable],
   );
 
   const getJsonlds = () => {
@@ -583,6 +634,45 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
     ];
   };
 
+  const handleViewAs = (key: 'information' | 'gallery' | 'biography' | 'services' | 'workHours') => {
+    const views = {
+      information: {
+        title: 'ویرایش اطلاعات فردی',
+        url: '/profile/info?isWebView=1&secretary_phone=off&biography=off&sticky=on',
+      },
+      biography: {
+        title: 'ویرایش توضیحات و بیوگرافی',
+        url: '/profile/biography?isWebView=1&sticky=on',
+      },
+      services: {
+        title: 'ویرایش تخصص',
+        url: '/profile/expertises?isWebView=1&sticky=on',
+      },
+      gallery: {
+        title: 'ویرایش تصاویر گالری',
+        url: '/profile/gallery?isWebView=1',
+      },
+      workHours: {
+        title: 'ویرایش ساعت کاری',
+        url: '/setting/workhours?isWebView=1&sticky=on',
+      },
+    };
+    setViewAsData({
+      ...views[key],
+    });
+    splunkInstance().sendEvent({
+      group: 'profile',
+      type: 'view-as',
+      event: {
+        action: `click-${key}`,
+        doctor: profileData.display_name,
+        slug,
+        terminal_id: getCookie('terminal_id'),
+      },
+    });
+    handleOpenViewAsModal();
+  };
+
   return (
     <>
       <Seo
@@ -599,6 +689,14 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
       />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+          {editable && (
+            <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
+              <InfoIcon className="min-w-6" />
+              <Text fontSize="sm" fontWeight="medium">
+                پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
+              </Text>
+            </div>
+          )}
           <Head
             pageViewCount={profileData?.number_of_visits}
             displayName={profileData?.display_name}
@@ -616,7 +714,37 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
             className="w-full shadow-card md:rounded-lg"
             satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
             rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
-          />
+            editable={editable}
+            servicesEditAction={() => handleViewAs('services')}
+            infoEditAction={() => handleViewAs('information')}
+          >
+            {editable && (
+              <div className="flex mx-4 space-s-2">
+                <Button
+                  size="sm"
+                  icon={<ReceiptIcon className="w-6 h-6" />}
+                  onClick={() => {
+                    window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
+                    splunkInstance().sendEvent({
+                      group: 'profile',
+                      type: 'view-as',
+                      event: {
+                        action: `click-list`,
+                        doctor: profileData.display_name,
+                        slug,
+                        terminal_id: getCookie('terminal_id'),
+                      },
+                    });
+                  }}
+                >
+                  لیست مراجعین
+                </Button>
+                <Button size="sm" variant="secondary" icon={<CalenderIcon className="w-6 h-6" />} onClick={() => handleViewAs('workHours')}>
+                  ساعت کاری
+                </Button>
+              </div>
+            )}
+          </Head>
           <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
             <div onClick={() => scrollIntoViewWithOffset('#services_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
@@ -681,6 +809,9 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
             خیر
           </Button>
         </div>
+      </Modal>
+      <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
+        <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
       </Modal>
     </>
   );

@@ -59,6 +59,7 @@ const nextConfig = {
     PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
+    DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],

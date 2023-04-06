@@ -30,6 +30,8 @@ export type UserInfo = {
   province_id?: string;
   image?: string;
   cell?: string;
+  is_doctor?: boolean;
+  profile?: any;
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
