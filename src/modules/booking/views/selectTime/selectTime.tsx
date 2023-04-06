@@ -40,12 +40,12 @@ enum TimeMode {
 export const SelectTimeUi = (props: SelectTimeProps) => {
   const { onSelect, loading, onFirstFreeTimeError, events, showOnlyFirstFreeTime = false, ...baseInfo } = props;
 
-  const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo, onEvent: data => events?.onOtherFreeTime(data) });
+  const { getDays, ...otherTimes } = useOtherTimes({ ...baseInfo, onEvent: data => events?.onOtherFreeTime?.(data) });
   const firstFreeTime = useFirstFreeTime({
     ...baseInfo,
     enabled: !loading,
     onError: onFirstFreeTimeError,
-    onEvent: data => events?.onFirstFreeTime(data),
+    onEvent: data => events?.onFirstFreeTime?.(data),
   });
 
   const suspend = useSuspend();

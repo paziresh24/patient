@@ -1,3 +1,5 @@
+import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
+import convertTimeStampToPersianDate from '@/common/utils/convertTimeStampToPersianDate';
 import { create } from 'zustand';
 
 interface BooksStore {
@@ -24,8 +26,9 @@ export const useBookStore = create<BooksStore>(set => ({
     }));
   },
   moveBook: ({ bookId, from }) => {
+    const timeString = `${convertTimeStampToPersianDate(from)} ${convertTimeStampToFormattedTime(from)}`;
     set(state => ({
-      books: state.books.map(book => (book.book_id === bookId ? { ...book, from } : book)),
+      books: state.books.map(book => (book.book_id === bookId ? { ...book, from, book_time_string: timeString } : book)),
     }));
   },
 }));

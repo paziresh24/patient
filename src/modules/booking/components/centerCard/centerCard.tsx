@@ -50,7 +50,7 @@ export const CenterCard = (props: CenterCardProps) => {
               )}
             >
               <Text className="line-clamp-1">{name}</Text>
-              <ChevronIcon dir="left" className="min-w-fit" />
+              <ChevronIcon dir="left" className="min-w-2" />
             </div>
           </div>
           {!!address && (

@@ -72,7 +72,7 @@ export const Head = (props: HeadProps) => {
       )}
       {serviceList && (
         <ScrollContainer
-          className={classNames('flex space-s-1 px-4 items-center relative', {
+          className={classNames('flex space-s-1 px-4 items-center relative md:max-w-[46rem]', {
             'justify-center': serviceList.length === 1,
             'p-4 bg-slate-50 border-2 border-slate-200 justify-start border-dashed rounded-lg mx-4': editable,
           })}
@@ -80,7 +80,7 @@ export const Head = (props: HeadProps) => {
           {editable && <EditButton className="ml-3" onClick={servicesEditAction} />}
           {serviceList.map(service => (
             <Chips
-              className="!bg-transparent border text-center min-w-fit !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
+              className="!bg-transparent border text-center min-w-fit w-max !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
               key={service}
             >
               {service}

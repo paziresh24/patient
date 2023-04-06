@@ -24,7 +24,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
           onMouseOver={() => setIsHoverItem(index)}
           onMouseLeave={() => setIsHoverItem(null)}
           chevronDir={hoverItem !== null ? (hoverItem > index ? 'left' : 'right') : 'left'}
-          className={classNames('min-w-fit', { 'opacity-80': items.length === index + 1 })}
+          className={classNames('min-w-fit w-max', { 'opacity-80': items.length === index + 1 })}
         />
       ))}
     </div>

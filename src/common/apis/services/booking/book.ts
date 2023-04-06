@@ -10,7 +10,7 @@ interface Params {
   national_code: string;
   cell: string;
   email?: string;
-  gender: 'male' | 'female';
+  gender?: 'male' | 'female';
   is_foreigner: boolean;
   selected_user_id: string;
   // insurance_id: this.insurance.id,

@@ -113,7 +113,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    router.push(`/dr/${slug}`);
+    router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -177,30 +177,34 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const handleMoveTurn = async ({ timeId, from }: { timeId: string; from: number }) => {
-    await moveBookApi.mutateAsync({
+    const { data } = await moveBookApi.mutateAsync({
       center_id: centerId,
       reference_code: trackingCode,
       request_code: timeId,
     });
-    handleCloseMoveTurnModal();
-    moveBook({
-      bookId: id,
-      from,
-    });
-    splunkInstance().sendEvent({
-      group: 'move-book',
-      type: 'confirm',
-      event: {
-        terminal_id: getCookie('terminal_id'),
-        doctorName,
-        expertise,
-        patient: {
-          phoneNumber: phoneNumber,
-          name: patientName,
+    if (data?.status === ClinicStatus.SUCCESS) {
+      handleCloseMoveTurnModal();
+      moveBook({
+        bookId: id,
+        from,
+      });
+      splunkInstance().sendEvent({
+        group: 'move-book',
+        type: 'confirm',
+        event: {
+          terminal_id: getCookie('terminal_id'),
+          doctorName,
+          expertise,
+          patient: {
+            phoneNumber: phoneNumber,
+            name: patientName,
+          },
         },
-      },
-    });
-    toast.success('جابجایی نوبت با موفقیت انجام شد.');
+      });
+      toast.success('جابجایی نوبت با موفقیت انجام شد.');
+      return;
+    }
+    toast.error(data?.message);
   };
 
   const handleMoveButton = () => {
@@ -256,7 +260,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'استرداد وجه' : 'لغو نوبت'}
           </Button>
         )}
-        {status === BookStatus.notVisited && centerType !== CenterType.consult && !activePaymentStatus && (
+        {status === BookStatus.notVisited && (
           <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
@@ -317,14 +321,14 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       <Modal
         title={
           isOnlineVisitTurn
-            ? `علت ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} شما چه میباشد؟`
-            : 'آیا از لغو نوبت مطمئن هستید؟'
+            ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+            : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
       >
         <>
           {isOnlineVisitTurn && (
-            <div className="space-y-3 mb-4">
+            <div className="mb-4 space-y-3">
               {(status === BookStatus.notVisited ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
                 <Select
                   key={question.id}

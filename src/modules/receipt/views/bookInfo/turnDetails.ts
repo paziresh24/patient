@@ -1,7 +1,5 @@
 import InfoIcon from '@/common/components/icons/info';
 import { Messenger, messengers } from '@/common/constants/messengers';
-import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
-import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { createElement } from 'react';
@@ -14,7 +12,7 @@ type Patient = {
 };
 interface TurnDetailsDataParam {
   data: {
-    bookTime: number;
+    bookTime: string;
     waitingTime?: string;
     turnStatus?: string;
     trackingCode: string;
@@ -50,8 +48,6 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     turnStatus,
   } = data;
 
-  const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${convertTimeStampToPersianDate(bookTime)}`;
-
   const lists = [
     {
       id: 17,
@@ -64,7 +60,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
-      value: dateTime,
+      value: bookTime,
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,

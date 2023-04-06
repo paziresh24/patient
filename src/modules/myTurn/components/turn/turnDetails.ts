@@ -1,8 +1,5 @@
-import { convertTimeStampToFormattedTime } from '@/common/utils/convertTimeStampToFormattedTime';
-import { convertTimeStampToPersianDate } from '@/common/utils/convertTimeStampToPersianDate';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
 import { Translate } from 'next-translate';
 import { PAYMENT_STATUS_TRANSLATION } from '../../constants/paymentStatusTranslation';
 import { PaymentStatus } from '../../types/paymentStatus';
@@ -25,8 +22,6 @@ interface TurnDetailsDataParam {
 export const turnDetailsData = ({ data, status, centerType, paymentStatus, activePaymentStatus, translate }: TurnDetailsDataParam) => {
   const { bookTime, trackingCode, waitingTime, centerName, patientName } = data;
 
-  const dateTime = `${convertTimeStampToFormattedTime(bookTime)} - ${digitsFaToEn(convertTimeStampToPersianDate(bookTime))}`;
-
   const lists = [
     {
       id: 1,
@@ -34,7 +29,7 @@ export const turnDetailsData = ({ data, status, centerType, paymentStatus, activ
         centerType === CenterType.consult
           ? translate('patient/appointments:turnDetails.timeForConsult')
           : translate('patient/appointments:turnDetails.time'),
-      value: dateTime,
+      value: bookTime,
       shouldShow: [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.deleted].includes(status),
     },
     {

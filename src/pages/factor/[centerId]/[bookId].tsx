@@ -9,6 +9,7 @@ import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -97,10 +98,10 @@ const Factor = () => {
               {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
                 <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />
               )}
-
               {getBookDetails.isSuccess && bookDetailsData && (
                 <Text fontSize="sm" fontWeight="medium">
-                  {`${moment(bookDetailsData?.book_from * 1000)
+                  {`${moment
+                    .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
                     ?.locale('fa')
                     ?.calendar(undefined, {
                       sameDay: '[امروز]',
@@ -108,13 +109,9 @@ const Factor = () => {
                       nextWeek: 'dddd',
                       sameElse: 'dddd',
                     })}
-              ${moment(bookDetailsData?.book_from * 1000)
-                ?.locale('fa')
-                ?.format('DD MMMM')}
+              ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('DD MMMM')}
                 ساعت
-                 ${moment(bookDetailsData?.book_from * 1000)
-                   ?.locale('fa')
-                   ?.format('HH:mm')}
+                 ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('HH:mm')}
             `}
                 </Text>
               )}
