@@ -4,29 +4,35 @@ import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
 import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
+import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
 import EditIcon from '@/common/components/icons/edit';
+import EyeIcon from '@/common/components/icons/eye';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
+import ReceiptIcon from '@/common/components/icons/receipt';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
+import useModal from '@/common/hooks/useModal';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
 const { publicRuntimeConfig } = config();
 
 export const UserProfile = () => {
+  const router = useRouter();
   const { handleOpenLoginModal } = useLoginModalContext();
   const { t } = useTranslation('common');
   const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
@@ -40,6 +46,8 @@ export const UserProfile = () => {
   const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
+  const { handleOpen, handleClose, modalProps } = useModal();
+
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
@@ -159,6 +167,38 @@ export const UserProfile = () => {
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}
+
+      <Modal {...modalProps} noHeader>
+        <div className="flex flex-col items-center space-y-4">
+          <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={90} height={90} />
+          <Text fontWeight="bold" align="center">
+            دکتر {userInfo?.profile?.name} {userInfo?.profile?.family} خوش آمدید.
+          </Text>
+          <div className="flex flex-col w-full space-y-2">
+            <Button
+              icon={<ReceiptIcon />}
+              variant="primary"
+              onClick={() => {
+                window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
+                handleClose();
+              }}
+            >
+              لیست مراجعین
+            </Button>
+            <Button
+              icon={<EyeIcon />}
+              block
+              variant="secondary"
+              onClick={() => {
+                router.push(`/dr/${userInfo?.profile?.slug}`);
+                handleClose();
+              }}
+            >
+              مشاهده/ویرایش پروفایل عمومی
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

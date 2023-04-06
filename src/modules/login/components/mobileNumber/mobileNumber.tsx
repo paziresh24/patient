@@ -40,21 +40,20 @@ export const MobileNumber = (props: MobileNumberProps) => {
     const { data: resetPasswordRes } = await resetPassword.mutateAsync({
       cell: +mobileNumberValue,
     });
-    if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
+    if (resetPasswordRes.status === ClinicStatus.SUCCESS || resetPasswordRes.status === 39) {
+      if (resetPasswordRes.status === 39) toast.error(resetPasswordRes.message);
+      if (resetPasswordRes?.result?.has_static_password) return setStep('password');
       return setStep('otp_code');
     }
-    if (resetPasswordRes.status === 39) {
-      toast.error(resetPasswordRes.message);
-      return setStep('otp_code');
-    }
+
     toast.error(resetPasswordRes.message);
   };
 
   return (
     <form className="flex flex-col space-y-5" onSubmit={handleRegister}>
-      <LoginTitleBar title={title ?? t('steps.first.title')} description={description ?? t('steps.first.description')} />
+      <LoginTitleBar title={title ?? t('steps.mobileNumber.title')} description={description ?? t('steps.mobileNumber.description')} />
       <TextField
-        label={t('steps.first.phoneNumberFieldLable')}
+        label={t('steps.mobileNumber.phoneNumberFieldLable')}
         onChange={e =>
           e.target.value.startsWith('9') && e.target.value.length >= 3
             ? setMobileNumberValue(digitsFaToEn(`0${e.target.value.trim()}`))
@@ -63,7 +62,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
         value={mobileNumberValue}
         style={{ direction: 'ltr' }}
         placeholder="09"
-        helperText={t('steps.first.exampleHint')}
+        helperText={t('steps.mobileNumber.exampleHint')}
         onFocus={() => setIsFieldError(false)}
         error={isFieldError}
         autoFocus
@@ -73,7 +72,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       />
 
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
-        {t('steps.first.action')}
+        {t('steps.mobileNumber.action')}
       </Button>
     </form>
   );

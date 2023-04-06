@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import MobileNumber from '../components/mobileNumber';
 import OtpCode from '../components/otpCode';
+import Password from '../components/password/password';
 
-export type StepLoginForm = 'mobile_number' | 'otp_code';
+export type StepLoginForm = 'mobile_number' | 'otp_code' | 'password';
 
 interface LoginFormProps {
   title?: string;
@@ -36,6 +37,7 @@ export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => 
           retryGetPasswordNumber={retryGetPasswordNumber}
         />
       )}
+      {step === 'password' && <Password setStep={setStep} mobileNumberValue={mobileNumberValue} postLogin={postLogin} />}
     </div>
   );
 };

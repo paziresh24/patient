@@ -2,7 +2,7 @@ import classNames from '@/common/utils/classNames';
 import { ButtonHTMLAttributes } from 'react';
 import Loading from '../loading';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
         The content of the button.
     */

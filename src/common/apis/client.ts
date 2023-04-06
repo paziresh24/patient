@@ -64,7 +64,18 @@ paziresh24AppClient.interceptors.request.use(
 );
 
 paziresh24AppClient.interceptors.response.use(
-  res => res,
+  async res => {
+    if (res.data?.message === 'Unauthenticated!') {
+      try {
+        const { data } = await refresh();
+        if (data.access_token) setCookie('token', data.access_token);
+        return paziresh24AppClient(res.config);
+      } catch (error) {
+        return paziresh24AppClient(res.config);
+      }
+    }
+    return res;
+  },
   async error => {
     const originalRequest = error.config;
     if (error.response?.status === 401) {

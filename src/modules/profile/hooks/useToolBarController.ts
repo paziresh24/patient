@@ -11,9 +11,10 @@ interface useToolBarControllerProps {
   slug: string;
   displayName: string;
   documentTitle: string;
+  editable?: boolean;
 }
 
-export const useToolBarController = ({ slug, displayName, documentTitle }: useToolBarControllerProps) => {
+export const useToolBarController = ({ slug, displayName, documentTitle, editable }: useToolBarControllerProps) => {
   const router = useRouter();
   const bookmarkController = useBookmarkController({ slug });
   const share = useShare();
@@ -46,12 +47,13 @@ export const useToolBarController = ({ slug, displayName, documentTitle }: useTo
         });
       },
     },
-    customize.showContribute && {
-      type: 'edit',
-      action: () => {
-        router.push(`/patient/contribute?slug=${slug}`);
+    customize.showContribute &&
+      !editable && {
+        type: 'edit',
+        action: () => {
+          router.push(`/patient/contribute?slug=${slug}`);
+        },
       },
-    },
   ].filter(Boolean);
 
   return toolBarItems;
