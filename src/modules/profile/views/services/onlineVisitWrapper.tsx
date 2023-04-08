@@ -139,7 +139,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       >
         <div className="flex flex-col space-y-3">
           <div className="p-2 rounded-md bg-slate-100">
-            <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: messengers[channelType]?.description }} />
+            <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: messengers[channelType[0] as 'igap' | 'phone']?.description }} />
           </div>
           <SelectUserWrapper
             className="pl-1 overflow-auto max-h-72 md:pb-0 pb-28"
