@@ -320,7 +320,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
           const items = doctor.centers.find((center: any) => center.center_type === 1)?.gallery ?? [];
           const reformmatedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
           if (!customize.showGalleryProfile) return null;
-          if (!items?.length && !editable && !doctor.centers.some((center: any) => center.center_type === 1)) return null;
+
+          if ((!doctor.centers.some((center: any) => center.center_type === 1) && !editable) || items?.length === 0) return null;
           return (
             <div className="flex flex-col space-y-3">
               <div className="flex items-center justify-between px-4 md:px-0">

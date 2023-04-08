@@ -346,7 +346,7 @@ export const withUserMenu = [
     link: '/app/',
   },
   {
-    title: 'راهنمای و دریافت نوبت ',
+    title: 'راهنمای دریافت نوبت ',
     link: '/home/help/',
   },
   {
