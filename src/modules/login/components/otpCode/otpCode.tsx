@@ -66,7 +66,7 @@ export const OtpCode = (props: OtpCodeProps) => {
             const { data } = await getDoctorProfile.mutateAsync();
             profile = data.data;
           } catch (error) {
-            console.log(error);
+            console.error(error);
           }
         }
 
@@ -136,7 +136,7 @@ export const OtpCode = (props: OtpCodeProps) => {
         {t('steps.otpCode.changeMobileNumber')}
       </Button>
 
-      <Button onClick={() => handleLogin(password)} loading={login.isLoading}>
+      <Button onClick={() => handleLogin(password)} loading={login.isLoading || getDoctorProfile.isLoading}>
         {t('steps.otpCode.action')}
       </Button>
     </div>

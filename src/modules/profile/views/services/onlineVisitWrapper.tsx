@@ -22,7 +22,7 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
-  channelType: 'igap' | 'phone';
+  channelType: Array<'phone' | 'igap' | 'whatsapp' | 'eitaa'>;
   doctorId: string;
   title: string;
   price: number;
@@ -54,7 +54,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
-  const messengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -117,11 +116,14 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   return (
     <>
       <OnlineVisit
-        channel={channelType}
+        channel={channelType[0]}
         messengers={doctorMessenger?.find?.(({ id }: any) => id === doctorId)?.messengers}
         duration={duration}
         title={removeHtmlTagInString(
-          (title ?? 'ویزیت آنلاین') + (!messengerSelectDoctorIds?.includes(doctorId) ? ` (${messengers[channelType]?.name})` : ''),
+          (title ?? 'ویزیت آنلاین') +
+            (channelType.includes('igap') || channelType.includes('phone')
+              ? ` (${messengers[channelType[0] as 'igap' | 'phone']?.name})`
+              : ''),
         )}
         price={price}
         loading={freeTurn.isLoading}

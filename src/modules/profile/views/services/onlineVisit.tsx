@@ -1,11 +1,12 @@
 import igapIcon from '@/common/assets/messenger/igap.png';
+import ChatIcon from '@/common/components/icons/chat';
 import PhoneIcon from '@/common/components/icons/phone';
 import { addCommas } from '@persian-tools/persian-tools';
 import { ServiceCard } from './card';
 
 interface OnlineVisitProps {
   title: string;
-  channel: 'igap' | 'phone';
+  channel: 'phone' | 'igap' | 'whatsapp' | 'eitaa';
   messengers?: string[];
   price?: number;
   duration?: string;
@@ -19,7 +20,14 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
     <ServiceCard
       header={{
         title,
-        icon: channel === 'igap' ? <img src={igapIcon.src} width={25} height={25} alt="" /> : <PhoneIcon width={21} height={21} />,
+        icon:
+          channel === 'igap' ? (
+            <img src={igapIcon.src} width={25} height={25} alt="" />
+          ) : channel === 'phone' ? (
+            <PhoneIcon width={21} height={21} />
+          ) : (
+            <ChatIcon />
+          ),
         ...(price && { hint: `${addCommas(price / 10)} تومان` }),
       }}
       body={{

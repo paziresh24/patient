@@ -54,7 +54,6 @@ import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
-import { useFeatureValue } from '@growthbook/growthbook-react';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -118,7 +117,10 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const messengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
+  const shouldShowMessengers =
+    !!profile?.online_visit_channel_types?.includes?.('eitaa') &&
+    !!profile?.online_visit_channel_types?.includes?.('whatsapp') &&
+    center?.id === CENTERS.CONSULT;
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -166,8 +168,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    if (center.id === CENTERS.CONSULT && !user.messengerType && messengerSelectDoctorIds?.includes?.(profile?.id))
-      return toast.error('لطفا پیام رسان را انتخاب کنید.');
+    if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
@@ -462,7 +463,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             searchText={symptomSearchText}
             className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
           />
-          {center?.id === CENTERS.CONSULT && !messengerSelectDoctorIds.includes(profile?.id) && (
+          {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
             <div className="p-2 mb-3 rounded-md bg-slate-100">
               <Text
                 fontSize="sm"
@@ -479,7 +480,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               loading: bookLoading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
-              shouldShowMessengers: messengerSelectDoctorIds?.includes?.(profile?.id) && center?.id === CENTERS.CONSULT,
+              shouldShowMessengers,
             }}
             nextStep={async (user: UserInfo) => {
               setUser(user);
