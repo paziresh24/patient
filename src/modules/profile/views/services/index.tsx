@@ -32,7 +32,13 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           ?.services?.map((service: any) => (
             <OnlineVisitWrapper
               key={service.id}
-              channelType={doctor?.online_visit_channels?.[0]?.type === 'igap' ? 'igap' : 'phone'}
+              channelType={
+                !!doctor?.online_visit_channel_types?.includes?.('eitaa') && !!doctor?.online_visit_channel_types?.includes?.('whatsapp')
+                  ? ['eitaa', 'whatsapp']
+                  : doctor?.online_visit_channel_types?.includes?.('igap')
+                  ? ['igap']
+                  : ['phone']
+              }
               title={service.desk}
               price={service.free_price}
               duration={

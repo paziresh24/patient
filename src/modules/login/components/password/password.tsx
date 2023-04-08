@@ -56,7 +56,7 @@ export const Password = (props: PasswordProps) => {
             const { data } = await getDoctorProfile.mutateAsync();
             profile = data.data;
           } catch (error) {
-            console.log(error);
+            console.error(error);
           }
         }
 
@@ -87,7 +87,7 @@ export const Password = (props: PasswordProps) => {
         />
       </div>
       <TextField onChange={e => setPassword(e.target.value)} type="password" style={{ direction: 'ltr' }} autoFocus />
-      <Button onClick={() => handleLogin(password)} loading={login.isLoading}>
+      <Button onClick={() => handleLogin(password)} loading={login.isLoading || getDoctorProfile.isLoading}>
         {t('steps.password.action')}
       </Button>
     </div>

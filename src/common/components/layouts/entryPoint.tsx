@@ -38,8 +38,12 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
       let profile = {};
       if (data.isDoctor) {
-        const { data } = await getDoctorProfile.mutateAsync();
-        profile = data.data;
+        try {
+          const { data } = await getDoctorProfile.mutateAsync();
+          profile = data.data;
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       setUserInfo({
