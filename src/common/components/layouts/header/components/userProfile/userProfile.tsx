@@ -12,7 +12,6 @@ import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
 import EditIcon from '@/common/components/icons/edit';
 import EyeIcon from '@/common/components/icons/eye';
-import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import UserCircle from '@/common/components/icons/userCircle';
@@ -150,13 +149,13 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList>
-                  {customize.showSupport && (
+                  {/* {customize.showSupport && (
                     <MenuItem
                       name={t('patient/common:menu.support')}
                       link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
                       icon={<HeadphoneIcon />}
                     />
-                  )}
+                  )} */}
                   <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
                 </MenuList>
               </div>
