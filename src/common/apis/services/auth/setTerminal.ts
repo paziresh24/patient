@@ -1,5 +1,6 @@
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import formData from '@/common/utils/formData';
+import removeSubdomain from '@/common/utils/removeSubdomain';
 import { getCookie, setCookie } from 'cookies-next';
 import { v4 as uuidv4 } from 'uuid';
 import { clinicClient } from '../../client';
@@ -15,6 +16,7 @@ export const setTerminal = async () => {
       setCookie('terminal_id', data.data.id, {
         maxAge: dayToSecond(60),
         path: '/',
+        domain: removeSubdomain(window.location.hostname),
       });
     });
 };
