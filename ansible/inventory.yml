@@ -6,7 +6,7 @@ all:
         ansible_user: root
         ansible_password: '{{ lookup("env", "STAGING_SERVER_PASSWORD") }}'
     develop_server:
-      hosts: 192.168.216.108
+      hosts: 192.168.116.108
       vars:
         ansible_user: root
         ansible_python_interpreter: /usr/bin/python3 
