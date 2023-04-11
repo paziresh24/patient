@@ -1,7 +1,9 @@
 import { useMoveBook } from '@/common/apis/services/booking/moveBook';
+import Alert from '@/common/components/atom/alert/alert';
 import Text from '@/common/components/atom/text/text';
 import RefreshIcon from '@/common/components/icons/refresh';
 import TrashIcon from '@/common/components/icons/trash';
+import WarningIcon from '@/common/components/icons/warning';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
@@ -48,6 +50,7 @@ interface TurnFooterProps {
   serviceId: string;
   userCenterId: string;
   activePaymentStatus: boolean;
+  respiteDeleteTurn?: string;
   patientName: string;
   paymentStatus: PaymentStatus;
   description: string;
@@ -73,6 +76,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     userCenterId,
     activePaymentStatus,
     patientName,
+    respiteDeleteTurn,
     paymentStatus,
     description,
   } = props;
@@ -335,6 +339,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
+          <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
+            <WarningIcon className="w-8" />
+            <Text fontSize="sm" fontWeight="bold">
+              {`زمان نوبت شما کمتر از ${respiteDeleteTurn} ساعت دیگر است و وجه پرداختی شما عودت داده نخواهد شد.`}
+            </Text>
+          </Alert>
+
           <div className="flex space-s-2">
             <Button
               theme="error"
