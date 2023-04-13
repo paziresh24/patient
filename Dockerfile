@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 #RUN yarn cache clean
 #RUN yarn --network-timeout 10000000
 #RUN yarn
-RUN npm config set timeout 6000000
+RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
 RUN npm cache clean --force
 RUN npm install 
 
