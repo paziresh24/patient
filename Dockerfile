@@ -1,4 +1,5 @@
-FROM docker.paziresh24.info/node:14.18.2-alpine
+#FROM docker.paziresh24.info/node:14.18.2-alpine
+FROM docker.paziresh24.info/node:18.15.0-alpine3.17
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 ENV DOCKER_BUILDKIT 1
