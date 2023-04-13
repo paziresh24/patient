@@ -19,7 +19,7 @@ COPY . .
 
 #RUN yarn build && \
 #    yarn cache clean
-RUN npm build
+RUN npm run build
 RUN npm cache clean --force
 
 EXPOSE 3000
