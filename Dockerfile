@@ -11,7 +11,7 @@ COPY package.json package-lock.json ./
 #RUN yarn
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
 RUN npm cache clean --force
-RUN npm install 
+RUN npm install --force
 
 COPY . .
 
