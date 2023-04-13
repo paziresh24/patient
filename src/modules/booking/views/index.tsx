@@ -54,6 +54,7 @@ import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { centersWithConfirmation } from '../constants/centersWithConfirmation';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -490,7 +491,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               }
 
               try {
-                if (university && user.national_code) {
+                if (centersWithConfirmation.includes(center.id) && user.national_code) {
                   const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
                   if (data) {
                     if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
