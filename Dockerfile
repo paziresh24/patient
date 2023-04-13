@@ -11,16 +11,14 @@ RUN rm -rf package-lock.json
 #RUN yarn --network-timeout 10000000
 #RUN yarn
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
-RUN npm cache clean --force
-RUN npm install --force
+RUN npm install --force && npm cache clean --force
 
 COPY . .
 
 
 #RUN yarn build && \
 #    yarn cache clean
-RUN npm run build
-RUN npm cache clean --force
+RUN npm run build && npm cache clean --force
 
 EXPOSE 3000
 
