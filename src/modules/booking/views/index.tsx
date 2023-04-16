@@ -54,7 +54,7 @@ import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
-import { centersWithConfirmation } from '../constants/centersWithConfirmation';
+import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -130,6 +130,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   } = useModal();
   const { handleOpen: handleOpenInsuranceModal, modalProps: insuranceModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
+  const { handleOpen: handleOpenErrorModal, handleClose: handleCloseErrorModal, modalProps: errorModalProps } = useModal();
+  const [errorModalMetaData, setErrorModalMetaData] = useState<any>({});
 
   const [insuranceNumber, setInsuranceNumber] = useState('');
   const [insuranceName, setInsuranceName] = useState('');
@@ -170,22 +172,23 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const handleBookAction = async (user: any) => {
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
-    const { insurance_id, insurance_referral_code } = user;
-    const userConfimation = getNationalCodeConfirmation.data?.data;
+    const { insurance_id } = user;
+    const userConfimation = getNationalCodeConfirmation.data?.data?.info;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
-    if (+center.settings?.booking_enable_insurance && !insurance_id && !insurance_referral_code)
-      return toast.error('لطفا بیمه خود را انتخاب کنید.');
+    if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
+
+    console.log(userConfimation);
+
     handleBook(
       {
         center,
         timeId,
         user: {
           ...user,
-          name: userConfimation?.first_name ?? user.name,
-          family: userConfimation?.last_name ?? user.family,
-          gender: userConfimation?.gender ?? user.gender,
+          name: userConfimation?.name ?? user.name,
+          family: userConfimation?.family ?? user.family,
+          gender: userConfimation?.gender !== null ? convertNumberToStringGender(userConfimation?.gender) : user.gender,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
-          insurance_referral_code: insurance_referral_code !== -1 ? insurance_referral_code : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
@@ -321,19 +324,35 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const getInsuranceList = () => {
     let insurances: any[] = [];
-    if (!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)) {
-      insurances = getNationalCodeConfirmation.data?.data?.insurances
-        ?.filter((insurance: any) => insurance.insurerBox?.coded_string)
-        .map((insurance: any) => ({
-          label: insurance.insurer?.value,
-          value: insurance.insurerBox?.coded_string,
-        }));
+    if (!isEmpty(getNationalCodeConfirmation.data?.data?.info?.insurances)) {
+      insurances = Object.values(getNationalCodeConfirmation.data?.data?.info?.insurances)?.map((insurance: any) => ({
+        label: insurance.name,
+        value: insurance.id,
+      }));
     } else {
       insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
     }
 
     insurances.push({ label: 'آزاد', value: -1 });
     return insurances;
+  };
+
+  const handleShowErrorModal = ({
+    text,
+    buttons,
+  }: {
+    text: string;
+    buttons?: Array<{
+      text?: string;
+      variant?: 'primary' | 'secondary';
+      onClick: () => void;
+    }>;
+  }) => {
+    setErrorModalMetaData({
+      text,
+      buttons,
+    });
+    handleOpenErrorModal();
   };
 
   return (
@@ -491,14 +510,22 @@ const BookingSteps = (props: BookingStepsProps) => {
               }
 
               try {
-                if (centersWithConfirmation.includes(center.id) && user.national_code) {
-                  const { data } = await getNationalCodeConfirmation.mutateAsync({ nationalCode: user.national_code! });
-                  if (data) {
-                    if (data?.insurances?.length === 1 && data?.insurances?.some((insurance: any) => insurance.insurerBox?.coded_string)) {
-                      const insurance = data?.insurances[0];
+                if (+center.settings.booking_get_person_info_by_national_code && user.national_code) {
+                  const { data } = await getNationalCodeConfirmation.mutateAsync({
+                    nationalCode: user.national_code!,
+                    centerId: center.id,
+                  });
+
+                  if (data?.info?.insurances) {
+                    const insurances: any[] = Object.values(data?.info?.insurances);
+                    if (insurances.length === 1) {
+                      const insurance = insurances[0];
                       return handleBookAction({
                         ...user,
-                        insurance_referral_code: insurance.insurerBox?.coded_string,
+                        name: data?.info?.name,
+                        family: data?.info?.family,
+                        gender: convertNumberToStringGender(data?.info?.gender),
+                        insurance_id: insurance.id,
                       });
                     }
                     handleOpenInsuranceModal();
@@ -506,7 +533,28 @@ const BookingSteps = (props: BookingStepsProps) => {
                   }
                 }
                 // eslint-disable-next-line no-empty
-              } catch (e) {}
+              } catch (e) {
+                handleShowErrorModal({
+                  text: `<p class="font-bold">در استعلام بیمه شما خطایی رخ داده است، لطفا چند دقیقه دیگر تلاش کنید.</p>
+                  <p>چنانچه مایلید بیمه شما به صورت آزاد محاسبه شود، فرایند نوبت دهی را ادامه داده و در نظر داشته باشید، هزینه اضافی پرداخت شده به شما برگشت داده نخواهد شد.</p>`,
+                  buttons: [
+                    {
+                      text: 'ادامه',
+                      variant: 'primary',
+                      onClick: () => {
+                        handleBookAction(user);
+                        handleCloseErrorModal();
+                      },
+                    },
+                    {
+                      text: 'انصراف',
+                      variant: 'secondary',
+                      onClick: handleCloseErrorModal,
+                    },
+                  ],
+                });
+                return;
+              }
 
               if (+center?.settings?.booking_enable_insurance) {
                 handleOpenInsuranceModal();
@@ -563,15 +611,23 @@ const BookingSteps = (props: BookingStepsProps) => {
             onClick={() =>
               handleBookAction({
                 ...user,
-                ...(!isEmpty(getNationalCodeConfirmation.data?.data?.insurances)
-                  ? { insurance_referral_code: insuranceName }
-                  : { insurance_id: insuranceName }),
+                insurance_id: insuranceName,
                 insurance_number: insuranceNumber,
               })
             }
           >
             ثبت نوبت
           </Button>
+        </div>
+      </Modal>
+      <Modal {...errorModalProps} noHeader bodyClassName="flex flex-col space-y-2">
+        <Text dangerouslySetInnerHTML={{ __html: errorModalMetaData.text }} />
+        <div className="flex items-center space-s-2">
+          {errorModalMetaData?.buttons?.map((button: any, index: number) => (
+            <Button block key={index} variant={button.variant} onClick={button.onClick}>
+              {button.text}
+            </Button>
+          ))}
         </div>
       </Modal>
       <Modal
