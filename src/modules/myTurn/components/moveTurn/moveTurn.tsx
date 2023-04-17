@@ -38,7 +38,7 @@ export const MoveTurn = (props: MoveTurnProps) => {
       />
       <Modal {...confirmModalProps} noHeader bodyClassName="space-y-3">
         <Text fontWeight="semiBold">
-          آیا از جابجایی نوبت خود از {getTimeAndDate(currentDate)} به تاريخ {getTimeAndDate(freeTurnInfo?.timeStamp ?? 0)} اطمینان دارید؟
+          آیا از جابجایی نوبت خود از {currentDate} به زمان {getTimeAndDate(freeTurnInfo?.timeStamp ?? 0)} اطمینان دارید؟
         </Text>
         <div className="flex items-center space-s-3">
           <Button

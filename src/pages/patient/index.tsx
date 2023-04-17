@@ -7,7 +7,6 @@ import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
-import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import ShareIcon from '@/common/components/icons/share';
 import UsersIcon from '@/common/components/icons/users';
@@ -101,7 +100,7 @@ export const PatinetProfile = () => {
           </Link>
         </div>
         <div className="flex flex-col mt-2 bg-white shadow-sm">
-          {customize.showSupport && (
+          {/* {customize.showSupport && (
             <Link
               href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
               className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100"
@@ -109,7 +108,7 @@ export const PatinetProfile = () => {
               <HeadphoneIcon />
               <Text fontWeight="medium">پشتیبانی</Text>
             </Link>
-          )}
+          )} */}
           {customize.showSupplierRegister && (
             <Link
               href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
@@ -133,7 +132,7 @@ export const PatinetProfile = () => {
             </div>
           )}
           <div
-            className="flex items-center px-5 py-4 border-b space-s-3 whitespace-nowrap border-slate-100 cursor-pointer"
+            className="flex items-center px-5 py-4 border-b cursor-pointer space-s-3 whitespace-nowrap border-slate-100"
             onClick={logout}
           >
             <LogoutIcon />

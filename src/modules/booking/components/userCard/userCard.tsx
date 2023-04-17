@@ -93,7 +93,7 @@ export const UserCard = (props: UserCardProps) => {
         title={`${name} ${family}`}
         subTitle={cell}
         selected={select}
-        onSelect={handleSelect}
+        onSelect={() => handleSelect()}
         actionText="ویرایش"
         actionIcon={<EditIcon width={18} height={18} />}
         action={() => {

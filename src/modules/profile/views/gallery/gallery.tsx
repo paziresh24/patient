@@ -15,7 +15,7 @@ export const Gallery = (props: GalleryProps) => {
         <div className="flex pb-1 overflow-auto rounded-lg space-s-3">
           {items.map((item, index) => (
             <PhotoView key={index} src={item + '?size=100'}>
-              <Image key={item} src={item} width={150} height={150} alt="" className="rounded-md cursor-pointer max-h-40" />
+              <Image key={item} src={item} width={120} height={120} alt="" className="rounded-md cursor-pointer max-h-40" />
             </PhotoView>
           ))}
         </div>

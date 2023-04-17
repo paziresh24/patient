@@ -37,7 +37,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               freeturn: doctor.freeturn,
               isBulk: doctor.is_bluk,
               ratesCount: doctor.rates_count,
-              rate: doctor.star,
+              rate: doctor.star * 20,
               url: doctor.url,
               id: doctor.id,
               action: [

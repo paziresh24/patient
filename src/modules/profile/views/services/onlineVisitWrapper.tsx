@@ -22,7 +22,7 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
-  channelType: 'igap' | 'phone';
+  channelType: Array<'phone' | 'igap' | 'whatsapp' | 'eitaa'>;
   doctorId: string;
   title: string;
   price: number;
@@ -54,7 +54,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
   const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
-  const messengerSelectDoctorIds = useFeatureValue<any[]>('select-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -117,11 +116,14 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   return (
     <>
       <OnlineVisit
-        channel={channelType}
+        channel={channelType[0]}
         messengers={doctorMessenger?.find?.(({ id }: any) => id === doctorId)?.messengers}
         duration={duration}
         title={removeHtmlTagInString(
-          (title ?? 'ویزیت آنلاین') + (!messengerSelectDoctorIds?.includes(doctorId) ? ` (${messengers[channelType]?.name})` : ''),
+          (title ?? 'ویزیت آنلاین') +
+            (channelType.includes('igap') || channelType.includes('phone')
+              ? ` (${messengers[channelType[0] as 'igap' | 'phone']?.name})`
+              : ''),
         )}
         price={price}
         loading={freeTurn.isLoading}
@@ -137,7 +139,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       >
         <div className="flex flex-col space-y-3">
           <div className="p-2 rounded-md bg-slate-100">
-            <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: messengers[channelType]?.description }} />
+            <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: messengers[channelType[0] as 'igap' | 'phone']?.description }} />
           </div>
           <SelectUserWrapper
             className="pl-1 overflow-auto max-h-72 md:pb-0 pb-28"

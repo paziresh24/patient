@@ -1,5 +1,6 @@
 import { useLogin } from '@/common/apis/services/auth/login';
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
+import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
@@ -34,6 +35,7 @@ export const OtpCode = (props: OtpCodeProps) => {
   const [password, setPassword] = useState('');
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
   const university = useServerQuery(state => state.queries.university);
+  const getDoctorProfile = useGetDoctorProfile();
 
   const handleLogin = async (password: string) => {
     try {
@@ -50,7 +52,7 @@ export const OtpCode = (props: OtpCodeProps) => {
           maxAge: dayToSecond(60),
         });
 
-        if (university)
+        if (university || process.env.NODE_ENV === 'development')
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(60),
@@ -58,8 +60,19 @@ export const OtpCode = (props: OtpCodeProps) => {
 
         if (window?.Android) window.Android.login(data.certificate);
 
+        let profile = {};
+        if (data.is_doctor) {
+          try {
+            const { data } = await getDoctorProfile.mutateAsync();
+            profile = data.data;
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
         setUserInfo({
           is_doctor: data.is_doctor,
+          profile,
           ...data.result,
         });
 
@@ -94,11 +107,11 @@ export const OtpCode = (props: OtpCodeProps) => {
   return (
     <div className="flex flex-col space-y-2">
       <div className="relative flex flex-col">
-        <LoginTitleBar title={t('steps.second.title')} description={t('steps.second.description', { mobileNumber: mobileNumberValue })} />
+        <LoginTitleBar title={t('steps.otpCode.title')} description={t('steps.otpCode.description', { mobileNumber: mobileNumberValue })} />
         <button className="absolute top-0 self-end px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
           {shouldShowResetButton ? (
             <Text fontWeight="semiBold" fontSize="sm">
-              {retryGetPasswordNumber >= 3 ? t('steps.second.voiceCallWay') : t('steps.second.resend')}
+              {retryGetPasswordNumber >= 3 ? t('steps.otpCode.voiceCallWay') : t('steps.otpCode.resend')}
             </Text>
           ) : (
             <Timer target={120} defaultTime="01:59" ended={() => setShouldShowResetButton(true)} className="!text-slate-500 font-medium" />
@@ -120,11 +133,11 @@ export const OtpCode = (props: OtpCodeProps) => {
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
       />
       <Button size="sm" variant="text" className="underline !text-slate-500" onClick={() => setStep('mobile_number')}>
-        {t('steps.second.changeMobileNumber')}
+        {t('steps.otpCode.changeMobileNumber')}
       </Button>
 
-      <Button onClick={() => handleLogin(password)} loading={login.isLoading}>
-        {t('steps.second.action')}
+      <Button onClick={() => handleLogin(password)} loading={login.isLoading || getDoctorProfile.isLoading}>
+        {t('steps.otpCode.action')}
       </Button>
     </div>
   );
