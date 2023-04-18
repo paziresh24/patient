@@ -18,7 +18,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
 
   return (
     <div className="flex flex-col space-y-6">
-      <div className="flex flex-col pt-1 mt-5 border border-solid divide-y rounded-lg divide-dashed border-slate-200 divide-slate-100">
+      <div className="flex flex-col pt-1 border border-solid divide-y rounded-lg divide-dashed border-slate-200 divide-slate-100">
         {loading && (
           <>
             <div className="flex items-center justify-between px-5 py-3">
