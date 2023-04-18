@@ -177,8 +177,6 @@ const BookingSteps = (props: BookingStepsProps) => {
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
 
-    console.log(userConfimation);
-
     handleBook(
       {
         center,
