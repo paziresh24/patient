@@ -54,6 +54,7 @@ interface TurnFooterProps {
   patientName: string;
   paymentStatus: PaymentStatus;
   description: string;
+  refundable?: number;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -79,6 +80,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     respiteDeleteTurn,
     paymentStatus,
     description,
+    refundable,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -343,13 +345,14 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
-          <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
-            <WarningIcon className="w-8" />
-            <Text fontSize="sm" fontWeight="bold">
-              {`زمان نوبت شما کمتر از ${respiteDeleteTurn} ساعت دیگر است و وجه پرداختی شما عودت داده نخواهد شد.`}
-            </Text>
-          </Alert>
-
+          {refundable === 0 && (
+            <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
+              <WarningIcon className="w-8" />
+              <Text fontSize="sm">
+                زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و وجه پرداختی شما عودت داده نخواهد شد.
+              </Text>
+            </Alert>
+          )}
           <div className="flex space-s-2">
             <Button
               theme="error"

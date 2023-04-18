@@ -76,6 +76,7 @@ export const Turn: React.FC<TurnProps> = props => {
         userCenterId={centerInfo.userCenterId}
         activePaymentStatus={centerInfo.activePaymentStatus}
         respiteDeleteTurn={turnDetails.respiteDeleteTurn}
+        refundable={turnDetails.refundable}
       />
     </Card>
   );
