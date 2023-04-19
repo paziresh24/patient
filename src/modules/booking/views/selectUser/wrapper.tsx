@@ -25,8 +25,9 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
     onSubmit(info);
   };
 
-  const handleSelect = (info: UserInfo) => {
+  const handleSelect = (info: UserInfo & { messengerType: string }) => {
     setUserSelected(info);
+    if (info?.messengerType) return handleSubmit(info);
   };
 
   return (
