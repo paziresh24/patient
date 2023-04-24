@@ -107,7 +107,7 @@ export const UserCard = (props: UserCardProps) => {
             <Text fontWeight="medium" fontSize="sm">
               از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
             </Text>
-            <div className="flex items-center mt-3 space-s-3">
+            <div className="flex items-center mt-3 space-s-3 select-none">
               <div className="w-full">
                 <input
                   onChange={e => e.target.checked && handleSelect('eitaa')}
