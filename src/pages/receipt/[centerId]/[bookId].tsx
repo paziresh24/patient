@@ -46,7 +46,7 @@ const Receipt = () => {
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
-    pincode: userId ? md5(userId) : (pincode as string),
+    pincode: (pincode as string) ?? (userId && md5(userId)),
   });
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
