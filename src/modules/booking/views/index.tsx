@@ -508,7 +508,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               }
 
               try {
-                if (+center.settings.booking_get_person_info_by_national_code && user.national_code) {
+                if (center.id === '455' && user.national_code) {
                   const { data } = await getNationalCodeConfirmation.mutateAsync({
                     nationalCode: user.national_code!,
                     centerId: center.id,
