@@ -54,6 +54,8 @@ import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
+import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
@@ -281,26 +283,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       );
   };
 
-  const reformatCentersProperty = (centers: any[]) => {
-    return (
-      centers
-        ?.map((center: any) => {
-          return {
-            ...center,
-            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${profile.display_name}` : center.name,
-            address: center.id === CENTERS.CONSULT ? '' : center.address,
-            freeturn: center.freeturn_text,
-            type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
-            phoneNumbers: center.display_number_array,
-            isDisable: !center.is_active,
-            isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
-            availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
-          };
-        })
-        .filter(center => (center.id === '5532' ? !center.isDisable : true)) ?? []
-    );
-  };
-
   useEffect(() => {
     if (step === 'SELECT_TIME') {
       clearTimeout(getTurnTimeout.current);
@@ -343,7 +325,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={SelectCenter}
           data={{
             loading: isLoading || isIdle,
-            centers: reformatCentersProperty(centers),
+            centers: reformattedCentersProperty({ centers, displayName: profile.display_name }),
           }}
           nextStep={(center: Center) => {
             const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
@@ -372,11 +354,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={SelectService}
           data={{
             loading: isLoading || isIdle || !center,
-            services: center?.services?.map((service: any) => ({
-              id: service.id,
-              name: service.alias_title,
-              isDisable: !service.hours_of_work || !service.can_booking || service.can_booking === 0,
-            })),
+            services: reformattedServicesProperty({ services: center?.services, center }),
           }}
           nextStep={(service: Service) => {
             const selectedService = center?.services?.find((s: any) => s.id === service.id);
