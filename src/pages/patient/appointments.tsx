@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { ReactElement, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -11,6 +10,7 @@ import { Tab, Tabs } from '@/components/atom/tabs';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useServerQuery from '@/common/hooks/useServerQuery';
@@ -98,9 +98,8 @@ export const Appointments = ({ query: queryServer }: any) => {
 
   return (
     <>
-      <Head>
-        <title>{t('title')}</title>
-      </Head>
+      <Seo title={t('title')} />
+
       {(isWebView || isApplication) && (
         <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
       )}

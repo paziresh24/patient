@@ -8,6 +8,7 @@ import ErrorIcon from '@/common/components/icons/error';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
@@ -27,11 +28,11 @@ import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { QueryClient, dehydrate } from 'react-query';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
-const Search = () => {
+const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
   const {
     asPath,
@@ -73,7 +74,7 @@ const Search = () => {
 
   return (
     <>
-      <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} />
+      <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className="flex flex-col items-center justify-center p-3 space-y-3 bg-white">
         <Suggestion key={asPath.toString()} overlay />
         <MobileToolbar />
@@ -119,61 +120,62 @@ Search.getLayout = function getLayout(page: ReactElement) {
   return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
 };
 
-export const getServerSideProps: GetServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  const { params, ...query } = context.query;
+export const getServerSideProps: GetServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    const { params, ...query } = context.query;
 
-  if (params?.length === 1 && (params as string[])?.[0] === 'ir') {
-    return {
-      redirect: {
-        destination: '/s',
-        permanent: true,
-      },
-    };
-  }
-
-  try {
-    const queryClient = new QueryClient();
-
-    const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
-    const university = query?.university;
-
-    await queryClient.fetchQuery(
-      [
-        ServerStateKeysEnum.Search,
-        {
-          route: (params as string[])?.join('/') ?? '',
-          query: {
-            ...query,
-            ...(university && { university }),
-          },
+    if (params?.length === 1 && (params as string[])?.[0] === 'ir') {
+      return {
+        redirect: {
+          destination: '/s',
+          permanent: true,
         },
-      ],
-      () =>
-        searchApi({
-          route: (params as string[])?.join('/') ?? '',
-          query: {
-            ...query,
-          },
-          headers,
-        }),
-    );
-
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-        query: context.query,
-      },
-    };
-  } catch (error) {
-    console.dir(error);
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404)
-        return {
-          notFound: true,
-        };
+      };
     }
-    throw new TypeError(JSON.stringify(error));
-  }
-});
+
+    try {
+      const queryClient = new QueryClient();
+
+      const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
+      const university = query?.university;
+
+      await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.Search,
+          {
+            route: (params as string[])?.join('/') ?? '',
+            query: {
+              ...query,
+              ...(university && { university }),
+            },
+          },
+        ],
+        () =>
+          searchApi({
+            route: (params as string[])?.join('/') ?? '',
+            query: {
+              ...query,
+            },
+            headers,
+          }),
+      );
+
+      return {
+        props: {
+          dehydratedState: dehydrate(queryClient),
+        },
+      };
+    } catch (error) {
+      console.dir(error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404)
+          return {
+            notFound: true,
+          };
+      }
+      throw new TypeError(JSON.stringify(error));
+    }
+  }),
+);
 
 export default Search;

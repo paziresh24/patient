@@ -1,7 +1,7 @@
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import Queue from '@/modules/myTurn/components/queue';
 import { GetServerSidePropsContext } from 'next/types';
@@ -11,9 +11,8 @@ export const QueuePage = () => {
   const { query } = useRouter();
   return (
     <>
-      <Head>
-        <title>شماره نوبت من</title>
-      </Head>
+      <Seo title=">شماره نوبت من" noIndex />
+
       <div className="flex flex-col h-[80vh] lg:rounded-3xl lg:m-10 bg-white">
         <div className="self-center w-full space-y-3 lg:p-5 lg:w-3/12">
           <Queue bookId={query.book_id as string} />

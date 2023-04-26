@@ -128,7 +128,7 @@ const Receipt = () => {
 
   return (
     <>
-      <Seo title="رسید نوبت" />
+      <Seo title="رسید نوبت" noIndex />
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt">
