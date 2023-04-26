@@ -13,7 +13,10 @@ export const reformattedCentersProperty = ({ centers, displayName }: { centers: 
           type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
           phoneNumbers: center.display_number_array,
           isDisable: !center.is_active,
-          isAvailable: center.freeturns_info.length > 1 || freeturnsInfo?.available_time < Math.floor(new Date().getTime() / 1000),
+          isAvailable:
+            center.services.length === 1 && !!freeturnsInfo
+              ? freeturnsInfo?.available_time < Math.floor(new Date().getTime() / 1000)
+              : true,
           availableTime: freeturnsInfo?.availalbe_time_text,
         };
       })
