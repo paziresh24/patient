@@ -15,7 +15,7 @@ const CompactFooter = () => {
       <Text as="p" align="center" fontSize="sm" fontWeight="bold">
         <Trans
           i18nKey="common:footer.copyRightTextByBrand"
-          components={[route === '/' ? <a key={0} href={publicRuntimeConfig.CLINIC_BASE_URL} /> : <span />]}
+          components={[route === '/' ? <a key={0} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/`} /> : <span />]}
         />
       </Text>
     </footer>
