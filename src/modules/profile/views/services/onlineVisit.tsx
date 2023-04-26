@@ -1,6 +1,5 @@
-import igapIcon from '@/common/assets/messenger/igap.png';
-import ChatIcon from '@/common/components/icons/chat';
 import PhoneIcon from '@/common/components/icons/phone';
+import StatusIcon from '@/common/components/icons/status';
 import { addCommas } from '@persian-tools/persian-tools';
 import { ServiceCard } from './card';
 
@@ -20,19 +19,12 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
     <ServiceCard
       header={{
         title,
-        icon:
-          channel === 'igap' ? (
-            <img src={igapIcon.src} width={25} height={25} alt="" />
-          ) : channel === 'phone' ? (
-            <PhoneIcon width={21} height={21} />
-          ) : (
-            <ChatIcon />
-          ),
+        icon: channel === 'phone' ? <PhoneIcon width={21} height={21} /> : <StatusIcon />,
         ...(price && { hint: `${addCommas(price / 10)} تومان` }),
       }}
       body={{
         description: [
-          messengers && `فعال در پیام رسان های : <strong>${messengers?.join('، ')}</strong>`,
+          messengers && `ویزیت در پیام رسان های : <strong>${messengers?.join('، ')}</strong>`,
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
         ].filter(Boolean),
       }}

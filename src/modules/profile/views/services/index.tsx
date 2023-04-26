@@ -33,10 +33,8 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
             <OnlineVisitWrapper
               key={service.id}
               channelType={
-                !!doctor?.online_visit_channel_types?.includes?.('eitaa') && !!doctor?.online_visit_channel_types?.includes?.('whatsapp')
-                  ? ['eitaa', 'whatsapp']
-                  : doctor?.online_visit_channel_types?.includes?.('igap')
-                  ? ['igap']
+                !!doctor?.online_visit_channel_types?.includes?.('eitaa') || !!doctor?.online_visit_channel_types?.includes?.('whatsapp')
+                  ? doctor?.online_visit_channel_types.filter((messenger: string) => messenger === 'whatsapp' || messenger === 'eitaa')
                   : ['phone']
               }
               title={service.desk}

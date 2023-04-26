@@ -7,7 +7,6 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { CENTERS } from '@/common/types/centers';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
@@ -22,7 +21,7 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
-  channelType: Array<'phone' | 'igap' | 'whatsapp' | 'eitaa'>;
+  channelType: Array<'phone' | 'whatsapp' | 'eitaa'>;
   doctorId: string;
   title: string;
   price: number;
@@ -107,7 +106,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       },
     );
   };
-
   const redirectBookingPage = () => {
     profileEvent('doctor profile press online visit book button');
     router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
@@ -119,12 +117,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         channel={channelType[0]}
         messengers={doctorMessenger?.find?.(({ id }: any) => id === doctorId)?.messengers}
         duration={duration}
-        title={removeHtmlTagInString(
-          (title ?? 'ویزیت آنلاین') +
-            (channelType.includes('igap') || channelType.includes('phone')
-              ? ` (${messengers[channelType[0] as 'igap' | 'phone']?.name})`
-              : ''),
-        )}
+        title="ویزیت آنلاین"
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
