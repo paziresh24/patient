@@ -46,7 +46,7 @@ const Receipt = () => {
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
-    pincode: userId ? md5(userId) : (pincode as string),
+    pincode: (pincode as string) ?? (userId && md5(userId)),
   });
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
@@ -126,13 +126,20 @@ const Receipt = () => {
     });
   };
 
+  const statusText = useMemo(() => {
+    if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
+    if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
+    if (turnStatus.expiredTurn && centerType === 'consult') return '';
+    return 'نوبت شما با موفقیت ثبت شد';
+  }, [turnStatus, centerType]);
+
   return (
     <>
       <Seo title="رسید نوبت" />
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
-          <div id="receipt">
-            {!turnStatus.requestedTurn && (
+          <div id="receipt" className="flex flex-col space-y-4">
+            {!turnStatus.requestedTurn && !!statusText && (
               <>
                 {getReceiptDetails.isSuccess ? (
                   <div className="flex flex-col items-center justify-center space-y-3">
@@ -147,11 +154,7 @@ const Receipt = () => {
                         'text-red-500': turnStatus.deletedTurn || turnStatus.expiredTurn,
                       })}
                     >
-                      {turnStatus.deletedTurn
-                        ? 'نوبت شما حذف شده است'
-                        : turnStatus.expiredTurn
-                        ? 'زمان نوبت شما به پایان رسیده است'
-                        : ' نوبت شما با موفقیت ثبت شد'}
+                      {statusText}
                     </Text>
                   </div>
                 ) : (

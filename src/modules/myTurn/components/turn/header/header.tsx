@@ -42,7 +42,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const { removeBook } = useBookStore();
   const { shareTurn, removeBookApi } = useBookAction();
 
-  const shouldShowRemoveTurn = status === BookStatus.notVisited || centerType === CenterType.consult;
+  const shouldShowTagStatus = centerType === CenterType.consult ? status !== BookStatus.expired : status !== BookStatus.notVisited;
 
   const removeBookAction = () => {
     removeBookApi.mutate(
@@ -104,8 +104,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           expertise={doctorInfo.expertise}
         />
       </Link>
-
-      {status !== BookStatus.notVisited && <TagStatus status={status} className="mx-5" />}
+      {shouldShowTagStatus && <TagStatus status={status} className="mx-5" />}
       {paymentStatus !== PaymentStatus.paying && (
         <DropDown
           element={

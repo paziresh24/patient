@@ -45,7 +45,6 @@ export const useBooking = () => {
       ...(user.messengerType && { online_channel: user.messengerType }),
       ...(user.national_code && { national_code: user.national_code }),
       ...(user.insurance_id && { insurance_id: user.insurance_id }),
-      ...(user.insurance_referral_code && { insurance_referral_code: user.insurance_referral_code }),
       ...(user.insurance_number && { insurance_number: user.insurance_number }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
     });

@@ -5,7 +5,8 @@ import Text from '@/common/components/atom/text/text';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { CENTERS } from '@/common/types/centers';
+import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
+import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
 import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
 import SelectService from '@/modules/booking/views/selectService/selectService';
 import { memo, useCallback, useState } from 'react';
@@ -37,26 +38,6 @@ export const Presence = memo((props: PresenceProps) => {
   } = useModal();
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
-
-  const reformatCentersProperty = (centers: any[]) => {
-    return (
-      centers
-        ?.map((center: any) => {
-          return {
-            ...center,
-            name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${displayName}` : center.name,
-            address: center.id === CENTERS.CONSULT ? '' : center.address,
-            freeturn: center.freeturn_text,
-            type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',
-            phoneNumbers: center.display_number_array,
-            isDisable: !center.is_active,
-            isAvailable: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.available_time < Math.floor(new Date().getTime() / 1000),
-            availableTime: center.freeturns_info?.[0] && center.freeturns_info?.[0]?.availalbe_time_text,
-          };
-        })
-        .filter(center => (center.id === '5532' ? !center.isDisable : true)) ?? []
-    );
-  };
 
   const handleOnBook = useCallback(() => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
@@ -167,7 +148,7 @@ export const Presence = memo((props: PresenceProps) => {
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
         <div className="pl-2 overflow-auto max-h-96">
           <SelectCenter
-            centers={reformatCentersProperty(centers)}
+            centers={reformattedCentersProperty({ centers, displayName })}
             onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
           />
         </div>
@@ -175,11 +156,7 @@ export const Presence = memo((props: PresenceProps) => {
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
         <div>
           <SelectService
-            services={selectedCenter.services?.map((service: any) => ({
-              id: service.id,
-              name: service.alias_title,
-              isDisable: !service.hours_of_work || !service.can_booking || service.can_booking === 0,
-            }))}
+            services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
             onSelect={handleOnBookByService}
           />
         </div>
