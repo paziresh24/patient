@@ -13,7 +13,7 @@ import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import messengers from '@/modules/profile/constants/messengers.json';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import without from 'lodash/without';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -52,7 +52,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -115,9 +114,9 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     <>
       <OnlineVisit
         channel={channelType[0]}
-        messengers={doctorMessenger?.find?.(({ id }: any) => id === doctorId)?.messengers}
+        messengers={without(channelType, 'phone')}
         duration={duration}
-        title="ویزیت آنلاین"
+        title={`ویزیت انلاین ${channelType[0] === 'phone' ? '(تماس تلفنی)' : ''}`}
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}

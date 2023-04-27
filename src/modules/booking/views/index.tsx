@@ -8,6 +8,7 @@ import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndCo
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
@@ -41,7 +42,6 @@ import { reformattedDoctorInfoForEvent } from '../functions/reformattedDoctorInf
 // Constants
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { CENTERS } from '@/common/types/centers';
-import messengers from '@/modules/profile/constants/messengers.json';
 
 // Global Store
 import { UserInfo } from '@/modules/login/store/userInfo';
@@ -121,6 +121,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     !!profile?.online_visit_channel_types?.includes?.('eitaa') &&
     !!profile?.online_visit_channel_types?.includes?.('whatsapp') &&
     center?.id === CENTERS.CONSULT;
+  const messengers = useFeatureValue<any>('channeldescription', []);
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -168,6 +169,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
+    console.log(user);
+
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
@@ -468,7 +471,8 @@ const BookingSteps = (props: BookingStepsProps) => {
               <Text
                 fontSize="sm"
                 dangerouslySetInnerHTML={{
-                  __html: messengers[profile?.online_visit_channels?.[0]?.type === 'igap' ? 'igap' : 'phone']?.description,
+                  __html:
+                    messengers[profile?.online_visit_channel_types.find((item: any) => messengers[item]?.type) ?? 'phone']?.description,
                 }}
               />
             </div>
@@ -511,7 +515,14 @@ const BookingSteps = (props: BookingStepsProps) => {
                 handleOpenInsuranceModal();
                 return;
               }
-              handleBookAction(user);
+              handleBookAction({
+                ...user,
+                ...(center?.id === CENTERS.CONSULT &&
+                  !!profile?.online_visit_channel_types?.length &&
+                  !shouldShowMessengers && {
+                    messengerType: messengers[profile?.online_visit_channel_types.find((item: any) => messengers[item])]?.type,
+                  }),
+              });
             }}
           />
         </>
