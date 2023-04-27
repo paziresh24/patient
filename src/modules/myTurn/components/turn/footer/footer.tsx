@@ -54,7 +54,7 @@ interface TurnFooterProps {
   patientName: string;
   paymentStatus: PaymentStatus;
   description: string;
-  refundable?: number;
+  refundable?: boolean;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -345,7 +345,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
-          {refundable === 0 && (
+          {!refundable && (
             <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
               <WarningIcon className="w-8" />
               <Text fontSize="sm">
