@@ -169,7 +169,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-    console.log(user);
 
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
