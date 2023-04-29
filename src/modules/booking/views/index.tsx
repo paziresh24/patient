@@ -11,6 +11,7 @@ import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { uniqMessengers } from '../functions/uniqMessengers';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -58,6 +59,7 @@ import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
+
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -121,7 +123,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     !!profile?.online_visit_channel_types?.includes?.('eitaa') &&
     !!profile?.online_visit_channel_types?.includes?.('whatsapp') &&
     center?.id === CENTERS.CONSULT;
-  const messengers = useFeatureValue<any>('channeldescription', []);
+  const messengers = useFeatureValue<any>('channeldescription', {});
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -169,7 +171,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [symptomSearchText, profile]);
 
   const handleBookAction = async (user: any) => {
-
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id, insurance_referral_code } = user;
     const userConfimation = getNationalCodeConfirmation.data?.data;
@@ -471,7 +472,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 fontSize="sm"
                 dangerouslySetInnerHTML={{
                   __html:
-                    messengers[profile?.online_visit_channel_types.find((item: any) => messengers[item]?.type) ?? 'phone']?.description,
+                    messengers[uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers))?.[0] ?? 'phone']?.description,
                 }}
               />
             </div>

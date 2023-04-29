@@ -3,11 +3,13 @@ import StatusIcon from '@/common/components/icons/status';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import isEmpty from 'lodash/isEmpty';
+import { renderToString } from 'react-dom/server';
 import { ServiceCard } from './card';
+import ChannelDetailes from './channelDetailes';
+
 interface OnlineVisitProps {
   title: string;
-  channel: string;
-  messengers?: string[];
+  channels?: string[];
   price?: number;
   duration?: string;
   onBook: () => void;
@@ -15,31 +17,22 @@ interface OnlineVisitProps {
 }
 
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { title, channel, messengers, price, duration, onBook, loading } = props;
+  const { title, channels, price, duration, onBook, loading } = props;
   const channelType = useFeatureValue<any>('onlinevisitchanneltype', []);
-  const channelDetailes = `<div class="flex justify-between"><span>ویزیت در پیام رسان های:</span><div class='flex justify-end gap-4'>${
-    messengers?.length &&
-    messengers
-      .map((key: any) => channelType[key])
-      .map(
-        (messenger: any) =>
-          `<div class='flex'><div class='flex items-center gap-2'><img src=${
-            messenger?.img ?? ''
-          } alt='icon' class='max-w-6 max-h-6' /><span>${messenger?.title ?? ''}</span></div></div>`,
-      )
-      .join('')
-  }</div></div>`;
+  const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
 
   return (
     <ServiceCard
       header={{
         title,
-        icon: channel === 'phone' ? <PhoneIcon width={21} height={21} /> : <StatusIcon />,
+        icon: channels?.length ? <StatusIcon /> : <PhoneIcon width={21} height={21} />,
         ...(price && { hint: `${addCommas(price / 10)} تومان` }),
       }}
       body={{
         description: [
-          messengers?.length && !isEmpty(channelType) ? channelDetailes : '',
+          channels?.length && !isEmpty(channelType)
+            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت در پیام رسان های:" />)
+            : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
         ].filter(Boolean),
       }}

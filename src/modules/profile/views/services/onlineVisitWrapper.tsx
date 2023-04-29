@@ -113,8 +113,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   return (
     <>
       <OnlineVisit
-        channel={channelType[0]}
-        messengers={without(channelType, 'phone')}
+        channels={without(channelType, 'phone')}
         duration={duration}
         title={`ویزیت انلاین ${channelType[0] === 'phone' ? '(تماس تلفنی)' : ''}`}
         price={price}
