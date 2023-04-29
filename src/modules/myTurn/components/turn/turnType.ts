@@ -36,7 +36,7 @@ export interface TurnProps {
     patientName: string;
     description: string;
     respiteDeleteTurn?: string;
-    refundable?: boolean;
+    notRefundable?: boolean;
   };
   location: {
     address: string;

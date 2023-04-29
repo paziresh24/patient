@@ -54,7 +54,7 @@ interface TurnFooterProps {
   patientName: string;
   paymentStatus: PaymentStatus;
   description: string;
-  refundable?: boolean;
+  notRefundable?: boolean;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -80,7 +80,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     respiteDeleteTurn,
     paymentStatus,
     description,
-    refundable,
+    notRefundable,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -212,6 +212,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     }
     toast.error(data?.message);
   };
+  console.log(notRefundable);
 
   const handleMoveButton = () => {
     handleOpenMoveTurnModal();
@@ -345,7 +346,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
-          {!refundable && (
+          {notRefundable && centerId !== CENTERS.CONSULT && (
             <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
               <WarningIcon className="w-8" />
               <Text fontSize="sm">
