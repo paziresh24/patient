@@ -212,7 +212,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     }
     toast.error(data?.message);
   };
-  console.log(notRefundable);
 
   const handleMoveButton = () => {
     handleOpenMoveTurnModal();
