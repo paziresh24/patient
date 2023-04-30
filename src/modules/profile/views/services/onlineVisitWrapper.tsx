@@ -21,7 +21,7 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
-  channelType: Array<'phone' | 'whatsapp' | 'eitaa'>;
+  channelType: Array<string>;
   doctorId: string;
   title: string;
   price: number;

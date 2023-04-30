@@ -144,6 +144,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const unsuspend = useUnsuspend();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -471,8 +472,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               <Text
                 fontSize="sm"
                 dangerouslySetInnerHTML={{
-                  __html:
-                    messengers[uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers))?.[0] ?? 'phone']?.description,
+                  __html: messengers[doctorMessenger?.[0] ?? 'phone']?.description,
                 }}
               />
             </div>
@@ -520,7 +520,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 ...(center?.id === CENTERS.CONSULT &&
                   !!profile?.online_visit_channel_types?.length &&
                   !shouldShowMessengers && {
-                    messengerType: messengers[profile?.online_visit_channel_types.find((item: any) => messengers[item])]?.type,
+                    messengerType: messengers[doctorMessenger?.[0]]?.type,
                   }),
               });
             }}

@@ -4,6 +4,8 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { CENTERS } from '@/common/types/centers';
 import humanizeTime from '@/common/utils/humanizeTime';
 import Recommend from '@/modules/booking/components/recommend/recommend';
+import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import External from './external';
@@ -14,6 +16,8 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
   const { recommendEvent } = useProfileSplunkEvent();
+  const messengers = useFeatureValue<any>('channeldescription', {});
+  const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
 
   return (
     <>
@@ -32,11 +36,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
           ?.services?.map((service: any) => (
             <OnlineVisitWrapper
               key={service.id}
-              channelType={
-                !!doctor?.online_visit_channel_types?.includes?.('eitaa') || !!doctor?.online_visit_channel_types?.includes?.('whatsapp')
-                  ? doctor?.online_visit_channel_types.filter((messenger: string) => messenger === 'whatsapp' || messenger === 'eitaa')
-                  : ['phone']
-              }
+              channelType={doctorMessenger?.length ? doctorMessenger : ['phone']}
               title={service.desk}
               price={service.free_price}
               duration={
