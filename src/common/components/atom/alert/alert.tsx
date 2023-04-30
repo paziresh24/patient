@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import classNames from '@/common/utils/classNames';
 
 interface AlertProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ const alertStyle = {
 
 export const Alert = (props: AlertProps) => {
   const { severity = 'success', children, className } = props;
-  return <div className={clsx(alertStyle[severity], className)}>{children}</div>;
+  return <div className={classNames(alertStyle[severity], className)}>{children}</div>;
 };
 
 export default Alert;
