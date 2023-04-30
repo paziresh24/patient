@@ -518,8 +518,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               handleBookAction({
                 ...user,
                 ...(center?.id === CENTERS.CONSULT &&
-                  !!profile?.online_visit_channel_types?.length &&
-                  !shouldShowMessengers && {
+                  doctorMessenger?.length === 1 && {
                     messengerType: messengers[doctorMessenger?.[0]]?.type,
                   }),
               });

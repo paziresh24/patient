@@ -10,7 +10,7 @@ type Messenger = {
 
 interface ChannelDetailesProps {
   title?: string;
-  messengers: Messenger[] | any;
+  messengers: Messenger[];
   wrapperClassName?: string;
   className?: string;
 }

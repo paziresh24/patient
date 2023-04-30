@@ -2,10 +2,9 @@ import PhoneIcon from '@/common/components/icons/phone';
 import StatusIcon from '@/common/components/icons/status';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
-import isEmpty from 'lodash/isEmpty';
 import { renderToString } from 'react-dom/server';
 import { ServiceCard } from './card';
-import ChannelDetailes from './channelDetailes';
+import ChannelDetailes, { Messenger } from './channelDetailes';
 
 interface OnlineVisitProps {
   title: string;
@@ -16,9 +15,13 @@ interface OnlineVisitProps {
   loading?: boolean;
 }
 
+type channelType = {
+  [key: string]: Messenger;
+};
+
 export const OnlineVisit = (props: OnlineVisitProps) => {
   const { title, channels, price, duration, onBook, loading } = props;
-  const channelType = useFeatureValue<any>('onlinevisitchanneltype', []);
+  const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
 
   return (
@@ -30,7 +33,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
       }}
       body={{
         description: [
-          channels?.length && !isEmpty(channelType)
+          channels?.length && channelDetailes
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت در پیام رسان های:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
