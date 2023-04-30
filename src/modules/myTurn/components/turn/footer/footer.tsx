@@ -345,7 +345,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               ))}
             </div>
           )}
-          {notRefundable && centerId !== CENTERS.CONSULT && (
+          {notRefundable && centerType !== CenterType.consult && (
             <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
               <WarningIcon className="w-8" />
               <Text fontSize="sm">
