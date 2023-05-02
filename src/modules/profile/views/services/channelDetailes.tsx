@@ -2,7 +2,7 @@ import Text from '@/common/components/atom/text/text';
 import clsx from 'clsx';
 import Image from 'next/image';
 
-type Messenger = {
+export type Messenger = {
   image?: string;
   id: number;
   text: string;
