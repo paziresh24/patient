@@ -1,6 +1,9 @@
+import Alert from '@/common/components/atom/alert/alert';
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
+import WarningIcon from '@/common/components/icons/warning';
 import { CENTERS } from '@/common/types/centers';
+import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
@@ -82,18 +85,27 @@ export const Factor = (props: FactorProps) => {
         />
       )}
       {!isEmpty(rules) && (
-        <div className="flex flex-col p-5 space-y-1 bg-white md:rounded-lg shadow-card">
-          <Text fontWeight="bold" className="mb-2">
-            نکات مهم
-          </Text>
-          <ul className="mr-5 list-disc">
-            {rules.map((rule, index) => [
-              <li key={index}>
-                <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: rule }} />
-              </li>,
-            ])}
-          </ul>
-        </div>
+        <Alert severity="warning">
+          <div className="flex flex-col p-5 space-y-1 bg-white md:rounded-lg shadow-card">
+            <div className="flex items-strat gap-2 mb-2">
+              <WarningIcon className="-translate-y-1 text-[#FDCA64]" />
+              <Text fontWeight="bold" className="text-[#798092]">
+                لطفا دقت کنید!
+              </Text>
+            </div>
+            <ul className="mr-5 list-disc space-y-4">
+              {rules.map((rule, index) => [
+                <li key={index}>
+                  <Text
+                    fontSize="sm"
+                    className={clsx('text-[#798092]', { 'text-[#FDCA64]': index === 0 })}
+                    dangerouslySetInnerHTML={{ __html: rule }}
+                  />
+                </li>,
+              ])}
+            </ul>
+          </div>
+        </Alert>
       )}
     </div>
   );

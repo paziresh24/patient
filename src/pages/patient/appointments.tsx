@@ -170,6 +170,8 @@ export const Appointments = ({ query: queryServer }: any) => {
                 centerName: turn.center?.name,
                 patientName: `${turn.patient_info?.name ?? ''} ${turn.patient_info?.family ?? ''}`,
                 description: turn.comment ?? '',
+                respiteDeleteTurn: turn.respite_to_refund_after_delete ?? '',
+                notRefundable: turn.payment_status === 'paid' && turn.refundable === 0,
               }}
               location={{
                 lat: turn.center?.map?.lat,

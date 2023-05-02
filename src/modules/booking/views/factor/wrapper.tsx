@@ -12,10 +12,11 @@ const { publicRuntimeConfig } = getConfig();
 interface FactorWrapperProps {
   bookId: string;
   centerId: string;
+  respiteToRefundAfterDelete: string;
 }
 
 const FactorWrapper = (props: FactorWrapperProps) => {
-  const { bookId, centerId } = props;
+  const { bookId, centerId, respiteToRefundAfterDelete } = props;
   const centerPayment = useCenterPayment();
   const consultPayment = useConsultPayment();
 
@@ -44,7 +45,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const getRules = () => {
     if (centerId === CENTERS.CONSULT) return [];
     return [
-      `تنها در صورت لغو نوبت تا <b> 5 ساعت</b> قبل از زمان ویزیت، امکان استرداد وجه شما ممکن می باشد.`,
+      `تنها در صورت لغو نوبت تا <b> ${respiteToRefundAfterDelete} ساعت</b> قبل از زمان ویزیت، امکان استرداد وجه شما ممکن می باشد.`,
       `مبلغ فوق به عنوان پیش پرداخت حق ویزیت (بیعانه) می باشد و تسویه نهایی بعد از مراجعه به مطب انجام خواهد شد.`,
     ];
   };
