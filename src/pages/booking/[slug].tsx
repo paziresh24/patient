@@ -19,7 +19,7 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
 
-  const { data, isLoading, isIdle, isSuccess } = useGetProfileData(
+  const { data, isLoading, isSuccess } = useGetProfileData(
     {
       slug: router.query?.slug?.toString() ?? '/',
     },
@@ -78,19 +78,19 @@ const Booking = () => {
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} />
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
-          {(isLoading || isIdle) && (
+          {isLoading && (
             <div className="self-center p-10">
               <Loading className="self-center" />
             </div>
           )}
-          <Transition match={!!queryHandler(router.query) && !isLoading && !isIdle} animation="bottom">
+          <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
             <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            isLoading={isLoading || isIdle}
+            isLoading={isLoading}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
             fullName={profileData?.display_name}
             expertise={getDisplayDoctorExpertise({
@@ -105,7 +105,7 @@ const Booking = () => {
               <Text fontSize="xs" className="opacity-70">
                 {router.query.centerId === CENTERS.CONSULT ? 'خدمت' : 'مرکز'}
               </Text>
-              {(isLoading || isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
+              {isLoading && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
                   {router.query.centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : centerName}

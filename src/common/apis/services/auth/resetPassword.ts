@@ -1,6 +1,6 @@
 import formData from '@/common/utils/formData';
+import { useMutation } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { useMutation } from 'react-query';
 import { clinicClient } from '../../client';
 import { setTerminal } from './setTerminal';
 

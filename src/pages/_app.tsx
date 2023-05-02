@@ -3,7 +3,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import localFont from '@next/font/local';
-import { Hydrate } from 'react-query';
+import { Hydrate } from '@tanstack/react-query';
 // @ts-ignore
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';

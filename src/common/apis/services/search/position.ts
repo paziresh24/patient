@@ -1,5 +1,5 @@
 import getConfig from 'next/config';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 const { publicRuntimeConfig } = getConfig();
 
 export interface Params {

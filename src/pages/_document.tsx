@@ -16,7 +16,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://analytics.google.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://static.hotjar.com" />
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <meta name="application-name" content="پذیرش۲۴" />
         <meta name="apple-mobile-web-app-title" content="پذیرش۲۴" />
