@@ -1,38 +1,41 @@
-import igapIcon from '@/common/assets/messenger/igap.png';
-import ChatIcon from '@/common/components/icons/chat';
 import PhoneIcon from '@/common/components/icons/phone';
+import StatusIcon from '@/common/components/icons/status';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
+import { renderToString } from 'react-dom/server';
 import { ServiceCard } from './card';
+import ChannelDetailes, { Messenger } from './channelDetailes';
 
 interface OnlineVisitProps {
   title: string;
-  channel: 'phone' | 'igap' | 'whatsapp' | 'eitaa';
-  messengers?: string[];
+  channels?: string[];
   price?: number;
   duration?: string;
   onBook: () => void;
   loading?: boolean;
 }
 
+type channelType = {
+  [key: string]: Messenger;
+};
+
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { title, channel, messengers, price, duration, onBook, loading } = props;
+  const { title, channels, price, duration, onBook, loading } = props;
+  const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
+  const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
+
   return (
     <ServiceCard
       header={{
         title,
-        icon:
-          channel === 'igap' ? (
-            <img src={igapIcon.src} width={25} height={25} alt="" />
-          ) : channel === 'phone' ? (
-            <PhoneIcon width={21} height={21} />
-          ) : (
-            <ChatIcon />
-          ),
+        icon: channels?.length ? <StatusIcon /> : <PhoneIcon width={21} height={21} />,
         ...(price && { hint: `${addCommas(price / 10)} تومان` }),
       }}
       body={{
         description: [
-          messengers && `فعال در پیام رسان های : <strong>${messengers?.join('، ')}</strong>`,
+          channels?.length && channelDetailes
+            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت در پیام رسان های:" />)
+            : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
         ].filter(Boolean),
       }}

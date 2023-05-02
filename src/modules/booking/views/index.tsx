@@ -8,8 +8,10 @@ import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndCo
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { uniqMessengers } from '../functions/uniqMessengers';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -41,7 +43,6 @@ import { reformattedDoctorInfoForEvent } from '../functions/reformattedDoctorInf
 // Constants
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { CENTERS } from '@/common/types/centers';
-import messengers from '@/modules/profile/constants/messengers.json';
 
 // Global Store
 import { UserInfo } from '@/modules/login/store/userInfo';
@@ -61,6 +62,7 @@ import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
+
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -124,6 +126,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     !!profile?.online_visit_channel_types?.includes?.('eitaa') &&
     !!profile?.online_visit_channel_types?.includes?.('whatsapp') &&
     center?.id === CENTERS.CONSULT;
+  const messengers = useFeatureValue<any>('channeldescription', {});
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -146,6 +149,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const unsuspend = useUnsuspend();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -464,7 +468,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               <Text
                 fontSize="sm"
                 dangerouslySetInnerHTML={{
-                  __html: messengers[profile?.online_visit_channels?.[0]?.type === 'igap' ? 'igap' : 'phone']?.description,
+                  __html: messengers[doctorMessenger?.[0] ?? 'phone']?.description,
                 }}
               />
             </div>
@@ -536,7 +540,13 @@ const BookingSteps = (props: BookingStepsProps) => {
                 handleOpenInsuranceModal();
                 return;
               }
-              handleBookAction(user);
+              handleBookAction({
+                ...user,
+                ...(center?.id === CENTERS.CONSULT &&
+                  doctorMessenger?.length === 1 && {
+                    messengerType: messengers[doctorMessenger?.[0]]?.type,
+                  }),
+              });
             }}
           />
         </>
