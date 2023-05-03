@@ -16,6 +16,7 @@ import InfoIcon from '@/common/components/icons/info';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -56,7 +57,7 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDataWithoutPagination }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, description, feedbackDataWithoutPagination, host }: any) => {
   useFeedbackDataStore.getState().data = initialFeedbackDate;
 
   const { query, ...router } = useRouter();
@@ -150,18 +151,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
     router.prefetch('/booking/[slug]');
   }, []);
 
-  const doctorExpertise = getDisplayDoctorExpertise({
-    aliasTitle: profileData?.expertises?.[0]?.alias_title,
-    degree: profileData?.expertises?.[0]?.degree?.name,
-    expertise: profileData?.expertises?.[0]?.expertise?.name,
-  });
-  const doctorCity = profileData?.centers?.find((center: any) => center.id !== '5532')?.city;
-  const documentTitle = `${profileData?.display_name}، ${doctorExpertise} ${
-    doctorCity ? `${doctorCity}،` : ''
-  } نوبت دهی آنلاین و شماره تلفن`;
-  const ducmentDescription = `نوبت دهی اینترنتی ${profileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
-
-  const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle, editable });
+  const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle: '', editable });
   const layout: {
     content: Record<string, ({ doctor }: { doctor: any }) => ReactElement | null>;
     sideBar: Record<string, ({ doctor }: { doctor: any }) => ReactElement | null>;
@@ -552,7 +542,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
         'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
-        'medicalSpecialty': !profileData?.group_expertises ? profileData.group_expertises?.[0]?.name : doctorExpertise,
+        'medicalSpecialty': profileData.group_expertises?.[0]?.name,
         'duns': profileData?.medical_code,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
@@ -677,8 +667,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
   return (
     <>
       <Seo
-        title={documentTitle}
-        description={ducmentDescription}
+        title={title}
+        description={description}
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
@@ -687,6 +677,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, feedbackDat
             type: 'image/jpg',
           },
         }}
+        host={host}
       />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
@@ -848,7 +839,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   const isCSR = context.req.url?.startsWith?.('/_next');
 
   const { slug, ...query } = context.query;
@@ -938,10 +929,22 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       console.log(error);
     }
 
+    const doctorCity = data?.centers?.find((center: any) => center.id !== '5532')?.city;
+    const doctorExpertise = getDisplayDoctorExpertise({
+      aliasTitle: data?.expertises?.[0]?.alias_title,
+      degree: data?.expertises?.[0]?.degree?.name,
+      expertise: data?.expertises?.[0]?.expertise?.name,
+    });
+    const title = university
+      ? data?.display_name
+      : `${data?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
+    const description = `نوبت دهی اینترنتی ${data?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+
     return {
       props: {
+        title,
+        description: university ? '' : description,
         dehydratedState: dehydrate(queryClient),
-        query,
         slug: slugFormmated,
         initialFeedbackDate: useFeedbackDataStore.getState().data,
         feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
@@ -957,6 +960,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
     throw new TypeError(JSON.stringify(error));
   }
-};
+});
 
 export default DoctorProfile;

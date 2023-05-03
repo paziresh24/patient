@@ -1,11 +1,10 @@
-import Head from 'next/head';
-
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
 import Avatar from '@/common/components/atom/avatar';
 import Text from '@/common/components/atom/text';
 import EditIcon from '@/common/components/icons/edit';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
@@ -54,9 +53,7 @@ export const PatinetProfile = () => {
 
   return (
     <>
-      <Head>
-        <title>{t('title')}</title>
-      </Head>
+      <Seo title={t('title')} noIndex />
 
       {(isWebView || isApplication) && (
         <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />

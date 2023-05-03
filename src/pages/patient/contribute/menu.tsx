@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -9,6 +8,7 @@ import CenterIcon from '@/components/icons/center';
 import AppBar from '@/components/layouts/appBar';
 
 import Skeleton from '@/common/components/atom/skeleton';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
@@ -60,9 +60,8 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>پیشخوان {profileData.display_name}</title>
-      </Head>
+      <Seo title={`پیشخوان ${profileData.display_name}`} noIndex />
+
       <AppBar title={`پیشخوان ${profileData.display_name}`} titleLoading={isLoading} backButton />
       <main className="flex flex-col items-center p-5 mx-auto md:max-w-md">
         <div className="flex flex-col space-y-5">

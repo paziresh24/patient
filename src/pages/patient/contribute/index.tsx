@@ -4,6 +4,7 @@ import Checkbox from '@/common/components/atom/checkbox';
 import CloseIcon from '@/common/components/icons/close';
 import DislikeIcon from '@/common/components/icons/dislike';
 import LikeIcon from '@/common/components/icons/like';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import Text from '@/components/atom/text';
@@ -59,9 +60,7 @@ const Home = () => {
         background: 'linear-gradient(rgb(255 255 255) 35.36%, rgb(244, 248, 251) 62.04%)',
       }}
     >
-      <Head>
-        <title>مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی</title>
-      </Head>
+      <Seo title="مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی" noIndex />
 
       <main className="flex flex-col items-center justify-between p-5 mx-auto md:max-w-md pb-36">
         <div className="flex flex-col space-y-5">

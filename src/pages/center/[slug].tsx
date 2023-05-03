@@ -4,6 +4,7 @@ import { suggestion, useSearchSuggestion } from '@/common/apis/services/search/s
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
@@ -19,12 +20,12 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { QueryClient, dehydrate } from 'react-query';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { university } }: any) => {
+const CenterProfile = ({ query: { university }, host }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
@@ -183,6 +184,7 @@ const CenterProfile = ({ query: { university } }: any) => {
             type: 'image/jpg',
           },
         }}
+        host={host}
       />
       <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
@@ -299,7 +301,7 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   const { slug, ...query } = context.query;
   const university = query.university as string;
 
@@ -345,7 +347,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        query,
         slug: slugFormmated,
       },
     };
@@ -359,6 +360,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     }
     throw new TypeError(JSON.stringify(error));
   }
-};
+});
 
 export default CenterProfile;

@@ -1,9 +1,9 @@
-import Head from 'next/head';
 import { ReactElement } from 'react';
 
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
@@ -21,10 +21,7 @@ export const Bookmarks = () => {
 
   return (
     <>
-      <Head>
-        <title>{t('title')}</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo title={t('title')} noIndex />
 
       {(isWebView || isApplication) && (
         <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />

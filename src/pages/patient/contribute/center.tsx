@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +9,7 @@ import AppBar from '@/components/layouts/appBar';
 import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
@@ -95,9 +95,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>اطلاعات مرکز درمانی {profileData.display_name}</title>
-      </Head>
+      <Seo title={`اطلاعات مرکز درمانی ${profileData.display_name}`} noIndex />
 
       <AppBar title={`اطلاعات مرکز درمانی ${profileData.display_name}`} backButton titleLoading={isLoading} />
       <main className="flex flex-col p-5 mx-auto space-y-4 md:max-w-md pb-28">
