@@ -8,6 +8,7 @@ export interface TurnProps {
   paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
+  currentTime: number;
   centerInfo: {
     centerId: string;
     centerType: string;
@@ -30,6 +31,7 @@ export interface TurnProps {
   };
   turnDetails: {
     bookTime: number;
+    bookTimestamp: number;
     waitingTime?: string;
     trackingCode: string;
     centerName: string;

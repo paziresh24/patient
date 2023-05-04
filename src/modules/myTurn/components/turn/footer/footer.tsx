@@ -8,6 +8,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
@@ -55,6 +56,8 @@ interface TurnFooterProps {
   paymentStatus: PaymentStatus;
   description: string;
   notRefundable?: boolean;
+  currentTime: number;
+  bookTimestamp: number;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -81,6 +84,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     paymentStatus,
     description,
     notRefundable,
+    currentTime,
+    bookTimestamp,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -97,8 +102,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isOnlineVisitTurn = centerType === CenterType.consult;
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
+  const isShowOnlineVisitTurnButton = !isAfterPastDaysFromTimestamp({ numDays: 3, currentTime, timestamp: bookTimestamp });
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted)) && paymentStatus !== PaymentStatus.paying;
+    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && isShowOnlineVisitTurnButton)) &&
+    paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
     splunkInstance().sendEvent({
@@ -251,9 +258,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {isOnlineVisitTurn && paymentStatus !== PaymentStatus.paying && status !== BookStatus.deleted && onlineVisitChannel && (
-        <MessengerButton channel={onlineVisitChannel} />
-      )}
+      {isOnlineVisitTurn &&
+        paymentStatus !== PaymentStatus.paying &&
+        status !== BookStatus.deleted &&
+        onlineVisitChannel &&
+        isShowOnlineVisitTurnButton && <MessengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button
