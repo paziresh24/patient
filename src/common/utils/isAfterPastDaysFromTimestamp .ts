@@ -7,8 +7,8 @@ interface Props {
 }
 
 export const isAfterPastDaysFromTimestamp = ({ numDays, timestamp, currentTime }: Props) => {
-  const numDaysInMillis = timestamp + dayToSecond(numDays) * 1000;
-  return currentTime > numDaysInMillis;
+  const numDaysInSecond = timestamp + dayToSecond(numDays);
+  return currentTime > numDaysInSecond;
 };
 
 export default isAfterPastDaysFromTimestamp;
