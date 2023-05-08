@@ -408,7 +408,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             loading: isLoading || isIdle || !center || !service,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
-            userCenterId: center?.user_center_id,
+            userCenterId: service?.user_center_id,
             showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
