@@ -9,6 +9,7 @@ import { reformattedCentersProperty } from '@/modules/booking/functions/reformat
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
 import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
 import SelectService from '@/modules/booking/views/selectService/selectService';
+import every from 'lodash/every';
 import { memo, useCallback, useState } from 'react';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import { ServiceCard } from './card';
@@ -38,6 +39,10 @@ export const Presence = memo((props: PresenceProps) => {
   } = useModal();
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
+  const isShowCenterAvailableBox = every(
+    centers[0]?.freeturns_info.map((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000)),
+    Boolean,
+  );
 
   const handleOnBook = useCallback(() => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
@@ -97,11 +102,7 @@ export const Presence = memo((props: PresenceProps) => {
     [selectedCenter],
   );
 
-  if (
-    centers.length === 1 &&
-    centers[0].freeturns_info?.[0] &&
-    centers[0].freeturns_info?.[0]?.available_time > Math.floor(new Date().getTime() / 1000)
-  ) {
+  if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
     return (
       <Card className="space-y-3 !rounded-none md:!rounded-lg">
         <Text fontWeight="bold">زمان نوبت دهی پزشک به پایان رسیده است!</Text>
