@@ -39,10 +39,13 @@ export const Presence = memo((props: PresenceProps) => {
   } = useModal();
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
-  const isShowCenterAvailableBox = every(
-    centers[0]?.freeturns_info.map((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000)),
-    Boolean,
-  );
+  const isShowCenterAvailableBox =
+    centers[0]?.freeturns_info.length === centers[0].services.length
+      ? every(
+          centers[0]?.freeturns_info.map((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000)),
+          Boolean,
+        )
+      : false;
 
   const handleOnBook = useCallback(() => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
