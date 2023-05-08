@@ -9,7 +9,6 @@ import { reformattedCentersProperty } from '@/modules/booking/functions/reformat
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
 import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
 import SelectService from '@/modules/booking/views/selectService/selectService';
-import every from 'lodash/every';
 import { memo, useCallback, useState } from 'react';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import { ServiceCard } from './card';
@@ -41,10 +40,7 @@ export const Presence = memo((props: PresenceProps) => {
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
   const isShowCenterAvailableBox =
     centers[0]?.freeturns_info.length === centers[0].services.length
-      ? every(
-          centers[0]?.freeturns_info.map((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000)),
-          Boolean,
-        )
+      ? centers[0]?.freeturns_info.every((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000))
       : false;
 
   const handleOnBook = useCallback(() => {
