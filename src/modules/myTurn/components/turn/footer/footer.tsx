@@ -113,8 +113,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     paymentStatus !== PaymentStatus.paying &&
     status !== BookStatus.deleted &&
     onlineVisitChannel &&
-    isShowOnlineVisitTurnButton &&
-    status !== BookStatus.visited;
+    isShowOnlineVisitTurnButton;
 
   const showPrescription = () => {
     splunkInstance().sendEvent({
