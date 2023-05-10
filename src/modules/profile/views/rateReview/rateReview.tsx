@@ -360,8 +360,8 @@ export const RateReview = (props: RateReviewProps) => {
     if (!text) return toast.error('لطفا متنی را وارد کنید');
     await replyFeedback.mutate({
       description: text,
-      doctor_id: '540',
-      server_id: '1',
+      doctor_id: doctor.id,
+      server_id: serverId,
       feedback_id: id,
     });
     handleClose();
