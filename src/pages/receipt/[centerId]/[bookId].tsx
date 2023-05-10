@@ -1,4 +1,5 @@
 import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptDetails';
+import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
@@ -13,19 +14,25 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
+import Select from '@/modules/booking/components/select/select';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
+import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import { getCookie } from 'cookies-next';
+import { shuffle } from 'lodash';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 const { publicRuntimeConfig } = getConfig();
 
@@ -37,6 +44,8 @@ const Receipt = () => {
 
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
+  const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -56,8 +65,10 @@ const Receipt = () => {
     scale: 2,
   });
   const { removeBookApi, centerMap } = useBookAction();
+  const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
 
@@ -80,8 +91,18 @@ const Receipt = () => {
     deletedTurn: bookDetailsData.is_deleted,
     expiredTurn: bookDetailsData.book_status === 'expired',
     requestedTurn: bookDetailsData.is_book_request,
+    notVisitedTurn: bookDetailsData.book_status === 'not_visited',
+    visitedTurn: bookDetailsData.book_status === 'visited',
   };
 
+  const isShowRemoveButtonForOnlineVisit =
+    !turnStatus.deletedTurn &&
+    !turnStatus.visitedTurn &&
+    !isAfterPastDaysFromTimestamp({
+      numDays: 3,
+      currentTime: serverTime?.data?.data?.data.timestamp,
+      timestamp: bookDetailsData.book_time,
+    });
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
@@ -96,6 +117,20 @@ const Receipt = () => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             handleCloseRemoveModal();
             toast.success('نوبت شما با موفقیت لغو شد!');
+            if (centerType === 'consult') {
+              splunkInstance().sendEvent({
+                group: 'my-turn',
+                type: 'delete-turn-reason',
+                event: {
+                  terminal_id: getCookie('terminal_id'),
+                  doctorName: bookDetailsData.doctor?.display_name,
+                  expertise: bookDetailsData.doctor?.display_expertise,
+                  phoneNumber: bookDetailsData?.patient?.cell,
+                  reason: reasonDeleteTurn,
+                  isVisited: turnStatus.visitedTurn,
+                },
+              });
+            }
             router.push('/patient/appointments');
             return;
           }
@@ -208,13 +243,20 @@ const Receipt = () => {
             </Button>
           )}
           {centerType === 'consult' && (
-            <MessengerButton
-              channel={
-                bookDetailsData.selected_online_visit_channel?.type
-                  ? bookDetailsData?.selected_online_visit_channel
-                  : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-              }
-            />
+            <div className="flex justify-between gap-2">
+              <MessengerButton
+                channel={
+                  bookDetailsData.selected_online_visit_channel?.type
+                    ? bookDetailsData?.selected_online_visit_channel
+                    : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
+                }
+              />
+              {isShowRemoveButtonForOnlineVisit && (
+                <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                  {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
+                </Button>
+              )}
+            </div>
           )}
         </div>
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -226,7 +268,24 @@ const Receipt = () => {
             isLoading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
           />
         </div>
-        <Modal title="آیا از لغو نوبت مطمئن هستید؟" {...removeModalProps}>
+        <Modal
+          title={
+            centerType === 'consult'
+              ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+              : 'آیا از لغو نوبت اطمینان دارید؟'
+          }
+          {...removeModalProps}
+        >
+          <div className="flex flex-col gap-3 mb-3">
+            {(turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
+              <Select
+                key={question.id}
+                selected={reasonDeleteTurn === question.value}
+                onSelect={() => setReasonDeleteTurn(question.value)}
+                title={question.text}
+              />
+            ))}
+          </div>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
               لغو نوبت
