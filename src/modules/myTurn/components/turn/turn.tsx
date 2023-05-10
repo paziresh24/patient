@@ -64,8 +64,6 @@ export const Turn: React.FC<TurnProps> = props => {
         location={location}
         feedbackUrl={feedbackUrl}
         status={status}
-        currentTime={currentTime}
-        bookTimestamp={turnDetails.bookTimestamp}
       />
 
       <TurnFooter
