@@ -1,4 +1,5 @@
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
+import OnlineDoctorInfo from '@/common/components/atom/info/onlineDoctorInfo';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -37,7 +38,7 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col-reverse items-start p-3 max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full md:basis-4/6">
           <FactorWrapper
             bookId={bookId as string}
@@ -45,84 +46,107 @@ const Factor = () => {
             respiteToRefundAfterDelete={bookDetailsData?.settings?.booking_respite_to_refund_after_delete ?? '5'}
           />
         </div>
-        <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6">
-          <DoctorInfo
-            className="p-4 rounded-lg bg-slate-50"
-            avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
+        {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && <Loading />}
+        {bookDetailsData && centerId === CENTERS.CONSULT && bookDetailsData?.book_params?.online_channel && (
+          <OnlineDoctorInfo
             firstName={bookDetailsData?.doctor_name}
             lastName={bookDetailsData?.doctor_family}
+            avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,
               degree: bookDetailsData?.expertises?.[0]?.degree?.name,
               expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
             })}
-            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
+            desciription={`سلام. من دکتر ${bookDetailsData?.doctor_name} ${
+              bookDetailsData?.doctor_family
+            } هستم.<br /> شما <b class="text-primary">ویزیت آنلاین از طریق ${
+              messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.name
+            } </b> را انتخاب کرده اید.<br /><b class="text-primary">${moment
+              .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+              ?.locale('fa')
+              ?.calendar(undefined, {
+                nextWeek: 'dddd',
+                sameElse: 'dddd',
+              })}</b> (تا حداکثر 5 ساعت بعد از آن) .پاسخگو سوالات شما خواهم بود. توجه داشته باشید در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، درخواست شما به صورت اتوماتیک لغو و هزینه به حساب شما باز میگردد`}
+            wrapperClassName="mb-3 lg:w-2/5 rounded-md"
           />
-          <div>
-            {centerId !== CENTERS.CONSULT && (
+        )}
+
+        {bookDetailsData && centerId !== CENTERS.CONSULT && (
+          <div className="w-full p-3 mb-2 space-y-3 bg-white border border-solid border-[#d0d2d6] rounded-lg shadow-card md:mb-0 md:w-2/5">
+            <DoctorInfo
+              className="p-4 rounded-lg bg-slate-50"
+              avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
+              firstName={bookDetailsData?.doctor_name}
+              lastName={bookDetailsData?.doctor_family}
+              expertise={getDisplayDoctorExpertise({
+                aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,
+                degree: bookDetailsData?.expertises?.[0]?.degree?.name,
+                expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
+              })}
+              isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
+            />
+            <div>
+              {centerId !== CENTERS.CONSULT && (
+                <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+                  <Text fontSize="xs" className="opacity-70">
+                    مرکز
+                  </Text>
+                  {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
+                    <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
+                  )}
+                  {getBookDetails.isSuccess && bookDetailsData && (
+                    <Text fontSize="sm" fontWeight="medium">
+                      {bookDetailsData?.center_name}
+                    </Text>
+                  )}
+                </div>
+              )}
               <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
                 <Text fontSize="xs" className="opacity-70">
-                  مرکز
+                  {centerId === CENTERS.CONSULT ? 'زمان گفتگو با شما' : 'زمان نوبت'}
                 </Text>
                 {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
-                  <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
+                  <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />
                 )}
                 {getBookDetails.isSuccess && bookDetailsData && (
                   <Text fontSize="sm" fontWeight="medium">
-                    {bookDetailsData?.center_name}
-                  </Text>
-                )}
-              </div>
-            )}
-            {centerId === CENTERS.CONSULT && bookDetailsData?.book_params?.online_channel && (
-              <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
-                <Text fontSize="xs" className="opacity-70">
-                  نام پیام رسان
-                </Text>
-                {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
-                  <Skeleton w="9rem" h="0.8rem" className="!mt-2" rounded="full" />
-                )}
-                {getBookDetails.isSuccess && bookDetailsData && (
-                  <Text fontSize="sm" fontWeight="medium" className="flex items-center">
-                    <img
-                      src={messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.icon}
-                      width={24}
-                      height={24}
-                      alt=""
-                      className="ml-1"
-                    />
-                    {messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.name}
-                  </Text>
-                )}
-              </div>
-            )}
-            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
-              <Text fontSize="xs" className="opacity-70">
-                {centerId === CENTERS.CONSULT ? 'زمان گفتگو با شما' : 'زمان نوبت'}
-              </Text>
-              {(getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
-                <Skeleton w="9rem" h="0.8rem" className="!my-2" rounded="full" />
-              )}
-              {getBookDetails.isSuccess && bookDetailsData && (
-                <Text fontSize="sm" fontWeight="medium">
-                  {`${moment
-                    .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
-                    ?.locale('fa')
-                    ?.calendar(undefined, {
-                      sameDay: '[امروز]',
-                      nextDay: '[فردا]',
-                      nextWeek: 'dddd',
-                      sameElse: 'dddd',
-                    })}
+                    {`${moment
+                      .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+                      ?.locale('fa')
+                      ?.calendar(undefined, {
+                        sameDay: '[امروز]',
+                        nextDay: '[فردا]',
+                        nextWeek: 'dddd',
+                        sameElse: 'dddd',
+                      })}
               ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('DD MMMM')}
                 ساعت
                  ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('HH:mm')}
             `}
-                </Text>
-              )}
+                  </Text>
+                )}
+              </div>
             </div>
           </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+const Loading = () => {
+  return (
+    <>
+      <div className=" gap-2 mb-3 md:!mb-0  bg-white p-4 w-full  md:basis-2/5  rounded-lg">
+        <div className="flex items-cente">
+          <Skeleton w="4.4rem" h="4.4rem" rounded="full" />
+          <div className="flex flex-col justify-center gap-3 mr-2">
+            <Skeleton w="8rem" h="1rem" rounded="full" />
+            <Skeleton w="4rem" h="1rem" rounded="full" />
+          </div>
         </div>
+        <Skeleton w="100%" h="8rem" rounded="md" className="mt-4" />
       </div>
     </>
   );
