@@ -7,6 +7,7 @@ import Loading from '@/components/atom/loading';
 import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 
+import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -38,6 +39,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
   const { handleOpenLoginModal } = useLoginModalContext();
+  const serverTime = useGetServerTime();
   const university = useServerQuery(state => state.queries.university);
 
   const getBooks = useGetBooks({
@@ -133,6 +135,7 @@ export const Appointments = ({ query: queryServer }: any) => {
             <Turn
               key={turn.book_id}
               status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
+              currentTime={serverTime?.data?.data?.data.timestamp ?? Date.now()}
               paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={
@@ -164,6 +167,7 @@ export const Appointments = ({ query: queryServer }: any) => {
               }}
               turnDetails={{
                 bookTime: turn.book_time_string,
+                bookTimestamp: turn.from,
                 waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                 trackingCode: turn.ref_id,
                 centerName: turn.center?.name,
