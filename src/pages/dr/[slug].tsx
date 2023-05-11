@@ -40,8 +40,6 @@ const { publicRuntimeConfig } = config();
 
 const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs }: any) => {
   useFeedbackDataStore.getState().data = initialFeedbackDate;
-  console.count('re-render page');
-
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
   const addPageView = usePageView();
@@ -479,7 +477,6 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
   const { title, description, slug, query, dehydratedState, feedbackDataWithoutPagination, host } = page.props;
-  console.count('re-render layout');
 
   const profileData = dehydratedState.queries.find((item: any) => item.queryKey[0] === ServerStateKeysEnum.DoctorFullProfile).state.data
     .data;

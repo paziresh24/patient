@@ -32,7 +32,6 @@ interface CentersInfoProps {
 
 export const CentersInfo = memo((props: CentersInfoProps) => {
   const { centers, className, onEventPhoneNumber, onEventAddress } = props;
-  console.count('centers info rerender');
 
   const DescriptionWrapper = ({ children, length }: { children: ReactNode; length: number }) => {
     if (length >= 140) {
