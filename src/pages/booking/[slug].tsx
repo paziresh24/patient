@@ -108,7 +108,7 @@ const Booking = () => {
               {(isLoading || isIdle) && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
-                  {router.query.centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : centerName}
+                  {router.query.centerId === CENTERS.CONSULT ? 'ویزیت آنلاین در پیام رسان' : centerName}
                 </Text>
               )}
             </div>
