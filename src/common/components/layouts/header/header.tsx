@@ -58,7 +58,7 @@ const Header = (props: HeaderProps) => {
         <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
-              <Link href="/" shallow>
+              <Link href="/" shallow prefetch={false}>
                 <HeaderLogo
                   showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
                   partnerLogo={customize.partnerLogo}
