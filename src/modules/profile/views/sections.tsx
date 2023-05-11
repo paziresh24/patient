@@ -2,7 +2,6 @@ import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
-import ProfileSeoBox from './seoBox/seoBox';
 
 const { publicRuntimeConfig } = config();
 
@@ -14,6 +13,7 @@ const Biography = dynamic(() => import('./biography'));
 const OwnPage = dynamic(() => import('./ownPage'));
 const Gallery = dynamic(() => import('./gallery'));
 const RateReview = dynamic(() => import('./rateReview'));
+const ProfileSeoBox = dynamic(() => import('./seoBox'));
 
 export const sections = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) =>
   [
