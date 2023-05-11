@@ -2,6 +2,7 @@ import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
@@ -30,7 +31,7 @@ const createBreadcrumb = (links: { orginalLink: string; title: string }[], displ
   return reformmatedBreadcrumb;
 };
 
-export const getProfileServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   const isCSR = context.req.url?.startsWith?.('/_next');
 
@@ -135,7 +136,6 @@ export const getProfileServerSideProps = async (context: GetServerSidePropsConte
         title: university ? data?.display_name : title,
         description: university ? '' : description,
         dehydratedState: dehydrate(queryClient),
-        query,
         slug: slugFormmated,
         initialFeedbackDate: useFeedbackDataStore.getState().data,
         feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
@@ -152,4 +152,4 @@ export const getProfileServerSideProps = async (context: GetServerSidePropsConte
     }
     throw new TypeError(JSON.stringify(error));
   }
-};
+});

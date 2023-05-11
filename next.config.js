@@ -54,7 +54,7 @@ const nextConfig = {
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
   },
   images: {
-    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir'],
+    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
   },
   async redirects() {
     return [

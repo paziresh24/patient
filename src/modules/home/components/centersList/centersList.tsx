@@ -28,15 +28,13 @@ export const CentersList = () => {
       <Text fontSize="sm" fontWeight="bold">
         لیست مراکز
       </Text>
-      <Opener openButtonText="بیشتر" height={200} closeButtonText="کمتر" className=" border border-slate-100  p-4 rounded-lg">
+      <Opener openButtonText="بیشتر" height={200} closeButtonText="کمتر" className="p-4 border rounded-lg  border-slate-100">
         <div className="flex flex-col space-y-2">
           {centers.map((item: any) => (
             <Link href={item.url} shallow scroll key={item.id}>
-              <a>
-                <Text fontWeight="medium" fontSize="sm" className="hover:text-primary transition-colors">
-                  {item.title}
-                </Text>
-              </a>
+              <Text fontWeight="medium" fontSize="sm" className="transition-colors hover:text-primary">
+                {item.title}
+              </Text>
             </Link>
           ))}
         </div>

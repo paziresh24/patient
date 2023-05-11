@@ -8,6 +8,8 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import humanizeTime from '@/common/utils/humanizeTime';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
@@ -21,6 +23,8 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
   const { recommendEvent } = useProfileSplunkEvent();
+  const messengers = useFeatureValue<any>('channeldescription', {});
+  const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
@@ -45,13 +49,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
             ?.services?.map((service: any) => (
               <OnlineVisitWrapper
                 key={service.id}
-                channelType={
-                  !!doctor?.online_visit_channel_types?.includes?.('eitaa') && !!doctor?.online_visit_channel_types?.includes?.('whatsapp')
-                    ? ['eitaa', 'whatsapp']
-                    : doctor?.online_visit_channel_types?.includes?.('igap')
-                    ? ['igap']
-                    : ['phone']
-                }
+                channelType={doctorMessenger?.length ? doctorMessenger : ['phone']}
                 title={service.desk}
                 price={service.free_price}
                 duration={

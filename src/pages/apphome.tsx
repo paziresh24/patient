@@ -33,22 +33,7 @@ const Home = () => {
 
   return (
     <>
-      <Seo
-        title="نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان"
-        description="پذیرش24، دکتر آنلاین و نوبت دهی سریع از بهترین پزشکان ، درمانگاه ها ، کلینیک ها و بیمارستان های کشور.از طریق این سایت و یا اپلیکیشن پذیرش24 اینترنتی با جستجوی دکتر مورد نظر ، مشاوره تلفنی و یا نوبت بگیرید."
-        jsonlds={[
-          {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            'url': 'https://www.paziresh24.com/',
-            'potentialAction': {
-              '@type': 'SearchAction',
-              'target': 'https://www.paziresh24.com/s/?text={search_term_string}',
-              'query-input': 'required name=search_term_string',
-            },
-          },
-        ]}
-      />
+      <Seo title="اپلیکیشن پذیرش24" noIndex />
 
       <main className="flex flex-col items-center space-y-3">
         <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">

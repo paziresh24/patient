@@ -15,6 +15,7 @@ export const LayoutWithHeaderAndFooter = ({
   showBottomNavigation = true,
   showHeader = true,
   showFooter = true,
+  compactFooter = false,
   showSearchSuggestionButton = false,
 }: {
   children: ReactNode;
@@ -24,6 +25,7 @@ export const LayoutWithHeaderAndFooter = ({
   showHeader?: boolean;
   showFooter?: boolean;
   showSearchSuggestionButton?: boolean;
+  compactFooter?: boolean;
 }) => {
   const customize = useCustomize(state => state.customize);
   const isWebView = useWebView();
@@ -38,7 +40,10 @@ export const LayoutWithHeaderAndFooter = ({
         />
       )}
       <div style={{ minHeight: 'calc(100vh - 8.8125rem)' }}>{children}</div>
-      {customize.showFooter && !isWebView && showFooter && (customize.footerType === 'compact' ? <CompactFooter /> : <Footer />)}
+      {customize.showFooter &&
+        !isWebView &&
+        showFooter &&
+        (customize.footerType === 'compact' || compactFooter ? <CompactFooter /> : <Footer />)}
       {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>
   );

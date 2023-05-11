@@ -1,5 +1,3 @@
-import Head from 'next/head';
-
 import Avatar from '@/common/components/atom/avatar';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
@@ -12,6 +10,7 @@ import ShareIcon from '@/common/components/icons/share';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -44,9 +43,7 @@ export const PatinetProfile = () => {
 
   return (
     <>
-      <Head>
-        <title>ویرایش اطلاعات من</title>
-      </Head>
+      <Seo title="پروفایل من" noIndex />
 
       {isApplication && <AppBar title="پروفایل من" />}
 

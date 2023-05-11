@@ -478,7 +478,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, query, dehydratedState, feedbackDataWithoutPagination } = page.props;
+  const { title, description, slug, query, dehydratedState, feedbackDataWithoutPagination, host } = page.props;
   console.count('re-render layout');
 
   const profileData = dehydratedState.queries.find((item: any) => item.queryKey[0] === ServerStateKeysEnum.DoctorFullProfile).state.data
@@ -601,6 +601,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             type: 'image/jpg',
           },
         }}
+        host={host}
       />
       {page}
     </LayoutWithHeaderAndFooter>

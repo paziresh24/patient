@@ -35,10 +35,15 @@ const Factor = () => {
 
   return (
     <>
-      <Seo title="فاکتور نوبت" />
+      <Seo title="فاکتور نوبت" noIndex />
+
       <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full md:basis-4/6">
-          <FactorWrapper bookId={bookId as string} centerId={centerId as string} />
+          <FactorWrapper
+            bookId={bookId as string}
+            centerId={centerId as string}
+            respiteToRefundAfterDelete={bookDetailsData?.settings?.booking_respite_to_refund_after_delete ?? '5'}
+          />
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6">
           <DoctorInfo

@@ -7,14 +7,13 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { CENTERS } from '@/common/types/centers';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import messengers from '@/modules/profile/constants/messengers.json';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import without from 'lodash/without';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -22,7 +21,7 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import OnlineVisit from './onlineVisit';
 
 interface OnlineVisitWrapperProps {
-  channelType: Array<'phone' | 'igap' | 'whatsapp' | 'eitaa'>;
+  channelType: Array<string>;
   doctorId: string;
   title: string;
   price: number;
@@ -53,7 +52,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const doctorMessenger = useFeatureValue<any[]>('doctor-messenger', []);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -107,7 +105,6 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
       },
     );
   };
-
   const redirectBookingPage = () => {
     profileEvent('doctor profile press online visit book button');
     router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
@@ -116,15 +113,9 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   return (
     <>
       <OnlineVisit
-        channel={channelType[0]}
-        messengers={doctorMessenger?.find?.(({ id }: any) => id === doctorId)?.messengers}
+        channels={without(channelType, 'phone')}
         duration={duration}
-        title={removeHtmlTagInString(
-          (title ?? 'ویزیت آنلاین') +
-            (channelType.includes('igap') || channelType.includes('phone')
-              ? ` (${messengers[channelType[0] as 'igap' | 'phone']?.name})`
-              : ''),
-        )}
+        title={`ویزیت انلاین ${channelType[0] === 'phone' ? '(تماس تلفنی)' : ''}`}
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}

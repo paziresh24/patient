@@ -86,7 +86,14 @@ function MyApp(props: AppProps) {
       <GrowthBookProvider growthbook={growthbook}>
         <Hydrate state={pageProps.dehydratedState}>
           {getLayout(
-            <Component {...pageProps} config={{ showHeader: !pageProps.query?.application, showFooter: !pageProps.query?.application }} />,
+            <Component
+              {...pageProps}
+              config={{
+                showHeader: !pageProps.query?.application,
+                showFooter: !pageProps.query?.application,
+                compactFooter: pageProps.query?.['footer:type'] === 'compact',
+              }}
+            />,
             router,
           )}
         </Hydrate>

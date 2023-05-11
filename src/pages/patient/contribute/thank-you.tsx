@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import Text from '@/components/atom/text';
 
 import Button from '@/common/components/atom/button';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
@@ -49,9 +49,7 @@ const ThankYouPage = () => {
 
   return (
     <div className="h-screen overflow-auto bg-white">
-      <Head>
-        <title>مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی</title>
-      </Head>
+      <Seo title="مشارکت در تکمیل اطلاعات پزشکان و مراکز درمانی" noIndex />
 
       <main
         className="flex flex-col justify-between p-5 pt-16 mx-auto md:max-w-md"
