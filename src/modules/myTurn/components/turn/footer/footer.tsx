@@ -103,9 +103,17 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const isShowOnlineVisitTurnButton = !isAfterPastDaysFromTimestamp({ numDays: 3, currentTime, timestamp: bookTimestamp });
+
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && isShowOnlineVisitTurnButton)) &&
+    (status === BookStatus.notVisited ||
+      (isOnlineVisitTurn && status !== BookStatus.deleted && status !== BookStatus.visited && isShowOnlineVisitTurnButton)) &&
     paymentStatus !== PaymentStatus.paying;
+  const shouldShowMessengerButton =
+    isOnlineVisitTurn &&
+    paymentStatus !== PaymentStatus.paying &&
+    status !== BookStatus.deleted &&
+    onlineVisitChannel &&
+    isShowOnlineVisitTurnButton;
 
   const showPrescription = () => {
     splunkInstance().sendEvent({
@@ -258,11 +266,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {isOnlineVisitTurn &&
-        paymentStatus !== PaymentStatus.paying &&
-        status !== BookStatus.deleted &&
-        onlineVisitChannel &&
-        isShowOnlineVisitTurnButton && <MessengerButton channel={onlineVisitChannel} />}
+      {shouldShowMessengerButton && <MessengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button
