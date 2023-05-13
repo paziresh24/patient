@@ -96,6 +96,7 @@ const Receipt = () => {
   };
 
   const isShowRemoveButtonForOnlineVisit =
+    !!bookDetailsData &&
     !turnStatus.deletedTurn &&
     !turnStatus.visitedTurn &&
     !isAfterPastDaysFromTimestamp({
@@ -243,7 +244,7 @@ const Receipt = () => {
             </Button>
           )}
           {centerType === 'consult' && (
-            <div className="flex justify-between gap-2">
+            <div className="grid gap-2">
               <MessengerButton
                 channel={
                   bookDetailsData.selected_online_visit_channel?.type
