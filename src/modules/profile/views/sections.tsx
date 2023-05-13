@@ -63,9 +63,9 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
       isShowFallback: editable,
       function: () => {
         const items = centers.find((center: any) => center.center_type === 1)?.gallery ?? [];
-        const reformmatedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
         return {
-          items: reformmatedItems,
+          items: reformattedItems,
         };
       },
       children: (props: any) => <Gallery className="bg-white md:rounded-lg" {...props} />,

@@ -305,19 +305,19 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
   const { slug, ...query } = context.query;
   const university = query.university as string;
 
-  const slugFormmated = slug as string;
+  const slugFormatted = slug as string;
   try {
     const queryClient = new QueryClient();
     const { result, redirect } = await queryClient.fetchQuery(
       [
         ServerStateKeysEnum.SlugProfile,
         {
-          slug: slugFormmated,
+          slug: slugFormatted,
         },
       ],
       () =>
         slugProfile({
-          slug: slugFormmated,
+          slug: slugFormatted,
         }),
     );
 
@@ -347,7 +347,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        slug: slugFormmated,
+        slug: slugFormatted,
       },
     };
   } catch (error) {
