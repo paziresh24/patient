@@ -47,7 +47,7 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start p-3 max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col-reverse items-start p-3 max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
         <div className="w-full md:basis-4/6">
           <FactorWrapper
             bookId={bookId as string}
@@ -98,7 +98,7 @@ const Factor = () => {
                   messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.name
                 } </b> را انتخاب کرده اید.<br /><b class="text-primary">${convertTime(
                   bookDetailsData?.book_time_string,
-                )}</b> (تا حداکثر 5 ساعت بعد از آن) .پاسخگو سوالات شما خواهم بود. توجه داشته باشید در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، درخواست شما به صورت اتوماتیک لغو و هزینه به حساب شما باز میگردد`,
+                )}</b> (تا حداکثر 3 ساعت بعد از آن) پاسخگو سوالات شما خواهم بود. توجه داشته باشید در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، درخواست شما به صورت اتوماتیک لغو و هزینه به حساب شما باز میگردد.`,
               }}
               className="text-[#77777c] !leading-7 text-justify lg:text-[0.75rem] text-[0.85rem] block"
             />
