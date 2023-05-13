@@ -8,7 +8,6 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
-import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
@@ -56,8 +55,7 @@ interface TurnFooterProps {
   paymentStatus: PaymentStatus;
   description: string;
   notRefundable?: boolean;
-  currentTime: number;
-  bookTimestamp: number;
+  possibilityBeingVisited?: boolean;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -70,6 +68,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     hasPaging,
     bookTime,
     onlineVisitChannel,
+    possibilityBeingVisited,
     centerId,
     nationalCode,
     trackingCode,
@@ -84,8 +83,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     paymentStatus,
     description,
     notRefundable,
-    currentTime,
-    bookTimestamp,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -102,9 +99,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isOnlineVisitTurn = centerType === CenterType.consult;
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
-  const isShowOnlineVisitTurnButton = !isAfterPastDaysFromTimestamp({ numDays: 3, currentTime, timestamp: bookTimestamp });
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && isShowOnlineVisitTurnButton)) &&
+    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && possibilityBeingVisited)) &&
     paymentStatus !== PaymentStatus.paying;
 
   const showPrescription = () => {
@@ -262,7 +258,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         paymentStatus !== PaymentStatus.paying &&
         status !== BookStatus.deleted &&
         onlineVisitChannel &&
-        isShowOnlineVisitTurnButton && <MessengerButton channel={onlineVisitChannel} />}
+        possibilityBeingVisited && <MessengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button
