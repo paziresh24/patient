@@ -1,4 +1,5 @@
 import useCustomize from '@/common/hooks/useCustomize';
+import { CENTERS } from '@/common/types/centers';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
@@ -31,7 +32,9 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { customize } = useCustomize();
 
   const shouldShowLocation = centerType !== CenterType.consult;
-  const shouldShowRate = (status === BookStatus.expired || status === BookStatus.visited) && feedbackUrl;
+  const shouldShowRate =
+    ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
+    feedbackUrl;
 
   const handleClickCard = () => {
     if (paymentStatus !== PaymentStatus.paying) {

@@ -268,17 +268,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       {shouldShowMessengerButton && <MessengerButton channel={onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
-        {shouldShowRemoveTurn && (
-          <Button
-            theme="error"
-            variant="secondary"
-            block={true}
-            onClick={showRemoveTurnModal}
-            icon={status === BookStatus.notVisited && <TrashIcon />}
-          >
-            {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'استرداد وجه' : 'لغو نوبت'}
-          </Button>
-        )}
         {status === BookStatus.notVisited && (
           <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
@@ -304,6 +293,17 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             </Button>
           )}
         </div>
+      )}
+      {shouldShowRemoveTurn && (
+        <Button
+          theme="error"
+          variant="secondary"
+          block={true}
+          onClick={showRemoveTurnModal}
+          icon={status === BookStatus.notVisited && <TrashIcon />}
+        >
+          {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
+        </Button>
       )}
 
       <Modal {...queueModalProps} bodyClassName="p-0" noHeader>
@@ -340,7 +340,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       <Modal
         title={
           isOnlineVisitTurn
-            ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+            ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'حذف نوبت و استرداد وجه'} را انتخاب کنید`
             : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
@@ -375,7 +375,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               data-testid="modal__remove-turn-button"
               disabled={isOnlineVisitTurn && !reasonDeleteTurn}
             >
-              {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'استرداد وجه' : 'لغو نوبت'}
+              {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
             </Button>
             <Button
               theme="error"
