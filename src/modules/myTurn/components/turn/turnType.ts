@@ -30,6 +30,7 @@ export interface TurnProps {
   };
   turnDetails: {
     bookTime: number;
+    bookTimestamp: number;
     waitingTime?: string;
     trackingCode: string;
     centerName: string;
@@ -37,6 +38,7 @@ export interface TurnProps {
     description: string;
     respiteDeleteTurn?: string;
     notRefundable?: boolean;
+    possibilityBeingVisited?: boolean;
   };
   location: {
     address: string;
