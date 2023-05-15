@@ -15,6 +15,7 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
+import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import Select from '@/modules/booking/components/select/select';
@@ -278,14 +279,15 @@ const Receipt = () => {
           {...removeModalProps}
         >
           <div className="flex flex-col gap-3 mb-3">
-            {(turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
-              <Select
-                key={question.id}
-                selected={reasonDeleteTurn === question.value}
-                onSelect={() => setReasonDeleteTurn(question.value)}
-                title={question.text}
-              />
-            ))}
+            {centerId === CENTERS.CONSULT &&
+              (turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
+                <Select
+                  key={question.id}
+                  selected={reasonDeleteTurn === question.value}
+                  onSelect={() => setReasonDeleteTurn(question.value)}
+                  title={question.text}
+                />
+              ))}
           </div>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
