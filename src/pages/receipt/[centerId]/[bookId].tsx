@@ -15,6 +15,7 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
+import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import Select from '@/modules/booking/components/select/select';
@@ -73,6 +74,11 @@ const Receipt = () => {
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
 
   const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
+  const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
+    numberDay: 3,
+    currentTime: serverTime?.data?.data?.data.timestamp,
+    timestamp: bookDetailsData.book_time,
+  });
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -96,14 +102,7 @@ const Receipt = () => {
   };
 
   const isShowRemoveButtonForOnlineVisit =
-    !!bookDetailsData &&
-    !turnStatus.deletedTurn &&
-    !turnStatus.visitedTurn &&
-    !isAfterPastDaysFromTimestamp({
-      numberDay: 3,
-      currentTime: serverTime?.data?.data?.data.timestamp,
-      timestamp: bookDetailsData.book_time,
-    });
+    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
@@ -245,13 +244,15 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              <MessengerButton
-                channel={
-                  bookDetailsData.selected_online_visit_channel?.type
-                    ? bookDetailsData?.selected_online_visit_channel
-                    : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-                }
-              />
+              {!turnStatus.deletedTurn && possibilityBeingVisited && (
+                <MessengerButton
+                  channel={
+                    bookDetailsData.selected_online_visit_channel?.type
+                      ? bookDetailsData?.selected_online_visit_channel
+                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
+                  }
+                />
+              )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                   {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
@@ -278,14 +279,15 @@ const Receipt = () => {
           {...removeModalProps}
         >
           <div className="flex flex-col gap-3 mb-3">
-            {(turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
-              <Select
-                key={question.id}
-                selected={reasonDeleteTurn === question.value}
-                onSelect={() => setReasonDeleteTurn(question.value)}
-                title={question.text}
-              />
-            ))}
+            {centerId === CENTERS.CONSULT &&
+              (turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
+                <Select
+                  key={question.id}
+                  selected={reasonDeleteTurn === question.value}
+                  onSelect={() => setReasonDeleteTurn(question.value)}
+                  title={question.text}
+                />
+              ))}
           </div>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
