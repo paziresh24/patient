@@ -34,7 +34,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
       body={{
         description: [
           channels?.length && channelDetailes
-            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت در پیام رسان های:" />)
+            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
         ].filter(Boolean),
