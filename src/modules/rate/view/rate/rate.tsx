@@ -5,7 +5,6 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import classNames from '@/common/utils/classNames';
-import Details from '../../components/details/details';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
 
@@ -15,17 +14,6 @@ export const Rate = (props: RateProps) => {
   return (
     <>
       <div className="w-full h-auto">
-        {!!details.count && (
-          <div className="p-4 pb-0 space-y-3">
-            <Details
-              satisfaction={details.satisfaction}
-              count={details.count}
-              count_text={details.count_text}
-              title={details.title}
-              information={details.information}
-            />
-          </div>
-        )}
         {!!controller && (
           <div className="flex items-center justify-between w-full px-4 my-4">
             <Text fontSize="sm" fontWeight="medium">
