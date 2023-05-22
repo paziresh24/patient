@@ -202,11 +202,7 @@ const Receipt = () => {
                 )}
               </>
             )}
-            <BookInfo
-              turnData={bookDetailsData}
-              loading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
-              centerId={centerId?.toString()!}
-            />
+            <BookInfo turnData={bookDetailsData} loading={getReceiptDetails.isLoading} centerId={centerId?.toString()!} />
           </div>
           {showOptionalButton && (
             <>
@@ -267,7 +263,7 @@ const Receipt = () => {
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image}
             fullName={bookDetailsData.doctor?.display_name}
             expertise={bookDetailsData.doctor?.display_expertise}
-            isLoading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
+            isLoading={getReceiptDetails.isLoading}
           />
         </div>
         <Modal

@@ -1,5 +1,5 @@
 import { searchClient } from '@/common/apis/client';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const symptoms = (text: string) => {
   return searchClient.get(`/seapi/autoComplete?q=${text}&return_type[]=suggestion`);

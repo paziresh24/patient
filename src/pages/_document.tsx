@@ -16,7 +16,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://analytics.google.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://static.hotjar.com" />
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />

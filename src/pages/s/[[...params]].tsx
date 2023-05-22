@@ -22,13 +22,13 @@ import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { addCommas } from '@persian-tools/persian-tools';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
-import { QueryClient, dehydrate } from 'react-query';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 

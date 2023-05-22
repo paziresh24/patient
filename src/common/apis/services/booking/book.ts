@@ -1,7 +1,7 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
 import { getCookie } from 'cookies-next';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
 
 interface Params {

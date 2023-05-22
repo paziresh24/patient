@@ -1,7 +1,7 @@
 import { paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export interface Params {
   slug: string;

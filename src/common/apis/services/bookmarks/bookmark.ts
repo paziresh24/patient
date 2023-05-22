@@ -1,6 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import formData from '@/common/utils/formData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
   slug: string;
