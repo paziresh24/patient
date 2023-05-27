@@ -271,7 +271,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
             ))}
         </div>
 
-        <aside className="md:flex hidden flex-col w-full space-y-3 overflow-hidden md:basis-5/12">
+        <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
           {aside({
             info: profileData,
             centers: profileData.centers,

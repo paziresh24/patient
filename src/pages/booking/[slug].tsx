@@ -73,8 +73,6 @@ const Booking = () => {
     return center?.center_type === 1 ? `مطب ${profileData.display_name}` : center?.name;
   }, [router.query.centerId, profileData]);
 
-  console.log(profileData);
-
   return (
     <>
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} noIndex />

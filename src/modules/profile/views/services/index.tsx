@@ -19,7 +19,7 @@ const Recommend = dynamic(() => import('@/modules/booking/components/recommend')
 const Presence = dynamic(() => import('./presence'));
 const External = dynamic(() => import('./external'));
 
-export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isBulk: boolean; slug: string; className?: string }) => {
+export const Services = ({ doctor, slug }: { doctor: any; slug: string; className?: string }) => {
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
   const { recommendEvent } = useProfileSplunkEvent();
@@ -34,7 +34,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
   return (
     <>
       <div ref={servicesRef} className="flex flex-col space-y-3">
-        {!isBulk && doctor?.id === '540' && (
+        {doctor?.id === '540' && (
           <External
             title="ویزیت آنلاین (غیر فعال)"
             buttonText="ورود به سایت دکتر پروفسور محمد تقی نوربالا"
@@ -42,8 +42,7 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
-        {!isBulk &&
-          doctor?.consult_active_booking &&
+        {doctor?.consult_active_booking &&
           doctor?.centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any) => (
@@ -69,20 +68,13 @@ export const Services = ({ doctor, isBulk, slug, className }: { doctor: any; isB
                 }}
               />
             ))}
-        {!isBulk && doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
+        {doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
             waitingTime={doctor.waiting_time_info?.waiting_time_title}
             onBook={({ centerId, serviceId }) => router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`)}
             displayName={doctor.display_name}
           />
-        )}
-        {isBulk && (
-          <Card className="!rounded-none md:!rounded-lg">
-            <Text fontWeight="bold" fontSize="sm">
-              نوبت دهی این پزشک در پذیرش24 غیر فعال می باشد. شما میتوانید از پزشکان حاذق در این حوزه نوبت بگیرید.
-            </Text>
-          </Card>
         )}
       </div>
       {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (

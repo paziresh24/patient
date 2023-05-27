@@ -5,23 +5,25 @@ import HospitalIcon from '@/common/components/icons/hospital';
 import OfficeIcon from '@/common/components/icons/office';
 import PhoneIcon from '@/common/components/icons/phone';
 import classNames from '@/common/utils/classNames';
+import Notification from '@/modules/profile/components/notification/notification';
 import { Center } from '../../types/selectCenter';
 import PhoneNumberList from '../phoneNumberList/phoneNumberList';
 
 interface CenterCardProps extends Center {
   onClick: (center: Center) => void;
+  doctorName: string;
 }
 
 export const CenterCard = (props: CenterCardProps) => {
   const { onClick, ...center } = props;
-  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true } = center;
+  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true, doctorName } = center;
 
   return (
     <>
       <div
         onClick={() => !isDisable && isAvailable && onClick(center)}
         className={classNames('w-full rounded-lg border border-slate-200 cursor-pointer shadow-sm', {
-          'cursor-auto': isDisable || !isAvailable,
+          'cursor-default': isDisable || !isAvailable,
         })}
       >
         <div className="p-4">
@@ -71,16 +73,13 @@ export const CenterCard = (props: CenterCardProps) => {
         {!isAvailable && availableTime && (
           <>
             <Divider />
-            <div className="w-full p-4">
-              <Text fontSize="sm" align="center" fontWeight="medium" className="block text-slate-500">
-                زمان نوبت دهی پزشک به پایان رسیده است!
-              </Text>
-            </div>
-            <Divider />
-            <div className="flex justify-between w-full p-4">
-              <Text className="text-black/">نوبت دهی اینترنتی:</Text>
-              <Text className="block text-slate-500">{availableTime}</Text>
-            </div>
+            <Notification
+              centerId={center.id}
+              doctorName={doctorName}
+              serviceId={center.services[0].id}
+              userCenterId={center.services[0].user_center_id}
+              availalbeTime={availableTime}
+            />
           </>
         )}
         {isDisable && (

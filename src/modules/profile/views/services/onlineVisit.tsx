@@ -3,7 +3,7 @@ import StatusIcon from '@/common/components/icons/status';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { renderToString } from 'react-dom/server';
-import { ServiceCard } from './card';
+import ServiceCard from '../../components/serviceCard';
 import ChannelDetailes, { Messenger } from './channelDetailes';
 
 interface OnlineVisitProps {

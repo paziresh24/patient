@@ -13,4 +13,5 @@ export enum ServerStateKeysEnum {
   InternalLinks = 'internalLinks',
   Feedbacks = 'feedbacks',
   ServerTime = 'serverTime',
+  AvailabilityNotification = 'availabilityNotification',
 }
