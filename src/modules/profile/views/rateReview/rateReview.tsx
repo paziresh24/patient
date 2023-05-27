@@ -435,9 +435,9 @@ export const RateReview = (props: RateReviewProps) => {
                 </Text>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {symptomes?.map(symptom => (
-                  <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={symptom}>
-                    <Text className="line-clamp-1">{symptom}</Text>
+                {getDoctorTags.data?.data?.positive_tags?.map?.((tag: string) => (
+                  <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={tag}>
+                    <Text className="line-clamp-1">{tag}</Text>
                   </Chips>
                 ))}
               </div>
@@ -483,9 +483,9 @@ export const RateReview = (props: RateReviewProps) => {
                 </Text>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {symptomes?.map(symptom => (
-                  <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={symptom}>
-                    <Text className="line-clamp-1">{symptom}</Text>
+                {getDoctorTags.data?.data?.negative_tags?.map?.((tag: string) => (
+                  <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={tag}>
+                    <Text className="line-clamp-1">{tag}</Text>
                   </Chips>
                 ))}
               </div>

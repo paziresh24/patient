@@ -26,6 +26,10 @@ export const contentClient = axios.create({
   withCredentials: true,
 });
 
+export const workflowClient = axios.create({
+  baseURL: publicRuntimeConfig.WORKFLOW_BASE_URL,
+});
+
 clinicClient.interceptors.request.use(
   config => {
     config = {

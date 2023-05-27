@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { workflowClient } from '../../client';
 
 export interface Params {
   doctor_id: string;
@@ -7,9 +7,7 @@ export interface Params {
 }
 
 export const getDoctorTags = (params: Params) => {
-  return axios.post(`https://ttq2asnnfxua5b3h5rpxaunr.hooks.n8n.cloud/webhook/get-doctors-tags`, {
-    ...params,
-  });
+  return workflowClient.post(`/webhook/get-doctors-tags`, params);
 };
 
 export const useGetDoctorTags = () => {
