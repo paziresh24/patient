@@ -71,7 +71,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
             </div>
           )}
           {shouldShowBrand && (
-            <Link href="/" shallow prefetch={false}>
+            <Link href="/" shallow>
               <HeaderLogo
                 showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
                 partnerLogo={customize.partnerLogo}

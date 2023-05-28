@@ -161,5 +161,3 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     </>
   );
 };
-
-export default OnlineVisitWrapper;

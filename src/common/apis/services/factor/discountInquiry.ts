@@ -1,7 +1,7 @@
 import { clinicClient } from '@/common/apis/client';
 import { AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
 import { setTerminal } from '../auth/setTerminal';
 
 interface Params {

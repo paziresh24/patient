@@ -1,6 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import { AxiosResponse } from 'axios';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
 
 interface Params {
   book_id: string;

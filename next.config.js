@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
+const { withSentryConfig } = require('@sentry/nextjs');
 const runtimeCaching = require('./runtimeCaching');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -27,6 +28,13 @@ const nextConfig = {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
   },
   webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+        __SENTRY_TRACING__: false,
+      }),
+    );
+
     /**
      * TODO: Find more possible barrels for this project.
      *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
@@ -70,6 +78,17 @@ const nextConfig = {
   },
 };
 
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-module.exports = moduleExports;
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  nextConfig.sentry = {
+    hideSourceMaps: true,
+  };
+}
+
+// Sentry should be the last thing to export to catch everything right
+module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;

@@ -20,7 +20,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
   const { t } = useTranslation('patient/common');
 
   return (
-    <div className="max-w-screen-xl w-full min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:pt-10 md:space-s-8">
+    <div className="max-w-screen-xl min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:pt-10 md:space-s-8">
       <div className="hidden col-span-3 px-5 bg-white rounded-lg shadow-sm md:sticky md:top-10 h-fit md:pb-2 md:block">
         <Link href="/patient/profile">
           <div className="flex items-center p-5 px-0 space-s-5">

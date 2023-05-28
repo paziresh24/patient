@@ -1,6 +1,6 @@
 import formData from '@/common/utils/formData';
 import { getCookie } from 'cookies-next';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
 import { clinicClient } from '../../client';
 
 export const getBookmarksList = () => {

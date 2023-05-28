@@ -1,25 +1,22 @@
 import { LoginModalProvider } from '@/modules/login/context/loginModal';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import TagManager from 'react-gtm-module';
 import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { EntryPoint } from './entryPoint';
 import Splash from './splash';
 
-const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: true,
-            retry: true,
-          },
-        },
-      }),
-  );
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      retry: true,
+    },
+  },
+});
 
+const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   useEffect(() => {
     TagManager.initialize({
       gtmId: pageProps.query?.['gtm:id'] ?? 'GTM-P5RPLDP',

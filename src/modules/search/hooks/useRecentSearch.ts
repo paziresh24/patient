@@ -5,11 +5,11 @@ import { Item } from '../types/suggestion';
 export const useRecentSearch = () => {
   const [recent, setRecent] = useState<Item[]>([]);
   useEffect(() => {
-    const formattedHistory: Array<{ name?: string }> = uniqBy(JSON.parse(localStorage.getItem('history') ?? '[]') as Item[], 'name')
+    const formmatedHistory: Array<{ name?: string }> = uniqBy(JSON.parse(localStorage.getItem('history') ?? '[]') as Item[], 'name')
       .reverse()
       .slice(0, 4)
       .filter((item: any) => item?.name);
-    setRecent(formattedHistory);
+    setRecent(formmatedHistory);
   }, []);
 
   const addRecentSearch = (item: Item) => {

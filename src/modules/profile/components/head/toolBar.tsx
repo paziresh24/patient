@@ -18,7 +18,7 @@ export const ToolBar = ({ items = [] }: ToolBarProps) => {
 
   const typeArray = items.map(item => item.type);
 
-  const reformattedItems = [
+  const reformmatedItems = [
     {
       title: 'ذخیره',
       icon: <BookmarkIcon width={21} height={21} fill={items.find(item => item.type == 'bookmark')?.isBookmarked} />,
@@ -41,7 +41,7 @@ export const ToolBar = ({ items = [] }: ToolBarProps) => {
 
   return (
     <div className="flex items-center space-s-2">
-      {reformattedItems
+      {reformmatedItems
         .filter(item => item.shouldShow)
         .map(item => (
           <div key={item.title} onClick={item.onClick} className="flex items-center cursor-pointer space-s-1">

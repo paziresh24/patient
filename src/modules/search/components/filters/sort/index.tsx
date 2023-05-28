@@ -17,11 +17,11 @@ export const Sort = () => {
   const { handleChange, filters } = useFilterChange();
   const { orderItems } = useSearch();
 
-  const orderItemsFormatted = useMemo(() => {
+  const orderItemsFormmated = useMemo(() => {
     return Object.entries(orderItems).map(([value, label]: any) => ({ label, value }));
   }, [orderItems]);
 
-  const freeturnItemsFormatted = useMemo(() => {
+  const freeturnItemsFormmated = useMemo(() => {
     return Object.entries(freeturnItems).map(([value, label]: any) => ({ label, value }));
   }, [orderItems]);
 
@@ -35,10 +35,10 @@ export const Sort = () => {
           size="small"
           className="font-medium border-0 rounded-tr-none rounded-br-none"
           classNameWrapper="lg:w-64"
-          options={orderItemsFormatted}
+          options={orderItemsFormmated}
           onChange={e => handleChange('sortBy', e.target.value.value)}
           value={
-            orderItemsFormatted.find(item => item.value === filters['sortBy']) ?? orderItemsFormatted.find(item => item.value === 'clinic')
+            orderItemsFormmated.find(item => item.value === filters['sortBy']) ?? orderItemsFormmated.find(item => item.value === 'clinic')
           }
         />
       </div>
@@ -50,11 +50,11 @@ export const Sort = () => {
           size="small"
           className="font-medium border-0 rounded-tr-none rounded-br-none"
           classNameWrapper="lg:w-36"
-          options={freeturnItemsFormatted}
+          options={freeturnItemsFormmated}
           onChange={e => handleChange('freeturn', e.target.value.value)}
           value={
-            freeturnItemsFormatted.find(item => item.value === filters['freeturn']) ??
-            freeturnItemsFormatted.find(item => item.value === 'all')
+            freeturnItemsFormmated.find(item => item.value === filters['freeturn']) ??
+            freeturnItemsFormmated.find(item => item.value === 'all')
           }
         />
       </div>

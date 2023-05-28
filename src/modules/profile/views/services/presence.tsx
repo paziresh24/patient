@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-
 import Button from '@/common/components/atom/button/button';
 import Card from '@/common/components/atom/card/card';
 import Modal from '@/common/components/atom/modal/modal';
@@ -9,11 +7,11 @@ import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
+import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
+import SelectService from '@/modules/booking/views/selectService/selectService';
 import { memo, useCallback, useState } from 'react';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import { ServiceCard } from './card';
-const SelectService = dynamic(() => import('@/modules/booking/views/selectService'));
-const SelectCenter = dynamic(() => import('@/modules/booking/views/selectCenter'));
 
 interface PresenceProps {
   centers: any[];
