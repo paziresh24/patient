@@ -37,7 +37,7 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full md:basis-4/6">
           <FactorWrapper
             bookId={bookId as string}

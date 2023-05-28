@@ -155,7 +155,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
 
   return (
     <>
-      <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
             <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
@@ -271,7 +271,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
             ))}
         </div>
 
-        <aside className="md:flex hidden flex-col w-full space-y-3 overflow-hidden md:basis-5/12">
+        <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
           {aside({
             info: profileData,
             centers: profileData.centers,

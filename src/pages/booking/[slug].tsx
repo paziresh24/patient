@@ -76,7 +76,7 @@ const Booking = () => {
   return (
     <>
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} noIndex />
-      <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
           {isLoading && (
             <div className="self-center p-10">

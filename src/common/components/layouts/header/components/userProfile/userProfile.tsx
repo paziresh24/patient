@@ -10,6 +10,7 @@ import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
+import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
 import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
@@ -139,7 +140,11 @@ export const UserProfile = () => {
                 </div>
               </Link>
               <Divider />
-              <div className="flex flex-col p-3 pb-0">
+              <div className="flex flex-col p-3 py-0">
+                <MenuList className="py-1">
+                  <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
+                </MenuList>
+                <Divider />
                 <MenuList>
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
