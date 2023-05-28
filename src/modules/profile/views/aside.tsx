@@ -3,19 +3,27 @@ import EditIcon from '@/common/components/icons/edit';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { getCookie } from 'cookies-next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import CentersInfo from './centersInfo/centersInfo';
-import Services from './services';
+
+const CentersInfo = dynamic(() => import('./centersInfo'));
+const Services = dynamic(() => import('./services'));
+const BulkService = dynamic(() => import('./services/bulk'));
 
 export const aside = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) => [
+  // Bulk
+  {
+    id: 'services_section',
+    isShow: isBulk,
+    children: () => <BulkService />,
+  },
   // Services
   {
     id: 'services_section',
-    isShow: true,
+    isShow: !isBulk,
     function: () => {
       return {
         doctor: info,
-        isBulk,
         slug: seo.slug,
       };
     },
