@@ -73,6 +73,8 @@ const Booking = () => {
     return center?.center_type === 1 ? `مطب ${profileData.display_name}` : center?.name;
   }, [router.query.centerId, profileData]);
 
+  console.log(profileData);
+
   return (
     <>
       <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} noIndex />
@@ -108,7 +110,9 @@ const Booking = () => {
               {isLoading && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
-                  {router.query.centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : centerName}
+                  {router.query.centerId === CENTERS.CONSULT
+                    ? `ویزیت آنلاین ${profileData.online_visit_channel_types ? 'در پیام رسان' : ''}`
+                    : centerName}
                 </Text>
               )}
             </div>

@@ -12,11 +12,6 @@
     },
     {
       "id": 3,
-      "text": "به دلایل شخصی",
-      "value": "personal_reason"
-    },
-    {
-      "id": 4,
       "text": "سایر",
       "value": "others"
     }
