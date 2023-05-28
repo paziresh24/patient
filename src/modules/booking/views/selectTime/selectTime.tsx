@@ -61,7 +61,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         timeText: firstFreeTime.timeText!,
       });
     }
-  }, [firstFreeTime.isSuccess, firstFreeTime.timeId]);
+  }, [firstFreeTime.isSuccess]);
 
   const timeModeAction = {
     FIRST_FREE_TURN: async () => {

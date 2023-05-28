@@ -2,7 +2,7 @@ import { clinicClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import formData from '@/common/utils/formData';
 import { getCookie } from 'cookies-next';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 import { setTerminal } from '../auth/setTerminal';
 
 export interface Params {

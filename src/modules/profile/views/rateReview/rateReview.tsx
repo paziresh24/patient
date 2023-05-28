@@ -24,9 +24,8 @@ import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Rate from '@/modules/rate/view/rate';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useInView } from 'react-intersection-observer';
 
 interface RateReviewProps {
   doctor: {
@@ -81,14 +80,6 @@ export const RateReview = (props: RateReviewProps) => {
     isLogin: state.isLogin,
     userInfo: state.info,
   }));
-  const [rateRef, inViewRate] = useInView();
-  const sendRateTriggered = useRef(false);
-  useEffect(() => {
-    if (inViewRate && !sendRateTriggered.current) {
-      sendRateTriggered.current = true;
-      return rateSplunkEvent('scroll To doctor feedbacks box');
-    }
-  }, [inViewRate]);
   const likeFeedback = useLikeFeedback();
   const replyFeedback = useReplyfeedback();
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -379,7 +370,7 @@ export const RateReview = (props: RateReviewProps) => {
   };
   return (
     <>
-      <div ref={rateRef} className={classNames('w-full bg-white', className)}>
+      <div className={classNames('w-full bg-white', className)}>
         <Rate
           details={details}
           filters={rateSearchInputs}

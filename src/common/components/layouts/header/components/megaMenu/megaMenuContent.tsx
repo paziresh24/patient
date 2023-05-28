@@ -50,7 +50,6 @@ const MegaMenuContent = ({ items, onClose }: MegaMenuContentProps) => {
                 })}
                 onClick={onClose}
                 href={menu.link ?? '#'}
-                prefetch={false}
               >
                 {menu.title}
               </Link>
@@ -62,7 +61,6 @@ const MegaMenuContent = ({ items, onClose }: MegaMenuContentProps) => {
                       key={index}
                       href={item.link ?? '#'}
                       onClick={onClose}
-                      prefetch={false}
                       className="text-slate-700 cursor-pointer mb-2 mt-1 block text-sm line-clamp-1 w-4/5"
                     >
                       {item.title}

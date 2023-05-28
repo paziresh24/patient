@@ -54,11 +54,11 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <header className="flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-sm z-infinity text-slate-700 md:px-4 md:h-20 border-slate-100">
+      <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-card text-slate-700 md:px-4 md:h-20 border-slate-100">
         <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
-              <Link href="/" shallow prefetch={false}>
+              <Link href="/" shallow>
                 <HeaderLogo
                   showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
                   partnerLogo={customize.partnerLogo}

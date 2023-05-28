@@ -1,5 +1,5 @@
 import React from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from 'react-query';
 import { queryClient } from '../../../../common/components/layouts/provider';
 import Turn from './turn';
 

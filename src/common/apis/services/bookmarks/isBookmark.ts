@@ -1,7 +1,7 @@
 import { clinicClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import formData from '@/common/utils/formData';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 
 export interface Params {
   slug: string;

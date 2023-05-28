@@ -1,7 +1,7 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 
 export interface Params {
   query?: any;

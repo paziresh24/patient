@@ -1,9 +1,9 @@
 import { clinicClient } from '@/common/apis/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 
 export const getAppHome = () => {
   return clinicClient.post('/api/appHome');
 };
 export const useGetAppHome = () => {
-  return useQuery(['home'], getAppHome);
+  return useQuery('home', getAppHome);
 };

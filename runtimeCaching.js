@@ -54,44 +54,44 @@ const runtimeCaching = [
       },
     },
   },
-  // {
-  //   urlPattern: ({ url }) => {
-  //     const isSameOrigin = self.origin === url.origin;
-  //     if (!isSameOrigin) return false;
-  //     const pathname = url.pathname;
-  //     if (pathname.startsWith('/api/megaMenu')) return true;
-  //     return false;
-  //   },
-  //   handler: 'NetworkFirst',
-  //   method: 'GET',
-  //   options: {
-  //     cacheName: 'apis',
-  //     expiration: {
-  //       maxEntries: 16,
-  //       maxAgeSeconds: 24 * 60 * 60, // 24 hours
-  //     },
-  //     networkTimeoutSeconds: 10, // fall back to cache if api does not response within 10 seconds
-  //   },
-  // },
-  // {
-  //   urlPattern: ({ url }) => {
-  //     const isSameOrigin = self.origin === url.origin;
-  //     if (!isSameOrigin) return false;
-  //     const pathname = url.pathname;
-  //     if (pathname.startsWith('/s/')) return false;
-  //     if (pathname.startsWith('/dr/')) return false;
-  //     return true;
-  //   },
-  //   handler: 'NetworkFirst',
-  //   options: {
-  //     cacheName: 'others',
-  //     expiration: {
-  //       maxEntries: 32,
-  //       maxAgeSeconds: 5 * 60 * 60, // 5 hours
-  //     },
-  //     networkTimeoutSeconds: 10,
-  //   },
-  // },
+  {
+    urlPattern: ({ url }) => {
+      const isSameOrigin = self.origin === url.origin;
+      if (!isSameOrigin) return false;
+      const pathname = url.pathname;
+      if (pathname.startsWith('/api/megaMenu')) return true;
+      return false;
+    },
+    handler: 'NetworkFirst',
+    method: 'GET',
+    options: {
+      cacheName: 'apis',
+      expiration: {
+        maxEntries: 16,
+        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+      },
+      networkTimeoutSeconds: 10, // fall back to cache if api does not response within 10 seconds
+    },
+  },
+  {
+    urlPattern: ({ url }) => {
+      const isSameOrigin = self.origin === url.origin;
+      if (!isSameOrigin) return false;
+      const pathname = url.pathname;
+      if (pathname.startsWith('/s/')) return false;
+      if (pathname.startsWith('/dr/')) return false;
+      return true;
+    },
+    handler: 'NetworkFirst',
+    options: {
+      cacheName: 'others',
+      expiration: {
+        maxEntries: 32,
+        maxAgeSeconds: 5 * 60 * 60, // 5 hours
+      },
+      networkTimeoutSeconds: 10,
+    },
+  },
 ];
 
 module.exports = runtimeCaching;

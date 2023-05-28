@@ -31,7 +31,7 @@ export const LayoutWithHeaderAndFooter = ({
   const isWebView = useWebView();
 
   return (
-    <div className={classNames('min-h-screen flex flex-col', { 'pb-16 md:pb-0': showBottomNavigation })}>
+    <div className={classNames({ 'pb-16 md:pb-0': showBottomNavigation })}>
       {customize.showHeader && !isWebView && showHeader && (
         <Header
           showSearchSuggestionButton={showSearchSuggestionButton}
@@ -39,7 +39,7 @@ export const LayoutWithHeaderAndFooter = ({
           shouldShowPromoteApp={shouldShowPromoteApp}
         />
       )}
-      <div className="flex flex-col flex-grow">{children}</div>
+      <div style={{ minHeight: 'calc(100vh - 8.8125rem)' }}>{children}</div>
       {customize.showFooter &&
         !isWebView &&
         showFooter &&

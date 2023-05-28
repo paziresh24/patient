@@ -104,7 +104,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { customize } = useCustomize();
   const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
-  const { data, isLoading } = useGetProfileData(
+  const { data, isLoading, isIdle } = useGetProfileData(
     {
       slug,
     },
@@ -346,7 +346,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب مرکز درمانی"
           Component={SelectCenter}
           data={{
-            loading: isLoading,
+            loading: isLoading || isIdle,
             centers: reformattedCentersProperty({ centers, displayName: profile.display_name }),
           }}
           nextStep={(center: Center) => {
@@ -375,7 +375,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب خدمت"
           Component={SelectService}
           data={{
-            loading: isLoading || !center,
+            loading: isLoading || isIdle || !center,
             services: reformattedServicesProperty({ services: center?.services, center }),
           }}
           nextStep={(service: Service) => {
@@ -405,7 +405,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             )
           }
           data={{
-            loading: isLoading || !center || !service,
+            loading: isLoading || isIdle || !center || !service,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             userCenterId: service?.user_center_id,
