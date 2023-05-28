@@ -171,7 +171,7 @@ const Receipt = () => {
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
-      <div className="flex flex-col-reverse items-start max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt" className="flex flex-col space-y-4">
             {!turnStatus.requestedTurn && !!statusText && (
@@ -202,11 +202,7 @@ const Receipt = () => {
                 )}
               </>
             )}
-            <BookInfo
-              turnData={bookDetailsData}
-              loading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
-              centerId={centerId?.toString()!}
-            />
+            <BookInfo turnData={bookDetailsData} loading={getReceiptDetails.isLoading} centerId={centerId?.toString()!} />
           </div>
           {showOptionalButton && (
             <>
@@ -267,7 +263,7 @@ const Receipt = () => {
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image}
             fullName={bookDetailsData.doctor?.display_name}
             expertise={bookDetailsData.doctor?.display_expertise}
-            isLoading={getReceiptDetails.isLoading || getReceiptDetails.isIdle}
+            isLoading={getReceiptDetails.isLoading}
           />
         </div>
         <Modal
