@@ -65,7 +65,7 @@ export const Premium = () => {
         <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
       )}
 
-      <div className="relative flex flex-col items-center flex-grow p-5 pb-24 bg-white pt-11">
+      <div className="relative flex flex-col items-center flex-grow p-5 pb-24 mx-auto bg-white md:max-w-md pt-11">
         <div className="relative flex flex-col border border-orange-200 items-center bg-gradient-to-tr from-yellow-400 via-amber-200 to-amber-300 after:bg-white after:content after:w-[99%] after:h-[97%] after:absolute after:rounded-md justify-center w-full p-5 space-y-1 rounded-lg before:-top-1 before:content before:absolute before:w-20 before:h-3 before:bg-white">
           <img src={demond.src} className="absolute z-20 -top-6 " />
           <Text fontWeight="bold" fontSize="lg" className="z-40">
@@ -82,10 +82,10 @@ export const Premium = () => {
               <Text>مدت اعتبار:</Text>
               <Text>30 روز</Text>
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <Text>تاریخ تمدید:</Text>
               <Text>03/23/ 1402 ، ساعت 15:10</Text>
-            </div>
+            </div> */}
           </div>
         </div>
 

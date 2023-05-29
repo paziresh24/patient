@@ -87,10 +87,10 @@ export const Premium = () => {
                   <Text>مدت اعتبار:</Text>
                   <Text>30 روز</Text>
                 </div>
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <Text>تاریخ تمدید:</Text>
                   <Text>03/23/ 1402 ، ساعت 15:10</Text>
-                </div>
+                </div> */}
               </div>
             )}
 

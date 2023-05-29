@@ -18,9 +18,9 @@ import { phoneNumberWithZero } from '@/common/utils/phoneNumberWithZero';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-
 interface NotificationProps {
   centerId: string;
   serviceId: string;
@@ -31,6 +31,7 @@ interface NotificationProps {
 }
 
 export const Notification = (props: NotificationProps) => {
+  const router = useRouter();
   const { centerId, doctorName, serviceId, userCenterId, availalbeTime, className } = props;
 
   const { handleOpen: handleOpenSubmitModal, handleClose: handleCloseSubmitModal, modalProps: submitModalProps } = useModal();
@@ -108,7 +109,8 @@ export const Notification = (props: NotificationProps) => {
       return;
     }
 
-    handleOpenSubmitModal();
+    if (userInfo.vip) return handleOpenSubmitModal();
+    router.push('/patient/premium');
   };
 
   return (

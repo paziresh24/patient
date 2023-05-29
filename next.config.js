@@ -55,7 +55,7 @@ const nextConfig = {
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
   },
   images: {
-    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
+    domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
   },
   async redirects() {
     return [

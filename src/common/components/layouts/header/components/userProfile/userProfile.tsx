@@ -144,9 +144,9 @@ export const UserProfile = () => {
                 {userInfo.vip && (
                   <Link href="/patient/premium">
                     <div className="flex flex-col my-2">
-                      <div className="flex items-center px-5 py-4 rounded-lg space-s-2 bg-amber-50">
+                      <div className="flex items-center justify-center px-5 py-4 rounded-lg space-s-2 bg-amber-50">
                         <DiamondIcon className="text-amber-500" />
-                        <Text>شماره دارای اشتراک طلایی هستید.</Text>
+                        <Text fontSize="sm">شماره دارای اشتراک طلایی هستید.</Text>
                       </div>
                     </div>
                   </Link>
