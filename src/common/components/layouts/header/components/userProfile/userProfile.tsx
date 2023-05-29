@@ -141,9 +141,21 @@ export const UserProfile = () => {
               </Link>
               <Divider />
               <div className="flex flex-col p-3 py-0">
-                <MenuList className="py-1">
-                  <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
-                </MenuList>
+                {userInfo.vip && (
+                  <Link href="/patient/premium">
+                    <div className="flex flex-col my-2">
+                      <div className="flex items-center px-5 py-4 rounded-lg space-s-2 bg-amber-50">
+                        <DiamondIcon className="text-amber-500" />
+                        <Text>شماره دارای اشتراک طلایی هستید.</Text>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+                {!userInfo.vip && (
+                  <MenuList className="py-1">
+                    <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
+                  </MenuList>
+                )}
                 <Divider />
                 <MenuList>
                   {menuItems.map(item => (

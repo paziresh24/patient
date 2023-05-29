@@ -32,6 +32,7 @@ export type UserInfo = {
   cell?: string;
   is_doctor?: boolean;
   profile?: any;
+  vip?: string;
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
