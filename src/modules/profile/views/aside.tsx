@@ -1,4 +1,6 @@
 import Button from '@/common/components/atom/button/button';
+import Card from '@/common/components/atom/card/card';
+import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
@@ -7,11 +9,11 @@ import Link from 'next/link';
 import CentersInfo from './centersInfo/centersInfo';
 import Services from './services';
 
-export const aside = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) => [
+export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) => [
   // Services
   {
     id: 'services_section',
-    isShow: true,
+    isShow: !isBulk,
     function: () => {
       return {
         doctor: info,
@@ -20,6 +22,16 @@ export const aside = ({ info, centers, isBulk, customize, editable, handleViewAs
       };
     },
     children: (props: any) => <Services {...props} />,
+  },
+  {
+    isShow: isBulk,
+    children: () => (
+      <Card className="!rounded-none md:!rounded-lg">
+        <Text fontWeight="bold" fontSize="sm">
+          نوبت دهی این پزشک در پذیرش24 غیر فعال می باشد. شما میتوانید از پزشکان حاذق در این حوزه نوبت بگیرید.
+        </Text>
+      </Card>
+    ),
   },
   // Centers Info
   {

@@ -16,7 +16,7 @@ export const Turn: React.FC<TurnProps> = props => {
   const detailsData = useMemo(
     () =>
       turnDetailsData({
-        data: omit(turnDetails, ['respiteDeleteTurn']),
+        data: omit(turnDetails, ['respiteDeleteTurn', 'bookTimestamp', 'possibilityBeingVisited']),
         centerType,
         status,
         paymentStatus,
@@ -77,6 +77,7 @@ export const Turn: React.FC<TurnProps> = props => {
         activePaymentStatus={centerInfo.activePaymentStatus}
         respiteDeleteTurn={turnDetails.respiteDeleteTurn}
         notRefundable={turnDetails.notRefundable}
+        possibilityBeingVisited={turnDetails.possibilityBeingVisited}
       />
     </Card>
   );

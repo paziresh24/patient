@@ -3,7 +3,7 @@ import StatusIcon from '@/common/components/icons/status';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { renderToString } from 'react-dom/server';
-import { ServiceCard } from './card';
+import ServiceCard from '../../components/serviceCard';
 import ChannelDetailes, { Messenger } from './channelDetailes';
 
 interface OnlineVisitProps {
@@ -34,7 +34,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
       body={{
         description: [
           channels?.length && channelDetailes
-            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت در پیام رسان های:" />)
+            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
         ].filter(Boolean),

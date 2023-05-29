@@ -12,4 +12,6 @@ export enum ServerStateKeysEnum {
   SlugProfile = 'slugProfile',
   InternalLinks = 'internalLinks',
   Feedbacks = 'feedbacks',
+  ServerTime = 'serverTime',
+  AvailabilityNotification = 'availabilityNotification',
 }

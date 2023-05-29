@@ -7,6 +7,7 @@ import Loading from '@/components/atom/loading';
 import Skeleton from '@/components/atom/skeleton';
 import { Tab, Tabs } from '@/components/atom/tabs';
 
+import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -15,6 +16,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import useWebView from '@/common/hooks/useWebView';
+import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
@@ -38,7 +40,9 @@ export const Appointments = ({ query: queryServer }: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [type, setType] = useState<BookType>('book');
   const { handleOpenLoginModal } = useLoginModalContext();
+  const serverTime = useGetServerTime();
   const university = useServerQuery(state => state.queries.university);
+  const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
 
   const getBooks = useGetBooks({
     page,
@@ -164,6 +168,7 @@ export const Appointments = ({ query: queryServer }: any) => {
               }}
               turnDetails={{
                 bookTime: turn.book_time_string,
+                bookTimestamp: turn.from,
                 waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                 trackingCode: turn.ref_id,
                 centerName: turn.center?.name,
@@ -171,6 +176,7 @@ export const Appointments = ({ query: queryServer }: any) => {
                 description: turn.comment ?? '',
                 respiteDeleteTurn: turn.respite_to_refund_after_delete ?? '',
                 notRefundable: turn.payment_status === 'paid' && turn.refundable === 0,
+                possibilityBeingVisited: !isAfterPastDaysFromTimestamp({ numberDay: 3, currentTime, timestamp: turn.from }),
               }}
               location={{
                 lat: turn.center?.map?.lat,

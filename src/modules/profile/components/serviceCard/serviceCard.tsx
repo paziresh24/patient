@@ -59,3 +59,5 @@ export const ServiceCard = (props: ServiceCardProps) => {
     </Card>
   );
 };
+
+export default ServiceCard;

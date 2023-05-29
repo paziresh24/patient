@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 
 import Button from '@/common/components/atom/button/button';
-import Card from '@/common/components/atom/card/card';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import useModal from '@/common/hooks/useModal';
@@ -10,8 +9,9 @@ import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
 import { memo, useCallback, useState } from 'react';
+import Notification from '../../components/notification/notification';
+import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
-import { ServiceCard } from './card';
 const SelectService = dynamic(() => import('@/modules/booking/views/selectService'));
 const SelectCenter = dynamic(() => import('@/modules/booking/views/selectCenter'));
 
@@ -105,13 +105,13 @@ export const Presence = memo((props: PresenceProps) => {
 
   if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
     return (
-      <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        <Text fontWeight="bold">زمان نوبت دهی پزشک به پایان رسیده است!</Text>
-        <div className="flex flex-col p-4 space-y-1 border border-dashed rounded-lg border-slate-300">
-          <Text fontSize="sm">زمان باز شدن نوبت دهی اینترنتی:</Text>
-          <Text fontWeight="bold">{centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}</Text>
-        </div>
-      </Card>
+      <Notification
+        centerId={centers[0].id}
+        doctorName={displayName}
+        serviceId={centers[0].services[0].id}
+        userCenterId={centers[0].services[0].user_center_id}
+        availalbeTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
+      />
     );
   }
 
@@ -151,6 +151,7 @@ export const Presence = memo((props: PresenceProps) => {
         <div className="pl-2 overflow-auto max-h-96">
           <SelectCenter
             centers={reformattedCentersProperty({ centers, displayName })}
+            doctorName={displayName}
             onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
           />
         </div>
@@ -158,7 +159,9 @@ export const Presence = memo((props: PresenceProps) => {
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
         <div>
           <SelectService
+            center={selectedCenter}
             services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
+            doctorName={displayName}
             onSelect={handleOnBookByService}
           />
         </div>

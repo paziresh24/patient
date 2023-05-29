@@ -5,12 +5,13 @@ import { Center } from '../../types/selectCenter';
 
 export interface CenterProps {
   centers: Center[];
+  doctorName: string;
   onSelect: (center: Center) => void;
   loading?: boolean;
 }
 
 export const SelectCenter = (props: CenterProps) => {
-  const { centers, onSelect, loading = false } = props;
+  const { centers, onSelect, loading = false, doctorName } = props;
 
   const handleSelectCenter = (center: Center) => {
     onSelect(center);
@@ -28,7 +29,7 @@ export const SelectCenter = (props: CenterProps) => {
   return (
     <div className="flex flex-col space-y-2">
       {orderBy(centers, ['isDisable', o => !o.isAvailable]).map(center => (
-        <CenterCard key={center.id} {...center} onClick={handleSelectCenter} />
+        <CenterCard key={center.id} {...center} doctorName={doctorName} onClick={handleSelectCenter} />
       ))}
     </div>
   );
