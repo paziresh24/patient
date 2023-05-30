@@ -148,7 +148,7 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
           doctor: doctorInfo,
           rateDetails,
           serverId: info.server_id,
-          symptomes: info.symptomes.slice(0, 5),
+          symptomes: info.symptomes?.slice?.(0, 5) ?? [],
         };
       },
       children: (props: any) => <RateReview {...props} />,
