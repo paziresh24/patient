@@ -1,22 +1,27 @@
 import Button from '@/common/components/atom/button/button';
 import Card from '@/common/components/atom/card/card';
 import Text from '@/common/components/atom/text/text';
+import ChevronIcon from '@/common/components/icons/chevron';
 import { ReactNode } from 'react';
 
 interface ServiceCardProps {
   header?: {
     icon?: ReactNode;
     title: string;
-    hint?: string;
+    hint?: ReactNode;
   };
   body?: {
     description: Array<string | undefined>;
   };
   footer?: {
+    component?: ReactNode;
     actions?: {
       text: string;
       onClick: () => void;
       loading?: boolean;
+      hint?: string;
+      icon?: ReactNode;
+      className?: string;
     }[];
   };
 }
@@ -50,10 +55,24 @@ export const ServiceCard = (props: ServiceCardProps) => {
       {footer && (
         <div className="px-4">
           {footer.actions?.map((action, index) => (
-            <Button block key={index} loading={action.loading} onClick={action.onClick}>
-              {action.text}
+            <Button
+              block
+              key={index}
+              loading={action.loading}
+              {...(action.icon && { icon: action.icon })}
+              onClick={action.onClick}
+              className={action.className ?? ''}
+            >
+              <div className="flex items-center justify-between w-full">
+                <Text>{action.text}</Text>
+                <div className="flex items-center space-s-3">
+                  {action.hint && <Text>{action.hint}</Text>}
+                  <ChevronIcon dir="left" />
+                </div>
+              </div>
             </Button>
           ))}
+          {footer && footer.component}
         </div>
       )}
     </Card>

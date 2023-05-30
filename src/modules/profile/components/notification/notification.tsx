@@ -12,6 +12,7 @@ import BellCheckIcon from '@/common/components/icons/bellCheck';
 import EditIcon from '@/common/components/icons/edit';
 import InfoIcon from '@/common/components/icons/info';
 import useModal from '@/common/hooks/useModal';
+import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
 import classNames from '@/common/utils/classNames';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { phoneNumberWithZero } from '@/common/utils/phoneNumberWithZero';
@@ -109,7 +110,7 @@ export const Notification = (props: NotificationProps) => {
       return;
     }
 
-    if (userInfo.vip) return handleOpenSubmitModal();
+    if (checkPremiumUser(userInfo.vip)) return handleOpenSubmitModal();
     router.push('/patient/premium');
   };
 

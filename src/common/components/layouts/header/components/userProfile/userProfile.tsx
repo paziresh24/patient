@@ -19,6 +19,8 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
+import { getPremiumDuration } from '@/common/utils/getPremiumDuration';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
@@ -101,11 +103,18 @@ export const UserProfile = () => {
         (isLogin ? (
           <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
             <div className="flex items-center py-3 text-sm font-medium text-center cursor-pointer space-s-2 md:py-6 md:pl-4">
-              {userInfo?.image ? (
-                <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
-              ) : (
-                <UserCircle width="30" height="30" />
-              )}
+              <div className="relative">
+                {userInfo?.image ? (
+                  <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
+                ) : (
+                  <UserCircle width="30" height="30" />
+                )}
+                {checkPremiumUser(userInfo.vip) && (
+                  <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 border border-white rounded-full bg-amber-400">
+                    <DiamondIcon className="w-2 h-2 text-white" />
+                  </div>
+                )}
+              </div>
               <Text className="hidden sm:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
@@ -140,24 +149,34 @@ export const UserProfile = () => {
                 </div>
               </Link>
               <Divider />
-              <div className="flex flex-col p-3 py-0">
-                {userInfo.vip && (
+              <div className="flex flex-col px-0 py-0">
+                {checkPremiumUser(userInfo.vip) && (
                   <Link href="/patient/premium">
-                    <div className="flex flex-col my-2">
-                      <div className="flex items-center justify-center px-5 py-4 rounded-lg space-s-2 bg-amber-50">
-                        <DiamondIcon className="text-amber-500" />
-                        <Text fontSize="sm">شماره دارای اشتراک طلایی هستید.</Text>
+                    <div className="flex flex-col mt-2">
+                      <div className="flex items-center justify-center py-3 rounded-lg space-s-2 bg-amber-50">
+                        <DiamondIcon className="w-5 h-5 text-amber-500" />
+                        <Text fontSize="xs" className="text-black">
+                          شماره دارای اشتراک طلایی هستید.
+                        </Text>
+                      </div>
+                      <div className="flex self-center my-3 space-s-1">
+                        <Text fontSize="sm" className="opacity-80">
+                          مدت اعتبار:
+                        </Text>
+                        <Text fontSize="sm" fontWeight="medium">
+                          {getPremiumDuration(userInfo.vip)} روز
+                        </Text>
                       </div>
                     </div>
                   </Link>
                 )}
-                {!userInfo.vip && (
-                  <MenuList className="py-1">
+                {!checkPremiumUser(userInfo.vip) && (
+                  <MenuList className="px-3 py-1">
                     <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
                   </MenuList>
                 )}
                 <Divider />
-                <MenuList>
+                <MenuList className="px-3">
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
                       {item.badge}
@@ -165,7 +184,7 @@ export const UserProfile = () => {
                   ))}
                 </MenuList>
                 <Divider className="my-1" />
-                <MenuList>
+                <MenuList className="px-3">
                   {/* {customize.showSupport && (
                     <MenuItem
                       name={t('patient/common:menu.support')}

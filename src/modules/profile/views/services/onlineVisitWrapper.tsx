@@ -7,6 +7,7 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { CENTERS } from '@/common/types/centers';
+import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
@@ -51,6 +52,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const router = useRouter();
   const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
 
   const checkLogin = (callback: () => any) => {
@@ -119,6 +121,10 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
+        {...(isLogin &&
+          checkPremiumUser(userInfo.vip) && {
+            discountPercent: 30,
+          })}
       />
       <Modal
         title="انتخاب کاربر برای گفتگو با پزشک"
