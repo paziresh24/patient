@@ -1,8 +1,6 @@
 const Card = dynamic(() => import('@/common/components/atom/card'));
 import Button from '@/common/components/atom/button/button';
-import Text from '@/common/components/atom/text/text';
 import useResponsive from '@/common/hooks/useResponsive';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import useWebView from '@/common/hooks/useWebView';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
@@ -13,7 +11,6 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
-import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 const OnlineVisitWrapper = dynamic(() => import('./onlineVisitWrapper'));
 const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
 const Presence = dynamic(() => import('./presence'));
@@ -21,8 +18,6 @@ const External = dynamic(() => import('./external'));
 
 export const Services = ({ doctor, slug, className }: { doctor: any; slug: string; className?: string }) => {
   const router = useRouter();
-  const university = useServerQuery(state => state.queries.university);
-  const { recommendEvent } = useProfileSplunkEvent();
   const messengers = useFeatureValue<any>('channeldescription', {});
   const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
   const [servicesRef, inViewServices] = useInView({
@@ -77,27 +72,7 @@ export const Services = ({ doctor, slug, className }: { doctor: any; slug: strin
           />
         )}
       </div>
-      {doctor?.should_recommend_other_doctors && doctor.centers[0] && doctor?.expertises?.[0] && !university && (
-        <div className="flex flex-col space-y-3 md:hidden">
-          <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-            برترین پزشکان {doctor.expertises[0].expertise_groups[0].name} {doctor.centers[0].city ? `در ${doctor.centers[0].city}` : null}{' '}
-            <Text fontWeight="medium" fontSize="sm">
-              از دیدگاه بیماران
-            </Text>
-          </Text>
-          <Recommend
-            doctorId={doctor.id}
-            city={doctor.city_en_slug}
-            category={doctor.expertises[0]?.expertise_groups[0].en_slug}
-            className="pr-4 md:pr-0"
-            clickRecommendEvent={doctor => {
-              recommendEvent('clickrecommend', {
-                recommendations: doctor,
-              });
-            }}
-          />
-        </div>
-      )}
+
       {isMobile && !inViewServices && (
         <div
           className={classNames('fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100', {
