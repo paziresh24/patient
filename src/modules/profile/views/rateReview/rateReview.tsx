@@ -6,6 +6,7 @@ import Button from '@/common/components/atom/button/button';
 import Chips from '@/common/components/atom/chips/chips';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import DiamondIcon from '@/common/components/icons/diamond';
@@ -28,6 +29,7 @@ import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Details from '@/modules/rate/components/details/details';
 import Rate from '@/modules/rate/view/rate';
 import { getCookie } from 'cookies-next';
+import { range } from 'lodash';
 import compact from 'lodash/compact';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -62,7 +64,7 @@ interface RateReviewProps {
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails, className, symptomes } = props;
+  const { doctor, serverId, rateDetails, className, symptomes = [] } = props;
   const getDoctorTags = useGetDoctorTags();
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
@@ -408,7 +410,7 @@ export const RateReview = (props: RateReviewProps) => {
           </div>
         )}
       </div>
-      <div ref={rateRef} className="flex flex-col w-full p-4 space-y-4 bg-white/80">
+      <div ref={rateRef} className="flex flex-col w-full p-4 space-y-4 bg-white/50">
         <div className="flex flex-col w-full space-y-3">
           <div className="flex flex-col space-y-1">
             <div className="flex items-center space-s-1">
@@ -435,6 +437,8 @@ export const RateReview = (props: RateReviewProps) => {
                 </Text>
               </div>
               <div className="grid grid-cols-2 gap-2">
+                {(getDoctorTags.isLoading || getDoctorTags.isIdle) &&
+                  range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
                 {getDoctorTags.data?.data?.positive_tags?.map?.((tag: string) => (
                   <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={tag}>
                     <Text className="line-clamp-1">{tag}</Text>
@@ -483,6 +487,8 @@ export const RateReview = (props: RateReviewProps) => {
                 </Text>
               </div>
               <div className="grid grid-cols-2 gap-2">
+                {(getDoctorTags.isLoading || getDoctorTags.isIdle) &&
+                  range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
                 {getDoctorTags.data?.data?.negative_tags?.map?.((tag: string) => (
                   <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={tag}>
                     <Text className="line-clamp-1">{tag}</Text>
