@@ -492,24 +492,26 @@ export const RateReview = (props: RateReviewProps) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-full space-y-3">
-          <div className="flex flex-col space-y-1">
-            <div className="flex items-center space-s-1">
-              <DiamondIcon className="text-amber-500" />
-              <Text fontWeight="bold">دلایل مراجعه سایر بیماران به پزشک</Text>
+        {symptomes?.length > 0 && (
+          <div className="flex flex-col w-full space-y-3">
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center space-s-1">
+                <DiamondIcon className="text-amber-500" />
+                <Text fontWeight="bold">دلایل مراجعه سایر بیماران به پزشک</Text>
+              </div>
+              <Text fontSize="sm" className="opacity-75">
+                سایر بیماران به دلایل زیر به این پزشک مراجعه کرده اند.
+              </Text>
             </div>
-            <Text fontSize="sm" className="opacity-75">
-              سایر بیماران به دلایل زیر به این پزشک مراجعه کرده اند.
-            </Text>
+            <div className="grid grid-cols-2 gap-2 p-4 bg-white border rounded-lg shadow-lg shadow-slate-400/20 border-slate-100">
+              {symptomes?.map?.(symptom => (
+                <Chips className="py-1 !whitespace-normal border border-primary/20 bg-primary/5 text-primary" key={symptom}>
+                  <Text className="line-clamp-1">{symptom}</Text>
+                </Chips>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 p-4 bg-white border rounded-lg shadow-lg shadow-slate-400/20 border-slate-100">
-            {symptomes?.map(symptom => (
-              <Chips className="py-1 !whitespace-normal border border-primary/20 bg-primary/5 text-primary" key={symptom}>
-                <Text className="line-clamp-1">{symptom}</Text>
-              </Chips>
-            ))}
-          </div>
-        </div>
+        )}
       </div>
       <div className={classNames('w-full bg-white', className)}>
         <Rate
