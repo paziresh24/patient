@@ -186,7 +186,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
         }}
         host={host}
       />
-      <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
             pageViewCount={profileData?.number_of_visits}

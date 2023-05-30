@@ -19,7 +19,7 @@ const Recommend = dynamic(() => import('@/modules/booking/components/recommend')
 const Presence = dynamic(() => import('./presence'));
 const External = dynamic(() => import('./external'));
 
-export const Services = ({ doctor, slug }: { doctor: any; slug: string; className?: string }) => {
+export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   const router = useRouter();
   const university = useServerQuery(state => state.queries.university);
   const { recommendEvent } = useProfileSplunkEvent();
