@@ -14,4 +14,5 @@ export enum ServerStateKeysEnum {
   Feedbacks = 'feedbacks',
   ServerTime = 'serverTime',
   AvailabilityNotification = 'availabilityNotification',
+  InquiryPayment = 'inquiryPayment',
 }
