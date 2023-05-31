@@ -3,6 +3,7 @@ import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useApplication from '@/common/hooks/useApplication';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
@@ -46,6 +47,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const { profileEvent } = useProfileSplunkEvent();
   const freeTurn = useGetFreeTurn();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const [timeId, setTimeId] = useState('');
   const { handleBook: handleBooking, isLoading } = useBooking();
   const router = useRouter();
@@ -65,7 +67,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     const { data } = await freeTurn.mutateAsync({
       center_id: CENTERS.CONSULT,
       service_id: id,
-      type: isWebView ? 'app' : 'web',
+      type: isWebView || isApplication ? 'app' : 'web',
       user_center_id: userCenterId,
     });
 
