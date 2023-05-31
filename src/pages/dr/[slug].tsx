@@ -11,11 +11,13 @@ import InfoIcon from '@/common/components/icons/info';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
+import classNames from '@/common/utils/classNames';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
@@ -52,6 +54,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
   const userInfo = useUserInfoStore(state => state.info);
   const { recommendEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const [editable, setEditable] = useState(false);
   const profile = useGetProfileData(
     { slug, ...(university && { university }) },
@@ -73,7 +76,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
       pageViewEvent({
         doctor: profileData,
         isBulk,
-        isWebView: !!isWebView,
+        isWebView: !!isWebView || !!isApplication,
       });
       addPageView.mutate({
         doctorId: profileData.id,
@@ -106,11 +109,6 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
       });
     }
   }, [userInfo.is_doctor, slug]);
-
-  useEffect(() => {
-    // Prefetch the booking page
-    router.prefetch('/booking/[slug]');
-  }, []);
 
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle: title, editable });
 
@@ -155,7 +153,11 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
 
   return (
     <>
-      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div
+        className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
+          'pb-24': isApplication,
+        })}
+      >
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
             <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">

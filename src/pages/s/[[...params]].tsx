@@ -67,11 +67,6 @@ const Search = ({ host }: any) => {
     });
   }, [asPath]);
 
-  useEffect(() => {
-    // Prefetch the doctor profile page
-    router.prefetch('/dr/[slug]');
-  }, []);
-
   return (
     <>
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />

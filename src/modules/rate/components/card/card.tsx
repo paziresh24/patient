@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text/text';
 import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import classNames from '@/common/utils/classNames';
 import { CardProps } from '@/modules/rate/type/card';
+import Image from 'next/image';
 
 export const Card = (props: CardProps) => {
   const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
@@ -13,7 +14,7 @@ export const Card = (props: CardProps) => {
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
         <div className="flex justify-between w-full">
           <div className="flex items-center">
-            <Avatar src={avatar} name={name} width={details?.length ? 55 : 40} height={details?.length ? 55 : 40} />
+            <Avatar as={Image} src={avatar} name={name} width={details?.length ? 55 : 40} height={details?.length ? 55 : 40} />
             <div className="mr-2 space-y-2">
               <div className="flex items-center space-s-1">
                 <Text fontWeight="bold" fontSize="sm">

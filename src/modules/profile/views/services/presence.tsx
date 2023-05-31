@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Button from '@/common/components/atom/button/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
+import useApplication from '@/common/hooks/useApplication';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
@@ -25,6 +26,7 @@ interface PresenceProps {
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
@@ -75,7 +77,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status && !isWebView) {
+    if (center.is_only_in_app.status && !isWebView && !isApplication) {
       handleOpenSelectDownloadAppModal();
       return;
     }
@@ -148,23 +150,28 @@ export const Presence = memo((props: PresenceProps) => {
         }}
       />
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
-        <div className="pl-2 overflow-auto max-h-96">
-          <SelectCenter
-            centers={reformattedCentersProperty({ centers, displayName })}
-            doctorName={displayName}
-            onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
-          />
-        </div>
+        {selectCenterModalProps.isOpen && (
+          <div className="pl-2 overflow-auto max-h-96">
+            <SelectCenter
+              centers={reformattedCentersProperty({ centers, displayName })}
+              doctorName={displayName}
+              onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
+            />
+          </div>
+        )}
       </Modal>
+
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
-        <div>
-          <SelectService
-            center={selectedCenter}
-            services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
-            doctorName={displayName}
-            onSelect={handleOnBookByService}
-          />
-        </div>
+        {selectServiceModalProps.isOpen && (
+          <div>
+            <SelectService
+              center={selectedCenter}
+              services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
+              doctorName={displayName}
+              onSelect={handleOnBookByService}
+            />
+          </div>
+        )}
       </Modal>
       <Modal title="نوبت دهی اینترنتی و حضوری (غیرفعال)" {...externalBookingModalProps} bodyClassName="space-y-3">
         <Text fontWeight="medium" className="leading-7">

@@ -127,11 +127,13 @@ const Factor = () => {
                 )}
                 {getBookDetails.isSuccess && bookDetailsData && (
                   <Text fontSize="sm" fontWeight="medium">
-                    {`${convertTime(bookDetailsData?.book_time_string)}
-              ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('DD MMMM')}
-                ساعت
-                 ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('HH:mm')}
-            `}
+                    {`${moment
+                      .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+                      ?.locale('fa')
+                      ?.format('DD MMMM')} ساعت ${moment
+                      .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+                      ?.locale('fa')
+                      ?.format('HH:mm')}`}
                   </Text>
                 )}
               </div>
