@@ -36,7 +36,7 @@ export const SelectService = (props: SelectServiceProps) => {
           })}
         >
           <div className="flex items-center justify-between p-3">
-            <Text fontWeight="semiBold" fontSize="sm" className="line-clamp-1">
+            <Text fontWeight="semiBold" fontSize="sm" className="line-clamp-2">
               {service.name}
             </Text>
             <ChevronIcon dir="left" className="min-w-2" />
