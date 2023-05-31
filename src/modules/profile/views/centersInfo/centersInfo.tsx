@@ -8,7 +8,7 @@ import { openGoogleMap } from '@/common/utils/openGoogleMap';
 import isEmpty from 'lodash/isEmpty';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 
 interface CentersInfoProps {
@@ -30,7 +30,7 @@ interface CentersInfoProps {
   onEventAddress?: (centerId: string) => void;
 }
 
-export const CentersInfo = (props: CentersInfoProps) => {
+export const CentersInfo = memo((props: CentersInfoProps) => {
   const { centers, className, onEventPhoneNumber, onEventAddress } = props;
 
   const DescriptionWrapper = ({ children, length }: { children: ReactNode; length: number }) => {
@@ -50,7 +50,7 @@ export const CentersInfo = (props: CentersInfoProps) => {
         <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
           {center.name && (
             <div className="flex justify-between">
-              <Link href={center.slug} scroll>
+              <Link href={center.slug} scroll prefetch={false}>
                 <Text fontWeight="bold">{center.name}</Text>
               </Link>
             </div>
@@ -125,6 +125,6 @@ export const CentersInfo = (props: CentersInfoProps) => {
       ))}
     </div>
   );
-};
+});
 
 export default CentersInfo;

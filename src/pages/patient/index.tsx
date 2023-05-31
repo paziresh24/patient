@@ -49,7 +49,7 @@ export const PatinetProfile = () => {
 
       <div>
         <Link href="/patient/profile?referrer=profile">
-          <div className="flex items-center p-5 bg-white border-t shadow-sm space-s-5 border-slate-200">
+          <div className="flex items-center p-5 bg-white shadow-sm space-s-5">
             <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
             <div className="flex flex-col space-y-2">
               {loginPending ? (

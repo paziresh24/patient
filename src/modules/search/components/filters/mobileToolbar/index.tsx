@@ -26,11 +26,11 @@ export const MobileToolbar = () => {
 
   const { filters } = useFilterChange();
 
-  const orderItemsFormmated = useMemo(() => {
+  const orderItemsFormatted = useMemo(() => {
     return Object.entries(orderItems).map(([value, label]: any) => ({ title: label, value }));
   }, [orderItems]);
 
-  const freeturnItemsFormmated = useMemo(() => {
+  const freeturnItemsFormatted = useMemo(() => {
     return Object.entries(freeturnItems).map(([value, label]: any) => ({ title: label, value }));
   }, [orderItems]);
 
@@ -139,8 +139,8 @@ export const MobileToolbar = () => {
           onClick={handleOpenSortsModal}
         >
           مرتب سازی:{' '}
-          {orderItemsFormmated.find(item => item.value === filters['sortBy'])?.title ??
-            orderItemsFormmated.find(item => item.value === 'clinic')?.title}
+          {orderItemsFormatted.find(item => item.value === filters['sortBy'])?.title ??
+            orderItemsFormatted.find(item => item.value === 'clinic')?.title}
         </Chips>
         <Chips
           className="py-2 !rounded-md !text-black flex justify-center items-center"
@@ -170,8 +170,8 @@ export const MobileToolbar = () => {
           onClick={handleOpenFreeturnModal}
         >
           نزدیک ترین نوبت:{' '}
-          {freeturnItemsFormmated.find(item => item.value === filters['freeturn'])?.title ??
-            freeturnItemsFormmated.find(item => item.value === 'all')?.title}
+          {freeturnItemsFormatted.find(item => item.value === filters['freeturn'])?.title ??
+            freeturnItemsFormatted.find(item => item.value === 'all')?.title}
         </Chips>
       </div>
       <Modal fullScreen title="فیلترها" {...filtersModalProps}>
@@ -202,10 +202,10 @@ export const MobileToolbar = () => {
         </div>
       </Modal>
       <Modal title="مرتب سازی" {...sortsModalProps}>
-        <RadioFilter items={orderItemsFormmated} name="sortBy" onChange={handleCloseSortsModal} />
+        <RadioFilter items={orderItemsFormatted} name="sortBy" onChange={handleCloseSortsModal} />
       </Modal>
       <Modal title="نزدیک ترین نوبت" {...freeturnModalProps}>
-        <RadioFilter items={freeturnItemsFormmated} name="freeturn" onChange={handleCloseFreeturnModal} />
+        <RadioFilter items={freeturnItemsFormatted} name="freeturn" onChange={handleCloseFreeturnModal} />
       </Modal>
     </>
   );
