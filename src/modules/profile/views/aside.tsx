@@ -6,11 +6,11 @@ import { CENTERS } from '@/common/types/centers';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import CentersInfo from './centersInfo';
+import Services from './services';
 
-const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
-const CentersInfo = dynamic(() => import('./centersInfo'));
-const Services = dynamic(() => import('./services'));
 const BulkService = dynamic(() => import('./services/bulk'));
+const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
 
 export const aside = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) => [
   // Bulk

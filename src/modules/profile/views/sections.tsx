@@ -1,3 +1,4 @@
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import config from 'next/config';
@@ -8,11 +9,31 @@ const { publicRuntimeConfig } = config();
 const AwardIcon = dynamic(() => import('@/common/components/icons/award'));
 const ChatIcon = dynamic(() => import('@/common/components/icons/chat'));
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const Activity = dynamic(() => import('./activity'));
-const Biography = dynamic(() => import('./biography'));
-const OwnPage = dynamic(() => import('./ownPage'));
-const Gallery = dynamic(() => import('./gallery'));
-const RateReview = dynamic(() => import('./rateReview'));
+const Activity = dynamic(() => import('./activity'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="8rem" rounded="lg" />;
+  },
+});
+const Biography = dynamic(() => import('./biography'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="16rem" rounded="lg" />;
+  },
+});
+const OwnPage = dynamic(() => import('./ownPage'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="8rem" rounded="lg" />;
+  },
+});
+const Gallery = dynamic(() => import('./gallery'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="8rem" rounded="lg" />;
+  },
+});
+const RateReview = dynamic(() => import('./rateReview'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="30rem" rounded="lg" />;
+  },
+});
 const ProfileSeoBox = dynamic(() => import('./seoBox'));
 
 export const sections = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) =>
