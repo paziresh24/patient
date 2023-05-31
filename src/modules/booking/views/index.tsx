@@ -50,6 +50,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useServerQuery from '@/common/hooks/useServerQuery';
@@ -102,6 +103,7 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
+  const isApplication = useApplication();
   const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
   const { data, isLoading } = useGetProfileData(
@@ -208,6 +210,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
+            if (isApplication) return window.open(`${data?.payment?.redirect_url}`);
             location.replace(`${data?.payment?.redirect_url}`);
             return;
           }

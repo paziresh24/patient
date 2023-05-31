@@ -1,6 +1,7 @@
 import { useCenterPayment } from '@/common/apis/services/factor/centerPayment';
 import { useConsultPayment } from '@/common/apis/services/factor/consultPayment';
 import Button from '@/common/components/atom/button/button';
+import useApplication from '@/common/hooks/useApplication';
 import { CENTERS } from '@/common/types/centers';
 import getConfig from 'next/config';
 import { toast } from 'react-hot-toast';
@@ -19,6 +20,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const { bookId, centerId, respiteToRefundAfterDelete } = props;
   const centerPayment = useCenterPayment();
   const consultPayment = useConsultPayment();
+  const isApplication = useApplication();
 
   const { isLoading, ...invoice } = useInvoice({
     bookId,
@@ -34,6 +36,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         book_id: bookId,
         ...(discountToken && { discount_token: discountToken }),
       });
+      if (isApplication) {
+        window.open(data.url);
+        return;
+      }
       if (data.status) {
         location.assign(data.url);
         return;
