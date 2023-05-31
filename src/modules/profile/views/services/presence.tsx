@@ -148,20 +148,25 @@ export const Presence = memo((props: PresenceProps) => {
         }}
       />
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
-        <div className="pl-2 overflow-auto max-h-96">
-          <SelectCenter
-            centers={reformattedCentersProperty({ centers, displayName })}
-            onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
-          />
-        </div>
+        {selectCenterModalProps.isOpen && (
+          <div className="pl-2 overflow-auto max-h-96">
+            <SelectCenter
+              centers={reformattedCentersProperty({ centers, displayName })}
+              onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
+            />
+          </div>
+        )}
       </Modal>
+
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
-        <div>
-          <SelectService
-            services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
-            onSelect={handleOnBookByService}
-          />
-        </div>
+        {selectServiceModalProps.isOpen && (
+          <div>
+            <SelectService
+              services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
+              onSelect={handleOnBookByService}
+            />
+          </div>
+        )}
       </Modal>
       <Modal title="نوبت دهی اینترنتی و حضوری (غیرفعال)" {...externalBookingModalProps} bodyClassName="space-y-3">
         <Text fontWeight="medium" className="leading-7">
