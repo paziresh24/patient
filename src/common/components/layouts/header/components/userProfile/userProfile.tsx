@@ -19,6 +19,7 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
 import { getPremiumDuration } from '@/common/utils/getPremiumDuration';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -172,7 +173,17 @@ export const UserProfile = () => {
                 )}
                 {!checkPremiumUser(userInfo.vip) && (
                   <MenuList className="px-3 py-1">
-                    <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
+                    <MenuItem
+                      name="اشتراک طلایی"
+                      onClick={() => {
+                        splunkInstance().sendEvent({
+                          group: 'bamdad',
+                          type: 'patient_profile_button',
+                        });
+                      }}
+                      link="/patient/premium"
+                      icon={<DiamondIcon className="text-amber-500" />}
+                    />
                   </MenuList>
                 )}
                 <Divider />

@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
+import SupportButtonBamdad from '../../bamdad/suppoortButton';
 import HeaderLogo from './components/logo/logo';
 import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
 const ButtonSuggestion = dynamic(() => import('@/modules/search/view/suggestion/button'));
@@ -124,6 +125,7 @@ const Header = (props: HeaderProps) => {
             </nav>
           )}
           <div className="flex items-center space-s-4">
+            <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {customize.showUserProfile && <UserProfile />}
           </div>

@@ -9,13 +9,12 @@ import { Service } from '../../types/selectService';
 export interface SelectServiceProps {
   services: Service[];
   loading?: boolean;
-  doctorName: string;
   onSelect: (service: Service) => void;
   center: Center;
 }
 
 export const SelectService = (props: SelectServiceProps) => {
-  const { services, onSelect, loading = false, doctorName, center } = props;
+  const { services, onSelect, loading = false, center } = props;
   const handleSelectService = (service: Service) => {
     if (service.isDisable || !service.isAvailable) return;
     onSelect(service);
@@ -48,7 +47,6 @@ export const SelectService = (props: SelectServiceProps) => {
           {!service.isAvailable && service.availableTime && (
             <Notification
               centerId={center.id ?? ''}
-              doctorName={doctorName}
               serviceId={service.id}
               userCenterId={service.userCenterId ?? ''}
               availalbeTime={service.availableTime ?? ''}

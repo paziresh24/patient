@@ -14,6 +14,7 @@ import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import messengers from '@/modules/profile/constants/messengers.json';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import without from 'lodash/without';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -54,6 +55,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const discountPercentage = useFeatureValue('premium.online_visit_discount_percentage', 0);
 
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
@@ -121,10 +123,8 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
-        {...(isLogin &&
-          checkPremiumUser(userInfo.vip) && {
-            discountPercent: 30,
-          })}
+        {...(discountPercentage && { discountPercent: discountPercentage })}
+        isPremium={isLogin && checkPremiumUser(userInfo.vip)}
       />
       <Modal
         title="انتخاب کاربر برای گفتگو با پزشک"

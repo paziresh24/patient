@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
+import SupportButtonBamdad from '@/common/components/bamdad/suppoortButton';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import ButtonSuggestion from '@/modules/search/view/suggestion/button';
@@ -90,6 +91,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
         </div>
 
         <div className="flex items-center space-s-3">
+          <SupportButtonBamdad />
           {showSearchSuggestionButton && <ButtonSuggestion />}
           {customize.showUserProfile && <UserProfile />}
         </div>
