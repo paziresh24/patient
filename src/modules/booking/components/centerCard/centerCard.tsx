@@ -11,12 +11,11 @@ import PhoneNumberList from '../phoneNumberList/phoneNumberList';
 
 interface CenterCardProps extends Center {
   onClick: (center: Center) => void;
-  doctorName: string;
 }
 
 export const CenterCard = (props: CenterCardProps) => {
   const { onClick, ...center } = props;
-  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true, doctorName } = center;
+  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true } = center;
 
   return (
     <>
@@ -75,7 +74,6 @@ export const CenterCard = (props: CenterCardProps) => {
             <Divider />
             <Notification
               centerId={center.id}
-              doctorName={doctorName}
               serviceId={center.services[0].id}
               userCenterId={center.services[0].user_center_id}
               availalbeTime={availableTime}

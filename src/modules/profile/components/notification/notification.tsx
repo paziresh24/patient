@@ -12,10 +12,12 @@ import BellCheckIcon from '@/common/components/icons/bellCheck';
 import EditIcon from '@/common/components/icons/edit';
 import InfoIcon from '@/common/components/icons/info';
 import useModal from '@/common/hooks/useModal';
-import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { phoneNumberWithZero } from '@/common/utils/phoneNumberWithZero';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
@@ -26,14 +28,13 @@ interface NotificationProps {
   centerId: string;
   serviceId: string;
   userCenterId: string;
-  doctorName: string;
   availalbeTime: string;
   className?: string;
 }
 
 export const Notification = (props: NotificationProps) => {
   const router = useRouter();
-  const { centerId, doctorName, serviceId, userCenterId, availalbeTime, className } = props;
+  const { centerId, serviceId, userCenterId, availalbeTime, className } = props;
 
   const { handleOpen: handleOpenSubmitModal, handleClose: handleCloseSubmitModal, modalProps: submitModalProps } = useModal();
   const { handleOpen: handleOpenCancelModal, handleClose: handleCloseCancelModal, modalProps: cancelModalProps } = useModal();
@@ -42,6 +43,7 @@ export const Notification = (props: NotificationProps) => {
   const [isLogin, loginPending] = useUserInfoStore(state => [state.isLogin, state.pending]);
   const { handleOpenLoginModal } = useLoginModalContext();
   const phoneNumberField = useRef<HTMLInputElement | null>(null);
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const exists = useExistsAvailabilityNotification(
     {
@@ -77,6 +79,16 @@ export const Notification = (props: NotificationProps) => {
         cell: phoneNumberWithZero(phoneNumberField.current.value),
       });
       setIsExists(true);
+      splunkInstance().sendEvent({
+        group: 'bamdad',
+        type: 'notify-me',
+        event: {
+          center_id: centerId,
+          service_id: serviceId,
+          user_center_id: userCenterId,
+          availalbe_time: availalbeTime,
+        },
+      });
       handleCloseSubmitModal();
     } catch (error) {
       if (axios.isAxiosError(error)) return toast.error(error.response?.data?.message);
@@ -101,9 +113,9 @@ export const Notification = (props: NotificationProps) => {
     if (!isLogin) {
       handleOpenLoginModal({
         state: true,
-        postLogin: () => {
+        postLogin: user => {
+          if (!checkPremiumUser(user.vip)) return router.push('/patient/premium');
           exists.refetch();
-          handleOpenSubmitModal();
         },
       });
 
@@ -127,10 +139,13 @@ export const Notification = (props: NotificationProps) => {
             {availalbeTime}
           </Text>
         </div>
-        {((exists.isLoading && isLogin) || loginPending) && <Loading className="self-center w-8 h-5 fill-slate-400" />}
-        {((exists.isSuccess && !isExists) || (!isLogin && !loginPending)) && (
+
+        {isShowPremiumFeatures && ((exists.isLoading && isLogin) || loginPending) && (
+          <Loading className="self-center w-8 h-5 fill-slate-400" />
+        )}
+        {isShowPremiumFeatures && ((exists.isSuccess && !isExists) || (!isLogin && !loginPending)) && (
           <Button onClick={handleClickOpenSubmmitModal} icon={<BellIcon />}>
-            اعلام نوبت های جدید را به من اطلاع بده
+            نوبت دار شد، به من اطلاع بده
           </Button>
         )}
         {exists.isSuccess && isExists && (
@@ -138,7 +153,7 @@ export const Notification = (props: NotificationProps) => {
             <div className="flex items-center p-3 rounded-md rounded-b-none bg-teal-100/40 space-s-1">
               <BellCheckIcon className="w-6 h-6 text-emerald-500" />
               <Text fontSize="sm" fontWeight="medium" className="text-emerald-500">
-                باز شدن نوبت های جدید به شما اطلاع داده می شود.
+                با فعال شدن امکان نوبت دهی، به شما اطلاع رسانی خواهد شد.
               </Text>
             </div>
             <div className="flex items-center p-3 rounded-md rounded-t-none bg-teal-100/40 space-s-1">
@@ -150,14 +165,14 @@ export const Notification = (props: NotificationProps) => {
           </div>
         )}
       </Card>
-      <Modal {...submitModalProps} title="اطلاع رسانی اعلام نوبت های جدید">
+      <Modal {...submitModalProps} title="اطلاع رسانی امکان دریافت نوبت">
         <div className="flex flex-col space-y-3">
           <Text fontWeight="medium" fontSize="sm" className="leading-6">
-            آیا تمایل دارید باز شدن نوبت های <b className="mx-1 text-primary">{doctorName}</b> از طریق پیامک به شما اطلاع داده شود؟
+            به چه شماره موبایلی اطلاع رسانی شود؟
           </Text>
           <div className="flex items-center justify-between p-3 border border-blue-400 rounded-lg bg-blue-300/10">
             <Text fontSize="sm" fontWeight="medium">
-              اطلاع رسانی به شماره:
+              شماره موبایل:
             </Text>
             <div className="flex items-center space-s-1">
               <input
@@ -166,7 +181,7 @@ export const Notification = (props: NotificationProps) => {
                 dir="ltr"
                 className="w-auto h-5 text-sm text-left bg-transparent outline-none appearance-none"
               />
-              <EditIcon className="w-5 h-5" />
+              <EditIcon className="w-5 h-5 cursor-pointer" onClick={() => phoneNumberField.current?.focus()} />
             </div>
           </div>
           <Button block onClick={handleSubmit} loading={submit.isLoading}>
@@ -177,7 +192,7 @@ export const Notification = (props: NotificationProps) => {
       <Modal {...cancelModalProps} title="لغو اطلاع رسانی">
         <div className="flex flex-col space-y-2">
           <Text fontWeight="medium" fontSize="sm" className="leading-6">
-            آیا تمایل دارید اطلاع رسانی باز شدن نوبت های <b className="mx-1 text-primary">{doctorName}</b> لغو شود؟
+            آیا تمایل دارید اطلاع رسانی امکان دریافت نوبت لغو شود؟
           </Text>
           <div className="flex space-s-2">
             <Button theme="error" variant="secondary" block onClick={handleCancel} loading={cancel.isLoading}>

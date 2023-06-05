@@ -19,8 +19,9 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
-import { getPremiumDuration } from '@/common/utils/getPremiumDuration';
+import CreditDuration from '@/modules/bamdad/components/creditDuration';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
@@ -49,6 +50,7 @@ export const UserProfile = () => {
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
   const { handleOpen, handleClose, modalProps } = useModal();
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -150,32 +152,14 @@ export const UserProfile = () => {
               </Link>
               <Divider />
               <div className="flex flex-col px-0 py-0">
-                {checkPremiumUser(userInfo.vip) && (
-                  <Link href="/patient/premium">
-                    <div className="flex flex-col mt-2">
-                      <div className="flex items-center justify-center py-3 rounded-lg space-s-2 bg-amber-50">
-                        <DiamondIcon className="w-5 h-5 text-amber-500" />
-                        <Text fontSize="xs" className="text-black">
-                          شماره دارای اشتراک طلایی هستید.
-                        </Text>
-                      </div>
-                      <div className="flex self-center my-3 space-s-1">
-                        <Text fontSize="sm" className="opacity-80">
-                          مدت اعتبار:
-                        </Text>
-                        <Text fontSize="sm" fontWeight="medium">
-                          {getPremiumDuration(userInfo.vip)} روز
-                        </Text>
-                      </div>
+                {isShowPremiumFeatures && (
+                  <>
+                    <div className="px-3 py-4">
+                      <CreditDuration />
                     </div>
-                  </Link>
+                    <Divider />
+                  </>
                 )}
-                {!checkPremiumUser(userInfo.vip) && (
-                  <MenuList className="px-3 py-1">
-                    <MenuItem name="اشتراک طلایی" link="/patient/premium" icon={<DiamondIcon className="text-amber-500" />} />
-                  </MenuList>
-                )}
-                <Divider />
                 <MenuList className="px-3">
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>

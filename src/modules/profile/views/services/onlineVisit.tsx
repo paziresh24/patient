@@ -1,8 +1,9 @@
-import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import PhoneIcon from '@/common/components/icons/phone';
 import StatusIcon from '@/common/components/icons/status';
+import { splunkInstance } from '@/common/services/splunk';
+import GoldButton from '@/modules/bamdad/components/goldButton';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { useRouter } from 'next/router';
@@ -17,6 +18,7 @@ interface OnlineVisitProps {
   onBook: () => void;
   loading?: boolean;
   discountPercent?: number;
+  isPremium?: boolean;
 }
 
 type channelType = {
@@ -24,7 +26,7 @@ type channelType = {
 };
 
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { title, channels, price, duration, onBook, loading, discountPercent } = props;
+  const { title, channels, price, duration, onBook, loading, discountPercent, isPremium } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
   const router = useRouter();
@@ -36,9 +38,9 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
         ...(price && {
           hint: (
             <div className="flex items-center space-s-2">
-              {discountPercent && (
+              {isPremium && (
                 <div className="relative flex items-center justify-center">
-                  <Text className="absolute text-white right-2">%30</Text>
+                  <Text className="absolute text-white right-2">%{discountPercent}</Text>
                   <svg width="46" height="24" viewBox="0 0 46 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="path-1-inside-1_2819_35812" fill="white">
                       <path d="M0.768746 4.99881C-0.958341 3.0658 0.413706 0 3.00588 0H42.4638C44.1207 0 45.4638 1.34315 45.4638 3V21C45.4638 22.6569 44.1207 24 42.4638 24H3.00587C0.413701 24 -0.958341 20.9342 0.768746 19.0012L5.23822 13.9988C6.25538 12.8604 6.25538 11.1396 5.23822 10.0012L0.768746 4.99881Z" />
@@ -55,7 +57,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
                   </svg>
                 </div>
               )}
-              <Text as="del" className={discountPercent ? 'text-red-500' : 'text-transparent'}>
+              <Text as="del" className={isPremium ? 'text-red-500' : 'text-transparent'}>
                 <Text className="text-slate-900" fontWeight="bold">
                   {addCommas(price / 10)} تومان
                 </Text>
@@ -73,33 +75,37 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
         ].filter(Boolean),
       }}
       footer={{
-        ...(!discountPercent && {
-          component: (
-            <div className="flex flex-col items-center mt-3 space-y-2 bg-white">
-              <div className="w-full p-3 text-center rounded-lg bg-amber-50">
-                <Text fontSize="sm" fontWeight="medium">
-                  شما می توانید با فعال سازی اشتراک ماهانه طلایی، از تخفیف 30% نامحدود در ویزیت های آنلاین استفاده کنید.
-                </Text>
+        ...(!isPremium &&
+          discountPercent && {
+            component: (
+              <div className="flex flex-col items-center mt-3 space-y-2 bg-white">
+                <div className="w-full p-3 text-center rounded-lg bg-amber-50">
+                  <Text fontSize="sm" fontWeight="medium">
+                    شما می توانید با فعال سازی اشتراک ماهانه طلایی، از تخفیف {discountPercent}% نامحدود در ویزیت های آنلاین استفاده کنید.
+                  </Text>
+                </div>
+                <GoldButton
+                  onClick={() => {
+                    splunkInstance().sendEvent({
+                      group: 'bamdad',
+                      type: 'doc_profile_button',
+                    });
+                    router.push('/patient/premium');
+                  }}
+                >
+                  مشاهده اشتراک طلایی
+                </GoldButton>
               </div>
-              <Button
-                onClick={() => router.push('/patient/premium')}
-                variant="secondary"
-                icon={<DiamondIcon className="text-yellow-600" />}
-                className="text-yellow-600 border-yellow-500 shadow-md shadow-amber-700/10 hover:bg-amber-50/50"
-              >
-                مشاهده اشتراک طلایی
-              </Button>
-            </div>
-          ),
-        }),
+            ),
+          }),
         actions: [
           {
             text: 'رزرو گفتگو',
             onClick: onBook,
             loading: loading,
-            ...(discountPercent && { className: '!shadow-amber-500/20 shadow-lg hover:shadow-xl transition-all ' }),
-            ...(discountPercent && { icon: <DiamondIcon /> }),
-            ...(price && discountPercent && { hint: `${addCommas((price - (price * discountPercent) / 100) / 10)} تومان` }),
+            ...(isPremium && { className: '!shadow-amber-500/20 shadow-lg hover:shadow-xl transition-all ' }),
+            ...(isPremium && { icon: <DiamondIcon /> }),
+            ...(price && isPremium && discountPercent && { hint: `${addCommas((price - (price * discountPercent) / 100) / 10)} تومان` }),
           },
         ],
       }}

@@ -31,9 +31,9 @@ export const LoginModal = () => {
       <LoginForm
         title={loginModalState.title}
         description={loginModalState.description}
-        postLogin={() => {
+        postLogin={userInfo => {
           handleOpenLoginModal({ state: false });
-          loginModalState.postLogin && loginModalState.postLogin();
+          loginModalState.postLogin && loginModalState.postLogin(userInfo);
         }}
       />
     </Modal>

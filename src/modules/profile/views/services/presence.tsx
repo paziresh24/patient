@@ -109,7 +109,6 @@ export const Presence = memo((props: PresenceProps) => {
     return (
       <Notification
         centerId={centers[0].id}
-        doctorName={displayName}
         serviceId={centers[0].services[0].id}
         userCenterId={centers[0].services[0].user_center_id}
         availalbeTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
@@ -154,7 +153,6 @@ export const Presence = memo((props: PresenceProps) => {
           <div className="pl-2 overflow-auto max-h-96">
             <SelectCenter
               centers={reformattedCentersProperty({ centers, displayName })}
-              doctorName={displayName}
               onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
             />
           </div>
@@ -167,7 +165,6 @@ export const Presence = memo((props: PresenceProps) => {
             <SelectService
               center={selectedCenter}
               services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
-              doctorName={displayName}
               onSelect={handleOnBookByService}
             />
           </div>
