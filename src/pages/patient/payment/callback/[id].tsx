@@ -10,8 +10,9 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
+import { splunkInstance } from '@/common/services/splunk';
 import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
-import { getPremiumDuration } from '@/common/utils/getPremiumDuration';
+import { getPremiumDuration } from '@/modules/bamdad/utils/getPremiumDuration';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -31,7 +32,13 @@ export const Premium = () => {
   const isSuccess = inquiry.data?.data?.success;
 
   useEffect(() => {
-    if (isSuccess) setFire(Math.random());
+    if (isSuccess) {
+      setFire(Math.random());
+      splunkInstance().sendEvent({
+        group: 'bamdad',
+        type: 'after_buy',
+      });
+    }
   }, [isSuccess]);
 
   return (
@@ -54,9 +61,9 @@ export const Premium = () => {
                     <path
                       d="M58.0001 8.89597L29.6496 36.9017L16.7631 24.1718"
                       stroke="#0BB07B"
-                      stroke-width="7"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 ) : (
@@ -76,11 +83,11 @@ export const Premium = () => {
               <div className="w-full p-3 px-1 rounded-md bg-orange-50">
                 {isSuccess ? (
                   <Text fontSize="sm" fontWeight="medium">
-                    اشتراک ماهانه طلایی پذیرش 24 برای شما فعال گردید
+                    اشتراک ماهانه طلایی پذیرش24 برای شما فعال گردید
                   </Text>
                 ) : (
                   <Text fontSize="sm" fontWeight="medium">
-                    اشتراک ماهانه طلایی پذیرش 24 برای شما فعال نشد
+                    اشتراک ماهانه طلایی پذیرش24 برای شما فعال نشد
                   </Text>
                 )}
               </div>

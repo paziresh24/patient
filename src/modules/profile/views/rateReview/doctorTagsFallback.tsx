@@ -1,7 +1,7 @@
-import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import { splunkInstance } from '@/common/services/splunk';
+import GoldButton from '@/modules/bamdad/components/goldButton';
 import { useRouter } from 'next/router';
 
 export const DoctorTagsFallback = () => {
@@ -33,7 +33,7 @@ export const DoctorTagsFallback = () => {
       <Text fontSize="sm" fontWeight="medium" className="text-slate-500 text-center">
         برای دسترسی به این ویژگی ها، اشتراک طلایی دریافت کنید
       </Text>
-      <Button
+      <GoldButton
         onClick={() => {
           splunkInstance().sendEvent({
             group: 'bamdad',
@@ -41,12 +41,9 @@ export const DoctorTagsFallback = () => {
           });
           router.push('/patient/premium');
         }}
-        variant="secondary"
-        icon={<DiamondIcon className="text-yellow-600" />}
-        className="text-yellow-600 border-yellow-500 shadow-md shadow-amber-700/10 hover:bg-amber-50/50"
       >
         مشاهده اشتراک طلایی
-      </Button>
+      </GoldButton>
     </div>
   );
 };

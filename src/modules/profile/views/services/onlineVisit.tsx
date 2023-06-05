@@ -1,9 +1,9 @@
-import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import PhoneIcon from '@/common/components/icons/phone';
 import StatusIcon from '@/common/components/icons/status';
 import { splunkInstance } from '@/common/services/splunk';
+import GoldButton from '@/modules/bamdad/components/goldButton';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { useRouter } from 'next/router';
@@ -84,7 +84,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
                     شما می توانید با فعال سازی اشتراک ماهانه طلایی، از تخفیف {discountPercent}% نامحدود در ویزیت های آنلاین استفاده کنید.
                   </Text>
                 </div>
-                <Button
+                <GoldButton
                   onClick={() => {
                     splunkInstance().sendEvent({
                       group: 'bamdad',
@@ -92,12 +92,9 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
                     });
                     router.push('/patient/premium');
                   }}
-                  variant="secondary"
-                  icon={<DiamondIcon className="text-yellow-600" />}
-                  className="text-yellow-600 border-yellow-500 shadow-md shadow-amber-700/10 hover:bg-amber-50/50"
                 >
                   مشاهده اشتراک طلایی
-                </Button>
+                </GoldButton>
               </div>
             ),
           }),

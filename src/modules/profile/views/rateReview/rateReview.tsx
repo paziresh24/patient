@@ -15,8 +15,9 @@ import ShareIcon from '@/common/components/icons/share';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
-import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
 import classNames from '@/common/utils/classNames';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
@@ -104,6 +105,7 @@ export const RateReview = (props: RateReviewProps) => {
   const replyText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -403,8 +405,10 @@ export const RateReview = (props: RateReviewProps) => {
         )}
       </div>
 
-      {checkPremiumUser(userInfo.vip) && <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />}
-      {!checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
+      {isShowPremiumFeatures && checkPremiumUser(userInfo.vip) && (
+        <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
+      )}
+      {isShowPremiumFeatures && !checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
       <div className={classNames('w-full bg-white', className)}>
         <Rate
           details={details}

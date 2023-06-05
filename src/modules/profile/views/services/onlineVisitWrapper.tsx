@@ -7,7 +7,8 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { CENTERS } from '@/common/types/centers';
-import { checkPremiumUser } from '@/common/utils/checkPremiumUser';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
@@ -56,7 +57,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const userInfo = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
   const discountPercentage = useFeatureValue('premium.online_visit_discount_percentage', 0);
-
+  const isShowPremiumFeatures = useShowPremiumFeatures();
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
     callback();
@@ -123,7 +124,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
-        {...(discountPercentage && { discountPercent: discountPercentage })}
+        {...(discountPercentage && isShowPremiumFeatures && { discountPercent: discountPercentage })}
         isPremium={isLogin && checkPremiumUser(userInfo.vip)}
       />
       <Modal

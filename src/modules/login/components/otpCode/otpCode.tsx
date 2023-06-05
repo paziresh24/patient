@@ -13,7 +13,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import PinInput from 'react-pin-input';
-import { useUserInfoStore } from '../../store/userInfo';
+import { UserInfo, useUserInfoStore } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 
@@ -21,7 +21,7 @@ interface OtpCodeProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
   setMobileNumberValue: Dispatch<SetStateAction<string>>;
-  postLogin?: () => void;
+  postLogin?: (userInfo: UserInfo) => void;
   setRetryGetPasswordNumber: Dispatch<SetStateAction<number>>;
   retryGetPasswordNumber: number;
 }
@@ -45,8 +45,6 @@ export const OtpCode = (props: OtpCodeProps) => {
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
-        postLogin && postLogin();
-
         setCookie('certificate', data.certificate, {
           path: '/',
           maxAge: dayToSecond(60),
@@ -70,11 +68,14 @@ export const OtpCode = (props: OtpCodeProps) => {
           }
         }
 
-        setUserInfo({
+        const info = {
           is_doctor: data.is_doctor,
           profile,
           ...data.result,
-        });
+        };
+
+        setUserInfo(info);
+        postLogin && postLogin(info);
 
         return;
       }
