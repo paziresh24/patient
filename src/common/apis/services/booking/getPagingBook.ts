@@ -1,6 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 interface Params {
   book_id: string;

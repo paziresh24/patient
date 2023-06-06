@@ -47,7 +47,7 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start p-3 max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
+      <div className="flex flex-col-reverse items-start p-3 w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
         <div className="w-full md:basis-4/6">
           <FactorWrapper
             bookId={bookId as string}
@@ -127,11 +127,13 @@ const Factor = () => {
                 )}
                 {getBookDetails.isSuccess && bookDetailsData && (
                   <Text fontSize="sm" fontWeight="medium">
-                    {`${convertTime(bookDetailsData?.book_time_string)}
-              ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('DD MMMM')}
-                ساعت
-                 ${moment.from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.format('HH:mm')}
-            `}
+                    {`${moment
+                      .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+                      ?.locale('fa')
+                      ?.format('DD MMMM')} ساعت ${moment
+                      .from(digitsFaToEn(bookDetailsData?.book_time_string), 'fa', 'JYYYY/JMM/JDD HH:mm')
+                      ?.locale('fa')
+                      ?.format('HH:mm')}`}
                   </Text>
                 )}
               </div>

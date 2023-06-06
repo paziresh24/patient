@@ -1,5 +1,5 @@
 import { searchClient } from '@/common/apis/client';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
   route: string;

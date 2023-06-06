@@ -123,7 +123,7 @@ export const useSearch = () => {
   }, [searchRequest.data]);
 
   const [result, setResult] = useState(search?.result ?? []);
-  const [isLoading, setIsLoading] = useState(searchRequest.isLoading || searchRequest.isIdle);
+  const [isLoading, setIsLoading] = useState(searchRequest.isLoading);
 
   useEffect(() => {
     setIsLoading(true);

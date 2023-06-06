@@ -64,7 +64,7 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
         {days?.map((turn: number, index: number) => (
           <div
             className={classNames(
-              'cursor-pointer min-w-fit w-max flex flex-col border border-solid border-slate-200 rounded-lg pl-6 py-2 p-3',
+              'cursor-pointer min-w-max w-full flex flex-col border border-solid border-slate-200 rounded-lg pl-6 py-2 p-3',
               {
                 'bg-primary bg-opacity-5 border-primary border-opacity-30 text-primary': selectedDay === turn,
               },

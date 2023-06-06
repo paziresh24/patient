@@ -3,6 +3,7 @@ import Text from '@/common/components/atom/text/text';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
 import classNames from '@/common/utils/classNames';
+import Image from 'next/image';
 import EditButton from '../viewAs/editButton';
 
 interface InfoProps {
@@ -31,7 +32,7 @@ export const Info = (props: InfoProps) => {
             onClick: editAction,
           })}
         >
-          <Avatar width={85} height={85} className="border-2 border-slate-200" src={image} />
+          <Avatar as={Image} priority={true} width={85} height={85} className="border-2 border-slate-200" src={image} />
           {editable && (
             <div className="absolute right-0 flex items-center justify-center w-6 h-6 border-2 rounded-full bg-slate-50 bottom-1 border-slate-200">
               <EditIcon className="w-4 h-4" />
