@@ -8,7 +8,6 @@ export interface TurnProps {
   paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
-  currentTime: number;
   centerInfo: {
     centerId: string;
     centerType: string;
@@ -39,6 +38,7 @@ export interface TurnProps {
     description: string;
     respiteDeleteTurn?: string;
     notRefundable?: boolean;
+    possibilityBeingVisited?: boolean;
   };
   location: {
     address: string;

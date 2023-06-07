@@ -1,5 +1,5 @@
 import { paziresh24AppClient } from '@/common/apis/client';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const getDoctorProfile = async () => paziresh24AppClient.get(`/V1/doctor/profile`);
 

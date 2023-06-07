@@ -16,6 +16,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useApplication from '@/common/hooks/useApplication';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import useWebView from '@/common/hooks/useWebView';
+import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
@@ -41,6 +42,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const serverTime = useGetServerTime();
   const university = useServerQuery(state => state.queries.university);
+  const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
 
   const getBooks = useGetBooks({
     page,
@@ -135,7 +137,6 @@ export const Appointments = ({ query: queryServer }: any) => {
             <Turn
               key={turn.book_id}
               status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
-              currentTime={serverTime?.data?.data?.data.timestamp ?? Date.now()}
               paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={
@@ -175,6 +176,7 @@ export const Appointments = ({ query: queryServer }: any) => {
                 description: turn.comment ?? '',
                 respiteDeleteTurn: turn.respite_to_refund_after_delete ?? '',
                 notRefundable: turn.payment_status === 'paid' && turn.refundable === 0,
+                possibilityBeingVisited: !isAfterPastDaysFromTimestamp({ numberDay: 3, currentTime, timestamp: turn.from }),
               }}
               location={{
                 lat: turn.center?.map?.lat,

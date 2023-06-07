@@ -59,7 +59,7 @@ export const Invoice = (props: InvoiceProps) => {
         {formattedDiscount && (
           <div className="flex justify-between text-red-500">
             <Text fontWeight="medium" fontSize="sm">
-              کدتخفیف:
+              تخفیف:
             </Text>
             <Text fontWeight="medium" fontSize="sm">
               {formattedDiscount} تومان

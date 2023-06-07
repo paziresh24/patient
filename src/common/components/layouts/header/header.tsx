@@ -3,6 +3,7 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChevronIcon from '@/components/icons/chevron';
+import SupportButtonBamdad from '@/modules/bamdad/components/suppoortButton';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -54,11 +55,11 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-card text-slate-700 md:px-4 md:h-20 border-slate-100">
+      <header className="flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-sm z-infinity text-slate-700 md:px-4 md:h-20 border-slate-100">
         <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
-              <Link href="/" shallow>
+              <Link href="/" shallow prefetch={false}>
                 <HeaderLogo
                   showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
                   partnerLogo={customize.partnerLogo}
@@ -124,6 +125,7 @@ const Header = (props: HeaderProps) => {
             </nav>
           )}
           <div className="flex items-center space-s-4">
+            <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {customize.showUserProfile && <UserProfile />}
           </div>

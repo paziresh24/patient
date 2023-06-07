@@ -2,12 +2,12 @@ import { dayToSecond } from './dayToSecond';
 
 interface Props {
   timestamp: number;
-  numDays: number;
+  numberDay: number;
   currentTime: number;
 }
 
-export const isAfterPastDaysFromTimestamp = ({ numDays, timestamp, currentTime }: Props) => {
-  const numDaysInSecond = timestamp + dayToSecond(numDays);
+export const isAfterPastDaysFromTimestamp = ({ numberDay, timestamp, currentTime }: Props) => {
+  const numDaysInSecond = timestamp + dayToSecond(numberDay);
   return currentTime > numDaysInSecond;
 };
 

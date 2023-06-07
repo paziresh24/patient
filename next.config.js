@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
-const { withSentryConfig } = require('@sentry/nextjs');
 const runtimeCaching = require('./runtimeCaching');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -28,13 +27,6 @@ const nextConfig = {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
   },
   webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-        __SENTRY_TRACING__: false,
-      }),
-    );
-
     /**
      * TODO: Find more possible barrels for this project.
      *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
@@ -60,9 +52,11 @@ const nextConfig = {
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
+    WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
+    IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
   },
   images: {
-    domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
+    domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
   },
   async redirects() {
     return [
@@ -78,17 +72,6 @@ const nextConfig = {
   },
 };
 
-const sentryWebpackPluginOptions = {
-  silent: true,
-};
-
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-  nextConfig.sentry = {
-    hideSourceMaps: true,
-  };
-}
-
-// Sentry should be the last thing to export to catch everything right
-module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;
+module.exports = moduleExports;

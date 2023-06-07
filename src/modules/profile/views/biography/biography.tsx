@@ -3,8 +3,8 @@ import Text from '@/common/components/atom/text/text';
 import AtomIcon from '@/common/components/icons/atom';
 import AwardIcon from '@/common/components/icons/award';
 import ReceiptIcon from '@/common/components/icons/receipt';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import classNames from '@/common/utils/classNames';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useMemo } from 'react';
 
 interface BiographyProps {
@@ -24,6 +24,22 @@ export const Biography = (props: BiographyProps) => {
 
   const Wrapper = needShowMore ? Opener : 'div';
 
+  // {
+  //   !biography && !awards && !scientific && editable && (
+  //     <div
+  //       onClick={() => handleViewAs('biography')}
+  //       className="flex items-center justify-center p-5 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer md:mx-0 hover:bg-slate-200/30 space-s-2 text-slate-400 border-slate-200"
+  //     >
+  //       <AddIcon className="w-5 h-5" />
+  //       <Text fontWeight="medium">نوشتن بیوگرافی</Text>
+  //     </div>
+  //   );
+  // }
+  // {
+  //   (biography || awards || scientific) && <Biography {...{ biography, awards, scientific }} className="bg-white md:rounded-lg" />;
+  // }
+
+  // if (!biography && !awards && !scientific) return null;
   return (
     <Wrapper
       {...(needShowMore && { height: 200, openButtonText: 'مشاهده بیشتر', closeButtonText: 'مشاهده کمتر' })}

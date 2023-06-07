@@ -2,10 +2,10 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
-import localFont from '@next/font/local';
-import { Hydrate } from 'react-query';
-// @ts-ignore
+import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
+import localFont from '@next/font/local';
+import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
 import getConfig from 'next/config';

@@ -35,7 +35,8 @@ module.exports = {
         },
       },
       animation: {
-        progress: 'progress 2s linear infinite',
+        'progress': 'progress 2s linear infinite',
+        'bounce-slow': 'bounce 3s infinite',
       },
       maxHeight: theme => ({
         0: '0',

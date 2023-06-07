@@ -1,17 +1,20 @@
+import dynamic from 'next/dynamic';
+
 import Button from '@/common/components/atom/button/button';
-import Card from '@/common/components/atom/card/card';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
+import useApplication from '@/common/hooks/useApplication';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
-import SelectCenter from '@/modules/booking/views/selectCenter/selectCenter';
-import SelectService from '@/modules/booking/views/selectService/selectService';
 import { memo, useCallback, useState } from 'react';
+import Notification from '../../components/notification/notification';
+import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
-import { ServiceCard } from './card';
+const SelectService = dynamic(() => import('@/modules/booking/views/selectService'));
+const SelectCenter = dynamic(() => import('@/modules/booking/views/selectCenter'));
 
 interface PresenceProps {
   centers: any[];
@@ -23,6 +26,7 @@ interface PresenceProps {
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
@@ -38,6 +42,10 @@ export const Presence = memo((props: PresenceProps) => {
   } = useModal();
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
+  const isShowCenterAvailableBox =
+    centers[0]?.freeturns_info.length === centers[0].services.length
+      ? centers[0]?.freeturns_info.every((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000))
+      : false;
 
   const handleOnBook = useCallback(() => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
@@ -69,7 +77,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status && !isWebView) {
+    if (center.is_only_in_app.status && !isWebView && !isApplication) {
       handleOpenSelectDownloadAppModal();
       return;
     }
@@ -97,19 +105,14 @@ export const Presence = memo((props: PresenceProps) => {
     [selectedCenter],
   );
 
-  if (
-    centers.length === 1 &&
-    centers[0].freeturns_info?.[0] &&
-    centers[0].freeturns_info?.[0]?.available_time > Math.floor(new Date().getTime() / 1000)
-  ) {
+  if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
     return (
-      <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        <Text fontWeight="bold">زمان نوبت دهی پزشک به پایان رسیده است!</Text>
-        <div className="flex flex-col p-4 space-y-1 border border-dashed rounded-lg border-slate-300">
-          <Text fontSize="sm">زمان باز شدن نوبت دهی اینترنتی:</Text>
-          <Text fontWeight="bold">{centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}</Text>
-        </div>
-      </Card>
+      <Notification
+        centerId={centers[0].id}
+        serviceId={centers[0].services[0].id}
+        userCenterId={centers[0].services[0].user_center_id}
+        availalbeTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
+      />
     );
   }
 
@@ -146,20 +149,26 @@ export const Presence = memo((props: PresenceProps) => {
         }}
       />
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
-        <div className="pl-2 overflow-auto max-h-96">
-          <SelectCenter
-            centers={reformattedCentersProperty({ centers, displayName })}
-            onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
-          />
-        </div>
+        {selectCenterModalProps.isOpen && (
+          <div className="pl-2 overflow-auto max-h-96">
+            <SelectCenter
+              centers={reformattedCentersProperty({ centers, displayName })}
+              onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}
+            />
+          </div>
+        )}
       </Modal>
+
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
-        <div>
-          <SelectService
-            services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
-            onSelect={handleOnBookByService}
-          />
-        </div>
+        {selectServiceModalProps.isOpen && (
+          <div>
+            <SelectService
+              center={selectedCenter}
+              services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
+              onSelect={handleOnBookByService}
+            />
+          </div>
+        )}
       </Modal>
       <Modal title="نوبت دهی اینترنتی و حضوری (غیرفعال)" {...externalBookingModalProps} bodyClassName="space-y-3">
         <Text fontWeight="medium" className="leading-7">

@@ -9,26 +9,14 @@ import { turnDetailsData } from './turnDetails';
 import type { TurnProps } from './turnType';
 
 export const Turn: React.FC<TurnProps> = props => {
-  const {
-    status,
-    doctorInfo,
-    paymentStatus,
-    turnDetails,
-    location,
-    feedbackUrl,
-    prescription,
-    centerType,
-    patientInfo,
-    centerInfo,
-    id,
-    currentTime,
-  } = props;
+  const { status, doctorInfo, paymentStatus, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } =
+    props;
   const { t } = useTranslation();
 
   const detailsData = useMemo(
     () =>
       turnDetailsData({
-        data: omit(turnDetails, ['respiteDeleteTurn', 'bookTimestamp']),
+        data: omit(turnDetails, ['respiteDeleteTurn', 'bookTimestamp', 'possibilityBeingVisited']),
         centerType,
         status,
         paymentStatus,
@@ -89,8 +77,7 @@ export const Turn: React.FC<TurnProps> = props => {
         activePaymentStatus={centerInfo.activePaymentStatus}
         respiteDeleteTurn={turnDetails.respiteDeleteTurn}
         notRefundable={turnDetails.notRefundable}
-        currentTime={currentTime}
-        bookTimestamp={turnDetails.bookTimestamp}
+        possibilityBeingVisited={turnDetails.possibilityBeingVisited}
       />
     </Card>
   );

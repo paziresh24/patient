@@ -16,7 +16,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://analytics.google.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://static.hotjar.com" />
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
@@ -27,6 +26,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="google" content="notranslate" />
       </Head>
       <body
         className={classNames('bg-slate-100 antialiased scroll-smooth', {

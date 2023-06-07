@@ -8,7 +8,7 @@ interface AlertProps {
 
 const alertStyle = {
   info: 'bg-blue-50 border border-blue-800 rounded-lg',
-  warning: 'bg-yellow-50 border border-yellow-300 rounded-lg',
+  warning: 'bg-amber-50 border border-amber-300 rounded-lg',
   success: 'bg-green-50  border border-green-800 rounded-lg',
   error: 'bg-red-50  border border-red-600 rounded-lg',
 };

@@ -14,13 +14,13 @@ import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
-import { QueryClient, dehydrate } from 'react-query';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -186,7 +186,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
         }}
         host={host}
       />
-      <div className="flex flex-col items-start max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
             pageViewCount={profileData?.number_of_visits}
@@ -305,19 +305,19 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
   const { slug, ...query } = context.query;
   const university = query.university as string;
 
-  const slugFormmated = slug as string;
+  const slugFormatted = slug as string;
   try {
     const queryClient = new QueryClient();
     const { result, redirect } = await queryClient.fetchQuery(
       [
         ServerStateKeysEnum.SlugProfile,
         {
-          slug: slugFormmated,
+          slug: slugFormatted,
         },
       ],
       () =>
         slugProfile({
-          slug: slugFormmated,
+          slug: slugFormatted,
         }),
     );
 
@@ -347,7 +347,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        slug: slugFormmated,
+        slug: slugFormatted,
       },
     };
   } catch (error) {

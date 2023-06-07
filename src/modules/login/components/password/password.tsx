@@ -10,14 +10,14 @@ import { setCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useUserInfoStore } from '../../store/userInfo';
+import { UserInfo, useUserInfoStore } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 
 interface PasswordProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
-  postLogin?: () => void;
+  postLogin?: (userInfo: UserInfo) => void;
 }
 
 export const Password = (props: PasswordProps) => {
@@ -60,13 +60,15 @@ export const Password = (props: PasswordProps) => {
           }
         }
 
-        setUserInfo({
+        const info = {
           is_doctor: data.is_doctor,
           profile,
           ...data.result,
-        });
+        };
 
-        postLogin && postLogin();
+        setUserInfo(info);
+
+        postLogin && postLogin(info);
 
         return;
       }
