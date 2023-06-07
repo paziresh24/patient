@@ -26,6 +26,32 @@ export const contentClient = axios.create({
   withCredentials: true,
 });
 
+export const workflow = axios.create({
+  baseURL: publicRuntimeConfig.P24_WORKFLOW_API,
+});
+
+workflow.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+      (config as any).headers['Content-Type'] = 'application/json';
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
+workflow.interceptors.response.use(
+  res => {
+    return res.data;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
 clinicClient.interceptors.request.use(
   config => {
     config = {

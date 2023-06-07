@@ -29,6 +29,7 @@ import { toast } from 'react-hot-toast';
 import MessengerButton from '../../messengerButton/messengerButton';
 import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
+import { SecureCallButton } from '../../secureCallButton/secureCallButton';
 import { OnlineVisitChannel } from '../turnType';
 const { publicRuntimeConfig } = getConfig();
 
@@ -261,7 +262,19 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {shouldShowMessengerButton && <MessengerButton channel={onlineVisitChannel} />}
+      {shouldShowMessengerButton && (
+        <div className="flex justify-between gap-4">
+          <MessengerButton channel={onlineVisitChannel} />
+          <SecureCallButton
+            bookId={id}
+            title="تماس با پزشک"
+            doctor={{ centerId, name: doctorName }}
+            patient={{ cell: phoneNumber, name: patientName, nationalCode }}
+            referenceCode={trackingCode}
+            eventAction="appointments"
+          />
+        </div>
+      )}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button

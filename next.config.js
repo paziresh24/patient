@@ -52,6 +52,7 @@ const nextConfig = {
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
+    P24_WORKFLOW_API: process.env.P24_WORKFLOW_API,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
