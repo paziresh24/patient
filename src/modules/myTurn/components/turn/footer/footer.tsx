@@ -313,17 +313,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           )}
         </div>
       )}
-      {shouldShowRemoveTurn && (
-        <Button
-          theme="error"
-          variant="secondary"
-          block={true}
-          onClick={showRemoveTurnModal}
-          icon={status === BookStatus.notVisited && <TrashIcon />}
-        >
-          {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
-        </Button>
-      )}
 
       <Modal {...queueModalProps} bodyClassName="p-0" noHeader>
         <Queue bookId={id} />
