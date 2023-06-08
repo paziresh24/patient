@@ -1,5 +1,5 @@
-const Card = dynamic(() => import('@/common/components/atom/card'));
 import Button from '@/common/components/atom/button/button';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { CENTERS } from '@/common/types/centers';
@@ -11,10 +11,21 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
-const OnlineVisitWrapper = dynamic(() => import('./onlineVisitWrapper'));
-const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
-const Presence = dynamic(() => import('./presence'));
-const External = dynamic(() => import('./external'));
+const OnlineVisitWrapper = dynamic(() => import('./onlineVisitWrapper'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="198px" rounded="lg" />;
+  },
+});
+const Presence = dynamic(() => import('./presence'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="198px" rounded="lg" />;
+  },
+});
+const External = dynamic(() => import('./external'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="198px" rounded="lg" />;
+  },
+});
 
 export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   const router = useRouter();

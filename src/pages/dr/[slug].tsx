@@ -107,11 +107,6 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     }
   }, [userInfo.is_doctor, slug]);
 
-  useEffect(() => {
-    // Prefetch the booking page
-    router.prefetch('/booking/[slug]');
-  }, []);
-
   const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle: title, editable });
 
   const handleViewAs = (key: 'information' | 'gallery' | 'biography' | 'services' | 'workHours') => {

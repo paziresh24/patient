@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { useProfileDataStore } from '../../store/profileData';
 
 export const OwnPage = () => {
-  const { data, isBulk } = useProfileDataStore();
+  const { data } = useProfileDataStore();
   const { info, isLogin } = useUserInfoStore();
 
   const handleClick = useCallback(() => {
@@ -24,7 +24,6 @@ export const OwnPage = () => {
     location.assign('https://dr.paziresh24.com/auth/?q=profile');
   }, [info, isLogin]);
 
-  if (!isBulk) return null;
   return (
     <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
       <Text fontWeight="medium">درخواست احراز هویت و دریافت مالکیت صفحه</Text>
