@@ -20,12 +20,12 @@ import ReactCanvasConfetti from 'react-canvas-confetti';
 
 export const Premium = () => {
   const router = useRouter();
-  const resNum = router.query?.id as string;
+  const id = router.query?.id as string;
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { t } = useTranslation('patient/premium');
   const inquiry = useInquiryPayment({
-    res_num: resNum,
+    id,
   });
   const [fire, setFire] = useState<boolean | number>(false);
 
