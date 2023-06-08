@@ -1,3 +1,4 @@
+import { splunkInstance } from '@/common/services/splunk';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
@@ -9,7 +10,16 @@ export const SupportButtonBamdad = () => {
 
   if (!checkPremiumUser(userInfo.vip) || !phoneNumber || !isLogin) return null;
   return (
-    <a href={`tel:${phoneNumber}`} className="p-1 px-2 text-sm font-semibold border border-amber-500 rounded-md">
+    <a
+      href={`tel:${phoneNumber}`}
+      onClick={() =>
+        splunkInstance().sendEvent({
+          group: 'bamdad',
+          type: 'support_call',
+        })
+      }
+      className="p-1 px-2 text-sm font-semibold border rounded-md border-amber-500"
+    >
       پشتیبانی ویژه
     </a>
   );

@@ -20,7 +20,7 @@ export const OnlineVisitDiscountFallback = ({ className }: { className: string }
         onClick={() => {
           splunkInstance().sendEvent({
             group: 'bamdad',
-            type: 'doc_profile_button',
+            type: 'doctor_profile_button',
           });
           router.push('/patient/premium');
         }}
