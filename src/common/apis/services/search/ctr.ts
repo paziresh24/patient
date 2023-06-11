@@ -1,6 +1,7 @@
-import formData from '@/common/utils/formData';
-import getConfig from 'next/config';
 import { useMutation } from '@tanstack/react-query';
+import getConfig from 'next/config';
+import { clinicClient } from '../../client';
+import { setTerminal } from '../auth/setTerminal';
 const { publicRuntimeConfig } = getConfig();
 
 export interface Params {
@@ -13,12 +14,9 @@ export interface Params {
   order?: string;
 }
 
-export const ctr = (params: Params) => {
-  return fetch(`${publicRuntimeConfig.CLINIC_BASE_URL}/api/sv2ctr`, {
-    body: formData(params),
-    method: 'POST',
-    keepalive: true,
-  });
+export const ctr = async (params: Params) => {
+  await setTerminal();
+  return clinicClient.post(`/api/sv2ctr`, params);
 };
 
 export const useCtr = () => useMutation(ctr);
