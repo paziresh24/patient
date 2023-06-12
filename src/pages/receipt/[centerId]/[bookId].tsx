@@ -24,9 +24,11 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
+import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -42,7 +44,7 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-
+  const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
@@ -72,14 +74,15 @@ const Receipt = () => {
   const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
-
   const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
+  const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === bookDetailsData?.services?.[0]?.id);
   const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
     numberDay: 3,
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
 
+  console.log(specialServiceInfo);
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
@@ -240,15 +243,32 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              {!turnStatus.deletedTurn && possibilityBeingVisited && (
-                <MessengerButton
-                  channel={
-                    bookDetailsData.selected_online_visit_channel?.type
-                      ? bookDetailsData?.selected_online_visit_channel
-                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-                  }
-                />
+              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
+                <div className="flex justify-between gap-4">
+                  <MessengerButton
+                    channel={
+                      bookDetailsData.selected_online_visit_channel?.type
+                        ? bookDetailsData?.selected_online_visit_channel
+                        : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                            (item: any) => !(item.type as string).endsWith('_number'),
+                          )[0]
+                    }
+                  />
+                  <SecureCallButton
+                    bookId={bookDetailsData.book_id}
+                    title="تماس با پزشک"
+                    doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
+                    patient={{
+                      cell: bookDetailsData.patient.cell,
+                      name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+                      nationalCode: bookDetailsData.national_code,
+                    }}
+                    referenceCode={bookDetailsData.reference_code}
+                    eventAction="appointments"
+                  />
+                </div>
               )}
+              {!turnStatus.deletedTurn && possibilityBeingVisited && <MessengerButton channel={specialServiceInfo?.messenger} />}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                   {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}

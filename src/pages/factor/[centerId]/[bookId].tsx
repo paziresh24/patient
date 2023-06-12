@@ -5,13 +5,13 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { Messenger, messengers } from '@/common/constants/messengers';
 import { withCSR } from '@/common/hoc/withCsr';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
@@ -25,6 +25,7 @@ const Factor = () => {
     query: { bookId, centerId },
   } = useRouter();
   const getBookDetails = useGetBookDetails();
+  const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
 
   useEffect(() => {
     if (bookId)
@@ -95,7 +96,7 @@ const Factor = () => {
                 __html: `سلام. من دکتر ${bookDetailsData?.doctor_name} ${
                   bookDetailsData?.doctor_family
                 } هستم.<br /> شما <b class="text-primary">ویزیت آنلاین از طریق ${
-                  messengers[bookDetailsData?.book_params?.online_channel as Messenger]?.name
+                  messengers[bookDetailsData?.book_params?.online_channel]?.text
                 } </b> را انتخاب کرده اید.<br /><b class="text-primary">${convertTime(
                   bookDetailsData?.book_time_string,
                 )}</b> (تا حداکثر 3 ساعت بعد از آن) پاسخگو سوالات شما خواهم بود. توجه داشته باشید در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، درخواست شما به صورت اتوماتیک لغو و هزینه به حساب شما باز میگردد.`,
