@@ -19,6 +19,7 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import shuffle from 'lodash/shuffle';
 import useTranslation from 'next-translate/useTranslation';
@@ -96,6 +97,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
+  const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
+  const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === serviceId);
   const isOnlineVisitTurn = centerType === CenterType.consult;
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
@@ -261,7 +264,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   return (
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
-      {shouldShowMessengerButton && <MessengerButton channel={onlineVisitChannel} />}
+      {shouldShowMessengerButton && <MessengerButton channel={specialServiceInfo ? specialServiceInfo.messenger : onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button
