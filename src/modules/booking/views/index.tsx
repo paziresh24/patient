@@ -210,7 +210,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
-            if (isApplication) return window.open(`${data?.payment?.redirect_url}`);
+            if (isApplication) return window.open(`${data?.payment?.redirect_url}`, '_system');
             location.replace(`${data?.payment?.redirect_url}`);
             return;
           }
