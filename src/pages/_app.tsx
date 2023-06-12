@@ -75,7 +75,7 @@ function MyApp(props: AppProps) {
        PWA/TWA -> ${isPWA()}\n
        Native -> ${isNativeWebView()}`,
       {
-        duration: 10000,
+        duration: 1000,
         className: '!bg-red-600 !text-white',
         style: { direction: 'ltr' },
         position: 'bottom-right',

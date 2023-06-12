@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
 import { isPWA } from '../utils/isPwa';
 
 export const useApplication = () => {
-  if (typeof window === 'undefined') return false;
+  const [state, setState] = useState(false);
 
-  return isPWA();
+  useEffect(() => {
+    setState(isPWA());
+  }, []);
+
+  return state;
 };
 
 export default useApplication;
