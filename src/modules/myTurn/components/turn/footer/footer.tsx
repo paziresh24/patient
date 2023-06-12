@@ -267,7 +267,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       {shouldShowMessengerButton && (
         <div className="flex justify-between gap-4">
-          <MessengerButton channel={onlineVisitChannel} />
+          <MessengerButton channel={specialServiceInfo ? specialServiceInfo.messenger : onlineVisitChannel} />
           <SecureCallButton
             bookId={id}
             title="تماس با پزشک"
@@ -278,7 +278,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           />
         </div>
       )}
-      {shouldShowMessengerButton && <MessengerButton channel={specialServiceInfo ? specialServiceInfo.messenger : onlineVisitChannel} />}
       <div className="flex items-center space-s-3">
         {shouldShowRemoveTurn && (
           <Button
