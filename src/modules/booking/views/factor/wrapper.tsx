@@ -53,7 +53,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         ...(discountToken && { discount_token: discountToken }),
       });
       if (isApplication) {
-        window.open(data.url);
+        window.open(data.url, '_blank');
         return;
       }
       if (data.status) {
