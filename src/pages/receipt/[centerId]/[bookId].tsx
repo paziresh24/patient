@@ -81,7 +81,6 @@ const Receipt = () => {
     timestamp: bookDetailsData.book_time,
   });
 
-  console.log(specialServiceInfo);
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
@@ -104,7 +103,7 @@ const Receipt = () => {
   };
 
   const isShowRemoveButtonForOnlineVisit =
-    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
+    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
@@ -166,9 +165,11 @@ const Receipt = () => {
   const statusText = useMemo(() => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
-    if (turnStatus.expiredTurn && centerType === 'consult') return '';
+    if (turnStatus.expiredTurn && centerType === 'consult') return 'نوبت شما منقضی شده است';
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
+
+  console.log(statusText);
 
   return (
     <>
@@ -242,7 +243,9 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              {!turnStatus.deletedTurn && possibilityBeingVisited && <MessengerButton channel={specialServiceInfo?.messenger} />}
+              {!turnStatus.deletedTurn && !turnStatus.expiredTurn && possibilityBeingVisited && (
+                <MessengerButton channel={specialServiceInfo?.messenger} />
+              )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                   {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}

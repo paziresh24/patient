@@ -81,11 +81,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                         '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
                       ]
                     : specialServiceInfo.messenger
-                    ? [
-                        `لطفا <b>قبض نوبت</b> خود را در <b>${
-                          messengers[specialServiceInfo.messenger.type as Messenger]?.name
-                        }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
-                      ]
+                    ? specialServiceInfo.rules
                     : [
                         'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
                         ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
