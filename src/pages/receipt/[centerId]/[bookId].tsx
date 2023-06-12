@@ -169,8 +169,6 @@ const Receipt = () => {
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
-  console.log(statusText);
-
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
