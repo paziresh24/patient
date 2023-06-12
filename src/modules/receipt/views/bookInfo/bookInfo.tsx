@@ -3,6 +3,7 @@ import { Messenger, messengers } from '@/common/constants/messengers';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
 interface PaymentDetailsProps {
@@ -13,6 +14,8 @@ interface PaymentDetailsProps {
 
 export const BookInfo = (props: PaymentDetailsProps) => {
   const { loading = false, turnData, centerId } = props;
+  const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
+  const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
 
@@ -76,6 +79,12 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                     ? [
                         ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
                         '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
+                      ]
+                    : specialServiceInfo.messenger
+                    ? [
+                        `لطفا <b>قبض نوبت</b> خود را در <b>${
+                          messengers[specialServiceInfo.messenger.type as Messenger]?.name
+                        }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
                     : [
                         'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
