@@ -2,8 +2,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
-import { isNativeWebView } from '@/common/utils/isNativeWebView';
-import { isPWA } from '@/common/utils/isPwa';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
@@ -17,7 +15,6 @@ import Head from 'next/head';
 import { NextRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
 import { useEffect } from 'react';
-import { toast } from 'react-hot-toast';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 
@@ -65,22 +62,6 @@ function MyApp(props: AppProps) {
     growthbook.setAttributes({
       id: getCookie('terminal_id'),
     });
-  }, []);
-
-  useEffect(() => {
-    toast(
-      `**Debug Toast**\n
-       display-mode: standalone -> ${window.matchMedia('(display-mode: standalone)').matches}\n
-       android-app:// -> ${document.referrer.includes('android-app://')}\n
-       PWA/TWA -> ${isPWA()}\n
-       Native -> ${isNativeWebView()}`,
-      {
-        duration: 1000,
-        className: '!bg-red-600 !text-white',
-        style: { direction: 'ltr' },
-        position: 'bottom-right',
-      },
-    );
   }, []);
 
   useEffect(() => {
