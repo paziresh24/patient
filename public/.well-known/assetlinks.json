@@ -4,7 +4,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.paziresh24.paziresh24",
-      "sha256_cert_fingerprints": ["35:4F:3A:4B:10:67:A2:CB:29:3E:48:6B:E7:30:11:FB:CD:F5:3A:79:A4:DD:F8:94:8F:89:F7:75:16:D7:2D:A9"]
+      "sha256_cert_fingerprints": ["A3:B9:8D:DC:9D:9B:E4:CE:09:E3:8F:83:D4:30:67:05:0A:94:C5:90:E9:1F:23:05:C7:EC:CC:80:9C:74:8E:CF"]
     }
   }
 ]
