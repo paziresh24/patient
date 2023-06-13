@@ -1,5 +1,6 @@
 import { useGetFreeTurn } from '@/common/apis/services/booking/getFreeTurn';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 import pick from 'lodash/pick';
 import { useEffect, useState } from 'react';
@@ -23,6 +24,7 @@ type FirstFreeTime = {
 export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true, onError, onEvent }: UseFirstFreeTime) => {
   const getFreeTurn = useGetFreeTurn();
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const [data, setData] = useState<FirstFreeTime>({});
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
       center_id: centerId,
       service_id: serviceId,
       user_center_id: userCenterId,
-      type: isWebView ? 'app' : 'web',
+      type: isWebView || isApplication ? 'app' : 'web',
     })) as any;
 
     onEvent && onEvent({ ...data, meta });
