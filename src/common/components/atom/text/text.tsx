@@ -60,11 +60,14 @@ export const Text = <E extends React.ElementType = 'span'>({
   const Component = as || 'span';
   return (
     <Component
-      className={classNames(className, {
-        [textStyles.size[fontSize!]]: fontSize,
-        [textStyles.weight[fontWeight!]]: fontWeight,
-        [textStyles.align[align!]]: align,
-      })}
+      className={classNames(
+        {
+          [textStyles.size[fontSize!]]: fontSize,
+          [textStyles.weight[fontWeight!]]: fontWeight,
+          [textStyles.align[align!]]: align,
+        },
+        className,
+      )}
       {...rest}
     >
       {children}

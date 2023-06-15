@@ -18,6 +18,7 @@ export const reformattedCentersProperty = ({ centers, displayName }: { centers: 
               ? freeturnsInfo?.available_time < Math.floor(new Date().getTime() / 1000)
               : true,
           availableTime: freeturnsInfo?.availalbe_time_text,
+          services: center.services,
         };
       })
       .filter(center => (center.id === '5532' ? !center.isDisable : true)) ?? []

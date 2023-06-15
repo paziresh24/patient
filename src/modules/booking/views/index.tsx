@@ -348,6 +348,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           data={{
             loading: isLoading,
             centers: reformattedCentersProperty({ centers, displayName: profile.display_name }),
+            doctorName: profile?.display_name,
           }}
           nextStep={(center: Center) => {
             const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
@@ -377,6 +378,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           data={{
             loading: isLoading || !center,
             services: reformattedServicesProperty({ services: center?.services, center }),
+            doctorName: profile?.display_name,
+            center: center,
           }}
           nextStep={(service: Service) => {
             const selectedService = center?.services?.find((s: any) => s.id === service.id);
