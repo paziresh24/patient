@@ -81,7 +81,7 @@ export const PatinetProfile = () => {
           </Link>
         </div>
         {isShowPremiumFeatures && (
-          <div className="flex py-4 px-5 flex-col mt-2 bg-white shadow-sm">
+          <div className="flex flex-col px-5 py-4 mt-2 bg-white shadow-sm">
             <CreditDuration />
           </div>
         )}
@@ -123,7 +123,7 @@ export const PatinetProfile = () => {
               href={`tel:${supportPhoneNumber}`}
               className="flex items-center px-5 py-4 border-b text-amber-600 space-s-2 whitespace-nowrap border-slate-100"
             >
-              <HeadphoneIcon className="" />
+              <HeadphoneIcon />
               <Text fontWeight="medium" fontSize="sm">
                 پشتیبانی ویژه
               </Text>

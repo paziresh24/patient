@@ -2,8 +2,7 @@ import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import PhoneIcon from '@/common/components/icons/phone';
 import StatusIcon from '@/common/components/icons/status';
-import { splunkInstance } from '@/common/services/splunk';
-import GoldButton from '@/modules/bamdad/components/goldButton';
+import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { useRouter } from 'next/router';
@@ -77,26 +76,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
       footer={{
         ...(!isPremium &&
           discountPercent && {
-            component: (
-              <div className="flex flex-col items-center mt-3 space-y-2 bg-white">
-                <div className="w-full p-3 text-center rounded-lg bg-amber-50">
-                  <Text fontSize="sm" fontWeight="medium">
-                    شما می توانید با فعال سازی اشتراک ماهانه طلایی، از تخفیف {discountPercent}% نامحدود در ویزیت های آنلاین استفاده کنید.
-                  </Text>
-                </div>
-                <GoldButton
-                  onClick={() => {
-                    splunkInstance().sendEvent({
-                      group: 'bamdad',
-                      type: 'doc_profile_button',
-                    });
-                    router.push('/patient/premium');
-                  }}
-                >
-                  مشاهده اشتراک طلایی
-                </GoldButton>
-              </div>
-            ),
+            component: <OnlineVisitDiscountFallback className="mt-3" />,
           }),
         actions: [
           {

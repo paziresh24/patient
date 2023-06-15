@@ -30,14 +30,14 @@ export const DoctorTagsFallback = () => {
         </div>
       </div>
 
-      <Text fontSize="sm" fontWeight="medium" className="text-slate-500 text-center">
+      <Text fontSize="sm" fontWeight="medium" className="text-center text-slate-500">
         برای دسترسی به این ویژگی ها، اشتراک طلایی دریافت کنید
       </Text>
       <GoldButton
         onClick={() => {
           splunkInstance().sendEvent({
             group: 'bamdad',
-            type: 'doc_profile_button',
+            type: 'doctor_profile_button',
           });
           router.push('/patient/premium');
         }}

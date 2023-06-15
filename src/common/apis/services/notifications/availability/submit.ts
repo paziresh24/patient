@@ -9,7 +9,7 @@ interface Params {
 }
 
 export const submitAvailabilityNotification = (params: Params) => {
-  return paziresh24AppClient.post('/V1/user/notifications/availability', params);
+  return paziresh24AppClient.post('/V1/request-availability', params);
 };
 
 export const useSubmitAvailabilityNotification = () => {

@@ -8,7 +8,7 @@ interface Params {
 }
 
 export const cancelAvailabilityNotification = (params: Params) => {
-  return paziresh24AppClient.delete('/V1/user/notifications/availability', {
+  return paziresh24AppClient.delete('/V1/request-availability', {
     params,
   });
 };
