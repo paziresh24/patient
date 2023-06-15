@@ -78,7 +78,7 @@ export const Premium = () => {
                     <Text>تاریخ تمدید:</Text>
                     <Text>
                       {new Date(inquiry.data?.data?.expire ?? '').toLocaleDateString('fa')}، ساعت{' '}
-                      {convertTimeStampToFormattedTime(new Date(inquiry.data?.data?.expire ?? '').getTime())}
+                      {convertTimeStampToFormattedTime(new Date(inquiry.data?.data?.expire ?? '').getTime() / 1000)}
                     </Text>
                   </div>
                 </div>

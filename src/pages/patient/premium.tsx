@@ -93,7 +93,7 @@ export const Premium = () => {
                     <Text>تاریخ تمدید:</Text>
                     <Text fontWeight="medium">
                       {new Date(user.vip ?? '').toLocaleDateString('fa')}، ساعت{' '}
-                      {convertTimeStampToFormattedTime(new Date(user.vip ?? '').getTime())}
+                      {convertTimeStampToFormattedTime(new Date(user.vip ?? '').getTime() / 1000)}
                     </Text>
                   </div>
                 </div>
