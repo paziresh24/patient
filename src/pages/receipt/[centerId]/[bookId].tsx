@@ -100,7 +100,7 @@ const Receipt = () => {
   };
 
   const isShowRemoveButtonForOnlineVisit =
-    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
+    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
@@ -162,7 +162,7 @@ const Receipt = () => {
   const statusText = useMemo(() => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
-    if (turnStatus.expiredTurn && centerType === 'consult') return 'نوبت شما منقضی شده است';
+    if (turnStatus.expiredTurn && centerType === 'consult') return '';
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
@@ -238,7 +238,7 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              {!turnStatus.deletedTurn && !turnStatus.expiredTurn && possibilityBeingVisited && (
+              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
                 <MessengerButton
                   channel={
                     bookDetailsData.selected_online_visit_channel?.type

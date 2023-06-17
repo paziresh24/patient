@@ -69,7 +69,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 13,
       name: 'شماره پزشک',
       value: doctorPhone,
-      shouldShow: centerType === CenterType.consult && doctorPhone,
+      shouldShow: centerType === CenterType.consult && doctorPhone && onlineChannel && onlineChannel !== 'rocketchat',
       type: 'Text',
       isBoldValue: false,
     },
