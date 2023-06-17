@@ -69,7 +69,9 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               },
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
-                  ? turnData.selected_online_visit_channel?.type
+                  ? specialServiceInfo.messenger
+                    ? specialServiceInfo.rules
+                    : turnData.selected_online_visit_channel?.type
                     ? [
                         `لطفا <b>قبض نوبت</b> خود را در <b>${
                           messengers[turnData.selected_online_visit_channel?.type as Messenger]?.name
@@ -80,8 +82,6 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                         ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
                         '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
                       ]
-                    : specialServiceInfo.messenger
-                    ? specialServiceInfo.rules
                     : [
                         'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
                         ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',

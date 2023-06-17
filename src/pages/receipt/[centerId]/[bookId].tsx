@@ -27,7 +27,6 @@ import MessengerButton from '@/modules/myTurn/components/messengerButton/messeng
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -43,7 +42,6 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-  const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
@@ -74,7 +72,6 @@ const Receipt = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
   const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
-  const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === bookDetailsData?.services?.[0]?.id);
   const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
     numberDay: 3,
     currentTime: serverTime?.data?.data?.data.timestamp,
@@ -242,7 +239,13 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!turnStatus.deletedTurn && !turnStatus.expiredTurn && possibilityBeingVisited && (
-                <MessengerButton channel={specialServiceInfo?.messenger} />
+                <MessengerButton
+                  channel={
+                    bookDetailsData.selected_online_visit_channel?.type
+                      ? bookDetailsData?.selected_online_visit_channel
+                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
+                  }
+                />
               )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
