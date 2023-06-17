@@ -1,10 +1,12 @@
 import { useBook } from '@/common/apis/services/booking/book';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
 
 export const useBooking = () => {
   const book = useBook();
   const isWebView = useWebView();
+  const isApplication = useApplication();
 
   const handleBook = async (
     {
@@ -35,7 +37,7 @@ export const useBooking = () => {
       request_code: timeId,
       center_id: center.id,
       server_id: center.server_id,
-      is_webview: isWebView ? 1 : 0,
+      is_webview: isWebView || isApplication ? 1 : 0,
       first_name: user.name,
       last_name: user.family,
       ...(user.gender && { gender: user.gender }),

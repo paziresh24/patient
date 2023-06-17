@@ -66,7 +66,6 @@ export const Notification = (props: NotificationProps) => {
   }, [exists.data]);
 
   const handleSubmit = async () => {
-    if (!phoneNumberField.current) return;
     if (!phoneNumberField.current || !phoneNumberValidator(phoneNumberField.current?.value ?? '')) {
       toast.error('شماره همراه را به صورت صحیح وارد نمایید');
       return;

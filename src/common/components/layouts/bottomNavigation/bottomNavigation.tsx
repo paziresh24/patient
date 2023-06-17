@@ -5,7 +5,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useRouter } from 'next/dist/client/router';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import Text from '../../atom/text/text';
 import CalenderIcon from '../../icons/calender';
 import HomeIcon from '../../icons/home';
@@ -33,48 +33,45 @@ export const BottomNavigation = () => {
     });
   };
 
-  const menus = useMemo(
-    () => [
-      {
-        name: 'خانه',
-        icon: <HomeIcon />,
-        link: isApplication ? '/apphome' : '/',
-        pattern: isApplication ? '/apphome' : '/',
-        privateRoute: false,
-      },
-      {
-        name: 'جستجو',
-        icon: <SearchIcon />,
-        link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
-        pattern: '/s/[[...params]]',
-        privateRoute: false,
-      },
-      {
-        name: 'نوبت های من',
-        icon: (
-          <div className="relative">
-            {!!turnsCount.presence && (
-              <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
-                {turnsCount.presence}
-              </div>
-            )}
-            <CalenderIcon />
-          </div>
-        ),
-        link: '/patient/appointments',
-        pattern: '/patient/appointments',
-        privateRoute: true,
-      },
-      {
-        name: 'پروفایل',
-        icon: <UserCircle />,
-        link: '/patient',
-        pattern: '/patient',
-        privateRoute: true,
-      },
-    ],
-    [isApplication, city, turnsCount],
-  );
+  const menus = [
+    {
+      name: 'خانه',
+      icon: <HomeIcon />,
+      link: isApplication ? '/apphome' : '/',
+      pattern: isApplication ? '/apphome' : '/',
+      privateRoute: false,
+    },
+    {
+      name: 'جستجو',
+      icon: <SearchIcon />,
+      link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
+      pattern: '/s/[[...params]]',
+      privateRoute: false,
+    },
+    {
+      name: 'نوبت های من',
+      icon: (
+        <div className="relative">
+          {!!turnsCount.presence && (
+            <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
+              {turnsCount.presence}
+            </div>
+          )}
+          <CalenderIcon />
+        </div>
+      ),
+      link: '/patient/appointments',
+      pattern: '/patient/appointments',
+      privateRoute: true,
+    },
+    {
+      name: 'پروفایل',
+      icon: <UserCircle />,
+      link: '/patient',
+      pattern: '/patient',
+      privateRoute: true,
+    },
+  ];
 
   const handleChangeRoute = (link: string, privateRoute: boolean) => {
     if (!isLogin && privateRoute) {

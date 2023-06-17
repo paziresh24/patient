@@ -4,11 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 
 interface Params {
-  res_num: string;
+  id: string;
 }
 
 export const inquiryPayment = async (params: Params) => {
-  return await clinicClient.get(`/api/payVip/${params.res_num}`, {
+  return await clinicClient.get(`/api/payVip/${params.id}`, {
     params: {
       certificate: getCookie('certificate'),
     },
