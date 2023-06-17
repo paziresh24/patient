@@ -239,7 +239,7 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
+              {!!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.expiredTurn && possibilityBeingVisited && (
                 <div className="flex justify-between gap-4">
                   <MessengerButton
                     channel={
@@ -263,15 +263,6 @@ const Receipt = () => {
                     eventAction="appointments"
                   />
                 </div>
-              )}
-              {!turnStatus.deletedTurn && !turnStatus.expiredTurn && possibilityBeingVisited && (
-                <MessengerButton
-                  channel={
-                    bookDetailsData.selected_online_visit_channel?.type
-                      ? bookDetailsData?.selected_online_visit_channel
-                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-                  }
-                />
               )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
