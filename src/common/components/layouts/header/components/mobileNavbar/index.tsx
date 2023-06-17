@@ -2,6 +2,7 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import HumbuggerMenu from '@/common/components/icons/humbuggerMenu';
 import useCustomize from '@/common/hooks/useCustomize';
+import SupportButtonBamdad from '@/modules/bamdad/components/suppoortButton';
 import ButtonSuggestion from '@/modules/search/view/suggestion/button';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -90,6 +91,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
         </div>
 
         <div className="flex items-center space-s-3">
+          <SupportButtonBamdad />
           {showSearchSuggestionButton && <ButtonSuggestion />}
           {customize.showUserProfile && <UserProfile />}
         </div>

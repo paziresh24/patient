@@ -2,13 +2,14 @@ import { useState } from 'react';
 import MobileNumber from '../components/mobileNumber';
 import OtpCode from '../components/otpCode';
 import Password from '../components/password/password';
+import { UserInfo } from '../store/userInfo';
 
 export type StepLoginForm = 'mobile_number' | 'otp_code' | 'password';
 
 interface LoginFormProps {
   title?: string;
   description?: string;
-  postLogin?: () => void;
+  postLogin?: (userInfo: UserInfo) => void;
 }
 
 export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => {
