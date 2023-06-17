@@ -3,6 +3,7 @@ import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChevronIcon from '@/components/icons/chevron';
+import SupportButtonBamdad from '@/modules/bamdad/components/suppoortButton';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -124,6 +125,7 @@ const Header = (props: HeaderProps) => {
             </nav>
           )}
           <div className="flex items-center space-s-4">
+            <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {customize.showUserProfile && <UserProfile />}
           </div>

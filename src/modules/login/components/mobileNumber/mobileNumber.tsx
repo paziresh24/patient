@@ -3,7 +3,8 @@ import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import { digitsFaToEn, phoneNumberValidator } from '@persian-tools/persian-tools';
+import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
+import { digitsFaToEn } from '@persian-tools/persian-tools';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -27,7 +28,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    if (!phoneNumberValidator(mobileNumberValue) && !mobileNumberValue.startsWith('0996')) {
+    if (!phoneNumberValidator(mobileNumberValue)) {
       setIsFieldError(true);
       return;
     }

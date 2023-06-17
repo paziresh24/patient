@@ -7,12 +7,15 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { CENTERS } from '@/common/types/centers';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import Recommend from '@/modules/booking/components/recommend/recommend';
 import useBooking from '@/modules/booking/hooks/booking';
 import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import messengers from '@/modules/profile/constants/messengers.json';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import without from 'lodash/without';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -51,8 +54,10 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const router = useRouter();
   const unSuspend = useUnsuspend();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
-
+  const discountPercentage = useFeatureValue('premium.online_visit_discount_percentage', 0);
+  const isShowPremiumFeatures = useShowPremiumFeatures();
   const checkLogin = (callback: () => any) => {
     if (!isLogin) return handleOpenLoginModal({ state: true, postLogin: callback });
     callback();
@@ -119,6 +124,8 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
+        {...(discountPercentage && isShowPremiumFeatures && { discountPercent: discountPercentage })}
+        isPremium={isLogin && checkPremiumUser(userInfo.vip)}
       />
       <Modal
         title="انتخاب کاربر برای گفتگو با پزشک"

@@ -8,4 +8,5 @@ export type Center = {
   availableTime?: string;
   type: 'office' | 'hospital' | 'consult';
   phoneNumbers?: string[];
+  services: any[];
 };

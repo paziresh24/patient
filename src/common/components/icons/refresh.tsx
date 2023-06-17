@@ -5,9 +5,9 @@ export const RefreshIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
     <path
       d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 4 16 4 16M3 12C3 7.02944 7 3 12 3C18 3 21 8 21 8M21 8V3.5M21 8H17M4 16H8.06448M4 16V20.5"
       stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 ));
