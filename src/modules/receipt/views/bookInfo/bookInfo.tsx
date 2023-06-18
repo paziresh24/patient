@@ -69,8 +69,8 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               },
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
-                  ? specialServiceInfo.messenger
-                    ? specialServiceInfo.rules
+                  ? specialServiceInfo?.messenger
+                    ? specialServiceInfo?.rules
                     : turnData.selected_online_visit_channel?.type
                     ? [
                         `لطفا <b>قبض نوبت</b> خود را در <b>${
