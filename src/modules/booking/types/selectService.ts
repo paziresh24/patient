@@ -4,4 +4,5 @@ export type Service = {
   isDisable: boolean;
   isAvailable?: boolean;
   availableTime?: string;
+  userCenterId?: string;
 };

@@ -1,9 +1,9 @@
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
 import useApplication from '@/common/hooks/useApplication';
+import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import classNames from '@/common/utils/classNames';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
 import Text from '../../atom/text/text';

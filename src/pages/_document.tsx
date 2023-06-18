@@ -26,6 +26,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="google" content="notranslate" />
       </Head>
       <body
         className={classNames('bg-slate-100 antialiased scroll-smooth', {

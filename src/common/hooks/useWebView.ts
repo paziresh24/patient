@@ -1,6 +1,5 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { create } from 'zustand';
+import { isNativeWebView } from '../utils/isNativeWebView';
 
 export const useWebViewStore = create<{
   isWebView: boolean;
@@ -11,16 +10,9 @@ export const useWebViewStore = create<{
 }));
 
 export const useWebView = () => {
-  const { query } = useRouter();
-  const { isWebView, setIsWebView } = useWebViewStore();
+  if (typeof window === 'undefined') return false;
 
-  useEffect(() => {
-    if (!isWebView) {
-      setIsWebView(!!query.isWebView || (typeof window !== 'undefined' && window?.matchMedia('(display-mode: standalone)')?.matches));
-    }
-  }, [query]);
-
-  return isWebView;
+  return isNativeWebView();
 };
 
 export default useWebView;

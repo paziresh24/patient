@@ -1,11 +1,12 @@
 import useCustomize from '@/common/hooks/useCustomize';
+import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
+import '@/firebase/analytics';
+import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
 import { Hydrate } from '@tanstack/react-query';
-// @ts-ignore
-import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
 import getConfig from 'next/config';
@@ -54,6 +55,7 @@ type AppProps = Omit<NextAppProps<withQueryProps & Record<string, unknown>>, 'Co
 
 function MyApp(props: AppProps) {
   const { Component, pageProps, router } = props;
+  useNetworkStatus();
 
   useEffect(() => {
     growthbook.loadFeatures({ autoRefresh: true });
