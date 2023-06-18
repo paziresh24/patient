@@ -24,6 +24,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
+import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
@@ -239,13 +240,29 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <MessengerButton
-                  channel={
-                    bookDetailsData.selected_online_visit_channel?.type
-                      ? bookDetailsData?.selected_online_visit_channel
-                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-                  }
-                />
+                <div className="flex justify-between gap-4">
+                  <MessengerButton
+                    channel={
+                      bookDetailsData.selected_online_visit_channel?.type
+                        ? bookDetailsData?.selected_online_visit_channel
+                        : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                            (item: any) => !(item.type as string).endsWith('_number'),
+                          )[0]
+                    }
+                  />
+                  <SecureCallButton
+                    bookId={bookDetailsData.book_id}
+                    title="تماس با پزشک"
+                    doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
+                    patient={{
+                      cell: bookDetailsData.patient.cell,
+                      name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+                      nationalCode: bookDetailsData.national_code,
+                    }}
+                    referenceCode={bookDetailsData.reference_code}
+                    eventAction="appointments"
+                  />
+                </div>
               )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
