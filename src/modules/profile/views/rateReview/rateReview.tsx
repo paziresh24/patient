@@ -16,17 +16,25 @@ import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
+import Details from '@/modules/rate/components/details/details';
 import Rate from '@/modules/rate/view/rate';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
+import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useInView } from 'react-intersection-observer';
+const DoctorTags = dynamic(() => import('./doctorTags'));
+const DoctorTagsFallback = dynamic(() => import('./doctorTagsFallback'), {
+  ssr: false,
+});
 
 interface RateReviewProps {
   doctor: {
@@ -39,6 +47,7 @@ interface RateReviewProps {
     expertise?: string;
     slug: string;
     city: string[];
+    server_id: string;
   };
   serverId: string;
   rateDetails: {
@@ -51,11 +60,12 @@ interface RateReviewProps {
       avg_star: number;
     }[];
   };
+  symptomes?: string[];
   className?: string;
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails, className } = props;
+  const { doctor, serverId, rateDetails, className, symptomes = [] } = props;
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
@@ -95,6 +105,7 @@ export const RateReview = (props: RateReviewProps) => {
   const replyText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -377,9 +388,28 @@ export const RateReview = (props: RateReviewProps) => {
     if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
     feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
   };
+
   return (
-    <>
-      <div ref={rateRef} className={classNames('w-full bg-white', className)}>
+    <div className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
+      <div ref={rateRef} className="w-full p-4 bg-white">
+        {!!details.count && (
+          <div className="space-y-3">
+            <Details
+              satisfaction={details.satisfaction}
+              count={details.count}
+              count_text={details.count_text}
+              title={details.title}
+              information={details.information}
+            />
+          </div>
+        )}
+      </div>
+
+      {isShowPremiumFeatures && checkPremiumUser(userInfo.vip) && (
+        <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
+      )}
+      {isShowPremiumFeatures && !checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
+      <div className={classNames('w-full bg-white', className)}>
         <Rate
           details={details}
           filters={rateSearchInputs}
@@ -396,49 +426,48 @@ export const RateReview = (props: RateReviewProps) => {
             </Button>
           </div>
         )}
-
-        <Modal title="گزارش نظر" {...reportModalProps}>
-          <TextField
-            multiLine
-            placeholder="لطفا علت و شرح گزارش نظر این کاربر را اعلام کنید تا تیم پشتیبانی پذیرش24 بر اساس پیشنهاد شما، نظر کاربر را مجددا بررسی نماید."
-            className="h-[10rem]"
-            ref={reportText}
-          />
-          <Button
-            loading={reportFeedback.isLoading}
-            onClick={() => submitReportFeedbackhandler(reportText.current?.value!)}
-            block
-            className="mt-4"
-          >
-            ارسال گزارش
-          </Button>
-        </Modal>
-        <Modal title="پاسخ به نظر" {...modalProps} noHeader={!isDesktop}>
-          {isDesktop ? (
-            <>
-              <TextField
-                multiLine
-                placeholder="نظر خود را بنویسید..."
-                onChange={e => setReplies(feedbackDetails.id, e.target.value)}
-                className="h-[10rem]"
-                autoFocus
-                ref={replyText}
-              />
-              <Button onClick={() => submitReplyHandler(feedbackDetails.id, replyText.current?.value!)} block className="mt-4">
-                ثبت پاسخ
-              </Button>
-            </>
-          ) : (
-            <MessageBox
-              placeholder="لطفا متن خود را وارد کنید"
-              submitText="ارسال"
-              submitHandled={text => submitReplyHandler(feedbackDetails.id, text)}
-              autoFocus
-            />
-          )}
-        </Modal>
       </div>
-    </>
+      <Modal title="گزارش نظر" {...reportModalProps}>
+        <TextField
+          multiLine
+          placeholder="لطفا علت و شرح گزارش نظر این کاربر را اعلام کنید تا تیم پشتیبانی پذیرش24 بر اساس پیشنهاد شما، نظر کاربر را مجددا بررسی نماید."
+          className="h-[10rem]"
+          ref={reportText}
+        />
+        <Button
+          loading={reportFeedback.isLoading}
+          onClick={() => submitReportFeedbackhandler(reportText.current?.value!)}
+          block
+          className="mt-4"
+        >
+          ارسال گزارش
+        </Button>
+      </Modal>
+      <Modal title="پاسخ به نظر" {...modalProps} noHeader={!isDesktop}>
+        {isDesktop ? (
+          <>
+            <TextField
+              multiLine
+              placeholder="نظر خود را بنویسید..."
+              onChange={e => setReplies(feedbackDetails.id, e.target.value)}
+              className="h-[10rem]"
+              autoFocus
+              ref={replyText}
+            />
+            <Button onClick={() => submitReplyHandler(feedbackDetails.id, replyText.current?.value!)} block className="mt-4">
+              ثبت پاسخ
+            </Button>
+          </>
+        ) : (
+          <MessageBox
+            placeholder="لطفا متن خود را وارد کنید"
+            submitText="ارسال"
+            submitHandled={text => submitReplyHandler(feedbackDetails.id, text)}
+            autoFocus
+          />
+        )}
+      </Modal>
+    </div>
   );
 };
 export default RateReview;

@@ -10,6 +10,7 @@ import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
+import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
 import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
@@ -18,6 +19,9 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import CreditDuration from '@/modules/bamdad/components/creditDuration';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
+import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useTranslation from 'next-translate/useTranslation';
@@ -46,6 +50,7 @@ export const UserProfile = () => {
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
   const { handleOpen, handleClose, modalProps } = useModal();
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -100,11 +105,18 @@ export const UserProfile = () => {
         (isLogin ? (
           <div ref={ref} className="relative flex flex-col items-end" onClick={() => setOpen(!open)}>
             <div className="flex items-center py-3 text-sm font-medium text-center cursor-pointer space-s-2 md:py-6 md:pl-4">
-              {userInfo?.image ? (
-                <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
-              ) : (
-                <UserCircle width="30" height="30" />
-              )}
+              <div className="relative">
+                {userInfo?.image ? (
+                  <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
+                ) : (
+                  <UserCircle width="30" height="30" />
+                )}
+                {checkPremiumUser(userInfo.vip) && (
+                  <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 border border-white rounded-full bg-amber-400">
+                    <DiamondIcon className="w-2 h-2 text-white" />
+                  </div>
+                )}
+              </div>
               <Text className="hidden sm:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
@@ -139,8 +151,16 @@ export const UserProfile = () => {
                 </div>
               </Link>
               <Divider />
-              <div className="flex flex-col p-3 pb-0">
-                <MenuList>
+              <div className="flex flex-col px-0 py-0">
+                {isShowPremiumFeatures && (
+                  <>
+                    <div className="px-3 py-4">
+                      <CreditDuration />
+                    </div>
+                    <Divider />
+                  </>
+                )}
+                <MenuList className="px-3">
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
                       {item.badge}
@@ -148,7 +168,7 @@ export const UserProfile = () => {
                   ))}
                 </MenuList>
                 <Divider className="my-1" />
-                <MenuList>
+                <MenuList className="px-3">
                   {/* {customize.showSupport && (
                     <MenuItem
                       name={t('patient/common:menu.support')}

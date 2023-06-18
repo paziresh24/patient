@@ -1,5 +1,5 @@
 import ChatIcon from '@/common/components/icons/chat';
-import { ServiceCard } from './card';
+import ServiceCard from '../../components/serviceCard';
 
 interface OnlineVisitProps {
   title: string;

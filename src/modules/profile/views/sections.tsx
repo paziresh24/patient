@@ -138,6 +138,7 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
           expertise: info?.expertises?.[0]?.expertise?.name,
           slug: info.slug,
           city: centers.map((center: any) => center.city),
+          server_id: info.server_id,
         };
 
         const rateDetails = {
@@ -168,9 +169,10 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
           doctor: doctorInfo,
           rateDetails,
           serverId: info.server_id,
+          symptomes: info.symptomes?.slice?.(0, 5) ?? [],
         };
       },
-      children: (props: any) => <RateReview className="md:rounded-lg" {...props} />,
+      children: (props: any) => <RateReview {...props} />,
     },
     // Seo Box
     {

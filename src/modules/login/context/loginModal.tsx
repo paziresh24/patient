@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { UserInfo } from '../store/userInfo';
 import { LoginModal } from '../views/loginModal';
 
 interface State {
@@ -6,7 +7,7 @@ interface State {
   title?: string;
   description?: string;
   closable?: boolean;
-  postLogin?: () => void;
+  postLogin?: (userInfo: UserInfo) => void;
 }
 
 export type TodoContextType = {
