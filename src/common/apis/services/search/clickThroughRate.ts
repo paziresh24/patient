@@ -14,9 +14,9 @@ export interface Params {
   order?: string;
 }
 
-export const ctr = async (params: Params) => {
+export const clickThroughRate = async (params: Params) => {
   await setTerminal();
   return clinicClient.post(`/api/sv2ctr`, params);
 };
 
-export const useCtr = () => useMutation(ctr);
+export const useClickThroughRate = () => useMutation(clickThroughRate);
