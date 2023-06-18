@@ -1,5 +1,4 @@
 import InfoIcon from '@/common/components/icons/info';
-import { Messenger, messengers } from '@/common/constants/messengers';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { createElement } from 'react';
@@ -17,7 +16,7 @@ interface TurnDetailsDataParam {
     turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
-    onlineChannel?: Messenger;
+    onlineChannel?: any;
     durationConversation?: string;
     centerName: string;
     receiptLink?: string;
@@ -26,6 +25,7 @@ interface TurnDetailsDataParam {
     centerId: string;
     patientInfo: Patient;
     rules?: string[];
+    messengerList?: any;
   };
   centerType: CenterType;
 }
@@ -46,13 +46,15 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     doctorPhone,
     durationConversation,
     turnStatus,
+    messengerList,
   } = data;
+  console.log(messengerList);
 
   const lists = [
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && messengers[onlineChannel]?.name,
+      value: onlineChannel && messengerList?.[onlineChannel]?.text,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,
