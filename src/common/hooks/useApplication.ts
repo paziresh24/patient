@@ -1,14 +1,14 @@
-import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
+import { isPWA } from '../utils/isPwa';
 
 export const useApplication = () => {
-  const { query } = useRouter();
-  const isApplication = useMemo(
-    () => query.application ?? (typeof window !== 'undefined' && window?.matchMedia('(display-mode: standalone)')?.matches),
-    [],
-  );
+  const [state, setState] = useState(false);
 
-  return isApplication;
+  useEffect(() => {
+    setState(isPWA());
+  }, []);
+
+  return state;
 };
 
 export default useApplication;

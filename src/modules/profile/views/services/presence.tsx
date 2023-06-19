@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Button from '@/common/components/atom/button/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
+import useApplication from '@/common/hooks/useApplication';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
@@ -25,6 +26,7 @@ interface PresenceProps {
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
   const isWebView = useWebView();
+  const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
   const {
@@ -75,7 +77,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status && !isWebView) {
+    if (center.is_only_in_app.status && !isWebView && !isApplication) {
       handleOpenSelectDownloadAppModal();
       return;
     }

@@ -29,7 +29,8 @@
       "@/hooks/*": ["./src/common/hooks/*"],
       "@/store/*": ["./src/common/store/*"],
       "@/apis/*": ["./src/common/apis/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@/firebase/*": ["./src/firebase/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
