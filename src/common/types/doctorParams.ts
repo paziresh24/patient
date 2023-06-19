@@ -11,7 +11,7 @@ export interface DoctorParams {
   server_id?: string;
   group_expertises?: GroupExpertises;
   feedbacks?: Feedback;
-  online_visit_channel_types?: string[] | any;
+  online_visit_channel_types?: string[];
 }
 
 export type Feedback = {
