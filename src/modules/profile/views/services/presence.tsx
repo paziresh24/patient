@@ -9,7 +9,7 @@ import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
-import { memo, useCallback, useState } from 'react';
+import { memo, useState } from 'react';
 import Notification from '../../components/notification/notification';
 import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
@@ -47,7 +47,7 @@ export const Presence = memo((props: PresenceProps) => {
       ? centers[0]?.freeturns_info.every((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000))
       : false;
 
-  const handleOnBook = useCallback(() => {
+  const handleOnBook = () => {
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
     sendGaEvent({ action: 'newprofile', category: 'button-book', label: displayName });
 
@@ -66,9 +66,9 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
     handleOpenSelectCenterModal();
-  }, []);
+  };
 
-  const handleOnBookByCenter = useCallback((center: any) => {
+  const handleOnBookByCenter = (center: any) => {
     setSelectedCenter(center);
     handleCloseSelectCenterModal();
 
@@ -90,20 +90,17 @@ export const Presence = memo((props: PresenceProps) => {
     });
 
     handleOpenSelectServiceModal();
-  }, []);
+  };
 
-  const handleOnBookByService = useCallback(
-    (service: any) => {
-      profileEvent('doctor profile select service button', {
-        service_id: service?.id,
-        service_alias_title: service?.alias_title,
-      });
+  const handleOnBookByService = (service: any) => {
+    profileEvent('doctor profile select service button', {
+      service_id: service?.id,
+      service_alias_title: service?.alias_title,
+    });
 
-      handleCloseSelectServiceModal();
-      return onBook({ centerId: selectedCenter.id, serviceId: service.id });
-    },
-    [selectedCenter],
-  );
+    handleCloseSelectServiceModal();
+    return onBook({ centerId: selectedCenter.id, serviceId: service.id });
+  };
 
   if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
     return (
