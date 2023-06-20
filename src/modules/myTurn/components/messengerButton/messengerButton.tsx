@@ -1,9 +1,10 @@
 import Button from '@/common/components/atom/button';
-import { messengers } from '@/common/constants/messengers';
 import { splunkBookingInstance } from '@/common/services/splunk';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { OnlineVisitChannel } from '../turn/turnType';
 
 export const MessengerButton = ({ channel }: { channel: OnlineVisitChannel }) => {
+  const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   if (!channel) return null;
   return (
     <Button
@@ -16,9 +17,9 @@ export const MessengerButton = ({ channel }: { channel: OnlineVisitChannel }) =>
         });
         window.open(channel?.channel_link);
       }}
-      icon={<img src={messengers[channel?.type]?.icon} width={24} height={24} alt="" className="ml-1" />}
+      icon={<img src={messengers[channel?.type]?.image} width={24} height={24} alt="" className="ml-1" />}
     >
-      شروع گفتگو با پزشک در {messengers[channel?.type]?.name}
+      شروع گفتگو با پزشک در {messengers[channel?.type]?.text}
     </Button>
   );
 };

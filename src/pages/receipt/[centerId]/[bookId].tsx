@@ -42,7 +42,6 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-
   const userId = useUserInfoStore(state => state.info.id);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
@@ -72,7 +71,6 @@ const Receipt = () => {
   const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
-
   const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
   const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
     numberDay: 3,
@@ -240,7 +238,7 @@ const Receipt = () => {
           )}
           {centerType === 'consult' && (
             <div className="grid gap-2">
-              {!turnStatus.deletedTurn && possibilityBeingVisited && (
+              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
                 <MessengerButton
                   channel={
                     bookDetailsData.selected_online_visit_channel?.type
