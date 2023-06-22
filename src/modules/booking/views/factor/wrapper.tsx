@@ -91,7 +91,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
       />
       {checkPremiumUser(userInfo.vip) && premiumOnlineVisitDiscountPercentage && premiumOnlineVistDiscountCode && (
         <Alert severity="warning" className="p-4">
-          <div className="flex space-s-2 text-amber-700 items-center">
+          <div className="flex items-center space-s-2 text-amber-700">
             <DiamondIcon />
             <Text fontSize="sm" fontWeight="medium">
               %{premiumOnlineVisitDiscountPercentage} تخفیف برای ویزیت آنلاین اعمال شده است.

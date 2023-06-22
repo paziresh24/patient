@@ -41,6 +41,7 @@ export const UserCard = (props: UserCardProps) => {
   const doctorMessenger = Object.values(messengers).filter((item: any) =>
     uniqMessengers(allMessenger, Object.keys(messengers)).includes(item.type),
   );
+  console.log(doctorMessenger);
 
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const fields = useMemo(

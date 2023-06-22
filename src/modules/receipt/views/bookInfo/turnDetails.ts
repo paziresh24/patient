@@ -9,6 +9,12 @@ type Patient = {
   nationalCode: string;
   selectServeis: string;
 };
+
+type MessengerDataType = {
+  text: string;
+  id: string;
+  image?: string;
+};
 interface TurnDetailsDataParam {
   data: {
     bookTime: string;
@@ -16,7 +22,7 @@ interface TurnDetailsDataParam {
     turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
-    onlineChannel?: any;
+    onlineChannel?: string;
     durationConversation?: string;
     centerName: string;
     receiptLink?: string;
@@ -25,7 +31,7 @@ interface TurnDetailsDataParam {
     centerId: string;
     patientInfo: Patient;
     rules?: string[];
-    messengerList?: any;
+    messengerList?: Record<string, MessengerDataType>;
   };
   centerType: CenterType;
 }
@@ -54,7 +60,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && messengerList?.[onlineChannel]?.text,
+      value: onlineChannel && messengerList?.[onlineChannel].text,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,
