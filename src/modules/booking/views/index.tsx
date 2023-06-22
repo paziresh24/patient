@@ -124,11 +124,9 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const shouldShowMessengers =
-    !!profile?.online_visit_channel_types?.includes?.('eitaa') &&
-    !!profile?.online_visit_channel_types?.includes?.('whatsapp') &&
-    center?.id === CENTERS.CONSULT;
   const messengers = useFeatureValue<any>('channeldescription', {});
+  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
+  const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -151,7 +149,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const unsuspend = useUnsuspend();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
-  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
