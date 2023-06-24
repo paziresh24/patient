@@ -1,5 +1,7 @@
-import getConfig from 'next/config';
 import { useMutation } from '@tanstack/react-query';
+import getConfig from 'next/config';
+import { searchClient } from '../../client';
+import { setTerminal } from '../auth/setTerminal';
 const { publicRuntimeConfig } = getConfig();
 
 export interface Params {
@@ -10,15 +12,9 @@ export interface Params {
   card_data: any;
 }
 
-export const sendPositionStatEvent = (params: Params) => {
-  return fetch(`${publicRuntimeConfig.SEARCH_BASE_URL}/seapi/stat/position`, {
-    body: JSON.stringify(params),
-    method: 'PATCH',
-    keepalive: true,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const sendPositionStatEvent = async (params: Params) => {
+  await setTerminal();
+  return searchClient.patch(`/seapi/stat/position`, params);
 };
 
 export const useStat = () => useMutation(sendPositionStatEvent);

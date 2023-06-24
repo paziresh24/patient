@@ -1,4 +1,4 @@
-import { useCtr } from '@/common/apis/services/search/ctr';
+import { useClickThroughRate } from '@/common/apis/services/search/clickThroughRate';
 import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
@@ -27,7 +27,7 @@ export const Result = () => {
   const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters, search } = useSearch();
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
-  const sendCtrEvent = useCtr();
+  const sendClickThroughRateEvent = useClickThroughRate();
   const university = useServerQuery(state => state.queries.university);
 
   const handleNextPage = () => {
@@ -48,7 +48,7 @@ export const Result = () => {
       route: asPath,
       card_data: item,
     });
-    sendCtrEvent.mutate({
+    sendClickThroughRateEvent.mutate({
       terminal_id: (getCookie('terminal_id') as string) ?? '',
       id: item.id,
       position: item.position,
