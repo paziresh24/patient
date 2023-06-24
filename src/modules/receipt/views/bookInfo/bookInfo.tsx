@@ -1,10 +1,11 @@
 import Skeleton from '@/common/components/atom/skeleton';
-import { Messenger, messengers } from '@/common/constants/messengers';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
+
 interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
@@ -13,6 +14,9 @@ interface PaymentDetailsProps {
 
 export const BookInfo = (props: PaymentDetailsProps) => {
   const { loading = false, turnData, centerId } = props;
+  const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
+  const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
+  const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
 
@@ -56,6 +60,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               onlineChannel: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel?.type
                 : turnData.doctor?.online_visit_channels?.[0]?.type,
+              messengerList: messengers,
               receiptLink: turnData?.share_url,
               centerId: centerId,
               patientInfo: {
@@ -66,10 +71,12 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               },
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
-                  ? turnData.selected_online_visit_channel?.type
+                  ? specialServiceInfo?.messenger
+                    ? specialServiceInfo?.rules
+                    : turnData.selected_online_visit_channel?.type
                     ? [
                         `لطفا <b>قبض نوبت</b> خود را در <b>${
-                          messengers[turnData.selected_online_visit_channel?.type as Messenger]?.name
+                          messengers[turnData.selected_online_visit_channel?.type]?.text
                         }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
                     : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap

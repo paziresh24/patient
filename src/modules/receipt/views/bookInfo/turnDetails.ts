@@ -1,5 +1,4 @@
 import InfoIcon from '@/common/components/icons/info';
-import { Messenger, messengers } from '@/common/constants/messengers';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { createElement } from 'react';
@@ -10,6 +9,12 @@ type Patient = {
   nationalCode: string;
   selectServeis: string;
 };
+
+type MessengerDataType = {
+  text: string;
+  id: string;
+  image?: string;
+};
 interface TurnDetailsDataParam {
   data: {
     bookTime: string;
@@ -17,7 +22,7 @@ interface TurnDetailsDataParam {
     turnStatus?: string;
     trackingCode: string;
     doctorPhone?: string;
-    onlineChannel?: Messenger;
+    onlineChannel?: string;
     durationConversation?: string;
     centerName: string;
     receiptLink?: string;
@@ -26,6 +31,7 @@ interface TurnDetailsDataParam {
     centerId: string;
     patientInfo: Patient;
     rules?: string[];
+    messengerList?: Record<string, MessengerDataType>;
   };
   centerType: CenterType;
 }
@@ -46,13 +52,14 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     doctorPhone,
     durationConversation,
     turnStatus,
+    messengerList,
   } = data;
 
   const lists = [
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && messengers[onlineChannel]?.name,
+      value: onlineChannel && messengerList?.[onlineChannel].text,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,
@@ -69,7 +76,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       id: 13,
       name: 'شماره پزشک',
       value: doctorPhone,
-      shouldShow: centerType === CenterType.consult && doctorPhone,
+      shouldShow: centerType === CenterType.consult && doctorPhone && onlineChannel && onlineChannel !== 'rocketchat',
       type: 'Text',
       isBoldValue: false,
     },

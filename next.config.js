@@ -52,6 +52,7 @@ const nextConfig = {
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
+    IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
   },
   images: {

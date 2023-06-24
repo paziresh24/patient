@@ -4,6 +4,7 @@ import Alert from '@/common/components/atom/alert/alert';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
+import useApplication from '@/common/hooks/useApplication';
 import { CENTERS } from '@/common/types/centers';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -26,6 +27,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const { bookId, centerId, respiteToRefundAfterDelete } = props;
   const centerPayment = useCenterPayment();
   const consultPayment = useConsultPayment();
+  const isApplication = useApplication();
   const userInfo = useUserInfoStore(state => state.info);
   const premiumOnlineVistDiscountCode = useFeatureValue('premium.online_visit_discount_code', '');
   const premiumOnlineVisitDiscountPercentage = useFeatureValue('premium.online_visit_discount_percentage', '');
@@ -50,6 +52,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         book_id: bookId,
         ...(discountToken && { discount_token: discountToken }),
       });
+      if (isApplication) {
+        window.open(data.url, '_blank');
+        return;
+      }
       if (data.status) {
         location.assign(data.url);
         return;
@@ -85,7 +91,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
       />
       {checkPremiumUser(userInfo.vip) && premiumOnlineVisitDiscountPercentage && premiumOnlineVistDiscountCode && (
         <Alert severity="warning" className="p-4">
-          <div className="flex space-s-2 text-amber-700 items-center">
+          <div className="flex items-center space-s-2 text-amber-700">
             <DiamondIcon />
             <Text fontSize="sm" fontWeight="medium">
               %{premiumOnlineVisitDiscountPercentage} تخفیف برای ویزیت آنلاین اعمال شده است.

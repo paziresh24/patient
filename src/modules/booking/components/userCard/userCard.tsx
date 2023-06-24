@@ -1,7 +1,5 @@
 import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser';
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
-import eitaaIcon from '@/common/assets/messenger/eitaa.png';
-import whatsappIcon from '@/common/assets/messenger/whatsapp.png';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
@@ -9,8 +7,11 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
 
 interface UserCardProps {
@@ -35,6 +36,11 @@ export const UserCard = (props: UserCardProps) => {
   const editSubuser = useEditSubuser();
   const updateUser = useUpdateUser();
   const { handleOpen, handleClose, modalProps } = useModal();
+  const allMessenger = useProfileDataStore.getState().messenger;
+  const messengers = useFeatureValue<any>('channeldescription', {});
+  const doctorMessenger = Object.values(messengers).filter((item: any) =>
+    uniqMessengers(allMessenger, Object.keys(messengers)).includes(item.type),
+  );
 
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const fields = useMemo(
@@ -108,38 +114,24 @@ export const UserCard = (props: UserCardProps) => {
               از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
             </Text>
             <div className="flex items-center mt-3 space-s-3 select-none">
-              <div className="w-full">
-                <input
-                  onChange={e => e.target.checked && handleSelect('eitaa')}
-                  className="absolute hidden peer"
-                  type="radio"
-                  name="messagenrs"
-                  id="eitaa"
-                />
-                <label
-                  htmlFor="eitaa"
-                  className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
-                >
-                  <img src={eitaaIcon.src} width={28} height={28} alt="" />
-                  <Text fontWeight="medium">ایتا</Text>
-                </label>
-              </div>
-              <div className="w-full">
-                <input
-                  onChange={e => e.target.checked && handleSelect('whatsapp')}
-                  className="absolute hidden peer"
-                  type="radio"
-                  name="messagenrs"
-                  id="whatsapp"
-                />
-                <label
-                  htmlFor="whatsapp"
-                  className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
-                >
-                  <img src={whatsappIcon.src} width={28} height={28} alt="" />
-                  <Text fontWeight="medium">واتساپ</Text>
-                </label>
-              </div>
+              {doctorMessenger.map((messenger: any) => (
+                <div className="w-full" key={messenger.id}>
+                  <input
+                    onChange={e => e.target.checked && handleSelect(messenger.type)}
+                    className="absolute hidden peer"
+                    type="radio"
+                    name="messagenrs"
+                    id={messenger.type}
+                  />
+                  <label
+                    htmlFor={messenger.type}
+                    className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
+                  >
+                    <img src={messenger.image} width={21} height={21} alt="" />
+                    <Text fontWeight="medium">{messenger.name}</Text>
+                  </label>
+                </div>
+              ))}
             </div>
           </>
         )}

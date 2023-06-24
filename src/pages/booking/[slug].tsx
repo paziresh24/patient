@@ -10,6 +10,7 @@ import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -18,8 +19,9 @@ const { publicRuntimeConfig } = getConfig();
 
 const Booking = () => {
   const router = useRouter();
+  const setProfileData = useProfileDataStore(state => state.setData);
 
-  const { data, isLoading, isSuccess } = useGetProfileData(
+  const { data, isLoading, isSuccess, status } = useGetProfileData(
     {
       slug: router.query?.slug?.toString() ?? '/',
     },
@@ -27,7 +29,6 @@ const Booking = () => {
       enabled: !!router.isReady,
     },
   );
-
   const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
@@ -60,6 +61,11 @@ const Booking = () => {
       payload: queries as any,
     };
   }, []);
+  useEffect(() => {
+    if (isSuccess) {
+      setProfileData(profileData);
+    }
+  }, [status]);
 
   useEffect(() => {
     // Prefetch the factor page
