@@ -240,7 +240,7 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4">
                   <MessengerButton
                     channel={
                       bookDetailsData.selected_online_visit_channel?.type

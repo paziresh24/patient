@@ -45,7 +45,7 @@ export const SecureCallButton = (props: EstablishingSecureCallParams) => {
       toast.success('درخواست شما با موفقیت ثبت شد');
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data.message ?? 'خطایی رخ داده است');
+        toast.error(error.response?.data.message);
       }
     }
   };
