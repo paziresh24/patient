@@ -124,7 +124,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: 'تماس با مرکز درمانی',
       value: centerPhone,
       buttonAction: () => {
-        return (location.href = 'tel:${centerPhone}');
+        return (location.href = `tel:${centerPhone}`);
       },
       shouldShow: !!centerPhone && centerType === CenterType.clinic,
       type: 'Button',
