@@ -8,12 +8,14 @@ import GoldButton from './goldButton';
 export const OnlineVisitDiscountFallback = ({ className }: { className: string }) => {
   const router = useRouter();
   const discountPercentage = useFeatureValue('premium.online_visit_discount_percentage', 0);
+  const copywriting = useFeatureValue<Record<string, any>>('premium.copywriting', {});
+  const texts = copywriting?.[router.pathname]?.onlineVisit ?? {};
 
   return (
     <div className={classNames('flex flex-col items-center space-y-2 bg-white', className)}>
       <div className="w-full p-3 text-center rounded-lg bg-amber-50">
         <Text fontSize="sm" fontWeight="medium">
-          شما می توانید با فعال سازی اشتراک ماهانه طلایی، از تخفیف {discountPercentage}% نامحدود در ویزیت های آنلاین استفاده کنید.
+          {texts.description?.replace?.('{{online_visit_discount_percentage}}', discountPercentage)}
         </Text>
       </div>
       <GoldButton
