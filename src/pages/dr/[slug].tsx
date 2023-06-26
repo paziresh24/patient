@@ -22,6 +22,7 @@ import { dayToSecond } from '@/common/utils/dayToSecond';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
@@ -62,6 +63,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
       keepPreviousData: true,
     },
   );
+  const isShowPremiumFeatures = useShowPremiumFeatures();
+
   const profileData = profile.data?.data;
   const isBulk = useMemo(
     () =>
@@ -70,6 +73,18 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     [profileData],
   );
   useProfileDataStore.getState().data = profileData;
+
+  useEffect(() => {
+    if (isShowPremiumFeatures) {
+      splunkInstance().sendEvent({
+        group: 'bamdad',
+        type: 'profile_page-view',
+        event: {
+          terminal_id: getCookie('terminal_id'),
+        },
+      });
+    }
+  }, [isShowPremiumFeatures]);
 
   useEffect(() => {
     if (profileData) {

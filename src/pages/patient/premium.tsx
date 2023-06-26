@@ -30,12 +30,14 @@ export const Premium = () => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const isUserPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const { query } = useRouter();
+  const { query, pathname } = useRouter();
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { t } = useTranslation('patient/premium');
   const featureList = useFeatureValue<Array<{ title: string; description: string }>>('premium.feature_list', []);
   const price = useFeatureValue<number>('premium.pricing', 0);
+  const copywriting = useFeatureValue<Record<string, any>>('premium.copywriting', {});
+  const texts = copywriting?.[pathname] ?? {};
 
   const payment = usePremiumPayment();
 
@@ -70,7 +72,7 @@ export const Premium = () => {
               <div className="absolute z-20 w-12 h-12 transition-all bg-amber-500 blur-2xl -top-6 animate-bounce" />
               <img src={diamond.src} alt="" className="absolute z-20 -top-6 animate-bounce-slow" />
               <Text fontWeight="bold" fontSize="lg" className="z-40 !mt-5">
-                اشتراک طلایی
+                {texts?.title}
               </Text>
               {checkPremiumUser(user.vip) && (
                 <Text align="center" fontSize="sm" className="z-40">
@@ -79,7 +81,7 @@ export const Premium = () => {
               )}
               {!checkPremiumUser(user.vip) && (
                 <Text align="center" fontSize="sm" className="z-40 px-5 py-2 leading-6">
-                  اشتراک ماهانه طلایی برای تجربه ای بهتر در ویزیت آنلاین و بهرمندی از سایر خدمات ویژه پذیرش24
+                  {texts?.description}
                 </Text>
               )}
 
