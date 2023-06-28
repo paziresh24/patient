@@ -103,3 +103,32 @@ paziresh24AppClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+workflowClient.interceptors.response.use(
+  res => {
+    return res.data;
+  },
+  async err => {
+    console.log(err);
+
+    const originalRequest = err.config;
+    if (err.code === 'ERR_NETWORK') {
+      try {
+        const { data } = (await refresh()) as any;
+        if (data.access_token) setCookie('token', data.access_token);
+        return workflowClient(originalRequest);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          splunkInstance().sendEvent({
+            group: 'patient-app',
+            type: 'error-refresh-token',
+            event: {
+              error: error.response?.data,
+            },
+          });
+        }
+      }
+    }
+    return Promise.reject(err);
+  },
+);
