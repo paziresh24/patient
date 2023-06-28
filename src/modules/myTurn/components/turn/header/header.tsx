@@ -1,3 +1,4 @@
+import PrinterIcon from '@/common/components/icons/printer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import Button from '@/components/atom/button';
@@ -68,6 +69,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     router.push(`/receipt/${centerId}/${id}`);
   };
 
+  const factorTurn = () => {
+    router.push(`/invoice/${centerId}/${id}`);
+  };
+
   const shareTurnInfo = () => {
     shareTurn({
       bookId: id,
@@ -83,6 +88,13 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       name: 'قبض نوبت',
       icon: <ReceiptIcon />,
       action: receiptTurn,
+      shouldShow: true,
+    },
+    {
+      id: 1,
+      name: 'چاپ فاکتور',
+      icon: <PrinterIcon />,
+      action: factorTurn,
       shouldShow: true,
     },
     {
