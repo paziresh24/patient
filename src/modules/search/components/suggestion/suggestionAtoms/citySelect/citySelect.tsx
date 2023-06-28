@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
 import LocationIcon from '@/common/components/icons/location';
+import SearchIcon from '@/common/components/icons/search';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { useEffect, useRef, useState } from 'react';
@@ -26,6 +27,7 @@ export const CitySelect = (props: CitySelectProps) => {
   const { city, onChange } = props;
   const { handleOpen, handleClose, modalProps } = useModal();
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
   const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>('provinces');
@@ -48,9 +50,14 @@ export const CitySelect = (props: CitySelectProps) => {
     }
   }, [getCitiesAndProvince.status, modalProps.isOpen]);
 
+  const scrollTop = () => {
+    if (containerRef.current) containerRef.current.scrollTop = 0;
+  };
+
   const handleClickProvince = (provinceId: string) => {
     setStepSelect('cities');
     setUserSearchInput('');
+    scrollTop();
     setFiltredLocation(citiesData.current.filter(city => city.province_id === provinceId).map(item => ({ ...item, isProvince: false })));
   };
 
@@ -66,6 +73,7 @@ export const CitySelect = (props: CitySelectProps) => {
 
   const handleBackToProvince = () => {
     setStepSelect('provinces');
+    scrollTop();
     setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
   };
 
@@ -79,7 +87,7 @@ export const CitySelect = (props: CitySelectProps) => {
       >
         <Text fontSize="sm">{city?.name}</Text>
       </Button>
-      <Modal fullScreen title="انتخاب استان/شهر" {...modalProps}>
+      <Modal fullScreen title="انتخاب شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
           <div className="flex flex-wrap gap-2">
             {popularCities.map(city => (
@@ -94,15 +102,22 @@ export const CitySelect = (props: CitySelectProps) => {
               </Button>
             ))}
           </div>
-          <TextField
-            size="small"
-            placeholder={`جستجو در ${stepSelect === 'provinces' ? 'استان ها' : 'شهر ها'}`}
-            onChange={e => setUserSearchInput(e.target.value)}
-            value={userSearchInput}
-          />
+          <div className="relative">
+            <SearchIcon className="absolute top-[0.6rem] rtl:right-[0.6rem] ltr:left-[0.6rem] h-5 w-5" />
+            <TextField
+              size="small"
+              placeholder={`جستجوی در شهرها`}
+              onChange={e => {
+                scrollTop();
+                setUserSearchInput(e.target.value);
+              }}
+              value={userSearchInput}
+              className="px-9"
+            />
+          </div>
 
-          <div className="flex flex-col h-full pb-32 overflow-auto no-scroll">
-            {stepSelect === 'cities' && (
+          <div ref={containerRef} className="flex flex-col h-full pb-32 overflow-auto no-scroll">
+            {!userSearchInput && stepSelect === 'cities' && (
               <div
                 className="sticky top-0 z-10 flex items-center p-3 font-medium bg-white border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50 space-s-2 "
                 onClick={handleBackToProvince}
@@ -111,9 +126,27 @@ export const CitySelect = (props: CitySelectProps) => {
                 <Text fontWeight="bold">برگشت به لیست استان‌ها</Text>
               </div>
             )}
-            {filtredLocation
-              .filter(item => item.name?.includes(userSearchInput))
-              .map(city => (
+            {userSearchInput &&
+              citiesData.current
+                .filter(item => item.name?.includes(userSearchInput))
+                .map(city => (
+                  <div
+                    key={city.id}
+                    className="flex items-center justify-between p-3 font-medium border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50"
+                    onClick={() => handleClickCity(city.id)}
+                  >
+                    <div className="flex flex-col">
+                      <Text>{city?.name}</Text>
+                      <Text fontSize="xs" fontWeight="light">
+                        {provincesData.current?.find(provine => provine.id === city.province_id)?.name}
+                      </Text>
+                    </div>
+                    <ChevronIcon dir="left" />
+                  </div>
+                ))}
+
+            {!userSearchInput &&
+              filtredLocation.map(city => (
                 <div
                   key={city.id}
                   className="flex items-center justify-between p-3 font-medium border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50"
