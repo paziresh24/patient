@@ -5,11 +5,14 @@ import useWebView from '@/common/hooks/useWebView';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import humanizeTime from '@/common/utils/humanizeTime';
+import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
+import { Center } from '@/modules/booking/types/selectCenter';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
 const OnlineVisitWrapper = dynamic(() => import('./onlineVisitWrapper'), {
   loading(loadingProps) {
@@ -36,6 +39,24 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   });
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
+
+  const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string) => {
+    const isBookRequest = (doctor.centers as Center[])
+      ?.find?.(center => center.id === centerId)
+      ?.services?.find?.(service => service.id === serviceId)?.can_request;
+
+    const params = {
+      centerId,
+      serviceId,
+      ...(isBookRequest && { timeId: '-1' }),
+    };
+
+    if (isNativeWebView()) {
+      if (isBookRequest) return location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
+    }
+
+    router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
+  };
 
   return (
     <>
@@ -78,7 +99,7 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
           <Presence
             centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
             waitingTime={doctor.waiting_time_info?.waiting_time_title}
-            onBook={({ centerId, serviceId }) => router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`)}
+            onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId)}
             displayName={doctor.display_name}
           />
         )}
