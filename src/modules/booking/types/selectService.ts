@@ -5,4 +5,5 @@ export type Service = {
   isAvailable?: boolean;
   availableTime?: string;
   userCenterId?: string;
+  can_request?: boolean;
 };
