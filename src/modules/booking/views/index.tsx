@@ -57,7 +57,6 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
-import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
@@ -161,7 +160,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       setService(selectedService);
       defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
       if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, isNativeWebView());
+        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' });
       }
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }
@@ -266,7 +265,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     toast.error(data.message);
   };
 
-  const handleChangeStep = (key: Step, payload?: any, openBrowserWebView?: boolean) => {
+  const handleChangeStep = (key: Step, payload?: any) => {
     setStep(key);
 
     if (key === 'BOOK_REQUEST') {
@@ -283,7 +282,6 @@ const BookingSteps = (props: BookingStepsProps) => {
           query: {
             ...router.query,
             ...payload,
-            ...(openBrowserWebView && { openInBrowser: 1 }),
           },
         },
         undefined,
@@ -366,7 +364,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 serviceId: service.id,
               };
               setService(service);
-              if (service?.can_request) return handleChangeStep('SELECT_USER', payload, isNativeWebView());
+              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
               return handleChangeStep('SELECT_TIME', payload);
             }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
@@ -387,7 +385,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             const selectedService = center?.services?.find((s: any) => s.id === service.id);
             sendSelectServiceEvent(reformattedDoctorInfoForEvent({ center, service: selectedService, doctor: profile }));
             setService(selectedService);
-            if (selectedService?.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id }, isNativeWebView());
+            if (selectedService?.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id });
             handleChangeStep('SELECT_TIME', { serviceId: service.id });
           }}
         />

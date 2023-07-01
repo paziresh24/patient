@@ -1,3 +1,5 @@
+import { Service } from './selectService';
+
 export type Center = {
   id: string;
   name: string;
@@ -8,5 +10,5 @@ export type Center = {
   availableTime?: string;
   type: 'office' | 'hospital' | 'consult';
   phoneNumbers?: string[];
-  services: any[];
+  services: Service[];
 };
