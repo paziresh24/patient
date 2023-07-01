@@ -112,7 +112,7 @@ workflowClient.interceptors.response.use(
     console.log(err);
 
     const originalRequest = err.config;
-    if (err.code === 'ERR_NETWORK') {
+    if (err?.response?.status === 401) {
       try {
         const { data } = (await refresh()) as any;
         if (data.access_token) setCookie('token', data.access_token);
