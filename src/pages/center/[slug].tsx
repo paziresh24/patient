@@ -20,7 +20,7 @@ import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -46,6 +46,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
       query: searchQuery,
       center_id: profileData.id,
       expertise: selectedExpertise,
+      ...(query?.expertise_id && !selectedExpertise && { expertise_id: query?.expertise_id }),
       university,
     },
     {
@@ -63,6 +64,22 @@ const CenterProfile = ({ query: { university }, host }: any) => {
       keepPreviousData: true,
     },
   );
+
+  const defaultExpertise = useMemo(() => {
+    const selectedExpertise = expertises.data?.[0]?.items?.[0]?.sub_items
+      ?.filter((item: any) => item.id === +query.expertise_id!)
+      ?.map((expertise: any) => ({
+        label: expertise.name,
+        value: expertise.name,
+      }))[0];
+
+    return (
+      selectedExpertise ?? {
+        label: 'همه تخصص ها',
+        value: '',
+      }
+    );
+  }, [query.expertise_id, expertises]);
 
   useEffect(() => {
     if (profileData) {
@@ -234,9 +251,11 @@ const CenterProfile = ({ query: { university }, host }: any) => {
                   })) ?? []
                 }
                 showRateAndReviews={customize.showRateAndReviews}
+                expertiseListLoading={expertises.isLoading}
                 loading={doctors.isLoading}
                 onSelectExpertise={setSelectedExpertise}
                 onSearch={setSearchQuery}
+                defaultValue={defaultExpertise}
               />
             </div>
           </div>
