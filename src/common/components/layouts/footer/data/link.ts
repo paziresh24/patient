@@ -37,7 +37,7 @@ export const footerForUsers = {
 };
 
 export const footerPaziresh24 = {
-  title: 'پذیرش۲۴',
+  title: 'پذیرش24',
   links: [
     {
       title: 'درباره ما',
@@ -48,7 +48,7 @@ export const footerPaziresh24 = {
       link: '/home/contact-us/',
     },
     {
-      title: 'جامعه توسعه دهندگان پذیرش۲۴',
+      title: 'جامعه توسعه دهندگان پذیرش24',
       link: 'https://community.paziresh24.com/',
     },
     {
