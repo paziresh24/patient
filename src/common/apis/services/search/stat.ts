@@ -1,5 +1,6 @@
 import { searchClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
+import { setTerminal } from '../auth/setTerminal';
 
 export interface Params {
   route: string;
@@ -8,7 +9,8 @@ export interface Params {
   centerTypeFilterPresence?: number;
 }
 
-export const stat = (params: Params) => {
+export const stat = async (params: Params) => {
+  await setTerminal();
   return searchClient.post(`/seapi/stat`, params);
 };
 
