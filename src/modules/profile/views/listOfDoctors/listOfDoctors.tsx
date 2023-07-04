@@ -7,20 +7,33 @@ import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactN
 import SearchCard from '@/modules/search/components/card/card';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
+
+type ExpertiseType = {
+  lable: string;
+  value: string;
+};
 interface ListOfDoctorsProps {
   doctors: any[];
-  expertises: {
-    lable: string;
-    value: string;
-  }[];
+  expertises: ExpertiseType[];
   onSearch: (query: string) => void;
   onSelectExpertise: (expertise: string) => void;
   loading?: boolean;
   showRateAndReviews?: boolean;
+  defaultValue?: ExpertiseType;
+  expertiseListLoading?: boolean;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
-  const { doctors, expertises, onSearch, onSelectExpertise, loading = false, showRateAndReviews = true } = props;
+  const {
+    doctors,
+    expertises,
+    onSearch,
+    onSelectExpertise,
+    defaultValue,
+    loading = false,
+    expertiseListLoading = false,
+    showRateAndReviews = true,
+  } = props;
   const [page, setPage] = useState(1);
   const router = useRouter();
 
@@ -28,29 +41,34 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
 
   return (
     <div className="flex flex-col space-y-3">
-      <div className="flex flex-col items-center space-y-2 md:space-y-0 md:flex-row md:space-s-2">
-        <TextField
-          placeholder="جستجوی نام پزشک ..."
-          onChange={e => {
-            onSearch(e.target.value);
-            setPage(1);
-          }}
-        />
-        <Autocomplete
-          options={[{ label: 'همه تخصص ها', value: '' }, ...expertises]}
-          onChange={e => {
-            onSelectExpertise(e.target.value.value);
-            setPage(1);
-          }}
-          classNameWrapper="w-full md:max-w-[15rem] font-medium !text-sm"
-          defaultValue={{
-            label: 'همه تخصص ها',
-            value: '',
-          }}
-          searchable
-          placeholder="همه تخصص ها"
-        />
-      </div>
+      {expertiseListLoading && (
+        <div className="flex flex-col md:flex-row gap-3">
+          <Skeleton h="3rem" className="!w-full md:!w-[68%]" rounded="lg" />
+          <Skeleton h="3rem" className="!w-full md:!w-[32%]" rounded="lg" />
+        </div>
+      )}
+      {!expertiseListLoading && (
+        <div className="flex flex-col items-center space-y-2 md:space-y-0 md:flex-row md:space-s-2">
+          <TextField
+            placeholder="جستجوی نام پزشک ..."
+            onChange={e => {
+              onSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+          <Autocomplete
+            options={[{ label: 'همه تخصص ها', value: '' }, ...expertises]}
+            onChange={e => {
+              onSelectExpertise(e.target.value.value);
+              setPage(1);
+            }}
+            classNameWrapper="w-full md:max-w-[15rem] font-medium !text-sm"
+            defaultValue={defaultValue}
+            searchable
+            placeholder="همه تخصص ها"
+          />
+        </div>
+      )}
       <div className="flex flex-col space-y-2">
         {loading && (
           <>
