@@ -10,7 +10,7 @@ import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import getConfig from 'next/config';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import useDiscount from '../../hooks/factor/useDiscount';
 import useInvoice from '../../hooks/factor/useInvoice';
@@ -40,11 +40,20 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     bookId,
   });
 
+  const isApplyPremiumDiscount = useMemo(
+    () =>
+      checkPremiumUser(userInfo.vip) &&
+      centerId === CENTERS.CONSULT &&
+      premiumOnlineVistDiscountCode &&
+      premiumOnlineVisitDiscountPercentage,
+    [userInfo, premiumOnlineVistDiscountCode, premiumOnlineVisitDiscountPercentage, centerId],
+  );
+
   useEffect(() => {
-    if (checkPremiumUser(userInfo.vip) && premiumOnlineVistDiscountCode && premiumOnlineVisitDiscountPercentage) {
+    if (isApplyPremiumDiscount) {
       handleDiscountSubmit(premiumOnlineVistDiscountCode);
     }
-  }, [userInfo, premiumOnlineVistDiscountCode, premiumOnlineVisitDiscountPercentage]);
+  }, [isApplyPremiumDiscount]);
 
   const handlePaymentAction = async ({ discountToken, bookId }: { discountToken?: string; bookId: string }) => {
     if (bookId) {
@@ -83,13 +92,12 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         onSubmitDiscount={handleDiscountSubmit}
         onPayment={handlePaymentAction}
         isShowDiscountInput={
-          centerId === CENTERS.CONSULT && checkPremiumUser(userInfo.vip)
-            ? !premiumOnlineVisitDiscountPercentage && !premiumOnlineVistDiscountCode
-            : true
+          centerId === CENTERS.CONSULT &&
+          (checkPremiumUser(userInfo.vip) ? !premiumOnlineVisitDiscountPercentage && !premiumOnlineVistDiscountCode : true)
         }
         rules={getRules()}
       />
-      {checkPremiumUser(userInfo.vip) && premiumOnlineVisitDiscountPercentage && premiumOnlineVistDiscountCode && (
+      {isApplyPremiumDiscount && (
         <Alert severity="warning" className="p-4">
           <div className="flex items-center space-s-2 text-amber-700">
             <DiamondIcon />
