@@ -23,6 +23,21 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
   useClickAway(ref, () => {
     setOpen(false);
   });
+
+  if (menuItem.length === 1) {
+    const fristItem = menuItem[0];
+    return (
+      <li className="relative flex items-center">
+        <Link prefetch={false} href={fristItem.link ?? '#'} className="flex items-center text-center ">
+          {fristItem.icon && fristItem.icon}
+          <Text fontSize="sm" className="p-3" fontWeight="medium">
+            {fristItem.title}
+          </Text>
+        </Link>
+      </li>
+    );
+  }
+
   return (
     <li ref={ref} className="relative flex items-center" onClick={() => setOpen(prev => !prev)}>
       <div className="flex items-center text-center cursor-pointer">
