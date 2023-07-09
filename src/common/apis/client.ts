@@ -109,6 +109,8 @@ workflowClient.interceptors.response.use(
     return res.data;
   },
   async err => {
+    console.log(err);
+
     const originalRequest = err.config;
     if (err?.response?.status === 401) {
       try {
