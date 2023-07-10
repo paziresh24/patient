@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
+import { toast } from 'react-hot-toast';
 import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
@@ -109,14 +110,15 @@ workflowClient.interceptors.response.use(
     return res.data;
   },
   async err => {
-    console.log(err);
-
     const originalRequest = err.config;
     if (err?.response?.status === 401) {
       try {
         const { data } = (await refresh()) as any;
-        if (data.access_token) setCookie('token', data.access_token);
-        return workflowClient(originalRequest);
+        if (data.access_token) {
+          setCookie('token', data.access_token);
+          return workflowClient(originalRequest);
+        }
+        return toast.error('متاسفانه مشکلی رخ داده است، لطفا از حساب خود خارج شده و مجدد تماس با پزشک را امتحان کنید');
       } catch (error) {
         if (axios.isAxiosError(error)) {
           splunkInstance().sendEvent({
