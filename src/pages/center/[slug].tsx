@@ -188,6 +188,8 @@ const CenterProfile = ({ query: { university }, host }: any) => {
     ];
   };
 
+  console.log(doctors.data);
+
   return (
     <>
       <Seo
