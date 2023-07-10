@@ -28,6 +28,7 @@ import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/s
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -47,6 +48,7 @@ const Receipt = () => {
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
+  const listOfDoctorHaveSafeCall = useFeatureValue<any>('safecalldoctorlist', []);
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -160,6 +162,8 @@ const Receipt = () => {
     });
   };
 
+  console.log(bookDetailsData);
+
   const statusText = useMemo(() => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
@@ -250,18 +254,20 @@ const Receipt = () => {
                           )[0]
                     }
                   />
-                  <SecureCallButton
-                    bookId={bookDetailsData.book_id}
-                    title="تماس با پزشک"
-                    doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
-                    patient={{
-                      cell: bookDetailsData.patient.cell,
-                      name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
-                      nationalCode: bookDetailsData.national_code,
-                    }}
-                    referenceCode={bookDetailsData.reference_code}
-                    eventAction="appointments"
-                  />
+                  {listOfDoctorHaveSafeCall.includes(bookDetailsData.services[0].id) && (
+                    <SecureCallButton
+                      bookId={bookDetailsData.book_id}
+                      title="تماس با پزشک"
+                      doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
+                      patient={{
+                        cell: bookDetailsData.patient.cell,
+                        name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+                        nationalCode: bookDetailsData.national_code,
+                      }}
+                      referenceCode={bookDetailsData.reference_code}
+                      eventAction="appointments"
+                    />
+                  )}
                 </div>
               )}
               {isShowRemoveButtonForOnlineVisit && (

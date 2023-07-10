@@ -19,6 +19,7 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import shuffle from 'lodash/shuffle';
 import useTranslation from 'next-translate/useTranslation';
@@ -95,6 +96,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
+  const listOfDoctorHaveSafeCall = useFeatureValue<any>('safecalldoctorlist', []);
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
@@ -265,14 +267,16 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {shouldShowMessengerButton && (
         <div className="flex justify-between gap-4">
           <MessengerButton channel={onlineVisitChannel} />
-          <SecureCallButton
-            bookId={id}
-            title="تماس با پزشک"
-            doctor={{ centerId, name: doctorName }}
-            patient={{ cell: phoneNumber, name: patientName, nationalCode }}
-            referenceCode={trackingCode}
-            eventAction="appointments"
-          />
+          {listOfDoctorHaveSafeCall.includes(serviceId) && (
+            <SecureCallButton
+              bookId={id}
+              title="تماس با پزشک"
+              doctor={{ centerId, name: doctorName }}
+              patient={{ cell: phoneNumber, name: patientName, nationalCode }}
+              referenceCode={trackingCode}
+              eventAction="appointments"
+            />
+          )}
         </div>
       )}
       <div className="flex items-center space-s-3">
