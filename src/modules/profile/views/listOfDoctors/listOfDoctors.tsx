@@ -115,7 +115,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               }}
               actions={[
                 {
-                  text: doctor.is_bulk ? 'ممشاهده پروقایل' : 'دریافت نوبت',
+                  text: doctor.is_bulk ? 'مشاهده پروفایل' : 'دریافت نوبت',
                   ...(doctor.freeturn_text && !doctor.is_bulk && { description: `اولین نوبت: ${doctor.freeturn_text}` }),
                   action: () => {
                     router.push(doctor.url);
