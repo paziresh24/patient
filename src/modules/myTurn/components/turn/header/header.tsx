@@ -95,7 +95,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       name: 'چاپ فاکتور',
       icon: <PrinterIcon />,
       action: factorTurn,
-      shouldShow: true,
+      shouldShow: status !== BookStatus.deleted && paymentStatus === PaymentStatus.paid,
     },
     {
       id: 1,
