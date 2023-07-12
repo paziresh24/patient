@@ -23,7 +23,7 @@ export const DoctorTags = (props: DoctorTagsProps) => {
       doctor_id: doctorId,
       server_id: serverId,
     });
-  }, []);
+  }, [doctorId, serverId]);
 
   return (
     <div className="flex flex-col w-full p-4 space-y-4 bg-white/50">
