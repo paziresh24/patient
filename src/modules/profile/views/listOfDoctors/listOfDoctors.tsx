@@ -115,12 +115,12 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               }}
               actions={[
                 {
-                  text: 'دریافت نوبت',
-                  ...(doctor.freeturn_text && { description: `اولین نوبت: ${doctor.freeturn_text}` }),
+                  text: doctor.is_bulk ? 'مشاهده پروفایل' : 'دریافت نوبت',
+                  ...(doctor.freeturn_text && !doctor.is_bulk && { description: `اولین نوبت: ${doctor.freeturn_text}` }),
                   action: () => {
                     router.push(doctor.url);
                   },
-                  outline: false,
+                  outline: doctor.is_bulk,
                 },
               ]}
             />
