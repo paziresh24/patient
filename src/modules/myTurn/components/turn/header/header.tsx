@@ -95,10 +95,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       name: 'چاپ فاکتور',
       icon: <PrinterIcon />,
       action: factorTurn,
-      shouldShow: status !== BookStatus.deleted && paymentStatus === PaymentStatus.paid,
+      shouldShow: status !== BookStatus.deleted && status !== BookStatus.notVisited && paymentStatus === PaymentStatus.paid,
     },
     {
-      id: 1,
+      id: 2,
       name: 'اشتراک گذاری',
       icon: <ShareIcon />,
       action: shareTurnInfo,
