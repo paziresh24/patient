@@ -1,4 +1,6 @@
+import { useEditFeedback } from '@/common/apis/services/rate/edit';
 import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
+import { useRemoveFeedback } from '@/common/apis/services/rate/remove';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
 import Button from '@/common/components/atom/button/button';
@@ -6,12 +8,14 @@ import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import TextField from '@/common/components/atom/textField/textField';
 import DislikeIcon from '@/common/components/icons/dislike';
+import EditIcon from '@/common/components/icons/edit';
 import HeartIcon from '@/common/components/icons/heart';
 import InfoIcon from '@/common/components/icons/info';
 import LikeIcon from '@/common/components/icons/like';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
+import TrashIcon from '@/common/components/icons/trash';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
@@ -82,6 +86,8 @@ export const RateReview = (props: RateReviewProps) => {
   });
   const { handleClose, handleOpen, modalProps } = useModal();
   const { handleOpen: handleOpenReportModal, handleClose: handleCloseReportModal, modalProps: reportModalProps } = useModal();
+  const { handleOpen: handleOpenEditModal, handleClose: handleCloseEditModal, modalProps: editModalProps } = useModal();
+  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
   const feedbacksData = useFeedbackDataStore(state => state.data);
@@ -103,8 +109,11 @@ export const RateReview = (props: RateReviewProps) => {
   const replyFeedback = useReplyfeedback();
   const { handleOpenLoginModal } = useLoginModalContext();
   const replyText = useRef<HTMLInputElement>();
+  const editText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
+  const removeComment = useRemoveFeedback();
+  const editComment = useEditFeedback();
   const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
@@ -180,6 +189,22 @@ export const RateReview = (props: RateReviewProps) => {
               action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
               type: 'button',
               icon: <InfoIcon width={22} height={22} />,
+              inModal: true,
+            },
+            {
+              id: 5,
+              name: 'ویرایش',
+              action: () => showEditComment(feedback.id),
+              type: 'menu',
+              icon: <EditIcon width={22} height={22} />,
+              inModal: true,
+            },
+            {
+              id: 6,
+              name: 'حذف',
+              action: () => showRemoveModal(feedback.id),
+              type: 'menu',
+              icon: <TrashIcon width={22} height={22} />,
               inModal: true,
             },
           ],
@@ -297,6 +322,18 @@ export const RateReview = (props: RateReviewProps) => {
     });
     handleOpenReportModal();
   };
+  const showRemoveModal = (id: string) => {
+    setFeedbackDetails({
+      id,
+    });
+    handleOpenRemoveModal();
+  };
+  const showEditComment = (id: string) => {
+    setFeedbackDetails({
+      id,
+    });
+    handleOpenEditModal();
+  };
 
   const showReplyModal = (id: string, isDoctor: boolean) => {
     rateSplunkEvent('reply first reply box');
@@ -389,6 +426,33 @@ export const RateReview = (props: RateReviewProps) => {
     feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
   };
 
+  const removeCommentHandler = async () => {
+    await removeComment.mutate({
+      feedback_id: feedbackDetails?.id,
+    });
+    if (removeComment.status) {
+      toast.success('نظر شما با موفقیت حذف شد');
+      rateSplunkEvent('remove comment');
+      handleCloseRemoveModal();
+      return;
+    }
+    return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+  };
+
+  const editCommentHandler = async (description: string) => {
+    await editComment.mutate({
+      feedback_id: feedbackDetails?.id,
+      description,
+    });
+    if (editComment.status) {
+      toast.success('نظر شما با موفقیت ویرایش شد');
+      rateSplunkEvent('edit comment');
+      handleCloseEditModal();
+      return;
+    }
+    return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+  };
+
   return (
     <div className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
       <div ref={rateRef} className="w-full p-4 bg-white">
@@ -466,6 +530,23 @@ export const RateReview = (props: RateReviewProps) => {
             autoFocus
           />
         )}
+      </Modal>
+      <Modal title="ویرایش نظر" {...editModalProps}>
+        <TextField multiLine className="h-[10rem]" defaultValue={feedbackDetails?.description} ref={editText} />
+        <Button loading={reportFeedback.isLoading} onClick={() => editCommentHandler(editText.current?.value!)} block className="mt-4">
+          ویرایش نظر
+        </Button>
+      </Modal>
+      <Modal title="حذف نظر" {...removeModalProps}>
+        <span>آیا از حذف نظر خود مطمئن هستید؟</span>
+        <div className="flex justify-between gap-3 mt-3">
+          <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
+            حذف
+          </Button>
+          <Button onClick={handleCloseRemoveModal} block variant="secondary">
+            انصراف
+          </Button>
+        </div>
       </Modal>
     </div>
   );
