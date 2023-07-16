@@ -42,7 +42,7 @@ const Invoice = () => {
     },
     {
       name: 'نام',
-      value: `${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
+      value: `${bookDetailsData?.patient?.name ?? ''} ${bookDetailsData?.patient?.family ?? ''}`,
     },
     {
       name: 'کدملی',
@@ -57,6 +57,7 @@ const Invoice = () => {
       value: bookDetailsData?.doctor?.display_name,
     },
   ];
+  const isShowInvoice = !bookDetailsData.is_deleted && bookDetailsData.book_status !== BookStatus.notVisited;
 
   if (getReceiptDetails.isLoading)
     return (
@@ -67,11 +68,11 @@ const Invoice = () => {
 
   return (
     <div className="relative flex-grow p-0 bg-white print:p-0 md:py-14">
-      {bookDetailsData.book_status === BookStatus.deleted && (
+      {!isShowInvoice && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center space-y-4 bg-white/80">
           <ErrorIcon className="text-red-600" />
-          <Text fontSize="xl" fontWeight="bold" className="text-red-600">
-            نوبت حذف شده است.
+          <Text fontSize="lg" fontWeight="bold" className="text-red-600">
+            شرایط نمایش فاکتور وجود ندارد
           </Text>
         </div>
       )}
@@ -114,7 +115,13 @@ const Invoice = () => {
           <tbody>
             {bookDetailsData.services?.map((item: any, index: number) => (
               <tr key={item.id}>
-                {[index + 1, item.title, addCommas(item.service_free_price), addCommas(item.discount), addCommas(item.cost)].map(col => (
+                {[
+                  index + 1,
+                  item.title,
+                  addCommas(item.service_free_price ?? 0),
+                  addCommas(item.discount ?? 0),
+                  addCommas(item.cost ?? 0),
+                ].map(col => (
                   <td key={col} className="p-3 text-center border border-slate-200">
                     {col}
                   </td>
@@ -126,7 +133,7 @@ const Invoice = () => {
                 جمع هزینه ها:
               </td>
               <td className="p-3 font-bold text-center border border-slate-200">
-                {addCommas((bookDetailsData.services as any[])?.reduce((prev, current) => (prev = +current.cost), 0))}
+                {addCommas((bookDetailsData.services as any[])?.reduce((prev, current) => (prev += current.cost ?? 0), 0))}
               </td>
             </tr>
           </tbody>
