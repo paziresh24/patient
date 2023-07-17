@@ -15,6 +15,7 @@ import LikeIcon from '@/common/components/icons/like';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
+import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import TrashIcon from '@/common/components/icons/trash';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -22,6 +23,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
+import Select from '@/modules/booking/components/select/select';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
@@ -137,6 +139,19 @@ export const RateReview = (props: RateReviewProps) => {
     });
   };
 
+  const doctorSuggestionButton = [
+    {
+      id: 1,
+      text: 'توصیه میکنم',
+      value: '1',
+    },
+    {
+      id: 2,
+      text: 'توصیه نمیکنم',
+      value: '0',
+    },
+  ];
+
   const feedbackInfo = useMemo(() => {
     return feedbacksData?.map(
       (feedback: any) =>
@@ -156,6 +171,13 @@ export const RateReview = (props: RateReviewProps) => {
               setFeedbackReplyModalDetails(
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
               ),
+          },
+          dropdown: {
+            element: (
+              <div className="relative left-0 flex items-center justify-center cursor-pointer" title="اشتراک گذاری، حذف، ویرایش">
+                <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
+              </div>
+            ),
           },
           options: [
             {
@@ -191,15 +213,15 @@ export const RateReview = (props: RateReviewProps) => {
               icon: <InfoIcon width={22} height={22} />,
               inModal: true,
             },
-            {
+            userInfo?.id === feedback?.user_id && {
               id: 5,
               name: 'ویرایش',
-              action: () => showEditComment(feedback.id),
+              action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
               type: 'menu',
               icon: <EditIcon width={22} height={22} />,
               inModal: true,
             },
-            {
+            userInfo?.id === feedback?.user_id && {
               id: 6,
               name: 'حذف',
               action: () => showRemoveModal(feedback.id),
@@ -208,6 +230,7 @@ export const RateReview = (props: RateReviewProps) => {
               inModal: true,
             },
           ],
+          menuTitle: userInfo?.id === feedback?.user_id ? 'اشتراک گذاری، حذف، ویرایش' : 'اشتراک گذاری',
           details: compact([feedback.formatted_date, feedback?.center_name]),
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
@@ -249,7 +272,7 @@ export const RateReview = (props: RateReviewProps) => {
           },
         },
     );
-  }, [feedbacksData, feedbackReplyModalDetails, replyDetails]);
+  }, [feedbacksData, feedbackReplyModalDetails, replyDetails, userInfo]);
 
   const changeFilterSelect = (e: any) => {
     setRateFilter(e);
@@ -328,9 +351,11 @@ export const RateReview = (props: RateReviewProps) => {
     });
     handleOpenRemoveModal();
   };
-  const showEditComment = (id: string) => {
+  const showEditComment = (id: string, description: string, like: string) => {
     setFeedbackDetails({
       id,
+      description,
+      like,
     });
     handleOpenEditModal();
   };
@@ -427,30 +452,34 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   const removeCommentHandler = async () => {
-    await removeComment.mutate({
-      feedback_id: feedbackDetails?.id,
-    });
-    if (removeComment.status) {
+    try {
+      await removeComment.mutateAsync({
+        feedback_id: feedbackDetails?.id,
+      });
       toast.success('نظر شما با موفقیت حذف شد');
       rateSplunkEvent('remove comment');
       handleCloseRemoveModal();
       return;
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
     }
-    return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
   };
 
   const editCommentHandler = async (description: string) => {
-    await editComment.mutate({
-      feedback_id: feedbackDetails?.id,
-      description,
-    });
-    if (editComment.status) {
+    try {
+      await editComment.mutateAsync({
+        feedback_id: feedbackDetails?.id,
+        description,
+        like: feedbackDetails?.like,
+      });
+
       toast.success('نظر شما با موفقیت ویرایش شد');
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
       return;
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
     }
-    return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
   };
 
   return (
@@ -532,13 +561,27 @@ export const RateReview = (props: RateReviewProps) => {
         )}
       </Modal>
       <Modal title="ویرایش نظر" {...editModalProps}>
+        <span className="text-[0.8rem] font-medium !mb-3 !-mt-1 !mr-1 block"> آیا این پزشک را به دیگران پیشنهاد میدهید؟</span>
+        <div className="flex gap-3">
+          {doctorSuggestionButton.map((item: any) => (
+            <Select
+              key={item.id}
+              onSelect={() => setFeedbackDetails({ ...feedbackDetails, like: item.value })}
+              selected={feedbackDetails?.like === item?.value}
+              title={item.text}
+              className="w-full"
+              titleClassName="!font-medium !text-[0.8rem]"
+            />
+          ))}
+        </div>
+        <span className="text-[0.8rem] font-medium !mb-2 !mt-3 !mr-1 block">شما میتوانید در این قسمت نظر خود را ویرایش کنید.</span>
         <TextField multiLine className="h-[10rem]" defaultValue={feedbackDetails?.description} ref={editText} />
-        <Button loading={reportFeedback.isLoading} onClick={() => editCommentHandler(editText.current?.value!)} block className="mt-4">
+        <Button loading={editComment.isLoading} onClick={() => editCommentHandler(editText.current?.value!)} block className="mt-4">
           ویرایش نظر
         </Button>
       </Modal>
       <Modal title="حذف نظر" {...removeModalProps}>
-        <span>آیا از حذف نظر خود مطمئن هستید؟</span>
+        <span className="text-sm font-medium">آیا از حذف نظر خود مطمئن هستید؟</span>
         <div className="flex justify-between gap-3 mt-3">
           <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
             حذف

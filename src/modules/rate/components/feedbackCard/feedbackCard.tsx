@@ -2,8 +2,8 @@ import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import PersonseIcon from '@/common/components/icons/persons';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
+import useResponsive from '@/hooks/useResponsive';
 import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
 

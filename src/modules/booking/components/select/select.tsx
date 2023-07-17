@@ -16,10 +16,12 @@ interface SelectProps {
   actionIcon?: ReactNode;
   children?: ReactNode;
   className?: string;
+  titleClassName?: string;
 }
 
 export const Select = (props: SelectProps) => {
-  const { onSelect, selected, subTitle, topTitle, title, isLoading, action, actionText, actionIcon, children, className } = props;
+  const { onSelect, selected, subTitle, topTitle, title, isLoading, action, actionText, actionIcon, children, className, titleClassName } =
+    props;
   return (
     <div
       className={classNames(
@@ -56,7 +58,7 @@ export const Select = (props: SelectProps) => {
             {topTitle && <Text fontSize="sm">{topTitle}</Text>}
             {isLoading && <Loading width={25} className="!mt-3" />}
             {!isLoading && (
-              <Text fontWeight="bold" fontSize="sm">
+              <Text fontWeight="bold" fontSize="sm" className={classNames(titleClassName)}>
                 {title}
               </Text>
             )}
