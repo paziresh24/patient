@@ -2,13 +2,12 @@ import Avatar from '@/common/components/atom/avatar/avatar';
 import Chips from '@/common/components/atom/chips/chips';
 import DropDown from '@/common/components/atom/dropDown/dropDown';
 import Text from '@/common/components/atom/text/text';
-import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import classNames from '@/common/utils/classNames';
 import { CardProps } from '@/modules/rate/type/card';
 import Image from 'next/image';
 
 export const Card = (props: CardProps) => {
-  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
+  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend, dropdown } = props;
   return (
     <>
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
@@ -31,14 +30,7 @@ export const Card = (props: CardProps) => {
           </div>
           {options?.some(item => item.type === 'menu') && (
             <div className="relative flex flex-col items-end">
-              <DropDown
-                element={
-                  <div className="relative left-0 flex items-center justify-center cursor-pointer">
-                    <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
-                  </div>
-                }
-                items={options.filter(item => item.type === 'menu')}
-              />
+              <DropDown element={dropdown?.element} items={options.filter(item => item.type === 'menu')} />
             </div>
           )}
         </div>
