@@ -254,7 +254,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       ...(dataForm.files && { files: dataForm.files }),
       description: dataForm.description,
       gender: user.gender,
-      cell: user.username,
+      cell: user.cell,
       name: `${user.name} ${user.family}`,
       ...(user.national_code && { national_code: user.national_code }),
     });
