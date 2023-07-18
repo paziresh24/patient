@@ -8,6 +8,7 @@ import { addCommas } from '@persian-tools/persian-tools';
 import { useRouter } from 'next/router';
 import { renderToString } from 'react-dom/server';
 import ServiceCard from '../../components/serviceCard';
+import { useProfileDataStore } from '../../store/profileData';
 import ChannelDetailes, { Messenger } from './channelDetailes';
 interface OnlineVisitProps {
   title: string;
@@ -27,6 +28,8 @@ type channelType = {
 export const OnlineVisit = (props: OnlineVisitProps) => {
   const { title, channels, price, duration, onBook, loading, discountPercent, isPremium } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
+  const safeCallModuleInfo = useFeatureValue<any>('onlinevisitmodule', []);
+  const profileData = useProfileDataStore(state => state.data);
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
   const router = useRouter();
   return (
@@ -71,6 +74,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
+          safeCallModuleInfo.doctors_id.includes(profileData.id) && safeCallModuleInfo.description,
         ].filter(Boolean),
       }}
       footer={{

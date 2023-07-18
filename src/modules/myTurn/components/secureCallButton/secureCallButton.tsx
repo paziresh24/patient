@@ -22,10 +22,11 @@ interface EstablishingSecureCallParams {
   referenceCode: string;
   patient: PatientInfo;
   doctor: DoctorInfo;
+  image?: string;
 }
 
 export const SecureCallButton = (props: EstablishingSecureCallParams) => {
-  const { bookId, doctor, eventAction, patient, referenceCode, title } = props;
+  const { bookId, doctor, eventAction, patient, referenceCode, title, image } = props;
   const establishingSecureCall = useEstablishingSecureCall();
   const handleEstablishingSecureCall = async () => {
     try {
@@ -52,6 +53,7 @@ export const SecureCallButton = (props: EstablishingSecureCallParams) => {
   return (
     <>
       <Button variant="secondary" onClick={handleEstablishingSecureCall} loading={establishingSecureCall.isLoading} block>
+        {!!image && <img src={image} width={25} height={25} className="mb-1" />}
         {title}
       </Button>
     </>

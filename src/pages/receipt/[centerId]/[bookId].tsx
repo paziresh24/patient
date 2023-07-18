@@ -48,7 +48,7 @@ const Receipt = () => {
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
-  const listOfDoctorHaveSafeCall = useFeatureValue<any>('safecalldoctorlist', []);
+  const safeCallModuleInfo = useFeatureValue<any>('onlinevisitmodule', {});
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -254,10 +254,11 @@ const Receipt = () => {
                           )[0]
                     }
                   />
-                  {listOfDoctorHaveSafeCall.includes(bookDetailsData.services[0].id) && (
+                  {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
                     <SecureCallButton
                       bookId={bookDetailsData.book_id}
-                      title="تماس با پزشک"
+                      title={safeCallModuleInfo.text}
+                      image={safeCallModuleInfo.image}
                       doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
                       patient={{
                         cell: bookDetailsData.patient.cell,

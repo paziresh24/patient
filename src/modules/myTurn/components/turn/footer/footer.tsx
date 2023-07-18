@@ -96,7 +96,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
-  const listOfDoctorHaveSafeCall = useFeatureValue<any>('safecalldoctorlist', []);
+  const safeCallModuleInfo = useFeatureValue<any>('onlinevisitmodule', []);
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
@@ -265,12 +265,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       {shouldShowMessengerButton && (
-        <div className="flex justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:gap-4">
           <MessengerButton channel={onlineVisitChannel} />
-          {listOfDoctorHaveSafeCall.includes(serviceId) && (
+          {safeCallModuleInfo.service_id.includes(serviceId) && (
             <SecureCallButton
               bookId={id}
-              title="تماس با پزشک"
+              title={safeCallModuleInfo.text}
+              image={safeCallModuleInfo.image}
               doctor={{ centerId, name: doctorName }}
               patient={{ cell: phoneNumber, name: patientName, nationalCode }}
               referenceCode={trackingCode}
