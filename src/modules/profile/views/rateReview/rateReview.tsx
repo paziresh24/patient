@@ -21,6 +21,7 @@ import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import Select from '@/modules/booking/components/select/select';
@@ -354,7 +355,7 @@ export const RateReview = (props: RateReviewProps) => {
   const showEditComment = (id: string, description: string, like: string) => {
     setFeedbackDetails({
       id,
-      description,
+      description: removeHtmlTagInString(description),
       like,
     });
     handleOpenEditModal();
