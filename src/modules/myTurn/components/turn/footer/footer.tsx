@@ -96,7 +96,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
-  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', []);
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
