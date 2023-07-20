@@ -14,7 +14,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
-import { splunkInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
@@ -48,7 +48,6 @@ const Receipt = () => {
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
-  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -69,6 +68,7 @@ const Receipt = () => {
   });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const serverTime = useGetServerTime();
@@ -159,6 +159,25 @@ const Receipt = () => {
   const handleMyTrunButtonAction = () => {
     router.push({
       pathname: '/patient/appointments',
+    });
+  };
+
+  const handleSafeCallAction = () => {
+    splunkBookingInstance().sendEvent({
+      group: 'safe-call',
+      type: 'patient',
+      event: {
+        action: 'receipt',
+        data: {
+          referenceCode: bookDetailsData.reference_code,
+          doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
+          patient: {
+            cell: bookDetailsData.patient.cell,
+            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            nationalCode: bookDetailsData.national_code,
+          },
+        },
+      },
     });
   };
 
@@ -253,19 +272,7 @@ const Receipt = () => {
                     }
                   />
                   {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
-                    <SecureCallButton
-                      bookId={bookDetailsData.book_id}
-                      title={safeCallModuleInfo.text}
-                      image={safeCallModuleInfo.image}
-                      doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
-                      patient={{
-                        cell: bookDetailsData.patient.cell,
-                        name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
-                        nationalCode: bookDetailsData.national_code,
-                      }}
-                      referenceCode={bookDetailsData.reference_code}
-                      eventAction="appointments"
-                    />
+                    <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
                   )}
                 </div>
               )}

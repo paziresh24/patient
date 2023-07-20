@@ -1,49 +1,23 @@
-import { useEstablishingSecureCall } from '@/common/apis/services/workflow/establishingSecureCall';
+import { useEstablishingSecureCall } from '@/common/apis/services/booking/establishingSecureCall';
 import Button from '@/common/components/atom/button/button';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-type DoctorInfo = {
-  name: string;
-  centerId: string;
-};
-
-type PatientInfo = {
-  name: string;
-  cell: string;
-  nationalCode: string;
-};
-
 interface EstablishingSecureCallParams {
-  title: string;
   bookId: string;
-  eventAction: string;
-  referenceCode: string;
-  patient: PatientInfo;
-  doctor: DoctorInfo;
-  image?: string;
+  extraAction?: () => void;
 }
 
-export const SecureCallButton = (props: EstablishingSecureCallParams) => {
-  const { bookId, doctor, eventAction, patient, referenceCode, title, image } = props;
+export const SecureCallButton = ({ bookId, extraAction }: EstablishingSecureCallParams) => {
   const establishingSecureCall = useEstablishingSecureCall();
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const handleEstablishingSecureCall = async () => {
     try {
       await establishingSecureCall.mutateAsync({ bookId });
-      splunkBookingInstance().sendEvent({
-        group: 'safe-call',
-        type: 'patient',
-        event: {
-          action: eventAction,
-          referenceCode,
-          data: {
-            doctor,
-            patient,
-          },
-        },
-      });
       toast.success('درخواست شما با موفقیت ثبت شد');
+      !!extraAction && extraAction();
+      return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message);
@@ -53,8 +27,8 @@ export const SecureCallButton = (props: EstablishingSecureCallParams) => {
   return (
     <>
       <Button variant="secondary" onClick={handleEstablishingSecureCall} loading={establishingSecureCall.isLoading} block>
-        {!!image && <img src={image} width={25} height={25} className="mb-1" />}
-        {title}
+        {!!safeCallModuleInfo.icon && <img src={safeCallModuleInfo.icon} width={25} height={25} className="mb-1" />}
+        {safeCallModuleInfo.text}
       </Button>
     </>
   );

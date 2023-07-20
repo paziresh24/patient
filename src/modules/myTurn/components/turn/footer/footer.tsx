@@ -6,7 +6,7 @@ import TrashIcon from '@/common/components/icons/trash';
 import WarningIcon from '@/common/components/icons/warning';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
-import { splunkInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
@@ -244,6 +244,21 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     });
   };
 
+  const handleSafeCallAction = () => {
+    splunkBookingInstance().sendEvent({
+      group: 'safe-call',
+      type: 'patient',
+      event: {
+        action: 'appointments',
+        data: {
+          referenceCode: trackingCode,
+          doctor: { centerId, name: doctorName },
+          patient: { cell: phoneNumber, name: patientName, nationalCode },
+        },
+      },
+    });
+  };
+
   const redirectToFactor = () => {
     router.push(`/factor/${centerId}/${id}`);
     splunkInstance().sendEvent({
@@ -267,17 +282,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {shouldShowMessengerButton && (
         <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:gap-4">
           <MessengerButton channel={onlineVisitChannel} />
-          {safeCallModuleInfo.service_id.includes(serviceId) && (
-            <SecureCallButton
-              bookId={id}
-              title={safeCallModuleInfo.text}
-              image={safeCallModuleInfo.image}
-              doctor={{ centerId, name: doctorName }}
-              patient={{ cell: phoneNumber, name: patientName, nationalCode }}
-              referenceCode={trackingCode}
-              eventAction="appointments"
-            />
-          )}
+          {safeCallModuleInfo.service_id.includes(serviceId) && <SecureCallButton bookId={id} extraAction={() => handleSafeCallAction()} />}
         </div>
       )}
       <div className="flex items-center space-s-3">
