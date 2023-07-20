@@ -28,7 +28,7 @@ type channelType = {
 export const OnlineVisit = (props: OnlineVisitProps) => {
   const { title, channels, price, duration, onBook, loading, discountPercent, isPremium } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
-  const safeCallModuleInfo = useFeatureValue<any>('onlinevisitmodule', []);
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const profileData = useProfileDataStore(state => state.data);
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
   const router = useRouter();

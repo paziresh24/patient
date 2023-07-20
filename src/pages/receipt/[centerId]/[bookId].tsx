@@ -48,7 +48,7 @@ const Receipt = () => {
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
-  const safeCallModuleInfo = useFeatureValue<any>('onlinevisitmodule', {});
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -161,8 +161,6 @@ const Receipt = () => {
       pathname: '/patient/appointments',
     });
   };
-
-  console.log(bookDetailsData);
 
   const statusText = useMemo(() => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
