@@ -474,7 +474,7 @@ export const RateReview = (props: RateReviewProps) => {
         like: feedbackDetails?.like,
       });
 
-      toast.success('نظر شما با موفقیت ویرایش شد');
+      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.');
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
       return;
