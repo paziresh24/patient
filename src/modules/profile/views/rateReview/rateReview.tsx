@@ -448,7 +448,7 @@ export const RateReview = (props: RateReviewProps) => {
       feedback_id: id,
     });
     handleClose();
-    if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
+    if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش داده خواهد شد.');
     feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
   };
 
@@ -457,7 +457,7 @@ export const RateReview = (props: RateReviewProps) => {
       await removeComment.mutateAsync({
         feedback_id: feedbackDetails?.id,
       });
-      toast.success('نظر شما با موفقیت حذف شد');
+      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.');
       rateSplunkEvent('remove comment');
       handleCloseRemoveModal();
       return;
@@ -474,7 +474,7 @@ export const RateReview = (props: RateReviewProps) => {
         like: feedbackDetails?.like,
       });
 
-      toast.success('نظر شما با موفقیت ویرایش شد');
+      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.');
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
       return;
