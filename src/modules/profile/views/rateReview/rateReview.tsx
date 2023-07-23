@@ -173,13 +173,11 @@ export const RateReview = (props: RateReviewProps) => {
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
               ),
           },
-          dropdown: {
-            element: (
-              <div className="relative left-0 flex items-center justify-center cursor-pointer" title="اشتراک گذاری، حذف، ویرایش">
-                <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
-              </div>
-            ),
-          },
+          dropdown: (
+            <div className="relative left-0 flex items-center justify-center cursor-pointer" title="اشتراک گذاری، حذف، ویرایش">
+              <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
+            </div>
+          ),
           options: [
             {
               id: 2,

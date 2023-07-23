@@ -14,10 +14,6 @@ export type Options = {
   prefix?: string;
 };
 
-export type DropDown = {
-  element: React.ReactNode;
-};
-
 export type Card = {
   id?: string;
   avatar?: any;
@@ -25,7 +21,7 @@ export type Card = {
   tag?: Tags[];
   options?: Options[];
   details?: string[];
-  dropdown?: DropDown;
+  dropdown?: React.ReactNode;
   symptomes?: {
     text: string;
     items: string[];

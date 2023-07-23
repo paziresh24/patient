@@ -30,7 +30,7 @@ export const Card = (props: CardProps) => {
           </div>
           {options?.some(item => item.type === 'menu') && (
             <div className="relative flex flex-col items-end">
-              <DropDown element={dropdown?.element} items={options.filter(item => item.type === 'menu')} />
+              <DropDown element={dropdown} items={options.filter(item => item.type === 'menu')} />
             </div>
           )}
         </div>
