@@ -457,7 +457,9 @@ export const RateReview = (props: RateReviewProps) => {
       await removeComment.mutateAsync({
         feedback_id: feedbackDetails?.id,
       });
-      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.');
+      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.', {
+        duration: 3000,
+      });
       rateSplunkEvent('remove comment');
       handleCloseRemoveModal();
       return;
@@ -474,7 +476,9 @@ export const RateReview = (props: RateReviewProps) => {
         like: feedbackDetails?.like,
       });
 
-      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.');
+      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.', {
+        duration: 3000,
+      });
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
       return;
