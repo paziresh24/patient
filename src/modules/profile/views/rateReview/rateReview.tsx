@@ -15,7 +15,6 @@ import LikeIcon from '@/common/components/icons/like';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
-import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import TrashIcon from '@/common/components/icons/trash';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -173,63 +172,60 @@ export const RateReview = (props: RateReviewProps) => {
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
               ),
           },
-          dropdown: (
-            <div className="relative left-0 flex items-center justify-center cursor-pointer" title="اشتراک گذاری، حذف، ویرایش">
-              <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
-            </div>
-          ),
-          options: [
-            {
-              id: 2,
-              name: 'اشتراک گذاری',
-              action: () => shareCommenthandler(feedback.id),
-              type: 'menu',
-              icon: <ShareIcon width={22} height={22} />,
-              inModal: true,
-            },
-            {
-              id: 4,
-              name: 'پسندیدن',
-              action: () => likeFeedbackHandler(feedback.id),
-              type: 'button',
-              icon: (
-                <HeartIcon
-                  width={20}
-                  height={20}
-                  className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
-                    '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
-                  })}
-                />
-              ),
-              prefix: feedback?.like > 0 && feedback?.like,
-              inModal: true,
-            },
-            {
-              id: 1,
-              name: 'گزارش',
-              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
-              type: 'button',
-              icon: <InfoIcon width={22} height={22} />,
-              inModal: true,
-            },
-            userInfo?.id === feedback?.user_id && {
-              id: 5,
-              name: 'ویرایش',
-              action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
-              type: 'menu',
-              icon: <EditIcon width={22} height={22} />,
-              inModal: true,
-            },
-            userInfo?.id === feedback?.user_id && {
-              id: 6,
-              name: 'حذف',
-              action: () => showRemoveModal(feedback.id),
-              type: 'menu',
-              icon: <TrashIcon width={22} height={22} />,
-              inModal: true,
-            },
-          ],
-          menuTitle: userInfo?.id === feedback?.user_id ? 'اشتراک گذاری، حذف، ویرایش' : 'اشتراک گذاری',
+          options: {
+            title: 'اشتراک گذاری، حذف، ویرایش',
+            items: [
+              {
+                id: 2,
+                name: 'اشتراک گذاری',
+                action: () => shareCommenthandler(feedback.id),
+                type: 'menu',
+                icon: <ShareIcon width={22} height={22} />,
+                inModal: true,
+              },
+              {
+                id: 4,
+                name: 'پسندیدن',
+                action: () => likeFeedbackHandler(feedback.id),
+                type: 'button',
+                icon: (
+                  <HeartIcon
+                    width={20}
+                    height={20}
+                    className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
+                      '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
+                    })}
+                  />
+                ),
+                prefix: feedback?.like > 0 && feedback?.like,
+                inModal: true,
+              },
+              {
+                id: 1,
+                name: 'گزارش',
+                action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
+                type: 'button',
+                icon: <InfoIcon width={22} height={22} />,
+                inModal: true,
+              },
+              userInfo?.id === feedback?.user_id && {
+                id: 5,
+                name: 'ویرایش',
+                action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
+                type: 'menu',
+                icon: <EditIcon width={22} height={22} />,
+                inModal: true,
+              },
+              userInfo?.id === feedback?.user_id && {
+                id: 6,
+                name: 'حذف',
+                action: () => showRemoveModal(feedback.id),
+                type: 'menu',
+                icon: <TrashIcon width={22} height={22} />,
+                inModal: true,
+              },
+            ],
+          },
           details: compact([feedback.formatted_date, feedback?.center_name]),
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },

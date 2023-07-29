@@ -19,9 +19,11 @@ export type Card = {
   avatar?: any;
   name?: string;
   tag?: Tags[];
-  options?: Options[];
+  options?: {
+    title?: string;
+    items?: Options[];
+  };
   details?: string[];
-  dropdown?: React.ReactNode;
   symptomes?: {
     text: string;
     items: string[];
