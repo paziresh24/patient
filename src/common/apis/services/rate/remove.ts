@@ -6,9 +6,7 @@ export interface Params {
 }
 
 export const removeFeedback = ({ feedback_id }: Params) => {
-  return paziresh24AppClient.post(`/mizaan/v1/delete-feedback`, {
-    feedback_id,
-  });
+  return paziresh24AppClient.delete(`/mizaan/v1/feedbacks/${feedback_id}`);
 };
 
 export const useRemoveFeedback = () => {

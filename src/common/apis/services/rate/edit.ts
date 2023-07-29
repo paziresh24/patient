@@ -8,8 +8,7 @@ export interface Params {
 }
 
 export const editFeedback = ({ feedback_id, description, like }: Params) => {
-  return paziresh24AppClient.post(`/mizaan/v1/edit-feedback`, {
-    feedback_id,
+  return paziresh24AppClient.patch(`/mizaan/v1/feedbacks/${feedback_id}`, {
     description,
     like,
   });
