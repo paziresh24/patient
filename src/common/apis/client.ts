@@ -28,6 +28,7 @@ export const contentClient = axios.create({
 
 export const workflowClient = axios.create({
   baseURL: publicRuntimeConfig.WORKFLOW_BASE_URL,
+  withCredentials: true,
 });
 
 clinicClient.interceptors.request.use(
@@ -100,5 +101,34 @@ paziresh24AppClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
+  },
+);
+
+workflowClient.interceptors.response.use(
+  res => {
+    return res.data;
+  },
+  async err => {
+    const originalRequest = err.config;
+    if (err?.response?.status === 401) {
+      try {
+        const { data } = (await refresh()) as any;
+        if (data.access_token) {
+          setCookie('token', data.access_token);
+          return workflowClient(originalRequest);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          splunkInstance().sendEvent({
+            group: 'patient-app',
+            type: 'error-refresh-token',
+            event: {
+              error: error.response?.data,
+            },
+          });
+        }
+      }
+    }
+    return Promise.reject(err);
   },
 );
