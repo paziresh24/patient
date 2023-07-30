@@ -74,7 +74,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
-          safeCallModuleInfo.doctors_id.includes(profileData.id) && safeCallModuleInfo.description,
+          safeCallModuleInfo?.doctors_id?.includes(profileData.id) && safeCallModuleInfo?.description,
         ].filter(Boolean),
       }}
       footer={{
