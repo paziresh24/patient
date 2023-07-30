@@ -68,6 +68,13 @@ The Patient Front-end comes with the following key features:
 - [Tailwind CSS](https://tailwindcss.com/)
 - [React Query](https://tanstack.com/query/v3/)
 
+## Design
+
+According to Google Analytics, 99% of Paziresh24 users access the website through mobile devices.Therefore, all designs have been optimized for the mobile view. For the desktop version, the same design is used along with a wrapper to ensure a consistent experience.
+
+To view the designs, please visit our Figma page at [link to Figma](https://www.figma.com/file/yOeQ521TJtGKn81juBFety/Paziresh-24-Design-system?type=design&node-id=635%3A14420&mode=dev).
+
+
 ## Contributing
 
 Please see our [contributing guide](/CONTRIBUTING.md).
