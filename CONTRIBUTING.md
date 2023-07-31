@@ -29,6 +29,7 @@ To develop locally:
 4. Set up your `.env` file:
 
    - Duplicate `.env.example` to `.env`.
+   - If you wish to request data from the develop environment, use `.env.development.example` instead.
  
 5. Start developing and watch for code changes:
 
@@ -93,3 +94,9 @@ If you encounter any bugs or have suggestions for improvements, feel free to cre
     ```
     
     You can now run the dev server with `npm run dev` and open [https://localhost:8766](https://localhost:8766). There should not see a warning about your connection not being private. You should also see a lock or similar icon in the address bar of your browser.
+- ### "Request has been blocked by the CORS policy."
+    Install "Allow CORS" browser extension
+    
+    [For Chrome users](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) | [For Firefox users](https://addons.mozilla.org/en-US/firefox/addon/access-control-allow-origin/)
+
+    Note: These are temporary solutions for local development/testing.
