@@ -2,12 +2,16 @@ import Avatar from '@/common/components/atom/avatar/avatar';
 import Chips from '@/common/components/atom/chips/chips';
 import DropDown from '@/common/components/atom/dropDown/dropDown';
 import Text from '@/common/components/atom/text/text';
+import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import classNames from '@/common/utils/classNames';
 import { CardProps } from '@/modules/rate/type/card';
 import Image from 'next/image';
 
 export const Card = (props: CardProps) => {
-  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend, dropdown } = props;
+  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
+
+  const dropDownMenuItems = options?.items?.filter(item => item.type === 'menu') ?? [];
+
   return (
     <>
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
@@ -28,9 +32,19 @@ export const Card = (props: CardProps) => {
               )}
             </div>
           </div>
-          {options?.some(item => item.type === 'menu') && (
+          {dropDownMenuItems.length > 0 && (
             <div className="relative flex flex-col items-end">
-              <DropDown element={dropdown?.element} items={options.filter(item => item.type === 'menu')} />
+              <DropDown
+                element={
+                  <div
+                    className="relative left-0 flex items-center justify-center cursor-pointer"
+                    title={dropDownMenuItems.map(item => item.name).join('، ')}
+                  >
+                    <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
+                  </div>
+                }
+                items={dropDownMenuItems}
+              />
             </div>
           )}
         </div>
@@ -61,8 +75,12 @@ export const Card = (props: CardProps) => {
             dangerouslySetInnerHTML={{ __html: description ?? '' }}
           />
         </div>
-        <div className={classNames('mt-2 flex justify-end', { 'justify-between': options?.some(option => option.type === 'controller') })}>
-          {options
+        <div
+          className={classNames('mt-2 flex justify-end', {
+            'justify-between': options?.items?.some(option => option.type === 'controller'),
+          })}
+        >
+          {options?.items
             ?.filter(option => option.type === 'controller')
             ?.map(option => (
               <Text key={option.id} onClick={option.action} className="flex items-center gap-1 cursor-pointer" fontSize="sm">
@@ -72,7 +90,7 @@ export const Card = (props: CardProps) => {
               </Text>
             ))}
           <div className="flex space-s-3">
-            {options
+            {options?.items
               ?.filter(option => option.type === 'button')
               ?.map(option => (
                 <Text key={option.id} onClick={option.action} className="flex items-center gap-1 cursor-pointer" fontSize="sm">

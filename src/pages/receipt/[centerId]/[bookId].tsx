@@ -14,7 +14,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
-import { splunkInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
@@ -28,6 +28,7 @@ import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/s
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -67,6 +68,7 @@ const Receipt = () => {
   });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const serverTime = useGetServerTime();
@@ -160,6 +162,25 @@ const Receipt = () => {
     });
   };
 
+  const handleSafeCallAction = () => {
+    splunkBookingInstance().sendEvent({
+      group: 'safe-call',
+      type: 'patient',
+      event: {
+        action: 'receipt',
+        data: {
+          referenceCode: bookDetailsData.reference_code,
+          doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
+          patient: {
+            cell: bookDetailsData.patient.cell,
+            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            nationalCode: bookDetailsData.national_code,
+          },
+        },
+      },
+    });
+  };
+
   const statusText = useMemo(() => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
@@ -250,18 +271,9 @@ const Receipt = () => {
                           )[0]
                     }
                   />
-                  <SecureCallButton
-                    bookId={bookDetailsData.book_id}
-                    title="تماس با پزشک"
-                    doctor={{ centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name }}
-                    patient={{
-                      cell: bookDetailsData.patient.cell,
-                      name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
-                      nationalCode: bookDetailsData.national_code,
-                    }}
-                    referenceCode={bookDetailsData.reference_code}
-                    eventAction="appointments"
-                  />
+                  {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
+                    <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                  )}
                 </div>
               )}
               {isShowRemoveButtonForOnlineVisit && (

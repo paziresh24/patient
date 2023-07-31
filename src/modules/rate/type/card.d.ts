@@ -14,18 +14,16 @@ export type Options = {
   prefix?: string;
 };
 
-export type DropDown = {
-  element: React.ReactNode;
-};
-
 export type Card = {
   id?: string;
   avatar?: any;
   name?: string;
   tag?: Tags[];
-  options?: Options[];
+  options?: {
+    title?: string;
+    items?: Options[];
+  };
   details?: string[];
-  dropdown?: DropDown;
   symptomes?: {
     text: string;
     items: string[];

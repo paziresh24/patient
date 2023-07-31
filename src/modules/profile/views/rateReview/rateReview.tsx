@@ -15,7 +15,6 @@ import LikeIcon from '@/common/components/icons/like';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
-import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import TrashIcon from '@/common/components/icons/trash';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -173,65 +172,59 @@ export const RateReview = (props: RateReviewProps) => {
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
               ),
           },
-          dropdown: {
-            element: (
-              <div className="relative left-0 flex items-center justify-center cursor-pointer" title="اشتراک گذاری، حذف، ویرایش">
-                <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
-              </div>
-            ),
+          options: {
+            items: [
+              {
+                id: 2,
+                name: 'اشتراک گذاری',
+                action: () => shareCommenthandler(feedback.id),
+                type: 'menu',
+                icon: <ShareIcon width={22} height={22} />,
+                inModal: true,
+              },
+              {
+                id: 4,
+                name: 'پسندیدن',
+                action: () => likeFeedbackHandler(feedback.id),
+                type: 'button',
+                icon: (
+                  <HeartIcon
+                    width={20}
+                    height={20}
+                    className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
+                      '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
+                    })}
+                  />
+                ),
+                prefix: feedback?.like > 0 && feedback?.like,
+                inModal: true,
+              },
+              {
+                id: 1,
+                name: 'گزارش',
+                action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
+                type: 'button',
+                icon: <InfoIcon width={22} height={22} />,
+                inModal: true,
+              },
+              userInfo?.id === feedback?.user_id && {
+                id: 5,
+                name: 'ویرایش',
+                action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
+                type: 'menu',
+                icon: <EditIcon width={22} height={22} />,
+                inModal: true,
+              },
+              userInfo?.id === feedback?.user_id && {
+                id: 6,
+                name: 'حذف',
+                action: () => showRemoveModal(feedback.id),
+                type: 'menu',
+                icon: <TrashIcon width={22} height={22} />,
+                inModal: true,
+              },
+            ],
           },
-          options: [
-            {
-              id: 2,
-              name: 'اشتراک گذاری',
-              action: () => shareCommenthandler(feedback.id),
-              type: 'menu',
-              icon: <ShareIcon width={22} height={22} />,
-              inModal: true,
-            },
-            {
-              id: 4,
-              name: 'پسندیدن',
-              action: () => likeFeedbackHandler(feedback.id),
-              type: 'button',
-              icon: (
-                <HeartIcon
-                  width={20}
-                  height={20}
-                  className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
-                    '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
-                  })}
-                />
-              ),
-              prefix: feedback?.like > 0 && feedback?.like,
-              inModal: true,
-            },
-            {
-              id: 1,
-              name: 'گزارش',
-              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
-              type: 'button',
-              icon: <InfoIcon width={22} height={22} />,
-              inModal: true,
-            },
-            userInfo?.id === feedback?.user_id && {
-              id: 5,
-              name: 'ویرایش',
-              action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
-              type: 'menu',
-              icon: <EditIcon width={22} height={22} />,
-              inModal: true,
-            },
-            userInfo?.id === feedback?.user_id && {
-              id: 6,
-              name: 'حذف',
-              action: () => showRemoveModal(feedback.id),
-              type: 'menu',
-              icon: <TrashIcon width={22} height={22} />,
-              inModal: true,
-            },
-          ],
-          menuTitle: userInfo?.id === feedback?.user_id ? 'اشتراک گذاری، حذف، ویرایش' : 'اشتراک گذاری',
           details: compact([feedback.formatted_date, feedback?.center_name]),
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
@@ -355,7 +348,7 @@ export const RateReview = (props: RateReviewProps) => {
   const showEditComment = (id: string, description: string, like: string) => {
     setFeedbackDetails({
       id,
-      description: removeHtmlTagInString(description),
+      description: removeHtmlTagInString(description ?? ''),
       like,
     });
     handleOpenEditModal();
@@ -457,7 +450,9 @@ export const RateReview = (props: RateReviewProps) => {
       await removeComment.mutateAsync({
         feedback_id: feedbackDetails?.id,
       });
-      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.');
+      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.', {
+        duration: 3000,
+      });
       rateSplunkEvent('remove comment');
       handleCloseRemoveModal();
       return;
@@ -474,7 +469,9 @@ export const RateReview = (props: RateReviewProps) => {
         like: feedbackDetails?.like,
       });
 
-      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.');
+      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.', {
+        duration: 3000,
+      });
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
       return;
@@ -563,7 +560,7 @@ export const RateReview = (props: RateReviewProps) => {
       </Modal>
       <Modal title="ویرایش نظر" {...editModalProps}>
         <span className="text-[0.8rem] font-medium !mb-3 !-mt-1 !mr-1 block"> آیا این پزشک را به دیگران پیشنهاد میدهید؟</span>
-        <div className="flex gap-3">
+        <div className="flex space-s-2">
           {doctorSuggestionButton.map((item: any) => (
             <Select
               key={item.id}
@@ -581,13 +578,12 @@ export const RateReview = (props: RateReviewProps) => {
           ویرایش نظر
         </Button>
       </Modal>
-      <Modal title="حذف نظر" {...removeModalProps}>
-        <span className="text-sm font-medium">آیا از حذف نظر خود مطمئن هستید؟</span>
-        <div className="flex justify-between gap-3 mt-3">
+      <Modal title="آیا از حذف نظر خود مطمئن هستید؟" {...removeModalProps}>
+        <div className="flex justify-between space-s-2">
           <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
             حذف
           </Button>
-          <Button onClick={handleCloseRemoveModal} block variant="secondary">
+          <Button onClick={handleCloseRemoveModal} block variant="secondary" theme="error">
             انصراف
           </Button>
         </div>
