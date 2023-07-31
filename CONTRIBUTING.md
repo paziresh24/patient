@@ -29,6 +29,7 @@ To develop locally:
 4. Set up your `.env` file:
 
    - Duplicate `.env.example` to `.env`.
+   - If you wish to request data from the develop environment, use `.env.development.example` instead.
  
 5. Start developing and watch for code changes:
 
