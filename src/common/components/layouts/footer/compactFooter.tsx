@@ -11,7 +11,7 @@ const CompactFooter = () => {
   const { route } = useRouter();
 
   return (
-    <footer className="p-5 bg-white border-t text-slate-700 border-slate-100">
+    <footer className="p-5 print:hidden bg-white border-t text-slate-700 border-slate-100">
       <Text as="p" align="center" fontSize="sm" fontWeight="bold">
         <Trans
           i18nKey="common:footer.copyRightTextByBrand"
