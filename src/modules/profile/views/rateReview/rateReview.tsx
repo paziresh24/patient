@@ -173,7 +173,6 @@ export const RateReview = (props: RateReviewProps) => {
               ),
           },
           options: {
-            title: 'اشتراک گذاری، حذف، ویرایش',
             items: [
               {
                 id: 2,
@@ -349,7 +348,7 @@ export const RateReview = (props: RateReviewProps) => {
   const showEditComment = (id: string, description: string, like: string) => {
     setFeedbackDetails({
       id,
-      description: removeHtmlTagInString(description),
+      description: removeHtmlTagInString(description ?? ''),
       like,
     });
     handleOpenEditModal();
@@ -561,7 +560,7 @@ export const RateReview = (props: RateReviewProps) => {
       </Modal>
       <Modal title="ویرایش نظر" {...editModalProps}>
         <span className="text-[0.8rem] font-medium !mb-3 !-mt-1 !mr-1 block"> آیا این پزشک را به دیگران پیشنهاد میدهید؟</span>
-        <div className="flex gap-3">
+        <div className="flex space-s-2">
           {doctorSuggestionButton.map((item: any) => (
             <Select
               key={item.id}
@@ -579,13 +578,12 @@ export const RateReview = (props: RateReviewProps) => {
           ویرایش نظر
         </Button>
       </Modal>
-      <Modal title="حذف نظر" {...removeModalProps}>
-        <span className="text-sm font-medium">آیا از حذف نظر خود مطمئن هستید؟</span>
-        <div className="flex justify-between gap-3 mt-3">
+      <Modal title="آیا از حذف نظر خود مطمئن هستید؟" {...removeModalProps}>
+        <div className="flex justify-between space-s-2">
           <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
             حذف
           </Button>
-          <Button onClick={handleCloseRemoveModal} block variant="secondary">
+          <Button onClick={handleCloseRemoveModal} block variant="secondary" theme="error">
             انصراف
           </Button>
         </div>

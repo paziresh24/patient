@@ -9,6 +9,9 @@ import Image from 'next/image';
 
 export const Card = (props: CardProps) => {
   const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
+
+  const dropDownMenuItems = options?.items?.filter(item => item.type === 'menu') ?? [];
+
   return (
     <>
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
@@ -29,15 +32,18 @@ export const Card = (props: CardProps) => {
               )}
             </div>
           </div>
-          {options?.items?.some(item => item.type === 'menu') && (
+          {dropDownMenuItems.length > 0 && (
             <div className="relative flex flex-col items-end">
               <DropDown
                 element={
-                  <div className="relative left-0 flex items-center justify-center cursor-pointer" title={options?.title}>
+                  <div
+                    className="relative left-0 flex items-center justify-center cursor-pointer"
+                    title={dropDownMenuItems.map(item => item.name).join('، ')}
+                  >
                     <ThreeDotsIcon className="w-4 h-4 cursor-pointer" />
                   </div>
                 }
-                items={options.items.filter(item => item.type === 'menu')}
+                items={dropDownMenuItems}
               />
             </div>
           )}
