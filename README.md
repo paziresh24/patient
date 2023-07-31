@@ -48,7 +48,7 @@ At Eyvan, we believe in the power of collective efforts and innovative thinking.
 
 ### Get Involved Today!
 
-Join Eyvan and start making a difference. Visit [community.paziresh24.com](https://community.paziresh24.com/) and become a vital part of a global community committed to transforming healthcare.
+Join Eyvan and start making a difference. Visit [community.paziresh24.com](https://community.paziresh24.com/).
 
 ## Features
 
