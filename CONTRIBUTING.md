@@ -37,6 +37,26 @@ To develop locally:
    npm run dev
    ```
 
+## Troubleshooting
+- ### "Your connection is not private"
+
+    You can either grant a temporary exception in your browser, or create and install a local certificate and use your OS to mark them as "trusted". The instructions below will show you how to create and install a local certificate.
+    
+    We will be using [mkcert](https://github.com/FiloSottile/mkcert) to create and install a locally-trusted, development certificate. The following will install `mkcert` and then create and install the local certificates.
+    
+    ```shell
+    brew install mkcert
+    npm run mkcert-localhost
+    ```
+    
+    You can now run the dev server with `npm run dev` and open [https://localhost:8766](https://localhost:8766). There should not see a warning about your connection not being private. You should also see a lock or similar icon in the address bar of your browser.
+- ### "Request has been blocked by the CORS policy."
+    Install "Allow CORS" browser extension
+    
+    [For Chrome users](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) | [For Firefox users](https://addons.mozilla.org/en-US/firefox/addon/access-control-allow-origin/)
+
+    Note: These are temporary solutions for local development/testing.
+
 ## Building
 
 You can build the project with:
@@ -78,25 +98,3 @@ If you encounter any bugs or have suggestions for improvements, feel free to cre
 - Write clean and readable code with appropriate comments and documentation to help other contributors understand your changes.
 
 - Use meaningful names for variables, functions, and components to improve code readability.
-
-
-
-## Troubleshooting
-- ### "Your connection is not private"
-
-    You can either grant a temporary exception in your browser, or create and install a local certificate and use your OS to mark them as "trusted". The instructions below will show you how to create and install a local certificate.
-    
-    We will be using [mkcert](https://github.com/FiloSottile/mkcert) to create and install a locally-trusted, development certificate. The following will install `mkcert` and then create and install the local certificates.
-    
-    ```shell
-    brew install mkcert
-    npm run mkcert-localhost
-    ```
-    
-    You can now run the dev server with `npm run dev` and open [https://localhost:8766](https://localhost:8766). There should not see a warning about your connection not being private. You should also see a lock or similar icon in the address bar of your browser.
-- ### "Request has been blocked by the CORS policy."
-    Install "Allow CORS" browser extension
-    
-    [For Chrome users](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) | [For Firefox users](https://addons.mozilla.org/en-US/firefox/addon/access-control-allow-origin/)
-
-    Note: These are temporary solutions for local development/testing.
