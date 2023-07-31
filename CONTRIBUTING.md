@@ -59,6 +59,7 @@ If you get errors, be sure to fix them before committing.
 ## Making a Pull Request
 
 1. **Push to Your Fork:** Push your changes to your forked repository
+
 2. **Open a Pull Request:** Go to the original project repository on GitHub and click the "Compare & pull request" button. Provide a detailed description of your changes, including the problem solved and any additional context.
 
 3. **Review Process:** The project maintainers will review your PR, provide feedback, and request any necessary changes. Please be patient during this process, as it may take some time.
@@ -67,7 +68,7 @@ If you get errors, be sure to fix them before committing.
 
 ## Reporting Issues
 
-If you encounter any bugs or have suggestions for improvements, feel free to create a new issue on the project's issue tracker. Provide as much detail as possible to help the community understand the problem or suggestion better.
+If you encounter any bugs or have suggestions for improvements, feel free to create a new topic on the community. Provide as much detail as possible to help the community understand the problem or suggestion better.
 
 ## Code Style and Guidelines
 
