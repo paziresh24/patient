@@ -1,5 +1,6 @@
 import ChevronIcon from '@/common/components/icons/chevron';
 import classNames from '@/common/utils/classNames';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { MenuItem } from './menuItem';
@@ -17,6 +18,22 @@ const SidebarNav = ({ menu }: { menu: MenuItem }) => {
     },
     ['click'],
   );
+
+  if (menu.sub_menu?.length === 1) {
+    const fristItem = menu.sub_menu[0];
+    return (
+      <li className="px-3 border-b border-slate-200">
+        <Link
+          prefetch={false}
+          href={fristItem.link ?? '#'}
+          className="flex items-center justify-between py-3 text-sm cursor-pointer"
+          title={fristItem.title}
+        >
+          {fristItem.title}
+        </Link>
+      </li>
+    );
+  }
 
   return (
     <li className="border-b border-slate-200" ref={ref}>
