@@ -11,7 +11,6 @@ import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import Badge, { BadgeProps } from '../badge';
@@ -83,7 +82,6 @@ export const SearchCard = (props: SearchCardProps) => {
               className={classNames('border-2 border-slate-200', {
                 'border-primary': baseInfo?.isVerify,
               })}
-              as={Image}
               {...avatarLazyLoading}
             />
             {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
