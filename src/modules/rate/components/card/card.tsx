@@ -10,7 +10,7 @@ import Image from 'next/image';
 export const Card = (props: CardProps) => {
   const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
 
-  const dropDownMenuItems = options?.items?.filter(item => item.type === 'menu') ?? [];
+  const dropDownMenuItems = options?.items?.filter(item => item.type === 'dropdown') ?? [];
 
   return (
     <>
@@ -91,7 +91,7 @@ export const Card = (props: CardProps) => {
             ))}
           <div className="flex space-s-3">
             {options?.items
-              ?.filter(option => option.type === 'button')
+              ?.filter(option => option.type === 'card')
               ?.map(option => (
                 <Text key={option.id} onClick={option.action} className="flex items-center gap-1 cursor-pointer" fontSize="sm">
                   {option?.prefix && option?.prefix}

@@ -8,7 +8,7 @@ export type Options = {
   id: number;
   name: string;
   action: () => void;
-  type: 'menu' | 'controller' | 'button';
+  type: 'dropdown' | 'controller' | 'card';
   icon?: React.ReactNode;
   inModal?: boolean;
   prefix?: string;
