@@ -31,6 +31,7 @@ import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Details from '@/modules/rate/components/details/details';
 import Rate from '@/modules/rate/view/rate';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
 import dynamic from 'next/dynamic';
@@ -117,6 +118,16 @@ export const RateReview = (props: RateReviewProps) => {
   const removeComment = useRemoveFeedback();
   const editComment = useEditFeedback();
   const isShowPremiumFeatures = useShowPremiumFeatures();
+  const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
+
+  const isShowOption = (key: string) => {
+    return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
+  };
+
+  const whereShowOption = (key: string) => {
+    if (!isShowOption(key)) return null;
+    return (options?.card as string[])?.includes?.(key) ? 'card' : 'dropdown';
+  };
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -174,19 +185,11 @@ export const RateReview = (props: RateReviewProps) => {
           },
           options: {
             items: [
-              {
-                id: 2,
-                name: 'اشتراک گذاری',
-                action: () => shareCommenthandler(feedback.id),
-                type: 'menu',
-                icon: <ShareIcon width={22} height={22} />,
-                inModal: true,
-              },
-              {
+              isShowOption('REACTION') && {
                 id: 4,
                 name: 'پسندیدن',
                 action: () => likeFeedbackHandler(feedback.id),
-                type: 'button',
+                type: whereShowOption('REACTION'),
                 icon: (
                   <HeartIcon
                     width={20}
@@ -199,30 +202,40 @@ export const RateReview = (props: RateReviewProps) => {
                 prefix: feedback?.like > 0 && feedback?.like,
                 inModal: true,
               },
-              {
+              isShowOption('SHARE') && {
+                id: 2,
+                name: 'اشتراک گذاری',
+                action: () => shareCommenthandler(feedback.id),
+                type: whereShowOption('SHARE'),
+                icon: <ShareIcon width={22} height={22} />,
+                inModal: true,
+              },
+              isShowOption('REPORT') && {
                 id: 1,
                 name: 'گزارش',
                 action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
-                type: 'button',
+                type: whereShowOption('REPORT'),
                 icon: <InfoIcon width={22} height={22} />,
                 inModal: true,
               },
-              userInfo?.id === feedback?.user_id && {
-                id: 5,
-                name: 'ویرایش',
-                action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
-                type: 'menu',
-                icon: <EditIcon width={22} height={22} />,
-                inModal: true,
-              },
-              userInfo?.id === feedback?.user_id && {
-                id: 6,
-                name: 'حذف',
-                action: () => showRemoveModal(feedback.id),
-                type: 'menu',
-                icon: <TrashIcon width={22} height={22} />,
-                inModal: true,
-              },
+              userInfo?.id === feedback?.user_id &&
+                isShowOption('EDIT') && {
+                  id: 5,
+                  name: 'ویرایش',
+                  action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
+                  type: whereShowOption('EDIT'),
+                  icon: <EditIcon width={22} height={22} />,
+                  inModal: true,
+                },
+              userInfo?.id === feedback?.user_id &&
+                isShowOption('DELETE') && {
+                  id: 6,
+                  name: 'حذف',
+                  action: () => showRemoveModal(feedback.id),
+                  type: whereShowOption('DELETE'),
+                  icon: <TrashIcon width={22} height={22} />,
+                  inModal: true,
+                },
             ],
           },
           details: compact([feedback.formatted_date, feedback?.center_name]),
