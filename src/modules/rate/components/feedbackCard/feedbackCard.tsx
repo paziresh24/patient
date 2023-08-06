@@ -2,8 +2,8 @@ import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import PersonseIcon from '@/common/components/icons/persons';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
+import useResponsive from '@/hooks/useResponsive';
 import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
 
@@ -79,9 +79,10 @@ export const FeedbackCard = (props: FeedbackParams) => {
       <Feedback
         {...feedback}
         firstReply
-        options={
-          [
-            ...feedback.options!,
+        options={{
+          ...feedback.options,
+          items: [
+            ...(feedback?.options?.items! ?? false),
             feedback?.reply?.length! > 1 && {
               id: 3,
               name: 'نمایش نظرات بیماران',
@@ -90,12 +91,19 @@ export const FeedbackCard = (props: FeedbackParams) => {
               icon: <PersonseIcon className="w-[1.1rem]" />,
               inModal: false,
             },
-          ].filter(Boolean) as Options[]
-        }
+          ].filter(Boolean) as Options[],
+        }}
       />
 
       <Modal title={feedback.replyModal?.title} {...modalProps} fullScreen bodyClassName="!px-0 !pb-16">
-        <Feedback firstReply={false} {...feedback} options={feedback.options?.filter(option => option.inModal)} />
+        <Feedback
+          firstReply={false}
+          {...feedback}
+          options={{
+            ...feedback.options,
+            items: feedback.options?.items?.filter(option => option.inModal),
+          }}
+        />
       </Modal>
     </div>
   );

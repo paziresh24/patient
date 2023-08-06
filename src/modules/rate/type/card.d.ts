@@ -8,7 +8,7 @@ export type Options = {
   id: number;
   name: string;
   action: () => void;
-  type: 'menu' | 'controller' | 'button';
+  type: 'dropdown' | 'controller' | 'card';
   icon?: React.ReactNode;
   inModal?: boolean;
   prefix?: string;
@@ -19,7 +19,10 @@ export type Card = {
   avatar?: any;
   name?: string;
   tag?: Tags[];
-  options?: Options[];
+  options?: {
+    title?: string;
+    items?: Options[];
+  };
   details?: string[];
   symptomes?: {
     text: string;
