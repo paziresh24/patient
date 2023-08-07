@@ -4,7 +4,7 @@ import { NextApiRequest } from 'next';
 export function getServerSideGrowthBookContext(req: NextApiRequest) {
   // Set GrowthBook polyfills for server environments
   setPolyfills({
-    fetch: require('node:fetch'),
+    fetch: require('node-fetch'),
     EventSource: require('eventsource'),
     SubtleCrypto: require('node:crypto')?.webcrypto?.subtle,
   });
