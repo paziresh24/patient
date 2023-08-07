@@ -43,6 +43,7 @@ const nextConfig = {
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
+    API_GATEWAY_BASE_URL: process.env.API_GATEWAY_BASE_URL,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
     CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,
     PAZIRESH24_API: process.env.PAZIRESH24_API,
