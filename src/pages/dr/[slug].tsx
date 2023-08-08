@@ -41,7 +41,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react';
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs, biography }: any) => {
   useFeedbackDataStore.getState().data = initialFeedbackDate;
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
@@ -272,7 +272,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
           </div>
 
           {sections({
-            info: profileData,
+            info: { ...profileData, biography },
             centers: profileData.centers,
             isBulk,
             editable,

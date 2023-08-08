@@ -11,6 +11,12 @@ export const paziresh24AppClient = axios.create({
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
 
+export const apiGatewayClient = axios.create({
+  baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL,
+  withCredentials: true,
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
+});
+
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
   withCredentials: true,

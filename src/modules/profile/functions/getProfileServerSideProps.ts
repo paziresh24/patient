@@ -1,13 +1,16 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
+import { apiGatewayClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import { getProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { GrowthBook } from '@growthbook/growthbook-react';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { getProfile } from './getProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
   const center = centers.find((center: any) => center.city && center.id !== '5532');
@@ -40,22 +43,24 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;
+
+  const gbContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+  const gb = new GrowthBook(gbContext);
+  await gb.loadFeatures({ timeout: 1000 });
+
+  const apiGatewayFeature = gb.getFeatureValue('profile.api-gateway', ['*']);
+  const shouldApiGateway = apiGatewayFeature.includes(slugFormmated) || apiGatewayFeature.includes('*');
+
   try {
     const queryClient = new QueryClient();
-    const { data, redirect } = await queryClient.fetchQuery(
-      [
-        ServerStateKeysEnum.DoctorFullProfile,
-        {
-          slug: slugFormmated,
-          ...(university && { university }),
-        },
-      ],
-      () =>
-        getProfileData({
-          slug: slugFormmated,
-          ...(university && { university }),
-        }),
-    );
+    const { redirect, fullProfileData } = await getProfile(queryClient, { slug: slugFormmated, university });
+    const { centers, id, server_id } = fullProfileData;
+    let biography = fullProfileData.biography;
+
+    if (shouldApiGateway) {
+      const { data } = await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`);
+      biography = data.Biography;
+    }
 
     if (redirect) {
       return {
@@ -66,7 +71,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       };
     }
 
-    const links = getSearchLinks({ centers: data.centers, group_expertises: data.group_expertises });
+    const links = getSearchLinks({ centers, group_expertises: fullProfileData.group_expertises });
 
     const internalLinksData = await queryClient
       .fetchQuery(
@@ -90,14 +95,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         [
           ServerStateKeysEnum.Feedbacks,
           {
-            doctor_id: data.id,
-            server_id: data.server_id,
+            doctor_id: id,
+            server_id: server_id,
           },
         ],
         () =>
           getFeedbacks({
-            doctor_id: data.id,
-            server_id: data.server_id,
+            doctor_id: id,
+            server_id: server_id,
           }),
       );
       if (!isCSR)
@@ -105,15 +110,15 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           [
             ServerStateKeysEnum.Feedbacks,
             {
-              doctor_id: data.id,
-              server_id: data.server_id,
+              doctor_id: id,
+              server_id: server_id,
               no_page_limit: true,
             },
           ],
           () =>
             getFeedbacks({
-              doctor_id: data.id,
-              server_id: data.server_id,
+              doctor_id: id,
+              server_id: server_id,
               no_page_limit: true,
             }),
         );
@@ -122,24 +127,25 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.log(error);
     }
 
-    const doctorCity = data?.centers?.find((center: any) => center.id !== '5532')?.city;
+    const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
     const doctorExpertise = getDisplayDoctorExpertise({
-      aliasTitle: data?.expertises?.[0]?.alias_title,
-      degree: data?.expertises?.[0]?.degree?.name,
-      expertise: data?.expertises?.[0]?.expertise?.name,
+      aliasTitle: fullProfileData?.expertises?.[0]?.alias_title,
+      degree: fullProfileData?.expertises?.[0]?.degree?.name,
+      expertise: fullProfileData?.expertises?.[0]?.expertise?.name,
     });
-    const title = `${data?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
-    const description = `نوبت دهی اینترنتی ${data?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+    const title = `${fullProfileData?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
+    const description = `نوبت دهی اینترنتی ${fullProfileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {
       props: {
-        title: university ? data?.display_name : title,
+        title: university ? fullProfileData?.display_name : title,
         description: university ? '' : description,
+        biography,
         dehydratedState: dehydrate(queryClient),
         slug: slugFormmated,
         initialFeedbackDate: useFeedbackDataStore.getState().data,
         feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
-        breadcrumbs: createBreadcrumb(internalLinksData, data?.display_name, pageSlug),
+        breadcrumbs: createBreadcrumb(internalLinksData, fullProfileData?.display_name, pageSlug),
       },
     };
   } catch (error) {
