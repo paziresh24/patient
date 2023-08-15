@@ -26,6 +26,7 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
     function: () => {
       return {
         doctor: info,
+        centers,
         slug: seo.slug,
       };
     },
@@ -99,7 +100,7 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
             location: center.map,
           })),
         onEventPhoneNumber: (centerId: any) => {
-          const center = info.centers.find((center: any) => center.id === centerId);
+          const center = centers.find((center: any) => center.id === centerId);
           splunkInstance().sendEvent({
             group: 'doctor profile',
             type: 'see center phone',
