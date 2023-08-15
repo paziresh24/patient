@@ -70,7 +70,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     () =>
       profileData.centers.map((center: any) => ({
         ...center,
-        ...overwriteData.centers.find(({ id }: { id: string }) => id === center.id),
+        ...(overwriteData?.centers?.find?.(({ id }: { id: string }) => id === center?.id) ?? {}),
       })),
     [profileData, overwriteData],
   );
