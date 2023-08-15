@@ -54,14 +54,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   try {
     const queryClient = new QueryClient();
     const { redirect, fullProfileData } = await getProfile(queryClient, { slug: slugFormmated, university });
-    const { centers, id, server_id } = fullProfileData;
-    let biography = fullProfileData.biography;
-
-    if (shouldApiGateway) {
-      const { data } = await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`);
-      biography = data.Biography;
-    }
-
     if (redirect) {
       return {
         redirect: {
@@ -69,6 +61,30 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           destination: encodeURI(redirect.route),
         },
       };
+    }
+    const { centers, id, server_id } = fullProfileData;
+    const overwriteData: { biography: string; centers: any[] } = { biography: fullProfileData.biography, centers: [] };
+
+    if (shouldApiGateway) {
+      const requests = [
+        await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
+        ...centers.map(async (center: { id: string }) => await apiGatewayClient.get(`/v2/centers/${server_id}/${center.id}`)),
+      ];
+      const [
+        {
+          data: { Biography },
+        },
+        ...centersData
+      ] = await Promise.all(requests);
+      overwriteData.biography = Biography;
+
+      overwriteData.centers = centersData.map(({ data: { Id: id, Addr: address, Tell: tell, TypeId: type_id, Name: name } }) => ({
+        id,
+        address,
+        // display_number_array: tell.split('|'),
+        center_type: type_id,
+        name,
+      }));
     }
 
     const links = getSearchLinks({ centers, group_expertises: fullProfileData.group_expertises });
@@ -140,7 +156,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       props: {
         title: university ? fullProfileData?.display_name : title,
         description: university ? '' : description,
-        biography,
+        overwriteData,
         dehydratedState: dehydrate(queryClient),
         slug: slugFormmated,
         initialFeedbackDate: useFeedbackDataStore.getState().data,
