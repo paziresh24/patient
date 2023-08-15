@@ -41,7 +41,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react';
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs, biography }: any) => {
+const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs, overwriteData }: any) => {
   useFeedbackDataStore.getState().data = initialFeedbackDate;
   const { query, ...router } = useRouter();
   const { customize } = useCustomize();
@@ -66,10 +66,18 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
   const isShowPremiumFeatures = useShowPremiumFeatures();
 
   const profileData = profile.data?.data;
-  const isBulk = useMemo(
+  const centers = useMemo(
     () =>
-      profileData?.centers?.every((center: any) => center.status === 2) ||
-      profileData?.centers?.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
+      profileData.centers.map((center: any) => ({
+        ...center,
+        ...overwriteData.centers.find(({ id }: { id: string }) => id === center.id),
+      })),
+    [profileData, overwriteData],
+  );
+  const isBulk: boolean = useMemo(
+    () =>
+      centers.every((center: any) => center.status === 2) ||
+      centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
     [profileData],
   );
   useProfileDataStore.getState().data = profileData;
@@ -256,7 +264,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
           <div className="flex flex-col w-full space-y-3 md:hidden">
             {aside({
               info: profileData,
-              centers: profileData.centers,
+              centers,
               isBulk,
               editable,
               handleViewAs,
@@ -272,8 +280,8 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
           </div>
 
           {sections({
-            info: { ...profileData, biography },
-            centers: profileData.centers,
+            info: { ...profileData, biography: overwriteData.biography },
+            centers,
             isBulk,
             editable,
             handleViewAs,
@@ -291,7 +299,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
           {aside({
             info: profileData,
-            centers: profileData.centers,
+            centers,
             isBulk,
             editable,
             handleViewAs,
@@ -319,7 +327,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
                 }&group_expertises_slug=${profileData?.group_expertises?.[0]?.en_slug ?? 'other'}&expertise=${
                   profileData?.expertises?.[0]?.expertise?.name
                 }&doctor_id=${profileData.id}&server_id=${profileData.serverId}&doctor_city=${
-                  profileData.centers.find((center: any) => center.city)[0]
+                  centers.find((center: any) => center.city)[0]
                 }&doctor_slug=${profileData.slug}`,
               )
             }

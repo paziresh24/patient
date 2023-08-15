@@ -8,7 +8,6 @@ import humanizeTime from '@/common/utils/humanizeTime';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
-import { Center } from '@/modules/booking/types/selectCenter';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -30,7 +29,7 @@ const External = dynamic(() => import('./external'), {
   },
 });
 
-export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
+export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[]; slug: string }) => {
   const router = useRouter();
   const messengers = useFeatureValue<any>('channeldescription', {});
   const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
@@ -41,9 +40,9 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   const isWebView = useWebView();
 
   const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string) => {
-    const isBookRequest = (doctor.centers as Center[])
+    const isBookRequest = centers
       ?.find?.(center => center.id === centerId)
-      ?.services?.find?.(service => service.id === serviceId)?.can_request;
+      ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
 
     const params = {
       centerId,
@@ -84,9 +83,9 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
                 doctorId={doctor.id}
                 slug={slug}
                 id={service.id}
-                userCenterId={doctor.centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
+                userCenterId={centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
                 city={{
-                  name: doctor.centers[0].city,
+                  name: centers[0].city,
                   slug: doctor.city_en_slug,
                 }}
                 expertise={{
@@ -97,7 +96,7 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
             ))}
         {doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
-            centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
+            centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
             waitingTime={doctor.waiting_time_info?.waiting_time_title}
             onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId)}
             displayName={doctor.display_name}
