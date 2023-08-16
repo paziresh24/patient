@@ -1,3 +1,6 @@
+import config from 'next/config';
+const { publicRuntimeConfig } = config();
+
 export const consultMenus = [
   {
     title: 'مشاوره پزشکی با بهترین متخصص آنلاین',
@@ -362,6 +365,6 @@ export const withUserMenu = [
 export const withDoctorMenu = [
   {
     title: 'ورود / ثبت نام پزشکان ',
-    link: 'https://dr.paziresh24.com/auth?utm_source=home&utm_medium=click&utm_campaign=login-register-auth',
+    link: `${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth?utm_source=home&utm_medium=click&utm_campaign=login-register-auth`,
   },
 ];

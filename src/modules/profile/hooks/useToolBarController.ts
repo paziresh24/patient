@@ -39,7 +39,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle, editabl
     {
       type: 'share',
       action: () => {
-        const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
+        const url = `${window.location.origin}/dr/${slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
         share({
           title: documentTitle,
           text: `${displayName} در پذیرش۲۴`,

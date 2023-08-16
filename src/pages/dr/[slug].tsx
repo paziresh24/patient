@@ -322,13 +322,13 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
             block
             onClick={() =>
               window.location.assign(
-                `https://www.paziresh24.com/comment/?doctorName=${profileData.display_name}&image=${profileData.image}&group_expertises=${
-                  profileData?.group_expertises?.[0]?.name ?? 'سایر'
-                }&group_expertises_slug=${profileData?.group_expertises?.[0]?.en_slug ?? 'other'}&expertise=${
-                  profileData?.expertises?.[0]?.expertise?.name
-                }&doctor_id=${profileData.id}&server_id=${profileData.serverId}&doctor_city=${
-                  centers.find((center: any) => center.city)[0]
-                }&doctor_slug=${profileData.slug}`,
+                `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${profileData.display_name}&image=${
+                  profileData.image
+                }&group_expertises=${profileData?.group_expertises?.[0]?.name ?? 'سایر'}&group_expertises_slug=${
+                  profileData?.group_expertises?.[0]?.en_slug ?? 'other'
+                }&expertise=${profileData?.expertises?.[0]?.expertise?.name}&doctor_id=${profileData.id}&server_id=${
+                  profileData.serverId
+                }&doctor_city=${centers.find((center: any) => center.city)[0]}&doctor_slug=${profileData.slug}`,
               )
             }
           >
