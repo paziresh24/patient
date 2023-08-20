@@ -273,7 +273,11 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
             })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
-                <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
+                <Section
+                  key={index}
+                  title={section?.title ?? ''}
+                  {...{ id: section.id, ActionButton: section.ActionButto, dataMetaTag: section.dataMetaTag }}
+                >
                   {section.children(section?.function?.())}
                 </Section>
               ))}
