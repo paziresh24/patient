@@ -2,6 +2,7 @@
 
 const nextTranslate = require('next-translate');
 const runtimeCaching = require('./runtimeCaching');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -75,4 +76,15 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-module.exports = moduleExports;
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  nextConfig.sentry = {
+    hideSourceMaps: true,
+  };
+}
+
+// Sentry should be the last thing to export to catch everything right
+module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;
