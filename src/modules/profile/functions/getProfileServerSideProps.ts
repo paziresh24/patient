@@ -44,12 +44,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;
 
-  const gbContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-  const gb = new GrowthBook(gbContext);
-  await gb.loadFeatures({ timeout: 1000 });
-
-  const apiGatewayFeature = gb.getFeatureValue('profile.api-gateway', ['*']);
-  const shouldApiGateway = apiGatewayFeature.includes(slugFormmated) || apiGatewayFeature.includes('*');
+  let shouldApiGateway = false;
+  try {
+    const gbContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+    const gb = new GrowthBook(gbContext);
+    await gb.loadFeatures({ timeout: 1000 });
+    const apiGatewayFeature = gb.getFeatureValue('profile.api-gateway', ['*']);
+    shouldApiGateway = apiGatewayFeature.includes(slugFormmated) || apiGatewayFeature.includes('*');
+  } catch (error) {
+    console.log(error);
+  }
 
   try {
     const queryClient = new QueryClient();
@@ -68,7 +72,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     if (shouldApiGateway) {
       const requests = [
         await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
-        ...centers.map(async (center: { id: string }) => await apiGatewayClient.get(`/v2/centers/${server_id}/${center.id}`)),
+        ...centers.map(
+          async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
+        ),
       ];
       const [
         {
