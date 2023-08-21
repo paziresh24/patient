@@ -70,27 +70,31 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const overwriteData: { biography: string; centers: any[] } = { biography: fullProfileData.biography, centers: [] };
 
     if (shouldApiGateway) {
-      const requests = [
-        await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
-        ...centers.map(
-          async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
-        ),
-      ];
-      const [
-        {
-          data: { Biography },
-        },
-        ...centersData
-      ] = await Promise.all(requests);
-      overwriteData.biography = Biography;
+      try {
+        const requests = [
+          await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
+          ...centers.map(
+            async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
+          ),
+        ];
+        const [
+          {
+            data: { Biography },
+          },
+          ...centersData
+        ] = await Promise.all(requests);
+        overwriteData.biography = Biography;
 
-      overwriteData.centers = centersData.map(({ data: { Id: id, Addr: address, Tell: tell, TypeId: type_id, Name: name } }) => ({
-        id,
-        address,
-        // display_number_array: tell.split('|'),
-        center_type: type_id,
-        name,
-      }));
+        overwriteData.centers = centersData.map(({ data: { Id: id, Addr: address, Tell: tell, TypeId: type_id, Name: name } }) => ({
+          id,
+          address,
+          // display_number_array: tell.split('|'),
+          center_type: type_id,
+          name,
+        }));
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     const links = getSearchLinks({ centers, group_expertises: fullProfileData.group_expertises });
