@@ -2,8 +2,10 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { splunkInstance } from '@/common/services/splunk';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import config from 'next/config';
 import { useCallback } from 'react';
 import { useProfileDataStore } from '../../store/profileData';
+const { publicRuntimeConfig } = config();
 
 export const OwnPage = () => {
   const { data } = useProfileDataStore();
@@ -21,7 +23,7 @@ export const OwnPage = () => {
         },
       },
     });
-    location.assign('https://dr.paziresh24.com/auth/?q=profile');
+    location.assign(`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth/?q=profile`);
   }, [info, isLogin]);
 
   return (

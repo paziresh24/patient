@@ -34,6 +34,7 @@ import Rate from '@/modules/rate/view/rate';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
+import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -42,6 +43,7 @@ const DoctorTags = dynamic(() => import('./doctorTags'));
 const DoctorTagsFallback = dynamic(() => import('./doctorTagsFallback'), {
   ssr: false,
 });
+const { publicRuntimeConfig } = config();
 
 interface RateReviewProps {
   doctor: {
@@ -423,7 +425,7 @@ export const RateReview = (props: RateReviewProps) => {
         text: 'ثبت نظر',
         action: () => {
           rateSplunkEvent('post');
-          location.href = `https://www.paziresh24.com/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
+          location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
         },
       },
     ],
