@@ -280,7 +280,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
                 <Section
                   key={index}
                   title={section?.title ?? ''}
-                  {...{ id: section.id, ActionButton: section.ActionButto, ...(isSetDataTages && { dataTages: section.dataTages }) }}
+                  {...{ id: section.id, ActionButton: section.ActionButto, ...(isSetDataTages && { dataAttributes: section.dataAttributes }) }}
                 >
                   {section.children(section?.function?.())}
                 </Section>
