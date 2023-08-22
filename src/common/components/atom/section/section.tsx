@@ -8,14 +8,14 @@ interface Props {
   ActionButton?: ReactNode;
   children: ReactNode;
   className?: string;
-  dataTages?: Record<string, string>;
+  dataAttributes?: Record<string, string>;
 }
 
 export const Section: FunctionComponent<Props> = props => {
-  const { id, children, title, ActionButton, className, dataTages } = props;
+  const { id, children, title, ActionButton, className, dataAttributes } = props;
 
   return (
-    <section {...{ id }} className={classNames('flex flex-col w-full gap-y-3', className)} {...dataTages}>
+    <section {...{ id }} className={classNames('flex flex-col w-full gap-y-3', className)} {...dataAttributes>
       {(title || ActionButton) && (
         <div className="flex items-center justify-between px-4 md:px-0">
           <Text as="h2" fontWeight="bold">
