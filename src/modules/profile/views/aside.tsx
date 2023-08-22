@@ -71,7 +71,7 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
         <Recommend className="pr-4 md:pr-0" {...props} />
       </div>
     ),
-    dataMetaTag: { 'data-nosnippet': 'true' },
+    dataTages: { 'data-nosnippet': 'true' },
   },
   // Centers Info
   {

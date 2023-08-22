@@ -34,6 +34,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
 import { useRouter } from 'next/router';
@@ -52,6 +53,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const { isMobile } = useResponsive();
+  const listOfExpertiseAndCities = useFeatureValue<any>('profile.nosnippet-substitute-section', '');
   const userInfo = useUserInfoStore(state => state.info);
   const { recommendEvent } = useProfileSplunkEvent();
   const isWebView = useWebView();
@@ -64,7 +66,6 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     },
   );
   const isShowPremiumFeatures = useShowPremiumFeatures();
-
   const profileData = profile.data?.data;
   const centers = useMemo(
     () =>
@@ -74,6 +75,9 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
       })),
     [profileData, overwriteData],
   );
+  const isSetDataTages =
+    listOfExpertiseAndCities?.cities?.includes(profileData?.city_en_slug) &&
+    listOfExpertiseAndCities?.group_expertises?.includes(profileData?.group_expertises?.[0]?.id?.toString());
   const isBulk: boolean = useMemo(
     () =>
       centers.every((center: any) => center.status === 2) ||
@@ -276,7 +280,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
                 <Section
                   key={index}
                   title={section?.title ?? ''}
-                  {...{ id: section.id, ActionButton: section.ActionButto, dataMetaTag: section.dataMetaTag }}
+                  {...{ id: section.id, ActionButton: section.ActionButto, ...(isSetDataTages && { dataTages: section.dataTages }) }}
                 >
                   {section.children(section?.function?.())}
                 </Section>
