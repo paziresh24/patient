@@ -4,11 +4,13 @@ import Accordion from '@/common/components/atom/accordion';
 import Logo from '@/components/atom/logo';
 import Text from '@/components/atom/text';
 import useTranslation from 'next-translate/useTranslation';
+import config from 'next/config';
 import { footerForUsers, footerPaziresh24 } from './data/link';
 import { socials } from './data/social';
 import aboutMe from './logo/about-me.svg';
 import aboutUs from './logo/about-us.svg';
 import about from './logo/about.svg';
+const { publicRuntimeConfig } = config();
 
 const Footer = () => {
   const { t } = useTranslation('common');
@@ -60,7 +62,10 @@ const Footer = () => {
                 </Accordion>
               </div>
               <div className="md:basis-[49%]">
-                <a href="https://dr.paziresh24.com/auth" className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100">
+                <a
+                  href={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth`}
+                  className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100"
+                >
                   {t('footer.menu.forDoctors')}
                 </a>
               </div>
