@@ -80,11 +80,5 @@ const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-  nextConfig.sentry = {
-    hideSourceMaps: true,
-  };
-}
-
 // Sentry should be the last thing to export to catch everything right
 module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;

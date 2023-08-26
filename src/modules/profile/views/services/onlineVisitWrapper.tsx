@@ -120,6 +120,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   return (
     <>
       <OnlineVisit
+        doctorId={doctorId}
         channels={without(channelType, 'phone')}
         duration={duration}
         title={`ویزیت انلاین ${channelType[0] === 'phone' ? '(تماس تلفنی)' : ''}`}

@@ -12,7 +12,7 @@ import Services from './services';
 const BulkService = dynamic(() => import('./services/bulk'));
 const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
 
-export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) => [
+export const aside = ({ information, centers, expertises, history, onlineVisit, isBulk, customize, editable, seo }: any) => [
   // Bulk
   {
     id: 'services_section',
@@ -25,7 +25,10 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
     isShow: !isBulk,
     function: () => {
       return {
-        doctor: info,
+        id: information.id,
+        doctor: information,
+        expertises,
+        onlineVisit,
         centers,
         slug: seo.slug,
       };
@@ -34,12 +37,12 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
   },
   // Rcommend
   {
-    isShow: info?.should_recommend_other_doctors && centers[0] && info?.expertises?.[0],
+    isShow: information?.should_recommend_other_doctors && centers[0] && expertises?.expertises?.[0],
     function: () => {
       return {
-        doctorId: info.id,
-        city: info.city_en_slug,
-        category: info.expertises[0]?.expertise_groups[0].en_slug,
+        doctorId: information.id,
+        city: information.city_en_slug,
+        category: expertises.group_expertises[0]?.en_slug,
         clickRecommendEvent: (doctor: any) => {
           splunkInstance().sendEvent({
             group: 'recommend',
@@ -50,9 +53,9 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
                 user_agent: window.navigator.userAgent,
                 page_url: window.location.pathname,
                 referrer: document.referrer,
-                group_expertises: info.group_expertises?.[0]?.name ?? 'سایر',
-                doctor_name: info.display_name,
-                server_id: info.server_id,
+                group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
+                doctor_name: information.display_name,
+                server_id: information.server_id,
                 recommendations: doctor,
               },
             },
@@ -63,7 +66,7 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
     children: (props: any) => (
       <div className="flex flex-col space-y-3 md:hidden">
         <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          برترین پزشکان {info.expertises[0].expertise_groups[0].name} {centers[0].city ? `در ${centers[0].city}` : null}{' '}
+          برترین پزشکان {expertises.group_expertises?.[0]?.name} {centers[0].city ? `در ${centers[0].city}` : null}{' '}
           <Text fontWeight="medium" fontSize="sm">
             از دیدگاه بیماران
           </Text>
@@ -97,7 +100,7 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
             slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
             description: center.description,
             phoneNumbers: center?.display_number_array,
-            name: center.center_type !== 1 ? center.name : `مطب ${info?.display_name}`,
+            name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
             location: center.map,
           })),
         onEventPhoneNumber: (centerId: any) => {
@@ -108,13 +111,12 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
             event: {
               data: {
                 doctor: {
-                  name: info.name,
-                  family: info.family,
-                  server_id: info.server_id,
+                  full_name: information.display_name,
+                  server_id: information.server_id,
                   slug: seo.slug,
-                  id: info.id,
-                  expertise: info.expertises[0].expertise.name,
-                  group_expertise: info.group_expertises[0].name,
+                  id: information.id,
+                  expertise: expertises.expertises[0].alias_title,
+                  group_expertise: expertises.group_expertises[0].name,
                 },
                 center: {
                   center_status: center?.status,
@@ -137,13 +139,12 @@ export const aside = ({ info, centers, isBulk, customize, editable, seo }: any) 
             event: {
               data: {
                 doctor: {
-                  name: info.name,
-                  family: info.family,
-                  server_id: info.server_id,
+                  full_name: information.display_name,
+                  server_id: information.server_id,
                   slug: seo.slug,
-                  id: info.id,
-                  expertise: info.expertises[0].expertise.name,
-                  group_expertise: info.group_expertises[0].name,
+                  id: information.id,
+                  expertise: expertises.expertises[0].alias_title,
+                  group_expertise: expertises.group_expertises[0].name,
                 },
                 center: {
                   center_status: center?.status,
