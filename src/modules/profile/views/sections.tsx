@@ -36,22 +36,41 @@ const RateReview = dynamic(() => import('./rateReview'), {
 });
 const ProfileSeoBox = dynamic(() => import('./seoBox'));
 
-export const sections = ({ info, centers, isBulk, customize, editable, handleViewAs, seo }: any) =>
+export const sections = ({
+  information,
+  centers,
+  expertises,
+  feedbacks,
+  media,
+  history,
+  symptomes,
+  similarLinks,
+  isBulk,
+  customize,
+  editable,
+  handleViewAs,
+  seo,
+}: any) =>
   [
     // Own Page
     {
       isShow: isBulk,
-      children: () => <OwnPage />,
+      function: () => {
+        return {
+          fullname: information.display_name,
+        };
+      },
+      children: (props: any) => <OwnPage {...props} />,
     },
     // About
     {
       title: 'درباره پزشک',
       id: 'about_section',
-      ActionButton: editable && info.biography && <EditButton onClick={() => handleViewAs('biography')} />,
-      isShow: info.biography || info.awards || info.scientific,
-      isShowFallback: !info.biography && !info.awards && !info.scientific && editable,
+      ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
+      isShow: information.biography || information.awards || information.scientific,
+      isShowFallback: !information.biography && !information.awards && !information.scientific && editable,
       function: () => {
-        const { biography, awards, scientific } = info;
+        const { biography, awards, scientific } = information;
         return {
           biography,
           awards,
@@ -71,19 +90,17 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
     },
     // Video
     {
-      isShow: info.aparat_video_code && info.aparat_video_code !== '0',
-      children: (props: any) => (
-        <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: info.aparat_video_code }} />
-      ),
+      isShow: media.aparat && media.aparat !== '0',
+      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media.aparat }} />,
     },
     // Gallery
     {
       title: 'گالری',
-      ActionButton: editable && info.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
-      isShow: customize.showGalleryProfile && centers.some((center: any) => center.center_type === 1 && !!center.gallery.length),
+      ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
+      isShow: customize.showGalleryProfile && media.gallery.length > 0,
       isShowFallback: editable,
       function: () => {
-        const items = centers.find((center: any) => center.center_type === 1)?.gallery ?? [];
+        const items = media.gallery;
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
         return {
           items: reformattedItems,
@@ -102,18 +119,18 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
     },
     // Activity
     {
-      title: `فعالیت ها ${info.display_name}`,
+      title: `فعالیت ها ${information.display_name}`,
       isShow: customize.showActivityProfile,
       function: () => {
         return {
           items: [
-            info.followConsultBoosk && {
+            history.count_of_consult_books && {
               icon: <ChatIcon className="min-w-fit w-max" />,
-              text: `<b>${info.followConsultBoosk}</b> مشاوره فعال`,
+              text: `<b>${history.count_of_consult_books}</b> مشاوره فعال`,
             },
             {
               icon: <AwardIcon className="min-w-fit w-max" />,
-              text: `پذیرش24 بیش از ${info.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${info.display_name} را داشته است.`,
+              text: `پذیرش24 بیش از ${history.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${information.display_name} را داشته است.`,
             },
           ].filter(Boolean),
         };
@@ -123,53 +140,54 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
     // Reviews
     {
       id: 'reviews_section',
-      title: `نظرات در مورد ${info.display_name}`,
+      title: `نظرات در مورد ${information.display_name}`,
       isShow: customize.showRateAndReviews,
       function: () => {
         const doctorInfo = {
           center: centers
             .filter((center: any) => center.id !== '5532')
             .map((center: any) => center && { id: center.id, name: center.name }),
-          id: info.id,
-          name: info.display_name,
-          image: info.image,
-          group_expertises: info.group_expertises[0].name ?? 'سایر',
-          group_expertises_slug: info.group_expertises[0].en_slug ?? 'other',
-          expertise: info?.expertises?.[0]?.expertise?.name,
-          slug: info.slug,
+          id: information.id,
+          name: information.display_name,
+          image: information.image,
+          group_expertises: expertises.group_expertises[0].name ?? 'سایر',
+          group_expertises_slug: expertises.group_expertises[0].en_slug ?? 'other',
+          expertise: expertises?.expertises?.[0]?.expertise?.name,
+          slug: seo.slug,
           city: centers.map((center: any) => center.city),
-          server_id: info.server_id,
+          server_id: information.server_id,
         };
 
         const rateDetails = {
-          satisfaction: info.feedbacks.details?.satisfaction,
-          count: info.feedbacks.details.number_of_feedbacks,
+          satisfaction: feedbacks.details?.satisfaction,
+          count: feedbacks.details.number_of_feedbacks,
           information: [
             {
               id: 1,
               title: 'برخورد مناسب پزشک',
-              satisfaction: info.feedbacks.details.doctor_encounter * 20,
-              avg_star: info.feedbacks.details.doctor_encounter,
+              satisfaction: feedbacks.details.doctor_encounter * 20,
+              avg_star: feedbacks.details.doctor_encounter,
             },
             {
               id: 2,
               title: 'توضیح پزشک در هنگام ویزیت',
-              satisfaction: info.feedbacks.details.explanation_of_issue * 20,
-              avg_star: info.feedbacks.details.explanation_of_issue,
+              satisfaction: feedbacks.details.explanation_of_issue * 20,
+              avg_star: feedbacks.details.explanation_of_issue,
             },
             {
               id: 3,
               title: 'مهارت و تخصص پزشک',
-              satisfaction: info.feedbacks.details.quality_of_treatment * 20,
-              avg_star: info.feedbacks.details.quality_of_treatment,
+              satisfaction: feedbacks.details.quality_of_treatment * 20,
+              avg_star: feedbacks.details.quality_of_treatment,
             },
           ],
         };
         return {
           doctor: doctorInfo,
           rateDetails,
-          serverId: info.server_id,
-          symptomes: info.symptomes?.slice?.(0, 5) ?? [],
+          feedbacks: feedbacks.feedbacks,
+          serverId: information.server_id,
+          symptomes: symptomes?.slice?.(0, 5) ?? [],
         };
       },
       children: (props: any) => <RateReview {...props} />,
@@ -179,13 +197,13 @@ export const sections = ({ info, centers, isBulk, customize, editable, handleVie
       isShow: customize.showSeoBoxs,
       function: () => {
         const about = `این صفحه به عنوان وب سایت نوبت دهی اینترنتی ${
-          info.display_name
+          information.display_name
         } جهت مشاهده خدمات و دریافت نوبت آنلاین مطب شخصی، کلینیک، درمانگاه و بیمارستان هایی که ایشان در حال ارائه خدمات درمانی هستند از طریق پذیرش24 طراحی و ارائه شده است. البته ممکن است در حال حاضر امکان رزرو نوبت از همه مراکز فوق ممکن نباشد که این موضوع وابسته به تصمیم ${
-          info.gender === 0 ? '' : info.gender == 1 ? 'آقای' : 'خانم'
+          information.gender === 0 ? '' : information.gender == 1 ? 'آقای' : 'خانم'
         } دکتر در ارائه نوبت گیری از درگاه های فوق بوده است.`;
 
         return {
-          similarLinks: info.similar_links?.map((item: any) => ({ name: item.caption, url: item.link })),
+          similarLinks: similarLinks?.map((item: any) => ({ name: item.caption, url: item.link })),
           about,
           breadcrumbs: seo.breadcrumbs,
         };

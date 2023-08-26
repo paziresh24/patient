@@ -5,9 +5,8 @@ import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
-import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { GrowthBook } from '@growthbook/growthbook-react';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
@@ -57,7 +56,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
   try {
     const queryClient = new QueryClient();
-    const { redirect, fullProfileData } = await getProfile(queryClient, { slug: slugFormmated, university });
+    const { redirect, fullProfileData } = await getProfile({ slug: slugFormmated, university });
     if (redirect) {
       return {
         redirect: {
@@ -66,53 +65,108 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         },
       };
     }
-    const { centers, id, server_id } = fullProfileData;
-    const overwriteData: { biography: string; centers: any[] } = { biography: fullProfileData.biography, centers: [] };
+    const { centers: fullCenters, id, server_id } = fullProfileData;
+    const overwriteData: { information: Record<string, string>; centers: any[] } = { information: {}, centers: [] };
 
     if (shouldApiGateway) {
       try {
         const requests = [
           await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
-          ...centers.map(
+          ...fullCenters.map(
             async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
           ),
         ];
-        const [
-          {
-            data: { Biography },
-          },
-          ...centersData
-        ] = await Promise.all(requests);
-        overwriteData.biography = Biography;
 
-        overwriteData.centers = centersData.map(({ data: { Id: id, Addr: address, Tell: tell, TypeId: type_id, Name: name } }) => ({
-          id,
-          address,
-          // display_number_array: tell.split('|'),
-          center_type: type_id,
-          name,
-        }));
+        const [doctorData, ...centersData] = await Promise.allSettled(requests);
+        if (doctorData.status === 'fulfilled')
+          overwriteData.information = {
+            biography: doctorData.value.data.Biography,
+            awards: doctorData.value.data.Awards,
+            scientific: doctorData.value.data.Scientific,
+            display_name: doctorData.value.data.FullName,
+            medical_code: doctorData.value.data.MedicalCode,
+            image: `/api/getImage/p24/search-${doctorData.value.data.Gender === 'man' ? 'men' : 'women'}/${
+              doctorData.value.data.Image ?? 'noimage.png'
+            }`,
+          };
+
+        overwriteData.centers = centersData.map(centerData => {
+          if (centerData.status === 'fulfilled') {
+            const {
+              Id: id,
+              Address: address,
+              Slug: slug,
+              CityName: city,
+              Tell: tell,
+              Lat: lat,
+              Lon: lon,
+              TypeId: type_id,
+              Name: name,
+              Status: status,
+              Description: description,
+            } = centerData.value.data;
+
+            return {
+              id,
+              address,
+              city,
+              map: { lat, lon },
+              display_number_array: tell.split('|'),
+              center_type: type_id,
+              name,
+              slug,
+              status,
+              description,
+            };
+          }
+        });
       } catch (error) {
         console.log(error);
       }
     }
 
-    const links = getSearchLinks({ centers, group_expertises: fullProfileData.group_expertises });
+    const information = {
+      id,
+      server_id,
+      biography: fullProfileData.biography,
+      awards: fullProfileData.awards,
+      scientific: fullProfileData.scientific,
+      display_name: fullProfileData.display_name,
+      medical_code: fullProfileData.medical_code,
+      experience: fullProfileData.experience,
+      gender: fullProfileData.gender,
+      image: fullProfileData.image,
+      city_en_slug: fullProfileData.city_en_slug,
+      should_recommend_other_doctors: fullProfileData.should_recommend_other_doctors,
+      ...overwriteData.information,
+    };
+    const centers = fullCenters.map((center: any) => ({ ...center, ...overwriteData.centers.find(c => c.id === center.id) }));
+    const expertises = {
+      group_expertises: fullProfileData.group_expertises,
+      expertises: fullProfileData.expertises,
+    };
+    const feedbacks = { ...fullProfileData.feedbacks };
+    const media = {
+      aparat: fullProfileData.aparat_video_code,
+      gallery: fullProfileData.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
+    };
+    const symptomes = fullProfileData.symptomes;
+    const history = {
+      insert_at_age: fullProfileData.insert_at_age,
+      count_of_consult_books: fullProfileData.followConsultBoosk,
+      count_of_page_view: fullProfileData.number_of_visits,
+    };
+    const similarLinks = fullProfileData.similar_links;
+    const onlineVisit = {
+      enabled: fullProfileData.consult_active_booking,
+      channels: fullProfileData.online_visit_channel_types,
+    };
 
-    const internalLinksData = await queryClient
-      .fetchQuery(
-        [
-          ServerStateKeysEnum.InternalLinks,
-          {
-            links,
-          },
-        ],
-        () =>
-          internalLinks({
-            links,
-          }),
-      )
-      .catch(error => console.log('error'));
+    const links = getSearchLinks({ centers, group_expertises: expertises.group_expertises });
+
+    const internalLinksData = await internalLinks({
+      links,
+    }).catch(error => console.log('error'));
 
     let feedbackDataWithoutPagination;
 
@@ -148,30 +202,41 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               no_page_limit: true,
             }),
         );
-      useFeedbackDataStore.getState().setData(feedbackData?.result ?? []);
+      feedbacks.feedbacks = feedbackData?.result ?? [];
     } catch (error) {
       console.log(error);
     }
 
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
     const doctorExpertise = getDisplayDoctorExpertise({
-      aliasTitle: fullProfileData?.expertises?.[0]?.alias_title,
-      degree: fullProfileData?.expertises?.[0]?.degree?.name,
-      expertise: fullProfileData?.expertises?.[0]?.expertise?.name,
+      aliasTitle: expertises?.expertises?.[0]?.alias_title,
+      degree: expertises?.expertises?.[0]?.degree?.name,
+      expertise: expertises?.expertises?.[0]?.expertise?.name,
     });
-    const title = `${fullProfileData?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
-    const description = `نوبت دهی اینترنتی ${fullProfileData?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+    const title = `${information?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
+    const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {
       props: {
-        title: university ? fullProfileData?.display_name : title,
+        title: university ? information?.display_name : title,
         description: university ? '' : description,
         overwriteData,
+        information,
+        centers,
+        expertises,
+        feedbacks,
         dehydratedState: dehydrate(queryClient),
+        media,
+        symptomes,
+        history,
+        onlineVisit,
+        similarLinks,
+        isBulk:
+          centers.every((center: any) => center.status === 2) ||
+          centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
+        breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
-        initialFeedbackDate: useFeedbackDataStore.getState().data,
         feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
-        breadcrumbs: createBreadcrumb(internalLinksData, fullProfileData?.display_name, pageSlug),
       },
     };
   } catch (error) {

@@ -2,6 +2,7 @@ import { useBookmark } from '@/common/apis/services/bookmarks/bookmark';
 import { useDeleteBookmark } from '@/common/apis/services/bookmarks/deleteBookmark';
 import { useIsBookmark } from '@/common/apis/services/bookmarks/isBookmark';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useEffect, useState } from 'react';
 
 interface useBookmarkProps {
@@ -9,7 +10,13 @@ interface useBookmarkProps {
 }
 
 export const useBookmarkController = ({ slug }: useBookmarkProps) => {
-  const isBookmark = useIsBookmark({ slug });
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const isBookmark = useIsBookmark(
+    { slug },
+    {
+      enabled: isLogin,
+    },
+  );
   const bookmark = useBookmark();
   const deleteBookmark = useDeleteBookmark();
   const [currentBookMarkStatus, setCurrentBookMarkStatus] = useState(false);
