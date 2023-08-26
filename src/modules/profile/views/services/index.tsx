@@ -105,8 +105,8 @@ export const Services = ({
                   slug: doctor.city_en_slug,
                 }}
                 expertise={{
-                  name: expertises.expertises[0]?.expertise_groups[0]?.name,
-                  slug: expertises.expertises[0]?.expertise_groups[0]?.en_slug,
+                  name: expertises.group_expertises?.[0]?.name,
+                  slug: expertises.group_expertises?.[0]?.en_slug,
                 }}
               />
             ))}

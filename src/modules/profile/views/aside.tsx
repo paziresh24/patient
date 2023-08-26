@@ -42,7 +42,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
       return {
         doctorId: information.id,
         city: information.city_en_slug,
-        category: expertises.expertises[0]?.expertise_groups[0].en_slug,
+        category: expertises.group_expertises[0]?.en_slug,
         clickRecommendEvent: (doctor: any) => {
           splunkInstance().sendEvent({
             group: 'recommend',
@@ -66,7 +66,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
     children: (props: any) => (
       <div className="flex flex-col space-y-3 md:hidden">
         <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          برترین پزشکان {expertises.expertises[0].expertise_groups[0].name} {centers[0].city ? `در ${centers[0].city}` : null}{' '}
+          برترین پزشکان {expertises.group_expertises?.[0]?.name} {centers[0].city ? `در ${centers[0].city}` : null}{' '}
           <Text fontWeight="medium" fontSize="sm">
             از دیدگاه بیماران
           </Text>
@@ -115,7 +115,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
                   server_id: information.server_id,
                   slug: seo.slug,
                   id: information.id,
-                  expertise: expertises.expertises[0].expertise.name,
+                  expertise: expertises.expertises[0].alias_title,
                   group_expertise: expertises.group_expertises[0].name,
                 },
                 center: {
@@ -143,7 +143,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
                   server_id: information.server_id,
                   slug: seo.slug,
                   id: information.id,
-                  expertise: expertises.expertises[0].expertise.name,
+                  expertise: expertises.expertises[0].alias_title,
                   group_expertise: expertises.group_expertises[0].name,
                 },
                 center: {

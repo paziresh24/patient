@@ -1,5 +1,5 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
-import { apiGatewayClient } from '@/common/apis/client';
+import { apiGatewayClient, paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
@@ -66,18 +66,29 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       };
     }
     const { centers: fullCenters, id, server_id } = fullProfileData;
-    const overwriteData: { information: Record<string, string>; centers: any[] } = { information: {}, centers: [] };
+    const overwriteData: { information: Record<string, string>; centers: any[]; expertise: any[] } = {
+      information: {},
+      centers: [],
+      expertise: [],
+    };
 
     if (shouldApiGateway) {
       try {
         const requests = [
           await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
+          await paziresh24AppClient.get(`/doctor/v1/expertise`, {
+            params: {
+              doctor_id: id,
+              server_id,
+            },
+          }),
           ...fullCenters.map(
             async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
           ),
         ];
 
-        const [doctorData, ...centersData] = await Promise.allSettled(requests);
+        const [doctorData, expertiseData, ...centersData] = await Promise.allSettled(requests);
+
         if (doctorData.status === 'fulfilled')
           overwriteData.information = {
             biography: doctorData.value.data.Biography,
@@ -89,6 +100,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               doctorData.value.data.Image ?? 'noimage.png'
             }`,
           };
+
+        if (expertiseData.status === 'fulfilled')
+          overwriteData.expertise =
+            expertiseData.value.data?.data?.map(({ alias_title, expertise_id, degree_id }: any) => ({
+              alias_title,
+              expertise_id,
+              degree_id,
+            })) ?? [];
 
         overwriteData.centers = centersData.map(centerData => {
           if (centerData.status === 'fulfilled') {
@@ -143,8 +162,20 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const centers = fullCenters.map((center: any) => ({ ...center, ...overwriteData.centers.find(c => c.id === center.id) }));
     const expertises = {
       group_expertises: fullProfileData.group_expertises,
-      expertises: fullProfileData.expertises,
+      expertises:
+        overwriteData.expertise.length > 0
+          ? overwriteData.expertise
+          : fullProfileData.expertises.map((item: any) => ({
+              alias_title: getDisplayDoctorExpertise({
+                aliasTitle: item.alias_title,
+                degree: item.degree?.name,
+                expertise: item.expertise?.name,
+              }),
+              expertise_id: item.expertise.id,
+              degree_id: item.degree.id,
+            })),
     };
+
     const feedbacks = { ...fullProfileData.feedbacks };
     const media = {
       aparat: fullProfileData.aparat_video_code,
@@ -208,12 +239,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     }
 
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
-    const doctorExpertise = getDisplayDoctorExpertise({
-      aliasTitle: expertises?.expertises?.[0]?.alias_title,
-      degree: expertises?.expertises?.[0]?.degree?.name,
-      expertise: expertises?.expertises?.[0]?.expertise?.name,
-    });
-    const title = `${information?.display_name}، ${doctorExpertise} ${doctorCity ? `${doctorCity}،` : ''} نوبت دهی آنلاین و شماره تلفن`;
+
+    const title = `${information?.display_name}، ${expertises.expertises[0].alias_title} ${
+      doctorCity ? `${doctorCity}،` : ''
+    } نوبت دهی آنلاین و شماره تلفن`;
     const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {

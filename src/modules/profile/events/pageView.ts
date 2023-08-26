@@ -52,7 +52,7 @@ export const pageViewEvent = async ({
           ? centers.filter((center: any) => center.is_active).map((center: any) => center.center_type_name)
           : 'blank',
         terminal_id: getCookie('terminal_id'),
-        expertises: expertises?.expertises?.map((expertise: any) => expertise?.expertise?.name),
+        expertises: expertises?.expertises?.map((expertise: any) => expertise?.alias_title),
         center_city: uniq(centers.map((center: any) => center.city)),
         centers_types: centers.map((center: any) => center.center_type),
         centers_name: centers.map((center: any) => center.name),

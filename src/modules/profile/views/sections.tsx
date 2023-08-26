@@ -152,7 +152,7 @@ export const sections = ({
           image: information.image,
           group_expertises: expertises.group_expertises[0].name ?? 'سایر',
           group_expertises_slug: expertises.group_expertises[0].en_slug ?? 'other',
-          expertise: expertises?.expertises?.[0]?.expertise?.name,
+          expertise: expertises?.expertises?.[0]?.alias_title,
           slug: seo.slug,
           city: centers.map((center: any) => center.city),
           server_id: information.server_id,

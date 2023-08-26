@@ -16,7 +16,6 @@ import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { dayToSecond } from '@/common/utils/dayToSecond';
-import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
@@ -193,13 +192,7 @@ const DoctorProfile = ({
             image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
             title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${information?.medical_code}`}
-            serviceList={expertises?.expertises?.map(({ alias_title, degree, expertise }: any) =>
-              getDisplayDoctorExpertise({
-                aliasTitle: alias_title,
-                degree: degree.name,
-                expertise: expertise.name,
-              }),
-            )}
+            serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
             satisfaction={customize.showRateAndReviews && feedbacks?.details?.satisfaction}
@@ -343,7 +336,7 @@ const DoctorProfile = ({
                   information.image
                 }&group_expertises=${expertises?.group_expertises?.[0]?.name ?? 'سایر'}&group_expertises_slug=${
                   expertises?.group_expertises?.[0]?.en_slug ?? 'other'
-                }&expertise=${expertises?.expertises?.[0]?.expertise?.name}&doctor_id=${information.id}&server_id=${
+                }&expertise=${expertises?.expertises?.[0]?.alias_title}&doctor_id=${information.id}&server_id=${
                   information.server_id
                 }&doctor_city=${centers.find((center: any) => center.city)[0]}&doctor_slug=${slug}`,
               )
@@ -366,11 +359,7 @@ const DoctorProfile = ({
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
   const { title, description, slug, expertises, centers, information, feedbacks, feedbackDataWithoutPagination, host } = page.props;
 
-  const doctorExpertise = getDisplayDoctorExpertise({
-    aliasTitle: expertises?.expertises?.[0]?.alias_title,
-    degree: expertises?.expertises?.[0]?.degree?.name,
-    expertise: expertises?.expertises?.[0]?.expertise?.name,
-  });
+  const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
   const getJsonlds = () => {
     const center = centers.find((cn: any) => cn.id !== '5532');
