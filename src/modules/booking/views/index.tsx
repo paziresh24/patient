@@ -57,6 +57,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
+import convertTimeStampToPersianDate from '@/common/utils/convertTimeStampToPersianDate';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
@@ -120,6 +121,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
   const [timeId, setTimeId] = useState('');
+  const [selectedTime, setSelectedTime] = useState(0);
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
@@ -197,6 +199,17 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
+          splunkBookingInstance().sendEvent({
+            group: 'booking',
+            type: 'book-date',
+            event: {
+              patient_cell: user.cell,
+              doctor_name: profile.display_name,
+              date: convertTimeStampToPersianDate(Math.floor(Date.now() / 1000)),
+              preferred_book_date: convertTimeStampToPersianDate(selectedTime),
+              confirmed_book_date: data?.details?.from,
+            },
+          });
           if (user.messengerType)
             splunkBookingInstance().sendEvent({
               group: 'patient-visit-online',
@@ -435,11 +448,12 @@ const BookingSteps = (props: BookingStepsProps) => {
                 }),
             },
           }}
-          nextStep={({ timeId }: { timeId: string }) => {
+          nextStep={({ timeId, timeStamp }: { timeId: string; timeStamp: number }) => {
             sendGaEvent({ action: 'P24DrsPage', category: 'submit book time', label: 'submit book time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'select-earliest-time', label: 'select-earliest-time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'NextButtonToLoginorReg', label: 'NextButtonToLoginorReg' });
             setTimeId(timeId);
+            setSelectedTime(timeStamp);
             handleChangeStep('SELECT_USER', { timeId });
           }}
         />
