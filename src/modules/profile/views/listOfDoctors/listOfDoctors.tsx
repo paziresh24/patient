@@ -87,7 +87,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
         {!loading &&
           sliceData.map(doctor => (
             <SearchCard
-              key={doctor.id}
+              key={doctor.title}
               type="doctor"
               baseInfo={{
                 displayName: doctor.title,

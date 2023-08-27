@@ -29,10 +29,24 @@ const External = dynamic(() => import('./external'), {
   },
 });
 
-export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[]; slug: string }) => {
+export const Services = ({
+  id,
+  doctor,
+  expertises,
+  centers,
+  slug,
+  onlineVisit,
+}: {
+  id: string;
+  expertises: any;
+  doctor: any;
+  centers: any[];
+  slug: string;
+  onlineVisit: any;
+}) => {
   const router = useRouter();
   const messengers = useFeatureValue<any>('channeldescription', {});
-  const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
+  const doctorMessenger = uniqMessengers(onlineVisit?.channels, Object.keys(messengers));
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
@@ -60,7 +74,7 @@ export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[
   return (
     <>
       <div ref={servicesRef} className="flex flex-col space-y-3">
-        {doctor?.id === '540' && (
+        {id === '540' && (
           <External
             title="ویزیت آنلاین (غیر فعال)"
             buttonText="ورود به سایت دکتر پروفسور محمد تقی نوربالا"
@@ -68,8 +82,8 @@ export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
-        {doctor?.consult_active_booking &&
-          doctor?.centers
+        {onlineVisit.enabled &&
+          centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any) => (
               <OnlineVisitWrapper
@@ -78,7 +92,9 @@ export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[
                 title={service.desk}
                 price={service.free_price}
                 duration={
-                  doctor.group_expertises[0].id === 21 || doctor.group_expertises[0].id === 47 ? humanizeTime(service.duration) : undefined
+                  expertises.group_expertises[0].id === 21 || expertises.group_expertises[0].id === 47
+                    ? humanizeTime(service.duration)
+                    : undefined
                 }
                 doctorId={doctor.id}
                 slug={slug}
@@ -89,12 +105,12 @@ export const Services = ({ doctor, centers, slug }: { doctor: any; centers: any[
                   slug: doctor.city_en_slug,
                 }}
                 expertise={{
-                  name: doctor.expertises[0]?.expertise_groups[0]?.name,
-                  slug: doctor.expertises[0]?.expertise_groups[0]?.en_slug,
+                  name: expertises.group_expertises?.[0]?.name,
+                  slug: expertises.group_expertises?.[0]?.en_slug,
                 }}
               />
             ))}
-        {doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
+        {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
             waitingTime={doctor.waiting_time_info?.waiting_time_title}
