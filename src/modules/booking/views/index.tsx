@@ -57,9 +57,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
-import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
-import convertTimeStampToPersianDate from '@/common/utils/convertTimeStampToPersianDate';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import moment from 'jalali-moment';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
@@ -207,12 +205,8 @@ const BookingSteps = (props: BookingStepsProps) => {
             event: {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
-              date: `${digitsFaToEn(convertTimeStampToPersianDate(Math.floor(Date.now() / 1000)))} - ${convertTimeStampToFormattedTime(
-                Math.floor(Date.now() / 1000),
-              )}`,
-              preferred_book_date: `${digitsFaToEn(convertTimeStampToPersianDate(selectedTime))} - ${convertTimeStampToFormattedTime(
-                selectedTime,
-              )}`,
+              date: moment.unix(Math.floor(Date.now() / 1000)).format('jYYYY/jMM/jDD - HH:mm'),
+              preferred_book_date: moment.unix(selectedTime).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
             },
           });
