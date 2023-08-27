@@ -57,6 +57,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
+import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
 import convertTimeStampToPersianDate from '@/common/utils/convertTimeStampToPersianDate';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
@@ -205,8 +206,10 @@ const BookingSteps = (props: BookingStepsProps) => {
             event: {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
-              date: convertTimeStampToPersianDate(Math.floor(Date.now() / 1000)),
-              preferred_book_date: convertTimeStampToPersianDate(selectedTime),
+              date: `${convertTimeStampToPersianDate(Math.floor(Date.now() / 1000))} - ${convertTimeStampToFormattedTime(
+                Math.floor(Date.now() / 1000),
+              )}`,
+              preferred_book_date: `${convertTimeStampToPersianDate(selectedTime)} - ${convertTimeStampToFormattedTime(selectedTime)}`,
               confirmed_book_date: data?.details?.from,
             },
           });
