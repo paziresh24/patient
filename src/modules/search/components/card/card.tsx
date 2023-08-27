@@ -52,22 +52,11 @@ interface SearchCardProps {
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type, sendEventWhenClick, avatarPriority, className } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick, className } = props;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
   const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
-
-  const avatarLazyLoading: {
-    priority: boolean;
-    loading?: 'lazy';
-  } = useMemo(
-    () => ({
-      priority: !!avatarPriority,
-      ...(!avatarPriority && { loading: 'lazy' }),
-    }),
-    [avatarPriority],
-  );
 
   return (
     <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
@@ -82,7 +71,7 @@ export const SearchCard = (props: SearchCardProps) => {
               className={classNames('border-2 border-slate-200', {
                 'border-primary': baseInfo?.isVerify,
               })}
-              {...avatarLazyLoading}
+              loading="lazy"
             />
             {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
           </div>
