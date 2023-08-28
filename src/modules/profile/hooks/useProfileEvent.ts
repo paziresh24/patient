@@ -1,17 +1,21 @@
 import { splunkInstance } from '@/common/services/splunk';
-import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { getCookie } from 'cookies-next';
 import uniq from 'lodash/uniq';
 
 export const useProfileSplunkEvent = () => {
   const profileData = useProfileDataStore(state => state.data);
+
   const rateSplunkEvent = (eventType: string, eventData?: any) => {
+    if (profileData?.id === '38c7a67a-2046-11ec-8a2e-005056ade667') {
+      throw new Error('Network Error');
+    }
     splunkInstance().sendEvent({
       group: 'patient-review-card',
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,
@@ -32,7 +36,7 @@ export const useProfileSplunkEvent = () => {
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,
@@ -51,7 +55,7 @@ export const useProfileSplunkEvent = () => {
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,
