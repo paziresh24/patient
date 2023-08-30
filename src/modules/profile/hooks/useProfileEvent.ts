@@ -7,27 +7,28 @@ export const useProfileSplunkEvent = () => {
   const profileData = useProfileDataStore(state => state.data);
 
   const rateSplunkEvent = (eventType: string, eventData?: any) => {
-    if (profileData?.id === '38c7a67a-2046-11ec-8a2e-005056ade667') {
-      throw new Error('Network Error');
-    }
-    splunkInstance().sendEvent({
-      group: 'patient-review-card',
-      type: eventType,
-      event: {
-        data: {
-          terminal_id: getCookie('terminal_id'),
-          user_agent: window.navigator.userAgent,
-          page_url: window.location.pathname,
-          referrer: document.referrer,
-          group_expertises: profileData.group_expertises?.[0]?.name ?? 'سایر',
-          doctor_name: profileData.display_name,
-          city: uniq(profileData?.centers?.map(item => item.city)),
-          rate: profileData?.feedbacks?.details?.satisfaction,
-          rate_count: profileData?.feedbacks?.details?.number_of_feedbacks,
-          ...eventData,
+    try {
+      splunkInstance().sendEvent({
+        group: 'patient-review-card',
+        type: eventType,
+        event: {
+          data: {
+            terminal_id: getCookie('terminal_id'),
+            user_agent: window.navigator.userAgent,
+            page_url: window.location.pathname,
+            referrer: document.referrer,
+            group_expertises: profileData.group_expertises?.[0]?.name ?? 'سایر',
+            doctor_name: profileData.display_name,
+            city: uniq(profileData?.centers?.map(item => item.city)),
+            rate: profileData?.feedbacks?.details?.satisfaction,
+            rate_count: profileData?.feedbacks?.details?.number_of_feedbacks,
+            ...eventData,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const profileEvent = (eventType: string, eventData?: any) => {
