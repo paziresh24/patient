@@ -26,6 +26,7 @@ import { getProfileServerSideProps } from '@/modules/profile/functions/getProfil
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
@@ -65,6 +66,7 @@ const DoctorProfile = ({
   const [editable, setEditable] = useState(false);
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
+  const setProfileData = useProfileDataStore(state => state.setData);
   const isShowPremiumFeatures = useShowPremiumFeatures();
 
   useEffect(() => {
@@ -103,6 +105,7 @@ const DoctorProfile = ({
         });
       }
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
+      setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
   }, [isBulk, information]);
 
