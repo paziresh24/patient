@@ -205,7 +205,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             event: {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
-              date: moment(Math.floor(Date.now())).format('jYYYY/jMM/jDD - HH:mm'),
+              date: moment().format('jYYYY/jMM/jDD - HH:mm'),
               preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
             },
