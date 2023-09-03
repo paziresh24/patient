@@ -6,6 +6,7 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
+import { init } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -56,6 +57,10 @@ type AppProps = Omit<NextAppProps<withQueryProps & Record<string, unknown>>, 'Co
 function MyApp(props: AppProps) {
   const { Component, pageProps, router } = props;
   useNetworkStatus();
+
+  useEffect(() => {
+    init({ url: publicRuntimeConfig.MATOMO_URL, siteId: publicRuntimeConfig.MATOMO_SITE_ID, phpTrackerFile: 'matomo.php' });
+  }, []);
 
   useEffect(() => {
     growthbook.loadFeatures({ autoRefresh: true });
