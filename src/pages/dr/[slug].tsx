@@ -30,7 +30,6 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
-import { useFeatureValue } from '@growthbook/growthbook-react';
 import { push } from '@socialgouv/matomo-next';
 import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
@@ -69,13 +68,7 @@ const DoctorProfile = ({
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
   const setProfileData = useProfileDataStore(state => state.setData);
-
-  const listOfExpertiseAndCities = useFeatureValue<any>('profile.nosnippet-substitute-section', '');
   const isShowPremiumFeatures = useShowPremiumFeatures();
-
-  const isSetDataTages =
-    listOfExpertiseAndCities?.cities?.includes(information?.city_en_slug) &&
-    listOfExpertiseAndCities?.group_expertises?.includes(expertises?.group_expertises?.[0]?.id?.toString());
 
   useEffect(() => {
     if (isShowPremiumFeatures) {
@@ -277,7 +270,7 @@ const DoctorProfile = ({
                   {...{
                     id: section.id,
                     ActionButton: section.ActionButto,
-                    ...(isSetDataTages && { dataAttributes: section.dataAttributes }),
+                    dataAttributes: section?.dataAttributes,
                   }}
                 >
                   {section.children(section?.function?.())}
