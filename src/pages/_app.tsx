@@ -59,7 +59,12 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
 
   useEffect(() => {
-    init({ url: publicRuntimeConfig.MATOMO_URL, siteId: publicRuntimeConfig.MATOMO_SITE_ID, phpTrackerFile: 'matomo.php' });
+    init({
+      url: publicRuntimeConfig.MATOMO_URL,
+      siteId: publicRuntimeConfig.MATOMO_SITE_ID,
+      phpTrackerFile: 'matomo.php',
+      excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
+    });
   }, []);
 
   useEffect(() => {
