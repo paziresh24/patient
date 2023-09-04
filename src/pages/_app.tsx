@@ -59,18 +59,17 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
 
   useEffect(() => {
+    growthbook.loadFeatures({ autoRefresh: true });
+    growthbook.setAttributes({
+      id: getCookie('terminal_id'),
+    });
+  }, []);
+  useEffect(() => {
     init({
       url: publicRuntimeConfig.MATOMO_URL,
       siteId: publicRuntimeConfig.MATOMO_SITE_ID,
       phpTrackerFile: 'matomo.php',
       excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
-    });
-  }, []);
-
-  useEffect(() => {
-    growthbook.loadFeatures({ autoRefresh: true });
-    growthbook.setAttributes({
-      id: getCookie('terminal_id'),
     });
   }, []);
 
