@@ -17,10 +17,10 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
-  const recommend_button_data = useFeatureValue<any>('profile-recommend_card_button', {});
+  const recommend_button = useFeatureValue<any>('profile-recommend_card_button', {});
   const router = useRouter();
-  const iShowRecommendButtonForThisDoctor = !recommend_button_data?.doctor_list_for_dont_show_button?.includes(router.query.slug);
-  const isDoctorInlistOfSpecialDoctors = recommend_button_data?.custom_button?.doctor_list?.includes(router.query.slug);
+  const iShowRecommendButtonForThisDoctor = !recommend_button?.dont_show_doctor_list?.includes(router.query.slug);
+  const isDoctorInlistOfSpecialDoctors = recommend_button?.custom_button?.doctor_list?.includes(router.query.slug);
 
   const doctors = data?.data ?? [];
 
@@ -49,9 +49,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               ...(iShowRecommendButtonForThisDoctor && {
                 action: [
                   {
-                    title: isDoctorInlistOfSpecialDoctors
-                      ? recommend_button_data?.custom_button?.button_text
-                      : recommend_button_data?.button_default_text,
+                    title: isDoctorInlistOfSpecialDoctors ? recommend_button?.custom_button?.text : recommend_button?.default_text,
                     description: `اولین نوبت: ${doctor.freeturn}`,
                     outline: isDoctorInlistOfSpecialDoctors,
                   },
