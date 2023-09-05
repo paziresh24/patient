@@ -68,7 +68,6 @@ function MyApp(props: AppProps) {
     init({
       url: publicRuntimeConfig.MATOMO_URL,
       siteId: publicRuntimeConfig.MATOMO_SITE_ID,
-      phpTrackerFile: 'matomo.php',
       excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
     });
   }, []);
