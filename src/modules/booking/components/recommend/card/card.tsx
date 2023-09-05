@@ -25,6 +25,7 @@ interface RecommendCardProps {
 export const RecommendCard = (props: RecommendCardProps) => {
   const { listOfDoctors, clickRecommendEvent } = props;
   const router = useRouter();
+
   return (
     <>
       <ScrollContainer className="flex w-full pl-5 !overflow-auto rounded-lg select-none no-scroll space-s-3 no-scroll">
@@ -50,6 +51,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
             actions={doctor?.action?.map((item: any) => ({
               text: item.title,
               description: item.description,
+              outline: item.outline,
               action: () => {
                 router.push(doctor.url);
               },
