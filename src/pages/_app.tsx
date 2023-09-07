@@ -6,6 +6,7 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
+import { init } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -61,6 +62,13 @@ function MyApp(props: AppProps) {
     growthbook.loadFeatures({ autoRefresh: true });
     growthbook.setAttributes({
       id: getCookie('terminal_id'),
+    });
+  }, []);
+  useEffect(() => {
+    init({
+      url: publicRuntimeConfig.MATOMO_URL,
+      siteId: publicRuntimeConfig.MATOMO_SITE_ID,
+      excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
     });
   }, []);
 

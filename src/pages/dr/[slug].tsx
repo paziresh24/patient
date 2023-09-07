@@ -30,6 +30,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { push } from '@socialgouv/matomo-next';
 import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
@@ -92,6 +93,7 @@ const DoctorProfile = ({
         isBulk,
         isWebView: !!isWebView || !!isApplication,
       });
+      push(['trackEvent', 'contact', 'doctor profile']);
       addPageView.mutate({
         doctorId: information.id,
         serverId: information.server_id,

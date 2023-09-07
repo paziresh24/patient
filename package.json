@@ -24,6 +24,7 @@
     "@paziresh24/splunk-event": "1.2.1",
     "@persian-tools/persian-tools": "3.4.1",
     "@sentry/nextjs": "7.64.0",
+    "@socialgouv/matomo-next": "1.6.1",
     "@tanstack/react-query": "4.29.5",
     "axios": "1.1.3",
     "chart.js": "3.9.1",

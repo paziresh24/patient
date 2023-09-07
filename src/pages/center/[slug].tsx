@@ -14,6 +14,7 @@ import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
+import { push } from '@socialgouv/matomo-next';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import config from 'next/config';
@@ -83,6 +84,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
 
   useEffect(() => {
     if (profileData) {
+      push(['trackEvent', 'contact', 'center profile']);
       splunkInstance().sendEvent({
         group: 'center_profile',
         type: 'load_center_profile',
