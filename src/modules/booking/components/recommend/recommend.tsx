@@ -49,7 +49,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               ...(isShowRecommendButtonForThisDoctor && {
                 action: [
                   {
-                    title: customButton?.text ? customButton?.text : recommendButton?.default_text,
+                    title: customButton?.text ?? recommendButton?.default_text,
                     description: `اولین نوبت: ${doctor.freeturn}`,
                     outline: customButton?.is_outline,
                   },
