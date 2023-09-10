@@ -44,6 +44,10 @@ const growthbook = new GrowthBook({
   },
 });
 
+function updateGrowthBookURL() {
+  growthbook.setURL(window.location.href);
+}
+
 type withQueryProps = {
   query: NextParsedUrlQuery;
 };
@@ -63,7 +67,10 @@ function MyApp(props: AppProps) {
     growthbook.setAttributes({
       id: getCookie('terminal_id'),
     });
+    router.events.on('routeChangeComplete', updateGrowthBookURL);
+    return () => router.events.off('routeChangeComplete', updateGrowthBookURL);
   }, []);
+
   useEffect(() => {
     init({
       url: publicRuntimeConfig.MATOMO_URL,
