@@ -8,7 +8,10 @@ export const getProfile = async ({ slug, university }: { slug: string; universit
     }),
   ];
 
-  const [{ data: fullProfileData, redirect }] = await Promise.all(requests);
+  const [{ data, redirect }] = await Promise.all(requests);
 
-  return { fullProfileData, redirect };
+  return {
+    fullProfileData: data,
+    redirect,
+  };
 };
