@@ -9,7 +9,7 @@ export type OverwriteProfileData = {
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
   const information = {
     id: source.id,
-    server_id: source.id,
+    server_id: source.server_id,
     awards: source.awards,
     scientific: source.scientific,
     display_name: source.display_name,
