@@ -51,6 +51,7 @@ const DoctorProfile = ({
   isBulk,
   expertises,
   feedbacks,
+  waitingTimeInfo,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -168,6 +169,24 @@ const DoctorProfile = ({
     handleOpenViewAsModal();
   };
 
+  const profileData = {
+    information,
+    centers,
+    expertises,
+    history,
+    onlineVisit,
+    waitingTimeInfo,
+    feedbacks,
+    media,
+    symptomes,
+    similarLinks,
+    isBulk,
+    editable,
+    handleViewAs,
+    customize,
+    seo: { breadcrumbs, slug },
+  };
+
   return (
     <>
       <div
@@ -250,18 +269,7 @@ const DoctorProfile = ({
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
-            {aside({
-              information,
-              centers,
-              expertises,
-              history,
-              onlineVisit,
-              isBulk,
-              editable,
-              handleViewAs,
-              customize,
-              seo: { breadcrumbs, slug },
-            })
+            {aside(profileData)
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
                 <Section
@@ -278,21 +286,7 @@ const DoctorProfile = ({
               ))}
           </div>
 
-          {sections({
-            information,
-            centers,
-            expertises,
-            feedbacks,
-            media,
-            history,
-            symptomes,
-            similarLinks,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {sections(profileData)
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -302,18 +296,7 @@ const DoctorProfile = ({
         </div>
 
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
-          {aside({
-            information,
-            centers,
-            expertises,
-            history,
-            onlineVisit,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {aside(profileData)
             .filter(({ isShow }: any) => Boolean(isShow))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>

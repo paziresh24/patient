@@ -12,7 +12,7 @@ import Services from './services';
 const BulkService = dynamic(() => import('./services/bulk'));
 const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
 
-export const aside = ({ information, centers, expertises, history, onlineVisit, isBulk, customize, editable, seo }: any) => [
+export const aside = ({ information, centers, expertises, waitingTimeInfo, onlineVisit, isBulk, customize, editable, seo }: any) => [
   // Bulk
   {
     id: 'services_section',
@@ -30,6 +30,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
         expertises,
         onlineVisit,
         centers,
+        waitingTimeInfo,
         slug: seo.slug,
       };
     },
