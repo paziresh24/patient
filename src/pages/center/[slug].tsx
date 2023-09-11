@@ -17,6 +17,7 @@ import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import { push } from '@socialgouv/matomo-next';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
+import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -89,7 +90,10 @@ const CenterProfile = ({ query: { university }, host }: any) => {
         group: 'center_profile',
         type: 'load_center_profile',
         event: {
-          data: profileData,
+          data: {
+            ...profileData,
+            terminal_id: getCookie('terminal_id'),
+          },
         },
       });
     }
