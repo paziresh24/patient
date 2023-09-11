@@ -115,7 +115,7 @@ const Booking = () => {
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
                   {router.query.centerId === CENTERS.CONSULT
-                    ? `ویزیت آنلاین ${profileData.online_visit_channel_types ? 'در پیام رسان' : ''}`
+                    ? `ویزیت آنلاین ${profileData.online_visit_channel_types?.length > 0 ? 'در پیام رسان' : ''}`
                     : centerName}
                 </Text>
               )}

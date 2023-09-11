@@ -1,15 +1,15 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
-import { apiGatewayClient, paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
+import { getProviderData } from './getProviderData';
+import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
   const center = centers.find((center: any) => center.city && center.id !== '5532');
@@ -43,13 +43,15 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;
 
-  let shouldApiGateway = false;
+  let shouldUseProvider: boolean = false;
   try {
-    const gbContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-    const gb = new GrowthBook(gbContext);
-    await gb.loadFeatures({ timeout: 1000 });
-    const apiGatewayFeature = gb.getFeatureValue('profile.api-gateway', ['*']);
-    shouldApiGateway = apiGatewayFeature.includes(slugFormmated) || apiGatewayFeature.includes('*');
+    const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+    const growthbook = new GrowthBook(growthbookContext);
+    await growthbook.loadFeatures({ timeout: 1000 });
+
+    // Providers Api
+    const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: ['*'] });
+    shouldUseProvider = providersApiDoctorList.slugs?.includes(slugFormmated) || providersApiDoctorList.slugs?.includes('*');
   } catch (error) {
     console.log(error);
   }
@@ -65,133 +67,32 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         },
       };
     }
-    const { centers: fullCenters, id, server_id } = fullProfileData;
-    const overwriteData: { information: Record<string, string>; centers: any[]; expertise: any[] } = {
-      information: {},
-      centers: [],
-      expertise: [],
+
+    const { id, server_id } = fullProfileData;
+    let profileData: OverwriteProfileData = {
+      provider: {
+        biography: fullProfileData.biography ?? '',
+      },
     };
 
-    if (shouldApiGateway) {
+    if (shouldUseProvider) {
       try {
-        const requests = [
-          await apiGatewayClient.get(`/v2/doctors/${server_id}/${id}`),
-          await paziresh24AppClient.get(`/doctor/v1/expertise`, {
-            params: {
-              doctor_id: id,
-              server_id,
-            },
-          }),
-          ...fullCenters.map(
-            async (center: { id: string; server_id: string }) => await apiGatewayClient.get(`/v2/centers/${center.server_id}/${center.id}`),
-          ),
-        ];
+        const parallelRequests = [await getProviderData({ slug: slugFormmated })];
 
-        const [doctorData, expertiseData, ...centersData] = await Promise.allSettled(requests);
+        const [providerData] = await Promise.allSettled(parallelRequests);
 
-        if (doctorData.status === 'fulfilled')
-          overwriteData.information = {
-            biography: doctorData.value.data.Biography,
-            awards: doctorData.value.data.Awards,
-            scientific: doctorData.value.data.Scientific,
-            display_name: doctorData.value.data.FullName,
-            medical_code: doctorData.value.data.MedicalCode,
-            image: `/api/getImage/p24/search-${doctorData.value.data.Gender === 'man' ? 'men' : 'women'}/${
-              doctorData.value.data.Image ?? 'noimage.png'
-            }`,
+        if (providerData.status === 'fulfilled') {
+          profileData.provider = {
+            ...providerData.value,
           };
-
-        if (expertiseData.status === 'fulfilled')
-          overwriteData.expertise =
-            expertiseData.value.data?.data?.map(({ alias_title, expertise_id, degree_id }: any) => ({
-              alias_title,
-              expertise_id,
-              degree_id,
-            })) ?? [];
-
-        overwriteData.centers = centersData.map(centerData => {
-          if (centerData.status === 'fulfilled') {
-            const {
-              Id: id,
-              Address: address,
-              Slug: slug,
-              CityName: city,
-              Tell: tell,
-              Lat: lat,
-              Lon: lon,
-              TypeId: type_id,
-              Name: name,
-              Status: status,
-              Description: description,
-            } = centerData.value.data;
-
-            return {
-              id,
-              address,
-              city,
-              map: { lat, lon },
-              display_number_array: tell.split('|'),
-              center_type: type_id,
-              name,
-              slug,
-              status,
-              description,
-            };
-          }
-        });
+        }
       } catch (error) {
         console.log(error);
       }
     }
 
-    const information = {
-      id,
-      server_id,
-      biography: fullProfileData.biography,
-      awards: fullProfileData.awards,
-      scientific: fullProfileData.scientific,
-      display_name: fullProfileData.display_name,
-      medical_code: fullProfileData.medical_code,
-      experience: fullProfileData.experience,
-      gender: fullProfileData.gender,
-      image: fullProfileData.image,
-      city_en_slug: fullProfileData.city_en_slug,
-      should_recommend_other_doctors: fullProfileData.should_recommend_other_doctors,
-      ...overwriteData.information,
-    };
-    const centers = fullCenters.map((center: any) => ({ ...center, ...overwriteData.centers.find(c => c.id === center.id) }));
-    const expertises = {
-      group_expertises: fullProfileData.group_expertises,
-      expertises:
-        overwriteData.expertise.length > 0
-          ? overwriteData.expertise
-          : fullProfileData.expertises.map((item: any) => ({
-              alias_title: getDisplayDoctorExpertise({
-                aliasTitle: item.alias_title,
-                degree: item.degree?.name,
-                expertise: item.expertise?.name,
-              }),
-              expertise_id: item.expertise.id,
-              degree_id: item.degree.id,
-            })),
-    };
-
-    const feedbacks = { ...fullProfileData.feedbacks };
-    const media = {
-      aparat: fullProfileData.aparat_video_code,
-      gallery: fullProfileData.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
-    };
-    const symptomes = fullProfileData.symptomes;
-    const history = {
-      insert_at_age: fullProfileData.insert_at_age,
-      count_of_consult_books: fullProfileData.followConsultBoosk,
-      count_of_page_view: fullProfileData.number_of_visits,
-    };
-    const similarLinks = fullProfileData.similar_links;
-    const onlineVisit = {
-      enabled: fullProfileData.consult_active_booking,
-      channels: fullProfileData.online_visit_channel_types,
-    };
+    const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
+      overwriteProfileData(profileData, fullProfileData);
 
     const links = getSearchLinks({ centers, group_expertises: expertises.group_expertises });
 
@@ -249,7 +150,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       props: {
         title: university ? information?.display_name : title,
         description: university ? '' : description,
-        overwriteData,
         information,
         centers,
         expertises,
@@ -260,6 +160,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         history,
         onlineVisit,
         similarLinks,
+        waitingTimeInfo,
         isBulk:
           centers.every((center: any) => center.status === 2) ||
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
