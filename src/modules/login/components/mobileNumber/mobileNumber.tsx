@@ -1,16 +1,19 @@
 import { useRegister } from '@/common/apis/services/auth/register';
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
+import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
+import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
+import config from 'next/config';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
-
+const { publicRuntimeConfig } = config();
 interface MobileNumberProps {
   title?: string;
   description?: string;
@@ -75,6 +78,16 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
+
+      <Text align="center" fontWeight="medium" className="leading-5 text-[0.7rem] md:text-xs">
+        <Trans
+          i18nKey="login:steps.mobileNumber.termAndprivacyPolicyNotice"
+          components={[
+            <a key={0} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/rules/`} className="text-blue-700" />,
+            <a key={1} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`} className="text-blue-700" />,
+          ]}
+        />
+      </Text>
     </form>
   );
 };

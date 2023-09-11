@@ -5,7 +5,8 @@
       "description": "Please enter your mobile number",
       "phoneNumberFieldLable": "Mobile number",
       "exampleHint": "E.g. 0912*******",
-      "action": "Get Code"
+      "action": "Get Code",
+      "termAndprivacyPolicyNotice": "Your login means acceptance of <0>Paziresh24 Terms</0> and <1>Privacy Policy</1>."
     },
     "otpCode": {
       "title": "Verification code",
