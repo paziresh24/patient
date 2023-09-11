@@ -9,6 +9,7 @@ import axios from 'axios';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getUserData } from './getUserData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
@@ -44,6 +45,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const pageSlug = `/dr/${slugFormmated}`;
 
   let shouldUseProvider: boolean = false;
+  let shouldUseUser: boolean = false;
   try {
     const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
     const growthbook = new GrowthBook(growthbookContext);
@@ -52,6 +54,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     // Providers Api
     const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: ['*'] });
     shouldUseProvider = providersApiDoctorList.slugs?.includes(slugFormmated) || providersApiDoctorList.slugs?.includes('*');
+
+    // Users APi
+    const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: ['*'] });
+    shouldUseUser = usersApiDoctorList.slugs?.includes(slugFormmated) || usersApiDoctorList.slugs?.includes('*');
   } catch (error) {
     console.log(error);
   }
@@ -71,6 +77,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
       provider: {
+        display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
       },
     };
@@ -85,6 +92,17 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           profileData.provider = {
             ...providerData.value,
           };
+
+          if (shouldUseUser) {
+            const parallelRequests = [await getUserData({ user_id: providerData.value.user_id })];
+            const [userData] = await Promise.allSettled(parallelRequests);
+
+            if (userData.status === 'fulfilled') {
+              profileData.provider = {
+                display_name: `${providerData.value.prefix} ${userData.value.name} ${userData.value.family}`,
+              };
+            }
+          }
         }
       } catch (error) {
         console.log(error);
