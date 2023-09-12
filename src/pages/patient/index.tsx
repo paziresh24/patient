@@ -8,7 +8,7 @@ import EditIcon from '@/common/components/icons/edit';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import ReceiptIcon from '@/common/components/icons/receipt';
-import SecuritySafe from '@/common/components/icons/securitySafe';
+import SecuritySafeIcon from '@/common/components/icons/securitySafe';
 import ShareIcon from '@/common/components/icons/share';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
@@ -135,7 +135,7 @@ export const PatinetProfile = () => {
             href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`}
             className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
           >
-            <SecuritySafe />
+            <SecuritySafeIcon />
             <Text fontWeight="medium" fontSize="sm">
               حریم خصوصی
             </Text>
