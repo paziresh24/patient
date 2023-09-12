@@ -50,7 +50,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
             type: 'clickrecommend',
             event: {
               data: {
-                terminal_id: getCookie('terminal'),
+                terminal_id: getCookie('terminal_id'),
                 user_agent: window.navigator.userAgent,
                 page_url: window.location.pathname,
                 referrer: document.referrer,
