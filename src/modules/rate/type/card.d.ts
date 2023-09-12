@@ -19,6 +19,7 @@ export type Card = {
   avatar?: any;
   name?: string;
   tag?: Tags[];
+  external?: boolean;
   options?: {
     title?: string;
     items?: Options[];

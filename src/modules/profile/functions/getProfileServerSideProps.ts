@@ -90,6 +90,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
         if (providerData.status === 'fulfilled') {
           profileData.provider = {
+            ...profileData.provider,
             ...providerData.value,
           };
 
@@ -99,6 +100,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
             if (userData.status === 'fulfilled') {
               profileData.provider = {
+                ...profileData.provider,
                 display_name: `${providerData.value.prefix} ${userData.value.name} ${userData.value.family}`,
               };
             }
