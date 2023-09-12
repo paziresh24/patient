@@ -2,7 +2,8 @@ import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise'
 
 export type OverwriteProfileData = {
   provider: {
-    biography: string;
+    display_name?: string;
+    biography?: string;
   };
 };
 
@@ -13,6 +14,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     awards: source.awards,
     scientific: source.scientific,
     display_name: source.display_name,
+    biography: source.biography,
     medical_code: source.medical_code,
     experience: source.experience,
     gender: source.gender,
