@@ -76,19 +76,21 @@ export const Card = (props: CardProps) => {
         </div>
         <div
           className={classNames('mt-2 flex justify-end', {
-            'justify-between': options?.items?.some(option => option.type === 'controller'),
+            'justify-between flex-col space-y-3': options?.items?.some(option => option.type === 'controller'),
           })}
         >
-          {options?.items
-            ?.filter(option => option.type === 'controller')
-            ?.map(option => (
-              <Text key={option.id} onClick={option.action} className="flex items-center gap-1 cursor-pointer" fontSize="sm">
-                {option?.prefix && option?.prefix}
-                {option?.icon && option.icon}
-                {option.name}
-              </Text>
-            ))}
-          <div className="flex space-s-3">
+          <div className="flex space-s-2">
+            {options?.items
+              ?.filter(option => option.type === 'controller')
+              ?.map(option => (
+                <Text key={option.id} onClick={option.action} className="flex items-center gap-1 cursor-pointer" fontSize="sm">
+                  {option?.prefix && option?.prefix}
+                  {option?.icon && option.icon}
+                  {option.name}
+                </Text>
+              ))}
+          </div>
+          <div className="flex self-end space-s-3">
             {options?.items
               ?.filter(option => option.type === 'card')
               ?.map(option => (

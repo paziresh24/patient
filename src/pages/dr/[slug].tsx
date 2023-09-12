@@ -190,6 +190,7 @@ const DoctorProfile = ({
   return (
     <>
       <div
+        key={information.id}
         className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
           'pb-24': isApplication,
         })}

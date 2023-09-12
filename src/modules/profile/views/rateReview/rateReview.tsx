@@ -174,6 +174,7 @@ export const RateReview = (props: RateReviewProps) => {
           id: feedback.id,
           description: feedback.description,
           avatar: feedback.user_image,
+          external: feedback?.external_score,
           ...(feedback.book_status && { tag: [{ id: 1, name: 'ویزیت شده', isBold: false }] }),
           replyModal: {
             id: feedback.id,
