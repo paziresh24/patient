@@ -7,6 +7,8 @@ import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
+import ReceiptIcon from '@/common/components/icons/receipt';
+import SecuritySafe from '@/common/components/icons/securitySafe';
 import ShareIcon from '@/common/components/icons/share';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
@@ -129,6 +131,24 @@ export const PatinetProfile = () => {
               </Text>
             </a>
           )}
+          <Link
+            href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`}
+            className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+          >
+            <SecuritySafe />
+            <Text fontWeight="medium" fontSize="sm">
+              حریم خصوصی
+            </Text>
+          </Link>
+          <Link
+            href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/rules/`}
+            className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+          >
+            <ReceiptIcon />
+            <Text fontWeight="medium" fontSize="sm">
+              شرایط استفاده
+            </Text>
+          </Link>
           {customize.showSupplierRegister && (
             <Link
               href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
