@@ -72,6 +72,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
         autoFocus
         type="tel"
         inputMode="numeric"
+        autoComplete="off"
         disabled={register.isLoading || resetPassword.isLoading}
       />
 

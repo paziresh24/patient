@@ -11,13 +11,14 @@ export const useModal = () => {
       document.querySelectorAll('#modal').length === 0 && openScroll();
       removeBack();
     };
-  });
+  }, []);
 
   const handleOpen = () => {
     setIsOpen(true);
     lockScroll();
     neutralizeBack();
   };
+
   const handleClose = () => {
     setIsOpen(false);
     document.querySelectorAll('#modal').length === 1 && openScroll();

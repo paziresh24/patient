@@ -38,13 +38,13 @@ const Home = () => {
       <main className="flex flex-col items-center space-y-3">
         <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">
           <Logo className="!mr-1" width={30} />
-          <div className="flex justify-center w-full px-4 md:w-1/5">
+          <div className="flex justify-center w-full px-4 md:w-96">
             <Suggestion />
           </div>
         </div>
 
         {appHome.isLoading && (
-          <div className="flex flex-col w-full space-y-3 md:w-1/5">
+          <div className="flex flex-col w-full space-y-3 md:w-96">
             <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
               <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
               <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
@@ -58,7 +58,7 @@ const Home = () => {
             </div>
           </div>
         )}
-        <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3 md:w-1/5">
+        <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3 md:w-96">
           {appHome.data?.data?.result?.map((section: any, index: number) => (
             <div className="flex flex-col w-full space-y-3" key={index}>
               {section.title && (
