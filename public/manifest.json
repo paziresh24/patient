@@ -23,6 +23,30 @@
       "purpose": "maskable"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "جستجو پزشکان",
+      "url": "/s?utm_source=jumplist&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/logos/search.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "نوبت‌های من",
+      "url": "/patient/appointments?utm_source=jumplist&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/logos/appointments.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "start_url": "/apphome/?application=true",
