@@ -29,10 +29,13 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
+  "android_package_name": "com.paziresh24.paziresh24",
   "related_applications": [
     {
+      "id": "com.paziresh24.paziresh24",
       "platform": "play",
       "url": "https://play.google.com/store/apps/details?id=com.paziresh24.paziresh24"
     }
-  ]
+  ],
+  "prefer_related_applications": true
 }

@@ -11,6 +11,7 @@ import LogoutIcon from '@/common/components/icons/logout';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import SecuritySafeIcon from '@/common/components/icons/securitySafe';
 import ShareIcon from '@/common/components/icons/share';
+import StarIcon from '@/common/components/icons/star';
 import UsersIcon from '@/common/components/icons/users';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -196,6 +197,19 @@ export const PatinetProfile = () => {
                   پزشک یا منشی هستید؟
                 </Text>
               </Link>
+            )}
+            {isApplication && (
+              <div
+                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                onClick={() => {
+                  location.assign('bazaar://details?id=com.paziresh24.paziresh24');
+                }}
+              >
+                <StarIcon />
+                <Text fontWeight="medium" fontSize="sm">
+                  امتیاز به برنامه
+                </Text>
+              </div>
             )}
             {customize.showShareApp && (
               <div
