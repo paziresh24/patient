@@ -66,7 +66,7 @@ export const PatinetProfile = () => {
           <Loading />
         </div>
       ) : (
-        <div>
+        <div className="mb-10">
           {isLogin && (
             <div className="flex flex-col p-5 bg-white shadow-sm">
               <Link href="/patient/profile?referrer=profile" className="flex items-center space-s-5">
