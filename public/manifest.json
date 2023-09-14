@@ -1,7 +1,7 @@
 {
-  "name": "پذیرش24",
-  "short_name": "پذیرش24 - Paziresh24",
-  "description": "تجربه مشاوره آنلاین و دریافت نوبت از بهترین پزشکان و بیمارستان‌های ایران",
+  "name": "پذیرش۲۴",
+  "short_name": "پذیرش۲۴ - Paziresh24",
+  "description": "تجربه ویزیت آنلاین و دریافت نوبت از بهترین پزشکان و بیمارستان‌های ایران",
   "lang": "fa",
   "dir": "rtl",
   "categories": ["health", "medical"],
@@ -25,7 +25,7 @@
   ],
   "shortcuts": [
     {
-      "name": "جستجو پزشکان",
+      "name": "جستجوی پزشکان",
       "url": "/s?utm_source=jumplist&utm_medium=shortcut",
       "icons": [
         {
