@@ -69,16 +69,15 @@ const nextConfig = {
         destination: '/receipt/5532/:id/',
         permanent: true,
       },
-    ];
-  },
-  async rewrites() {
-    return [
-      { source: '/patient/api/:path*', destination: '/api/:path*' },
       {
         source: '/apphome/.well-known/assetlinks.json',
         destination: '/.well-known/assetlinks.json',
+        permanent: true,
       },
     ];
+  },
+  async rewrites() {
+    return [{ source: '/patient/api/:path*', destination: '/api/:path*' }];
   },
 };
 
