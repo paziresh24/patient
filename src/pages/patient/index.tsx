@@ -56,6 +56,19 @@ export const PatinetProfile = () => {
     router.push(link);
   };
 
+  const getRatingAppLink = () => {
+    const downloadSource = localStorage.getItem('app:download_source');
+
+    const rateLinks = {
+      direct: 'market://details?id=com.paziresh24.paziresh24',
+      bazaar: 'bazaar://details?id=com.paziresh24.paziresh24',
+      myket: 'myket://comment?id=com.paziresh24.paziresh24',
+      google_play: 'market://details?id=com.paziresh24.paziresh24',
+    };
+
+    return downloadSource && rateLinks[downloadSource as 'direct' | 'bazaar' | 'myket' | 'google_play'];
+  };
+
   return (
     <>
       <Seo title="پروفایل من" noIndex />
@@ -198,11 +211,11 @@ export const PatinetProfile = () => {
                 </Text>
               </Link>
             )}
-            {isApplication && (
+            {isApplication && getRatingAppLink() && (
               <div
                 className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
-                  location.assign('bazaar://details?id=com.paziresh24.paziresh24');
+                  location.assign(getRatingAppLink() ?? '#');
                 }}
               >
                 <StarIcon />

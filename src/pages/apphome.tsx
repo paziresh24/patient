@@ -6,16 +6,20 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import { useSearchStore } from '@/modules/search/store/search';
 import Suggestion from '@/modules/search/view/suggestion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
 const Home = () => {
   const appHome = useGetAppHome();
+  const isApplication = useApplication();
   const city = useSearchStore(state => state.city);
+  const { query, isReady } = useRouter();
 
   const handlePopupRoute = (type: string) => {
     if (type === 'center') {
@@ -25,6 +29,15 @@ const Home = () => {
       return `/s/${city.en_slug}/doctor`;
     }
   };
+
+  useEffect(() => {
+    if (isReady && isApplication) {
+      if (query.platform) localStorage.setItem('app:platform', query.platform as string);
+      if (query.version_code) localStorage.setItem('app:version_code', query.version_code as string);
+      if (query.version_name) localStorage.setItem('app:version_name', query.version_name as string);
+      if (query.download_source) localStorage.setItem('app:download_source', query.download_source as string);
+    }
+  }, [isReady, query, isApplication]);
 
   const reformatSlids = (slids: any[]) => {
     const reversed = Array.from(slids).reverse();
