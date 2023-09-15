@@ -190,9 +190,9 @@ const DoctorProfile = ({
   return (
     <>
       <div
-        className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
-          'pb-24': isApplication,
-        })}
+        className={classNames(
+          'flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24',
+        )}
       >
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (

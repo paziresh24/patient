@@ -11,8 +11,6 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useApplication from '@/common/hooks/useApplication';
-import useWebView from '@/common/hooks/useWebView';
 import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
 import diamond from '@/modules/bamdad/assets/diamond.png';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
@@ -31,8 +29,6 @@ export const Premium = () => {
   const isUserPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { query, pathname } = useRouter();
-  const isWebView = useWebView();
-  const isApplication = useApplication();
   const { t } = useTranslation('patient/premium');
   const featureList = useFeatureValue<Array<{ title: string; description: string }>>('premium.feature_list', []);
   const price = useFeatureValue<number>('premium.pricing', 0);
@@ -57,9 +53,7 @@ export const Premium = () => {
     <>
       <Seo title={t('title')} noIndex />
 
-      {(isWebView || isApplication) && (
-        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
-      )}
+      <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
       <div className="flex flex-col flex-grow h-full bg-white">
         {isUserPending && (
           <div className="flex flex-col items-center justify-center flex-grow">

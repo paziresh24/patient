@@ -18,7 +18,6 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -37,7 +36,6 @@ export const PatinetProfile = () => {
   const logout = useUserInfoStore(state => state.logout);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const isApplication = useApplication();
   const share = useShare();
   const { customize } = useCustomize();
 
@@ -74,7 +72,7 @@ export const PatinetProfile = () => {
     <>
       <Seo title="پروفایل من" noIndex />
 
-      {isApplication && <AppBar title="پروفایل من" />}
+      <AppBar title="پروفایل من" className="hidden pwa:!flex" />
 
       {loginPending ? (
         <div className="h-full flex justify-center items-center flex-grow">
@@ -108,7 +106,7 @@ export const PatinetProfile = () => {
             </div>
           )}
           {!isLogin && (
-            <div className="flex flex-col mt-2 bg-white shadow-sm">
+            <div className="flex flex-col bg-white shadow-sm">
               <div
                 onClick={() => openLoginForm()}
                 className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
@@ -196,9 +194,9 @@ export const PatinetProfile = () => {
                 </Text>
               </Link>
             )}
-            {isApplication && getRatingAppLink() && (
+            {getRatingAppLink() && (
               <div
-                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                className="hidden pwa:flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
                   location.assign(getRatingAppLink() ?? '#');
                 }}

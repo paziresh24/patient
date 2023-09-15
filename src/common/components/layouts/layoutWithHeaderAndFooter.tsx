@@ -32,7 +32,7 @@ export const LayoutWithHeaderAndFooter = ({
 
   return (
     <div className={classNames('min-h-screen flex flex-col', { 'pb-16 md:pb-0': showBottomNavigation })}>
-      {customize.showHeader && !isWebView && showHeader && (
+      {customize.showHeader && showHeader && (
         <Header
           showSearchSuggestionButton={showSearchSuggestionButton}
           shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand}
@@ -40,10 +40,7 @@ export const LayoutWithHeaderAndFooter = ({
         />
       )}
       <div className="flex flex-col flex-grow">{children}</div>
-      {customize.showFooter &&
-        !isWebView &&
-        showFooter &&
-        (customize.footerType === 'compact' || compactFooter ? <CompactFooter /> : <Footer />)}
+      {customize.showFooter && showFooter && (customize.footerType === 'compact' || compactFooter ? <CompactFooter /> : <Footer />)}
       {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>
   );

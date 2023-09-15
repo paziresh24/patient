@@ -14,7 +14,7 @@ export const SearchSeoBox = () => {
     <>
       <Breadcrumbs className="py-5" items={seoInfo?.breadcrumbs!} />
       {customize.showSeoBoxs && (
-        <div className="flex flex-col !mt-5 space-y-2">
+        <div className="flex pwa:hidden flex-col !mt-5 space-y-2">
           <Text as="h1" fontWeight="bold">
             {seoInfo?.heading}
           </Text>

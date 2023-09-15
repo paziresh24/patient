@@ -106,8 +106,6 @@ function MyApp(props: AppProps) {
             <Component
               {...pageProps}
               config={{
-                showHeader: !pageProps.query?.application,
-                showFooter: !pageProps.query?.application,
                 compactFooter: pageProps.query?.['footer:type'] === 'compact',
               }}
             />,
