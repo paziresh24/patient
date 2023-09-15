@@ -57,6 +57,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showShareApp: true,
     showSupplierRegister: true,
     showRateAndReviews: true,
+    showSupport: true,
     showContribute: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
