@@ -11,7 +11,6 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
-import useWebView from '@/common/hooks/useWebView';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
@@ -25,7 +24,6 @@ import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
@@ -37,16 +35,13 @@ const Search = ({ host }: any) => {
   const {
     asPath,
     query: { params },
-    ...router
   } = useRouter();
-  const isWebView = useWebView();
 
   const { isLanding, isLoading, total, seoInfo, selectedFilters, result } = useSearch();
   const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
-  const { publicRuntimeConfig } = getConfig();
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -95,16 +90,14 @@ const Search = ({ host }: any) => {
           </div>
         </div>
         <SearchSeoBox />
-        {!isWebView && (
-          <Button
-            onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
-            variant="text"
-            className="!my-5 gap-2 self-end"
-            icon={<ErrorIcon className="w-5" />}
-          >
-            گزارش مشکل در جستجو
-          </Button>
-        )}
+        <Button
+          onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
+          variant="text"
+          className="!my-5 gap-2 self-end"
+          icon={<ErrorIcon className="w-5" />}
+        >
+          گزارش مشکل در جستجو
+        </Button>
       </div>
       <UnknownCity />
     </>

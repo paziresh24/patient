@@ -29,7 +29,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="google" content="notranslate" />
       </Head>
       <body
-        className={classNames('bg-slate-100 antialiased scroll-smooth', {
+        className={classNames('bg-slate-100 antialiased scroll-smooth pwa:select-none', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

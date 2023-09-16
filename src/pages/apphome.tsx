@@ -6,16 +6,20 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import useApplication from '@/common/hooks/useApplication';
 import { useSearchStore } from '@/modules/search/store/search';
 import Suggestion from '@/modules/search/view/suggestion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
 const Home = () => {
   const appHome = useGetAppHome();
+  const isApplication = useApplication();
   const city = useSearchStore(state => state.city);
+  const { query, isReady } = useRouter();
 
   const handlePopupRoute = (type: string) => {
     if (type === 'center') {
@@ -25,6 +29,15 @@ const Home = () => {
       return `/s/${city.en_slug}/doctor`;
     }
   };
+
+  useEffect(() => {
+    if (isReady && isApplication) {
+      if (query.platform) localStorage.setItem('app:platform', query.platform as string);
+      if (query.version_code) localStorage.setItem('app:version_code', query.version_code as string);
+      if (query.version_name) localStorage.setItem('app:version_name', query.version_name as string);
+      if (query.download_source) localStorage.setItem('app:download_source', query.download_source as string);
+    }
+  }, [isReady, query, isApplication]);
 
   const reformatSlids = (slids: any[]) => {
     const reversed = Array.from(slids).reverse();
@@ -38,13 +51,13 @@ const Home = () => {
       <main className="flex flex-col items-center space-y-3">
         <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">
           <Logo className="!mr-1" width={30} />
-          <div className="w-full px-4">
+          <div className="flex justify-center w-full px-4 md:w-96">
             <Suggestion />
           </div>
         </div>
 
         {appHome.isLoading && (
-          <div className="flex flex-col w-full space-y-3">
+          <div className="flex flex-col w-full space-y-3 md:w-96">
             <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
               <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
               <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
@@ -58,7 +71,7 @@ const Home = () => {
             </div>
           </div>
         )}
-        <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3">
+        <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3 md:w-96">
           {appHome.data?.data?.result?.map((section: any, index: number) => (
             <div className="flex flex-col w-full space-y-3" key={index}>
               {section.title && (
@@ -105,7 +118,13 @@ const Home = () => {
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter shouldShowBrand={false} shouldShowPromoteApp={false} {...page.props.config}>
+    <LayoutWithHeaderAndFooter
+      shouldShowBrand={false}
+      shouldShowPromoteApp={false}
+      {...page.props.config}
+      showHeader={false}
+      showFooter={false}
+    >
       {page}
     </LayoutWithHeaderAndFooter>
   );

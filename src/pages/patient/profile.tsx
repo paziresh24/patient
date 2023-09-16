@@ -7,8 +7,6 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
-import useApplication from '@/common/hooks/useApplication';
-import useWebView from '@/common/hooks/useWebView';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
@@ -20,8 +18,6 @@ import { toast } from 'react-hot-toast';
 
 export const PatinetProfile = () => {
   const { query } = useRouter();
-  const isWebView = useWebView();
-  const isApplication = useApplication();
   const { t } = useTranslation('patient/profile');
   const userInfo = useUserInfoStore(state => state.info);
   const userInfoPending = useUserInfoStore(state => state.pending);
@@ -55,19 +51,15 @@ export const PatinetProfile = () => {
     <>
       <Seo title={t('title')} noIndex />
 
-      {(isWebView || isApplication) && (
-        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
-      )}
+      <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="flex flex-col p-5 space-y-5 bg-white">
-        {!isWebView && !isApplication && (
-          <Text fontWeight="black" fontSize="xl">
-            {t('title')}
-          </Text>
-        )}
+      <div className="flex flex-col p-5 bg-white">
+        <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5">
+          {t('title')}
+        </Text>
         <label
           htmlFor="userAvatar"
-          className="flex items-center self-center justify-center text-white transition-all cursor-pointer hover:text-transparent"
+          className="flex mb-5 items-center self-center justify-center text-white transition-all cursor-pointer hover:text-transparent"
         >
           <Avatar
             className="transition-all brightness-50 hover:brightness-100"

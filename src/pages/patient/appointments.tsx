@@ -13,9 +13,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useApplication from '@/common/hooks/useApplication';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import useWebView from '@/common/hooks/useWebView';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import Turn from '@/modules/myTurn/components/turn';
@@ -32,8 +30,6 @@ type BookType = 'book' | 'book_request';
 
 export const Appointments = ({ query: queryServer }: any) => {
   const { query, ...router } = useRouter();
-  const isWebView = useWebView();
-  const isApplication = useApplication();
   const { t } = useTranslation('patient/appointments');
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
@@ -104,16 +100,12 @@ export const Appointments = ({ query: queryServer }: any) => {
     <>
       <Seo title={t('title')} />
 
-      {(isWebView || isApplication) && (
-        <AppBar title={t('title')} className="border-b border-slate-200" backButton={query.referrer === 'profile'} />
-      )}
+      <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 space-y-5 bg-white">
-        {!isWebView && !isApplication && (
-          <Text fontWeight="black" fontSize="xl" className="mt-5">
-            {t('title')}
-          </Text>
-        )}
+      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white">
+        <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5 mt-5">
+          {t('title')}
+        </Text>
 
         <div className="sticky top-0 z-10 justify-center w-full bg-white border-b border-solid lg:flex md:shadow-none border-slate-200">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">

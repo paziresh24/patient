@@ -14,7 +14,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import classNames from '@/common/utils/classNames';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -191,9 +190,7 @@ const DoctorProfile = ({
     <>
       <div
         key={information.id}
-        className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
-          'pb-24': isApplication,
-        })}
+        className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24"
       >
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
