@@ -9,7 +9,7 @@ const { publicRuntimeConfig } = config();
 
 export const OwnPage = ({ fullname }: { fullname: string }) => {
   const { info, isLogin } = useUserInfoStore();
-  const ownPageTitle = useFeatureValue<any>('profile.own_page_text', '');
+  const ownPage = useFeatureValue<any>('profile.own_page', {});
 
   const handleClick = useCallback(() => {
     splunkInstance().sendEvent({
@@ -28,9 +28,9 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
 
   return (
     <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
-      <Text fontWeight="medium">{ownPageTitle ?? ''}</Text>
+      <Text fontWeight="medium">{ownPage?.title ?? 'درخواست احراز هویت و دریافت مالکیت صفحه'}</Text>
       <Button onClick={handleClick} variant="secondary">
-        من {fullname} هستم
+        {ownPage?.buttonText ?? `من ${fullname} هستم`}
       </Button>
     </div>
   );
