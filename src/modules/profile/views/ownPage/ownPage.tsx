@@ -30,7 +30,7 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
     <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
       <Text fontWeight="medium">{ownPage?.title ?? 'درخواست احراز هویت و دریافت مالکیت صفحه'}</Text>
       <Button onClick={handleClick} variant="secondary">
-        {ownPage?.buttonText ?? `من ${fullname} هستم`}
+        {ownPage?.buttonText?.replace('{fullname}', fullname) ?? ''}
       </Button>
     </div>
   );
