@@ -75,7 +75,7 @@ export const PatinetProfile = () => {
       <AppBar title="پروفایل من" className="hidden pwa:!flex" />
 
       {loginPending ? (
-        <div className="h-full flex justify-center items-center flex-grow">
+        <div className="flex items-center justify-center flex-grow h-full">
           <Loading />
         </div>
       ) : (
@@ -113,7 +113,7 @@ export const PatinetProfile = () => {
               >
                 <LoginIcon />
                 <Text fontWeight="medium" fontSize="sm">
-                  ورورد به حساب کاربری
+                  ورود به حساب کاربری
                 </Text>
               </div>
             </div>
@@ -196,7 +196,7 @@ export const PatinetProfile = () => {
             )}
             {getRatingAppLink() && (
               <div
-                className="hidden pwa:flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                className="items-center hidden px-5 py-4 border-b pwa:flex space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
                   location.assign(getRatingAppLink() ?? '#');
                 }}
