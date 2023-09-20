@@ -91,7 +91,7 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
       ...state,
       customize: {
         ...state.customize,
-        customize,
+        ...customize,
       },
     }));
   },
