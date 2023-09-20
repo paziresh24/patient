@@ -1,6 +1,6 @@
 import { useSearchRecommendByDoctor } from '@/common/apis/services/search/recommend';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { HTMLAttributes } from 'react';
 import RecommendCard from './card/card';
@@ -17,11 +17,8 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
-  const recommendButton = useFeatureValue<any>('profile.recommend_card_button', {});
+  const isRecommendOutline = useFeatureIsOn('profile.recommend_button');
   const router = useRouter();
-  const isShowRecommendButtonForThisDoctor = !recommendButton?.dont_show_doctor_list?.includes(router.query.slug);
-  const customButton = recommendButton?.custom_button?.doctor_list?.includes(router.query.slug) ? recommendButton?.custom_button : null;
-
   const doctors = data?.data ?? [];
 
   return (
@@ -46,15 +43,13 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               rate: doctor.star * 20,
               url: doctor.url,
               id: doctor.id,
-              ...(isShowRecommendButtonForThisDoctor && {
-                action: [
-                  {
-                    title: customButton?.text ?? recommendButton?.default_text,
-                    description: `اولین نوبت: ${doctor.freeturn}`,
-                    outline: customButton?.is_outline,
-                  },
-                ],
-              }),
+              action: [
+                {
+                  title: isRecommendOutline ? 'مشاهده صفحه' : 'دریافت نوبت',
+                  description: `اولین نوبت: ${doctor.freeturn}`,
+                  outline: isRecommendOutline,
+                },
+              ],
             })) ?? []
           }
           clickRecommendEvent={(id: string) => clickRecommendEvent?.(doctors?.find((doctor: any) => doctor.id === id))}
