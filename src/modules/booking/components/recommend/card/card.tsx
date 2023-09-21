@@ -19,7 +19,7 @@ type Recommends = {
 
 interface RecommendCardProps {
   listOfDoctors: Recommends[];
-  clickRecommendEvent?: (id: string) => void;
+  clickRecommendEvent?: (id: string, elementName?: string, elementContent?: string) => void;
 }
 
 export const RecommendCard = (props: RecommendCardProps) => {
@@ -56,7 +56,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
                 router.push(doctor.url);
               },
             }))}
-            sendEventWhenClick={() => clickRecommendEvent?.(doctor.id)}
+            sendEventWhenClick={({ element, content }) => clickRecommendEvent?.(doctor.id, element, content)}
           />
         ))}
       </ScrollContainer>
