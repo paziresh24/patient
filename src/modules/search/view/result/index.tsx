@@ -2,9 +2,7 @@ import { useClickThroughRate } from '@/common/apis/services/search/clickThroughR
 import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { splunkSearchInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -29,7 +27,6 @@ export const Result = () => {
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
   const sendClickThroughRateEvent = useClickThroughRate();
-  const university = useServerQuery(state => state.queries.university);
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
@@ -50,19 +47,18 @@ export const Result = () => {
       server_id: item.server_id,
       type: item.type,
     });
-    splunkSearchInstance().sendEvent({
-      group: 'search',
-      type: 'search_click_position',
-      event: {
-        id: item._id,
-        filters: selectedFilters,
-        position: item.position,
-        route: asPath,
+    sendPositionStatEvent.mutate({
+      id: item._id,
+      filters: selectedFilters,
+      position: item.position,
+      route: asPath,
+      card_data: {
+        ...item,
+        centers_types: item.centers.map(center => center.center_type),
         element_name: elementName,
-        element_content: elementContent,
-        card_data: { ...item, centers_types: item.centers.map(center => center.center_type) },
-        terminal_id: getCookie('terminal_id'),
+        element_content: elementContent ?? '',
       },
+      terminal_id: getCookie('terminal_id') as string,
     });
     sendGaEvent({
       action: 'CardSearchClick',
