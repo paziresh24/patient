@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
 import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
+import { splunkSearchInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -40,14 +41,7 @@ export const Result = () => {
     });
   };
 
-  const handleCardEvent = (item: ResultType) => {
-    sendPositionStatEvent.mutate({
-      id: item._id,
-      filters: selectedFilters,
-      position: item.position,
-      route: asPath,
-      card_data: item,
-    });
+  const handleClickEelmentEvent = (item: ResultType, elementName: string, elementContent?: string) => {
     sendClickThroughRateEvent.mutate({
       terminal_id: (getCookie('terminal_id') as string) ?? '',
       id: item.id,
@@ -55,6 +49,20 @@ export const Result = () => {
       query_id: search.query_id,
       server_id: item.server_id,
       type: item.type,
+    });
+    splunkSearchInstance().sendEvent({
+      group: 'search',
+      type: 'search_click_position',
+      event: {
+        id: item._id,
+        filters: selectedFilters,
+        position: item.position,
+        route: asPath,
+        element_name: elementName,
+        element_content: elementContent,
+        card_data: { ...item, centers_types: item.centers.map(center => center.center_type) },
+        terminal_id: getCookie('terminal_id'),
+      },
     });
     sendGaEvent({
       action: 'CardSearchClick',
@@ -91,13 +99,15 @@ export const Result = () => {
               price: item.price,
               badges: item.badges,
             }}
-            actions={item?.actions?.map(item => ({
-              text: item.title,
-              description: item.top_title,
-              outline: item.outline,
-              action: () => router.push(item.url),
+            actions={item?.actions?.map(action => ({
+              text: action.title,
+              description: action.top_title,
+              outline: action.outline,
+              action: () => {
+                router.push(action.url);
+              },
             }))}
-            sendEventWhenClick={() => handleCardEvent(item)}
+            sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(item, element, content)}
           />
         ),
       )}

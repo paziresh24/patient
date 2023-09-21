@@ -7,7 +7,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
-import { splunkInstance } from '@/common/services/splunk';
+import { splunkCenterProfileInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
@@ -86,7 +86,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
   useEffect(() => {
     if (profileData) {
       push(['trackEvent', 'contact', 'center profile']);
-      splunkInstance().sendEvent({
+      splunkCenterProfileInstance().sendEvent({
         group: 'center_profile',
         type: 'load_center_profile',
         event: {

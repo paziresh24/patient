@@ -44,7 +44,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
         doctorId: information.id,
         city: information.city_en_slug,
         category: expertises.group_expertises[0]?.en_slug,
-        clickRecommendEvent: (doctor: any) => {
+        clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
           splunkInstance().sendEvent({
             group: 'recommend',
             type: 'clickrecommend',
@@ -56,8 +56,11 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
                 referrer: document.referrer,
                 group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
                 doctor_name: information.display_name,
+                centers_types: centers.map((center: any) => center.center_type_name),
                 server_id: information.server_id,
                 recommendations: doctor,
+                element_name: elementName,
+                element_content: elementContent,
               },
             },
           });
