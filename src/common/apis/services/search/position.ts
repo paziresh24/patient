@@ -10,6 +10,7 @@ export interface Params {
   position: number;
   id: string;
   card_data: any;
+  terminal_id: string;
 }
 
 export const sendPositionStatEvent = async (params: Params) => {
