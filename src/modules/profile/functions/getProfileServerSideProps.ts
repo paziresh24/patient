@@ -44,24 +44,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;
 
-  let shouldUseProvider: boolean = false;
-  let shouldUseUser: boolean = false;
-  try {
-    const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-    const growthbook = new GrowthBook(growthbookContext);
-    await growthbook.loadFeatures({ timeout: 1000 });
-
-    // Providers Api
-    const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: ['*'] });
-    shouldUseProvider = providersApiDoctorList.slugs?.includes(slugFormmated) || providersApiDoctorList.slugs?.includes('*');
-
-    // Users APi
-    const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: ['*'] });
-    shouldUseUser = usersApiDoctorList.slugs?.includes(slugFormmated) || usersApiDoctorList.slugs?.includes('*');
-  } catch (error) {
-    console.log(error);
-  }
-
   try {
     const queryClient = new QueryClient();
     const { redirect, fullProfileData } = await getProfile({ slug: slugFormmated, university });
@@ -74,11 +56,40 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       };
     }
 
+    let shouldUseProvider: boolean = false;
+    let shouldUseUser: boolean = false;
+    try {
+      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+      const growthbook = new GrowthBook(growthbookContext);
+      await growthbook.loadFeatures({ timeout: 1000 });
+
+      // Providers Api
+      const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: [''] });
+      const providersApiDoctorCitiesList = growthbook.getFeatureValue('profile:providers-api|cities', { cities: [''] });
+      shouldUseProvider =
+        providersApiDoctorList.slugs?.includes(slugFormmated) ||
+        providersApiDoctorList.slugs?.includes('') ||
+        providersApiDoctorCitiesList.cities?.includes(fullProfileData.city_en_slug) ||
+        providersApiDoctorCitiesList.cities?.includes('*');
+
+      // Users APi
+      const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: [''] });
+      const usersApiDoctorCitiesList = growthbook.getFeatureValue('profile:users-api|cities', { cities: [''] });
+      shouldUseUser =
+        usersApiDoctorList.slugs?.includes(slugFormmated) ||
+        usersApiDoctorList.slugs?.includes('') ||
+        usersApiDoctorCitiesList.cities?.includes(fullProfileData.city_en_slug) ||
+        usersApiDoctorCitiesList.cities?.includes('*');
+    } catch (error) {
+      console.log(error);
+    }
+
     const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
       provider: {
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
+        employee_id: fullProfileData.medical_code ?? '',
       },
     };
 
