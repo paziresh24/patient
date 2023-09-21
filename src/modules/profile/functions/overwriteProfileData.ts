@@ -4,6 +4,7 @@ export type OverwriteProfileData = {
   provider: {
     display_name?: string;
     biography?: string;
+    employee_id?: string;
   };
 };
 
@@ -15,7 +16,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     scientific: source.scientific,
     display_name: source.display_name,
     biography: source.biography,
-    medical_code: source.medical_code,
+    employee_id: source.medical_code,
     experience: source.experience,
     gender: source.gender,
     image: source.image,

@@ -206,7 +206,7 @@ const DoctorProfile = ({
             displayName={information?.display_name}
             image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
             title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
-            subTitle={`شماره نظام پزشکی: ${information?.medical_code}`}
+            subTitle={`شماره نظام پزشکی: ${information?.employee_id}`}
             serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
@@ -356,7 +356,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
         'isAcceptingNewPatients': true,
         'medicalSpecialty': !expertises?.group_expertises ? expertises.group_expertises?.[0]?.name : doctorExpertise,
-        'duns': information?.medical_code,
+        'duns': information?.employee_id,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',

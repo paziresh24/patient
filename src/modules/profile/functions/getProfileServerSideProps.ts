@@ -44,24 +44,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;
 
-  let shouldUseProvider: boolean = false;
-  let shouldUseUser: boolean = false;
-  try {
-    const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-    const growthbook = new GrowthBook(growthbookContext);
-    await growthbook.loadFeatures({ timeout: 1000 });
-
-    // Providers Api
-    const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: ['*'] });
-    shouldUseProvider = providersApiDoctorList.slugs?.includes(slugFormmated) || providersApiDoctorList.slugs?.includes('*');
-
-    // Users APi
-    const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: ['*'] });
-    shouldUseUser = usersApiDoctorList.slugs?.includes(slugFormmated) || usersApiDoctorList.slugs?.includes('*');
-  } catch (error) {
-    console.log(error);
-  }
-
   try {
     const queryClient = new QueryClient();
     const { redirect, fullProfileData } = await getProfile({ slug: slugFormmated, university });
@@ -74,11 +56,46 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       };
     }
 
+    let shouldUseProvider: boolean = false;
+    let shouldUseUser: boolean = false;
+    try {
+      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+      const growthbook = new GrowthBook(growthbookContext);
+      await growthbook.loadFeatures({ timeout: 1000 });
+
+      // Providers Api
+      const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: [''] });
+      const providersApiDoctorCitiesList = growthbook.getFeatureValue('profile:providers-api|cities', { cities: [''] });
+      shouldUseProvider =
+        providersApiDoctorList.slugs?.includes(slugFormmated) ||
+        providersApiDoctorList.slugs?.includes('') ||
+        fullProfileData.centers.some(
+          (center: any) =>
+            center.center_type === 1 && center.status === 1 && providersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
+        ) ||
+        providersApiDoctorCitiesList.cities?.includes('*');
+
+      // Users APi
+      const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: [''] });
+      const usersApiDoctorCitiesList = growthbook.getFeatureValue('profile:users-api|cities', { cities: [''] });
+      shouldUseUser =
+        usersApiDoctorList.slugs?.includes(slugFormmated) ||
+        usersApiDoctorList.slugs?.includes('') ||
+        fullProfileData.centers.some(
+          (center: any) =>
+            center.center_type === 1 && center.status === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
+        ) ||
+        usersApiDoctorCitiesList.cities?.includes('*');
+    } catch (error) {
+      console.error(error);
+    }
+
     const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
       provider: {
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
+        employee_id: fullProfileData.medical_code ?? '',
       },
     };
 
@@ -95,7 +112,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           };
 
           if (shouldUseUser) {
-            const parallelRequests = [await getUserData({ user_id: providerData.value.user_id })];
+            const parallelRequests = [await getUserData({ user_id: providerData.value.user_id, slug: slugFormmated })];
             const [userData] = await Promise.allSettled(parallelRequests);
 
             if (userData.status === 'fulfilled') {
@@ -107,7 +124,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           }
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
@@ -118,7 +135,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     const internalLinksData = await internalLinks({
       links,
-    }).catch(error => console.log('error'));
+    }).catch(error => console.error(error));
 
     let feedbackDataWithoutPagination;
 
@@ -156,7 +173,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         );
       feedbacks.feedbacks = feedbackData?.result ?? [];
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;

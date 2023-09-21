@@ -7,7 +7,6 @@ type Recommends = {
   displayAddress?: string;
   displayExpertise?: string;
   displayName: string;
-  medicalCode?: string;
   freeturn?: string;
   isBulk: true;
   ratesCount: number;
