@@ -54,7 +54,7 @@ export const Result = () => {
       route: asPath,
       card_data: {
         ...item,
-        centers_types: item.centers.map(center => center.center_type),
+        ...(item.type === 'doctor' && { centers_types: item.centers.map(center => center.center_type) }),
         element_name: elementName,
         element_content: elementContent ?? '',
       },
