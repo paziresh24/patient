@@ -1,6 +1,6 @@
 import { useSearchRecommendByDoctor } from '@/common/apis/services/search/recommend';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { HTMLAttributes } from 'react';
 import RecommendCard from './card/card';
@@ -17,7 +17,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
-  const isRecommendOutline = useFeatureIsOn('profile.recommend_button');
+  const recommendButton = useFeatureValue<any>('profile.recommend_button', {});
   const router = useRouter();
   const doctors = data?.data ?? [];
 
@@ -43,13 +43,15 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               rate: doctor.star * 20,
               url: doctor.url,
               id: doctor.id,
-              action: [
-                {
-                  title: isRecommendOutline ? 'مشاهده صفحه' : 'دریافت نوبت',
-                  description: `اولین نوبت: ${doctor.freeturn}`,
-                  outline: isRecommendOutline,
-                },
-              ],
+              ...(recommendButton?.is_show && {
+                action: [
+                  {
+                    title: recommendButton?.title,
+                    description: `اولین نوبت: ${doctor.freeturn}`,
+                    outline: recommendButton?.is_outline,
+                  },
+                ],
+              }),
             })) ?? []
           }
           clickRecommendEvent={(id: string) => clickRecommendEvent?.(doctors?.find((doctor: any) => doctor.id === id))}
