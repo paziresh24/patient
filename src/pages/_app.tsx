@@ -28,6 +28,7 @@ const iransansFont = localFont({
 const { publicRuntimeConfig } = getConfig();
 
 const growthbook = new GrowthBook({
+  enabled: publicRuntimeConfig.GROWTHBOOK_API_HOST && publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   trackingCallback: (experiment: any, result: any) => {
@@ -58,11 +59,13 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
 
   useEffect(() => {
-    growthbook.loadFeatures({ autoRefresh: true });
-    growthbook.setAttributes({
-      id: getCookie('terminal_id'),
-    });
-  }, []);
+    if (growthbook.ready) {
+      growthbook.loadFeatures({ autoRefresh: true });
+      growthbook.setAttributes({
+        id: getCookie('terminal_id'),
+      });
+    }
+  }, [growthbook.ready]);
 
   useEffect(() => {
     useCustomize.getState().setCustomize(pageProps.query);

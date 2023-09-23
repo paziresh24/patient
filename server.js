@@ -11,7 +11,7 @@ const handle = app.getRequestHandler();
 (() => {
   if (!fs.existsSync('./cert/localhost-key.pem') && !fs.existsSync('./cert/localhost.pem'))
     return console.log(
-      '> 💔 Error: Please create the certificate file before running npm run dev -> https://gitlabserver.paziresh24.com/repositories/patient/blob/master/CONTRIBUTING.md#your-connection-is-not-private',
+      '> 💔 Error: Please create the certificate file before running npm run dev -> https://github.com/paziresh24/patient/blob/main/CONTRIBUTING.md#your-connection-is-not-private',
     );
 
   const httpsOptions = {
