@@ -29,7 +29,7 @@ Paziresh24 is an ambitious open-source project with a vision to transform health
 <br />
 <div align="center">
 <div>
-  <img src="https://i.ibb.co/NSkM47t/efmYp5yW.jpg" alt="Paziresh24" style="width:80%"/>
+  <img src="https://github.com/paziresh24/patient/blob/main/readmeAssets/vision.jpeg?raw=true" alt="vision" style="width:80%"/>
 </div>
   <figcaption align="center"><em >Our vision is to ensure that patients only experience pain related to their illness and nothing else.</em> <a href="https://community.paziresh24.com/t/topic/972"><strong>Read more</strong></a></figcaption>
 </div>
