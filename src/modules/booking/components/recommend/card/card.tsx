@@ -7,7 +7,6 @@ type Recommends = {
   displayAddress?: string;
   displayExpertise?: string;
   displayName: string;
-  medicalCode?: string;
   freeturn?: string;
   isBulk: true;
   ratesCount: number;
@@ -19,12 +18,13 @@ type Recommends = {
 
 interface RecommendCardProps {
   listOfDoctors: Recommends[];
-  clickRecommendEvent?: (id: string) => void;
+  clickRecommendEvent?: (id: string, elementName?: string, elementContent?: string) => void;
 }
 
 export const RecommendCard = (props: RecommendCardProps) => {
   const { listOfDoctors, clickRecommendEvent } = props;
   const router = useRouter();
+
   return (
     <>
       <ScrollContainer className="flex w-full pl-5 !overflow-auto rounded-lg select-none no-scroll space-s-3 no-scroll">
@@ -50,11 +50,12 @@ export const RecommendCard = (props: RecommendCardProps) => {
             actions={doctor?.action?.map((item: any) => ({
               text: item.title,
               description: item.description,
+              outline: item.outline,
               action: () => {
                 router.push(doctor.url);
               },
             }))}
-            sendEventWhenClick={() => clickRecommendEvent?.(doctor.id)}
+            sendEventWhenClick={({ element, content }) => clickRecommendEvent?.(doctor.id, element, content)}
           />
         ))}
       </ScrollContainer>

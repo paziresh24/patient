@@ -1,9 +1,11 @@
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
+import Text from '@/common/components/atom/text';
+import InfoIcon from '@/common/components/icons/info';
 import PersonseIcon from '@/common/components/icons/persons';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
+import useResponsive from '@/hooks/useResponsive';
 import { Card, Options } from '../../type/card';
 import RateCard from '../card/card';
 
@@ -69,7 +71,8 @@ export const Feedback = (props: { replyClassName?: string } & Feedbacks) => {
 
 export const FeedbackCard = (props: FeedbackParams) => {
   const { feedback, className } = props;
-  const { handleOpen, modalProps } = useModal();
+  const { handleOpen: handleOpenReplyModal, modalProps: replyModalProps } = useModal();
+  const { handleOpen: handleOpenExternalInfo, modalProps: externalInfoModalProps } = useModal();
 
   return (
     <div
@@ -79,23 +82,50 @@ export const FeedbackCard = (props: FeedbackParams) => {
       <Feedback
         {...feedback}
         firstReply
-        options={
-          [
-            ...feedback.options!,
+        options={{
+          ...feedback.options,
+          items: [
+            ...(feedback?.options?.items! ?? false),
+
             feedback?.reply?.length! > 1 && {
               id: 3,
               name: 'نمایش نظرات بیماران',
-              action: handleOpen,
+              action: handleOpenReplyModal,
               type: 'controller',
               icon: <PersonseIcon className="w-[1.1rem]" />,
               inModal: false,
             },
-          ].filter(Boolean) as Options[]
-        }
+            feedback?.external && {
+              id: 4,
+              name: 'منبع این نظر: nobat.ir',
+              action: handleOpenExternalInfo,
+              type: 'controller',
+              icon: <InfoIcon className="w-[1.1rem]" />,
+              inModal: false,
+            },
+          ].filter(Boolean) as Options[],
+        }}
       />
 
-      <Modal title={feedback.replyModal?.title} {...modalProps} fullScreen bodyClassName="!px-0 !pb-16">
-        <Feedback firstReply={false} {...feedback} options={feedback.options?.filter(option => option.inModal)} />
+      <Modal {...externalInfoModalProps} noHeader>
+        <Text as="p" fontSize="sm" className="mb-1 leading-6">
+          پذیرش24 تلاش میکند تا علاوه بر نظراتی که مستقیما از بیماران پزشک دریافت میکند، سایر نظرات کاربران که آنلاین در سراسر وب ثبت کرده
+          اند را برای انتخاب آگاهانه تر بهترین درمانگر در اختیار شما قرار دهد.
+        </Text>
+        <Text as="p" fontSize="sm" fontWeight="medium">
+          طبیعتا این نوع از نظرات، بدون نظارت دقیق منعکس شده اند.
+        </Text>
+      </Modal>
+
+      <Modal title={feedback.replyModal?.title} {...replyModalProps} fullScreen bodyClassName="!px-0 !pb-16">
+        <Feedback
+          firstReply={false}
+          {...feedback}
+          options={{
+            ...feedback.options,
+            items: feedback.options?.items?.filter(option => option.inModal),
+          }}
+        />
       </Modal>
     </div>
   );

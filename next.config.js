@@ -2,6 +2,7 @@
 
 const nextTranslate = require('next-translate');
 const runtimeCaching = require('./runtimeCaching');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -43,6 +44,7 @@ const nextConfig = {
   trailingSlash: true,
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
+    API_GATEWAY_BASE_URL: process.env.API_GATEWAY_BASE_URL,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
     CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,
     PAZIRESH24_API: process.env.PAZIRESH24_API,
@@ -54,6 +56,8 @@ const nextConfig = {
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
     IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
+    MATOMO_URL: process.env.MATOMO_URL,
+    MATOMO_SITE_ID: process.env.MATOMO_SITE_ID,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
@@ -65,6 +69,11 @@ const nextConfig = {
         destination: '/receipt/5532/:id/',
         permanent: true,
       },
+      {
+        source: '/apphome/.well-known/assetlinks.json',
+        destination: '/.well-known/assetlinks.json',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
@@ -74,4 +83,9 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-module.exports = moduleExports;
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+// Sentry should be the last thing to export to catch everything right
+module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;

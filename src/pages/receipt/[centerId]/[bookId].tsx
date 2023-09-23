@@ -14,7 +14,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import useShare from '@/common/hooks/useShare';
-import { splunkInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
@@ -24,9 +24,11 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
+import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -66,6 +68,7 @@ const Receipt = () => {
   });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const serverTime = useGetServerTime();
@@ -124,6 +127,9 @@ const Receipt = () => {
                   doctorName: bookDetailsData.doctor?.display_name,
                   expertise: bookDetailsData.doctor?.display_expertise,
                   phoneNumber: bookDetailsData?.patient?.cell,
+                  nationalCode: bookDetailsData?.patient?.national_code,
+                  trackingCode: bookDetailsData?.reference_code,
+                  patientName: `${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
                   reason: reasonDeleteTurn,
                   isVisited: turnStatus.visitedTurn,
                 },
@@ -156,6 +162,25 @@ const Receipt = () => {
   const handleMyTrunButtonAction = () => {
     router.push({
       pathname: '/patient/appointments',
+    });
+  };
+
+  const handleSafeCallAction = () => {
+    splunkBookingInstance().sendEvent({
+      group: 'safe-call',
+      type: 'patient',
+      event: {
+        action: 'receipt',
+        data: {
+          referenceCode: bookDetailsData.reference_code,
+          doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
+          patient: {
+            cell: bookDetailsData.patient.cell,
+            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            nationalCode: bookDetailsData.national_code,
+          },
+        },
+      },
     });
   };
 
@@ -239,13 +264,20 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <MessengerButton
-                  channel={
-                    bookDetailsData.selected_online_visit_channel?.type
-                      ? bookDetailsData?.selected_online_visit_channel
-                      : bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => !(item.type as string).endsWith('_number'))[0]
-                  }
-                />
+                <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4">
+                  <MessengerButton
+                    channel={
+                      bookDetailsData.selected_online_visit_channel?.type
+                        ? bookDetailsData?.selected_online_visit_channel
+                        : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                            (item: any) => !(item.type as string).endsWith('_number'),
+                          )[0]
+                    }
+                  />
+                  {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
+                    <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                  )}
+                </div>
               )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>

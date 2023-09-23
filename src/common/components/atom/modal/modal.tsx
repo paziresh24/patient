@@ -46,7 +46,7 @@ export const Modal = (props: ModalProps) => {
           {!noHeader && (
             <div className="flex items-center justify-between p-4 border-b border-slate-100">
               <span className="font-bold line-clamp-1">{title}</span>
-              <CloseIcon onClick={onClose} />
+              <CloseIcon onClick={onClose} className="cursor-pointer" />
             </div>
           )}
           <div className={classNames('p-5 flex-grow overflow-auto no-scroll', bodyClassName)}>{children}</div>

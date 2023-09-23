@@ -103,6 +103,14 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: true,
     },
     {
+      id: 12,
+      name: 'کد پیگیری',
+      value: trackingCode,
+      shouldShow: trackingCode,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
       id: 4,
       name: ` میانگین زمان انتظار در مرکز`,
       value: waitingTime,
@@ -123,7 +131,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: 'تماس با مرکز درمانی',
       value: centerPhone,
       buttonAction: () => {
-        return (location.href = 'tel:${centerPhone}');
+        return (location.href = `tel:${centerPhone}`);
       },
       shouldShow: !!centerPhone && centerType === CenterType.clinic,
       type: 'Button',
@@ -138,17 +146,9 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     },
     {
       id: 12,
-      name: 'خدمت انتخاب شده',
+      name: 'خدمت',
       value: patientInfo.selectServeis,
       shouldShow: centerType === CenterType.clinic && turnStatus !== BookStatus.requested,
-      type: 'Text',
-      isBoldValue: false,
-    },
-    {
-      id: 12,
-      name: 'کد پیگیری',
-      value: trackingCode,
-      shouldShow: centerType === CenterType.consult && trackingCode,
       type: 'Text',
       isBoldValue: false,
     },

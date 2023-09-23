@@ -69,7 +69,7 @@ export const BottomNavigation = () => {
       icon: <UserCircle />,
       link: '/patient',
       pattern: '/patient',
-      privateRoute: true,
+      privateRoute: false,
     },
   ];
 
@@ -85,7 +85,7 @@ export const BottomNavigation = () => {
   };
 
   return (
-    <div className="fixed print:hidden bottom-0 left-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-white border-t md:hidden border-slate-200">
+    <div className="fixed bottom-0 left-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-white border-t print:hidden md:hidden border-slate-200">
       {menus.map(({ icon, name, link, privateRoute, pattern }, index) => (
         <div
           key={index}

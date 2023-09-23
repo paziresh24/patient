@@ -5,7 +5,8 @@
       "description": "لطفا شماره موبايل خود را وارد کنيد",
       "phoneNumberFieldLable": "شماره موبایل",
       "exampleHint": "مثال:*******0912",
-      "action": "دریافت کد تایید"
+      "action": "دریافت کد تایید",
+      "termAndprivacyPolicyNotice": "ورود شما به معنای پذیرش <0>شرایط پذیرش24</0> و <1>قوانین حریم‌خصوصی</1> است."
     },
     "otpCode": {
       "title": "کد تایید",

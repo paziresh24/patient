@@ -2,11 +2,11 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import { splunkInstance } from '@/common/services/splunk';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import config from 'next/config';
 import { useCallback } from 'react';
-import { useProfileDataStore } from '../../store/profileData';
+const { publicRuntimeConfig } = config();
 
-export const OwnPage = () => {
-  const { data } = useProfileDataStore();
+export const OwnPage = ({ fullname }: { fullname: string }) => {
   const { info, isLogin } = useUserInfoStore();
 
   const handleClick = useCallback(() => {
@@ -21,14 +21,14 @@ export const OwnPage = () => {
         },
       },
     });
-    location.assign('https://dr.paziresh24.com/auth/?q=profile');
+    location.assign(`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth/?q=profile`);
   }, [info, isLogin]);
 
   return (
     <div className="flex flex-col p-4 space-y-3 bg-white md:rounded-lg">
       <Text fontWeight="medium">درخواست احراز هویت و دریافت مالکیت صفحه</Text>
       <Button onClick={handleClick} variant="secondary">
-        من {data.display_name} هستم
+        من {fullname} هستم
       </Button>
     </div>
   );

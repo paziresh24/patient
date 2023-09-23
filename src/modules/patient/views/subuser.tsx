@@ -62,7 +62,7 @@ export const SubuserList = () => {
             />
           ))}
       </div>
-      <Button className="self-center" onClick={handleOpenAddSubuserModal}>
+      <Button className="self-center mt-5" onClick={handleOpenAddSubuserModal}>
         {t('addUser')}
       </Button>
       <Modal title={t('newUserModalTitle')} {...addModalProps}>

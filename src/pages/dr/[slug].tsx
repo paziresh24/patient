@@ -1,5 +1,3 @@
-import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Avatar from '@/common/components/atom/avatar/avatar';
 import Button from '@/common/components/atom/button';
@@ -14,12 +12,9 @@ import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import classNames from '@/common/utils/classNames';
 import { dayToSecond } from '@/common/utils/dayToSecond';
-import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
@@ -34,45 +29,46 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { push } from '@socialgouv/matomo-next';
 import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
-import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, breadcrumbs }: any) => {
-  useFeedbackDataStore.getState().data = initialFeedbackDate;
-  const { query, ...router } = useRouter();
+const DoctorProfile = ({
+  slug,
+  title,
+  breadcrumbs,
+  information,
+  centers,
+  media,
+  symptomes,
+  history,
+  onlineVisit,
+  similarLinks,
+  isBulk,
+  expertises,
+  feedbacks,
+  waitingTimeInfo,
+}: any) => {
+  useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
-  const addPageView = usePageView();
-  const slug = query.slug as string;
+  const isApplication = useApplication();
+  const isWebView = useWebView();
 
+  const addPageView = usePageView();
+  const { recommendEvent } = useProfileSplunkEvent();
+
+  // Modal
   const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
-  const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
-  const { isMobile } = useResponsive();
-  const userInfo = useUserInfoStore(state => state.info);
-  const { recommendEvent } = useProfileSplunkEvent();
-  const isWebView = useWebView();
-  const isApplication = useApplication();
-  const [editable, setEditable] = useState(false);
-  const profile = useGetProfileData(
-    { slug, ...(university && { university }) },
-    {
-      keepPreviousData: true,
-    },
-  );
-  const isShowPremiumFeatures = useShowPremiumFeatures();
 
-  const profileData = profile.data?.data;
-  const isBulk = useMemo(
-    () =>
-      profileData?.centers?.every((center: any) => center.status === 2) ||
-      profileData?.centers?.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
-    [profileData],
-  );
-  useProfileDataStore.getState().data = profileData;
+  const [editable, setEditable] = useState(false);
+  const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
+  const userInfo = useUserInfoStore(state => state.info);
+  const setProfileData = useProfileDataStore(state => state.setData);
+  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   useEffect(() => {
     if (isShowPremiumFeatures) {
@@ -87,17 +83,22 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
   }, [isShowPremiumFeatures]);
 
   useEffect(() => {
-    if (profileData) {
+    if (information) {
       pageViewEvent({
-        doctor: profileData,
+        information,
+        centers,
+        expertises,
+        history,
+        feedbacks,
         isBulk,
         isWebView: !!isWebView || !!isApplication,
       });
+      push(['trackEvent', 'contact', 'doctor profile']);
       addPageView.mutate({
-        doctorId: profileData.id,
-        serverId: profileData.server_id,
+        doctorId: information.id,
+        serverId: information.server_id,
       });
-      window.doctor = profileData;
+      window.doctor = { ...information, centers };
       if (document.referrer.includes('google.') && !getCookie('isBeenBefore')) {
         handleOpenBeenBeforeModal();
         setCookie('isBeenBefore', true, {
@@ -105,9 +106,10 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
           path: '/',
         });
       }
-      if (profileData.should_recommend_other_doctors) recommendEvent('loadrecommend');
+      if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
+      setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [profileData, isBulk]);
+  }, [isBulk, information]);
 
   useEffect(() => {
     if (!!userInfo.is_doctor && slug === userInfo?.profile?.slug) {
@@ -117,7 +119,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
         type: 'view-as',
         event: {
           action: 'page-view',
-          doctor: profileData.display_name,
+          doctor: information.display_name,
           slug,
           terminal_id: getCookie('terminal_id'),
         },
@@ -125,7 +127,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     }
   }, [userInfo.is_doctor, slug]);
 
-  const toolBarItems = useToolBarController({ slug, displayName: profileData?.display_name, documentTitle: title, editable });
+  const toolBarItems = useToolBarController({ slug, displayName: information?.display_name, documentTitle: title, editable });
 
   const handleViewAs = (key: 'information' | 'gallery' | 'biography' | 'services' | 'workHours') => {
     const views = {
@@ -158,7 +160,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
       type: 'view-as',
       event: {
         action: `click-${key}`,
-        doctor: profileData.display_name,
+        doctor: information.display_name,
         slug,
         terminal_id: getCookie('terminal_id'),
       },
@@ -166,12 +168,29 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
     handleOpenViewAsModal();
   };
 
+  const profileData = {
+    information,
+    centers,
+    expertises,
+    history,
+    onlineVisit,
+    waitingTimeInfo,
+    feedbacks,
+    media,
+    symptomes,
+    similarLinks,
+    isBulk,
+    editable,
+    handleViewAs,
+    customize,
+    seo: { breadcrumbs, slug },
+  };
+
   return (
     <>
       <div
-        className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
-          'pb-24': isApplication,
-        })}
+        key={information.id}
+        className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24"
       >
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
@@ -183,22 +202,16 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
             </div>
           )}
           <Head
-            pageViewCount={profileData?.number_of_visits}
-            displayName={profileData?.display_name}
-            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
-            title={profileData?.experience ? `${profileData?.experience} سال تجربه` : undefined}
-            subTitle={`شماره نظام پزشکی: ${profileData?.medical_code}`}
-            serviceList={profileData?.expertises?.map(({ alias_title, degree, expertise }: any) =>
-              getDisplayDoctorExpertise({
-                aliasTitle: alias_title,
-                degree: degree.name,
-                expertise: expertise.name,
-              }),
-            )}
+            pageViewCount={history?.count_of_page_view}
+            displayName={information?.display_name}
+            image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
+            title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
+            subTitle={`شماره نظام پزشکی: ${information?.employee_id}`}
+            serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
-            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
+            satisfaction={customize.showRateAndReviews && feedbacks?.details?.satisfaction}
+            rateCount={feedbacks?.details?.number_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
             infoEditAction={() => handleViewAs('information')}
@@ -215,7 +228,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
                       type: 'view-as',
                       event: {
                         action: `click-list`,
-                        doctor: profileData.display_name,
+                        doctor: information.display_name,
                         slug,
                         terminal_id: getCookie('terminal_id'),
                       },
@@ -254,32 +267,24 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
-            {aside({
-              info: profileData,
-              centers: profileData.centers,
-              isBulk,
-              editable,
-              handleViewAs,
-              customize,
-              seo: { breadcrumbs, slug },
-            })
+            {aside(profileData)
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
-                <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
+                <Section
+                  key={index}
+                  title={section?.title ?? ''}
+                  {...{
+                    id: section.id,
+                    ActionButton: section.ActionButto,
+                    dataAttributes: section?.dataAttributes,
+                  }}
+                >
                   {section.children(section?.function?.())}
                 </Section>
               ))}
           </div>
 
-          {sections({
-            info: profileData,
-            centers: profileData.centers,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {sections(profileData)
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -289,15 +294,7 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
         </div>
 
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
-          {aside({
-            info: profileData,
-            centers: profileData.centers,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {aside(profileData)
             .filter(({ isShow }: any) => Boolean(isShow))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -307,20 +304,20 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
         </aside>
       </div>
       <Modal noHeader {...beenBeforeModalProps} bodyClassName="space-y-4 flex flex-col items-center">
-        <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image} width={90} height={90} />
-        <Text fontWeight="semiBold">آیا تاکنون توسط {profileData.display_name} ویزیت شده‌اید؟</Text>
+        <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + information?.image} width={90} height={90} />
+        <Text fontWeight="semiBold">آیا تاکنون توسط {information.display_name} ویزیت شده‌اید؟</Text>
         <div className="flex w-full space-s-3">
           <Button
             block
             onClick={() =>
               window.location.assign(
-                `https://www.paziresh24.com/comment/?doctorName=${profileData.display_name}&image=${profileData.image}&group_expertises=${
-                  profileData?.group_expertises?.[0]?.name ?? 'سایر'
-                }&group_expertises_slug=${profileData?.group_expertises?.[0]?.en_slug ?? 'other'}&expertise=${
-                  profileData?.expertises?.[0]?.expertise?.name
-                }&doctor_id=${profileData.id}&server_id=${profileData.serverId}&doctor_city=${
-                  profileData.centers.find((center: any) => center.city)[0]
-                }&doctor_slug=${profileData.slug}`,
+                `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${information.display_name}&image=${
+                  information.image
+                }&group_expertises=${expertises?.group_expertises?.[0]?.name ?? 'سایر'}&group_expertises_slug=${
+                  expertises?.group_expertises?.[0]?.en_slug ?? 'other'
+                }&expertise=${expertises?.expertises?.[0]?.alias_title}&doctor_id=${information.id}&server_id=${
+                  information.server_id
+                }&doctor_city=${centers.find((center: any) => center.city)[0]}&doctor_slug=${slug}`,
               )
             }
           >
@@ -339,19 +336,12 @@ const DoctorProfile = ({ query: { university }, initialFeedbackDate, title, brea
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, query, dehydratedState, feedbackDataWithoutPagination, host } = page.props;
+  const { title, description, slug, expertises, centers, information, feedbacks, feedbackDataWithoutPagination, host } = page.props;
 
-  const profileData = dehydratedState.queries.find((item: any) => item.queryKey[0] === ServerStateKeysEnum.DoctorFullProfile).state.data
-    .data;
-
-  const doctorExpertise = getDisplayDoctorExpertise({
-    aliasTitle: profileData?.expertises?.[0]?.alias_title,
-    degree: profileData?.expertises?.[0]?.degree?.name,
-    expertise: profileData?.expertises?.[0]?.expertise?.name,
-  });
+  const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
   const getJsonlds = () => {
-    const center = profileData.centers.find((cn: any) => cn.id !== '5532');
+    const center = centers.find((cn: any) => cn.id !== '5532');
     const date = new Date();
     const currentUrl = `/dr/${slug}`;
 
@@ -360,13 +350,13 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
         'priceRange': '$$',
-        'name': profileData.display_name,
+        'name': information.display_name,
         'telephone': center?.display_number,
-        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
         'isAcceptingNewPatients': true,
-        'medicalSpecialty': !profileData?.group_expertises ? profileData.group_expertises?.[0]?.name : doctorExpertise,
-        'duns': profileData?.medical_code,
+        'medicalSpecialty': !expertises?.group_expertises ? expertises.group_expertises?.[0]?.name : doctorExpertise,
+        'duns': information?.employee_id,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',
@@ -383,8 +373,8 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             '@type': 'AggregateRating',
             'bestRating': 5,
             'worstRating': 0,
-            'ratingValue': profileData.feedbacks.details.avg_star,
-            'ratingCount': profileData.feedbacks.details.number_of_feedbacks,
+            'ratingValue': feedbacks.details.avg_star,
+            'ratingCount': feedbacks.details.number_of_feedbacks,
           },
         }),
         'review':
@@ -408,9 +398,9 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'name': profileData.display_name,
+        'name': information.display_name,
         'telephone': center?.display_number,
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',
@@ -440,7 +430,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             'position': 2,
             'item': {
               '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-              'name': profileData.display_name,
+              'name': information.display_name,
             },
           },
         ],
@@ -456,8 +446,8 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image,
-            alt: profileData?.display_name,
+            src: publicRuntimeConfig.CLINIC_BASE_URL + information?.image,
+            alt: information?.display_name,
             type: 'image/jpg',
           },
         }}

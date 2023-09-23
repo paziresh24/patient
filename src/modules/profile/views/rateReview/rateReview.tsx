@@ -1,4 +1,6 @@
+import { useEditFeedback } from '@/common/apis/services/rate/edit';
 import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
+import { useRemoveFeedback } from '@/common/apis/services/rate/remove';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
 import Button from '@/common/components/atom/button/button';
@@ -6,18 +8,22 @@ import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
 import TextField from '@/common/components/atom/textField/textField';
 import DislikeIcon from '@/common/components/icons/dislike';
+import EditIcon from '@/common/components/icons/edit';
 import HeartIcon from '@/common/components/icons/heart';
 import InfoIcon from '@/common/components/icons/info';
 import LikeIcon from '@/common/components/icons/like';
 import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
+import TrashIcon from '@/common/components/icons/trash';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
+import Select from '@/modules/booking/components/select/select';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useGetFeedbackData } from '@/modules/profile/hooks/useGetFeedback';
@@ -25,8 +31,10 @@ import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import Details from '@/modules/rate/components/details/details';
 import Rate from '@/modules/rate/view/rate';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
+import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -35,6 +43,7 @@ const DoctorTags = dynamic(() => import('./doctorTags'));
 const DoctorTagsFallback = dynamic(() => import('./doctorTagsFallback'), {
   ssr: false,
 });
+const { publicRuntimeConfig } = config();
 
 interface RateReviewProps {
   doctor: {
@@ -82,6 +91,8 @@ export const RateReview = (props: RateReviewProps) => {
   });
   const { handleClose, handleOpen, modalProps } = useModal();
   const { handleOpen: handleOpenReportModal, handleClose: handleCloseReportModal, modalProps: reportModalProps } = useModal();
+  const { handleOpen: handleOpenEditModal, handleClose: handleCloseEditModal, modalProps: editModalProps } = useModal();
+  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
   const feedbacksData = useFeedbackDataStore(state => state.data);
@@ -103,9 +114,22 @@ export const RateReview = (props: RateReviewProps) => {
   const replyFeedback = useReplyfeedback();
   const { handleOpenLoginModal } = useLoginModalContext();
   const replyText = useRef<HTMLInputElement>();
+  const editText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
+  const removeComment = useRemoveFeedback();
+  const editComment = useEditFeedback();
   const isShowPremiumFeatures = useShowPremiumFeatures();
+  const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
+
+  const isShowOption = (key: string) => {
+    return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
+  };
+
+  const whereShowOption = (key: string) => {
+    if (!isShowOption(key)) return null;
+    return (options?.card as string[])?.includes?.(key) ? 'card' : 'dropdown';
+  };
 
   const replysStructure = (replys: any[], mainfeedbackowner: string): any[] => {
     return replys?.map((reply: any) => {
@@ -128,6 +152,19 @@ export const RateReview = (props: RateReviewProps) => {
     });
   };
 
+  const doctorSuggestionButton = [
+    {
+      id: 1,
+      text: 'توصیه میکنم',
+      value: '1',
+    },
+    {
+      id: 2,
+      text: 'توصیه نمیکنم',
+      value: '0',
+    },
+  ];
+
   const feedbackInfo = useMemo(() => {
     return feedbacksData?.map(
       (feedback: any) =>
@@ -137,6 +174,7 @@ export const RateReview = (props: RateReviewProps) => {
           id: feedback.id,
           description: feedback.description,
           avatar: feedback.user_image,
+          external: feedback?.external_score,
           ...(feedback.book_status && { tag: [{ id: 1, name: 'ویزیت شده', isBold: false }] }),
           replyModal: {
             id: feedback.id,
@@ -148,41 +186,61 @@ export const RateReview = (props: RateReviewProps) => {
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
               ),
           },
-          options: [
-            {
-              id: 2,
-              name: 'اشتراک گذاری',
-              action: () => shareCommenthandler(feedback.id),
-              type: 'menu',
-              icon: <ShareIcon width={22} height={22} />,
-              inModal: true,
-            },
-            {
-              id: 4,
-              name: 'پسندیدن',
-              action: () => likeFeedbackHandler(feedback.id),
-              type: 'button',
-              icon: (
-                <HeartIcon
-                  width={20}
-                  height={20}
-                  className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
-                    '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
-                  })}
-                />
-              ),
-              prefix: feedback?.like > 0 && feedback?.like,
-              inModal: true,
-            },
-            {
-              id: 1,
-              name: 'گزارش',
-              action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
-              type: 'button',
-              icon: <InfoIcon width={22} height={22} />,
-              inModal: true,
-            },
-          ],
+          options: {
+            items: [
+              isShowOption('REACTION') && {
+                id: 4,
+                name: 'پسندیدن',
+                action: () => likeFeedbackHandler(feedback.id),
+                type: whereShowOption('REACTION'),
+                icon: (
+                  <HeartIcon
+                    width={20}
+                    height={20}
+                    className={classNames('[&>path]:stroke-slate-800 [&>path]:text-white', {
+                      '[&>path]:fill-red-600 [&>path]:stroke-red-600': feedback?.isLiked,
+                    })}
+                  />
+                ),
+                prefix: feedback?.like > 0 && feedback?.like,
+                inModal: true,
+              },
+              isShowOption('SHARE') && {
+                id: 2,
+                name: 'اشتراک گذاری',
+                action: () => shareCommenthandler(feedback.id),
+                type: whereShowOption('SHARE'),
+                icon: <ShareIcon width={22} height={22} />,
+                inModal: true,
+              },
+              isShowOption('REPORT') && {
+                id: 1,
+                name: 'گزارش',
+                action: () => showReportModal(feedback.id, feedback.description, feedback.is_doctor),
+                type: whereShowOption('REPORT'),
+                icon: <InfoIcon width={22} height={22} />,
+                inModal: true,
+              },
+              userInfo?.id === feedback?.user_id &&
+                isShowOption('EDIT') && {
+                  id: 5,
+                  name: 'ویرایش',
+                  action: () => showEditComment(feedback.id, feedback.description, feedback.recommended),
+                  type: whereShowOption('EDIT'),
+                  icon: <EditIcon width={22} height={22} />,
+                  inModal: true,
+                },
+              userInfo?.id === feedback?.user_id &&
+                isShowOption('DELETE') && {
+                  id: 6,
+                  name: 'حذف',
+                  action: () => showRemoveModal(feedback.id),
+                  type: whereShowOption('DELETE'),
+                  icon: <TrashIcon width={22} height={22} />,
+                  inModal: true,
+                },
+            ],
+          },
           details: compact([feedback.formatted_date, feedback?.center_name]),
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
@@ -224,7 +282,7 @@ export const RateReview = (props: RateReviewProps) => {
           },
         },
     );
-  }, [feedbacksData, feedbackReplyModalDetails, replyDetails]);
+  }, [feedbacksData, feedbackReplyModalDetails, replyDetails, userInfo]);
 
   const changeFilterSelect = (e: any) => {
     setRateFilter(e);
@@ -297,6 +355,20 @@ export const RateReview = (props: RateReviewProps) => {
     });
     handleOpenReportModal();
   };
+  const showRemoveModal = (id: string) => {
+    setFeedbackDetails({
+      id,
+    });
+    handleOpenRemoveModal();
+  };
+  const showEditComment = (id: string, description: string, like: string) => {
+    setFeedbackDetails({
+      id,
+      description: removeHtmlTagInString(description ?? ''),
+      like,
+    });
+    handleOpenEditModal();
+  };
 
   const showReplyModal = (id: string, isDoctor: boolean) => {
     rateSplunkEvent('reply first reply box');
@@ -354,7 +426,7 @@ export const RateReview = (props: RateReviewProps) => {
         text: 'ثبت نظر',
         action: () => {
           rateSplunkEvent('post');
-          location.href = `https://www.paziresh24.com/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
+          location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
         },
       },
     ],
@@ -385,8 +457,43 @@ export const RateReview = (props: RateReviewProps) => {
       feedback_id: id,
     });
     handleClose();
-    if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش خواهد داده شد.');
+    if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش داده خواهد شد.');
     feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
+  };
+
+  const removeCommentHandler = async () => {
+    try {
+      await removeComment.mutateAsync({
+        feedback_id: feedbackDetails?.id,
+      });
+      toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.', {
+        duration: 3000,
+      });
+      rateSplunkEvent('remove comment');
+      handleCloseRemoveModal();
+      return;
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+    }
+  };
+
+  const editCommentHandler = async (description: string) => {
+    try {
+      await editComment.mutateAsync({
+        feedback_id: feedbackDetails?.id,
+        description,
+        like: feedbackDetails?.like,
+      });
+
+      toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.', {
+        duration: 3000,
+      });
+      rateSplunkEvent('edit comment');
+      handleCloseEditModal();
+      return;
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+    }
   };
 
   return (
@@ -466,6 +573,36 @@ export const RateReview = (props: RateReviewProps) => {
             autoFocus
           />
         )}
+      </Modal>
+      <Modal title="ویرایش نظر" {...editModalProps}>
+        <span className="text-[0.8rem] font-medium !mb-3 !-mt-1 !mr-1 block"> آیا این پزشک را به دیگران پیشنهاد میدهید؟</span>
+        <div className="flex space-s-2">
+          {doctorSuggestionButton.map((item: any) => (
+            <Select
+              key={item.id}
+              onSelect={() => setFeedbackDetails({ ...feedbackDetails, like: item.value })}
+              selected={feedbackDetails?.like === item?.value}
+              title={item.text}
+              className="w-full"
+              titleClassName="!font-medium !text-[0.8rem]"
+            />
+          ))}
+        </div>
+        <span className="text-[0.8rem] font-medium !mb-2 !mt-3 !mr-1 block">شما میتوانید در این قسمت نظر خود را ویرایش کنید.</span>
+        <TextField multiLine className="h-[10rem]" defaultValue={feedbackDetails?.description} ref={editText} />
+        <Button loading={editComment.isLoading} onClick={() => editCommentHandler(editText.current?.value!)} block className="mt-4">
+          ویرایش نظر
+        </Button>
+      </Modal>
+      <Modal title="آیا از حذف نظر خود مطمئن هستید؟" {...removeModalProps}>
+        <div className="flex justify-between space-s-2">
+          <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
+            حذف
+          </Button>
+          <Button onClick={handleCloseRemoveModal} block variant="secondary" theme="error">
+            انصراف
+          </Button>
+        </div>
       </Modal>
     </div>
   );

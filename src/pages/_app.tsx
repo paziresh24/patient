@@ -6,6 +6,7 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
+import { init as matomoInit } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -44,6 +45,10 @@ const growthbook = new GrowthBook({
   },
 });
 
+function updateGrowthBookURL() {
+  growthbook.setURL(window.location.href);
+}
+
 type withQueryProps = {
   query: NextParsedUrlQuery;
 };
@@ -64,8 +69,22 @@ function MyApp(props: AppProps) {
       growthbook.setAttributes({
         id: getCookie('terminal_id'),
       });
+      router.events.on('routeChangeComplete', updateGrowthBookURL);
     }
+    return () => {
+      if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
+    };
   }, [growthbook.ready]);
+
+  useEffect(() => {
+    if (publicRuntimeConfig.MATOMO_URL && publicRuntimeConfig.MATOMO_SITE_ID) {
+      matomoInit({
+        url: publicRuntimeConfig.MATOMO_URL,
+        siteId: publicRuntimeConfig.MATOMO_SITE_ID,
+        excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
+      });
+    }
+  }, []);
 
   useEffect(() => {
     useCustomize.getState().setCustomize(pageProps.query);
@@ -94,8 +113,6 @@ function MyApp(props: AppProps) {
             <Component
               {...pageProps}
               config={{
-                showHeader: !pageProps.query?.application,
-                showFooter: !pageProps.query?.application,
                 compactFooter: pageProps.query?.['footer:type'] === 'compact',
               }}
             />,

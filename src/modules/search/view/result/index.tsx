@@ -2,7 +2,6 @@ import { useClickThroughRate } from '@/common/apis/services/search/clickThroughR
 import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
@@ -28,7 +27,6 @@ export const Result = () => {
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
   const sendClickThroughRateEvent = useClickThroughRate();
-  const university = useServerQuery(state => state.queries.university);
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
@@ -40,14 +38,7 @@ export const Result = () => {
     });
   };
 
-  const handleCardEvent = (item: ResultType) => {
-    sendPositionStatEvent.mutate({
-      id: item._id,
-      filters: selectedFilters,
-      position: item.position,
-      route: asPath,
-      card_data: item,
-    });
+  const handleClickEelmentEvent = (item: ResultType, elementName: string, elementContent?: string) => {
     sendClickThroughRateEvent.mutate({
       terminal_id: (getCookie('terminal_id') as string) ?? '',
       id: item.id,
@@ -55,6 +46,19 @@ export const Result = () => {
       query_id: search.query_id,
       server_id: item.server_id,
       type: item.type,
+    });
+    sendPositionStatEvent.mutate({
+      id: item._id,
+      filters: selectedFilters,
+      position: item.position,
+      route: asPath,
+      card_data: {
+        ...item,
+        ...(item.type === 'doctor' && { centers_types: item.centers.map(center => center.center_type) }),
+        element_name: elementName,
+        element_content: elementContent ?? '',
+      },
+      terminal_id: getCookie('terminal_id') as string,
     });
     sendGaEvent({
       action: 'CardSearchClick',
@@ -71,7 +75,6 @@ export const Result = () => {
           <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
         ) : (
           <Card
-            avatarPriority={index <= 1}
             key={index}
             baseInfo={{
               displayName: item.title,
@@ -92,13 +95,15 @@ export const Result = () => {
               price: item.price,
               badges: item.badges,
             }}
-            actions={item?.actions?.map(item => ({
-              text: item.title,
-              description: item.top_title,
-              outline: item.outline,
-              action: () => router.push(item.url),
+            actions={item?.actions?.map(action => ({
+              text: action.title,
+              description: action.top_title,
+              outline: action.outline,
+              action: () => {
+                router.push(action.url);
+              },
             }))}
-            sendEventWhenClick={() => handleCardEvent(item)}
+            sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(item, element, content)}
           />
         ),
       )}

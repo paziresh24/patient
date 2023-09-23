@@ -8,7 +8,6 @@ import humanizeTime from '@/common/utils/humanizeTime';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
-import { Center } from '@/modules/booking/types/selectCenter';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -30,10 +29,26 @@ const External = dynamic(() => import('./external'), {
   },
 });
 
-export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
+export const Services = ({
+  id,
+  doctor,
+  expertises,
+  centers,
+  slug,
+  onlineVisit,
+  waitingTimeInfo,
+}: {
+  id: string;
+  expertises: any;
+  doctor: any;
+  centers: any[];
+  slug: string;
+  onlineVisit: any;
+  waitingTimeInfo: any;
+}) => {
   const router = useRouter();
   const messengers = useFeatureValue<any>('channeldescription', {});
-  const doctorMessenger = uniqMessengers(doctor?.online_visit_channel_types, Object.keys(messengers));
+  const doctorMessenger = uniqMessengers(onlineVisit?.channels, Object.keys(messengers));
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
@@ -41,9 +56,9 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   const isWebView = useWebView();
 
   const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string) => {
-    const isBookRequest = (doctor.centers as Center[])
+    const isBookRequest = centers
       ?.find?.(center => center.id === centerId)
-      ?.services?.find?.(service => service.id === serviceId)?.can_request;
+      ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
 
     const params = {
       centerId,
@@ -61,7 +76,7 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
   return (
     <>
       <div ref={servicesRef} className="flex flex-col space-y-3">
-        {doctor?.id === '540' && (
+        {id === '540' && (
           <External
             title="ویزیت آنلاین (غیر فعال)"
             buttonText="ورود به سایت دکتر پروفسور محمد تقی نوربالا"
@@ -69,8 +84,8 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
-        {doctor?.consult_active_booking &&
-          doctor?.centers
+        {onlineVisit.enabled &&
+          centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any) => (
               <OnlineVisitWrapper
@@ -79,26 +94,28 @@ export const Services = ({ doctor, slug }: { doctor: any; slug: string }) => {
                 title={service.desk}
                 price={service.free_price}
                 duration={
-                  doctor.group_expertises[0].id === 21 || doctor.group_expertises[0].id === 47 ? humanizeTime(service.duration) : undefined
+                  expertises.group_expertises[0].id === 21 || expertises.group_expertises[0].id === 47
+                    ? humanizeTime(service.duration)
+                    : undefined
                 }
                 doctorId={doctor.id}
                 slug={slug}
                 id={service.id}
-                userCenterId={doctor.centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
+                userCenterId={centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
                 city={{
-                  name: doctor.centers[0].city,
+                  name: centers[0].city,
                   slug: doctor.city_en_slug,
                 }}
                 expertise={{
-                  name: doctor.expertises[0]?.expertise_groups[0]?.name,
-                  slug: doctor.expertises[0]?.expertise_groups[0]?.en_slug,
+                  name: expertises.group_expertises?.[0]?.name,
+                  slug: expertises.group_expertises?.[0]?.en_slug,
                 }}
               />
             ))}
-        {doctor?.centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
+        {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
-            centers={doctor.centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
-            waitingTime={doctor.waiting_time_info?.waiting_time_title}
+            centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
+            waitingTime={waitingTimeInfo?.waiting_time_title}
             onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId)}
             displayName={doctor.display_name}
           />

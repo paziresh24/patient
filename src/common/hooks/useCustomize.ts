@@ -1,6 +1,5 @@
 import { ParsedUrlQuery } from 'querystring';
 import { create } from 'zustand';
-import { useWebViewStore } from './useWebView';
 
 interface Customize {
   showHeader: boolean;
@@ -58,26 +57,23 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showShareApp: true,
     showSupplierRegister: true,
     showRateAndReviews: true,
+    showSupport: true,
     showContribute: true,
   },
   setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
-    const isWebView = useWebViewStore.getState().isWebView;
-    const isApplication = query.application ?? window.matchMedia('(display-mode: standalone)')?.matches;
     const customize = {
-      showHeader: !isApplication && !isWebView,
-      showFooter: !isApplication && !isWebView,
-      showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic' && !isApplication,
+      showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic',
       headerBrandLogoType: (query['header:brand-logo-type'] as HeaderBrandLogoType) ?? 'default',
       showUserProfile: (query['header:user-profile'] as Toggle) !== 'off',
       showBrandLogoInHomePage: (query['header:brand-logo-in-home-page'] as Toggle) === 'on' || false,
-      showPromoteApp: (query['promote-app'] as Toggle) !== 'off' && !isApplication,
+      showPromoteApp: (query['promote-app'] as Toggle) !== 'off',
       partnerLogo: (query['partner:logo'] as string) || '',
       showPartnerLogoInPrimaryPlace: (query['partner:primary-place'] as Toggle) === 'on',
       partnerTitle: (query['partner:title'] as string) || '',
       partnerSubTitle: (query['partner:sub-title'] as string) || '',
       showSelectCityInSuggestion: (query['suggestion:city-select'] as Toggle) !== 'off',
-      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off' && !isWebView && !isApplication,
+      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off',
       footerType: (query['footer:type'] as FooterType) ?? 'default',
       showConsultServices: (query['search:consult'] as Toggle) !== 'off',
       showActivityProfile: (query['profile:activity'] as Toggle) !== 'off',
@@ -93,7 +89,10 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
 
     return set(state => ({
       ...state,
-      customize,
+      customize: {
+        ...state.customize,
+        ...customize,
+      },
     }));
   },
 }));

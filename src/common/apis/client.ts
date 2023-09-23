@@ -1,12 +1,17 @@
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
-import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
 
 export const paziresh24AppClient = axios.create({
   baseURL: publicRuntimeConfig.PAZIRESH24_API,
+  withCredentials: true,
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
+});
+
+export const apiGatewayClient = axios.create({
+  baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL,
   withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
@@ -28,6 +33,7 @@ export const contentClient = axios.create({
 
 export const workflowClient = axios.create({
   baseURL: publicRuntimeConfig.WORKFLOW_BASE_URL,
+  withCredentials: true,
 });
 
 clinicClient.interceptors.request.use(
@@ -88,17 +94,30 @@ paziresh24AppClient.interceptors.response.use(
         if (data.access_token) setCookie('token', data.access_token);
         return paziresh24AppClient(originalRequest);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          splunkInstance().sendEvent({
-            group: 'patient-app',
-            type: 'error-refresh-token',
-            event: {
-              error: error.response?.data,
-            },
-          });
-        }
+        console.error(error);
       }
     }
     return Promise.reject(error);
+  },
+);
+
+workflowClient.interceptors.response.use(
+  res => {
+    return res.data;
+  },
+  async err => {
+    const originalRequest = err.config;
+    if (err?.response?.status === 401) {
+      try {
+        const { data } = (await refresh()) as any;
+        if (data.access_token) {
+          setCookie('token', data.access_token);
+          return workflowClient(originalRequest);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return Promise.reject(err);
   },
 );

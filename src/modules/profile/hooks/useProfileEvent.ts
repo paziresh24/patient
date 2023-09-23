@@ -1,5 +1,5 @@
 import { splunkInstance } from '@/common/services/splunk';
-import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { getCookie } from 'cookies-next';
 import uniq from 'lodash/uniq';
 
@@ -11,7 +11,7 @@ export const useProfileSplunkEvent = () => {
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,
@@ -32,7 +32,7 @@ export const useProfileSplunkEvent = () => {
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,
@@ -51,7 +51,7 @@ export const useProfileSplunkEvent = () => {
       type: eventType,
       event: {
         data: {
-          terminal_id: getCookie('terminal'),
+          terminal_id: getCookie('terminal_id'),
           user_agent: window.navigator.userAgent,
           page_url: window.location.pathname,
           referrer: document.referrer,

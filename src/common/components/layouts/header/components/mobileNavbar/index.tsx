@@ -36,21 +36,21 @@ const MobileNavbar = (props: MobileNavbarProps) => {
       title: 'تخصص ها',
       sub_menu: expertiseItems,
     },
-
     {
       id: 3,
+      title: 'مجله سلامتی',
+      sub_menu: articleMenus,
+    },
+    {
+      id: 4,
       title: 'برای بیماران',
       sub_menu: withUserMenu,
     },
     {
-      id: 4,
-      title: 'برای پزشکان',
-      sub_menu: withDoctorMenu,
-    },
-    {
       id: 5,
-      title: 'مجله سلامتی',
-      sub_menu: articleMenus,
+      title: 'برای پزشکان',
+
+      sub_menu: withDoctorMenu,
     },
   ];
 

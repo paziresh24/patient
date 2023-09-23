@@ -1,5 +1,6 @@
 import { useGetBaseInfo } from '@/common/apis/services/config/baseInfo';
 import { useSearch as useSearchRequest } from '@/common/apis/services/search/search';
+import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -52,6 +53,7 @@ export type Result = {
   view: string;
   price: string;
   server_id: number;
+  centers: Center[];
   actions: {
     title: string;
     top_title: string;
