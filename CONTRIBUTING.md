@@ -5,8 +5,8 @@ Thank you for considering contributing to the Paziresh24 - Patient Front-end! By
 To ensure a smooth and collaborative process, please follow these guidelines when contributing to the project:
 
 ## Developing
-The development branch is `master`. This is the branch that all pull
-requests should be made against. The changes on the `master`
+The development branch is `main`. This is the branch that all pull
+requests should be made against. The changes on the `main`
 branch are tagged into a release monthly.
 
 To develop locally:
