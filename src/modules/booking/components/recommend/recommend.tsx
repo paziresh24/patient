@@ -17,11 +17,8 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
   const { data, isLoading } = useSearchRecommendByDoctor({
     ...props,
   });
-  const recommendButton = useFeatureValue<any>('profile.recommend_card_button', {});
+  const recommendButton = useFeatureValue<any>('profile.recommend_button', {});
   const router = useRouter();
-  const isShowRecommendButtonForThisDoctor = !recommendButton?.dont_show_doctor_list?.includes(router.query.slug);
-  const customButton = recommendButton?.custom_button?.doctor_list?.includes(router.query.slug) ? recommendButton?.custom_button : null;
-
   const doctors = data?.data ?? [];
 
   return (
@@ -45,12 +42,12 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               rate: doctor.star * 20,
               url: doctor.url,
               id: doctor.id,
-              ...(isShowRecommendButtonForThisDoctor && {
+              ...(recommendButton?.is_show && {
                 action: [
                   {
-                    title: customButton?.text ?? recommendButton?.default_text,
+                    title: recommendButton?.title,
                     description: `اولین نوبت: ${doctor.freeturn}`,
-                    outline: customButton?.is_outline,
+                    outline: recommendButton?.is_outline,
                   },
                 ],
               }),
