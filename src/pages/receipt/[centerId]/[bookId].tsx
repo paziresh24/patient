@@ -51,7 +51,7 @@ const Receipt = () => {
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
-    modalProps: WaitingTimeModalProps,
+    modalProps: waitingTimeModalProps,
   } = useModal();
 
   const getReceiptDetails = useGetReceiptDetails({
@@ -264,7 +264,7 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-4">
                   <MessengerButton
                     channel={
                       bookDetailsData.selected_online_visit_channel?.type
@@ -324,7 +324,7 @@ const Receipt = () => {
             </Button>
           </div>
         </Modal>
-        <Modal title="احتمال معطلی بیش از یک ساعت!" {...WaitingTimeModalProps}>
+        <Modal title="احتمال معطلی بیش از یک ساعت!" {...waitingTimeModalProps}>
           <div className="flex flex-col space-y-3">
             <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
             <Button block onClick={() => handleCloseWaitingTimeModal()}>

@@ -14,13 +14,16 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import useServerQuery from '@/common/hooks/useServerQuery';
+import { splunkInstance } from '@/common/services/splunk';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
@@ -39,6 +42,8 @@ export const Appointments = ({ query: queryServer }: any) => {
   const serverTime = useGetServerTime();
   const university = useServerQuery(state => state.queries.university);
   const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
+  const user = useUserInfoStore(state => state.info);
+  const sendEventForLocalTypeBookCenterList = useFeatureValue('appointments.remove-sync|center-list', { centers: [''] });
 
   const getBooks = useGetBooks({
     page,
@@ -74,7 +79,33 @@ export const Appointments = ({ query: queryServer }: any) => {
   useEffect(() => {
     if (getBooks.isSuccess) {
       setIsLoading(false);
-      getBooks.data?.data?.length > 0 && addBooks(getBooks.data.data);
+      if (getBooks.data?.data?.length > 0) {
+        addBooks(getBooks.data.data);
+        getBooks.data?.data.forEach((item: any) => {
+          if (
+            item?.book_type_id !== 7 &&
+            item?.book_type_id !== 8 &&
+            sendEventForLocalTypeBookCenterList?.centers?.includes?.(item?.center_id)
+          ) {
+            splunkInstance().sendEvent({
+              group: 'appointments',
+              type: 'see-local-book',
+              event: {
+                data: {
+                  patient_fullname: `${user.name} ${user.family}`,
+                  patient_cell: user.cell,
+                  book_type_id: item.book_type_id,
+                  book_center_id: item.center_id,
+                  book_center_name: item.center.name,
+                  book_time_string: item.book_time_string,
+                  book_from: item.from,
+                  book_status: item.book_status,
+                },
+              },
+            });
+          }
+        });
+      }
     }
     if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401)
       handleOpenLoginModal({
@@ -103,7 +134,7 @@ export const Appointments = ({ query: queryServer }: any) => {
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
       <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white">
-        <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5 mt-5">
+        <Text fontWeight="black" fontSize="xl" className="mt-5 mb-5 pwa:hidden">
           {t('title')}
         </Text>
 

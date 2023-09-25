@@ -50,6 +50,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
@@ -269,7 +270,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       gender: user.gender,
       cell: user.cell,
       name: `${user.name} ${user.family}`,
-      ...(user.national_code && { national_code: user.national_code }),
+      national_code: user?.national_code ?? FakeData.NATIONAL_CODE,
     });
     if (data.status === ClinicStatus.SUCCESS) {
       return router.push(`/receipt/${center.id}/${data.result.book_request_id}`);
