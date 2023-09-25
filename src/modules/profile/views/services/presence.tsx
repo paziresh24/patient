@@ -62,7 +62,11 @@ export const Presence = memo((props: PresenceProps) => {
 
     if (centers.length === 1) {
       const center = centers[0];
-      handleOnBookByCenter(center);
+      handleOnBookByCenter(center, {
+        event: {
+          action: 'automatic_select_center',
+        },
+      });
       return;
     }
 
@@ -77,7 +81,7 @@ export const Presence = memo((props: PresenceProps) => {
     handleOpenSelectCenterModal();
   };
 
-  const handleOnBookByCenter = (center: any) => {
+  const handleOnBookByCenter = (center: any, options?: { event: Record<string, string> }) => {
     profileEvent('center_selection_modal_click', {
       center_name: center.name,
       center_address: center.address,
@@ -85,6 +89,7 @@ export const Presence = memo((props: PresenceProps) => {
       center_city: center.city,
       center_status: center.status,
       center_type: center.center_type_name,
+      ...options?.event,
     });
     setSelectedCenter(center);
     handleCloseSelectCenterModal();
