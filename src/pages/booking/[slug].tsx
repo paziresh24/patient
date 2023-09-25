@@ -9,8 +9,11 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
+import BookingStepsV2 from '@/modules/bookingV2/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
+import { useFeatureValue } from '@growthbook/growthbook-react';
+import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -20,6 +23,7 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
+  const isMembershipUser = useFeatureValue('booking:membership-api|doctor-list', { ids: [''] });
 
   const { data, isLoading, isSuccess, status } = useGetProfileData(
     {
@@ -33,7 +37,7 @@ const Booking = () => {
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
-    if (payloads.includes('centerId') && payloads.includes('serviceId') && payloads.includes('timeId')) {
+    if (payloads.includes('centerId') && payloads.includes('serviceId') && (payloads.includes('timeId') || payloads.includes('time'))) {
       return {
         step: 'SELECT_USER',
         payload: queries as any,
@@ -90,7 +94,11 @@ const Booking = () => {
             </div>
           )}
           <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
-            <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
+            {isMembershipUser.ids.includes(router.query.userId as string) ? (
+              <BookingStepsV2 defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
+            ) : (
+              <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
+            )}
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -117,6 +125,24 @@ const Booking = () => {
                   {router.query.centerId === CENTERS.CONSULT
                     ? `ویزیت آنلاین ${profileData.online_visit_channel_types?.length > 0 ? 'در پیام رسان' : ''}`
                     : centerName}
+                </Text>
+              )}
+            </div>
+          )}
+
+          {router.query?.time && (
+            <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
+              <Text fontSize="xs" className="opacity-70">
+                زمان نوبت
+              </Text>
+              {isLoading && <Skeleton w="9rem" h="0.8rem" className="!mt-2 !mb-1" rounded="full" />}
+              {isSuccess && (
+                <Text fontSize="sm" fontWeight="medium">
+                  {moment(router.query.time)?.locale('fa')?.calendar?.(undefined, {
+                    sameDay: 'امروز (dddd) - ساعت: HH:mm',
+                    nextDay: 'فردا (dddd) - ساعت: HH:mm',
+                    sameElse: 'dddd jD jMMMM - ساعت: HH:mm',
+                  })}
                 </Text>
               )}
             </div>

@@ -2,6 +2,7 @@ import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
@@ -67,8 +68,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const providersApiDoctorList = growthbook.getFeatureValue('profile:providers-api|doctor-list', { slugs: [''] });
       const providersApiDoctorCitiesList = growthbook.getFeatureValue('profile:providers-api|cities', { cities: [''] });
       shouldUseProvider =
-        providersApiDoctorList.slugs?.includes(slugFormmated) ||
-        providersApiDoctorList.slugs?.includes('') ||
+        newApiFeatureFlaggingCondition(providersApiDoctorList.slugs, slugFormmated) ||
         fullProfileData.centers.some(
           (center: any) =>
             center.center_type === 1 && center.status === 1 && providersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
@@ -79,8 +79,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const usersApiDoctorList = growthbook.getFeatureValue('profile:users-api|doctor-list', { slugs: [''] });
       const usersApiDoctorCitiesList = growthbook.getFeatureValue('profile:users-api|cities', { cities: [''] });
       shouldUseUser =
-        usersApiDoctorList.slugs?.includes(slugFormmated) ||
-        usersApiDoctorList.slugs?.includes('') ||
+        newApiFeatureFlaggingCondition(usersApiDoctorList.slugs, slugFormmated) ||
         fullProfileData.centers.some(
           (center: any) =>
             center.center_type === 1 && center.status === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
