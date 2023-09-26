@@ -7,8 +7,8 @@ export const getProviderData = async ({ slug }: GetProviderData) => {
   const { data: response } = await providers({ slug });
   const firstItemData = response.providers?.[0] as Record<string, string>;
 
-  if (!firstItemData?.biography || !firstItemData?.prefix || !firstItemData?.employee_id) {
-    Sentry.captureMessage(`biography:${firstItemData.biography} prefix:${firstItemData.prefix} employee_id:${firstItemData.employee_id}`);
+  if (!firstItemData?.user_id || !firstItemData?.employee_id) {
+    Sentry.captureMessage(`user_id:${firstItemData.user_id} employee_id:${firstItemData.employee_id}`);
   }
 
   return {

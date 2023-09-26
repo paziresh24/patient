@@ -1,0 +1,22 @@
+import { splunkBookingInstance } from '@/common/services/splunk';
+import { getCookie } from 'cookies-next';
+
+export const sendBookEvent = ({ bookInfo, userInfo, doctorInfo }: { bookInfo: any; userInfo: any; doctorInfo: any }) => {
+  splunkBookingInstance().sendEvent({
+    group: 'doctor profile',
+    type: 'doctor profile book received',
+    event: {
+      data: {
+        ...doctorInfo,
+        user_name: userInfo.name,
+        user_family: userInfo.family,
+        user_national_code: userInfo.national_code,
+        user_tell: userInfo.cell,
+        date: bookInfo.time,
+        user_agent: window.navigator.userAgent,
+        terminal_id: getCookie('terminal_id'),
+        center_id: bookInfo.center_id,
+      },
+    },
+  });
+};
