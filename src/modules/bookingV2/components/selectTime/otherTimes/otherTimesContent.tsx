@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 export interface SelectOtherTurnTimeProps {
   slots: Slot[];
-  onSelectTime: ({ time }?: { time?: string }) => void;
+  onSelectTime: ({ time }: { time?: string }) => void;
 }
 type Slot = {
   date: string;
@@ -32,7 +32,7 @@ export const SelectOtherTurnTime = (props: SelectOtherTurnTimeProps) => {
   const handleClickDay = async (date: string) => {
     setSelectedDay(date);
     turnsTime(slots.find(slot => slot.date === date)?.slots ?? []);
-    onSelectTime(undefined);
+    onSelectTime({});
     setSelectedSlot(undefined);
   };
 

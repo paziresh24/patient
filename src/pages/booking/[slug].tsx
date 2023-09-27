@@ -9,6 +9,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
+import { useMembership } from '@/modules/bookingV2/apis/membership';
 import BookingStepsV2 from '@/modules/bookingV2/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
@@ -24,8 +25,17 @@ const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
   const isMembershipUser = useFeatureValue('booking:membership-api|doctor-list', { ids: [''] });
+  const { data: membershipData, isLoading: membershipLoading } = useMembership(
+    { user_id: router.query.userId as string },
+    { enabled: !!router.query.userId && !!isMembershipUser.ids?.includes?.(router.query?.userId as string) },
+  );
 
-  const { data, isLoading, isSuccess, status } = useGetProfileData(
+  const {
+    data,
+    isLoading: fullProfileLoading,
+    isSuccess,
+    status,
+  } = useGetProfileData(
     {
       slug: router.query?.slug?.toString() ?? '/',
     },
@@ -33,6 +43,11 @@ const Booking = () => {
       enabled: !!router.isReady,
     },
   );
+
+  const isLoading =
+    fullProfileLoading ||
+    (!!router.query.userId && !!isMembershipUser.ids?.includes?.(router.query?.userId as string) && membershipLoading);
+
   const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
@@ -94,7 +109,7 @@ const Booking = () => {
             </div>
           )}
           <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
-            {isMembershipUser.ids.includes(router.query.userId as string) ? (
+            {membershipData?.data?.memberships?.some((center: any) => center.center_id === router.query.centerId) ? (
               <BookingStepsV2 defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
             ) : (
               <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
