@@ -32,6 +32,11 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
       <Button onClick={handleClick} variant="secondary">
         {ownPage?.buttonText?.replace('{fullname}', fullname) ?? ''}
       </Button>
+      {ownPage?.description && (
+        <Text fontSize="sm" fontWeight="medium" className="opacity-95">
+          {ownPage?.description?.replace('{fullname}', fullname) ?? ''}
+        </Text>
+      )}
     </div>
   );
 };
