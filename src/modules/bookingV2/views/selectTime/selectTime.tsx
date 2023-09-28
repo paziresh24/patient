@@ -1,4 +1,6 @@
+import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import axios from 'axios';
 import moment from 'jalali-moment';
 import { useEffect, useState } from 'react';
 import { useAvailability } from '../../apis/availability';
@@ -7,7 +9,7 @@ import OtherTimes from '../../components/selectTime/otherTimes';
 import { BaseInfo } from '../../types/baseInfo';
 
 interface SelectTimeProps extends BaseInfo {
-  onSelect: ({ time }?: { time?: string }) => void;
+  onSelect: ({ time }: { time?: string }) => void;
   loading?: boolean;
   onFirstFreeTimeError?: (errorText: string) => void;
   events?: Events;
@@ -28,6 +30,8 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
   const { onSelect, loading, onFirstFreeTimeError, events, showOnlyFirstFreeTime = false, ...baseInfo } = props;
   const getAvailability = useAvailability();
 
+  const firstFreeTime = getAvailability.data?.data?.[0]?.slots?.[0]?.time;
+
   useEffect(() => {
     if (!loading) {
       fetchAvailability();
@@ -42,6 +46,23 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       });
       onSelect({ time: data?.[0]?.slots?.[0]?.time });
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        splunkBookingInstance().sendEvent({
+          group: 'booking-error',
+          type: 'booking-availability-api-error',
+          event: {
+            error_message: error.response?.data?.message,
+            error_status: error.response?.status,
+            membership_id: baseInfo.membershipId,
+            service_id: baseInfo.serviceId,
+          },
+        });
+
+        if (onFirstFreeTimeError)
+          onFirstFreeTimeError(
+            error.response?.status === 404 ? 'نوبت های اینترنتی این پزشک پر شده است.' : (error.response?.data?.message as string),
+          );
+      }
       return;
     }
   };
@@ -54,7 +75,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       setTimeMode(TimeMode.FIRST_FREE_TURN);
     },
     OTHER_FREE_TURN: () => {
-      onSelect();
+      onSelect({});
       setTimeMode(TimeMode.OTHER_FREE_TURN);
     },
   };
@@ -66,11 +87,15 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       })}
     >
       <FreeTurn
-        timeText={moment.from(getAvailability.data?.data?.[0]?.slots?.[0]?.time, 'en').locale('fa').calendar(undefined, {
-          sameDay: 'امروز (dddd) - ساعت: HH:mm',
-          nextDay: 'فردا (dddd) - ساعت: HH:mm',
-          sameElse: 'dddd jD jMMMM - ساعت: HH:mm',
-        })}
+        timeText={
+          firstFreeTime
+            ? moment.from(firstFreeTime, 'en').locale('fa').calendar(undefined, {
+                sameDay: 'امروز (dddd) - ساعت: HH:mm',
+                nextDay: 'فردا (dddd) - ساعت: HH:mm',
+                sameElse: 'dddd jD jMMMM - ساعت: HH:mm',
+              })
+            : undefined
+        }
         loading={loading || getAvailability.isLoading || getAvailability.isIdle}
         onSelect={timeModeAction[TimeMode.FIRST_FREE_TURN]}
         selected={timeMode === TimeMode.FIRST_FREE_TURN}
@@ -78,7 +103,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       />
       {!showOnlyFirstFreeTime && (
         <OtherTimes
-          slots={getAvailability.data?.data}
+          slots={getAvailability.data?.data ?? []}
           onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}
           selected={timeMode === TimeMode.OTHER_FREE_TURN}
           onSelectTime={onSelect}
