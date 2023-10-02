@@ -19,6 +19,7 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import Select from '@/modules/booking/components/select/select';
+import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -44,20 +45,20 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-  const userId = useUserInfoStore(state => state.info.id);
+  const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
-    modalProps: WaitingTimeModalProps,
+    modalProps: waitingTimeModalProps,
   } = useModal();
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
-    pincode: (pincode as string) ?? (userId && md5(userId)),
+    pincode: (pincode as string) ?? (user.id && md5(user.id)),
   });
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
@@ -88,6 +89,31 @@ const Receipt = () => {
       }
     }
   }, [getReceiptDetails.status]);
+
+  useEffect(() => {
+    if (document.referrer.includes('shaparak.ir') && bookDetailsData) {
+      sendBookEvent({
+        bookInfo: {
+          center_id: centerId,
+          from: bookDetailsData.book_time,
+          reference_code: bookDetailsData.reference_code,
+        },
+        doctorInfo: {
+          doctor_name: bookDetailsData.doctor.display_name,
+          group_expertises: bookDetailsData.doctor.display_expertise,
+          server_id: bookDetailsData.server_id,
+          center_type_name: bookDetailsData.is_online_visit ? 'ویزیت آنلاین' : bookDetailsData.server_id === 1 ? 'مطب' : 'بیمارستان',
+          center_tell: bookDetailsData.center.display_number,
+          center_address: bookDetailsData.center.address,
+          service_alias_title: bookDetailsData?.services?.[0]?.title,
+          service_id: bookDetailsData?.services?.[0]?.id,
+        },
+        userInfo: {
+          ...bookDetailsData.patient,
+        },
+      });
+    }
+  }, [bookDetailsData]);
 
   useEffect(() => {
     // Prefetch the doctor profile page
@@ -264,7 +290,7 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-4">
                   <MessengerButton
                     channel={
                       bookDetailsData.selected_online_visit_channel?.type
@@ -324,7 +350,7 @@ const Receipt = () => {
             </Button>
           </div>
         </Modal>
-        <Modal title="احتمال معطلی بیش از یک ساعت!" {...WaitingTimeModalProps}>
+        <Modal title="احتمال معطلی بیش از یک ساعت!" {...waitingTimeModalProps}>
           <div className="flex flex-col space-y-3">
             <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
             <Button block onClick={() => handleCloseWaitingTimeModal()}>

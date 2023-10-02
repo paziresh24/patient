@@ -114,6 +114,7 @@ function MyApp(props: AppProps) {
               {...pageProps}
               config={{
                 compactFooter: pageProps.query?.['footer:type'] === 'compact',
+                shouldShowPromoteApp: false,
               }}
             />,
             router,
