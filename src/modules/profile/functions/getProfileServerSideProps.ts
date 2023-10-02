@@ -70,8 +70,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       shouldUseProvider =
         newApiFeatureFlaggingCondition(providersApiDoctorList.slugs, slugFormmated) ||
         fullProfileData.centers.some(
-          (center: any) =>
-            center.center_type === 1 && center.status === 1 && providersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
+          (center: any) => center.center_type === 1 && providersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         providersApiDoctorCitiesList.cities?.includes('*');
 
@@ -81,8 +80,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       shouldUseUser =
         newApiFeatureFlaggingCondition(usersApiDoctorList.slugs, slugFormmated) ||
         fullProfileData.centers.some(
-          (center: any) =>
-            center.center_type === 1 && center.status === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
+          (center: any) => center.center_type === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         usersApiDoctorCitiesList.cities?.includes('*');
     } catch (error) {
