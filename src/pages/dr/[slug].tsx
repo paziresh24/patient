@@ -14,7 +14,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import classNames from '@/common/utils/classNames';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -30,6 +29,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { push } from '@socialgouv/matomo-next';
 import { getCookie, setCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
@@ -50,6 +50,7 @@ const DoctorProfile = ({
   isBulk,
   expertises,
   feedbacks,
+  waitingTimeInfo,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -92,6 +93,7 @@ const DoctorProfile = ({
         isBulk,
         isWebView: !!isWebView || !!isApplication,
       });
+      push(['trackEvent', 'contact', 'doctor profile']);
       addPageView.mutate({
         doctorId: information.id,
         serverId: information.server_id,
@@ -166,12 +168,29 @@ const DoctorProfile = ({
     handleOpenViewAsModal();
   };
 
+  const profileData = {
+    information,
+    centers,
+    expertises,
+    history,
+    onlineVisit,
+    waitingTimeInfo,
+    feedbacks,
+    media,
+    symptomes,
+    similarLinks,
+    isBulk,
+    editable,
+    handleViewAs,
+    customize,
+    seo: { breadcrumbs, slug },
+  };
+
   return (
     <>
       <div
-        className={classNames('flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10', {
-          'pb-24': isApplication,
-        })}
+        key={information.id}
+        className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24"
       >
         <div className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
@@ -187,7 +206,7 @@ const DoctorProfile = ({
             displayName={information?.display_name}
             image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
             title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
-            subTitle={`شماره نظام پزشکی: ${information?.medical_code}`}
+            subTitle={`شماره نظام پزشکی: ${information?.employee_id}`}
             serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
@@ -248,18 +267,7 @@ const DoctorProfile = ({
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
-            {aside({
-              information,
-              centers,
-              expertises,
-              history,
-              onlineVisit,
-              isBulk,
-              editable,
-              handleViewAs,
-              customize,
-              seo: { breadcrumbs, slug },
-            })
+            {aside(profileData)
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
                 <Section
@@ -276,21 +284,7 @@ const DoctorProfile = ({
               ))}
           </div>
 
-          {sections({
-            information,
-            centers,
-            expertises,
-            feedbacks,
-            media,
-            history,
-            symptomes,
-            similarLinks,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {sections(profileData)
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -300,18 +294,7 @@ const DoctorProfile = ({
         </div>
 
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
-          {aside({
-            information,
-            centers,
-            expertises,
-            history,
-            onlineVisit,
-            isBulk,
-            editable,
-            handleViewAs,
-            customize,
-            seo: { breadcrumbs, slug },
-          })
+          {aside(profileData)
             .filter(({ isShow }: any) => Boolean(isShow))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -373,7 +356,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
         'isAcceptingNewPatients': true,
         'medicalSpecialty': !expertises?.group_expertises ? expertises.group_expertises?.[0]?.name : doctorExpertise,
-        'duns': information?.medical_code,
+        'duns': information?.employee_id,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',

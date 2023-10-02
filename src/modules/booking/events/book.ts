@@ -16,6 +16,7 @@ export const sendBookEvent = ({ bookInfo, userInfo, doctorInfo }: { bookInfo: an
         date: bookInfo.from,
         user_agent: window.navigator.userAgent,
         terminal_id: getCookie('terminal_id'),
+        center_id: bookInfo.center_id,
       },
     },
   });

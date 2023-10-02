@@ -19,7 +19,7 @@ interface ProfileSeoBoxProps {
 export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
   const { about, breadcrumbs, similarLinks } = props;
   return (
-    <div className="flex flex-col space-y-3">
+    <div className="flex pwa:hidden flex-col space-y-3">
       {similarLinks && (
         <div className="p-4 transition-all bg-white md:rounded-lg">
           <Opener openButtonText="مشاهده بیشتر" closeButtonText="مشاهده کمتر">

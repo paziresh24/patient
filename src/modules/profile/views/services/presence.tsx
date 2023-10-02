@@ -55,20 +55,42 @@ export const Presence = memo((props: PresenceProps) => {
       centers_name: centers.map(center => center.name),
       centers_address: centers.map(center => center.address),
       centers_phone: centers.map(center => center.tell),
-      city: centers.map(center => center.city),
+      centers_city: centers.map(center => center.city),
       centers_statuses: centers.map(center => center.status),
-      centers_types: centers.map(center => center.type),
+      centers_types: centers.map(center => center.center_type_name),
     });
 
     if (centers.length === 1) {
       const center = centers[0];
-      handleOnBookByCenter(center);
+      handleOnBookByCenter(center, {
+        event: {
+          action: 'automatic_select_center',
+        },
+      });
       return;
     }
+
+    profileEvent('center_selection_modal_load', {
+      centers_name: centers.map(center => center.name),
+      centers_address: centers.map(center => center.address),
+      centers_phone: centers.map(center => center.tell),
+      centers_city: centers.map(center => center.city),
+      centers_statuses: centers.map(center => center.status),
+      centers_types: centers.map(center => center.center_type_name),
+    });
     handleOpenSelectCenterModal();
   };
 
-  const handleOnBookByCenter = (center: any) => {
+  const handleOnBookByCenter = (center: any, options?: { event: Record<string, string> }) => {
+    profileEvent('center_selection_modal_click', {
+      center_name: center.name,
+      center_address: center.address,
+      center_phone: center.tell,
+      center_city: center.city,
+      center_status: center.status,
+      center_type: center.center_type_name,
+      ...options?.event,
+    });
     setSelectedCenter(center);
     handleCloseSelectCenterModal();
 

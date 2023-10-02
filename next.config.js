@@ -56,6 +56,8 @@ const nextConfig = {
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
     IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
+    MATOMO_URL: process.env.MATOMO_URL,
+    MATOMO_SITE_ID: process.env.MATOMO_SITE_ID,
   },
   images: {
     domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
@@ -65,6 +67,11 @@ const nextConfig = {
       {
         source: '/receipt/:id/',
         destination: '/receipt/5532/:id/',
+        permanent: true,
+      },
+      {
+        source: '/apphome/.well-known/assetlinks.json',
+        destination: '/.well-known/assetlinks.json',
         permanent: true,
       },
     ];

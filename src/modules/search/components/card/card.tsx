@@ -46,7 +46,7 @@ interface SearchCardProps {
     action: () => void;
     outline: boolean;
   }[];
-  sendEventWhenClick?: () => void;
+  sendEventWhenClick?: ({ element, content }: { element: string; content?: string }) => void;
   avatarPriority?: boolean;
   className?: string;
 }
@@ -61,7 +61,7 @@ export const SearchCard = (props: SearchCardProps) => {
   return (
     <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
       <div className="flex items-center mb-3 space-s-2">
-        <Link onClick={sendEventWhenClick} href={baseInfo.url}>
+        <Link onClick={() => sendEventWhenClick?.({ element: 'avatar' })} href={baseInfo.url}>
           <div className="relative">
             <Avatar
               src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
@@ -78,7 +78,13 @@ export const SearchCard = (props: SearchCardProps) => {
         </Link>
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
-            <Link className="w-4/5" onClick={sendEventWhenClick} href={baseInfo.url}>
+            <Link
+              className="w-4/5"
+              onClick={() =>
+                sendEventWhenClick?.({ element: 'display_name', content: baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}` })
+              }
+              href={baseInfo.url}
+            >
               <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
                 {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
               </Text>
@@ -149,7 +155,7 @@ export const SearchCard = (props: SearchCardProps) => {
               variant={item.outline ? 'secondary' : 'primary'}
               onClick={() => {
                 item.action();
-                sendEventWhenClick?.();
+                sendEventWhenClick?.({ element: 'action_button', content: item.text });
               }}
             >
               {item.text}

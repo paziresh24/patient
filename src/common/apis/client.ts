@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
-import { splunkInstance } from '../services/splunk';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
 
@@ -95,15 +94,7 @@ paziresh24AppClient.interceptors.response.use(
         if (data.access_token) setCookie('token', data.access_token);
         return paziresh24AppClient(originalRequest);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          splunkInstance().sendEvent({
-            group: 'patient-app',
-            type: 'error-refresh-token',
-            event: {
-              error: error.response?.data,
-            },
-          });
-        }
+        console.error(error);
       }
     }
     return Promise.reject(error);
@@ -124,15 +115,7 @@ workflowClient.interceptors.response.use(
           return workflowClient(originalRequest);
         }
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          splunkInstance().sendEvent({
-            group: 'patient-app',
-            type: 'error-refresh-token',
-            event: {
-              error: error.response?.data,
-            },
-          });
-        }
+        console.error(error);
       }
     }
     return Promise.reject(err);

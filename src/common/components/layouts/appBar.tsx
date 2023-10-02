@@ -1,5 +1,5 @@
-import Text from '@/components/atom/text';
 import classNames from '@/common/utils/classNames';
+import Text from '@/components/atom/text';
 import { useRouter } from 'next/router';
 import { HTMLAttributes } from 'react';
 import Skeleton from '../atom/skeleton';

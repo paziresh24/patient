@@ -12,7 +12,7 @@ import Services from './services';
 const BulkService = dynamic(() => import('./services/bulk'));
 const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
 
-export const aside = ({ information, centers, expertises, history, onlineVisit, isBulk, customize, editable, seo }: any) => [
+export const aside = ({ information, centers, expertises, waitingTimeInfo, onlineVisit, isBulk, customize, editable, seo }: any) => [
   // Bulk
   {
     id: 'services_section',
@@ -30,6 +30,7 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
         expertises,
         onlineVisit,
         centers,
+        waitingTimeInfo,
         slug: seo.slug,
       };
     },
@@ -43,20 +44,23 @@ export const aside = ({ information, centers, expertises, history, onlineVisit, 
         doctorId: information.id,
         city: information.city_en_slug,
         category: expertises.group_expertises[0]?.en_slug,
-        clickRecommendEvent: (doctor: any) => {
+        clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
           splunkInstance().sendEvent({
             group: 'recommend',
             type: 'clickrecommend',
             event: {
               data: {
-                terminal_id: getCookie('terminal'),
+                terminal_id: getCookie('terminal_id'),
                 user_agent: window.navigator.userAgent,
                 page_url: window.location.pathname,
                 referrer: document.referrer,
                 group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
                 doctor_name: information.display_name,
+                centers_types: centers.map((center: any) => center.center_type_name),
                 server_id: information.server_id,
                 recommendations: doctor,
+                element_name: elementName,
+                element_content: elementContent,
               },
             },
           });

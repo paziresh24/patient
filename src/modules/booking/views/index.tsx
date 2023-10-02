@@ -50,6 +50,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
@@ -57,9 +58,7 @@ import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
-import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
-import convertTimeStampToPersianDate from '@/common/utils/convertTimeStampToPersianDate';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import moment from 'jalali-moment';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
@@ -207,12 +206,8 @@ const BookingSteps = (props: BookingStepsProps) => {
             event: {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
-              date: `${digitsFaToEn(convertTimeStampToPersianDate(Math.floor(Date.now() / 1000)))} - ${convertTimeStampToFormattedTime(
-                Math.floor(Date.now() / 1000),
-              )}`,
-              preferred_book_date: `${digitsFaToEn(convertTimeStampToPersianDate(selectedTime))} - ${convertTimeStampToFormattedTime(
-                selectedTime,
-              )}`,
+              date: moment().format('jYYYY/jMM/jDD - HH:mm'),
+              preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
             },
           });
@@ -275,7 +270,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       gender: user.gender,
       cell: user.cell,
       name: `${user.name} ${user.family}`,
-      ...(user.national_code && { national_code: user.national_code }),
+      national_code: user?.national_code ?? FakeData.NATIONAL_CODE,
     });
     if (data.status === ClinicStatus.SUCCESS) {
       return router.push(`/receipt/${center.id}/${data.result.book_request_id}`);

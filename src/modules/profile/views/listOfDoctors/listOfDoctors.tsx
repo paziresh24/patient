@@ -3,8 +3,10 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import { splunkCenterProfileInstance } from '@/common/services/splunk';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import SearchCard from '@/modules/search/components/card/card';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 
@@ -39,10 +41,23 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
 
   const sliceData = useMemo(() => doctors.slice(0, page * 5), [page, doctors]);
 
+  const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
+    splunkCenterProfileInstance().sendEvent({
+      group: 'center_profile',
+      type: 'doctor_card_click',
+      event: {
+        element_name: elementName,
+        element_content: elementContent,
+        card_data: { ...item },
+        terminal_id: getCookie('terminal_id'),
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col space-y-3">
       {expertiseListLoading && (
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col gap-3 md:flex-row">
           <Skeleton h="3rem" className="!w-full md:!w-[68%]" rounded="lg" />
           <Skeleton h="3rem" className="!w-full md:!w-[32%]" rounded="lg" />
         </div>
@@ -123,6 +138,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                   outline: doctor.is_bulk,
                 },
               ]}
+              sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
             />
           ))}
         {sliceData.length !== doctors.length && (

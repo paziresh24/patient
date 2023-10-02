@@ -36,6 +36,7 @@ export const Services = ({
   centers,
   slug,
   onlineVisit,
+  waitingTimeInfo,
 }: {
   id: string;
   expertises: any;
@@ -43,6 +44,7 @@ export const Services = ({
   centers: any[];
   slug: string;
   onlineVisit: any;
+  waitingTimeInfo: any;
 }) => {
   const router = useRouter();
   const messengers = useFeatureValue<any>('channeldescription', {});
@@ -53,7 +55,7 @@ export const Services = ({
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
 
-  const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string) => {
+  const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string, user_id?: string) => {
     const isBookRequest = centers
       ?.find?.(center => center.id === centerId)
       ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
@@ -61,6 +63,7 @@ export const Services = ({
     const params = {
       centerId,
       serviceId,
+      ...(user_id && { userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
 
@@ -113,8 +116,8 @@ export const Services = ({
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
-            waitingTime={doctor.waiting_time_info?.waiting_time_title}
-            onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId)}
+            waitingTime={waitingTimeInfo?.waiting_time_title}
+            onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId, doctor.user_id)}
             displayName={doctor.display_name}
           />
         )}
