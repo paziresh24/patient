@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import AlertIcon from '@/common/components/icons/alert';
+import LikeIcon from '@/common/components/icons/like';
 import classNames from '@/common/utils/classNames';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
@@ -67,9 +68,22 @@ export const Rate = (props: RateProps) => {
               </div>
             )}
             {message && (
-              <div className=" text-center flex flex-col justify-center items-center h-[12rem] gap-3 bg-[#FFAD0D]/[0.2]">
-                <AlertIcon className="[&>path]:fill-[#FFAD0D] w-10 h-10" />
-                <Text fontWeight="medium">{message}</Text>
+              <div className="h-[12rem] w-full relative flex flex-col items-center">
+                <div className="h-[12rem] m-4 blur-[0.32rem]">
+                  <p className="text-green-700 text-sm font-bold flex gap-1 items-center">
+                    این پزشک را پیشنهاد داده اند
+                    <LikeIcon style={{ transform: 'rotateY(180deg)' }} className="mb-1" />
+                  </p>
+                  <p className="text-sm font-medium text-justify !leading-7 mt-5">
+                    این یک متن کاملا استانیک هست برای نمونه نمایشی برای باکس غیرفعال لودن باکس کامنت ها در پروفایل پزشکان
+                  </p>
+                </div>
+                <div className=" text-center flex flex-col justify-center items-center h-full w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.25]">
+                  <AlertIcon className="[&>path]:fill-[#FFAD0D] w-10 h-10" />
+                  <Text fontWeight="medium" className="text-[#0F1D40] leading-8">
+                    {message}
+                  </Text>
+                </div>
               </div>
             )}
           </>
