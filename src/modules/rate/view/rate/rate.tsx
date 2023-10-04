@@ -4,6 +4,7 @@ import Divider from '@/common/components/atom/divider/divider';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import AlertIcon from '@/common/components/icons/alert';
 import classNames from '@/common/utils/classNames';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
@@ -30,7 +31,7 @@ export const Rate = (props: RateProps) => {
         )}
         {!!details.count && (
           <>
-            <Divider className="mb-5" />
+            <Divider className={classNames('mb-5', { '!mb-0': !!message })} />
             {!message && (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between w-full gap-3 px-4">
@@ -66,7 +67,8 @@ export const Rate = (props: RateProps) => {
               </div>
             )}
             {message && (
-              <div className="p-4 pt-0 text-center">
+              <div className=" text-center flex flex-col justify-center items-center h-[12rem] gap-3 bg-[#FFAD0D]/[0.2]">
+                <AlertIcon className="[&>path]:fill-[#FFAD0D] w-10 h-10" />
                 <Text fontWeight="medium">{message}</Text>
               </div>
             )}
