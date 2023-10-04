@@ -24,10 +24,14 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
-  const isMembershipUser = useFeatureValue('booking:membership-api|doctor-list', { ids: [''] });
+  const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
     { user_id: router.query.userId as string },
-    { enabled: !!router.query.userId && !!isMembershipUser.ids?.includes?.(router.query?.userId as string) },
+    {
+      enabled:
+        !!router.query.userId &&
+        (!!isMembershipCity.cities?.includes?.(router.query?.cityName) || !!isMembershipCity.cities?.includes?.('*')),
+    },
   );
 
   const {
@@ -46,7 +50,7 @@ const Booking = () => {
 
   const isLoading =
     fullProfileLoading ||
-    (!!router.query.userId && !!isMembershipUser.ids?.includes?.(router.query?.userId as string) && membershipLoading);
+    (!!router.query.userId && !!isMembershipCity.cities?.includes?.(router.query?.cityName as string) && membershipLoading);
 
   const profileData = data?.data;
 
