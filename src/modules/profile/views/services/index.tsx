@@ -63,7 +63,8 @@ export const Services = ({
     const params = {
       centerId,
       serviceId,
-      ...(user_id && { userId: user_id, cityName: city_name }),
+      cityName: city_name,
+      ...(user_id && { userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
 
