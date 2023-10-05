@@ -68,14 +68,19 @@ export const Rate = (props: RateProps) => {
               </div>
             )}
             {message && (
-              <div className="h-[12rem] w-full relative flex flex-col items-center">
-                <div className="h-[12rem] m-4 blur-[0.32rem]">
+              <div className="h-auto w-full relative flex flex-col items-center">
+                <div className="h-full m-4 blur-[0.32rem]">
                   <p className="text-green-700 text-sm font-bold flex gap-1 items-center">
                     این پزشک را پیشنهاد داده اند
                     <LikeIcon style={{ transform: 'rotateY(180deg)' }} className="mb-1" />
                   </p>
                   <p className="text-sm font-medium text-justify !leading-7 mt-5">
-                    این یک متن کاملا استانیک هست برای نمونه نمایشی برای باکس غیرفعال لودن باکس کامنت ها در پروفایل پزشکان
+                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
+                    و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
+                    کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم
+                    افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت
+                    می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی
+                    دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
                   </p>
                 </div>
                 <div className=" text-center flex flex-col justify-center items-center h-full w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.25]">
