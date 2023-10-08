@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import classNames from '@/common/utils/classNames';
+import CloseRate from '@/modules/profile/views/rateReview/closeRate';
 import FeedbackCard from '../../components/feedbackCard/feedbackCard';
 import { RateProps } from '../../type/rate';
 
@@ -30,7 +31,7 @@ export const Rate = (props: RateProps) => {
         )}
         {!!details.count && (
           <>
-            <Divider className="mb-5" />
+            <Divider className={classNames('mb-5', { '!mb-0': !!message })} />
             {!message && (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between w-full gap-3 px-4">
@@ -65,11 +66,7 @@ export const Rate = (props: RateProps) => {
                 </div>
               </div>
             )}
-            {message && (
-              <div className="p-4 pt-0 text-center">
-                <Text fontWeight="medium">{message}</Text>
-              </div>
-            )}
+            {message && <CloseRate message={message} />}
           </>
         )}
       </div>
