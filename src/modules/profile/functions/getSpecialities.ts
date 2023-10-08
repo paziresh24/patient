@@ -7,7 +7,7 @@ export const getSpecialitiesData = async ({ provider_id }: GetSpecialities) => {
   const { data: response } = await specialities({ provider_id });
 
   if (!response) {
-    Sentry.captureMessage(`provider_id:${provider_id}`);
+    Sentry.captureMessage(`provider specialities: provider_id:${provider_id}`);
   }
 
   return {
