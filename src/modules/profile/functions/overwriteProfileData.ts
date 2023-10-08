@@ -1,4 +1,5 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import isEmpty from 'lodash/isEmpty';
 
 export type OverwriteProfileData = {
   provider: {
@@ -31,17 +32,8 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const expertises = {
     group_expertises: source.group_expertises,
-    expertises: overwriteData.provider.expertises
-      ? overwriteData.provider.expertises.map((item: any) => ({
-          alias_title: getDisplayDoctorExpertise({
-            aliasTitle: `${item?.academic_degree?.title} ${item?.speciality?.title}`,
-            degree: item?.academic_degree?.title,
-            expertise: item?.speciality?.title,
-          }),
-          expertise_id: item?.speciality?.id ?? '',
-          degree_id: item?.academic_degree?.id ?? '',
-        }))
-      : source.expertises.map((item: any) => ({
+    expertises: isEmpty(overwriteData.provider.expertises)
+      ? source.expertises.map((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
             aliasTitle: item.alias_title,
             degree: item.degree?.name,
@@ -49,6 +41,15 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           }),
           expertise_id: item.expertise.id,
           degree_id: item.degree.id,
+        }))
+      : overwriteData.provider.expertises.map((item: any) => ({
+          alias_title: getDisplayDoctorExpertise({
+            aliasTitle: `${item?.academic_degree?.title} ${item?.speciality?.title}`,
+            degree: item?.academic_degree?.title,
+            expertise: item?.speciality?.title,
+          }),
+          expertise_id: item?.speciality?.id ?? '',
+          degree_id: item?.academic_degree?.id ?? '',
         })),
   };
 
