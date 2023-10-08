@@ -30,8 +30,8 @@ const Booking = () => {
     { provider_id: router.query.providerId as string },
     {
       enabled:
-        !!router.query.providerId &&
-        (!!isMembershipUser.ids?.includes?.(router.query?.providerId) ||
+        !!router.query.userId &&
+        (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
           !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
           !!isMembershipCity.cities?.includes?.('*')),
     },
@@ -53,8 +53,8 @@ const Booking = () => {
 
   const isLoading =
     fullProfileLoading ||
-    (!!router.query.providerId &&
-      (!!isMembershipUser.ids?.includes?.(router.query?.providerId) ||
+    (!!router.query.userId &&
+      (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
         ((!!isMembershipCity.cities?.includes?.(router.query?.cityName) || !!isMembershipCity.cities?.includes?.('*')) &&
           membershipLoading)));
 
