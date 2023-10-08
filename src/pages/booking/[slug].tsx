@@ -27,11 +27,11 @@ const Booking = () => {
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
-    { user_id: router.query.userId as string },
+    { provider_id: router.query.providerId as string },
     {
       enabled:
-        !!router.query.userId &&
-        (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+        !!router.query.providerId &&
+        (!!isMembershipUser.ids?.includes?.(router.query?.providerId) ||
           !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
           !!isMembershipCity.cities?.includes?.('*')),
     },
@@ -53,8 +53,8 @@ const Booking = () => {
 
   const isLoading =
     fullProfileLoading ||
-    (!!router.query.userId &&
-      (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+    (!!router.query.providerId &&
+      (!!isMembershipUser.ids?.includes?.(router.query?.providerId) ||
         ((!!isMembershipCity.cities?.includes?.(router.query?.cityName) || !!isMembershipCity.cities?.includes?.('*')) &&
           membershipLoading)));
 

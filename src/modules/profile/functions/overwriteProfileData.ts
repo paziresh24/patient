@@ -5,6 +5,7 @@ export type OverwriteProfileData = {
     display_name?: string;
     biography?: string;
     employee_id?: string;
+    provider_id?: string;
     user_id?: string;
   };
 };
