@@ -4,12 +4,15 @@ import axios from 'axios';
 import moment from 'jalali-moment';
 import { useEffect, useState } from 'react';
 import { useAvailability } from '../../apis/availability';
+import { useReserve } from '../../apis/reserve';
+import { useUnReserve } from '../../apis/unReserve';
 import FreeTurn from '../../components/selectTime/freeTurn';
 import OtherTimes from '../../components/selectTime/otherTimes';
 import { BaseInfo } from '../../types/baseInfo';
+import { TimeInfo } from './wrapper';
 
 interface SelectTimeProps extends BaseInfo {
-  onSelect: ({ time }: { time?: string }) => void;
+  onSelect: ({ time, reserveId }: TimeInfo) => void;
   loading?: boolean;
   onFirstFreeTimeError?: (errorText: string) => void;
   events?: Events;
@@ -29,6 +32,8 @@ enum TimeMode {
 export const SelectTimeUi = (props: SelectTimeProps) => {
   const { onSelect, loading, onFirstFreeTimeError, events, showOnlyFirstFreeTime = false, ...baseInfo } = props;
   const getAvailability = useAvailability();
+  const reserveAvailability = useReserve();
+  const unReserveAvailability = useUnReserve();
 
   const firstFreeTime = getAvailability.data?.data?.[0]?.slots?.[0]?.time;
 
@@ -44,7 +49,8 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         membership_id: baseInfo.membershipId,
         service_id: baseInfo.serviceId,
       });
-      onSelect({ time: data?.[0]?.slots?.[0]?.time });
+      reserveAvailabilityTime(data?.[0]?.slots?.[0]?.time);
+      return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         splunkBookingInstance().sendEvent({
@@ -67,11 +73,52 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
     }
   };
 
+  const reserveAvailabilityTime = async (time: string) => {
+    try {
+      const {
+        data: { id: reserveId },
+      } = await reserveAvailability.mutateAsync({
+        membership_id: baseInfo.membershipId,
+        service_id: baseInfo.serviceId,
+        time,
+      });
+
+      onSelect({ time, reserveId });
+      return;
+    } catch (error) {
+      fetchAvailability();
+      return;
+    }
+  };
+
+  const unReserveAvailabilityTime = async () => {
+    try {
+      await unReserveAvailability.mutateAsync({
+        membership_id: baseInfo.membershipId,
+        reserve_id: reserveAvailability.data?.data.id,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        splunkBookingInstance().sendEvent({
+          group: 'booking-error',
+          type: 'booking-availability-api-error',
+          event: {
+            error_message: error.response?.data?.message,
+            error_status: error.response?.status,
+            membership_id: baseInfo.membershipId,
+            service_id: baseInfo.serviceId,
+          },
+        });
+      }
+    }
+  };
+
   const [timeMode, setTimeMode] = useState<TimeMode>(TimeMode.FIRST_FREE_TURN);
 
   const timeModeAction = {
     FIRST_FREE_TURN: () => {
-      onSelect({ time: getAvailability.data?.data?.[0]?.slots?.[0]?.time });
+      unReserveAvailabilityTime();
+      reserveAvailabilityTime(firstFreeTime);
       setTimeMode(TimeMode.FIRST_FREE_TURN);
     },
     OTHER_FREE_TURN: () => {
@@ -83,7 +130,8 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
   return (
     <div
       className={classNames('flex flex-col space-y-3', {
-        'animate-pulse opacity-75 pointer-events-none': loading || getAvailability.isLoading || getAvailability.isIdle,
+        'animate-pulse opacity-75 pointer-events-none':
+          loading || getAvailability.isLoading || getAvailability.isIdle || reserveAvailability.isLoading,
       })}
     >
       <FreeTurn
@@ -96,7 +144,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
               })
             : undefined
         }
-        loading={loading || getAvailability.isLoading || getAvailability.isIdle}
+        loading={loading || getAvailability.isLoading || getAvailability.isIdle || reserveAvailability.isLoading}
         onSelect={timeModeAction[TimeMode.FIRST_FREE_TURN]}
         selected={timeMode === TimeMode.FIRST_FREE_TURN}
         title="زودترین زمان نوبت خالی"
@@ -106,7 +154,12 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
           slots={getAvailability.data?.data ?? []}
           onSelect={timeModeAction[TimeMode.OTHER_FREE_TURN]}
           selected={timeMode === TimeMode.OTHER_FREE_TURN}
-          onSelectTime={onSelect}
+          onSelectTime={({ time }) => {
+            if (time) {
+              unReserveAvailabilityTime();
+              reserveAvailabilityTime(time);
+            }
+          }}
         />
       )}
     </div>

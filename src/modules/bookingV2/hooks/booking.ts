@@ -9,12 +9,14 @@ export const useBooking = () => {
       membershipId,
       serviceId,
       time,
+      reserve_id,
     }: {
       user: any;
       membershipId: string;
       serviceId: string;
       userId?: string;
       time: string;
+      reserve_id: string;
     },
     {
       onSuccess,
@@ -31,6 +33,7 @@ export const useBooking = () => {
         membership_id: membershipId,
         service_id: serviceId,
         time,
+        reserve_id,
         ...(user.isSubUser && { sub_user: Number(user.id) }),
       });
       return onSuccess && onSuccess({ ...data, time: data.start_time });

@@ -28,7 +28,7 @@ import SelectSymptoms from '../components/selectSymptoms';
 import Wrapper from '../components/wrapper';
 import SelectCenter from './selectCenter';
 import SelectService from './selectService';
-import SelectTimeWrapper from './selectTime/wrapper';
+import SelectTimeWrapper, { TimeInfo } from './selectTime/wrapper';
 import SelectUserWrapper from './selectUser/wrapper';
 import TurnRequest, { TurnRequestInformation } from './turnRequest/turnRequest';
 
@@ -88,18 +88,19 @@ type SELECT_TIME = {
 };
 type SELECT_USER = {
   step: 'SELECT_USER';
-  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time'>;
+  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time' | 'reserveId'>;
 };
 
 type BOOK_REQUEST = {
   step: 'BOOK_REQUEST';
-  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time'>;
+  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time' | 'reserveId'>;
 };
 
 type Payloads = {
   centerId: string;
   serviceId: string;
   time: string;
+  reserveId: string;
 };
 
 export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT_USER' | 'BOOK_REQUEST';
@@ -142,8 +143,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
-  const [timeId, setTime] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState<TimeInfo>({});
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
@@ -181,7 +181,9 @@ const BookingSteps = (props: BookingStepsProps) => {
         selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
       setCenter(selectedCenter);
       setService(selectedService);
-      defaultStep.step === 'SELECT_USER' && defaultStep.payload.time && setSelectedTime(defaultStep.payload.time);
+      defaultStep.step === 'SELECT_USER' &&
+        defaultStep.payload.time &&
+        setSelectedTime({ time: defaultStep.payload.time, reserveId: defaultStep.payload.reserveId });
       if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
         return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, time: '-1' });
       }
@@ -209,7 +211,8 @@ const BookingSteps = (props: BookingStepsProps) => {
       {
         membershipId: membershipsData?.id,
         serviceId: serviceData.id,
-        time: selectedTime,
+        time: selectedTime.time!,
+        reserve_id: selectedTime.reserveId!,
         userId,
         user: {
           ...user,
@@ -228,7 +231,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
               date: moment().format('jYYYY/jMM/jDD - HH:mm'),
-              preferred_book_date: moment(selectedTime).format('jYYYY/jMM/jDD - HH:mm'),
+              preferred_book_date: moment(selectedTime.time).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: moment(data?.time).format('jYYYY/jMM/jDD - HH:mm'),
             },
           });
@@ -460,12 +463,12 @@ const BookingSteps = (props: BookingStepsProps) => {
                 }),
             },
           }}
-          nextStep={({ time }: { time: string }) => {
+          nextStep={({ time, reserveId }: TimeInfo) => {
             sendGaEvent({ action: 'P24DrsPage', category: 'submit book time', label: 'submit book time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'select-earliest-time', label: 'select-earliest-time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'NextButtonToLoginorReg', label: 'NextButtonToLoginorReg' });
-            setSelectedTime(time);
-            handleChangeStep('SELECT_USER', { time });
+            setSelectedTime({ time, reserveId });
+            handleChangeStep('SELECT_USER', { time, reserveId });
           }}
         />
       )}
