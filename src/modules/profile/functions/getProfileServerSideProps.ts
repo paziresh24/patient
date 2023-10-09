@@ -106,7 +106,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         if (providerData.status === 'fulfilled') {
           profileData.provider = {
             ...profileData.provider,
-            user_id: providerData.value.id,
+            provider_id: providerData.value.id,
+            user_id: providerData.value.user_id,
             biography: providerData.value.biography,
             employee_id: providerData.value.employee_id,
           };

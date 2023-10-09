@@ -112,8 +112,9 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { slug, defaultStep, className } = props;
   const { data: providerResponse, isLoading: providerLoading } = useProviders({ slug });
   const providerData = providerResponse?.data?.providers?.[0];
+  const providerId = providerData?.id;
   const userId = providerData?.user_id;
-  const { data: membershipResponse, isLoading: membershipLoading } = useMembership({ user_id: userId }, { enabled: !!userId });
+  const { data: membershipResponse, isLoading: membershipLoading } = useMembership({ provider_id: providerId }, { enabled: !!providerId });
   const membershipsData = membershipResponse?.data?.memberships?.find?.(
     (membership: any) => membership?.center_id === defaultStep?.payload?.centerId,
   );
@@ -121,7 +122,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     {
       membership_id: membershipsData?.id,
     },
-    { enabled: !!userId && !!defaultStep?.payload?.centerId && !membershipLoading },
+    { enabled: !!providerId && !!defaultStep?.payload?.centerId && !membershipLoading },
   );
   const serviceData =
     defaultStep?.step !== 'SELECT_SERVICES' && defaultStep?.step !== 'SELECT_CENTER'
