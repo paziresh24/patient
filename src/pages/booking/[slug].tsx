@@ -63,7 +63,11 @@ const Booking = () => {
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
-    if (payloads.includes('centerId') && payloads.includes('serviceId') && (payloads.includes('timeId') || payloads.includes('time'))) {
+    if (
+      payloads.includes('centerId') &&
+      payloads.includes('serviceId') &&
+      (payloads.includes('timeId') || payloads.includes('time') || payloads.includes('reserveId'))
+    ) {
       return {
         step: 'SELECT_USER',
         payload: queries as any,
