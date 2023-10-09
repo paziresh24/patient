@@ -212,7 +212,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         membershipId: membershipsData?.id,
         serviceId: serviceData.id,
         time: selectedTime.time!,
-        reserve_id: selectedTime.reserveId!,
+        reserveId: selectedTime.reserveId!,
         userId,
         user: {
           ...user,

@@ -50,7 +50,6 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         service_id: baseInfo.serviceId,
       });
       reserveAvailabilityTime(data?.[0]?.slots?.[0]?.time);
-      return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         splunkBookingInstance().sendEvent({
@@ -84,10 +83,8 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       });
 
       onSelect({ time, reserveId });
-      return;
     } catch (error) {
       fetchAvailability();
-      return;
     }
   };
 
@@ -98,18 +95,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
         reserve_id: reserveAvailability.data?.data.id,
       });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        splunkBookingInstance().sendEvent({
-          group: 'booking-error',
-          type: 'booking-availability-api-error',
-          event: {
-            error_message: error.response?.data?.message,
-            error_status: error.response?.status,
-            membership_id: baseInfo.membershipId,
-            service_id: baseInfo.serviceId,
-          },
-        });
-      }
+      console.error(error);
     }
   };
 
