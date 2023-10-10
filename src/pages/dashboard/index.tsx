@@ -1,8 +1,8 @@
-import Loading from '@/common/components/atom/loading';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
 import useResponsive from '@/common/hooks/useResponsive';
 import { useApps } from '@/modules/dashboard/apis/apps';
+import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { flatten } from 'lodash';
@@ -24,7 +24,7 @@ export const Dashboard = () => {
   return (
     <SideBar fullWidth className="md:hidden">
       <div className="hidden md:flex   md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-        <Loading className="w-8 fill-slate-400" />
+        <LoadingApps />
       </div>
     </SideBar>
   );
