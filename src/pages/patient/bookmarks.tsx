@@ -21,7 +21,7 @@ export const Bookmarks = () => {
 
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="flex flex-col p-5 bg-white">
+      <div className="flex flex-col p-5 bg-white rounded-md">
         <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5">
           {t('title')}
         </Text>

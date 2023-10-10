@@ -4,7 +4,6 @@ import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
 import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
-import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
@@ -12,18 +11,17 @@ import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
 import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
-import EyeIcon from '@/common/components/icons/eye';
+import ElementIcon from '@/common/components/icons/element';
 import LogoutIcon from '@/common/components/icons/logout';
-import ReceiptIcon from '@/common/components/icons/receipt';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
-import useModal from '@/common/hooks/useModal';
 import CreditDuration from '@/modules/bamdad/components/creditDuration';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -49,37 +47,56 @@ export const UserProfile = () => {
   const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
-  const { handleOpen, handleClose, modalProps } = useModal();
   const isShowPremiumFeatures = useShowPremiumFeatures();
+  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id ?? '') || dashboardDoctorList.ids.includes('*');
 
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
   });
 
-  const menuItems = [
-    {
-      name: t('patient/common:menu.myTurns'),
-      icon: <CalenderIcon />,
-      link: '/patient/appointments',
-      badge: !!turnsCount.presence && (
-        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
-      ),
-      shouldShow: true,
-    },
-    {
-      name: t('patient/common:menu.bookmarks'),
-      icon: <BookmarkIcon />,
-      link: '/patient/bookmarks',
-      shouldShow: customize.bookMark,
-    },
-    {
-      name: t('patient/common:menu.subuser'),
-      icon: <UsersIcon />,
-      link: '/patient/subuser',
-      shouldShow: true,
-    },
-  ].filter(item => item.shouldShow);
+  const menuItems = isShowDashboard
+    ? [
+        {
+          name: 'داشبورد',
+          icon: <ElementIcon />,
+          link: '/dashboard',
+          shouldShow: true,
+        },
+        {
+          name: t('patient/common:menu.myTurns'),
+          icon: <CalenderIcon />,
+          link: '/dashboard/apps/@paziresh24/appointments',
+          badge: !!turnsCount.presence && (
+            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+          ),
+          shouldShow: true,
+        },
+      ].filter(item => item.shouldShow)
+    : [
+        {
+          name: t('patient/common:menu.myTurns'),
+          icon: <CalenderIcon />,
+          link: '/patient/appointments',
+          badge: !!turnsCount.presence && (
+            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+          ),
+          shouldShow: true,
+        },
+        {
+          name: t('patient/common:menu.bookmarks'),
+          icon: <BookmarkIcon />,
+          link: '/patient/bookmarks',
+          shouldShow: customize.bookMark,
+        },
+        {
+          name: t('patient/common:menu.subuser'),
+          icon: <UsersIcon />,
+          link: '/patient/subuser',
+          shouldShow: true,
+        },
+      ].filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
@@ -169,13 +186,6 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-1" />
                 <MenuList className="px-3">
-                  {/* {customize.showSupport && (
-                    <MenuItem
-                      name={t('patient/common:menu.support')}
-                      link={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/support-form/`}
-                      icon={<HeadphoneIcon />}
-                    />
-                  )} */}
                   <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
                 </MenuList>
               </div>
@@ -186,38 +196,6 @@ export const UserProfile = () => {
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}
-
-      <Modal {...modalProps} noHeader>
-        <div className="flex flex-col items-center space-y-4">
-          <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={90} height={90} />
-          <Text fontWeight="bold" align="center">
-            دکتر {userInfo?.profile?.name} {userInfo?.profile?.family} خوش آمدید.
-          </Text>
-          <div className="flex flex-col w-full space-y-2">
-            <Button
-              icon={<ReceiptIcon />}
-              variant="primary"
-              onClick={() => {
-                window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
-                handleClose();
-              }}
-            >
-              لیست مراجعین
-            </Button>
-            <Button
-              icon={<EyeIcon />}
-              block
-              variant="secondary"
-              onClick={() => {
-                router.push(`/dr/${userInfo?.profile?.slug}`);
-                handleClose();
-              }}
-            >
-              مشاهده/ویرایش پروفایل عمومی
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

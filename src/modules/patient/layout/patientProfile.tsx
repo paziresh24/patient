@@ -8,14 +8,25 @@ import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
-import { ReactElement } from 'react';
+import { useRouter } from 'next/router';
+import { ReactElement, useEffect } from 'react';
 
 export const PatientProfileLayout = ({ children }: { children: ReactElement }) => {
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const { customize } = useCustomize();
+  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
+      router.replace(`/dashboard/apps/@paziresh24/${router.pathname.replace('patient', '')}`);
+    }
+  }, [userInfo.id]);
 
   const { t } = useTranslation('patient/common');
 

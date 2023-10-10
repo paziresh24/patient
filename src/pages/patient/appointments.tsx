@@ -133,7 +133,7 @@ export const Appointments = ({ query: queryServer }: any) => {
 
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white">
+      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white rounded-md">
         <Text fontWeight="black" fontSize="xl" className="mt-5 mb-5 pwa:hidden">
           {t('title')}
         </Text>
