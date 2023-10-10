@@ -89,7 +89,7 @@ export const Dashboard = () => {
         <AppBar title={appData?.name ?? ''} className="hidden pwa:!flex" />
       )}
       <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-        {(apps.isLoading || apps.isInitialLoading || isAppLoading) && <LoadingApps />}
+        {(!apps.isSuccess || isAppLoading) && !appData?.source?.startsWith('paziresh24://') && <LoadingApps />}
         {apps.isSuccess &&
           (appData?.source?.startsWith('paziresh24://') ? (
             intents[appData.source.replace('paziresh24://', '') as Intents]
