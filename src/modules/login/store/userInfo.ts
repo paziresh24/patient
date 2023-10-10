@@ -1,3 +1,5 @@
+import { isPWA } from '@/common/utils/isPwa';
+import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { getCookie, removeCookies } from 'cookies-next';
 import config from 'next/config';
 import { create } from 'zustand';
@@ -42,14 +44,18 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   turnsCount: {
     presence: 0,
   },
-  setUserInfo: info =>
+  setUserInfo: info => {
+    if (isPWA()) {
+      firebaseCloudMessaging.init(info.id ?? '');
+    }
     set(() => ({
       info: {
         ...info,
         is_foreigner: info.is_foreigner == '1',
       },
       isLogin: true,
-    })),
+    }));
+  },
   removeInfo: () => {
     set(() => ({
       info: {},
