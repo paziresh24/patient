@@ -10,7 +10,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { range } from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
+import { Fragment, ReactNode, useEffect, useState } from 'react';
 import { useApps } from '../apis/apps';
 import pluginIcon from '../assets/plugin.svg';
 import { MenuItem } from '../components/menuItem';
@@ -98,7 +98,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                 )}
                 {apps.isSuccess &&
                   data?.map((menu: App[], index: number, menuItems: App[][]) => (
-                    <>
+                    <Fragment key={index}>
                       {menu.map(app => (
                         <MenuItem
                           key={app.key}
@@ -109,7 +109,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         />
                       ))}
                       {menuItems.length - 1 > index && <Divider className="my-3" />}
-                    </>
+                    </Fragment>
                   ))}
               </div>
               <div onClick={logout}>
@@ -124,7 +124,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                 بزودی این بخش اضافه می شود.
               </Text>
             </div>
-            <Link href="https://community.paziresh24.com/" className="py-4 bg-gradient-to-l from-slate-200 cursor-pointer text-center">
+            <Link href="https://community.paziresh24.com/" className="py-4 bg-slate-200/50 shadow-inner cursor-pointer text-center">
               <Text fontSize="xs" fontWeight="medium" className="underline">
                 توسعه دهنده/کارآفرین هستم
               </Text>
