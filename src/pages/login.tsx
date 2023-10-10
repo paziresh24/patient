@@ -9,7 +9,7 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center h-screen p-8 bg-white">
       <div className="w-96">
-        <LoginForm postLogin={() => router.push(decodeURI((router.query?.redirect_url as string) ?? '/'))} />
+        <LoginForm postLogin={() => router.push(decodeURI(decodeURIComponent(router.query?.redirect_url as string) ?? '/'))} />
       </div>
     </div>
   );

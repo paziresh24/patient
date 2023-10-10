@@ -69,7 +69,7 @@ apiGatewayClient.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401) {
       try {
-        window.location.assign(`/login?redirect_url=${encodeURI(location.href)}`);
+        window.location.assign(`/login?redirect_url=${encodeURIComponent(encodeURI(location.href))}`);
       } catch (error) {
         console.error(error);
       }
