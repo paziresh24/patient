@@ -61,6 +61,23 @@ clinicClient.interceptors.response.use(
   },
 );
 
+apiGatewayClient.interceptors.response.use(
+  async res => {
+    return res;
+  },
+  async error => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401) {
+      try {
+        window.location.assign(`/login?redirect_url=${encodeURIComponent(encodeURI(location.href))}`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 paziresh24AppClient.interceptors.request.use(
   config => {
     if (getCookie('token')) {
