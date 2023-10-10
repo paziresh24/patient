@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
@@ -61,15 +61,20 @@ clinicClient.interceptors.response.use(
   },
 );
 
-paziresh24AppClient.interceptors.request.use(
-  config => {
-    if (getCookie('token')) {
-      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
-    }
-    return config;
+apiGatewayClient.interceptors.response.use(
+  async res => {
+    return res;
   },
-  err => {
-    return Promise.reject(err);
+  async error => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401) {
+      try {
+        window.location.assign(`/login?redirect_url=${encodeURI(location.href)}`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return Promise.reject(error);
   },
 );
 
