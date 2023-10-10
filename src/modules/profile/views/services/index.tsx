@@ -55,7 +55,14 @@ export const Services = ({
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
 
-  const handleOpenBookingPage = (slug: string, centerId: string, serviceId: string, user_id?: string, city_name?: string) => {
+  const handleOpenBookingPage = (
+    slug: string,
+    centerId: string,
+    serviceId: string,
+    provider_id?: string,
+    user_id?: string,
+    city_name?: string,
+  ) => {
     const isBookRequest = centers
       ?.find?.(center => center.id === centerId)
       ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
@@ -63,7 +70,8 @@ export const Services = ({
     const params = {
       centerId,
       serviceId,
-      ...(user_id && { userId: user_id, cityName: city_name }),
+      cityName: city_name,
+      ...(provider_id && user_id && { providerId: provider_id, userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
 
@@ -117,7 +125,9 @@ export const Services = ({
           <Presence
             centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
             waitingTime={waitingTimeInfo?.waiting_time_title}
-            onBook={({ centerId, serviceId }) => handleOpenBookingPage(slug, centerId, serviceId, doctor.user_id, doctor.city_en_slug)}
+            onBook={({ centerId, serviceId }) =>
+              handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
+            }
             displayName={doctor.display_name}
           />
         )}

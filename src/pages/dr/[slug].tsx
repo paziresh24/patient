@@ -106,6 +106,7 @@ const DoctorProfile = ({
           path: '/',
         });
       }
+
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }

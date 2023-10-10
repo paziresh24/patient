@@ -10,6 +10,7 @@ import axios from 'axios';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
@@ -105,10 +106,22 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         if (providerData.status === 'fulfilled') {
           profileData.provider = {
             ...profileData.provider,
-            user_id: providerData.value.id,
+            provider_id: providerData.value.id,
+            user_id: providerData.value.user_id,
             biography: providerData.value.biography,
             employee_id: providerData.value.employee_id,
           };
+
+          const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+
+          const [specialitiesData] = await Promise.allSettled(parallelRequests);
+
+          if (specialitiesData.status === 'fulfilled') {
+            profileData.provider = {
+              ...profileData.provider,
+              expertises: Object.values(specialitiesData.value),
+            };
+          }
 
           if (shouldUseUser) {
             const parallelRequests = [await getUserData({ user_id: providerData.value.user_id, slug: slugFormmated })];

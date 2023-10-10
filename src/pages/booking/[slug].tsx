@@ -25,12 +25,15 @@ const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
+  const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
-    { user_id: router.query.userId as string },
+    { provider_id: router.query.providerId as string },
     {
       enabled:
         !!router.query.userId &&
-        (!!isMembershipCity.cities?.includes?.(router.query?.cityName) || !!isMembershipCity.cities?.includes?.('*')),
+        (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+          !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
+          !!isMembershipCity.cities?.includes?.('*')),
     },
   );
 
@@ -50,13 +53,21 @@ const Booking = () => {
 
   const isLoading =
     fullProfileLoading ||
-    (!!router.query.userId && !!isMembershipCity.cities?.includes?.(router.query?.cityName as string) && membershipLoading);
+    (!!router.query.userId &&
+      (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+        !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
+        !!isMembershipCity.cities?.includes?.('*')) &&
+      membershipLoading);
 
   const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
-    if (payloads.includes('centerId') && payloads.includes('serviceId') && (payloads.includes('timeId') || payloads.includes('time'))) {
+    if (
+      payloads.includes('centerId') &&
+      payloads.includes('serviceId') &&
+      (payloads.includes('timeId') || payloads.includes('time') || payloads.includes('reserveId'))
+    ) {
       return {
         step: 'SELECT_USER',
         payload: queries as any,

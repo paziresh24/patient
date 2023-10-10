@@ -5,23 +5,23 @@ import { BaseInfo } from '../../types/baseInfo';
 import SelectTime, { Events } from './selectTime';
 
 interface SelectTimeWrapperProps extends BaseInfo {
-  onSubmit: (freeTurnInfo: FreeTurnInfo) => void;
+  onSubmit: (freeTurnInfo: TimeInfo) => void;
   loading?: boolean;
   onFirstFreeTimeError?: (errorText: string) => void;
   events?: Events;
   showOnlyFirstFreeTime?: boolean;
-  onChangeTimeId?: (freeTurnInfo: FreeTurnInfo) => void;
+  onChangeTimeId?: (freeTurnInfo: TimeInfo) => void;
 }
 
-type FreeTurnInfo = { time?: string };
+export type TimeInfo = { time?: string; reserveId?: string };
 
 export const SelectTimeWrapper = (props: SelectTimeWrapperProps) => {
   const { onSubmit, onChangeTimeId, ...rest } = props;
-  const [freeTurnInfo, setFreeTurnInfo] = useState<FreeTurnInfo>();
+  const [freeTurnInfo, setFreeTurnInfo] = useState<TimeInfo>();
 
-  const handleSubmit = ({ time }: FreeTurnInfo) => {
+  const handleSubmit = ({ time, reserveId }: TimeInfo) => {
     if (!time) return toast.error('لطفا زمان مورد نظر خود را انتخاب کنید');
-    onSubmit({ time });
+    onSubmit({ time, reserveId });
   };
 
   return (

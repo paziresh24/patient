@@ -2,7 +2,7 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
 
 interface MembershipParams {
-  user_id: string;
+  provider_id: string;
 }
 
 export const membership = async (params: MembershipParams) => {
