@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig } = getConfig();
@@ -75,6 +75,18 @@ apiGatewayClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
+  },
+);
+
+paziresh24AppClient.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
   },
 );
 
