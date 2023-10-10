@@ -85,7 +85,9 @@ export const Dashboard = () => {
     <div className="flex flex-col w-full">
       <Seo title={appData?.name} noIndex />
 
-      <AppBar title={appData?.name ?? ''} className="hidden pwa:!flex" />
+      {apps.isSuccess && appData?.source?.startsWith('paziresh24://') && (
+        <AppBar title={appData?.name ?? ''} className="hidden pwa:!flex" />
+      )}
       <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
         {(apps.isLoading || apps.isInitialLoading || isAppLoading) && <LoadingApps />}
         {apps.isSuccess &&

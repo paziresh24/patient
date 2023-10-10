@@ -22,11 +22,12 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import config from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 const { publicRuntimeConfig } = config();
 
 export const PatinetProfile = () => {
@@ -38,6 +39,13 @@ export const PatinetProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const share = useShare();
   const { customize } = useCustomize();
+  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+
+  useEffect(() => {
+    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
+      router.replace(`/dashboard`);
+    }
+  }, [userInfo.id]);
 
   const openLoginForm = (link?: string) => {
     !isLogin &&
@@ -45,7 +53,9 @@ export const PatinetProfile = () => {
       handleOpenLoginModal({
         state: true,
         postLogin() {
-          if (link) router.push(link);
+          if (link) {
+            router.push(link);
+          }
         },
       });
   };
