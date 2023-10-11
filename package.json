@@ -32,7 +32,7 @@
     "clsx": "^1.1.1",
     "cookies-next": "2.1.1",
     "eventsource": "2.0.2",
-    "firebase": "9.22.1",
+    "firebase": "10.4.0",
     "fslightbox-react": "1.6.3",
     "html2pdf.js": "0.9.0",
     "jalali-moment": "3.3.11",

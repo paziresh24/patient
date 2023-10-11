@@ -45,7 +45,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         }))
       : overwriteData.provider.expertises.map((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
-            aliasTitle: `${item?.academic_degree?.title} ${item?.speciality?.title}`,
+            aliasTitle: item?.alias,
             degree: item?.academic_degree?.title,
             expertise: item?.speciality?.title,
           }),

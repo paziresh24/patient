@@ -11,7 +11,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 
-export const Bookmarks = () => {
+export const Subusers = () => {
   const { query } = useRouter();
   const { t } = useTranslation('patient/subuser');
 
@@ -21,7 +21,7 @@ export const Bookmarks = () => {
 
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="flex flex-col p-5 bg-white">
+      <div className="flex flex-col p-5 bg-white rounded-md">
         <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5">
           {t('title')}
         </Text>
@@ -31,7 +31,7 @@ export const Bookmarks = () => {
   );
 };
 
-Bookmarks.getLayout = function getLayout(page: ReactElement) {
+Subusers.getLayout = function getLayout(page: ReactElement) {
   return (
     <LayoutWithHeaderAndFooter {...page.props.config}>
       <PatientProfileLayout>{page}</PatientProfileLayout>
@@ -47,4 +47,4 @@ export const getServerSideProps = withCSR(async (context: GetServerSidePropsCont
   };
 });
 
-export default Bookmarks;
+export default Subusers;
