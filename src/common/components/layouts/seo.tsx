@@ -1,4 +1,3 @@
-import logo from '@/public/logos/primary.svg';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
@@ -61,9 +60,9 @@ export const Seo = (props: SeoProps) => {
       <meta property="og:url" content={`https://www.paziresh24.com${asPath}`} />
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="fa_IR" />
-      <meta property="og:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
-      <meta property="og:image:secure_url" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
-      <meta property="og:image:type" content={openGraph?.image?.type ?? 'image/svg+xml'} />
+      <meta property="og:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
+      <meta property="og:image:secure_url" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
+      <meta property="og:image:type" content={openGraph?.image?.type ?? 'image/png'} />
       <meta property="og:image:alt" content={openGraph?.image?.alt ?? brandName} />
       <meta property="dc.title" content={titleTemplate} />
       <meta property="dc.description" content={description} />
@@ -75,12 +74,12 @@ export const Seo = (props: SeoProps) => {
       <meta property="twitter:creator" content={brandName} />
       <meta property="twitter:site" content={brandName} />
       <meta property="twitter:url" content={`https://www.paziresh24.com${asPath}`} />
-      <meta property="twitter:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
+      <meta property="twitter:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
       <meta property="twitter:image:alt" content={openGraph?.image?.alt ?? brandName} />
       <meta property="twitter:card" content="summary" />
       <meta itemProp="name" content={titleTemplate} />
       <meta itemProp="description" content={description} />
-      <meta itemProp="image" content={openGraph?.image?.src ?? `https://www.paziresh24.com${logo.src}`} />
+      <meta itemProp="image" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
       <meta name="author" content={brandName} />
       <meta name="application-name" content={brandName} />
       <meta name="apple-mobile-web-app-title" content={brandName} />
