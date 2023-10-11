@@ -193,7 +193,10 @@ const BookingSteps = (props: BookingStepsProps) => {
           ...user,
           name: userConfimation?.name ?? user.name,
           family: userConfimation?.family ?? user.family,
-          gender: userConfimation?.gender !== null ? convertNumberToStringGender(userConfimation?.gender) : user.gender,
+          gender:
+            userConfimation?.gender !== null && userConfimation?.gender !== undefined
+              ? convertNumberToStringGender(userConfimation?.gender)
+              : user.gender,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
