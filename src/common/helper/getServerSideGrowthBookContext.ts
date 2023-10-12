@@ -1,5 +1,7 @@
 import { setPolyfills } from '@growthbook/growthbook-react';
 import { NextApiRequest } from 'next';
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
 export function getServerSideGrowthBookContext(req: NextApiRequest) {
   // Set GrowthBook polyfills for server environments
@@ -10,7 +12,7 @@ export function getServerSideGrowthBookContext(req: NextApiRequest) {
   });
 
   return {
-    apiHost: process.env.GROWTHBOOK_API_HOST,
-    clientKey: process.env.GROWTHBOOK_CLIENT_KEY,
+    apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
+    clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   };
 }

@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ message: 'Method Not Allowed' });
 
-  const DRAPP_BASE_URL = process.env.DOCTOR_APP_BASE_URL;
+  const DRAPP_BASE_URL = publicRuntimeConfig.DOCTOR_APP_BASE_URL;
 
   if (req.query.is_doctor === 'true')
     return res.status(200).json([
