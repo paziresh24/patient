@@ -103,7 +103,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
         const [providerData] = await Promise.allSettled(parallelRequests);
 
-        if (providerData.status === 'fulfilled') {
+        if (providerData.status === 'fulfilled' && providerData.value?.user_id) {
           profileData.provider = {
             ...profileData.provider,
             provider_id: providerData.value.id,
@@ -124,13 +124,13 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           }
 
           if (shouldUseUser) {
-            const parallelRequests = [await getUserData({ user_id: providerData.value.user_id, slug: slugFormmated })];
+            const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
             const [userData] = await Promise.allSettled(parallelRequests);
 
-            if (userData.status === 'fulfilled') {
+            if (userData.status === 'fulfilled' && userData.value?.name) {
               profileData.provider = {
                 ...profileData.provider,
-                display_name: `${providerData.value.prefix} ${userData.value.name} ${userData.value.family}`,
+                display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
               };
             }
           }
