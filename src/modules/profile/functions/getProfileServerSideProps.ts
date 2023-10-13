@@ -110,6 +110,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             user_id: providerData.value.user_id,
             biography: providerData.value.biography,
             employee_id: providerData.value.employee_id,
+            prefix: providerData.value?.prefix,
           };
 
           const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
@@ -130,6 +131,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             if (userData.status === 'fulfilled' && userData.value?.name) {
               profileData.provider = {
                 ...profileData.provider,
+                name: userData.value?.name,
+                family: userData.value?.family,
                 display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
               };
             }
