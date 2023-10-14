@@ -72,6 +72,7 @@ const Receipt = () => {
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userPednding = useUserInfoStore(state => state.pending);
   const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
@@ -81,6 +82,12 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+
+  useEffect(() => {
+    if (!pincode && !isLogin && !userPednding) {
+      router.push(`/login?redirect_url=${router.asPath}`);
+    }
+  }, [isLogin, userPednding, pincode]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -316,7 +323,7 @@ const Receipt = () => {
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image}
+            {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image })}
             fullName={bookDetailsData.doctor?.display_name}
             expertise={bookDetailsData.doctor?.display_expertise}
             isLoading={getReceiptDetails.isLoading}

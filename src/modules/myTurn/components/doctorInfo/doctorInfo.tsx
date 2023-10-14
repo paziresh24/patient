@@ -6,7 +6,7 @@ interface DoctorInfoProps {
   /**
    * Avatar src (url)
    */
-  avatar: string;
+  avatar?: string;
   firstName?: string;
   lastName?: string;
   fullName?: string;
