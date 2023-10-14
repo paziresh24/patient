@@ -1,5 +1,6 @@
 {
   "title": "My Turns",
+  "description": "It is possible to keep track of my appointments in Reception 24, download the appointment bill, cancel the appointment, change the appointment time, etc. in this section.",
   "tunrsTabName": "Turns",
   "requestsTabName": "Requests",
   "turnDetails": {
