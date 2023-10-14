@@ -3,6 +3,9 @@ import isEmpty from 'lodash/isEmpty';
 
 export type OverwriteProfileData = {
   provider: {
+    prefix?: string;
+    name?: string;
+    family?: string;
     display_name?: string;
     biography?: string;
     employee_id?: string;
@@ -19,6 +22,8 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     awards: source.awards,
     scientific: source.scientific,
     display_name: source.display_name,
+    name: source.name,
+    family: source.family,
     biography: source.biography,
     employee_id: source.medical_code,
     experience: source.experience,
