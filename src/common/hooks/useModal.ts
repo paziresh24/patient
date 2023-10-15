@@ -2,6 +2,14 @@ import { useEffect, useState } from 'react';
 import useLockScroll from './useLockScroll';
 import useVirtualBack from './useVirtualBack';
 
+type ModalProps = {
+  isOpen: IsOpen;
+  onClose: OnClose;
+};
+
+type OnClose = () => {};
+type IsOpen = boolean;
+
 export const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { lockScroll, openScroll } = useLockScroll();
@@ -35,7 +43,7 @@ export const useModal = () => {
     modalProps: {
       isOpen: isOpen,
       onClose: handleClose,
-    },
+    } as ModalProps,
   };
 };
 
