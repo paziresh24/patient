@@ -64,6 +64,7 @@ export const UserCard = (props: UserCardProps) => {
         gender: data.gender.value,
         is_foreigner: data.is_foreigner ? '1' : '0',
         is_foreigner_web: data.is_foreigner,
+        user_id: userId,
       });
       if (res.data.status === ClinicStatus.SUCCESS) {
         handleClose();
