@@ -1,5 +1,7 @@
 import classNames from '@/common/utils/classNames';
-import { ForwardedRef, forwardRef, InputHTMLAttributes } from 'react';
+import { ForwardedRef, forwardRef, InputHTMLAttributes, useState } from 'react';
+import EyeIcon from '../../icons/eye';
+import EyeSlashIcon from '../../icons/eyeSlash';
 import Text from '../text';
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'size'>;
@@ -22,6 +24,7 @@ const inputSize = {
 // eslint-disable-next-line react/display-name
 export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<any>) => {
   const { label, className, classNameWrapper, size = 'medium', multiLine = false, helperText, error = false, ...inputProps } = props;
+  const [isObscured, setIsObscured] = useState(inputProps.type === 'password');
 
   const Component = multiLine ? 'textarea' : 'input';
 
@@ -40,16 +43,38 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
           {label}
         </Text>
       )}
-      <Component
-        ref={ref}
-        autoComplete="off"
-        className={classNames(
-          'rounded-lg border border-solid border-inherit outline-inherit w-full transition-all',
-          inputSize[size],
-          className,
-        )}
-        {...inputProps}
-      />
+      <div className="relative border-inherit outline-inherit w-full">
+        <Component
+          ref={ref}
+          autoComplete="off"
+          className={classNames(
+            'rounded-lg border border-solid border-inherit outline-inherit w-full transition-all',
+            inputSize[size],
+            className,
+            {
+              'pl-11': inputProps.type === 'password',
+            },
+          )}
+          {...inputProps}
+          type={inputProps.type === 'password' ? (isObscured ? 'password' : 'text') : inputProps.type}
+        />
+        {inputProps.type === 'password' &&
+          (isObscured ? (
+            <EyeIcon
+              onClick={() => {
+                setIsObscured(false);
+              }}
+              className="absolute left-4 top-[.9rem] w-5 h-5"
+            />
+          ) : (
+            <EyeSlashIcon
+              onClick={() => {
+                setIsObscured(true);
+              }}
+              className="absolute left-4 top-[.9rem] w-5 h-5"
+            />
+          ))}
+      </div>
       {helperText && <span className="text-xs">{helperText}</span>}
     </div>
   );

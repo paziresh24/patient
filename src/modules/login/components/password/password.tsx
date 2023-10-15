@@ -1,16 +1,13 @@
-import { useLogin } from '@/common/apis/services/auth/login';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import Button from '@/common/components/atom/button';
+import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField/textField';
-import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import useServerQuery from '@/common/hooks/useServerQuery';
-import { dayToSecond } from '@/common/utils/dayToSecond';
-import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import PasswordIcon from '@/common/components/icons/password';
 import useTranslation from 'next-translate/useTranslation';
+import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { UserInfo, useUserInfoStore } from '../../store/userInfo';
+import { useLogin } from '../../hooks/useLogin';
+import { UserInfo } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 
@@ -23,60 +20,19 @@ interface PasswordProps {
 export const Password = (props: PasswordProps) => {
   const { mobileNumberValue, postLogin } = props;
   const { t } = useTranslation('login');
-  const login = useLogin();
-  const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const [password, setPassword] = useState('');
-  const university = useServerQuery(state => state.queries.university);
-  const getDoctorProfile = useGetDoctorProfile();
+  const { login, isLoading } = useLogin();
 
   const handleLogin = async (password: string) => {
     try {
-      const { data } = await login.mutateAsync({
-        username: +mobileNumberValue,
+      const data = await login({
+        username: mobileNumberValue,
         password,
       });
 
-      if (data.status === ClinicStatus.SUCCESS) {
-        setCookie('certificate', data.certificate, {
-          path: '/',
-          maxAge: dayToSecond(60),
-        });
-
-        if (university)
-          setCookie('token', data.token, {
-            path: '/',
-            maxAge: dayToSecond(60),
-          });
-
-        if (window?.Android) window.Android.login(data.certificate);
-
-        let profile = {};
-        if (data.is_doctor) {
-          try {
-            const { data } = await getDoctorProfile.mutateAsync();
-            profile = data.data;
-          } catch (error) {
-            console.error(error);
-          }
-        }
-
-        const info = {
-          is_doctor: data.is_doctor,
-          profile,
-          ...data.result,
-        };
-
-        setUserInfo(info);
-
-        postLogin && postLogin(info);
-
-        return;
-      }
-      toast.error(data.message);
+      postLogin && postLogin(data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.response?.data);
-      }
+      toast.error((error as any).message);
     }
   };
 
@@ -88,10 +44,20 @@ export const Password = (props: PasswordProps) => {
           description={t('steps.password.description', { mobileNumber: mobileNumberValue })}
         />
       </div>
-      <TextField onChange={e => setPassword(e.target.value)} type="password" style={{ direction: 'ltr' }} autoFocus />
-      <Button onClick={() => handleLogin(password)} loading={login.isLoading || getDoctorProfile.isLoading}>
+      <TextField autoComplete="off" onChange={e => setPassword(e.target.value)} type="password" style={{ direction: 'ltr' }} autoFocus />
+      <Button onClick={() => handleLogin(password)} loading={isLoading}>
         {t('steps.password.action')}
       </Button>
+      <Link
+        href={`/login/forgot?mobile_number=${mobileNumberValue}`}
+        as="/login/forgot"
+        className="flex !mt-4 items-center space-s-1 text-slate-500"
+      >
+        <PasswordIcon className="w-5 h-5" />
+        <Text fontSize="xs" fontWeight="medium">
+          {t('steps.password.forgotPassword')}
+        </Text>
+      </Link>
     </div>
   );
 };

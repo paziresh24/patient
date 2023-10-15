@@ -3,7 +3,6 @@ import MobileNumber from '../components/mobileNumber';
 import OtpCode from '../components/otpCode';
 import Password from '../components/password/password';
 import { UserInfo } from '../store/userInfo';
-
 export type StepLoginForm = 'mobile_number' | 'otp_code' | 'password';
 
 interface LoginFormProps {
@@ -31,7 +30,6 @@ export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => 
       {step === 'otp_code' && (
         <OtpCode
           setStep={setStep}
-          setMobileNumberValue={setMobileNumberValue}
           mobileNumberValue={mobileNumberValue}
           postLogin={postLogin}
           setRetryGetPasswordNumber={setRetryGetPasswordNumber}

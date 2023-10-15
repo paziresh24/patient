@@ -65,6 +65,11 @@ export const Appointments = ({ query: queryServer }: any) => {
   useEffect(() => {
     // Prefetch the receipt page
     router.prefetch('/receipt/[centerId]/[bookId]');
+
+    return () =>
+      handleOpenLoginModal({
+        state: false,
+      });
   }, []);
 
   useEffect(() => {

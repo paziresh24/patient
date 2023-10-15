@@ -19,7 +19,7 @@
     "password": {
       "title": "Password",
       "description": "Please enter the password.",
-      "changeMobileNumber": "Change mobile number",
+      "forgotPassword": "I forgot my password",
       "action": "Login"
     }
   }
