@@ -30,6 +30,7 @@ export const PatinetProfile = () => {
       gender: data.gender.value,
       province: data.province.value,
       city: data.city.value,
+      user_id: userInfo.id,
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
       toast.success('اطلاعات شما با موفقیت ویرایش شد.');
