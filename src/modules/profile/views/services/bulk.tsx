@@ -8,17 +8,14 @@ import useModal from '@/common/hooks/useModal';
 import SearchCard from '@/modules/search/components/card/card';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { template } from 'lodash';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 interface BulkServiceProps {
   displayName: string;
   expertises: any;
 }
 
 export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
-  const { handleOpen, handleClose, modalProps } = useModal();
-  const content = useFeatureValue('recommed:suggest-doctor-modal-content', { header: '', footer: '' });
-  const router = useRouter();
+  const { handleOpen, modalProps } = useModal();
+  const content = useFeatureValue('recommed:suggest-doctor-modal-content', { header: '', footer: '', cardButton: 'مشاهده صفحه' });
   const searchData = useSearch({
     route: decodeURIComponent(`ir/${expertises.group_expertises[0].en_slug}`),
     query: {
@@ -34,7 +31,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   return (
     <>
       <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        <Button block onClick={handleOpen}>
+        <Button id="bulk-profile-button" block onClick={handleOpen}>
           <Text>دریافت نوبت</Text>
         </Button>
       </Card>
@@ -55,7 +52,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                 }),
               }}
             />
-            <Link href={substituteDoctor.url + '?from_profile_suggest_cta=1'}>
+            <a href={substituteDoctor.url + '?from_profile_suggest_cta=1'}>
               <SearchCard
                 baseInfo={{
                   displayName: substituteDoctor.title,
@@ -63,7 +60,6 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                   experience: substituteDoctor.experience,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  url: substituteDoctor.url,
                   rate: {
                     count: substituteDoctor.rates_count,
                     satisfaction: substituteDoctor.satisfaction,
@@ -72,19 +68,18 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                 }}
                 type="doctor"
                 details={{
-                  badges: substituteDoctor.badges,
+                  badges: substituteDoctor.badges.map((item: any) => ({ ...item, description: null })),
                 }}
                 className="shadow-none border !p-4 rounded-none border-slate-100"
                 actions={[
                   {
-                    text: 'مشاهده صفحه',
-                    action: () => router.push(substituteDoctor.url),
+                    text: content.cardButton ?? 'مشاهده صفحه',
                     outline: false,
                     description: '',
                   },
                 ]}
               />
-            </Link>
+            </a>
             {content.footer && (
               <div
                 dangerouslySetInnerHTML={{
