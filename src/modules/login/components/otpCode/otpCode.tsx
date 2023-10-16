@@ -1,26 +1,19 @@
-import { useLogin } from '@/common/apis/services/auth/login';
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import useServerQuery from '@/common/hooks/useServerQuery';
-import { dayToSecond } from '@/common/utils/dayToSecond';
-import axios from 'axios';
-import { setCookie } from 'cookies-next';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import PinInput from 'react-pin-input';
-import { UserInfo, useUserInfoStore } from '../../store/userInfo';
+import { useLogin } from '../../hooks/useLogin';
+import { UserInfo } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
-
 interface OtpCodeProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
-  setMobileNumberValue: Dispatch<SetStateAction<string>>;
   postLogin?: (userInfo: UserInfo) => void;
   setRetryGetPasswordNumber: Dispatch<SetStateAction<number>>;
   retryGetPasswordNumber: number;
@@ -29,61 +22,21 @@ interface OtpCodeProps {
 export const OtpCode = (props: OtpCodeProps) => {
   const { mobileNumberValue, setStep, postLogin, retryGetPasswordNumber, setRetryGetPasswordNumber } = props;
   const { t } = useTranslation('login');
-  const login = useLogin();
+  const { login, isLoading } = useLogin();
   const resetPassword = useResetPassword();
-  const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const [password, setPassword] = useState('');
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
-  const university = useServerQuery(state => state.queries.university);
-  const getDoctorProfile = useGetDoctorProfile();
 
   const handleLogin = async (password: string) => {
     try {
-      const { data } = await login.mutateAsync({
-        username: +mobileNumberValue,
+      const data = await login({
+        username: mobileNumberValue,
         password,
       });
 
-      if (data.status === ClinicStatus.SUCCESS) {
-        setCookie('certificate', data.certificate, {
-          path: '/',
-          maxAge: dayToSecond(60),
-        });
-
-        if (university || process.env.NODE_ENV === 'development')
-          setCookie('token', data.token, {
-            path: '/',
-            maxAge: dayToSecond(60),
-          });
-
-        if (window?.Android) window.Android.login(data.certificate);
-
-        let profile = {};
-        if (data.is_doctor) {
-          try {
-            const { data } = await getDoctorProfile.mutateAsync();
-            profile = data.data;
-          } catch (error) {
-            console.error(error);
-          }
-        }
-
-        const info = {
-          is_doctor: data.is_doctor,
-          profile,
-          ...data.result,
-        };
-
-        setUserInfo(info);
-        postLogin && postLogin(info);
-
-        return;
-      }
-      toast.error(data.message);
+      postLogin && postLogin(data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.response?.data);
-      }
+      toast.error((error as any).message);
     }
   };
 
@@ -137,7 +90,7 @@ export const OtpCode = (props: OtpCodeProps) => {
         {t('steps.otpCode.changeMobileNumber')}
       </Button>
 
-      <Button onClick={() => handleLogin(password)} loading={login.isLoading || getDoctorProfile.isLoading}>
+      <Button onClick={() => handleLogin(password)} loading={isLoading}>
         {t('steps.otpCode.action')}
       </Button>
     </div>
