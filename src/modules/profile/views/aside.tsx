@@ -17,7 +17,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
   {
     id: 'services_section',
     isShow: isBulk,
-    children: () => <BulkService />,
+    children: () => <BulkService displayName={information.display_name} expertises={expertises} />,
   },
   // Services
   {

@@ -25,6 +25,7 @@ interface SearchCardProps {
     expertise?: string;
     viewCount?: string;
     isVerify?: boolean;
+    isOnline?: boolean;
     experience?: number;
     url: string;
     rate?: {
@@ -70,6 +71,7 @@ export const SearchCard = (props: SearchCardProps) => {
               height={80}
               className={classNames('border-2 border-slate-200', {
                 'border-primary': baseInfo?.isVerify,
+                'border-green-400': baseInfo?.isOnline,
               })}
               loading="lazy"
             />
