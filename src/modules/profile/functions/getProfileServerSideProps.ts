@@ -60,6 +60,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     let shouldUseProvider: boolean = false;
     let shouldUseUser: boolean = false;
+    let shouldUseExpertice: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -84,6 +85,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           (center: any) => center.center_type === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         usersApiDoctorCitiesList.cities?.includes('*');
+
+      //Expertice Api
+      const experticeApiDoctorList = growthbook.getFeatureValue('profile:expertises-api|doctor-list', { slugs: [''] });
+      const experticeApiCitiesList = growthbook.getFeatureValue('profile:expertises-api|cities', { cities: [''] });
+      shouldUseExpertice =
+        newApiFeatureFlaggingCondition(experticeApiDoctorList.slugs, slugFormmated) ||
+        fullProfileData.centers.some(
+          (center: any) => center.center_type === 1 && experticeApiCitiesList.cities?.includes(center.city_en_slug),
+        ) ||
+        experticeApiCitiesList.cities?.includes('*');
     } catch (error) {
       console.error(error);
     }
@@ -113,15 +124,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             prefix: providerData.value?.prefix,
           };
 
-          const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+          if (shouldUseExpertice) {
+            const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+            const [specialitiesData] = await Promise.allSettled(parallelRequests);
 
-          const [specialitiesData] = await Promise.allSettled(parallelRequests);
-
-          if (specialitiesData.status === 'fulfilled') {
-            profileData.provider = {
-              ...profileData.provider,
-              expertises: Object.values(specialitiesData.value),
-            };
+            if (specialitiesData.status === 'fulfilled') {
+              profileData.provider = {
+                ...profileData.provider,
+                expertises: Object.values(specialitiesData.value),
+              };
+            }
           }
 
           if (shouldUseUser) {
