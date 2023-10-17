@@ -13,6 +13,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
@@ -82,6 +83,7 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -324,7 +326,7 @@ const Receipt = () => {
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
             {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image })}
-            fullName={bookDetailsData.doctor?.display_name}
+            fullName={removePrefixDoctorName(bookDetailsData.doctor?.display_name)}
             expertise={bookDetailsData.doctor?.display_expertise}
             isLoading={getReceiptDetails.isLoading}
           />

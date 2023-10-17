@@ -11,6 +11,7 @@ import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
@@ -53,6 +54,7 @@ const DoctorProfile = ({
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
   const isApplication = useApplication();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
   const isWebView = useWebView();
 
   const addPageView = usePageView();
@@ -160,7 +162,10 @@ const DoctorProfile = ({
   };
 
   const profileData = {
-    information,
+    information: {
+      ...(information ?? {}),
+      display_name: removePrefixDoctorName(information?.display_name),
+    },
     centers,
     expertises,
     history,
@@ -193,16 +198,16 @@ const DoctorProfile = ({
             </div>
           )}
           <Head
-            pageViewCount={history?.count_of_page_view}
-            displayName={information?.display_name}
-            image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
-            title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
-            subTitle={`شماره نظام پزشکی: ${information?.employee_id}`}
-            serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
+            pageViewCount={profileData.history?.count_of_page_view}
+            displayName={profileData.information.display_name}
+            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
+            title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
+            subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
+            serviceList={profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && feedbacks?.details?.satisfaction}
-            rateCount={feedbacks?.details?.number_of_feedbacks}
+            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
             infoEditAction={() => handleViewAs('information')}

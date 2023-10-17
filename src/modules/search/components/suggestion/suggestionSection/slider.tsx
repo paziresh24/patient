@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import Text from '@/common/components/atom/text';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
+import classNames from '@/common/utils/classNames';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
@@ -13,6 +14,7 @@ interface SliderSectionProps {
 export const SliderSection = (props: SliderSectionProps) => {
   const { items } = props;
   const { handleItemClick } = useSuggestionItem();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   return (
     <div className="flex p-3 overflow-auto bg-white space-s-3 no-scroll">
@@ -38,7 +40,7 @@ export const SliderSection = (props: SliderSectionProps) => {
             </div>
             <div className="flex flex-col space-y-1">
               <Text fontWeight="medium" fontSize="sm">
-                {item.name}
+                {removePrefixDoctorName(item.name)}
               </Text>
               <Text fontSize="xs" className="line-clamp-1">
                 {item.sub_title}

@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import Text from '@/common/components/atom/text';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
+import classNames from '@/common/utils/classNames';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
-import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import style from './section.module.css';
 const { publicRuntimeConfig } = getConfig();
@@ -14,6 +15,7 @@ interface CardSectionProps {
 export const CardSection = (props: CardSectionProps) => {
   const { items } = props;
   const { handleItemClick } = useSuggestionItem();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   return (
     <div className="py-2 space-y-1 bg-white">
@@ -37,7 +39,7 @@ export const CardSection = (props: CardSectionProps) => {
               className={style.title}
               fontWeight="medium"
               fontSize="sm"
-              dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }}
+              dangerouslySetInnerHTML={{ __html: removePrefixDoctorName(item.formatted_title ?? '') ?? '' }}
             />
             <Text fontSize="xs" className="line-clamp-1">
               {item.sub_title}
