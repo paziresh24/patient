@@ -11,7 +11,7 @@ const BottomNavigation = dynamic(() => import('./bottomNavigation'));
 export const LayoutWithHeaderAndFooter = ({
   children,
   shouldShowBrand = true,
-  shouldShowPromoteApp = false,
+  shouldShowPromoteApp = true,
   showBottomNavigation = true,
   showHeader = true,
   showFooter = true,
