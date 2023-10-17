@@ -3,6 +3,7 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { splunkCenterProfileInstance } from '@/common/services/splunk';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import SearchCard from '@/modules/search/components/card/card';
@@ -38,6 +39,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   } = props;
   const [page, setPage] = useState(1);
   const router = useRouter();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   const sliceData = useMemo(() => doctors.slice(0, page * 5), [page, doctors]);
 
@@ -105,7 +107,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               key={doctor.title}
               type="doctor"
               baseInfo={{
-                displayName: doctor.title,
+                displayName: removePrefixDoctorName(doctor.title),
                 avatar: doctor.image,
                 url: doctor.url,
                 expertise: doctor.sub_title,

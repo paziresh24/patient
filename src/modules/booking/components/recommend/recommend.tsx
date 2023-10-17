@@ -1,7 +1,7 @@
 import { useSearchRecommendByDoctor } from '@/common/apis/services/search/recommend';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { useRouter } from 'next/router';
 import { HTMLAttributes } from 'react';
 import RecommendCard from './card/card';
 
@@ -18,7 +18,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
     ...props,
   });
   const recommendButton = useFeatureValue<any>('profile.recommend_button', {});
-  const router = useRouter();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
   const doctors = data?.data ?? [];
 
   return (
@@ -35,7 +35,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
               image: doctor.image,
               displayAddress: doctor.display_address,
               displayExpertise: doctor.display_expertise,
-              displayName: doctor.display_name,
+              displayName: removePrefixDoctorName(doctor.display_name),
               freeturn: doctor.freeturn,
               isBulk: doctor.is_bluk,
               ratesCount: doctor.rates_count,
