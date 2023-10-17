@@ -3,8 +3,6 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import Transition from '@/common/components/atom/transition';
 import LogoutIcon from '@/common/components/icons/logout';
-import ShopIcon from '@/common/components/icons/shop';
-import WrenchIcon from '@/common/components/icons/wrench';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { range } from 'lodash';
@@ -39,19 +37,6 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
 
   const [activeTab, setActiveTab] = useState('tools');
 
-  const tabs = [
-    {
-      key: 'tools',
-      name: 'ابزرک‌ها',
-      icon: <WrenchIcon className="w-5 h-5" />,
-    },
-    {
-      key: 'store',
-      name: 'بازارچه',
-      icon: <ShopIcon className="w-5 h-5" />,
-    },
-  ];
-
   const data = apps.data?.data;
 
   return (
@@ -64,30 +49,8 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
             { 'w-72 min-w-72 max-w-72': !fullWidth },
           )}
         >
-          <div className="p-4">
-            <div className="w-full p-2 space-s-2 flex bg-slate-100 rounded-lg">
-              {tabs.map(tab => (
-                <div
-                  key={tab.key}
-                  className={classNames(
-                    'w-full flex items-center cursor-pointer justify-center space-s-1 p-2 text-center rounded-md text-slate-400',
-                    {
-                      'bg-white text-slate-800 shadow-sm': activeTab === tab.key,
-                    },
-                  )}
-                  onClick={() => setActiveTab(tab.key)}
-                >
-                  {tab.icon}
-                  <Text fontSize="sm" fontWeight="medium">
-                    {tab.name}
-                  </Text>
-                </div>
-              ))}
-            </div>
-          </div>
-
           <Transition match={activeTab === 'tools'} animation="left" className="h-full">
-            <div className="flex flex-col justify-between h-full px-4 pb-4">
+            <div className="flex flex-col justify-between h-full px-4 py-4">
               <div>
                 {(apps.isLoading || apps.isInitialLoading) && (
                   <div className="space-y-3">
