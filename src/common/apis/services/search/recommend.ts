@@ -20,6 +20,6 @@ export const searchRecommendByDoctor = async ({ city, category, doctorId, center
   return data;
 };
 
-export const useSearchRecommendByDoctor = (params: Params) => {
-  return useQuery([ServerStateKeysEnum.Search, params], () => searchRecommendByDoctor(params));
+export const useSearchRecommendByDoctor = (params: Params, options?: any) => {
+  return useQuery([ServerStateKeysEnum.Search, params], () => searchRecommendByDoctor(params), { ...options });
 };

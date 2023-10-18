@@ -4,6 +4,7 @@ import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import { CENTERS } from '@/common/types/centers';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
@@ -39,6 +40,7 @@ const createBreadcrumb = (links: { orginalLink: string; title: string }[], displ
 export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   const isCSR = context.req.url?.startsWith?.('/_next');
+  const isVisitOnlineCenterType = context.query.centerTarget === CENTERS.CONSULT;
 
   const { slug, ...query } = context.query;
   const university = query.university as string;
@@ -215,7 +217,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         title: university ? information?.display_name : title,
         description: university ? '' : description,
         information,
-        centers,
+        centers: centers.filter((center: any) => (isVisitOnlineCenterType ? center.id === CENTERS.CONSULT : true)),
         expertises,
         feedbacks,
         dehydratedState: dehydrate(queryClient),

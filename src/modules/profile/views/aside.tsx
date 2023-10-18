@@ -1,5 +1,4 @@
 import Button from '@/common/components/atom/button/button';
-import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
@@ -10,7 +9,7 @@ import CentersInfo from './centersInfo';
 import Services from './services';
 
 const BulkService = dynamic(() => import('./services/bulk'));
-const Recommend = dynamic(() => import('@/modules/booking/components/recommend'));
+const RecommendWrapper = dynamic(() => import('./recommend'));
 
 export const aside = ({ information, centers, expertises, waitingTimeInfo, onlineVisit, isBulk, customize, editable, seo }: any) => [
   // Bulk
@@ -42,8 +41,8 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
     function: () => {
       return {
         doctorId: information.id,
-        city: information.city_en_slug,
-        category: expertises.group_expertises[0]?.en_slug,
+        city: { name: centers[0].city, en_slug: information.city_en_slug },
+        groupExpertise: expertises.group_expertises[0],
         clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
           splunkInstance().sendEvent({
             group: 'recommend',
@@ -67,17 +66,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
         },
       };
     },
-    children: (props: any) => (
-      <div className="flex flex-col space-y-3 md:hidden">
-        <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          برترین پزشکان {expertises.group_expertises?.[0]?.name} {centers[0].city ? `در ${centers[0].city}` : null}{' '}
-          <Text fontWeight="medium" fontSize="sm">
-            از دیدگاه بیماران
-          </Text>
-        </Text>
-        <Recommend className="pr-4 md:pr-0" {...props} />
-      </div>
-    ),
+    children: (props: any) => <RecommendWrapper {...props} />,
     dataAttributes: { 'data-nosnippet': 'true' },
   },
   // Centers Info

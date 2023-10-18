@@ -37,8 +37,8 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
       </Card>
       <Modal bodyClassName="p-0" title="" {...modalProps}>
         {searchData.isLoading && (
-          <div className="w-full flex justify-center">
-            <Loading className=" w-8 h-8 my-8" />
+          <div className="flex justify-center w-full">
+            <Loading className="w-8 h-8 my-8 " />
           </div>
         )}
         {searchData.isSuccess && substituteDoctor && (
@@ -52,7 +52,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                 }),
               }}
             />
-            <a href={substituteDoctor.url + '?from_profile_suggest_cta=1'}>
+            <a href={substituteDoctor.url + '?from_profile_suggest_cta=1&centerTarget=5532'}>
               <SearchCard
                 baseInfo={{
                   displayName: substituteDoctor.title,

@@ -8,12 +8,15 @@ type Recommends = {
   displayExpertise?: string;
   displayName: string;
   freeturn?: string;
-  isBulk: true;
+  isBulk: boolean;
+  isOnline?: boolean;
   ratesCount: number;
   rate: number;
   url: string;
   id: string;
   action?: any;
+  badges?: any;
+  price?: string;
 };
 
 interface RecommendCardProps {
@@ -27,11 +30,11 @@ export const RecommendCard = (props: RecommendCardProps) => {
 
   return (
     <>
-      <ScrollContainer className="flex w-full pl-5 !overflow-auto rounded-lg select-none no-scroll space-s-3 no-scroll">
+      <ScrollContainer className="flex w-full pl-5 !overflow-auto rounded-lg select-none no-scroll space-s-2 no-scroll">
         {listOfDoctors?.map(doctor => (
           <Card
             key={doctor.id}
-            className="w-[22rem] min-w-[22rem]"
+            className="w-[15rem] min-w-[15rem] !space-y-0"
             type="doctor"
             baseInfo={{
               displayName: doctor.displayName,
@@ -43,9 +46,12 @@ export const RecommendCard = (props: RecommendCardProps) => {
                 count: doctor.ratesCount,
                 satisfaction: doctor.rate,
               },
+              isOnline: doctor.isOnline,
             }}
             details={{
-              address: { text: doctor.displayAddress ?? '' },
+              ...(doctor.displayAddress && { address: { text: doctor.displayAddress } }),
+              badges: doctor.badges,
+              price: doctor.price,
             }}
             actions={doctor?.action?.map((item: any) => ({
               text: item.title,
