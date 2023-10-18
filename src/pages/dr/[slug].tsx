@@ -14,6 +14,7 @@ import useModal from '@/common/hooks/useModal';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
+import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
@@ -245,11 +246,13 @@ const DoctorProfile = ({
                 دریافت نوبت
               </Text>
             </div>
-            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                آدرس و تلفن
-              </Text>
-            </div>
+            {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+              <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
+                <Text fontSize="sm" fontWeight="medium">
+                  آدرس و تلفن
+                </Text>
+              </div>
+            )}
             <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 درباره پزشک

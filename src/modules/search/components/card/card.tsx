@@ -62,8 +62,8 @@ export const SearchCard = (props: SearchCardProps) => {
   const LinkInhance = baseInfo?.url ? (Link as any) : 'div';
 
   return (
-    <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
-      <div className="flex items-center mb-3 space-s-2">
+    <Card className={classNames('relative justify-between !p-3 md:!p-4 space-y-3', className)}>
+      <div className="flex items-center space-s-2">
         <LinkInhance onClick={() => sendEventWhenClick?.({ element: 'avatar' })} {...(baseInfo?.url && { href: baseInfo?.url })}>
           <div className="relative">
             <Avatar
@@ -128,7 +128,7 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       </div>
       {details?.address?.text && (
-        <div className="flex items-center mt-1 space-s-1">
+        <div className="flex items-center space-s-1">
           <LocationIcon className="w-5 h-5 min-w-[1.25rem]" />
           <Text fontSize="sm" className="line-clamp-1">
             {details?.address?.text}
@@ -136,7 +136,7 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.price && (
-        <div className="flex items-center mt-3 space-s-1">
+        <div className="flex items-center space-s-1">
           <MoneyIcon className="w-5 h-5 min-w-[1.25rem]" />
           <Text fontSize="sm" className="line-clamp-1">
             {details?.price}
@@ -144,13 +144,13 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.badges && details?.badges?.length > 0 && (
-        <div className="flex flex-wrap justify-start gap-2 mt-3 md:justify-center">
+        <div className="flex flex-wrap justify-start gap-2 md:justify-center">
           {details?.badges?.map((badge, index) => (
             <Badge key={index} {...badge} />
           ))}
         </div>
       )}
-      <div className="flex items-end mt-4 space-s-3">
+      <div className="flex items-end space-s-3">
         {actions?.map((item, index) => (
           <div key={index} className="flex flex-col w-full space-y-2">
             {item.description && <Text className="text-[0.7rem] md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />}
