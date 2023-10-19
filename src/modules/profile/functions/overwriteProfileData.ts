@@ -1,4 +1,6 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import flatMap from 'lodash/flatMap';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 export type OverwriteProfileData = {
@@ -34,10 +36,16 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     ...overwriteData.provider,
   };
 
+  const group_expertises = flatMap(overwriteData.provider?.expertises, item => get(item, 'speciality.taggables', [])).map(
+    (item: any) => item.tag,
+  );
+
   const centers = source.centers;
 
   const expertises = {
-    group_expertises: source.group_expertises,
+    group_expertises: isEmpty(group_expertises)
+      ? source.group_expertises
+      : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
     expertises: isEmpty(overwriteData.provider.expertises)
       ? source.expertises.map((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
