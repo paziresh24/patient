@@ -3,6 +3,7 @@ import axios from 'axios';
 
 interface Params {
   user_id: string;
+  phone_number?: string;
   is_doctor: boolean;
 }
 

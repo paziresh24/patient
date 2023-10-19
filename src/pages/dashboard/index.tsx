@@ -12,7 +12,7 @@ import { ReactElement, useEffect } from 'react';
 export const Dashboard = () => {
   const { isMobile, isDesktop } = useResponsive();
   const user = useUserInfoStore(state => state.info);
-  const apps = useApps({ user_id: user.id ?? '', is_doctor: !!user.is_doctor }, { enabled: !!user.id });
+  const apps = useApps({ user_id: user.id ?? '', phone_number: user.cell, is_doctor: !!user.is_doctor }, { enabled: !!user.id });
   const router = useRouter();
 
   useEffect(() => {
