@@ -17,8 +17,14 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (apps.isSuccess && isDesktop) {
+      if (apps.data.data.length === 0) {
+        router.push('/dashboard/profile');
+        return;
+      }
       router.push(
-        `/dashboard/apps/${(flatten(apps.data.data)?.[0] as any)?.key}/${(flatten(apps.data.data)?.[0] as any).navigation_items[0]?.key}/`,
+        `/dashboard/apps/${(flatten(apps.data.data)?.[0] as any)?.key}/${
+          (flatten(apps.data.data)?.[0] as any)?.navigation_items?.[0]?.key
+        }/`,
       );
     }
   }, [apps.isSuccess, isDesktop]);

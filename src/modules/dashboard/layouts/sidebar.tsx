@@ -72,7 +72,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           }))}
                       />
                     ))}
-                {appsData.isSuccess && apps.some((app: any) => !app.pin) && <Divider />}
+                {appsData.isSuccess && apps.some((app: any) => app.pin) && <Divider />}
 
                 {appsData.isSuccess &&
                   apps
@@ -92,7 +92,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           }))}
                       />
                     ))}
-                <Divider />
+                {((appsData.isSuccess && apps.some((app: any) => !app.pin)) || appsData.isLoading) && <Divider />}
                 {defaultMenuData.map(menu => (
                   <MenuItem key={menu.url} name={menu.label} icon={menu.icon} link={`${menu.url}/`} />
                 ))}

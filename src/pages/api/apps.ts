@@ -21,17 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const appManifests = await Promise.allSettled(apps);
   const defaultDoctorAppsManifests = await Promise.allSettled(defaultDoctorApps);
 
-  if (isDoctor)
-    return res.status(200).json([
-      ...appManifests
-        .reverse()
-        .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value.data, pin: true }),
-      ...defaultDoctorAppsManifests
-        .reverse()
-        .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value.data, pin: false }),
-    ]);
-
-  return res.status(200).json([[]]);
+  return res.status(200).json([
+    ...appManifests
+      .reverse()
+      .filter(item => item.status === 'fulfilled')
+      .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: true }),
+    ...defaultDoctorAppsManifests
+      .reverse()
+      .filter(item => item.status === 'fulfilled')
+      .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: false }),
+  ]);
 }
