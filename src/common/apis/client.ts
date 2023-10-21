@@ -2,12 +2,19 @@ import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { refresh } from './services/auth/refresh';
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
 export const paziresh24AppClient = axios.create({
-  baseURL: publicRuntimeConfig.PAZIRESH24_API,
+  baseURL: serverRuntimeConfig.DOCTORS_BASE_URL ?? publicRuntimeConfig.DOCTORS_BASE_URL,
   withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
+});
+
+export const feedbacksClient = axios.create({
+  baseURL: publicRuntimeConfig.FEEDBACKS_BASE_URL,
+  withCredentials: true,
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
+  timeout: 3000,
 });
 
 export const apiGatewayClient = axios.create({

@@ -1,4 +1,4 @@
-import { paziresh24AppClient } from '@/common/apis/client';
+import { feedbacksClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,7 +15,7 @@ export interface FeedbackParams {
 }
 
 export const getFeedbacks = async (params: FeedbackParams) => {
-  const { data } = await paziresh24AppClient.get(`/mizaan/v1/search/feedbacks/`, {
+  const { data } = await feedbacksClient.get(`/v1/search/feedbacks/`, {
     params,
   });
   return data;
