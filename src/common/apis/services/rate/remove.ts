@@ -1,4 +1,4 @@
-import { paziresh24AppClient } from '@/common/apis/client';
+import { feedbacksClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
@@ -6,7 +6,7 @@ export interface Params {
 }
 
 export const removeFeedback = ({ feedback_id }: Params) => {
-  return paziresh24AppClient.delete(`/mizaan/v1/feedbacks/${feedback_id}`);
+  return feedbacksClient.delete(`/v1/feedbacks/${feedback_id}`);
 };
 
 export const useRemoveFeedback = () => {
