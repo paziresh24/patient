@@ -10,7 +10,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `https://bazaar.paziresh24.com/wp-json/custom/v1/orders-by-phone/?phone=${req.query.phone_number}`,
     );
 
-    const apps = [...installedApps.data.map(async (item: any) => await axios.get(item.app_link))];
+    const apps = [
+      ...installedApps.data.map(
+        async (item: any) =>
+          await axios.get(item.app_link).catch(error => {
+            return {
+              data: {
+                navigation_items: [],
+              },
+            };
+          }),
+      ),
+    ];
     let defaultDoctorApps: any = [];
     if (isDoctor) {
       apps.push(await axios.get('https://dr.paziresh24.com/drapp-manifest.json'));
