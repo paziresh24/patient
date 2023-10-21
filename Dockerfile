@@ -4,6 +4,9 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 ENV DOCKER_BUILDKIT 1
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEW_RELIC_NO_CONFIG_FILE=true
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+ENV NEW_RELIC_LOG=stdout
 
 COPY package.json package-lock.json ./ 
 RUN rm -rf package-lock.json 

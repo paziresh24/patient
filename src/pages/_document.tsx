@@ -1,3 +1,11 @@
+if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
+  try {
+    require('newrelic');
+  } catch (error) {
+    console.error('newrelic', error);
+  }
+}
+
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
