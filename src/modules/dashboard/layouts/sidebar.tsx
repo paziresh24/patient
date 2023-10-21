@@ -62,6 +62,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         key={app.name}
                         name={app.name}
                         icon={app.icon}
+                        pattern={app.key}
                         link={`/dashboard/apps/${app.key}/${app.navigation_items.find((item: any) => item.rel === 'home').key}/`}
                         subMenu={app.navigation_items
                           .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))
@@ -81,6 +82,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         key={app.name}
                         name={app.name}
                         icon={app.icon}
+                        pattern={app.key}
                         link={`/dashboard/apps/${app.key}/${app.navigation_items.find((item: any) => item.rel === 'home').key}/`}
                         subMenu={app.navigation_items
                           .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))

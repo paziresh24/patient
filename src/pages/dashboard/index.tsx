@@ -17,7 +17,9 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (apps.isSuccess && isDesktop) {
-      router.push(`/dashboard/apps/${(flatten(apps.data.data)?.[0] as any)?.key}`);
+      router.push(
+        `/dashboard/apps/${(flatten(apps.data.data)?.[0] as any)?.key}/${(flatten(apps.data.data)?.[0] as any).navigation_items[0]?.key}/`,
+      );
     }
   }, [apps.isSuccess, isDesktop]);
 

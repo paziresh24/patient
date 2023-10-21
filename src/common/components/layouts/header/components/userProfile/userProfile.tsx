@@ -67,7 +67,7 @@ export const UserProfile = () => {
         {
           name: t('patient/common:menu.myTurns'),
           icon: <CalenderIcon />,
-          link: '/dashboard/apps/@paziresh24/appointments',
+          link: '/dashboard/appointments',
           badge: !!turnsCount.presence && (
             <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
           ),

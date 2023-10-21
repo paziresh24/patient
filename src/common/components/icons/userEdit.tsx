@@ -13,7 +13,7 @@ export const UserEditIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
       d="M19.2101 15.74L15.67 19.2801C15.53 19.4201 15.4 19.68 15.37 19.87L15.18 21.22C15.11 21.71 15.45 22.05 15.94 21.98L17.29 21.79C17.48 21.76 17.75 21.63 17.88 21.49L21.42 17.95C22.03 17.34 22.32 16.63 21.42 15.73C20.53 14.84 19.8201 15.13 19.2101 15.74Z"
       stroke="currentColor"
       strokeWidth="1.5"
-      stroke-miterlimit="10"
+      strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -21,7 +21,7 @@ export const UserEditIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
       d="M18.7001 16.25C19.0001 17.33 19.84 18.17 20.92 18.47"
       stroke="currentColor"
       strokeWidth="1.5"
-      stroke-miterlimit="10"
+      strokeMiterlimit="10"
       strokeLinecap="round"
       strokeLinejoin="round"
     />

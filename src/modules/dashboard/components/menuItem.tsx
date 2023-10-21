@@ -1,6 +1,7 @@
 import Text from '@/common/components/atom/text';
 import Transition from '@/common/components/atom/transition';
 import ChevronIcon from '@/common/components/icons/chevron';
+import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,13 +15,15 @@ interface MenuItemProps {
   subMenu?: MenuItemProps[];
   className?: string;
   type?: 'parent' | 'children';
+  pattern?: string;
 }
 
-export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent' }: MenuItemProps) => {
+export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
   const router = useRouter();
   const isSubMenu = !!subMenu && subMenu?.length > 0;
-  const ComponentWrapper = link ? Link : ('div' as any);
-  const [isOpen, setIsOpen] = useState(false);
+  const { isMobile } = useResponsive();
+  const ComponentWrapper = (isMobile ? (type === 'parent' ? link && !isSubMenu : true) : !!link) ? Link : ('div' as any);
+  const [isOpen, setIsOpen] = useState(router.asPath.includes(pattern));
   const ref = useRef(null);
   useClickAway(
     ref,
@@ -42,7 +45,7 @@ export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent'
           {
             'justify-between': isSubMenu,
             '!pr-6': type === 'children',
-            'bg-slate-100': type === 'parent' && router.asPath == link,
+            'bg-slate-100': type === 'parent' && router.asPath === link,
             'before:absolute before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[70%] relative before:bg-primary':
               type === 'children' && router.asPath == link,
           },

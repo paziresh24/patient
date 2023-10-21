@@ -24,7 +24,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
 
   useEffect(() => {
     if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
-      router.replace(`/dashboard/apps/@paziresh24/${router.pathname.replace('patient', '')}`);
+      router.replace(`/dashboard/${router.pathname.replace('patient', '')}`);
     }
   }, [userInfo.id]);
 
