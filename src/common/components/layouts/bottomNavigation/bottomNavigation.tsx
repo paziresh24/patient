@@ -66,7 +66,7 @@ export const BottomNavigation = () => {
           <CalenderIcon />
         </div>
       ),
-      link: isShowDashboard ? '/dashboard/apps/@paziresh24/appointments/' : '/patient/appointments',
+      link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
       ...(isShowDashboard && { exact: true }),
       pattern: '/patient/appointments',
       privateRoute: true,
