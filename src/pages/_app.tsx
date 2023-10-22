@@ -29,7 +29,7 @@ const iransansFont = localFont({
 const { publicRuntimeConfig } = getConfig();
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
-const growthbook = new GrowthBook({
+export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
