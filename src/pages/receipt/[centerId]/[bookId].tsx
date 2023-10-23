@@ -1,5 +1,6 @@
 import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptDetails';
 import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
+import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
@@ -48,6 +49,11 @@ const Receipt = () => {
   } = useRouter();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const {
+    handleOpen: handleOpenSuccessfulMessageeModal,
+    handleClose: handleSuccessfulMessageeModal,
+    modalProps: successfulMessage,
+  } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -96,6 +102,7 @@ const Receipt = () => {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
         handleOpenWaitingTimeModal();
       }
+      handleOpenSuccessfulMessageeModal();
     }
   }, [getReceiptDetails.status]);
 
@@ -363,6 +370,27 @@ const Receipt = () => {
           <div className="flex flex-col space-y-3">
             <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
             <Button block onClick={() => handleCloseWaitingTimeModal()}>
+              مشاهده رسید نوبت
+            </Button>
+          </div>
+        </Modal>
+        <Modal title="نوبت با موفقیت ثبت شد" {...successfulMessage}>
+          <div className="flex flex-col space-y-3 items-center">
+            <SuccessIcon className="text-green-600" />
+            <Text fontWeight="medium">نوبت شما با موفقیت ثبت شد</Text>
+            <Alert severity="warning" className="p-2 flex flex-col gap-2 items-center">
+              <Text fontSize="sm" fontWeight="bold">
+                احتمال معطلی بیش از یک ساعت!
+              </Text>
+              <Text className="text-center" fontSize="sm">
+                نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.
+              </Text>
+            </Alert>
+            <Text className="text-center" fontSize="sm">
+              با ثبت نظر خود از پذیرش 24 حمایت کنید!
+            </Text>
+            <Button block>حمایت کردن</Button>
+            <Button variant="secondary" block>
               مشاهده رسید نوبت
             </Button>
           </div>
