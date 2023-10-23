@@ -72,7 +72,7 @@ export const sections = ({
       function: () => {
         const { biography } = information;
         return {
-          biography,
+          content: biography,
         };
       },
       children: (props: any) => <Biography className="bg-white md:rounded-lg" {...props} />,
