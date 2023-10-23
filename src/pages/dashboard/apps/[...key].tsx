@@ -15,7 +15,10 @@ export const Dashboard = () => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
-  const appsData = useApps({ user_id: user.id ?? '', phone_number: user.cell, is_doctor: !!user.is_doctor }, { enabled: !!user.id });
+  const appsData = useApps(
+    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
+    { enabled: !!user.id },
+  );
   const {
     query: { key: keys },
     isReady,

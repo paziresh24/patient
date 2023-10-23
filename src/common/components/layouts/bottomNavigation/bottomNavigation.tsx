@@ -26,7 +26,7 @@ export const BottomNavigation = () => {
   const isApplication = useApplication();
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(user?.id ?? '') || dashboardDoctorList.ids.includes('*');
+  const isShowDashboard = dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();

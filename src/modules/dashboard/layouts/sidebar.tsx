@@ -22,7 +22,10 @@ export type App = {
 export const SideBar = ({ children, className, fullWidth }: { children: ReactNode; className?: string; fullWidth?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
   const logout = useUserInfoStore(state => state.logout);
-  const appsData = useApps({ user_id: user.id ?? '', phone_number: user.cell, is_doctor: !!user.is_doctor }, { enabled: !!user.id });
+  const appsData = useApps(
+    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
+    { enabled: !!user.id },
+  );
   const isUserPending = useUserInfoStore(state => state.pending);
   const { asPath, ...router } = useRouter();
 

@@ -49,7 +49,7 @@ export const UserProfile = () => {
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id ?? '') || dashboardDoctorList.ids.includes('*');
+  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -161,7 +161,7 @@ export const UserProfile = () => {
                           </Text>
                           <EditIcon className="w-5 h-5" />
                         </div>
-                        <Text fontSize="xs">{userInfo.username}</Text>
+                        <Text fontSize="xs">{userInfo.cell}</Text>
                       </>
                     )}
                   </div>

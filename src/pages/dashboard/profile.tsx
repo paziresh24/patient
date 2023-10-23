@@ -11,10 +11,10 @@ import PatinetProfile from '../patient/profile';
 
 export const AppointmentsPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
-  const info = useUserInfoStore(state => state.info);
+  const user = useUserInfoStore(state => state.info);
   return (
     <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-      {info.is_doctor ? (
+      {user.provider?.job_title === 'doctor' ? (
         <>
           {isAppLoading && <LoadingApps />}
           <iframe
