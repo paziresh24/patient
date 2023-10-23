@@ -168,6 +168,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     let feedbackDataWithoutPagination;
 
+    let dontShowRateAndReviewMessage = '';
     try {
       const feedbackData = await queryClient.fetchQuery(
         [
@@ -183,6 +184,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             server_id: server_id,
           }),
       );
+      feedbacks.feedbacks = feedbackData?.result ?? [];
+      dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
+
       if (!isCSR)
         feedbackDataWithoutPagination = await queryClient.fetchQuery(
           [
@@ -200,7 +204,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               no_page_limit: true,
             }),
         );
-      feedbacks.feedbacks = feedbackData?.result ?? [];
     } catch (error) {
       console.error(error);
     }
@@ -227,6 +230,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         onlineVisit,
         similarLinks,
         waitingTimeInfo,
+        dontShowRateAndReviewMessage,
         isBulk:
           centers.every((center: any) => center.status === 2) ||
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
