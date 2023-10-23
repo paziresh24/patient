@@ -86,6 +86,11 @@ export const sections = ({
         </div>
       ),
     },
+    // Video
+    {
+      isShow: media.aparat && media.aparat !== '0',
+      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media.aparat }} />,
+    },
     // Gallery
     {
       title: 'گالری',

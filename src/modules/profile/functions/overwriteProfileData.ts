@@ -68,6 +68,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const feedbacks = { ...source.feedbacks };
 
   const media = {
+    aparat: source.aparat_video_code,
     gallery: source.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
   };
 
