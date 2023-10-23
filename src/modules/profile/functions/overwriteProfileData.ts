@@ -21,8 +21,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source.id,
     server_id: source.server_id,
-    awards: source.awards,
-    scientific: source.scientific,
     display_name: source.display_name,
     name: source.name,
     family: source.family,

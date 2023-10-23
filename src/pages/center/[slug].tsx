@@ -289,7 +289,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره مرکز درمانی
               </Text>
-              <Biography biography={profileData.biography} className="bg-white md:rounded-lg" />
+              <Biography content={profileData.biography} className="bg-white md:rounded-lg" />
             </div>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
