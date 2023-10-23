@@ -21,8 +21,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source.id,
     server_id: source.server_id,
-    awards: source.awards,
-    scientific: source.scientific,
     display_name: source.display_name,
     name: source.name,
     family: source.family,
@@ -70,7 +68,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const feedbacks = { ...source.feedbacks };
 
   const media = {
-    aparat: source.aparat_video_code,
     gallery: source.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
   };
 

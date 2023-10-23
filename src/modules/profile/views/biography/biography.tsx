@@ -1,7 +1,5 @@
 import Opener from '@/common/components/atom/opener/opener';
 import Text from '@/common/components/atom/text/text';
-import AtomIcon from '@/common/components/icons/atom';
-import AwardIcon from '@/common/components/icons/award';
 import ReceiptIcon from '@/common/components/icons/receipt';
 import classNames from '@/common/utils/classNames';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
@@ -9,18 +7,16 @@ import { useMemo } from 'react';
 
 interface BiographyProps {
   biography?: string;
-  awards?: string;
-  scientific?: string;
   className?: string;
 }
 
 export const Biography = (props: BiographyProps) => {
-  const { biography, awards, scientific, className } = props;
+  const { biography, className } = props;
 
   const needShowMore = useMemo(() => {
-    const bio = (biography ?? '') + (awards ?? '') + (scientific ?? '');
+    const bio = biography ?? '';
     return removeHtmlTagInString(bio).length >= 750;
-  }, [biography, awards, scientific]);
+  }, [biography]);
 
   const Wrapper = needShowMore ? Opener : 'div';
 
@@ -55,28 +51,6 @@ export const Biography = (props: BiographyProps) => {
               </Text>
             </div>
             <Text className="leading-6" align="justify" fontSize="sm" dangerouslySetInnerHTML={{ __html: biography }} />
-          </div>
-        )}
-        {awards && (
-          <div className="flex flex-col space-y-3">
-            <div className="flex items-center space-s-1">
-              <AwardIcon className="w-6 h-6" />
-              <Text fontWeight="bold" fontSize="sm">
-                دستاوردها
-              </Text>
-            </div>
-            <Text className="leading-6" align="justify" fontSize="sm" dangerouslySetInnerHTML={{ __html: awards }} />
-          </div>
-        )}
-        {scientific && (
-          <div className="flex flex-col space-y-3">
-            <div className="flex items-center space-s-1">
-              <AtomIcon className="w-6 h-6" />
-              <Text fontWeight="bold" fontSize="sm">
-                سوابق علمی
-              </Text>
-            </div>
-            <Text className="leading-6" align="justify" fontSize="sm" dangerouslySetInnerHTML={{ __html: scientific }} />
           </div>
         )}
       </div>

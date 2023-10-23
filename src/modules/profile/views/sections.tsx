@@ -67,14 +67,12 @@ export const sections = ({
       title: 'درباره پزشک',
       id: 'about_section',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
-      isShow: information.biography || information.awards || information.scientific,
-      isShowFallback: !information.biography && !information.awards && !information.scientific && editable,
+      isShow: information.biography,
+      isShowFallback: !information.biography && editable,
       function: () => {
-        const { biography, awards, scientific } = information;
+        const { biography } = information;
         return {
           biography,
-          awards,
-          scientific,
         };
       },
       children: (props: any) => <Biography className="bg-white md:rounded-lg" {...props} />,
@@ -87,11 +85,6 @@ export const sections = ({
           <Text fontWeight="medium">نوشتن بیوگرافی</Text>
         </div>
       ),
-    },
-    // Video
-    {
-      isShow: media.aparat && media.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media.aparat }} />,
     },
     // Gallery
     {

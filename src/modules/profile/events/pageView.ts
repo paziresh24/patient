@@ -61,7 +61,7 @@ export const pageViewEvent = async ({
         first_freeturn_availble_time: some(centers, 'freeturns_info.availalbe_time_text')
           ? compact(centers.map((center: any) => center?.freeturns_info && center?.freeturns_info?.availalbe_time_text))
           : 'blank',
-        doctor_info_box_presence: information.biography || information.awards || information.scientific ? 1 : 0,
+        doctor_info_box_presence: information.biography ? 1 : 0,
         isWebView: isWebView ? 1 : 0,
         viewable_center_selection_modal: centers.filter((center: any) => center.id !== '5532').length > 1 ? 1 : 0,
         viewable_service_selection_modal:
