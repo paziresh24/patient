@@ -15,7 +15,7 @@ export const Rate = (props: RateProps) => {
   return (
     <>
       <div className="w-full h-auto">
-        {!!controller && (
+        {!!controller && !message && (
           <div className="flex items-center justify-between w-full px-4 my-4">
             <Text fontSize="sm" fontWeight="medium">
               {controller.text}
@@ -31,7 +31,7 @@ export const Rate = (props: RateProps) => {
         )}
         {!!details.count && (
           <>
-            <Divider className={classNames('mb-5', { '!mb-0': !!message })} />
+            <Divider className={classNames('mb-5', { hidden: !!message })} />
             {!message && (
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between w-full gap-3 px-4">

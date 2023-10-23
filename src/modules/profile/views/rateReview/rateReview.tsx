@@ -497,9 +497,9 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
-      <div ref={rateRef} className="w-full p-4 bg-white">
-        {!!details.count && (
+    <div ref={rateRef} className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
+      {!!details.count && !message && (
+        <div className="w-full p-4 bg-white">
           <div className="space-y-3">
             <Details
               satisfaction={details.satisfaction}
@@ -509,8 +509,8 @@ export const RateReview = (props: RateReviewProps) => {
               information={details.information}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {isShowPremiumFeatures && checkPremiumUser(userInfo.vip) && (
         <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
