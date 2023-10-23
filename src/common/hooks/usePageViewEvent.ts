@@ -22,7 +22,7 @@ export const usePageViewEvent = () => {
         data: {
           url: window.location.pathname,
           user: {
-            username: userInfo?.username ?? null,
+            username: userInfo?.cell ?? null,
             terminal_id: getCookie('terminal_id'),
           },
           ...data,

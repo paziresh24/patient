@@ -35,6 +35,10 @@ export type UserInfo = {
   is_doctor?: boolean;
   profile?: any;
   vip?: string;
+  provider?: {
+    job_title?: 'doctor';
+    slug?: string;
+  };
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
@@ -51,6 +55,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     set(() => ({
       info: {
         ...info,
+        cell: `0${info.cell}`,
         is_foreigner: info.is_foreigner == '1',
       },
       isLogin: true,

@@ -23,7 +23,7 @@ export const useInfoVote = () => {
 
   const userInfo = {
     terminal_id: getCookie('terminal_id'),
-    username: userData?.username,
+    username: userData?.cell,
   };
 
   const like = (value: string | undefined, type: string) => {

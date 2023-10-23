@@ -106,7 +106,7 @@ const DoctorProfile = ({
   }, [isBulk, information]);
 
   useEffect(() => {
-    if (!!userInfo.is_doctor && slug === userInfo?.profile?.slug) {
+    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
       setEditable(true);
       splunkInstance().sendEvent({
         group: 'profile',
@@ -119,7 +119,7 @@ const DoctorProfile = ({
         },
       });
     }
-  }, [userInfo.is_doctor, slug]);
+  }, [userInfo, slug]);
 
   const toolBarItems = useToolBarController({ slug, displayName: information?.display_name, documentTitle: title, editable });
 

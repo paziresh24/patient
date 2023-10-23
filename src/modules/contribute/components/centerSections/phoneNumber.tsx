@@ -28,15 +28,13 @@ export const PhoneNumberSection = (props: PhoneNumberSectionProps) => {
   const userData = useUserInfoStore(state => state.info);
 
   const handleAddPhoneNumber = (phoneNumberValue: PhoneData) => {
-    if (phoneNumbers.every(items => items.cell !== phoneNumberValue) && phoneNumberValue != userData?.username) {
+    if (phoneNumbers.every(items => items.cell !== phoneNumberValue) && phoneNumberValue != userData?.cell) {
       phoneDataForEdit && handlePhoneStatus(phoneNumbers.find(items => items.cell == phoneDataForEdit)!, 'dislike');
       setPhoneNumbers(prev => [...prev, { cell: phoneNumberValue, default: false, status: 'add' }]);
       handleCloseAddPhoneModalModal();
       return;
     }
-    phoneNumberValue == userData?.username
-      ? toast.error('لطفا شماره تلفن مرکز را وارد کنید.')
-      : toast.error('این شماره قبلا وارد شده است.');
+    phoneNumberValue == userData?.cell ? toast.error('لطفا شماره تلفن مرکز را وارد کنید.') : toast.error('این شماره قبلا وارد شده است.');
   };
 
   const editPhoneNumber = (value: string) => {

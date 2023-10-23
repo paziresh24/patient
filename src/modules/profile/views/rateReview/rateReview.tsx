@@ -221,7 +221,7 @@ export const RateReview = (props: RateReviewProps) => {
                 icon: <InfoIcon width={22} height={22} />,
                 inModal: true,
               },
-              userInfo?.id === feedback?.user_id &&
+              userInfo?.id?.toString() === feedback?.user_id &&
                 isShowOption('EDIT') && {
                   id: 5,
                   name: 'ویرایش',
@@ -230,7 +230,7 @@ export const RateReview = (props: RateReviewProps) => {
                   icon: <EditIcon width={22} height={22} />,
                   inModal: true,
                 },
-              userInfo?.id === feedback?.user_id &&
+              userInfo?.id?.toString() === feedback?.user_id &&
                 isShowOption('DELETE') && {
                   id: 6,
                   name: 'حذف',
@@ -395,7 +395,7 @@ export const RateReview = (props: RateReviewProps) => {
           current_comment: feedbackDetails.description,
           comment_id: feedbackDetails.id,
           terminal_id: getCookie('terminal_id'),
-          phone: userInfo.username ?? null,
+          phone: userInfo.cell ?? null,
           is_doctor: feedbackDetails.isDoctor,
         },
       },
