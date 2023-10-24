@@ -1,6 +1,7 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
-import { suggestion, useSearchSuggestion } from '@/common/apis/services/search/suggestion';
+import { search as searchApi } from '@/common/apis/services/search/search';
+import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
@@ -15,24 +16,25 @@ import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import { push } from '@socialgouv/matomo-next';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
+import { flatten } from 'lodash';
+import { GetServerSidePropsContext } from 'next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { university }, host }: any) => {
+const CenterProfile = ({ query: { university, text }, host }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
   const slug = query.slug as string;
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(text ?? '');
   const [selectedExpertise, setSelectedExpertise] = useState('');
 
   const profile = useSlugProfile(
@@ -43,18 +45,44 @@ const CenterProfile = ({ query: { university }, host }: any) => {
     },
   );
   const profileData = profile.data?.result?.data;
-  const doctors = useSearchSuggestion(
-    {
-      query: searchQuery,
-      center_id: profileData.id,
-      expertise: selectedExpertise,
-      ...(query?.expertise_id && !selectedExpertise && { expertise_id: query?.expertise_id }),
-      university,
+  const filters = {
+    center: profileData.id,
+    result_type: 'فقط+پزشکان',
+    ...(searchQuery && { text: searchQuery }),
+  };
+
+  const {
+    data: doctors,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    remove,
+  } = useInfiniteQuery({
+    queryKey: [
+      ServerStateKeysEnum.Search,
+      {
+        route: selectedExpertise ?? '',
+        query: {
+          ...filters,
+          page: 1,
+        },
+      },
+    ],
+    queryFn: ({ pageParam }) =>
+      searchApi({
+        route: selectedExpertise ?? '',
+        query: {
+          ...filters,
+          page: pageParam ?? 1,
+        },
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total ? lastPage : undefined;
     },
-    {
-      refetchOnMount: false,
-    },
-  );
+    refetchOnMount: false,
+  });
+
   const expertises = useSearchSuggestion(
     {
       query: '',
@@ -193,6 +221,7 @@ const CenterProfile = ({ query: { university }, host }: any) => {
       },
     ];
   };
+  console.log(doctors);
 
   return (
     <>
@@ -249,18 +278,30 @@ const CenterProfile = ({ query: { university }, host }: any) => {
             </Text>
             <div id="doctors-list_section" className="px-4 md:p-0">
               <ListOfDoctors
-                doctors={doctors.data?.[0]?.items ?? []}
+                doctors={flatten(doctors?.pages?.map(page => page?.search?.result as any[]) ?? []) ?? []}
                 expertises={
                   expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
                     label: expertise.name,
-                    value: expertise.name,
+                    value: expertise.url,
                   })) ?? []
                 }
+                onChangePage={page => {
+                  fetchNextPage({ pageParam: page });
+                }}
+                hasNextPage={hasNextPage ?? true}
                 showRateAndReviews={customize.showRateAndReviews}
                 expertiseListLoading={expertises.isLoading}
-                loading={doctors.isLoading}
-                onSelectExpertise={setSelectedExpertise}
-                onSearch={setSearchQuery}
+                loading={isLoading}
+                isFetchingNextPage={isFetchingNextPage}
+                onSelectExpertise={expertise => {
+                  remove();
+                  setSelectedExpertise(expertise.replace('/s/', ''));
+                }}
+                searchQuery={searchQuery}
+                onSearch={query => {
+                  remove();
+                  setSearchQuery(query);
+                }}
                 defaultValue={defaultExpertise}
               />
             </div>
@@ -328,7 +369,7 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   const { slug, ...query } = context.query;
-  const university = query.university as string;
+  const text = query?.text as string;
 
   const slugFormatted = slug as string;
   try {
@@ -364,9 +405,24 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       };
     }
 
+    const filters = {
+      center: result?.data?.id,
+      result_type: 'فقط+پزشکان',
+      ...(text && { text }),
+    };
+
     await queryClient.fetchQuery(
-      [ServerStateKeysEnum.SearchSuggestion, { query: '', center_id: result?.data?.id, expertise: '', ...(university && { university }) }],
-      () => suggestion({ query: '', center_id: result?.data?.id, expertise: '', ...(university && { university }) }),
+      [
+        ServerStateKeysEnum.Search,
+        {
+          route: '',
+          query: {
+            ...filters,
+            page: 1,
+          },
+        },
+      ],
+      () => searchApi({ route: '', query: { ...filters, page: 1 } }).then(data => ({ pages: [data] })),
     );
 
     return {
