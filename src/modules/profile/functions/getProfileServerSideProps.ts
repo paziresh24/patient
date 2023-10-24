@@ -8,6 +8,7 @@ import { CENTERS } from '@/common/types/centers';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
+import moment from 'jalali-moment';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
@@ -37,6 +38,22 @@ const createBreadcrumb = (links: { orginalLink: string; title: string }[], displ
   return reformmatedBreadcrumb;
 };
 
+function formatDurationInMonths(date: string) {
+  const months = moment().diff(date, 'months') / 12;
+  const years = moment().diff(date, 'years');
+
+  if (years <= 1 && months <= 1) return '1 ماه';
+  if (years <= 1 && months < 12) return `${Math.floor(months)} ماه`;
+
+  return formatResult(Math.floor(years), Math.floor(months));
+}
+
+function formatResult(years: number, months: number) {
+  const yearText = `${years} سال`;
+  const monthText = months ? ` و ${months} ماه` : '';
+  return `${yearText}${monthText}`;
+}
+
 export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   const isCSR = context.req.url?.startsWith?.('/_next');
@@ -63,6 +80,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseProvider: boolean = false;
     let shouldUseUser: boolean = false;
     let shouldUseExpertice: boolean = false;
+    let shouldUseCreatedAt: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -97,12 +115,17 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           (center: any) => center.center_type === 1 && experticeApiCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         experticeApiCitiesList.cities?.includes('*');
+
+      //CreatedAt Api
+      const createdAtDoctorList = growthbook.getFeatureValue('profile:created_at-field|doctor-list', { slugs: [''] });
+      shouldUseCreatedAt = newApiFeatureFlaggingCondition(createdAtDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
 
     const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
+      history: {},
       provider: {
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
@@ -124,6 +147,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             biography: providerData.value.biography,
             employee_id: providerData.value.employee_id,
             prefix: providerData.value?.prefix,
+            ...(shouldUseCreatedAt && {
+              experience: providerData.value?.field_start_date
+                ? Math.ceil(moment().diff(providerData.value?.field_start_date, 'months') / 12).toString()
+                : '',
+            }),
+          };
+          profileData.history = {
+            ...(shouldUseCreatedAt && {
+              insert_at_age: formatDurationInMonths(providerData.value?.created_at),
+            }),
           };
 
           if (shouldUseExpertice) {
