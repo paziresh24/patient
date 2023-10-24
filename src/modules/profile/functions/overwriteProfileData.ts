@@ -14,6 +14,10 @@ export type OverwriteProfileData = {
     provider_id?: string;
     user_id?: string;
     expertises?: any;
+    experience?: string;
+  };
+  history: {
+    insert_at_age?: string;
   };
 };
 
@@ -78,6 +82,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     insert_at_age: source.insert_at_age,
     count_of_consult_books: source.followConsultBoosk,
     count_of_page_view: source.number_of_visits,
+    ...overwriteData.history,
   };
 
   const similarLinks = source.similar_links;
