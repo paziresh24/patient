@@ -1,6 +1,5 @@
 import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptDetails';
 import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
-import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
@@ -14,12 +13,14 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
+import usePwa from '@/common/hooks/usePwa';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
+import { isPWA } from '@/common/utils/isPwa';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -47,11 +48,12 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
+  const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const {
     handleOpen: handleOpenSuccessfulMessageeModal,
-    handleClose: handleSuccessfulMessageeModal,
+    handleClose: handleCloseSuccessfulMessageeModal,
     modalProps: successfulMessage,
   } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
@@ -102,7 +104,9 @@ const Receipt = () => {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
         handleOpenWaitingTimeModal();
       }
-      handleOpenSuccessfulMessageeModal();
+      if (isPWA()) {
+        handleOpenSuccessfulMessageeModal();
+      }
     }
   }, [getReceiptDetails.status]);
 
@@ -377,20 +381,14 @@ const Receipt = () => {
         <Modal title="نوبت با موفقیت ثبت شد" {...successfulMessage}>
           <div className="flex flex-col space-y-3 items-center">
             <SuccessIcon className="text-green-600" />
-            <Text fontWeight="medium">نوبت شما با موفقیت ثبت شد</Text>
-            <Alert severity="warning" className="p-2 flex flex-col gap-2 items-center">
-              <Text fontSize="sm" fontWeight="bold">
-                احتمال معطلی بیش از یک ساعت!
-              </Text>
-              <Text className="text-center" fontSize="sm">
-                نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.
-              </Text>
-            </Alert>
-            <Text className="text-center" fontSize="sm">
-              با ثبت نظر خود از پذیرش 24 حمایت کنید!
+            <Text fontWeight="bold">نوبت شما با موفقیت ثبت شد</Text>
+            <Text className="text-center" fontSize="sm" fontWeight="medium">
+              با ثبت نظر خود از پذیرش 24 در {appDownloadSource} حمایت کنید!
             </Text>
-            <Button block>حمایت کردن</Button>
-            <Button variant="secondary" block>
+            <Button block onClick={() => location.assign((getRatingAppLink as string) ?? '#')}>
+              حمایت کردن
+            </Button>
+            <Button variant="secondary" block onClick={handleCloseSuccessfulMessageeModal}>
               مشاهده رسید نوبت
             </Button>
           </div>
