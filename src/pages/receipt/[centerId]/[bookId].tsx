@@ -13,11 +13,14 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
+import usePwa from '@/common/hooks/usePwa';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
+import { isPWA } from '@/common/utils/isPwa';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -45,8 +48,14 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
+  const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const {
+    handleOpen: handleOpenSuccessfulMessageeModal,
+    handleClose: handleCloseSuccessfulMessageeModal,
+    modalProps: successfulMessage,
+  } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -72,6 +81,7 @@ const Receipt = () => {
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userPednding = useUserInfoStore(state => state.pending);
   const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
@@ -81,11 +91,21 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
+
+  useEffect(() => {
+    if (!pincode && !isLogin && !userPednding) {
+      router.push(`/login?redirect_url=${router.asPath}`);
+    }
+  }, [isLogin, userPednding, pincode]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
         handleOpenWaitingTimeModal();
+      }
+      if (isPWA()) {
+        handleOpenSuccessfulMessageeModal();
       }
     }
   }, [getReceiptDetails.status]);
@@ -316,8 +336,8 @@ const Receipt = () => {
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image}
-            fullName={bookDetailsData.doctor?.display_name}
+            {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image })}
+            fullName={removePrefixDoctorName(bookDetailsData.doctor?.display_name)}
             expertise={bookDetailsData.doctor?.display_expertise}
             isLoading={getReceiptDetails.isLoading}
           />
@@ -354,6 +374,21 @@ const Receipt = () => {
           <div className="flex flex-col space-y-3">
             <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
             <Button block onClick={() => handleCloseWaitingTimeModal()}>
+              مشاهده رسید نوبت
+            </Button>
+          </div>
+        </Modal>
+        <Modal title="نوبت با موفقیت ثبت شد" {...successfulMessage}>
+          <div className="flex flex-col space-y-3 items-center">
+            <SuccessIcon className="text-green-600" />
+            <Text fontWeight="bold">نوبت شما با موفقیت ثبت شد</Text>
+            <Text className="text-center" fontSize="sm" fontWeight="medium">
+              با ثبت نظر خود از پذیرش 24 در {appDownloadSource} حمایت کنید!
+            </Text>
+            <Button block onClick={() => location.assign((getRatingAppLink as string) ?? '#')}>
+              حمایت کردن
+            </Button>
+            <Button variant="secondary" block onClick={handleCloseSuccessfulMessageeModal}>
               مشاهده رسید نوبت
             </Button>
           </div>

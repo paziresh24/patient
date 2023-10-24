@@ -65,6 +65,11 @@ export const Appointments = ({ query: queryServer }: any) => {
   useEffect(() => {
     // Prefetch the receipt page
     router.prefetch('/receipt/[centerId]/[bookId]');
+
+    return () =>
+      handleOpenLoginModal({
+        state: false,
+      });
   }, []);
 
   useEffect(() => {
@@ -72,7 +77,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   }, [inView]);
 
   useEffect(() => {
-    regetchBook();
+    refetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, type]);
 
@@ -110,12 +115,14 @@ export const Appointments = ({ query: queryServer }: any) => {
     if (getBooks.isError && axios.isAxiosError(getBooks.error) && getBooks.error?.response?.status === 401)
       handleOpenLoginModal({
         state: true,
-        postLogin: () => regetchBook(),
+        description: 'لطفا برای مشاهده نوبت ها، وارد شوید.',
+        postLogin: () => refetchBook(),
+        closable: false,
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getBooks.status]);
 
-  const regetchBook = () => {
+  const refetchBook = () => {
     getBooks.remove();
     getBooks.refetch();
   };
@@ -129,11 +136,11 @@ export const Appointments = ({ query: queryServer }: any) => {
 
   return (
     <>
-      <Seo title={t('title')} />
+      <Seo title={t('title')} description={t('description')} />
 
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
-      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white">
+      <div className="sticky top-0 z-10 flex flex-col px-5 pb-0 bg-white rounded-md">
         <Text fontWeight="black" fontSize="xl" className="mt-5 mb-5 pwa:hidden">
           {t('title')}
         </Text>

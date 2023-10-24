@@ -6,7 +6,7 @@ interface DoctorInfoProps {
   /**
    * Avatar src (url)
    */
-  avatar: string;
+  avatar?: string;
   firstName?: string;
   lastName?: string;
   fullName?: string;
@@ -22,7 +22,7 @@ export const DoctorInfo: React.FC<DoctorInfoProps> = props => {
       {isLoading && <Loading />}
       {!isLoading && (
         <>
-          <Aavatar src={avatar} />
+          <Aavatar src={avatar} name={fullName ?? `${firstName} ${lastName}`} />
           <div className="flex flex-col">
             <Text fontSize="sm" fontWeight="bold" className="line-clamp-1" data-testid="doctor-info__full-name">
               {fullName ?? `${firstName} ${lastName}`}

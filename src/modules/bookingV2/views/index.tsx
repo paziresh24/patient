@@ -28,7 +28,7 @@ import SelectSymptoms from '../components/selectSymptoms';
 import Wrapper from '../components/wrapper';
 import SelectCenter from './selectCenter';
 import SelectService from './selectService';
-import SelectTimeWrapper from './selectTime/wrapper';
+import SelectTimeWrapper, { TimeInfo } from './selectTime/wrapper';
 import SelectUserWrapper from './selectUser/wrapper';
 import TurnRequest, { TurnRequestInformation } from './turnRequest/turnRequest';
 
@@ -88,18 +88,19 @@ type SELECT_TIME = {
 };
 type SELECT_USER = {
   step: 'SELECT_USER';
-  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time'>;
+  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time' | 'reserveId'>;
 };
 
 type BOOK_REQUEST = {
   step: 'BOOK_REQUEST';
-  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time'>;
+  payload: Pick<Payloads, 'centerId' | 'serviceId' | 'time' | 'reserveId'>;
 };
 
 type Payloads = {
   centerId: string;
   serviceId: string;
   time: string;
+  reserveId: string;
 };
 
 export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT_USER' | 'BOOK_REQUEST';
@@ -112,8 +113,9 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { slug, defaultStep, className } = props;
   const { data: providerResponse, isLoading: providerLoading } = useProviders({ slug });
   const providerData = providerResponse?.data?.providers?.[0];
+  const providerId = providerData?.id;
   const userId = providerData?.user_id;
-  const { data: membershipResponse, isLoading: membershipLoading } = useMembership({ user_id: userId }, { enabled: !!userId });
+  const { data: membershipResponse, isLoading: membershipLoading } = useMembership({ provider_id: providerId }, { enabled: !!providerId });
   const membershipsData = membershipResponse?.data?.memberships?.find?.(
     (membership: any) => membership?.center_id === defaultStep?.payload?.centerId,
   );
@@ -121,7 +123,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     {
       membership_id: membershipsData?.id,
     },
-    { enabled: !!userId && !!defaultStep?.payload?.centerId && !membershipLoading },
+    { enabled: !!providerId && !!defaultStep?.payload?.centerId && !membershipLoading },
   );
   const serviceData =
     defaultStep?.step !== 'SELECT_SERVICES' && defaultStep?.step !== 'SELECT_CENTER'
@@ -141,8 +143,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
-  const [timeId, setTime] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState<TimeInfo>({});
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
@@ -180,7 +181,9 @@ const BookingSteps = (props: BookingStepsProps) => {
         selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
       setCenter(selectedCenter);
       setService(selectedService);
-      defaultStep.step === 'SELECT_USER' && defaultStep.payload.time && setSelectedTime(defaultStep.payload.time);
+      defaultStep.step === 'SELECT_USER' &&
+        defaultStep.payload.time &&
+        setSelectedTime({ time: defaultStep.payload.time, reserveId: defaultStep.payload.reserveId });
       if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
         return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, time: '-1' });
       }
@@ -208,13 +211,17 @@ const BookingSteps = (props: BookingStepsProps) => {
       {
         membershipId: membershipsData?.id,
         serviceId: serviceData.id,
-        time: selectedTime,
+        time: selectedTime.time!,
+        reserveId: selectedTime.reserveId!,
         userId,
         user: {
           ...user,
           name: userConfimation?.name ?? user.name,
           family: userConfimation?.family ?? user.family,
-          gender: userConfimation?.gender !== null ? convertNumberToStringGender(userConfimation?.gender) : user.gender,
+          gender:
+            userConfimation?.gender !== null && userConfimation?.gender !== undefined
+              ? convertNumberToStringGender(userConfimation?.gender)
+              : user.gender,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
         },
       },
@@ -227,7 +234,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               patient_cell: user.cell,
               doctor_name: profile.display_name,
               date: moment().format('jYYYY/jMM/jDD - HH:mm'),
-              preferred_book_date: moment(selectedTime).format('jYYYY/jMM/jDD - HH:mm'),
+              preferred_book_date: moment(selectedTime.time).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: moment(data?.time).format('jYYYY/jMM/jDD - HH:mm'),
             },
           });
@@ -459,12 +466,12 @@ const BookingSteps = (props: BookingStepsProps) => {
                 }),
             },
           }}
-          nextStep={({ time }: { time: string }) => {
+          nextStep={({ time, reserveId }: TimeInfo) => {
             sendGaEvent({ action: 'P24DrsPage', category: 'submit book time', label: 'submit book time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'select-earliest-time', label: 'select-earliest-time' });
             sendGaEvent({ action: 'P24DrsPage', category: 'NextButtonToLoginorReg', label: 'NextButtonToLoginorReg' });
-            setSelectedTime(time);
-            handleChangeStep('SELECT_USER', { time });
+            setSelectedTime({ time, reserveId });
+            handleChangeStep('SELECT_USER', { time, reserveId });
           }}
         />
       )}

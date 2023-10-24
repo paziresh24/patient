@@ -5,7 +5,7 @@ import CloseIcon from '../../icons/close';
 import ClientOnlyPortal from '../../layouts/clientOnlyPortal';
 const Transition = dynamic(() => import('../transition'));
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean;
   onClose: (_?: any) => void;
   children: React.ReactNode;

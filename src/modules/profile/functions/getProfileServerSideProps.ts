@@ -4,12 +4,14 @@ import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import { CENTERS } from '@/common/types/centers';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
@@ -38,6 +40,7 @@ const createBreadcrumb = (links: { orginalLink: string; title: string }[], displ
 export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   const isCSR = context.req.url?.startsWith?.('/_next');
+  const isVisitOnlineCenterType = context.query.centerTarget === CENTERS.CONSULT;
 
   const { slug, ...query } = context.query;
   const university = query.university as string;
@@ -59,6 +62,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     let shouldUseProvider: boolean = false;
     let shouldUseUser: boolean = false;
+    let shouldUseExpertice: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -83,6 +87,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           (center: any) => center.center_type === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         usersApiDoctorCitiesList.cities?.includes('*');
+
+      //Expertice Api
+      const experticeApiDoctorList = growthbook.getFeatureValue('profile:expertises-api|doctor-list', { slugs: [''] });
+      const experticeApiCitiesList = growthbook.getFeatureValue('profile:expertises-api|cities', { cities: [''] });
+      shouldUseExpertice =
+        newApiFeatureFlaggingCondition(experticeApiDoctorList.slugs, slugFormmated) ||
+        fullProfileData.centers.some(
+          (center: any) => center.center_type === 1 && experticeApiCitiesList.cities?.includes(center.city_en_slug),
+        ) ||
+        experticeApiCitiesList.cities?.includes('*');
     } catch (error) {
       console.error(error);
     }
@@ -102,20 +116,38 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
         const [providerData] = await Promise.allSettled(parallelRequests);
 
-        if (providerData.status === 'fulfilled') {
+        if (providerData.status === 'fulfilled' && providerData.value?.user_id) {
           profileData.provider = {
             ...profileData.provider,
-            ...providerData.value,
+            provider_id: providerData.value.id,
+            user_id: providerData.value.user_id,
+            biography: providerData.value.biography,
+            employee_id: providerData.value.employee_id,
+            prefix: providerData.value?.prefix,
           };
 
-          if (shouldUseUser) {
-            const parallelRequests = [await getUserData({ user_id: providerData.value.user_id, slug: slugFormmated })];
-            const [userData] = await Promise.allSettled(parallelRequests);
+          if (shouldUseExpertice) {
+            const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+            const [specialitiesData] = await Promise.allSettled(parallelRequests);
 
-            if (userData.status === 'fulfilled') {
+            if (specialitiesData.status === 'fulfilled') {
               profileData.provider = {
                 ...profileData.provider,
-                display_name: `${providerData.value.prefix} ${userData.value.name} ${userData.value.family}`,
+                expertises: Object.values(specialitiesData.value),
+              };
+            }
+          }
+
+          if (shouldUseUser) {
+            const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
+            const [userData] = await Promise.allSettled(parallelRequests);
+
+            if (userData.status === 'fulfilled' && userData.value?.name) {
+              profileData.provider = {
+                ...profileData.provider,
+                name: userData.value?.name,
+                family: userData.value?.family,
+                display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
               };
             }
           }
@@ -185,7 +217,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         title: university ? information?.display_name : title,
         description: university ? '' : description,
         information,
-        centers,
+        centers: centers.filter((center: any) => (isVisitOnlineCenterType ? center.id === CENTERS.CONSULT : true)),
         expertises,
         feedbacks,
         dehydratedState: dehydrate(queryClient),

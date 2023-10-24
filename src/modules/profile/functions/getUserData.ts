@@ -8,7 +8,7 @@ export const getUserData = async ({ user_id, slug }: GetUserData) => {
   const firstItemData = response.users?.[0] as Record<string, string>;
 
   if (!firstItemData?.name || !firstItemData?.family) {
-    Sentry.captureMessage(`name:${firstItemData.name} family:${firstItemData.family} slug:${slug} user_id:${user_id}`);
+    Sentry.captureMessage(`name:${firstItemData?.name} family:${firstItemData?.family} slug:${slug} user_id:${user_id}`);
   }
 
   return {

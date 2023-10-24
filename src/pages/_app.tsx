@@ -28,10 +28,12 @@ const iransansFont = localFont({
 
 const { publicRuntimeConfig } = getConfig();
 
+const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
 const growthbook = new GrowthBook({
-  enabled: publicRuntimeConfig.GROWTHBOOK_API_HOST && publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
+  enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
+
   trackingCallback: (experiment: any, result: any) => {
     splunkInstance().sendEvent({
       group: 'growth-book',
@@ -64,7 +66,7 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
 
   useEffect(() => {
-    if (growthbook.ready) {
+    if (isEnabledGrowthbook) {
       growthbook.loadFeatures({ autoRefresh: true });
       growthbook.setAttributes({
         id: getCookie('terminal_id'),
@@ -74,7 +76,7 @@ function MyApp(props: AppProps) {
     return () => {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
-  }, [growthbook.ready]);
+  }, []);
 
   useEffect(() => {
     if (publicRuntimeConfig.MATOMO_URL && publicRuntimeConfig.MATOMO_SITE_ID) {
@@ -114,7 +116,6 @@ function MyApp(props: AppProps) {
               {...pageProps}
               config={{
                 compactFooter: pageProps.query?.['footer:type'] === 'compact',
-                shouldShowPromoteApp: false,
               }}
             />,
             router,

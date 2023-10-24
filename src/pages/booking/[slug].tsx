@@ -6,6 +6,7 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
@@ -24,10 +25,19 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
-  const isMembershipCity = useFeatureValue('booking:membership-api|cities', { cities: [''] });
+  const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
+  const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
+
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
-    { user_id: router.query.userId as string },
-    { enabled: !!router.query.userId && !!isMembershipCity.cities?.includes?.(router.query?.cityName as string) },
+    { provider_id: router.query.providerId as string },
+    {
+      enabled:
+        !!router.query.userId &&
+        (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+          !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
+          !!isMembershipCity.cities?.includes?.('*')),
+    },
   );
 
   const {
@@ -46,13 +56,21 @@ const Booking = () => {
 
   const isLoading =
     fullProfileLoading ||
-    (!!router.query.userId && !!isMembershipCity.cities?.includes?.(router.query?.cityName as string) && membershipLoading);
+    (!!router.query.userId &&
+      (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
+        !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
+        !!isMembershipCity.cities?.includes?.('*')) &&
+      membershipLoading);
 
   const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
-    if (payloads.includes('centerId') && payloads.includes('serviceId') && (payloads.includes('timeId') || payloads.includes('time'))) {
+    if (
+      payloads.includes('centerId') &&
+      payloads.includes('serviceId') &&
+      (payloads.includes('timeId') || payloads.includes('time') || payloads.includes('reserveId'))
+    ) {
       return {
         step: 'SELECT_USER',
         payload: queries as any,
@@ -121,7 +139,7 @@ const Booking = () => {
             className="p-4 rounded-lg bg-slate-50"
             isLoading={isLoading}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
-            fullName={profileData?.display_name}
+            fullName={removePrefixDoctorName(profileData?.display_name)}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: profileData?.expertises?.[0]?.alias_title,
               degree: profileData?.expertises?.[0]?.degree?.name,

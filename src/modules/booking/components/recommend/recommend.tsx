@@ -1,7 +1,8 @@
 import { useSearchRecommendByDoctor } from '@/common/apis/services/search/recommend';
+import { useSearch } from '@/common/apis/services/search/search';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import { useFeatureValue } from '@growthbook/growthbook-react';
-import { useRouter } from 'next/router';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { HTMLAttributes } from 'react';
 import RecommendCard from './card/card';
 
@@ -14,42 +15,63 @@ interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const Recommend = ({ className, clickRecommendEvent, ...props }: RecommendProps) => {
-  const { data, isLoading } = useSearchRecommendByDoctor({
-    ...props,
-  });
+  const useVisitOnlineDoctorSubstitute = useFeatureIsOn('profile.use-visit-online-doctor-substitute');
+
+  const recommendDoctor = useSearchRecommendByDoctor(
+    {
+      ...props,
+    },
+    { enabled: !useVisitOnlineDoctorSubstitute },
+  );
+
+  const searchDoctor = useSearch(
+    {
+      route: decodeURIComponent(`ir/${props.category}`),
+      query: {
+        turn_type: 'consult',
+      },
+    },
+    { enabled: useVisitOnlineDoctorSubstitute },
+  );
+
   const recommendButton = useFeatureValue<any>('profile.recommend_button', {});
-  const router = useRouter();
-  const doctors = data?.data ?? [];
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
+  const doctors = useVisitOnlineDoctorSubstitute ? searchDoctor.data?.search?.result ?? [] : recommendDoctor.data?.data ?? [];
 
   return (
     <div className={className}>
-      {isLoading ? (
+      {recommendDoctor.isLoading || searchDoctor.isLoading ? (
         <div className="flex pb-5 overflow-auto no-scroll space-s-3">
-          <Skeleton w="22rem" h="16rem" rounded="lg" className="min-w-[22rem]" />
-          <Skeleton w="22rem" h="16rem" rounded="lg" />
+          <Skeleton w="16rem" h="14rem" rounded="lg" className="min-w-[17rem]" />
+          <Skeleton w="16rem" h="14rem" rounded="lg" />
         </div>
       ) : (
         <RecommendCard
           listOfDoctors={
             doctors?.map((doctor: any) => ({
               image: doctor.image,
-              displayAddress: doctor.display_address,
+              ...(!useVisitOnlineDoctorSubstitute && { displayAddress: doctor.display_address }),
               displayExpertise: doctor.display_expertise,
-              displayName: doctor.display_name,
+              displayName: removePrefixDoctorName(doctor.title ?? doctor.display_name),
               freeturn: doctor.freeturn,
               isBulk: doctor.is_bluk,
               ratesCount: doctor.rates_count,
-              rate: doctor.star * 20,
-              url: doctor.url,
+              rate: doctor.satisfaction ?? doctor.star * 20,
+              url: doctor.url + (useVisitOnlineDoctorSubstitute ? '?from_recommend_section=1&centerTarget=5532' : ''),
               id: doctor.id,
+              isOnline: !!useVisitOnlineDoctorSubstitute,
+              badges: doctor.badges,
+              price: doctor.price,
               ...(recommendButton?.is_show && {
-                action: [
-                  {
-                    title: recommendButton?.title,
-                    description: `اولین نوبت: ${doctor.freeturn}`,
-                    outline: recommendButton?.is_outline,
-                  },
-                ],
+                action: doctor?.actions
+                  ? doctor?.actions?.map((action: any) => ({ ...action, description: action.top_title }))
+                  : [
+                      {
+                        title: recommendButton?.title,
+                        description: `اولین نوبت: ${doctor.freeturn}`,
+                        outline: recommendButton?.is_outline,
+                      },
+                    ],
               }),
             })) ?? []
           }

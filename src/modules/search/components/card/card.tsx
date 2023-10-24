@@ -25,8 +25,9 @@ interface SearchCardProps {
     expertise?: string;
     viewCount?: string;
     isVerify?: boolean;
+    isOnline?: boolean;
     experience?: number;
-    url: string;
+    url?: string;
     rate?: {
       satisfaction: number;
       count: number;
@@ -43,7 +44,7 @@ interface SearchCardProps {
   actions?: {
     text: string;
     description: string;
-    action: () => void;
+    action?: () => void;
     outline: boolean;
   }[];
   sendEventWhenClick?: ({ element, content }: { element: string; content?: string }) => void;
@@ -58,10 +59,12 @@ export const SearchCard = (props: SearchCardProps) => {
 
   const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
 
+  const LinkInhance = baseInfo?.url ? (Link as any) : 'div';
+
   return (
-    <Card className={classNames('relative justify-between !p-3 md:!p-4', className)}>
-      <div className="flex items-center mb-3 space-s-2">
-        <Link onClick={() => sendEventWhenClick?.({ element: 'avatar' })} href={baseInfo.url}>
+    <Card className={classNames('relative justify-between !p-3 md:!p-4 space-y-3', className)}>
+      <div className="flex items-center space-s-2">
+        <LinkInhance onClick={() => sendEventWhenClick?.({ element: 'avatar' })} {...(baseInfo?.url && { href: baseInfo?.url })}>
           <div className="relative">
             <Avatar
               src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
@@ -70,25 +73,26 @@ export const SearchCard = (props: SearchCardProps) => {
               height={80}
               className={classNames('border-2 border-slate-200', {
                 'border-primary': baseInfo?.isVerify,
+                'border-green-400': baseInfo?.isOnline,
               })}
               loading="lazy"
             />
             {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
           </div>
-        </Link>
+        </LinkInhance>
         <div className="flex flex-col w-full space-y-1">
           <div className="flex items-start justify-between">
-            <Link
+            <LinkInhance
               className="w-4/5"
               onClick={() =>
                 sendEventWhenClick?.({ element: 'display_name', content: baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}` })
               }
-              href={baseInfo.url}
+              {...(baseInfo?.url && { href: baseInfo?.url })}
             >
               <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
                 {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
               </Text>
-            </Link>
+            </LinkInhance>
             {!!baseInfo?.viewCount && (
               <div className="absolute flex items-center space-s-1 rtl:left-5 ltr:right-5 top-5">
                 <Text fontSize="xs">{baseInfo?.viewCount}</Text>
@@ -124,7 +128,7 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       </div>
       {details?.address?.text && (
-        <div className="flex items-center mt-1 space-s-1">
+        <div className="flex items-center space-s-1">
           <LocationIcon className="w-5 h-5 min-w-[1.25rem]" />
           <Text fontSize="sm" className="line-clamp-1">
             {details?.address?.text}
@@ -132,7 +136,7 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.price && (
-        <div className="flex items-center mt-3 space-s-1">
+        <div className="flex items-center space-s-1">
           <MoneyIcon className="w-5 h-5 min-w-[1.25rem]" />
           <Text fontSize="sm" className="line-clamp-1">
             {details?.price}
@@ -140,13 +144,13 @@ export const SearchCard = (props: SearchCardProps) => {
         </div>
       )}
       {details?.badges && details?.badges?.length > 0 && (
-        <div className="flex flex-wrap justify-start gap-2 mt-3 md:justify-center">
+        <div className="flex flex-wrap justify-start gap-2 md:justify-center">
           {details?.badges?.map((badge, index) => (
             <Badge key={index} {...badge} />
           ))}
         </div>
       )}
-      <div className="flex items-end mt-4 space-s-3">
+      <div className="flex items-end space-s-3">
         {actions?.map((item, index) => (
           <div key={index} className="flex flex-col w-full space-y-2">
             {item.description && <Text className="text-[0.7rem] md:text-sm" dangerouslySetInnerHTML={{ __html: item.description }} />}
@@ -154,7 +158,7 @@ export const SearchCard = (props: SearchCardProps) => {
               block
               variant={item.outline ? 'secondary' : 'primary'}
               onClick={() => {
-                item.action();
+                item.action?.();
                 sendEventWhenClick?.({ element: 'action_button', content: item.text });
               }}
             >

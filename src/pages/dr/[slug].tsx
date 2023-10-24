@@ -1,5 +1,4 @@
 import { usePageView } from '@/common/apis/services/profile/pageView';
-import Avatar from '@/common/components/atom/avatar/avatar';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Section from '@/common/components/atom/section/section';
@@ -12,9 +11,10 @@ import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import { dayToSecond } from '@/common/utils/dayToSecond';
+import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
@@ -30,7 +30,7 @@ import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { push } from '@socialgouv/matomo-next';
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 
@@ -55,13 +55,13 @@ const DoctorProfile = ({
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
   const isApplication = useApplication();
+  const removePrefixDoctorName = useRemovePrefixDoctorName();
   const isWebView = useWebView();
 
   const addPageView = usePageView();
   const { recommendEvent } = useProfileSplunkEvent();
 
   // Modal
-  const { handleOpen: handleOpenBeenBeforeModal, handleClose: handleCloseBeenBeforeModal, modalProps: beenBeforeModalProps } = useModal();
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
 
   const [editable, setEditable] = useState(false);
@@ -98,14 +98,8 @@ const DoctorProfile = ({
         doctorId: information.id,
         serverId: information.server_id,
       });
-      window.doctor = { ...information, centers };
-      if (document.referrer.includes('google.') && !getCookie('isBeenBefore')) {
-        handleOpenBeenBeforeModal();
-        setCookie('isBeenBefore', true, {
-          maxAge: dayToSecond(60),
-          path: '/',
-        });
-      }
+      window.doctor = { ...information, centers, expertises, isBulk, slug, history };
+
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
@@ -169,7 +163,10 @@ const DoctorProfile = ({
   };
 
   const profileData = {
-    information,
+    information: {
+      ...(information ?? {}),
+      display_name: removePrefixDoctorName(information?.display_name),
+    },
     centers,
     expertises,
     history,
@@ -202,16 +199,16 @@ const DoctorProfile = ({
             </div>
           )}
           <Head
-            pageViewCount={history?.count_of_page_view}
-            displayName={information?.display_name}
-            image={publicRuntimeConfig.CLINIC_BASE_URL + information?.image}
-            title={information?.experience ? `${information?.experience} سال تجربه` : undefined}
-            subTitle={`شماره نظام پزشکی: ${information?.employee_id}`}
-            serviceList={expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
+            pageViewCount={profileData.history?.count_of_page_view}
+            displayName={profileData.information.display_name}
+            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
+            title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
+            subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
+            serviceList={profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && feedbacks?.details?.satisfaction}
-            rateCount={feedbacks?.details?.number_of_feedbacks}
+            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
             infoEditAction={() => handleViewAs('information')}
@@ -249,11 +246,13 @@ const DoctorProfile = ({
                 دریافت نوبت
               </Text>
             </div>
-            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                آدرس و تلفن
-              </Text>
-            </div>
+            {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+              <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
+                <Text fontSize="sm" fontWeight="medium">
+                  آدرس و تلفن
+                </Text>
+              </div>
+            )}
             <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
               <Text fontSize="sm" fontWeight="medium">
                 درباره پزشک
@@ -303,31 +302,6 @@ const DoctorProfile = ({
             ))}
         </aside>
       </div>
-      <Modal noHeader {...beenBeforeModalProps} bodyClassName="space-y-4 flex flex-col items-center">
-        <Avatar src={publicRuntimeConfig.CLINIC_BASE_URL + information?.image} width={90} height={90} />
-        <Text fontWeight="semiBold">آیا تاکنون توسط {information.display_name} ویزیت شده‌اید؟</Text>
-        <div className="flex w-full space-s-3">
-          <Button
-            block
-            onClick={() =>
-              window.location.assign(
-                `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${information.display_name}&image=${
-                  information.image
-                }&group_expertises=${expertises?.group_expertises?.[0]?.name ?? 'سایر'}&group_expertises_slug=${
-                  expertises?.group_expertises?.[0]?.en_slug ?? 'other'
-                }&expertise=${expertises?.expertises?.[0]?.alias_title}&doctor_id=${information.id}&server_id=${
-                  information.server_id
-                }&doctor_city=${centers.find((center: any) => center.city)[0]}&doctor_slug=${slug}`,
-              )
-            }
-          >
-            بله
-          </Button>
-          <Button variant="secondary" block onClick={handleCloseBeenBeforeModal}>
-            خیر
-          </Button>
-        </div>
-      </Modal>
       <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
         <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
       </Modal>

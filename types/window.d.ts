@@ -7,6 +7,7 @@ interface Window {
     rateApp: any;
   };
   doctor: any;
+  paziresh24: any;
 }
 
 declare const window: Window;
