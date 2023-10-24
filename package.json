@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "pre-commit": "lint-staged",
     "test": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "mkcert-localhost": "mkcert -key-file cert/localhost-key.pem -cert-file cert/localhost.pem localhost 127.0.0.1 local.paziresh24.com local.paziresh24.dev && mkcert -install"
   },
   "dependencies": {
     "@elastic/elasticsearch": "8.6.0",

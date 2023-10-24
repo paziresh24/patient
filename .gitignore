@@ -25,7 +25,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
+# env files
+.env
+.env.development
 .env*.local
 
 # vercel
@@ -36,7 +38,7 @@ yarn-error.log*
 
 .swc
 
-/cert
+/cert/*.pem
 
 .idea
 

@@ -6,7 +6,7 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
-import { init } from '@socialgouv/matomo-next';
+import { init as matomoInit } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -29,6 +29,7 @@ const iransansFont = localFont({
 const { publicRuntimeConfig } = getConfig();
 
 const growthbook = new GrowthBook({
+  enabled: publicRuntimeConfig.GROWTHBOOK_API_HOST && publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   trackingCallback: (experiment: any, result: any) => {
@@ -63,20 +64,26 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
 
   useEffect(() => {
-    growthbook.loadFeatures({ autoRefresh: true });
-    growthbook.setAttributes({
-      id: getCookie('terminal_id'),
-    });
-    router.events.on('routeChangeComplete', updateGrowthBookURL);
-    return () => router.events.off('routeChangeComplete', updateGrowthBookURL);
-  }, []);
+    if (growthbook.ready) {
+      growthbook.loadFeatures({ autoRefresh: true });
+      growthbook.setAttributes({
+        id: getCookie('terminal_id'),
+      });
+      router.events.on('routeChangeComplete', updateGrowthBookURL);
+    }
+    return () => {
+      if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
+    };
+  }, [growthbook.ready]);
 
   useEffect(() => {
-    init({
-      url: publicRuntimeConfig.MATOMO_URL,
-      siteId: publicRuntimeConfig.MATOMO_SITE_ID,
-      excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
-    });
+    if (publicRuntimeConfig.MATOMO_URL && publicRuntimeConfig.MATOMO_SITE_ID) {
+      matomoInit({
+        url: publicRuntimeConfig.MATOMO_URL,
+        siteId: publicRuntimeConfig.MATOMO_SITE_ID,
+        excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
+      });
+    }
   }, []);
 
   useEffect(() => {

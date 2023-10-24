@@ -1,39 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with
-[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+  <h3 align="center">Paziresh24 / Patient Frontend</h3>
+  <p align="center">
+    Appointment booking system
+    <br />
+    <a href="https://www.paziresh24.com"><strong>Learn more »</strong></a>
+    <br />
+    <br />
+    <a href="https://community.paziresh24.com">Community</a>
+    ·
+    <a href="https://www.paziresh24.com">Website</a>
+      </p>
+</div>
 
-## Getting Started
+## Table of Contents
 
-First, run the development server:
+- [Introduction](#introduction)
+- [Community](#join-the-eyvan-community-at-paziresh24)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Design](#design)
+- [Contributing](#contributing)
+- [License](#license)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Introduction
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Paziresh24 is an ambitious open-source project with a vision to transform healthcare service delivery. Our goal is to create a user-friendly platform that empowers patients to effortlessly schedule appointments, access medical records, and seamlessly communicate with healthcare providers. But we can't do it alone – we need your expertise and passion to drive this revolution in the healthcare industry!
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+<br />
+<div align="center">
+<div>
+  <img src="https://github.com/paziresh24/patient/blob/main/readmeAssets/vision.jpeg?raw=true" alt="vision" style="width:80%"/>
+</div>
+  <figcaption align="center"><em >Our vision is to ensure that patients only experience pain related to their illness and nothing else.</em> <a href="https://community.paziresh24.com/t/topic/972"><strong>Read more</strong></a></figcaption>
+</div>
+<br />
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on
-[http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+At Paziresh24, we believe that technology has the power to revolutionize healthcare and improve the lives of millions. By making this project open-source, we invite developers from around the globe to collaborate, innovate, and shape the future of healthcare services. Your contributions can directly impact the wellbeing of patients, making their healthcare journey smoother, more efficient, and ultimately, more compassionate.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as
-[API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+## Join the Eyvan Community at Paziresh24
 
-To learn more about Next.js, take a look at the following resources:
+Welcome to Eyvan, the heart of the Paziresh24 community! We are a diverse group of developers, designers, entrepreneurs, and healthcare enthusiasts united with a common purpose.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Why Join Eyvan?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+At Eyvan, we believe in the power of collective efforts and innovative thinking. Whether you are a developer, designer, entrepreneur, or simply someone with a passion for positive change, your unique skills and perspectives are valuable to us. By joining our community, you can actively contribute to our shared vision and shape the future of Paziresh24.
 
-## Deploy on Vercel
+### Get Involved Today!
 
-The easiest way to deploy your Next.js app is to use the
-[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
+Join Eyvan and start making a difference. Visit [community.paziresh24.com](https://community.paziresh24.com/).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Features
+
+The Patient Front-end comes with the following key features:
+
+1. **Search and Discovery:** Easily search for healthcare providers and discover relevant medical centers based on your specific needs.
+
+2. **Doctor and Center Profiles:** Access detailed profiles of doctors and medical centers, helping you make informed decisions about your healthcare providers.
+
+3. **Ratings and Reviews:** Read and leave reviews to share your experiences with healthcare providers, helping others in the community make informed choices.
+
+4. **Appointment Scheduling:** Efficiently plan and schedule appointments with your preferred healthcare providers at your convenience.
+
+## Technologies Used
+
+- [Next.js](https://nextjs.org/)
+- [React.js](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Query](https://tanstack.com/query/v3/)
+- [Zustand](https://zustand-demo.pmnd.rs/)
+
+## Design
+
+According to Google Analytics, 99% of Paziresh24 users access the website through mobile devices. Therefore, all designs have been optimized for the mobile view. For the desktop version, the same design is used along with a wrapper to ensure a consistent experience.
+
+To view the designs, please visit our Figma page at [link to Figma](https://www.figma.com/file/yOeQ521TJtGKn81juBFety/Paziresh-24-Design-system?type=design&node-id=635%3A14420&mode=dev).
+
+
+## Contributing
+
+Please see our [contributing guide](/CONTRIBUTING.md).
+
+## License
