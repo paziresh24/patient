@@ -40,3 +40,13 @@ export const splunkSearchInstance = () =>
       terminal_id: getCookie('terminal_id'),
     },
   });
+
+export const logErrorToSplunk = () =>
+  splunk.create({
+    baseUrl: 'https://p24splk.paziresh24.com',
+    token: '0578f83b-e3d0-41a8-8409-15e5f439dba2',
+    constant: {
+      current_url: window.location.href,
+      terminal_id: getCookie('terminal_id'),
+    },
+  });

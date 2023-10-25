@@ -36,12 +36,12 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
         </Button>
       </Card>
       <Modal bodyClassName="p-0" title="" {...modalProps}>
-        {searchData.isLoading && (
+        {(searchData.isLoading || !substituteDoctor?.url) && (
           <div className="flex justify-center w-full">
             <Loading className="w-8 h-8 my-8 " />
           </div>
         )}
-        {searchData.isSuccess && substituteDoctor && (
+        {searchData.isSuccess && substituteDoctor?.url && (
           <div className="flex flex-col space-y-2">
             <div
               className="p-4 pb-0"
@@ -68,7 +68,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                 }}
                 type="doctor"
                 details={{
-                  badges: substituteDoctor.badges.map((item: any) => ({ ...item, description: null })),
+                  badges: substituteDoctor?.badges?.map?.((item: any) => ({ ...item, description: null })),
                 }}
                 className="shadow-none border !p-4 rounded-none border-slate-100"
                 actions={[
