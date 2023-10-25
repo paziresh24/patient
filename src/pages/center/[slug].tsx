@@ -221,7 +221,6 @@ const CenterProfile = ({ query: { university, text }, host }: any) => {
       },
     ];
   };
-  console.log(doctors);
 
   return (
     <>
