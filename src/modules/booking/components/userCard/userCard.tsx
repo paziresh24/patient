@@ -12,6 +12,7 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import { defaultMessengers } from '../../constants/defaultMessengers';
 import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
 
@@ -38,7 +39,7 @@ export const UserCard = (props: UserCardProps) => {
   const patchUser = usePatchUser();
   const { handleOpen, handleClose, modalProps } = useModal();
   const allMessenger = useProfileDataStore.getState().messenger;
-  const messengers = useFeatureValue<any>('channeldescription', {});
+  const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
   const doctorMessenger = Object.values(messengers).filter((item: any) =>
     uniqMessengers(allMessenger, Object.keys(messengers)).includes(item.type),
   );
