@@ -17,8 +17,6 @@ export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: G
 
   const data: any = await next?.(ctx, themeConfing);
 
-  console.log(ctx);
-
   return {
     ...data,
     props: {

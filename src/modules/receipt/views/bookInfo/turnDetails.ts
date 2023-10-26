@@ -54,7 +54,6 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     turnStatus,
     messengerList,
   } = data;
-  console.log(messengerList);
 
   const lists = [
     {

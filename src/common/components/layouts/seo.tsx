@@ -30,12 +30,12 @@ export const Seo = (props: SeoProps) => {
   const { asPath } = useRouter();
   const customize = useCustomize(state => state.customize);
 
-  const brandName = customize?.partnerTitle ?? 'پذیرش24';
+  const brandName = customize?.partnerTitle ? customize?.partnerTitle : 'پذیرش24';
 
   const titleTemplate = `${title ?? ''}${titleWithBrandName ? ` | ${brandName}` : ''}`;
 
   // َUniversity Site
-  if (customize.partnerTitle)
+  if (customize?.partnerTitle)
     return (
       <>
         <Head>
