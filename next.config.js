@@ -42,12 +42,17 @@ const nextConfig = {
   swcMinify: true,
   reactStrictMode: true,
   trailingSlash: true,
+  serverRuntimeConfig: {
+    DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
+  },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
     API_GATEWAY_BASE_URL: process.env.API_GATEWAY_BASE_URL,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
     CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,
-    PAZIRESH24_API: process.env.PAZIRESH24_API,
+    DOCTORS_BASE_URL: process.env.NEXT_PUBLIC_DOCTORS_BASE_URL,
+    FEEDBACKS_BASE_URL: process.env.FEEDBACKS_BASE_URL,
+    NEXT_PUBLIC_FEEDBACKS_API: process.env.NEXT_PUBLIC_FEEDBACKS_API,
     PRESCRIPTION_API: process.env.PRESCRIPTION_API,
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
     PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,

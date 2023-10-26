@@ -4,6 +4,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { HTMLAttributes } from 'react';
+import { growthbook } from 'src/pages/_app';
 import RecommendCard from './card/card';
 
 interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
@@ -21,7 +22,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
     {
       ...props,
     },
-    { enabled: !useVisitOnlineDoctorSubstitute },
+    { enabled: growthbook.ready && !useVisitOnlineDoctorSubstitute },
   );
 
   const searchDoctor = useSearch(
@@ -31,7 +32,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
         turn_type: 'consult',
       },
     },
-    { enabled: useVisitOnlineDoctorSubstitute },
+    { enabled: growthbook.ready && useVisitOnlineDoctorSubstitute },
   );
 
   const recommendButton = useFeatureValue<any>('profile.recommend_button', {});
@@ -40,7 +41,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
 
   return (
     <div className={className}>
-      {recommendDoctor.isLoading || searchDoctor.isLoading ? (
+      {recommendDoctor.isLoading && searchDoctor.isLoading ? (
         <div className="flex pb-5 overflow-auto no-scroll space-s-3">
           <Skeleton w="16rem" h="14rem" rounded="lg" className="min-w-[17rem]" />
           <Skeleton w="16rem" h="14rem" rounded="lg" />

@@ -1,4 +1,4 @@
-import { paziresh24AppClient } from '@/common/apis/client';
+import { feedbacksClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
@@ -8,7 +8,7 @@ export interface Params {
 }
 
 export const editFeedback = ({ feedback_id, description, like }: Params) => {
-  return paziresh24AppClient.patch(`/mizaan/v1/feedbacks/${feedback_id}`, {
+  return feedbacksClient.patch(`/v1/feedbacks/${feedback_id}`, {
     description,
     like,
   });

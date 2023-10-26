@@ -19,16 +19,15 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
   const loginPending = useUserInfoStore(state => state.pending);
   const { customize } = useCustomize();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+  const { t } = useTranslation('patient/common');
 
   const router = useRouter();
 
   useEffect(() => {
-    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
-      router.replace(`/dashboard/apps/@paziresh24/${router.pathname.replace('patient', '')}`);
+    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '')) || dashboardDoctorList.ids.includes('*')) {
+      router.replace(`/dashboard${router.pathname.replace('/patient', '')}`);
     }
   }, [userInfo.id]);
-
-  const { t } = useTranslation('patient/common');
 
   return (
     <div className="max-w-screen-xl w-full min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:pt-10 md:space-s-8">
@@ -50,7 +49,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
                     </Text>
                     <EditIcon className="w-5 h-5" />
                   </div>
-                  <Text fontSize="sm">{userInfo.username}</Text>
+                  <Text fontSize="sm">{userInfo.cell}</Text>
                 </>
               )}
             </div>

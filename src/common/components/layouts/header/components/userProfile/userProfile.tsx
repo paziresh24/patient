@@ -49,7 +49,7 @@ export const UserProfile = () => {
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id ?? '') || dashboardDoctorList.ids.includes('*');
+  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -67,7 +67,7 @@ export const UserProfile = () => {
         {
           name: t('patient/common:menu.myTurns'),
           icon: <CalenderIcon />,
-          link: '/dashboard/apps/@paziresh24/appointments',
+          link: '/dashboard/appointments',
           badge: !!turnsCount.presence && (
             <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
           ),
@@ -161,7 +161,7 @@ export const UserProfile = () => {
                           </Text>
                           <EditIcon className="w-5 h-5" />
                         </div>
-                        <Text fontSize="xs">{userInfo.username}</Text>
+                        <Text fontSize="xs">{userInfo.cell}</Text>
                       </>
                     )}
                   </div>

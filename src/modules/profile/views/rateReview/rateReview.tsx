@@ -221,7 +221,7 @@ export const RateReview = (props: RateReviewProps) => {
                 icon: <InfoIcon width={22} height={22} />,
                 inModal: true,
               },
-              userInfo?.id === feedback?.user_id &&
+              userInfo?.id?.toString() === feedback?.user_id &&
                 isShowOption('EDIT') && {
                   id: 5,
                   name: 'ویرایش',
@@ -230,7 +230,7 @@ export const RateReview = (props: RateReviewProps) => {
                   icon: <EditIcon width={22} height={22} />,
                   inModal: true,
                 },
-              userInfo?.id === feedback?.user_id &&
+              userInfo?.id?.toString() === feedback?.user_id &&
                 isShowOption('DELETE') && {
                   id: 6,
                   name: 'حذف',
@@ -395,7 +395,7 @@ export const RateReview = (props: RateReviewProps) => {
           current_comment: feedbackDetails.description,
           comment_id: feedbackDetails.id,
           terminal_id: getCookie('terminal_id'),
-          phone: userInfo.username ?? null,
+          phone: userInfo.cell ?? null,
           is_doctor: feedbackDetails.isDoctor,
         },
       },
@@ -497,9 +497,9 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
-      <div ref={rateRef} className="w-full p-4 bg-white">
-        {!!details.count && (
+    <div ref={rateRef} className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
+      {!!details.count && !message && (
+        <div className="w-full p-4 bg-white">
           <div className="space-y-3">
             <Details
               satisfaction={details.satisfaction}
@@ -509,8 +509,8 @@ export const RateReview = (props: RateReviewProps) => {
               information={details.information}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {isShowPremiumFeatures && checkPremiumUser(userInfo.vip) && (
         <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />

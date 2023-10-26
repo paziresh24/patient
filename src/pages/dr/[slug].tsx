@@ -51,6 +51,7 @@ const DoctorProfile = ({
   expertises,
   feedbacks,
   waitingTimeInfo,
+  dontShowRateAndReviewMessage,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -106,7 +107,7 @@ const DoctorProfile = ({
   }, [isBulk, information]);
 
   useEffect(() => {
-    if (!!userInfo.is_doctor && slug === userInfo?.profile?.slug) {
+    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
       setEditable(true);
       splunkInstance().sendEvent({
         group: 'profile',
@@ -119,7 +120,7 @@ const DoctorProfile = ({
         },
       });
     }
-  }, [userInfo.is_doctor, slug]);
+  }, [userInfo, slug]);
 
   const toolBarItems = useToolBarController({ slug, displayName: information?.display_name, documentTitle: title, editable });
 
@@ -207,7 +208,7 @@ const DoctorProfile = ({
             serviceList={profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            satisfaction={customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction}
             rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}

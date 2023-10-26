@@ -44,7 +44,7 @@ export const PatinetProfile = () => {
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
 
   useEffect(() => {
-    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
+    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '')) || dashboardDoctorList.ids.includes('*')) {
       router.replace(`/dashboard`);
     }
   }, [userInfo.id]);
@@ -97,7 +97,7 @@ export const PatinetProfile = () => {
                         </Text>
                         <EditIcon className="w-5 h-5" />
                       </div>
-                      <Text fontSize="sm">{userInfo.username}</Text>
+                      <Text fontSize="sm">{userInfo.cell}</Text>
                     </>
                   )}
                 </div>

@@ -59,6 +59,7 @@ import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import moment from 'jalali-moment';
+import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
@@ -127,7 +128,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const bookRequest = useBookRequest();
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
-  const messengers = useFeatureValue<any>('channeldescription', {});
+  const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
 

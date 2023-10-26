@@ -1,17 +1,15 @@
 import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
-import Text from '@/common/components/atom/text';
 import Transition from '@/common/components/atom/transition';
 import LogoutIcon from '@/common/components/icons/logout';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { range } from 'lodash';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useApps } from '../apis/apps';
-import pluginIcon from '../assets/plugin.svg';
 import { MenuItem } from '../components/menuItem';
+import { defaultMenuData } from '../constants/defaultMenuData';
 
 export type App = {
   key: string;
@@ -24,8 +22,10 @@ export type App = {
 export const SideBar = ({ children, className, fullWidth }: { children: ReactNode; className?: string; fullWidth?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
   const logout = useUserInfoStore(state => state.logout);
-  const apps = useApps({ user_id: user.id ?? '', is_doctor: !!user.is_doctor }, { enabled: !!user.id });
-
+  const appsData = useApps(
+    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
+    { enabled: !!user.id },
+  );
   const isUserPending = useUserInfoStore(state => state.pending);
   const { asPath, ...router } = useRouter();
 
@@ -35,13 +35,11 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     }
   }, [user, isUserPending]);
 
-  const [activeTab, setActiveTab] = useState('tools');
-
-  const data = apps.data?.data;
+  const apps = appsData.data?.data;
 
   return (
     <>
-      <div className="flex h-full overflow-hidden flex-grow">
+      <div className="flex flex-grow h-full overflow-hidden">
         <div
           className={classNames(
             'flex overflow-y-auto overflow-x-hidden no-scroll md:h-[calc(100vh-80px)] w-full flex-grow flex-col bg-white shadow-xl shadow-slate-400/20 z-20',
@@ -49,49 +47,63 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
             { 'w-72 min-w-72 max-w-72': !fullWidth },
           )}
         >
-          <Transition match={activeTab === 'tools'} animation="left" className="h-full">
+          <Transition match={true} animation="left" className="h-full">
             <div className="flex flex-col justify-between h-full px-4 py-4">
-              <div>
-                {(apps.isLoading || apps.isInitialLoading) && (
+              <div className="flex flex-col space-y-2">
+                {(appsData.isLoading || appsData.isInitialLoading) && (
                   <div className="space-y-3">
                     {range(0, 3).map(_ => (
                       <Skeleton key={_} w="100%" className="opacity-50" h="2.75rem" rounded="md" />
                     ))}
                   </div>
                 )}
-                {apps.isSuccess &&
-                  data?.map((menu: App[], index: number, menuItems: App[][]) => (
-                    <Fragment key={index}>
-                      {menu.map(app => (
-                        <MenuItem
-                          key={app.key}
-                          name={app.name}
-                          icon={app.icon}
-                          link={`/dashboard/apps/${app.key}/`}
-                          subMenu={app.sub?.map(item => ({ name: item.name, icon: item.icon, link: `/dashboard/apps/${item.key}/` }))}
-                        />
-                      ))}
-                      {menuItems.length - 1 > index && <Divider className="my-3" />}
-                    </Fragment>
-                  ))}
+                {appsData.isSuccess &&
+                  apps
+                    .filter((app: any) => app.pin)
+                    .map((app: any) => (
+                      <MenuItem
+                        key={app.name}
+                        name={app.name}
+                        icon={app.icon}
+                        pattern={app.key}
+                        link={`/dashboard/apps/${app.key}/${app.navigation_items.find((item: any) => item.rel === 'home')?.key}/`}
+                        subMenu={app.navigation_items
+                          .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))
+                          .map((item: any) => ({
+                            name: item.label,
+                            link: `/dashboard/apps/${app.key}/${item.key}/`,
+                          }))}
+                      />
+                    ))}
+                {appsData.isSuccess && apps.some((app: any) => app.pin) && <Divider />}
+
+                {appsData.isSuccess &&
+                  apps
+                    .filter((app: any) => !app.pin)
+                    .map((app: any) => (
+                      <MenuItem
+                        key={app.name}
+                        name={app.name}
+                        icon={app.icon}
+                        pattern={app.key}
+                        link={`/dashboard/apps/${app.key}/${app.navigation_items.find((item: any) => item.rel === 'home')?.key}/`}
+                        subMenu={app.navigation_items
+                          .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))
+                          .map((item: any) => ({
+                            name: item.label,
+                            link: `/dashboard/apps/${app.key}/${item.key}/`,
+                          }))}
+                      />
+                    ))}
+                {((appsData.isSuccess && apps.some((app: any) => !app.pin)) || appsData.isLoading) && <Divider />}
+                {defaultMenuData.map(menu => (
+                  <MenuItem key={menu.url} name={menu.label} icon={menu.icon} link={`${menu.url}/`} />
+                ))}
               </div>
               <div onClick={logout}>
                 <MenuItem name="خروج" icon={<LogoutIcon />} />
               </div>
             </div>
-          </Transition>
-          <Transition delay={400} match={activeTab === 'store'} animation="right" className="w-full flex flex-col h-full flex-grow">
-            <div className="w-full space-y-5 pb-32 justify-center items-center flex flex-col h-full flex-grow">
-              <img src={pluginIcon.src} alt="" />
-              <Text fontSize="sm" fontWeight="medium">
-                بزودی این بخش اضافه می شود.
-              </Text>
-            </div>
-            <Link href="https://community.paziresh24.com/" className="py-4 bg-slate-200/50 shadow-inner cursor-pointer text-center">
-              <Text fontSize="xs" fontWeight="medium" className="underline">
-                توسعه دهنده/کارآفرین هستم
-              </Text>
-            </Link>
           </Transition>
         </div>
         {children}
