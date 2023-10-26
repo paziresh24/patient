@@ -9,7 +9,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import useCustomize from '@/common/hooks/useCustomize';
+import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import UnknownCity from '@/modules/search/components/unknownCity';
@@ -109,7 +109,7 @@ Search.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps: GetServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
+  withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
     const { params, ...query } = context.query;
 
     if (params?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       const queryClient = new QueryClient();
 
       const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
-      const university = query?.university;
+      const university = themeConfing?.partnerKey;
 
       await queryClient.fetchQuery(
         [

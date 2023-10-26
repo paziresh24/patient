@@ -2,7 +2,6 @@ import { useGetUser } from '@/common/apis/services/auth/getUser';
 import { useLogin as useLoginRequest } from '@/common/apis/services/auth/login';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { useProviders } from '@/modules/profile/apis/providers';
 import axios from 'axios';
@@ -12,7 +11,6 @@ import { useUserInfoStore } from '../store/userInfo';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
-  const university = useServerQuery(state => state.queries.university);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const getMe = useGetMe();
   const getUser = useGetUser();
@@ -33,12 +31,6 @@ export const useLogin = () => {
 
         await getUser.mutateAsync();
         await getMe.mutateAsync();
-
-        if (university || process.env.NODE_ENV === 'development')
-          setCookie('token', data.token, {
-            path: '/',
-            maxAge: dayToSecond(365),
-          });
 
         if (window?.Android) window.Android.login(data.certificate);
 
