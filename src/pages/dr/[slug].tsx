@@ -31,6 +31,7 @@ import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { push } from '@socialgouv/matomo-next';
 import { getCookie } from 'cookies-next';
+import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 
@@ -205,7 +206,7 @@ const DoctorProfile = ({
             image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
             title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
-            serviceList={profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
+            serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
             satisfaction={customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction}

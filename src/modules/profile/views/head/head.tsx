@@ -47,6 +47,7 @@ export const Head = (props: HeadProps) => {
     servicesEditAction,
     children,
   } = props;
+
   return (
     <div className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
