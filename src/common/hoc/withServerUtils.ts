@@ -3,6 +3,8 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 export const withServerUtils = (next: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
   const data: any = await next?.(ctx);
 
+  console.log(ctx);
+
   return {
     ...data,
     props: {
