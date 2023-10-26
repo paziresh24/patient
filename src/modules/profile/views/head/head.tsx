@@ -7,6 +7,7 @@ import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactN
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import RateBadge from '@/components/atom/badge/badge';
 import LikeIcon from '@/components/icons/like';
+import flattenDeep from 'lodash/flatMapDeep';
 import { ReactNode } from 'react';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
@@ -47,6 +48,7 @@ export const Head = (props: HeadProps) => {
     servicesEditAction,
     children,
   } = props;
+
   return (
     <div className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
@@ -78,7 +80,7 @@ export const Head = (props: HeadProps) => {
           })}
         >
           {editable && <EditButton className="ml-3" onClick={servicesEditAction} />}
-          {serviceList.map(service => (
+          {flattenDeep(serviceList).map(service => (
             <Chips
               className="!bg-transparent border text-center min-w-fit w-max !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
               key={service}
