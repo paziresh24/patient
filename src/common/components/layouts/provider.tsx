@@ -1,4 +1,3 @@
-import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { AppBridge, useSetupAppBridge } from '@/common/hooks/useSetupAppBridge';
 import { LoginModalProvider } from '@/modules/login/context/loginModal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -8,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import { EntryPoint } from './entryPoint';
 import Splash from './splash';
 
-const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: { themeConfing: ThemeConfig } }) => {
+const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   const appBridgeConfig = useSetupAppBridge();
   const [queryClient] = useState(
     () =>
