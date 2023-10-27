@@ -523,53 +523,6 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
 
-              try {
-                if (center.id === '455' && user.national_code) {
-                  const { data } = await getNationalCodeConfirmation.mutateAsync({
-                    nationalCode: user.national_code!,
-                    centerId: center.id,
-                  });
-
-                  if (data?.info?.insurances) {
-                    const insurances: any[] = Object.values(data?.info?.insurances);
-                    if (insurances.length === 1) {
-                      const insurance = insurances[0];
-                      return handleBookAction({
-                        ...user,
-                        name: data?.info?.name,
-                        family: data?.info?.family,
-                        gender: convertNumberToStringGender(data?.info?.gender),
-                        insurance_id: insurance.id,
-                      });
-                    }
-                    handleOpenInsuranceModal();
-                    return;
-                  }
-                }
-                // eslint-disable-next-line no-empty
-              } catch (e) {
-                handleShowErrorModal({
-                  text: `<p class="font-bold">در استعلام بیمه شما خطایی رخ داده است، لطفا چند دقیقه دیگر تلاش کنید.</p>
-                  <p>چنانچه مایلید بیمه شما به صورت آزاد محاسبه شود، فرایند نوبت دهی را ادامه داده و در نظر داشته باشید، هزینه اضافی پرداخت شده به شما برگشت داده نخواهد شد.</p>`,
-                  buttons: [
-                    {
-                      text: 'ادامه',
-                      variant: 'primary',
-                      onClick: () => {
-                        handleBookAction(user);
-                        handleCloseErrorModal();
-                      },
-                    },
-                    {
-                      text: 'انصراف',
-                      variant: 'secondary',
-                      onClick: handleCloseErrorModal,
-                    },
-                  ],
-                });
-                return;
-              }
-
               if (+center?.settings?.booking_enable_insurance) {
                 handleOpenInsuranceModal();
                 return;
