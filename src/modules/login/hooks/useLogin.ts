@@ -31,14 +31,14 @@ export const useLogin = () => {
           maxAge: dayToSecond(365),
         });
 
-        await getUser.mutateAsync();
-        await getMe.mutateAsync();
-
         if (university || process.env.NODE_ENV === 'development')
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),
           });
+
+        await getUser.mutateAsync();
+        await getMe.mutateAsync();
 
         if (window?.Android) window.Android.login(data.certificate);
 
