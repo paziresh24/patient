@@ -29,7 +29,7 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { university, text }, host }: any) => {
+const CenterProfile = ({ query: { text }, host }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
@@ -88,7 +88,6 @@ const CenterProfile = ({ query: { university, text }, host }: any) => {
       query: '',
       center_id: profileData.id,
       return_expertise: true,
-      university,
     },
     {
       keepPreviousData: true,

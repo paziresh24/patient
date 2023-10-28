@@ -4,6 +4,7 @@ import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { CENTERS } from '@/common/types/centers';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
@@ -54,13 +55,13 @@ function formatResult(years: number, months: number) {
   return `${yearText}${monthText}`;
 }
 
-export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
+export const getProfileServerSideProps = withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
   context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
   const isCSR = context.req.url?.startsWith?.('/_next');
   const isVisitOnlineCenterType = context.query.centerTarget === CENTERS.CONSULT;
 
   const { slug, ...query } = context.query;
-  const university = query.university as string;
+  const university = themeConfing?.partnerKey as string;
 
   const slugFormmated = decodeURIComponent(slug as string);
   const pageSlug = `/dr/${slugFormmated}`;

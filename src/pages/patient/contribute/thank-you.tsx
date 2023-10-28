@@ -6,6 +6,7 @@ import Text from '@/components/atom/text';
 import Button from '@/common/components/atom/button';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
@@ -106,10 +107,12 @@ const ThankYouPage = () => {
   );
 };
 
-export const getServerSideProps = withCSR(async () => {
-  return {
-    props: {},
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async () => {
+    return {
+      props: {},
+    };
+  }),
+);
 
 export default ThankYouPage;

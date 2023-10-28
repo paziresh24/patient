@@ -1,7 +1,7 @@
-import { ParsedUrlQuery } from 'querystring';
 import { create } from 'zustand';
 
-interface Customize {
+export interface ThemeConfig {
+  partnerKey: string;
   showHeader: boolean;
   showFooter: boolean;
   showSideBar: boolean;
@@ -33,7 +33,7 @@ type HeaderBrandLogoType = 'default' | 'compact';
 type FooterType = 'default' | 'compact';
 type Toggle = 'on' | 'off';
 
-const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (query: ParsedUrlQuery) => void }>(set => ({
+const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (query: any) => void }>(set => ({
   customize: {
     showHeader: true,
     showFooter: true,
@@ -60,38 +60,14 @@ const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (quer
     showSupport: true,
     showContribute: true,
   },
-  setCustomize: (query: ParsedUrlQuery) => {
+  setCustomize: (query: any) => {
     if (!query) return;
-    const customize = {
-      showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic',
-      headerBrandLogoType: (query['header:brand-logo-type'] as HeaderBrandLogoType) ?? 'default',
-      showUserProfile: (query['header:user-profile'] as Toggle) !== 'off',
-      showBrandLogoInHomePage: (query['header:brand-logo-in-home-page'] as Toggle) === 'on' || false,
-      showPromoteApp: (query['promote-app'] as Toggle) !== 'off',
-      partnerLogo: (query['partner:logo'] as string) || '',
-      showPartnerLogoInPrimaryPlace: (query['partner:primary-place'] as Toggle) === 'on',
-      partnerTitle: (query['partner:title'] as string) || '',
-      partnerSubTitle: (query['partner:sub-title'] as string) || '',
-      showSelectCityInSuggestion: (query['suggestion:city-select'] as Toggle) !== 'off',
-      showSeoBoxs: (query['seo:show'] as Toggle) !== 'off',
-      footerType: (query['footer:type'] as FooterType) ?? 'default',
-      showConsultServices: (query['search:consult'] as Toggle) !== 'off',
-      showActivityProfile: (query['profile:activity'] as Toggle) !== 'off',
-      showGalleryProfile: (query['profile:gallery'] as Toggle) !== 'off',
-      showTermsAndConditions: (query['terms-and-conditions'] as Toggle) !== 'off',
-      bookMark: (query['bookmark'] as Toggle) !== 'off',
-      showShareApp: (query['share-app'] as Toggle) !== 'off',
-      showSupplierRegister: (query['supplier-register'] as Toggle) !== 'off',
-      showRateAndReviews: (query['rate-and-reviews'] as Toggle) !== 'off',
-      showSupport: (query['support'] as Toggle) !== 'off',
-      showContribute: (query['contribute'] as Toggle) !== 'off',
-    };
 
     return set(state => ({
       ...state,
       customize: {
         ...state.customize,
-        ...customize,
+        ...query,
       },
     }));
   },
