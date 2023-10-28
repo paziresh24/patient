@@ -1,6 +1,6 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import useServerQuery from '@/common/hooks/useServerQuery';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useQuery } from '@tanstack/react-query';
 
 export interface Params {
@@ -20,7 +20,7 @@ export const search = async ({ route, query, headers }: Params) => {
 };
 
 export const useSearch = ({ route, query }: Params, option?: any) => {
-  const university = useServerQuery(state => state.queries?.university);
+  const university = useCustomize(state => state.customize?.partnerKey);
 
   const searchParams = {
     route,

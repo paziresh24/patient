@@ -9,6 +9,7 @@ import SuccessIcon from '@/common/components/icons/success';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { splunkInstance } from '@/common/services/splunk';
 import convertTimeStampToFormattedTime from '@/common/utils/convertTimeStampToFormattedTime';
 import { getPremiumDuration } from '@/modules/bamdad/utils/getPremiumDuration';
@@ -114,12 +115,14 @@ Premium.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default Premium;

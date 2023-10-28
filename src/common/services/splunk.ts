@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next';
 
 export const splunkInstance = () =>
   splunk.create({
-    baseUrl: 'https://p24splk.paziresh24.com',
+    baseUrl: 'https://p24splk.paziresh26.com',
     token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
     constant: {
       current_url: window.location.href,

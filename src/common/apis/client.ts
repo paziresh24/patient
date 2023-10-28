@@ -14,7 +14,7 @@ export const feedbacksClient = axios.create({
   baseURL: publicRuntimeConfig.FEEDBACKS_BASE_URL,
   withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
-  timeout: 3000,
+  timeout: 2000,
 });
 
 export const apiGatewayClient = axios.create({
