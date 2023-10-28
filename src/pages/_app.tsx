@@ -90,31 +90,41 @@ function MyApp(props: AppProps) {
   }, []);
 
   useEffect(() => {
-    useCustomize.getState().setCustomize(pageProps.themeConfing);
+    useCustomize.getState().setCustomize(pageProps.query);
     useServerQuery.getState().setQueries(pageProps.query);
-  }, [pageProps.query, pageProps.themeConfing]);
+  }, [pageProps.query]);
 
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
     <ErrorBoundary>
-      <GrowthBookProvider growthbook={growthbook}>
-        <Provider pageProps={pageProps}>
-          <style jsx global>{`
-            :root {
-              --font-iran-sans: ${iransansFont.style.fontFamily};
-            }
-          `}</style>
-          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
-          <Head>
-            <meta
-              name="viewport"
-              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-            />
-          </Head>
-          <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-        </Provider>
-      </GrowthBookProvider>
+      <Provider pageProps={pageProps}>
+        <style jsx global>{`
+          :root {
+            --font-iran-sans: ${iransansFont.style.fontFamily};
+          }
+        `}</style>
+        <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
+        <Head>
+          <meta
+            name="viewport"
+            content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
+        </Head>
+        <GrowthBookProvider growthbook={growthbook}>
+          <Hydrate state={pageProps.dehydratedState}>
+            {getLayout(
+              <Component
+                {...pageProps}
+                config={{
+                  compactFooter: pageProps.query?.['footer:type'] === 'compact',
+                }}
+              />,
+              router,
+            )}
+          </Hydrate>
+        </GrowthBookProvider>
+      </Provider>
     </ErrorBoundary>
   );
 }

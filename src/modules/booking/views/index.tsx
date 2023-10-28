@@ -54,6 +54,7 @@ import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
@@ -107,6 +108,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
   const isApplication = useApplication();
+  const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
   const { data, isLoading } = useGetProfileData(
     {
@@ -248,7 +250,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
-            if (isApplication) return window.open(`${data?.payment?.redirect_url}`, '_system');
+            if (isApplication) return window.open(`${data?.payment?.redirect_url}`);
             location.replace(`${data?.payment?.redirect_url}`);
             return;
           }
@@ -618,7 +620,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {!customize?.partnerKey && (
+          {!university && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}

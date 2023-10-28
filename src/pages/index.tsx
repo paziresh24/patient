@@ -6,6 +6,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import classNames from '@/common/utils/classNames';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useRouter } from 'next/dist/client/router';
@@ -24,6 +25,7 @@ const Home = () => {
   const router = useRouter();
   const { recent } = useRecentSearch();
 
+  const university = useServerQuery(state => state.queries.university);
   const customize = useCustomize(state => state.customize);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const Home = () => {
     <>
       <main
         className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
-          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
+          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': university,
         })}
       >
         {!customize.partnerTitle && <Logo className="text-2xl md:text-3xl" width={55} />}
@@ -52,7 +54,7 @@ const Home = () => {
         <Suggestion />
         {recent.length > 0 && <RecentSearch />}
         {!recent.length && <div className="h-[68px] md:h-6" />}
-        {customize?.partnerKey && <CentersList />}
+        {university && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
     </>

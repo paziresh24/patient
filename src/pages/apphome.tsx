@@ -6,7 +6,6 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
 import { useSearchStore } from '@/modules/search/store/search';
 import Suggestion from '@/modules/search/view/suggestion';
@@ -131,14 +130,12 @@ Home.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
 
 export default Home;

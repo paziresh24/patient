@@ -9,7 +9,6 @@ import ShareIcon from '@/common/components/icons/share';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useShare from '@/common/hooks/useShare';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -176,14 +175,12 @@ Invoice.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
 
 export default Invoice;

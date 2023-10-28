@@ -24,7 +24,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
 
   useEffect(() => {
     TagManager.initialize({
-      gtmId: 'GTM-P5RPLDP',
+      gtmId: pageProps.query?.['gtm:id'] ?? 'GTM-P5RPLDP',
     });
   }, []);
 
@@ -46,7 +46,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
           duration: 3000,
         }}
       />
-      {pageProps?.themeConfing?.partnerKey && <Splash partnerLogo={pageProps?.themeConfing?.partnerLogo} />}
+      {pageProps?.query?.university && <Splash partnerLogo={pageProps?.query?.['partner:logo']} />}
     </QueryClientProvider>
   );
 };

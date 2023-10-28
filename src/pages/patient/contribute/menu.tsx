@@ -10,7 +10,6 @@ import AppBar from '@/components/layouts/appBar';
 import Skeleton from '@/common/components/atom/skeleton';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
@@ -156,12 +155,10 @@ const MneuItemLoading = () => {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async () => {
-    return {
-      props: {},
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async () => {
+  return {
+    props: {},
+  };
+});
 
 export default Home;

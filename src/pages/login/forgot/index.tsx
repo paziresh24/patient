@@ -1,5 +1,4 @@
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import ForgotForm from '@/modules/login/views/forgotForm';
 import { useRouter } from 'next/router';
@@ -28,14 +27,12 @@ const ForgotPage = () => {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
 
 export default ForgotPage;

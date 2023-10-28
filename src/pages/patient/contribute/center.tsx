@@ -11,7 +11,6 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
@@ -166,12 +165,10 @@ const FormLoading = () => {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async () => {
-    return {
-      props: {},
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async () => {
+  return {
+    props: {},
+  };
+});
 
 export default Home;

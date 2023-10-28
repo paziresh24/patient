@@ -6,7 +6,6 @@ import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
@@ -155,14 +154,12 @@ Factor.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
 
 export default Factor;

@@ -1,4 +1,3 @@
-import useCustomize from '@/common/hooks/useCustomize';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
@@ -27,15 +26,15 @@ const getPathFromUrl = (url: string): string => {
 
 export const Seo = (props: SeoProps) => {
   const { title, description = '', jsonlds, canonicalUrl, openGraph, host = '', titleWithBrandName = true, children, noIndex } = props;
-  const { asPath } = useRouter();
-  const customize = useCustomize(state => state.customize);
+  const { asPath, query, ...rest } = useRouter();
+  const isUniversityPage = query.university;
 
-  const brandName = customize?.partnerTitle ? customize?.partnerTitle : 'پذیرش24';
+  const brandName = (query['partner:title'] as string) ?? 'پذیرش24';
 
   const titleTemplate = `${title ?? ''}${titleWithBrandName ? ` | ${brandName}` : ''}`;
 
   // َUniversity Site
-  if (customize?.partnerTitle)
+  if (isUniversityPage)
     return (
       <>
         <Head>
