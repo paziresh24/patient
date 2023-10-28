@@ -15,7 +15,12 @@ interface BulkServiceProps {
 
 export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   const { handleOpen, modalProps } = useModal();
-  const content = useFeatureValue('recommed:suggest-doctor-modal-content', { header: '', footer: '', cardButton: 'مشاهده صفحه' });
+  const content = useFeatureValue('recommed:suggest-doctor-modal-content', {
+    header: '',
+    footer: '',
+    cardButton: 'مشاهده صفحه',
+    buttonAction: 'profile',
+  });
   const searchData = useSearch({
     route: decodeURIComponent(`ir/${expertises.group_expertises[0].en_slug}`),
     query: {
@@ -52,7 +57,13 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
                 }),
               }}
             />
-            <a href={substituteDoctor.url + '?from_profile_suggest_cta=1&centerTarget=5532'}>
+            <a
+              href={
+                content.buttonAction === 'profile'
+                  ? substituteDoctor.url + '?from_profile_suggest_cta=1&centerTarget=5532'
+                  : substituteDoctor.url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true'
+              }
+            >
               <SearchCard
                 baseInfo={{
                   displayName: substituteDoctor.title,

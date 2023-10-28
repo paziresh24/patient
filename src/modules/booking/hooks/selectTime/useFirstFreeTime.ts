@@ -19,6 +19,7 @@ type FirstFreeTime = {
   to?: number;
   full_date?: string;
   timeId?: string;
+  message?: string;
 };
 
 export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true, onError, onEvent }: UseFirstFreeTime) => {
@@ -50,14 +51,16 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
     }
     onError && onError(data.message);
     setData({});
-    return {};
+    return {
+      message: data.message,
+    };
   };
 
   return {
     timeText: data?.full_date,
     timeStamp: data?.from,
     timeId: data?.timeId,
-    loading: getFreeTurn.isLoading || getFreeTurn.isIdle,
+    loading: getFreeTurn.isLoading,
     isSuccess: getFreeTurn.isSuccess,
     getFirstFreeTime: getFirstFreeTime,
   };
