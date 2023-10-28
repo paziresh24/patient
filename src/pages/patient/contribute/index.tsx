@@ -6,13 +6,13 @@ import DislikeIcon from '@/common/components/icons/dislike';
 import LikeIcon from '@/common/components/icons/like';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import Text from '@/components/atom/text';
 import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import heart from '@/modules/contribute/images/heart.svg';
 import heroVector from '@/modules/contribute/images/hero.svg';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -114,12 +114,10 @@ const Home = () => {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async () => {
-    return {
-      props: {},
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async () => {
+  return {
+    props: {},
+  };
+});
 
 export default Home;

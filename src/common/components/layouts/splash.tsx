@@ -8,7 +8,7 @@ export const Splash = ({ partnerLogo }: { partnerLogo: string }) => {
   useEffect(() => {
     setTimeout(() => {
       setShow(false);
-    }, 600);
+    }, 500);
   }, []);
 
   if (!show) return null;

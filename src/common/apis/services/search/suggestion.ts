@@ -1,6 +1,6 @@
 import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import useCustomize from '@/common/hooks/useCustomize';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { useQuery } from '@tanstack/react-query';
 
 export interface Params {
@@ -24,7 +24,7 @@ export const suggestion = async ({ query, withoutUniversity, ...params }: Params
 };
 
 export const useSearchSuggestion = (params: Params, options?: any) => {
-  const university = useCustomize(state => state.customize?.partnerKey);
+  const university = useServerQuery(state => state.queries?.university);
   params = { ...params, ...(university && !params.withoutUniversity && { university }) };
 
   return useQuery([ServerStateKeysEnum.SearchSuggestion, params], () => suggestion(params), options);

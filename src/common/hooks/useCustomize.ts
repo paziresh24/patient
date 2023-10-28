@@ -1,7 +1,7 @@
+import { ParsedUrlQuery } from 'querystring';
 import { create } from 'zustand';
 
-export interface ThemeConfig {
-  partnerKey: string;
+interface Customize {
   showHeader: boolean;
   showFooter: boolean;
   showSideBar: boolean;
@@ -33,7 +33,7 @@ type HeaderBrandLogoType = 'default' | 'compact';
 type FooterType = 'default' | 'compact';
 type Toggle = 'on' | 'off';
 
-const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (query: any) => void }>(set => ({
+const useCustomize = create<{ customize: Partial<Customize>; setCustomize: (query: ParsedUrlQuery) => void }>(set => ({
   customize: {
     showHeader: true,
     showFooter: true,
@@ -60,7 +60,7 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
     showSupport: true,
     showContribute: true,
   },
-  setCustomize: (query: any) => {
+  setCustomize: (query: ParsedUrlQuery) => {
     if (!query) return;
     const customize = {
       showSideBar: (query.layout as Layout) !== 'no-sidebar' && (query.layout as Layout) !== 'basic',
@@ -91,8 +91,7 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
       ...state,
       customize: {
         ...state.customize,
-        ...query,
-        // ...customize,
+        ...customize,
       },
     }));
   },

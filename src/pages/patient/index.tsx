@@ -18,9 +18,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
-import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -34,7 +32,6 @@ const { publicRuntimeConfig } = config();
 
 export const PatinetProfile = () => {
   const router = useRouter();
-  const { getRatingAppLink } = usePwa();
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
@@ -66,6 +63,19 @@ export const PatinetProfile = () => {
   const openPrivateLink = (link: string) => {
     if (!isLogin) return openLoginForm(link);
     router.push(link);
+  };
+
+  const getRatingAppLink = () => {
+    const downloadSource = localStorage.getItem('app:download_source');
+
+    const rateLinks = {
+      direct: 'market://details?id=com.paziresh24.paziresh24',
+      bazaar: 'bazaar://details?id=com.paziresh24.paziresh24',
+      myket: 'myket://comment?id=com.paziresh24.paziresh24',
+      google_play: 'market://details?id=com.paziresh24.paziresh24',
+    };
+
+    return downloadSource && rateLinks[downloadSource as 'direct' | 'bazaar' | 'myket' | 'google_play'];
   };
 
   return (
@@ -194,11 +204,11 @@ export const PatinetProfile = () => {
                 </Text>
               </Link>
             )}
-            {!!getRatingAppLink && (
+            {getRatingAppLink() && (
               <div
                 className="items-center hidden px-5 py-4 border-b pwa:flex space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
-                  location.assign((getRatingAppLink as string) ?? '#');
+                  location.assign(getRatingAppLink() ?? '#');
                 }}
               >
                 <StarIcon />
@@ -246,14 +256,12 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
-  }),
-);
+export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
+  return {
+    props: {
+      query: context.query,
+    },
+  };
+});
 
 export default PatinetProfile;

@@ -50,8 +50,10 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { FakeData } from '@/common/constants/fakeData';
+import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
@@ -106,6 +108,8 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
+  const isApplication = useApplication();
+  const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
   const { data: providerResponse, isLoading: providerLoading } = useProviders({ slug });
   const providerData = providerResponse?.data?.providers?.[0];
@@ -613,7 +617,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {!customize?.partnerKey && (
+          {!university && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}

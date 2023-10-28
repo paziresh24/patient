@@ -2,7 +2,7 @@ import { useGetUser } from '@/common/apis/services/auth/getUser';
 import { useLogin as useLoginRequest } from '@/common/apis/services/auth/login';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import useCustomize from '@/common/hooks/useCustomize';
+import useServerQuery from '@/common/hooks/useServerQuery';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { useProviders } from '@/modules/profile/apis/providers';
 import axios from 'axios';
@@ -12,11 +12,11 @@ import { useUserInfoStore } from '../store/userInfo';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
+  const university = useServerQuery(state => state.queries.university);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const getMe = useGetMe();
   const getUser = useGetUser();
   const getProvider = useProviders({ user_id: getMe?.data?.id }, { enabled: !!getMe?.data?.id });
-  const university = useCustomize(state => state.customize?.partnerKey);
 
   const handleLogin = async ({ username, password }: { username: string; password: string }) => {
     try {
