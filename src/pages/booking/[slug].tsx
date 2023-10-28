@@ -70,7 +70,10 @@ const Booking = () => {
     if (
       payloads.includes('centerId') &&
       payloads.includes('serviceId') &&
-      (payloads.includes('timeId') || payloads.includes('time') || payloads.includes('reserveId'))
+      (payloads.includes('timeId') ||
+        payloads.includes('time') ||
+        payloads.includes('reserveId') ||
+        payloads.includes('skipTimeSelectStep'))
     ) {
       return {
         step: 'SELECT_USER',

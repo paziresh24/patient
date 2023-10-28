@@ -68,6 +68,18 @@ clinicClient.interceptors.response.use(
   },
 );
 
+apiGatewayClient.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
 apiGatewayClient.interceptors.response.use(
   async res => {
     return res;

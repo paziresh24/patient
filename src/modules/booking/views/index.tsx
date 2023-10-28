@@ -62,6 +62,7 @@ import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
 import useBooking from '../hooks/booking';
+import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
@@ -149,6 +150,12 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { handleBook, isLoading: bookLoading } = useBooking();
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
   const unsuspend = useUnsuspend();
+  const getFirstFreeTime = useFirstFreeTime({
+    enabled: false,
+    centerId: center?.id,
+    serviceId: service?.id,
+    userCenterId: center?.user_center_id,
+  });
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
@@ -158,12 +165,22 @@ const BookingSteps = (props: BookingStepsProps) => {
       const selectedService =
         (defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER') &&
         selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
+
       setCenter(selectedCenter);
       setService(selectedService);
-      defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId && setTimeId(defaultStep.payload.timeId);
-      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' });
+
+      if (defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId) {
+        setTimeId(defaultStep.payload.timeId);
       }
+
+      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
+        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, { replaceUrl: true });
+      }
+
+      if (defaultStep.step === 'SELECT_SERVICES' && selectedCenter.services.length === 1) {
+        return handleChangeStep(defaultStep?.step ?? 'SELECT_TIME', { serviceId: selectedCenter.services?.[0]?.id }, { replaceUrl: true });
+      }
+
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }
   }, [centers, defaultStep]);
@@ -184,10 +201,18 @@ const BookingSteps = (props: BookingStepsProps) => {
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
 
+    let reserveId: string | undefined = timeId;
+
+    if (!reserveId) {
+      const timeData = await getFirstFreeTime.getFirstFreeTime();
+      if (!timeData.timeId) return toast.error(timeData?.message ?? 'خطا در دریافت نوبت خالی پزشک.');
+      reserveId = timeData.timeId;
+    }
+
     handleBook(
       {
         center,
-        timeId,
+        timeId: reserveId as string,
         user: {
           ...user,
           name: userConfimation?.name ?? user.name,
@@ -281,7 +306,13 @@ const BookingSteps = (props: BookingStepsProps) => {
     toast.error(data.message);
   };
 
-  const handleChangeStep = (key: Step, payload?: any) => {
+  const handleChangeStep = (
+    key: Step,
+    payload?: any,
+    options?: {
+      replaceUrl?: boolean;
+    },
+  ) => {
     setStep(key);
 
     if (key === 'BOOK_REQUEST') {
@@ -292,8 +323,10 @@ const BookingSteps = (props: BookingStepsProps) => {
       });
     }
 
+    const action = options?.replaceUrl ? 'replace' : 'push';
+
     payload &&
-      router.push(
+      router[action](
         {
           query: {
             ...router.query,
@@ -335,24 +368,6 @@ const BookingSteps = (props: BookingStepsProps) => {
 
     insurances.push({ label: 'آزاد', value: -1 });
     return insurances;
-  };
-
-  const handleShowErrorModal = ({
-    text,
-    buttons,
-  }: {
-    text: string;
-    buttons?: Array<{
-      text?: string;
-      variant?: 'primary' | 'secondary';
-      onClick: () => void;
-    }>;
-  }) => {
-    setErrorModalMetaData({
-      text,
-      buttons,
-    });
-    handleOpenErrorModal();
   };
 
   return (
@@ -469,7 +484,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             </div>
           )}
           <Text fontWeight="bold" className="block mb-3">
-            برای درمان چه بیماری به پزشک مراجعه کردید؟
+            برای درمان چه بیماری به پزشک مراجعه می‌کنید؟
           </Text>
           <SelectSymptoms
             symptoms={symptoms}
@@ -497,7 +512,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
             data={{
-              loading: bookLoading || getNationalCodeConfirmation.isLoading,
+              loading: bookLoading || getFirstFreeTime.loading || getNationalCodeConfirmation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
               shouldShowMessengers,

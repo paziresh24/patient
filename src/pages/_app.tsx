@@ -2,7 +2,7 @@ import ErrorBoundary from '@/common/components/layouts/errorBoundary';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { splunkInstance } from '@/common/services/splunk';
+import { coreWebVitalsSplunk, splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
@@ -122,21 +122,13 @@ function MyApp(props: AppProps) {
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === 'custom' || !publicRuntimeConfig.IS_PRODUCTION) return;
 
-  const body = JSON.stringify({
-    ...metric,
-    attribution: {
-      ...metric.attribution,
-      userAgent: window.navigator.userAgent,
-      url: window.location.pathname,
+  coreWebVitalsSplunk().sendEvent({
+    group: 'core_web_vitals',
+    type: `${metric.label}_${metric.name}`,
+    event: {
+      ...metric,
     },
   });
-  const url = '/patient/api/webvitals/';
-
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(url, body);
-  } else {
-    fetch(url, { body, method: 'POST', keepalive: true });
-  }
 }
 
 export default MyApp;

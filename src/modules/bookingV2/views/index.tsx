@@ -479,7 +479,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             </div>
           )}
           <Text fontWeight="bold" className="block mb-3">
-            برای درمان چه بیماری به پزشک مراجعه کردید؟
+            برای درمان چه بیماری به پزشک مراجعه می‌کنید؟
           </Text>
           <SelectSymptoms
             symptoms={symptoms}
