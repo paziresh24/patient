@@ -1,6 +1,6 @@
 import { paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import useServerQuery from '@/common/hooks/useServerQuery';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useQuery } from '@tanstack/react-query';
 
 export interface Params {
@@ -14,7 +14,7 @@ export const getProfileData = async ({ slug, ...params }: Params) => {
 };
 
 export const useGetProfileData = (params: Params, options?: any) => {
-  const university = useServerQuery(state => state.queries?.university);
+  const university = useCustomize(state => state.customize?.partnerKey);
 
   return useQuery(
     [ServerStateKeysEnum.DoctorFullProfile, params],

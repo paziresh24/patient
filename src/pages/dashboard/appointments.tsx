@@ -1,5 +1,6 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { GetServerSidePropsContext } from 'next/types';
@@ -24,12 +25,14 @@ AppointmentsPage.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default AppointmentsPage;

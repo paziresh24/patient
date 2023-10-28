@@ -11,19 +11,21 @@ class ErrorBoundary extends React.Component<Props> {
     super(props);
   }
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const throttledLogErrorToSplunk = throttle(logErrorToSplunk().sendEvent, 2000);
-    throttledLogErrorToSplunk({
-      group: 'frontend_error_logging',
-      type: 'unhandled_exceptions_with_error_boundary',
-      event: {
-        error: {
-          message: error.message,
-          stack: error.stack,
-          name: error.name,
+    if (process.env.NODE_ENV === 'production') {
+      const throttledLogErrorToSplunk = throttle(logErrorToSplunk().sendEvent, 2000);
+      throttledLogErrorToSplunk({
+        group: 'frontend_error_logging',
+        type: 'unhandled_exceptions_with_error_boundary',
+        event: {
+          error: {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+          },
+          errorInfo,
         },
-        errorInfo,
-      },
-    });
+      });
+    }
   }
 
   render() {
