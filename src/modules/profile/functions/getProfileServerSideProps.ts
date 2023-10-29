@@ -82,11 +82,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseProvider: boolean = false;
     let shouldUseUser: boolean = false;
     let shouldUseExpertice: boolean = false;
-<<<<<<< HEAD
     let shouldUseCreatedAt: boolean = false;
-=======
     let shouldUseFeedback: boolean = false;
->>>>>>> 506f6c6
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -122,15 +119,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         ) ||
         experticeApiCitiesList.cities?.includes('*');
 
-<<<<<<< HEAD
       //CreatedAt Api
       const createdAtDoctorList = growthbook.getFeatureValue('profile:created_at-field|doctor-list', { slugs: [''] });
       shouldUseCreatedAt = newApiFeatureFlaggingCondition(createdAtDoctorList.slugs, slugFormmated);
-=======
       //Feedback Api
       const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
->>>>>>> 506f6c6
     } catch (error) {
       console.error(error);
     }
@@ -215,24 +209,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     let dontShowRateAndReviewMessage = '';
     try {
-<<<<<<< HEAD
-      const feedbackData = await queryClient.fetchQuery(
-        [
-          ServerStateKeysEnum.Feedbacks,
-          {
-            doctor_id: id,
-            server_id: server_id,
-          },
-        ],
-        () =>
-          getFeedbacks({
-            doctor_id: id,
-            server_id: server_id,
-          }),
-      );
-      feedbacks.feedbacks = feedbackData?.result ?? [];
-      dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
-=======
       const feedbackData = shouldUseFeedback
         ? await queryClient.fetchQuery(
             [
@@ -260,7 +236,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 server_id: server_id,
               }),
           );
->>>>>>> 506f6c6
 
       if (!isCSR)
         feedbackDataWithoutPagination = await queryClient.fetchQuery(
@@ -279,11 +254,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               no_page_limit: true,
             }),
         );
-<<<<<<< HEAD
-=======
 
       feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
->>>>>>> 506f6c6
     } catch (error) {
       console.error(error);
     }
