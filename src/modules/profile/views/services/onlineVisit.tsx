@@ -83,7 +83,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           }),
         actions: [
           {
-            text: 'رزرو گفتگو',
+            text: 'ویزیت آنلاین',
             onClick: onBook,
             loading: loading,
             ...(isPremium && { className: '!shadow-amber-500/20 shadow-lg hover:shadow-xl transition-all ' }),
