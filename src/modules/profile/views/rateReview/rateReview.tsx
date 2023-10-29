@@ -3,6 +3,10 @@ import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
 import { useRemoveFeedback } from '@/common/apis/services/rate/remove';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
+import { useDeletFeedback } from '@/common/apis/services/rate2/delete';
+import { useEditComment } from '@/common/apis/services/rate2/edit';
+import { useReplyComment } from '@/common/apis/services/rate2/replyComment';
+import { useSubmitComment } from '@/common/apis/services/rate2/submit';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
@@ -36,6 +40,7 @@ import { getCookie } from 'cookies-next';
 import compact from 'lodash/compact';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useInView } from 'react-intersection-observer';
@@ -59,6 +64,7 @@ interface RateReviewProps {
     server_id: string;
   };
   serverId: string;
+  userId?: number;
   rateDetails: {
     satisfaction: number;
     count: number;
@@ -89,19 +95,20 @@ export const RateReview = (props: RateReviewProps) => {
     label: 'مرتبط ترین',
     value: 'default_order',
   });
+  const { isLogin, userInfo } = useUserInfoStore(state => ({
+    isLogin: state.isLogin,
+    userInfo: state.info,
+  }));
   const { handleClose, handleOpen, modalProps } = useModal();
   const { handleOpen: handleOpenReportModal, handleClose: handleCloseReportModal, modalProps: reportModalProps } = useModal();
   const { handleOpen: handleOpenEditModal, handleClose: handleCloseEditModal, modalProps: editModalProps } = useModal();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const { handleOpen: handleOpenSubmitModal, handleClose: handleCloseSubmitModal, modalProps: SubmitModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
   const feedbacksData = useFeedbackDataStore(state => state.data);
   const { isDesktop } = useResponsive();
   const [replyDetails, setReplyDetails] = useState<{ text: string; id: string }[]>([]);
-  const { isLogin, userInfo } = useUserInfoStore(state => ({
-    isLogin: state.isLogin,
-    userInfo: state.info,
-  }));
   const [rateRef, inViewRate] = useInView();
   const sendRateTriggered = useRef(false);
   useEffect(() => {
@@ -110,21 +117,30 @@ export const RateReview = (props: RateReviewProps) => {
       return rateSplunkEvent('scroll To doctor feedbacks box');
     }
   }, [inViewRate]);
+  const router = useRouter();
   const likeFeedback = useLikeFeedback();
   const replyFeedback = useReplyfeedback();
+  const replyComment = useReplyComment();
   const { handleOpenLoginModal } = useLoginModalContext();
   const replyText = useRef<HTMLInputElement>();
   const editText = useRef<HTMLInputElement>();
+  const commentText = useRef<HTMLInputElement>();
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
   const removeComment = useRemoveFeedback();
-  const editComment = useEditFeedback();
+  const deleteComment = useDeletFeedback();
+  const submitComment = useSubmitComment();
+  const editComment = useEditComment();
+  const editFeedback = useEditFeedback();
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
+  const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
 
   const isShowOption = (key: string) => {
     return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
   };
+
+  const isSpecialDoctor = specialDoctor?.slug?.includes(router.query.slug);
 
   const whereShowOption = (key: string) => {
     if (!isShowOption(key)) return null;
@@ -170,7 +186,7 @@ export const RateReview = (props: RateReviewProps) => {
       (feedback: any) =>
         feedback && {
           type: 'parent',
-          name: feedback.user_name,
+          name: feedback.user_name ?? feedback.name,
           id: feedback.id,
           description: feedback.description,
           avatar: feedback.user_image,
@@ -245,7 +261,7 @@ export const RateReview = (props: RateReviewProps) => {
           ...(feedback.feedback_symptomes?.length && {
             symptomes: { text: 'علت مراجعه', items: feedback.feedback_symptomes.map((symptom: any) => symptom.symptomes) },
           }),
-          recommend: {
+          recommend: feedback.recommended && {
             text: feedback.recommended === '1' ? 'پزشک را توصیه می‌کنم' : 'پزشک را توصیه نمیکنم',
             isRecommend: feedback.recommended === '1',
             icon:
@@ -426,7 +442,9 @@ export const RateReview = (props: RateReviewProps) => {
         text: 'ثبت نظر',
         action: () => {
           rateSplunkEvent('post');
-          location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
+          isSpecialDoctor
+            ? handleOpenSubmitModal()
+            : (location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`);
         },
       },
     ],
@@ -450,12 +468,20 @@ export const RateReview = (props: RateReviewProps) => {
         state: true,
       });
     if (!text) return toast.error('لطفا متنی را وارد کنید');
-    await replyFeedback.mutate({
-      description: text,
-      doctor_id: doctor.id,
-      server_id: serverId,
-      feedback_id: id,
-    });
+    if (isSpecialDoctor) {
+      await replyComment.mutate({
+        description: text,
+        feedback_id: id,
+        user_id: userInfo.id,
+      });
+    } else {
+      await replyFeedback.mutate({
+        description: text,
+        doctor_id: doctor.id,
+        server_id: serverId,
+        feedback_id: id,
+      });
+    }
     handleClose();
     if (replyFeedback.status) toast.success('نظر شما ثبت گردید و پس از تایید، نمایش داده خواهد شد.');
     feedbacksData[0]?.reply?.[0].id === id ? rateSplunkEvent('send reply first reply box') : rateSplunkEvent('send reply or comment');
@@ -463,9 +489,16 @@ export const RateReview = (props: RateReviewProps) => {
 
   const removeCommentHandler = async () => {
     try {
-      await removeComment.mutateAsync({
-        feedback_id: feedbackDetails?.id,
-      });
+      if (isSpecialDoctor) {
+        await deleteComment.mutateAsync({
+          feedback_id: feedbackDetails?.id,
+          user_id: userInfo && userInfo.id,
+        });
+      } else {
+        await removeComment.mutateAsync({
+          feedback_id: feedbackDetails?.id,
+        });
+      }
       toast.success('درخواست شما با موفقیت انجام شد. نظر شما، پس از گذشت 24 ساعت حذف خواهد شد.', {
         duration: 3000,
       });
@@ -479,17 +512,35 @@ export const RateReview = (props: RateReviewProps) => {
 
   const editCommentHandler = async (description: string) => {
     try {
-      await editComment.mutateAsync({
-        feedback_id: feedbackDetails?.id,
-        description,
-        like: feedbackDetails?.like,
-      });
-
+      if (isSpecialDoctor) {
+        await editComment.mutateAsync({
+          feedback_id: feedbackDetails?.id,
+          description,
+          user_id: userInfo && userInfo.id,
+        });
+      } else {
+        await editFeedback.mutateAsync({
+          feedback_id: feedbackDetails?.id,
+          description,
+          like: feedbackDetails?.like,
+        });
+      }
       toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش24 ویرایش خواهد شد.', {
         duration: 3000,
       });
       rateSplunkEvent('edit comment');
       handleCloseEditModal();
+      return;
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+    }
+  };
+
+  const submitCommentHandler = async (description: string) => {
+    try {
+      await submitComment.mutateAsync({ external_id: doctor.id, description, user_id: userInfo.id });
+      toast.success('نظر شما با موفقیت ثبت شد');
+      handleCloseSubmitModal();
       return;
     } catch (error) {
       return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
@@ -590,17 +641,35 @@ export const RateReview = (props: RateReviewProps) => {
         </div>
         <span className="text-[0.8rem] font-medium !mb-2 !mt-3 !mr-1 block">شما میتوانید در این قسمت نظر خود را ویرایش کنید.</span>
         <TextField multiLine className="h-[10rem]" defaultValue={feedbackDetails?.description} ref={editText} />
-        <Button loading={editComment.isLoading} onClick={() => editCommentHandler(editText.current?.value!)} block className="mt-4">
+        <Button
+          loading={editFeedback.isLoading || editComment.isLoading}
+          onClick={() => editCommentHandler(editText.current?.value!)}
+          block
+          className="mt-4"
+        >
           ویرایش نظر
         </Button>
       </Modal>
       <Modal title="آیا از حذف نظر خود مطمئن هستید؟" {...removeModalProps}>
         <div className="flex justify-between space-s-2">
-          <Button loading={removeComment.isLoading} onClick={removeCommentHandler} block theme="error">
+          <Button loading={removeComment.isLoading || deleteComment.isLoading} onClick={removeCommentHandler} block theme="error">
             حذف
           </Button>
           <Button onClick={handleCloseRemoveModal} block variant="secondary" theme="error">
             انصراف
+          </Button>
+        </div>
+      </Modal>
+      <Modal title="ثبت نظر" {...SubmitModalProps}>
+        <div>
+          <TextField multiLine className="h-[10rem]" ref={commentText} />
+          <Button
+            loading={submitComment.isLoading}
+            onClick={() => submitCommentHandler(commentText.current?.value!)}
+            block
+            className="mt-4"
+          >
+            ثبت نظر
           </Button>
         </div>
       </Modal>
