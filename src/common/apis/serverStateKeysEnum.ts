@@ -15,4 +15,5 @@ export enum ServerStateKeysEnum {
   ServerTime = 'serverTime',
   AvailabilityNotification = 'availabilityNotification',
   InquiryPayment = 'inquiryPayment',
+  DoctorRewiew = 'DoctorRewiew',
 }

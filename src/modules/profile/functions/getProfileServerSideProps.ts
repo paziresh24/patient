@@ -1,4 +1,5 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
+import { getReview } from '@/apis/services/rate2/getFedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
@@ -63,6 +64,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseProvider: boolean = false;
     let shouldUseUser: boolean = false;
     let shouldUseExpertice: boolean = false;
+    let shouldUseFeedback: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -97,6 +99,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           (center: any) => center.center_type === 1 && experticeApiCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         experticeApiCitiesList.cities?.includes('*');
+
+      //Feedback Api
+      const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
+      shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -169,20 +175,34 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let feedbackDataWithoutPagination;
 
     try {
-      const feedbackData = await queryClient.fetchQuery(
-        [
-          ServerStateKeysEnum.Feedbacks,
-          {
-            doctor_id: id,
-            server_id: server_id,
-          },
-        ],
-        () =>
-          getFeedbacks({
-            doctor_id: id,
-            server_id: server_id,
-          }),
-      );
+      const feedbackData = shouldUseFeedback
+        ? await queryClient.fetchQuery(
+            [
+              ServerStateKeysEnum.DoctorRewiew,
+              {
+                external_id: `doctor_${fullProfileData.id}_1`,
+              },
+            ],
+            () =>
+              getReview({
+                external_id: `doctor_${fullProfileData.id}_1`,
+              }),
+          )
+        : await queryClient.fetchQuery(
+            [
+              ServerStateKeysEnum.Feedbacks,
+              {
+                doctor_id: id,
+                server_id: server_id,
+              },
+            ],
+            () =>
+              getFeedbacks({
+                doctor_id: id,
+                server_id: server_id,
+              }),
+          );
+
       if (!isCSR)
         feedbackDataWithoutPagination = await queryClient.fetchQuery(
           [
@@ -200,7 +220,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               no_page_limit: true,
             }),
         );
-      feedbacks.feedbacks = feedbackData?.result ?? [];
+
+      feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
     } catch (error) {
       console.error(error);
     }
