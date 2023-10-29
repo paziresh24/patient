@@ -283,7 +283,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       {shouldShowMessengerButton && (
-        <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:gap-4">
+        <div className="flex flex-col gap-2 lg:flex-row lg:justify-between lg:gap-4">
           <MessengerButton channel={onlineVisitChannel} />
           {safeCallModuleInfo.service_id.includes(serviceId) && <SecureCallButton bookId={id} extraAction={() => handleSafeCallAction()} />}
         </div>
@@ -300,7 +300,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
           </Button>
         )}
-        {status === BookStatus.notVisited && (
+        {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && (
           <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
@@ -380,7 +380,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             </div>
           )}
           {notRefundable && centerType !== CenterType.consult && (
-            <Alert severity="warning" className="p-2 mb-4 flex items-center gap-2">
+            <Alert severity="warning" className="flex items-center gap-2 p-2 mb-4">
               <WarningIcon className="w-8" />
               <Text fontSize="sm">
                 زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و وجه پرداختی شما عودت داده نخواهد شد.
