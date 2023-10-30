@@ -6,10 +6,10 @@ interface ReviewParams {
   external_id: string;
 }
 
-export const getReview = async (params: ReviewParams) => {
+export const getReviews = async (params: ReviewParams) => {
   const { data } = await apiGatewayClient.get(`/v1/feedbacks`, { params });
   return data;
 };
 
 export const useGetReview = (params: ReviewParams, options?: any) =>
-  useQuery([ServerStateKeysEnum.DoctorRewiew, params], () => getReview(params), options);
+  useQuery([ServerStateKeysEnum.Reviews, params], () => getReviews(params), options);

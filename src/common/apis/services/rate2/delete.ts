@@ -2,12 +2,12 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
-  feedback_id: string;
+  id: string;
   user_id?: string;
 }
 
-export const deleteFeedback = ({ feedback_id, user_id }: Params) => {
-  return apiGatewayClient.delete(`/v1/feedbacks/${feedback_id}`, {
+export const deleteFeedback = ({ id, user_id }: Params) => {
+  return apiGatewayClient.delete(`/v1/feedbacks/${id}`, {
     headers: {
       'x-user-id': user_id,
     },

@@ -2,17 +2,16 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
-  external_id: string;
-  description?: string;
+  id: string;
+  description: string | any;
   user_id?: string;
 }
 
-export const submitComment = async ({ external_id, description, user_id }: Params) => {
+export const replyComment = ({ id, description, user_id }: Params) => {
   return apiGatewayClient.post(
-    `/v1/feedbacks`,
+    `/v1/feedbacks/${id}`,
     {
       description,
-      external_id,
     },
     {
       headers: {
@@ -22,6 +21,6 @@ export const submitComment = async ({ external_id, description, user_id }: Param
   );
 };
 
-export const useSubmitComment = () => {
-  return useMutation(submitComment);
+export const useReplyComment = () => {
+  return useMutation(replyComment);
 };

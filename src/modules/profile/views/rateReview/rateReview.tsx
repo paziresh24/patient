@@ -3,10 +3,10 @@ import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
 import { useRemoveFeedback } from '@/common/apis/services/rate/remove';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
+import { useAddReview } from '@/common/apis/services/rate2/addReview';
 import { useDeletFeedback } from '@/common/apis/services/rate2/delete';
 import { useEditComment } from '@/common/apis/services/rate2/edit';
-import { useReplyComment } from '@/common/apis/services/rate2/replyComment';
-import { useSubmitComment } from '@/common/apis/services/rate2/submit';
+import { useReplyComment } from '@/common/apis/services/rate2/reply';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
@@ -103,7 +103,7 @@ export const RateReview = (props: RateReviewProps) => {
   const { handleOpen: handleOpenReportModal, handleClose: handleCloseReportModal, modalProps: reportModalProps } = useModal();
   const { handleOpen: handleOpenEditModal, handleClose: handleCloseEditModal, modalProps: editModalProps } = useModal();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
-  const { handleOpen: handleOpenSubmitModal, handleClose: handleCloseSubmitModal, modalProps: SubmitModalProps } = useModal();
+  const { handleOpen: handleOpenAddReviewModal, handleClose: handleCloseAddReviewModal, modalProps: addReviewModalProps } = useModal();
   const [feedbackReplyModalDetails, setFeedbackReplyModalDetails] = useState<{ id: string; isShow: boolean }[]>([]);
   const [feedbackDetails, setFeedbackDetails] = useState<any>(null);
   const feedbacksData = useFeedbackDataStore(state => state.data);
@@ -129,7 +129,7 @@ export const RateReview = (props: RateReviewProps) => {
   const reportFeedback = useReportFeedback();
   const removeComment = useRemoveFeedback();
   const deleteComment = useDeletFeedback();
-  const submitComment = useSubmitComment();
+  const addReview = useAddReview();
   const editComment = useEditComment();
   const editFeedback = useEditFeedback();
   const isShowPremiumFeatures = useShowPremiumFeatures();
@@ -443,8 +443,10 @@ export const RateReview = (props: RateReviewProps) => {
         action: () => {
           rateSplunkEvent('post');
           isSpecialDoctor
-            ? handleOpenSubmitModal()
-            : (location.href = `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`);
+            ? handleOpenAddReviewModal()
+            : location.assign(
+                `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`,
+              );
         },
       },
     ],
@@ -471,7 +473,7 @@ export const RateReview = (props: RateReviewProps) => {
     if (isSpecialDoctor) {
       await replyComment.mutate({
         description: text,
-        feedback_id: id,
+        id,
         user_id: userInfo.id,
       });
     } else {
@@ -491,8 +493,8 @@ export const RateReview = (props: RateReviewProps) => {
     try {
       if (isSpecialDoctor) {
         await deleteComment.mutateAsync({
-          feedback_id: feedbackDetails?.id,
-          user_id: userInfo && userInfo.id,
+          id: feedbackDetails?.id,
+          user_id: userInfo?.id,
         });
       } else {
         await removeComment.mutateAsync({
@@ -514,9 +516,9 @@ export const RateReview = (props: RateReviewProps) => {
     try {
       if (isSpecialDoctor) {
         await editComment.mutateAsync({
-          feedback_id: feedbackDetails?.id,
+          id: feedbackDetails?.id,
           description,
-          user_id: userInfo && userInfo.id,
+          user_id: userInfo?.id,
         });
       } else {
         await editFeedback.mutateAsync({
@@ -536,11 +538,11 @@ export const RateReview = (props: RateReviewProps) => {
     }
   };
 
-  const submitCommentHandler = async (description: string) => {
+  const addReviewHandler = async (description: string) => {
     try {
-      await submitComment.mutateAsync({ external_id: `doctor_${doctor.id}_1`, description, user_id: userInfo.id });
+      await addReview.mutateAsync({ external_id: `doctor_${doctor.id}_1`, description, user_id: userInfo?.id });
       toast.success('نظر شما با موفقیت ثبت شد');
-      handleCloseSubmitModal();
+      handleCloseAddReviewModal();
       return;
     } catch (error) {
       return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
@@ -660,15 +662,10 @@ export const RateReview = (props: RateReviewProps) => {
           </Button>
         </div>
       </Modal>
-      <Modal title="ثبت نظر" {...SubmitModalProps}>
+      <Modal title="ثبت نظر" {...addReviewModalProps}>
         <div>
           <TextField multiLine className="h-[10rem]" ref={commentText} />
-          <Button
-            loading={submitComment.isLoading}
-            onClick={() => submitCommentHandler(commentText.current?.value!)}
-            block
-            className="mt-4"
-          >
+          <Button loading={addReview.isLoading} onClick={() => addReviewHandler(commentText.current?.value!)} block className="mt-4">
             ثبت نظر
           </Button>
         </div>
