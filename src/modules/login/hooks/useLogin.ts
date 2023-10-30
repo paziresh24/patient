@@ -31,7 +31,7 @@ export const useLogin = () => {
           maxAge: dayToSecond(365),
         });
 
-        if (university || process.env.NODE_ENV === 'development')
+        if (university)
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),
