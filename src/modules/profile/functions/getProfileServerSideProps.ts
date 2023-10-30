@@ -1,6 +1,7 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
+import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
@@ -82,6 +83,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseUser: boolean = false;
     let shouldUseExpertice: boolean = false;
     let shouldUseCreatedAt: boolean = false;
+    let shouldUseFeedback: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -120,6 +122,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       //CreatedAt Api
       const createdAtDoctorList = growthbook.getFeatureValue('profile:created_at-field|doctor-list', { slugs: [''] });
       shouldUseCreatedAt = newApiFeatureFlaggingCondition(createdAtDoctorList.slugs, slugFormmated);
+      //Feedback Api
+      const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
+      shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -204,21 +209,37 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     let dontShowRateAndReviewMessage = '';
     try {
-      const feedbackData = await queryClient.fetchQuery(
-        [
-          ServerStateKeysEnum.Feedbacks,
-          {
-            doctor_id: id,
-            server_id: server_id,
-          },
-        ],
-        () =>
-          getFeedbacks({
-            doctor_id: id,
-            server_id: server_id,
-          }),
-      );
-      feedbacks.feedbacks = feedbackData?.result ?? [];
+      let feedbackData;
+      if (shouldUseFeedback) {
+        feedbackData = await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Reviews,
+            {
+              external_id: `doctor_${fullProfileData.id}_1`,
+            },
+          ],
+          () =>
+            getReviews({
+              external_id: `doctor_${fullProfileData.id}_1`,
+            }),
+        );
+      } else {
+        feedbackData = await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Feedbacks,
+            {
+              doctor_id: id,
+              server_id: server_id,
+            },
+          ],
+          () =>
+            getFeedbacks({
+              doctor_id: id,
+              server_id: server_id,
+            }),
+        );
+      }
+      feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
 
       if (!isCSR)
