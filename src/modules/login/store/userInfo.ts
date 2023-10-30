@@ -1,3 +1,4 @@
+import { clinicClient } from '@/common/apis/client';
 import { isPWA } from '@/common/utils/isPwa';
 import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { getCookie, removeCookies } from 'cookies-next';
@@ -82,6 +83,10 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   logout: () => {
     removeCookies('certificate');
     removeCookies('token');
-    location.assign(`${publicRuntimeConfig.CLINIC_BASE_URL}/logout?url=${location.pathname}`);
+    clinicClient.get('/logout');
+    set(() => ({
+      info: {},
+      isLogin: false,
+    }));
   },
 }));
