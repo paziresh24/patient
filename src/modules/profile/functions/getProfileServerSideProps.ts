@@ -1,7 +1,7 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
-import { getReviews } from '@/common/apis/services/rate2/getReviews';
+import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';

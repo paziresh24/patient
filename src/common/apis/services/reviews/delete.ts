@@ -14,6 +14,6 @@ export const deleteFeedback = ({ id, user_id }: Params) => {
   });
 };
 
-export const useDeletFeedback = () => {
+export const useDeleteFeedback = () => {
   return useMutation(deleteFeedback);
 };

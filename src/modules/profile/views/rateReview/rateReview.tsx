@@ -3,10 +3,10 @@ import { useLikeFeedback } from '@/common/apis/services/rate/likeFeedback';
 import { useRemoveFeedback } from '@/common/apis/services/rate/remove';
 import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
-import { useAddReview } from '@/common/apis/services/rate2/addReview';
-import { useDeletFeedback } from '@/common/apis/services/rate2/delete';
-import { useEditComment } from '@/common/apis/services/rate2/edit';
-import { useReplyComment } from '@/common/apis/services/rate2/reply';
+import { useAddReview } from '@/common/apis/services/reviews/addReview';
+import { useDeleteFeedback } from '@/common/apis/services/reviews/delete';
+import { useEditComment } from '@/common/apis/services/reviews/edit';
+import { useReplyComment } from '@/common/apis/services/reviews/reply';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
@@ -128,7 +128,7 @@ export const RateReview = (props: RateReviewProps) => {
   const reportText = useRef<HTMLInputElement>();
   const reportFeedback = useReportFeedback();
   const removeComment = useRemoveFeedback();
-  const deleteComment = useDeletFeedback();
+  const deleteComment = useDeleteFeedback();
   const addReview = useAddReview();
   const editComment = useEditComment();
   const editFeedback = useEditFeedback();
@@ -442,11 +442,13 @@ export const RateReview = (props: RateReviewProps) => {
         text: 'ثبت نظر',
         action: () => {
           rateSplunkEvent('post');
-          isSpecialDoctor
-            ? handleOpenAddReviewModal()
-            : location.assign(
-                `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`,
-              );
+          if (isSpecialDoctor) {
+            handleOpenAddReviewModal();
+            return;
+          }
+          location.assign(
+            `${publicRuntimeConfig.CLINIC_BASE_URL}/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${serverId}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`,
+          );
         },
       },
     ],
