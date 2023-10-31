@@ -13,6 +13,7 @@ import { useUserInfoStore } from '../store/userInfo';
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
+  const logout = useUserInfoStore(state => state.logout);
   const getMe = useGetMe();
   const getUser = useGetUser();
   const getProvider = useProviders({ user_id: getMe?.data?.id }, { enabled: !!getMe?.data?.id });
@@ -48,6 +49,9 @@ export const useLogin = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);
+        if (error.response?.status === 401 || error.response?.status === 400) {
+          logout();
+        }
         return Promise.reject(error.response?.data);
       }
     }
