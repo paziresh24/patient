@@ -1,4 +1,5 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
@@ -11,14 +12,17 @@ export const BazaarPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
 
   return (
-    <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-      {isAppLoading && <LoadingApps />}
-      <iframe
-        onLoad={() => setIsAppLoading(false)}
-        className={classNames('w-full h-full', { hidden: isAppLoading })}
-        src="https://bazaar.paziresh24.com/"
-      />
-    </div>
+    <>
+      <Seo title="بازارچه" noIndex />
+      <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
+        {isAppLoading && <LoadingApps />}
+        <iframe
+          onLoad={() => setIsAppLoading(false)}
+          className={classNames('w-full h-full', { hidden: isAppLoading })}
+          src="https://bazaar.paziresh24.com/"
+        />
+      </div>
+    </>
   );
 };
 

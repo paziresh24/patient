@@ -21,7 +21,7 @@ import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFea
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -49,7 +49,9 @@ export const UserProfile = () => {
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isShowDashboard =
+    isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   const ref = useRef(null);
   useClickAway(ref, () => {

@@ -1,4 +1,5 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -34,17 +35,20 @@ export const Dashboard = () => {
   }, [apps.isSuccess, isDesktop]);
 
   return (
-    <SideBar fullWidth className="md:hidden">
-      <div className="hidden md:flex   md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-        <LoadingApps />
-      </div>
-    </SideBar>
+    <>
+      <Seo title="داشبورد" noIndex />
+      <SideBar fullWidth className="md:hidden">
+        <div className="hidden md:flex   md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
+          <LoadingApps />
+        </div>
+      </SideBar>
+    </>
   );
 };
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter {...page.props.config} showFooter={false}>
+    <LayoutWithHeaderAndFooter {...page.props.config} shouldShowPromoteApp={false} showFooter={false}>
       {page}
     </LayoutWithHeaderAndFooter>
   );

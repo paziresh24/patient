@@ -31,6 +31,7 @@ export const Dashboard = () => {
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
   const selctedMenu = useMemo(() => app?.navigation_items.find((item: any) => item.key === menuKey), [app, isReady, menuKey, appKey]);
+  const appName = selctedMenu?.label ?? app?.name ?? 'داشبورد';
 
   useEffect(() => {
     setIsAppLoading(true);
@@ -38,9 +39,8 @@ export const Dashboard = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <Seo title={selctedMenu?.label} noIndex />
-
-      {appsData.isSuccess && selctedMenu?.url && <AppBar title={selctedMenu?.label ?? app.name ?? ''} className="hidden pwa:!flex" />}
+      <Seo title={appName} noIndex />
+      {appsData.isSuccess && selctedMenu?.url && <AppBar title={appName} className="hidden pwa:!flex" />}
       <div
         key={selctedMenu?.key}
         className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative"
@@ -62,7 +62,7 @@ export const Dashboard = () => {
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter {...page.props.config} showFooter={false}>
+    <LayoutWithHeaderAndFooter {...page.props.config} shouldShowPromoteApp={false} showFooter={false}>
       <SideBar className="hidden md:flex">{page}</SideBar>
     </LayoutWithHeaderAndFooter>
   );
