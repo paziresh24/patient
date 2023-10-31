@@ -23,24 +23,19 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
-import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
-const { publicRuntimeConfig } = config();
 
 export const UserProfile = () => {
-  const router = useRouter();
   const { handleOpenLoginModal } = useLoginModalContext();
   const { t } = useTranslation('common');
-  const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
-    isLogin: state.isLogin,
-    userInfo: state.info,
-    pending: state.pending,
-  }));
+
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+  const pending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
