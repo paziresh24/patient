@@ -41,12 +41,14 @@ export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent'
           ...(subMenu && subMenu?.length > 0 && { onClick: () => setIsOpen(prev => !prev) }),
         }}
         className={classNames(
-          'flex cursor-pointer hover:bg-slate-5 rounded-md items-center px-3 py-2 whitespace-nowrap',
+          'flex cursor-pointer  rounded-md items-center px-3 py-2 whitespace-nowrap',
           {
             'justify-between': isSubMenu,
-            '!pr-6': type === 'children',
+            '!pr-6 before:transition-all before:duration-300 before:opacity-0 hover:opacity-80 duration-300 transition-all':
+              type === 'children',
+            ' hover:bg-slate-50 duration-300 transition-all': type === 'parent',
             'bg-slate-100': type === 'parent' && router.asPath === link,
-            'before:absolute before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[70%] relative before:bg-primary':
+            'before:absolute before:opacity-100  before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[70%] relative before:bg-primary':
               type === 'children' && router.asPath == link,
           },
           className,

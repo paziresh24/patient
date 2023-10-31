@@ -4,7 +4,7 @@ import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
 import Text from '../../atom/text/text';
@@ -26,7 +26,9 @@ export const BottomNavigation = () => {
   const isApplication = useApplication();
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isShowDashboard =
+    isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();

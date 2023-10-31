@@ -1,4 +1,5 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
@@ -17,6 +18,7 @@ export const AppointmentsPage = () => {
     <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
       {user.provider?.job_title === 'doctor' ? (
         <>
+          <Seo title="ویرایش پروفایل" noIndex />
           {isAppLoading && <LoadingApps />}
           <iframe
             onLoad={() => setIsAppLoading(false)}
