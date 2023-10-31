@@ -38,7 +38,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       removeInfo();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 || error.response?.status === 400) {
           logout();
           setPending(false);
         }
