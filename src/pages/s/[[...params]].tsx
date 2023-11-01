@@ -143,6 +143,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
             route: (params as string[])?.join('/') ?? '',
             query: {
               ...query,
+              ...(university && { university }),
             },
             headers,
           }),

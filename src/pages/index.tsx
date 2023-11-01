@@ -55,11 +55,13 @@ const Home = () => {
         {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
-      <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
-        <Text fontWeight="semiBold" fontSize="sm" as="h1" className="text-slate-400">
-          نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان
-        </Text>
-      </div>
+      {!customize.partnerKey && (
+        <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
+          <Text fontWeight="semiBold" fontSize="sm" as="h1" className="text-slate-400">
+            نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان
+          </Text>
+        </div>
+      )}
     </>
   );
 };
