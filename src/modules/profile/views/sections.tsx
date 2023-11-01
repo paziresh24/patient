@@ -54,7 +54,7 @@ export const sections = ({
   [
     // Own Page
     {
-      isShow: isBulk,
+      isShow: isBulk && !customize?.partnerKey,
       function: () => {
         return {
           fullname: information.display_name,

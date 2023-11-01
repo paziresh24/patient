@@ -1,9 +1,13 @@
 import { useSearch } from '@/common/apis/services/search/search';
+import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
 import Card from '@/common/components/atom/card';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
+import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text/text';
+import ErrorIcon from '@/common/components/icons/error';
+import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import SearchCard from '@/modules/search/components/card/card';
 import { useFeatureValue } from '@growthbook/growthbook-react';
@@ -15,6 +19,7 @@ interface BulkServiceProps {
 
 export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   const { handleOpen, modalProps } = useModal();
+  const customize = useCustomize(state => state.customize);
   const content = useFeatureValue('recommed:suggest-doctor-modal-content', {
     header: '',
     footer: '',
@@ -35,11 +40,25 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
 
   return (
     <>
-      <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        <Button id="bulk-profile-button" block onClick={handleOpen}>
-          <Text>دریافت نوبت</Text>
-        </Button>
-      </Card>
+      {searchData.isLoading && <Skeleton w="100%" h="5rem" className="md:rounded-md" />}
+      {substituteDoctor?.url && (
+        <Card className="space-y-3 !rounded-none md:!rounded-lg">
+          <Button id="bulk-profile-button" block onClick={handleOpen}>
+            <Text>دریافت نوبت</Text>
+          </Button>
+        </Card>
+      )}
+      {!searchData.isLoading && (!substituteDoctor?.url || customize.partnerKey) && (
+        <Card className="space-y-3 !rounded-none md:!rounded-lg">
+          <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+            <ErrorIcon className="w-5 h-5" />
+            <Text className="text-sm font-medium">در حال حاضر این پزشک با پذیرش24 همکاری ندارد.</Text>
+          </Alert>
+          <Text fontWeight="medium" fontSize="sm" className="text-slate-500">
+            شما می توانید از سایر پزشکان حاذق در این حوزه نوبت بگیرید.
+          </Text>
+        </Card>
+      )}
       <Modal bodyClassName="p-0" title="" {...modalProps}>
         {(searchData.isLoading || !substituteDoctor?.url) && (
           <div className="flex justify-center w-full">

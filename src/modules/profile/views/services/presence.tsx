@@ -4,6 +4,7 @@ import Button from '@/common/components/atom/button/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
 import useApplication from '@/common/hooks/useApplication';
+import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
@@ -25,6 +26,7 @@ interface PresenceProps {
 
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
+  const customise = useCustomize(state => state.customize);
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
@@ -99,7 +101,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status && !isWebView && !isApplication) {
+    if (center.is_only_in_app.status && !customise.partnerKey && !isWebView && !isApplication) {
       handleOpenSelectDownloadAppModal();
       return;
     }
