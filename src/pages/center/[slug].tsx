@@ -47,7 +47,7 @@ const CenterProfile = ({ query: { text }, host }: any) => {
   const profileData = profile.data?.result?.data;
   const filters = {
     center: profileData.id,
-    result_type: 'فقط+پزشکان',
+    result_type: 'پزشکان+بیمارستانی',
     ...(searchQuery && { text: searchQuery }),
   };
 
@@ -405,7 +405,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
 
     const filters = {
       center: result?.data?.id,
-      result_type: 'فقط+پزشکان',
+      result_type: 'پزشکان+بیمارستانی',
       ...(text && { text }),
     };
 
