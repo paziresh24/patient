@@ -33,6 +33,7 @@ interface OnlineVisitWrapperProps {
   id: string;
   userCenterId: string;
   duration?: string;
+  waitingTime?: any;
   city: {
     slug: string;
     name: string;
@@ -44,7 +45,7 @@ interface OnlineVisitWrapperProps {
 }
 
 export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
-  const { channelType, doctorId, price, title, userCenterId, slug, id, duration, city, expertise } = props;
+  const { channelType, doctorId, price, title, userCenterId, slug, id, duration, city, expertise, waitingTime } = props;
   const { handleOpen: handleOpenBookingModal, handleClose: handleCloseBoolingModal, modalProps: bookingModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
   const { profileEvent } = useProfileSplunkEvent();
@@ -127,6 +128,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
+        waitingTime={waitingTime}
         {...(discountPercentage && isShowPremiumFeatures && { discountPercent: discountPercentage })}
         isPremium={isLogin && checkPremiumUser(userInfo.vip)}
       />
