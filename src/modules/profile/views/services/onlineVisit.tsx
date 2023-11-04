@@ -5,6 +5,7 @@ import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
+import isEmpty from 'lodash/isEmpty';
 import { useRouter } from 'next/router';
 import { renderToString } from 'react-dom/server';
 import ServiceCard from '../../components/serviceCard';
@@ -19,6 +20,7 @@ interface OnlineVisitProps {
   loading?: boolean;
   discountPercent?: number;
   isPremium?: boolean;
+  waitingTime?: any;
 }
 
 type channelType = {
@@ -26,11 +28,12 @@ type channelType = {
 };
 
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { doctorId, title, channels, price, duration, onBook, loading, discountPercent, isPremium } = props;
+  const { doctorId, title, channels, price, duration, onBook, loading, discountPercent, isPremium, waitingTime } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
   const router = useRouter();
+
   return (
     <ServiceCard
       header={{
@@ -73,6 +76,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
+          !isEmpty(waitingTime) && `میانگین زمان انتظار تا ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
           safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description,
         ].filter(Boolean),
       }}

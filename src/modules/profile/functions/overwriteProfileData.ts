@@ -1,4 +1,5 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { flatten } from 'lodash';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -18,6 +19,9 @@ export type OverwriteProfileData = {
   };
   history: {
     insert_at_age?: string;
+  };
+  feedbacks: {
+    waiting_time_info?: any;
   };
 };
 
@@ -92,7 +96,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     channels: source.online_visit_channel_types,
   };
 
-  const waitingTimeInfo = source.waiting_time_info;
+  const waitingTimeInfo = flatten([overwriteData?.feedbacks?.waiting_time_info, source.waiting_time_info].filter((items: any) => !!items));
 
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };

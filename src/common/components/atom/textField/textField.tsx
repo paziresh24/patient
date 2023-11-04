@@ -31,7 +31,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
   return (
     <div
       className={classNames(
-        'flex flex-col space-y-3 w-full border-slate-300 outline-primary',
+        'flex flex-col space-y-2 w-full border-slate-300 outline-primary',
         {
           'text-red-600 border-red-200 !outline-red-200 ': error,
         },
@@ -43,7 +43,7 @@ export const TextField = forwardRef((props: TextFieldProps, ref: ForwardedRef<an
           {label}
         </Text>
       )}
-      <div className="relative border-inherit outline-inherit w-full">
+      <div className="relative w-full border-inherit outline-inherit">
         <Component
           ref={ref}
           autoComplete="off"
