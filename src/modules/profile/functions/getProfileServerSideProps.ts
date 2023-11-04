@@ -12,6 +12,7 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import moment from 'jalali-moment';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
 import { getSpecialitiesData } from './getSpecialities';
@@ -84,6 +85,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseExpertice: boolean = false;
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
+    let shouldUseAverageWaitingTime: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -125,6 +127,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       //Feedback Api
       const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
+      // AverageWaitingTime Api
+      const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
+      shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -132,6 +137,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
       history: {},
+      feedbacks: {},
       provider: {
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
@@ -187,6 +193,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 name: userData.value?.name,
                 family: userData.value?.family,
                 display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
+              };
+            }
+          }
+          if (shouldUseAverageWaitingTime) {
+            const parallelRequests = [await getAverageWaitingTime({ slug: slugFormmated })];
+            const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
+
+            if (averageWaitingTimeData.status === 'fulfilled') {
+              profileData.feedbacks = {
+                waiting_time_info: averageWaitingTimeData?.value?.result,
               };
             }
           }

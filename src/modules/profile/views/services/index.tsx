@@ -108,6 +108,7 @@ export const Services = ({
                     : undefined
                 }
                 doctorId={doctor.id}
+                waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id === CENTERS.CONSULT) ?? {}}
                 slug={slug}
                 fullName={doctor.display_name}
                 id={service.id}
@@ -125,7 +126,7 @@ export const Services = ({
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
-            waitingTime={waitingTimeInfo?.waiting_time_title}
+            waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id !== CENTERS.CONSULT)?.waiting_time_title}
             onBook={({ centerId, serviceId }) =>
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
             }

@@ -4,6 +4,8 @@ import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
+import { isEmpty } from 'lodash';
+import { useRouter } from 'next/router';
 import { renderToString } from 'react-dom/server';
 import ServiceCard from '../../components/serviceCard';
 import ChannelDetailes, { Messenger } from './channelDetailes';
@@ -18,6 +20,7 @@ interface OnlineVisitProps {
   discountPercent?: number;
   isPremium?: boolean;
   buttonText: string;
+  waitingTime?: any;
 }
 
 type channelType = {
@@ -25,10 +28,11 @@ type channelType = {
 };
 
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { doctorId, title, channels, buttonText, price, duration, onBook, loading, discountPercent, isPremium } = props;
+  const { doctorId, title, channels, price, buttonText, duration, onBook, loading, discountPercent, isPremium, waitingTime } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
+  const router = useRouter();
 
   return (
     <ServiceCard
@@ -75,6 +79,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
           !duration && 'تا <strong>۳ روز</strong> هر سوالی دارید میتوانید از پزشک بپرسید.',
+          !isEmpty(waitingTime) && `میانگین زمان انتظار تا ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
         ].filter(Boolean),
       }}
       footer={{
