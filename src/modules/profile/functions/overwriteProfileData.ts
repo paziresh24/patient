@@ -18,6 +18,7 @@ export type OverwriteProfileData = {
   };
   history: {
     insert_at_age?: string;
+    count_of_page_view?: string;
   };
 };
 
@@ -81,7 +82,9 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const history = {
     insert_at_age: source.insert_at_age,
     count_of_consult_books: source.followConsultBoosk,
-    count_of_page_view: source.number_of_visits,
+    count_of_page_view: isEmpty(overwriteData.history?.count_of_page_view)
+      ? source.number_of_visits
+      : overwriteData.history?.count_of_page_view,
     ...overwriteData.history,
   };
 

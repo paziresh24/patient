@@ -42,6 +42,7 @@ export type UserInfo = {
   provider?: {
     job_title?: 'doctor';
     slug?: string;
+    id?: string;
   };
 };
 

@@ -84,6 +84,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseExpertice: boolean = false;
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
+    let sholudUsePageView: boolean = false;
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -125,6 +126,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       //Feedback Api
       const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
+      // PageView Api
+      const PageViewDoctorList = growthbook.getFeatureValue('profile:page-view|doctor-list', { slugs: [''] });
+      sholudUsePageView = newApiFeatureFlaggingCondition(PageViewDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -162,6 +166,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           profileData.history = {
             ...(shouldUseCreatedAt && {
               insert_at_age: formatDurationInMonths(providerData.value?.created_at),
+            }),
+            ...(sholudUsePageView && {
+              count_of_page_view: providerData.value?.page_view,
             }),
           };
 

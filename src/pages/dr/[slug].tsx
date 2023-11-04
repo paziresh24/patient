@@ -1,3 +1,4 @@
+import { useIncrementPageView } from '@/common/apis/services/profile/incrementPageView';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
@@ -29,6 +30,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { push } from '@socialgouv/matomo-next';
 import { getCookie } from 'cookies-next';
 import flatMapDeep from 'lodash/flatMapDeep';
@@ -59,9 +61,10 @@ const DoctorProfile = ({
   const isApplication = useApplication();
   const removePrefixDoctorName = useRemovePrefixDoctorName();
   const isWebView = useWebView();
-
+  const incrementPageView = useIncrementPageView();
   const addPageView = usePageView();
   const { recommendEvent } = useProfileSplunkEvent();
+  const doctorListForincrementPageView = useFeatureValue<any>('profile:page-view|doctor-list', { slugs: [''] });
 
   // Modal
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
@@ -100,12 +103,19 @@ const DoctorProfile = ({
         doctorId: information.id,
         serverId: information.server_id,
       });
+
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
   }, [isBulk, information]);
+
+  useEffect(() => {
+    if (doctorListForincrementPageView.slugs.includes(slug)) {
+      incrementPageView.mutateAsync({ id: userInfo?.provider?.id });
+    }
+  }, [userInfo, slug]);
 
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
