@@ -100,7 +100,7 @@ export const Services = ({
               <OnlineVisitWrapper
                 key={service.id}
                 channelType={doctorMessenger?.length ? doctorMessenger : ['phone']}
-                title={service.desk}
+                title="همین الان آنلاین ویزیت شوید"
                 price={service.free_price}
                 duration={
                   expertises.group_expertises[0].id === 21 || expertises.group_expertises[0].id === 47
@@ -110,6 +110,7 @@ export const Services = ({
                 doctorId={doctor.id}
                 waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id === CENTERS.CONSULT) ?? {}}
                 slug={slug}
+                fullName={doctor.display_name}
                 id={service.id}
                 userCenterId={centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
                 city={{
