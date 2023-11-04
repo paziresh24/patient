@@ -5,6 +5,7 @@ import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
 import { useAddReview } from '@/common/apis/services/reviews/addReview';
 import { useDeleteFeedback } from '@/common/apis/services/reviews/delete';
+import { useDislikeReview } from '@/common/apis/services/reviews/dislike';
 import { useEditComment } from '@/common/apis/services/reviews/edit';
 import { useLikeReview } from '@/common/apis/services/reviews/like';
 import { useReplyComment } from '@/common/apis/services/reviews/reply';
@@ -121,6 +122,7 @@ export const RateReview = (props: RateReviewProps) => {
   const router = useRouter();
   const likeFeedback = useLikeFeedback();
   const likeReviews = useLikeReview();
+  const dislikeReviews = useDislikeReview();
   const replyFeedback = useReplyfeedback();
   const replyComment = useReplyComment();
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -464,11 +466,12 @@ export const RateReview = (props: RateReviewProps) => {
     rateSplunkEvent('like');
     toggleLike(id);
     const isLiked = feedbacksData.find((item: any) => item?.id === id)?.isLiked;
-    console.log(isLiked);
-
     try {
-      if (isSpecialDoctor) {
+      if (isSpecialDoctor && !isLiked) {
         await likeReviews.mutateAsync({ id, user_id: userInfo.id });
+        return;
+      } else if (isSpecialDoctor && isLiked) {
+        await dislikeReviews.mutateAsync({ id, user_id: userInfo.id });
         return;
       }
       await likeFeedback.mutateAsync({
