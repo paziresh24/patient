@@ -36,6 +36,9 @@ export type UserInfo = {
   is_doctor?: boolean;
   profile?: any;
   vip?: string;
+  insurance_id?: string;
+  father_name?: string;
+  birth_date?: string;
   provider?: {
     job_title?: 'doctor';
     slug?: string;

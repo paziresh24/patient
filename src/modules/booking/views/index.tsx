@@ -21,6 +21,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import InfoIcon from '@/common/components/icons/info';
+import InputMask from 'react-input-mask';
 import Recommend from '../components/recommend';
 import SelectSymptoms from '../components/selectSymptoms';
 
@@ -49,6 +50,7 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
+import { useInquiryIdentityInformation } from '@/common/apis/services/booking/inquiryIdentityInformation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
 import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
@@ -57,6 +59,7 @@ import useModal from '@/common/hooks/useModal';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
+import axios from 'axios';
 import moment from 'jalali-moment';
 import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
@@ -66,7 +69,6 @@ import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
-
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -128,6 +130,9 @@ const BookingSteps = (props: BookingStepsProps) => {
   const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
   const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
+  const shouldUseInquiryIdentityInformation = useFeatureValue<{ ids: string[] }>('booking:inquiry-identity-information|center-list', {
+    ids: [],
+  });
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
 
@@ -140,6 +145,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
   const { handleOpen: handleOpenErrorModal, handleClose: handleCloseErrorModal, modalProps: errorModalProps } = useModal();
   const [errorModalMetaData, setErrorModalMetaData] = useState<any>({});
+  const { handleOpen: handleOpenBirthDateModal, handleClose: handleCloseBirthDateModal, modalProps: birthDateModalProps } = useModal();
+  const birthDateInputValue = useRef<any>(null);
 
   const [insuranceNumber, setInsuranceNumber] = useState('');
   const [insuranceName, setInsuranceName] = useState('');
@@ -149,6 +156,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [symptomSearchText, setSymptomSearchText] = useState('');
   const { handleBook, isLoading: bookLoading } = useBooking();
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
+  const inquiryIdentityInformation = useInquiryIdentityInformation();
   const unsuspend = useUnsuspend();
   const getFirstFreeTime = useFirstFreeTime({
     enabled: false,
@@ -197,7 +205,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const handleBookAction = async (user: any) => {
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id } = user;
-    const userConfimation = getNationalCodeConfirmation.data?.data?.info;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
 
@@ -215,12 +222,6 @@ const BookingSteps = (props: BookingStepsProps) => {
         timeId: reserveId as string,
         user: {
           ...user,
-          name: userConfimation?.name ?? user.name,
-          family: userConfimation?.family ?? user.family,
-          gender:
-            userConfimation?.gender !== null && userConfimation?.gender !== undefined
-              ? convertNumberToStringGender(userConfimation?.gender)
-              : user.gender,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
         },
         selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
@@ -370,6 +371,24 @@ const BookingSteps = (props: BookingStepsProps) => {
     return insurances;
   };
 
+  const handleShowErrorModal = ({
+    text,
+    buttons,
+  }: {
+    text: string;
+    buttons?: Array<{
+      text?: string;
+      variant?: 'primary' | 'secondary';
+      onClick: () => void;
+    }>;
+  }) => {
+    setErrorModalMetaData({
+      text,
+      buttons,
+    });
+    handleOpenErrorModal();
+  };
+
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
@@ -512,17 +531,88 @@ const BookingSteps = (props: BookingStepsProps) => {
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
             data={{
-              loading: bookLoading || getFirstFreeTime.loading || getNationalCodeConfirmation.isLoading,
+              loading:
+                bookLoading || getFirstFreeTime.loading || getNationalCodeConfirmation.isLoading || inquiryIdentityInformation.isLoading,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
               shouldShowMessengers,
             }}
-            nextStep={async (user: UserInfo) => {
-              setUser(user);
+            nextStep={async (intialUser: UserInfo) => {
+              let user = { ...intialUser };
               if (service?.can_request) {
+                setUser(user);
                 handleChangeStep('BOOK_REQUEST');
                 return;
               }
+
+              try {
+                if (shouldUseInquiryIdentityInformation?.ids?.includes?.(center.id) && user.national_code) {
+                  const { data: insurancesData } = await getNationalCodeConfirmation.mutateAsync({
+                    nationalCode: user.national_code!,
+                    centerId: center.id,
+                  });
+
+                  if (!insurancesData?.info?.birth_date) {
+                    setUser(user);
+                    handleOpenBirthDateModal();
+                    return;
+                  }
+
+                  const { data: information } = await inquiryIdentityInformation.mutateAsync({
+                    centerId: center.id,
+                    nationalCode: user.national_code,
+                    yearOfBirth: insurancesData?.info?.birth_date.split('/')[0],
+                  });
+
+                  user = {
+                    ...user,
+                    name: information?.info?.name,
+                    family: information?.info?.family,
+                    gender: convertNumberToStringGender(information?.info?.gender),
+                    father_name: information?.info?.fatherName,
+                    birth_date: insurancesData?.info?.birth_date,
+                  };
+
+                  const insurances: any[] = Object.values(insurancesData?.info?.insurances);
+
+                  if (insurances.length === 1) {
+                    const insurance = insurances[0];
+                    user = {
+                      ...user,
+                      insurance_id: insurance.id,
+                    };
+                  } else {
+                    setUser(user);
+                    handleOpenInsuranceModal();
+                  }
+
+                  handleBookAction(user);
+                  return;
+                }
+              } catch (e) {
+                handleShowErrorModal({
+                  text: `<p class="font-bold">در استعلام بیمه شما خطایی رخ داده است، لطفا چند دقیقه دیگر تلاش کنید.</p>
+                  <p>چنانچه مایلید بیمه شما به صورت آزاد محاسبه شود، فرایند نوبت دهی را ادامه داده و در نظر داشته باشید، هزینه اضافی پرداخت شده به شما برگشت داده نخواهد شد.</p>`,
+                  buttons: [
+                    {
+                      text: 'ادامه',
+                      variant: 'primary',
+                      onClick: () => {
+                        setUser(user);
+                        handleOpenBirthDateModal();
+                        handleCloseErrorModal();
+                      },
+                    },
+                    {
+                      text: 'انصراف',
+                      variant: 'secondary',
+                      onClick: handleCloseErrorModal,
+                    },
+                  ],
+                });
+                return;
+              }
+              setUser(user);
 
               if (+center?.settings?.booking_enable_insurance) {
                 handleOpenInsuranceModal();
@@ -603,6 +693,53 @@ const BookingSteps = (props: BookingStepsProps) => {
             </Button>
           ))}
         </div>
+      </Modal>
+      <Modal title="تاریخ تولد خود را وارد کنید." {...birthDateModalProps} bodyClassName="flex flex-col space-y-2">
+        <InputMask mask="9999/99/99" ref={birthDateInputValue}>
+          {
+            ((inputProps: any) => {
+              return (
+                <TextField
+                  {...inputProps}
+                  helperText="مثال: 1372/12/03"
+                  type="number"
+                  inputMode="numeric"
+                  dir="ltr"
+                  placeholder="____/__/__"
+                  className="text-center"
+                />
+              );
+            }) as any
+          }
+        </InputMask>
+        <Button
+          onClick={async () => {
+            try {
+              const { data: information } = await inquiryIdentityInformation.mutateAsync({
+                centerId: center.id,
+                nationalCode: user.national_code,
+                yearOfBirth: birthDateInputValue.current?.value?.split?.('/')[0],
+              });
+
+              const userInformation = {
+                ...user,
+                name: information?.info?.name,
+                family: information?.info?.family,
+                gender: convertNumberToStringGender(information?.info?.gender),
+                father_name: information?.info?.fatherName,
+                birth_date: birthDateInputValue.current?.value,
+              };
+              handleCloseBirthDateModal();
+              handleBookAction(userInformation);
+            } catch (error) {
+              if (axios.isAxiosError(error)) toast.error(error.response?.data?.message);
+            }
+          }}
+          loading={inquiryIdentityInformation.isLoading}
+          block
+        >
+          تایید
+        </Button>
       </Modal>
       <Modal
         noHeader
