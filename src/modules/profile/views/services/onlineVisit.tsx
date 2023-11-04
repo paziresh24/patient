@@ -1,11 +1,9 @@
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
-import PhoneIcon from '@/common/components/icons/phone';
 import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
-import { useRouter } from 'next/router';
 import { renderToString } from 'react-dom/server';
 import ServiceCard from '../../components/serviceCard';
 import ChannelDetailes, { Messenger } from './channelDetailes';
@@ -19,6 +17,7 @@ interface OnlineVisitProps {
   loading?: boolean;
   discountPercent?: number;
   isPremium?: boolean;
+  buttonText: string;
 }
 
 type channelType = {
@@ -26,16 +25,16 @@ type channelType = {
 };
 
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const { doctorId, title, channels, price, duration, onBook, loading, discountPercent, isPremium } = props;
+  const { doctorId, title, channels, buttonText, price, duration, onBook, loading, discountPercent, isPremium } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
-  const router = useRouter();
+
   return (
     <ServiceCard
       header={{
         title,
-        icon: channels?.length ? <StatusIcon /> : <PhoneIcon width={21} height={21} />,
+        icon: <StatusIcon />,
         ...(price && {
           hint: (
             <div className="flex items-center space-s-2">
@@ -72,8 +71,10 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           channels?.length && channelDetailes
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
-          duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
           safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description,
+          'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+          duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
+          !duration && 'تا <strong>۳ روز</strong> هر سوالی دارید میتوانید از پزشک بپرسید.',
         ].filter(Boolean),
       }}
       footer={{
@@ -83,7 +84,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           }),
         actions: [
           {
-            text: 'ویزیت آنلاین',
+            text: buttonText,
             onClick: onBook,
             loading: loading,
             ...(isPremium && { className: '!shadow-amber-500/20 shadow-lg hover:shadow-xl transition-all ' }),

@@ -27,6 +27,7 @@ import OnlineVisit from './onlineVisit';
 interface OnlineVisitWrapperProps {
   channelType: Array<string>;
   doctorId: string;
+  fullName?: string;
   title: string;
   price: number;
   slug: string;
@@ -44,7 +45,7 @@ interface OnlineVisitWrapperProps {
 }
 
 export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
-  const { channelType, doctorId, price, title, userCenterId, slug, id, duration, city, expertise } = props;
+  const { channelType, doctorId, fullName, price, title, userCenterId, slug, id, duration, city, expertise } = props;
   const { handleOpen: handleOpenBookingModal, handleClose: handleCloseBoolingModal, modalProps: bookingModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
   const { profileEvent } = useProfileSplunkEvent();
@@ -123,12 +124,13 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         doctorId={doctorId}
         channels={without(channelType, 'phone')}
         duration={duration}
-        title={`ویزیت انلاین ${channelType[0] === 'phone' ? '(تماس تلفنی)' : ''}`}
+        title={title}
         price={price}
         loading={freeTurn.isLoading}
         onBook={redirectBookingPage}
         {...(discountPercentage && isShowPremiumFeatures && { discountPercent: discountPercentage })}
         isPremium={isLogin && checkPremiumUser(userInfo.vip)}
+        buttonText={`شروع ویزیت با ${fullName}`}
       />
       <Modal
         title="انتخاب کاربر برای گفتگو با پزشک"
