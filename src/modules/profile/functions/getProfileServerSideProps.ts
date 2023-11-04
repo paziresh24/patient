@@ -86,6 +86,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
+    let shouldUsePageView: boolean = false;
+
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -111,7 +113,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         ) ||
         usersApiDoctorCitiesList.cities?.includes('*');
 
-      //Expertice Api
+      // Expertice Api
       const experticeApiDoctorList = growthbook.getFeatureValue('profile:expertises-api|doctor-list', { slugs: [''] });
       const experticeApiCitiesList = growthbook.getFeatureValue('profile:expertises-api|cities', { cities: [''] });
       shouldUseExpertice =
@@ -121,15 +123,21 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         ) ||
         experticeApiCitiesList.cities?.includes('*');
 
-      //CreatedAt Api
+      // CreatedAt Api
       const createdAtDoctorList = growthbook.getFeatureValue('profile:created_at-field|doctor-list', { slugs: [''] });
       shouldUseCreatedAt = newApiFeatureFlaggingCondition(createdAtDoctorList.slugs, slugFormmated);
-      //Feedback Api
+
+      // Feedback Api
       const feedbackApiDoctorList = growthbook.getFeatureValue('profile:feedback_api', { slug: [''] });
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
+
       // AverageWaitingTime Api
       const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
       shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
+
+      // Page View Api
+      const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
+      shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -165,9 +173,13 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 : '',
             }),
           };
+
           profileData.history = {
             ...(shouldUseCreatedAt && {
               insert_at_age: formatDurationInMonths(providerData.value?.created_at),
+            }),
+            ...(shouldUsePageView && {
+              count_of_page_view: providerData.value?.page_view,
             }),
           };
 
@@ -302,6 +314,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         similarLinks,
         waitingTimeInfo,
         dontShowRateAndReviewMessage,
+        shouldUseIncrementPageView: shouldUsePageView,
         isBulk:
           centers.every((center: any) => center.status === 2) ||
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),

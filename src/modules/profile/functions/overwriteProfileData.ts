@@ -19,6 +19,7 @@ export type OverwriteProfileData = {
   };
   history: {
     insert_at_age?: string;
+    count_of_page_view?: string;
   };
   feedbacks: {
     waiting_time_info?: any;
