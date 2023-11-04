@@ -40,6 +40,8 @@ export const useBooking = () => {
       is_webview: isWebView || isApplication ? 1 : 0,
       first_name: user.name,
       last_name: user.family,
+      ...(user.father_name && { father_name: user.father_name }),
+      ...(user.birth_date && { birth_date: user.birth_date }),
       ...(user.gender && { gender: user.gender }),
       cell: user.cell,
       selected_user_id: user.id,
