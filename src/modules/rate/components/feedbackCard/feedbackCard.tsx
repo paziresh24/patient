@@ -24,6 +24,7 @@ export interface Feedbacks extends Card {
   reply?: Reply[];
   firstReply?: boolean;
   messageBox?: MessageBoxProps;
+  isLiked?: boolean;
   replyModal?: {
     title: string;
     id: number;
