@@ -1,3 +1,4 @@
+import { useIncrementPageView } from '@/common/apis/services/profile/incrementPageView';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
@@ -53,6 +54,7 @@ const DoctorProfile = ({
   feedbacks,
   waitingTimeInfo,
   dontShowRateAndReviewMessage,
+  shouldUseIncrementPageView,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -61,6 +63,8 @@ const DoctorProfile = ({
   const isWebView = useWebView();
 
   const addPageView = usePageView();
+  const incrementPageView = useIncrementPageView();
+
   const { recommendEvent } = useProfileSplunkEvent();
 
   // Modal
@@ -96,10 +100,17 @@ const DoctorProfile = ({
         isWebView: !!isWebView || !!isApplication,
       });
       push(['trackEvent', 'contact', 'doctor profile']);
-      addPageView.mutate({
-        doctorId: information.id,
-        serverId: information.server_id,
-      });
+      if (shouldUseIncrementPageView) {
+        incrementPageView.mutate({
+          provider_id: information.provider_id,
+        });
+      } else {
+        addPageView.mutate({
+          doctorId: information.id,
+          serverId: information.server_id,
+        });
+      }
+
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
