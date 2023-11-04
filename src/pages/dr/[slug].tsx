@@ -113,7 +113,11 @@ const DoctorProfile = ({
 
   useEffect(() => {
     if (doctorListForincrementPageView.slugs.includes(slug)) {
-      incrementPageView.mutateAsync({ id: userInfo?.provider?.id });
+      try {
+        incrementPageView.mutate({ id: userInfo?.provider?.id });
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [userInfo, slug]);
 
