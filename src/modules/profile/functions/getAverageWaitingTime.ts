@@ -1,5 +1,5 @@
+import { averageWaitingTime } from '@/common/apis/services/reviews/averageWaitingTime';
 import * as Sentry from '@sentry/nextjs';
-import { averageWaitingTime } from './../../../common/apis/services/reviews/averageWaitingTime';
 
 type GetAverageWaitingTimeParams = { slug: string };
 

@@ -198,11 +198,11 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           }
           if (shouldUseAverageWaitingTime) {
             const parallelRequests = [await getAverageWaitingTime({ slug: slugFormmated })];
-            const [userData] = await Promise.allSettled(parallelRequests);
+            const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
 
-            if (userData.status === 'fulfilled') {
+            if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
-                waiting_time_info: userData?.value?.result,
+                waiting_time_info: averageWaitingTimeData?.value?.result,
               };
             }
           }

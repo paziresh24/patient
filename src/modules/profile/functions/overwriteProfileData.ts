@@ -98,7 +98,5 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const waitingTimeInfo = flatten([overwriteData?.feedbacks?.waiting_time_info, source.waiting_time_info].filter((items: any) => !!items));
 
-  console.log(waitingTimeInfo);
-
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };
