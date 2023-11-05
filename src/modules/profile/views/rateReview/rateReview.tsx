@@ -5,7 +5,9 @@ import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
 import { useAddReview } from '@/common/apis/services/reviews/addReview';
 import { useDeleteFeedback } from '@/common/apis/services/reviews/delete';
+import { useDislikeReview } from '@/common/apis/services/reviews/dislike';
 import { useEditComment } from '@/common/apis/services/reviews/edit';
+import { useLikeReview } from '@/common/apis/services/reviews/like';
 import { useReplyComment } from '@/common/apis/services/reviews/reply';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
@@ -119,6 +121,8 @@ export const RateReview = (props: RateReviewProps) => {
   }, [inViewRate]);
   const router = useRouter();
   const likeFeedback = useLikeFeedback();
+  const likeReviews = useLikeReview();
+  const dislikeReviews = useDislikeReview();
   const replyFeedback = useReplyfeedback();
   const replyComment = useReplyComment();
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -461,9 +465,19 @@ export const RateReview = (props: RateReviewProps) => {
       });
     rateSplunkEvent('like');
     toggleLike(id);
-    await likeFeedback.mutateAsync({
-      feedback_id: id,
-    });
+    const isLiked = feedbacksData.find((item: any) => item?.id === id)?.isLiked;
+    try {
+      if (isSpecialDoctor) {
+        if (!isLiked) return likeReviews.mutate({ id, user_id: userInfo.id });
+        dislikeReviews.mutate({ id, user_id: userInfo.id });
+        return;
+      }
+      likeFeedback.mutate({
+        feedback_id: id,
+      });
+    } catch (error) {
+      return toast.error('مشکلی به وجود آمده است، لطفا از حساب خود خارج شده و مجدد تلاش کنید');
+    }
   };
 
   const submitReplyHandler = async (id: string, text: string) => {
