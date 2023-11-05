@@ -78,7 +78,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description,
           'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
-          !duration && 'تا <strong>۳ روز</strong> هر سوالی دارید میتوانید از پزشک بپرسید.',
+          !duration && 'تا <strong>۳ روز</strong> می‌توانید هر سوالی دارید از پزشک بپرسید',
           !isEmpty(waitingTime) && `میانگین زمان انتظار تا ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
         ].filter(Boolean),
       }}
