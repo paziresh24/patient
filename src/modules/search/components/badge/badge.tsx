@@ -4,19 +4,23 @@ import Text from '@/common/components/atom/text';
 import InfoIcon from '@/common/components/icons/info';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
+import { ReactNode } from 'react';
 import { categoryIcons } from '../../constants/suggestion/categoryIcons';
 
 export interface BadgeProps {
-  icon?: `${'star' | 'smile' | 'clock'}-icon`;
+  icon?: StaticIcons | ReactNode;
   title: string;
-  type: 'info' | 'success';
+  type: 'info' | 'success' | 'error';
   description?: string;
 }
+
+type StaticIcons = `${'star' | 'smile' | 'clock' | 'shield'}-icon`;
 
 const badgeStyles = {
   type: {
     info: 'bg-[#e5f6fd] text-blue-700',
     success: 'bg-[#eafaee] !text-green-700',
+    error: 'bg-red-50 text-red-600 border border-dotted border-red-600',
   },
 };
 
@@ -34,7 +38,7 @@ export const Badge = (props: BadgeProps) => {
             '!cursor-pointer': description,
           },
         )}
-        icon={icon && categoryIcons[icon]?.()}
+        icon={!!icon && typeof icon === 'string' ? categoryIcons[icon as StaticIcons]?.() : icon}
         onClick={() => description && handleOpen()}
       >
         <div className="flex items-center">
