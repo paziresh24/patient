@@ -467,14 +467,12 @@ export const RateReview = (props: RateReviewProps) => {
     toggleLike(id);
     const isLiked = feedbacksData.find((item: any) => item?.id === id)?.isLiked;
     try {
-      if (isSpecialDoctor && !isLiked) {
-        await likeReviews.mutateAsync({ id, user_id: userInfo.id });
-        return;
-      } else if (isSpecialDoctor && isLiked) {
-        await dislikeReviews.mutateAsync({ id, user_id: userInfo.id });
+      if (isSpecialDoctor) {
+        if (!isLiked) return likeReviews.mutate({ id, user_id: userInfo.id });
+        dislikeReviews.mutate({ id, user_id: userInfo.id });
         return;
       }
-      await likeFeedback.mutateAsync({
+      likeFeedback.mutate({
         feedback_id: id,
       });
     } catch (error) {
