@@ -1,5 +1,5 @@
 export interface MenuItem {
-  title: string;
+  title?: string;
   link?: string;
   sub_menu?: MenuItem[];
 }
