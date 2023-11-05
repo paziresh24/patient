@@ -4,6 +4,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import CenterIcon from '@/common/components/icons/center';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
 import HeadphoneIcon from '@/common/components/icons/headphone';
@@ -199,15 +200,26 @@ export const PatinetProfile = () => {
               </a>
             )}
             {customize.showSupplierRegister && (
-              <Link
-                href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
-                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
-              >
-                <DoctorIcon />
-                <Text fontWeight="medium" fontSize="sm">
-                  پزشک یا منشی هستید؟
-                </Text>
-              </Link>
+              <>
+                <Link
+                  href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
+                  className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                >
+                  <DoctorIcon />
+                  <Text fontWeight="medium" fontSize="sm">
+                    پزشک یا منشی هستید؟
+                  </Text>
+                </Link>
+                <Link
+                  href="https://survey.porsline.ir/s/7GFKVQz"
+                  className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                >
+                  <CenterIcon />
+                  <Text fontWeight="medium" fontSize="sm">
+                    ثبت نام مراکز درمانی
+                  </Text>
+                </Link>
+              </>
             )}
             {getRatingAppLink() && (
               <div

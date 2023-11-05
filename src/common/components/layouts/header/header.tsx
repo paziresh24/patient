@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import HeaderLogo from './components/logo/logo';
-import { articleMenus, consultMenus, withDoctorMenu, withUserMenu } from './data/links';
+import { articleMenus, consultMenus, medicalCenterMenu, withDoctorMenu, withUserMenu } from './data/links';
 const ButtonSuggestion = dynamic(() => import('@/modules/search/view/suggestion/button'));
 const Transition = dynamic(() => import('../../atom/transition'));
 const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
@@ -76,11 +76,11 @@ const Header = (props: HeaderProps) => {
           )}
           {customize.showSideBar && (
             <nav>
-              <ul className="flex justify-center space-s-5">
+              <ul className="flex justify-center space-s-2">
                 <li ref={ref}>
-                  <div className="flex items-center" onClick={() => setOpen(prev => !prev)}>
-                    <span className="inline-block p-3 text-sm font-medium text-center cursor-pointer">{t('header.titles.categories')}</span>
-                    <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />
+                  <div className="flex items-center p-3" onClick={() => setOpen(prev => !prev)}>
+                    <span className="inline-block text-sm font-medium text-center cursor-pointer">{t('header.titles.categories')}</span>
+                    <ChevronIcon className="mr-3" dir={`${open ? 'top' : 'bottom'}`} />
                   </div>
 
                   <Transition
@@ -120,7 +120,8 @@ const Header = (props: HeaderProps) => {
                   </Transition>
                 </li>
                 <SubMenu title={t('header.titles.forPatients')} menuItem={withUserMenu} />
-                <SubMenu title={t('header.titles.forDoctors')} menuItem={withDoctorMenu} />
+                <SubMenu menuItem={withDoctorMenu} />
+                <SubMenu menuItem={medicalCenterMenu} />
               </ul>
             </nav>
           )}
