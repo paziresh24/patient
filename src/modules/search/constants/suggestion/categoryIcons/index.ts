@@ -6,6 +6,7 @@ import { IllnessIcon } from './icons/illness';
 import { ListIcon } from './icons/list';
 import { MostCommonIcon } from './icons/mostCommon';
 import { SearchIcon } from './icons/search';
+import { ShieldIcon } from './icons/shield';
 import { SmileIcon } from './icons/smile';
 import { StarIcon } from './icons/star';
 import { TopIcon } from './icons/top';
@@ -22,4 +23,5 @@ export const categoryIcons = {
   'star-icon': StarIcon,
   'smile-icon': SmileIcon,
   'clock-icon': ClockIcon,
+  'shield-icon': ShieldIcon,
 };
