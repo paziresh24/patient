@@ -48,7 +48,7 @@ export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent'
               type === 'children',
             ' hover:bg-slate-50 duration-300 transition-all': type === 'parent',
             'bg-slate-100': type === 'parent' && router.asPath === link,
-            'before:absolute before:opacity-100  before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[70%] relative before:bg-primary':
+            'before:absolute before:opacity-100  before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[80%] relative before:bg-primary':
               type === 'children' && router.asPath == link,
           },
           className,
@@ -64,7 +64,7 @@ export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent'
       </ComponentWrapper>
       {isSubMenu && (
         <Transition match={isOpen} animation="right">
-          <div className="relative mr-[1.4rem] mt-1 before:content  before:absolute before:top-2 before:right-0 before:rounded-full before:bg-slate-200 before:w-[2px] before:h-[80%]">
+          <div className="relative mr-[1.4rem] mt-1 before:content  before:absolute flex flex-col justify-center before:right-0 before:rounded-full before:bg-slate-200 before:w-[2px] before:h-[80%]">
             {subMenu?.map(menuItem => (
               <MenuItem className="py-2 rounded-none" key={menuItem.name} {...menuItem} type="children" />
             ))}
