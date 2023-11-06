@@ -196,7 +196,7 @@ export const ConsultBanner = () => {
           </div>
         )}
         {searchData.isSuccess && substituteDoctor?.url && (
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-2 mb-2">
             <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
               بدون خروج از منزل، آنلاین ویزیت شوید.
             </Alert>
@@ -224,7 +224,7 @@ export const ConsultBanner = () => {
                     },
                   ],
                 }}
-                className="shadow-none"
+                className="shadow-none !py-0 lg:!py-0 cursor-pointer"
                 actions={[
                   {
                     text: `گفتگو با ${substituteDoctor.title}`,
@@ -236,7 +236,7 @@ export const ConsultBanner = () => {
             </div>
           </div>
         )}
-        <Button block size="sm" className="text-xs opacity-80" variant="text" onClick={handleClickMoreDoctors}>
+        <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
           مشاهده سایر پزشکان آنلاین {selectedCategory.title}
         </Button>
       </Modal>
