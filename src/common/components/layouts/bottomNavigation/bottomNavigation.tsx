@@ -62,6 +62,7 @@ export const BottomNavigation = () => {
           icon: <CalenderIcon />,
           link: '/dashboard/apps/drapp/appointments/',
           exact: true,
+          pattern: '',
           privateRoute: true,
         }
       : {
