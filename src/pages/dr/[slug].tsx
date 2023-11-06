@@ -104,12 +104,12 @@ const DoctorProfile = ({
         incrementPageView.mutate({
           provider_id: information.provider_id,
         });
-      } else {
-        addPageView.mutate({
-          doctorId: information.id,
-          serverId: information.server_id,
-        });
       }
+
+      addPageView.mutate({
+        doctorId: information.id,
+        serverId: information.server_id,
+      });
 
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
