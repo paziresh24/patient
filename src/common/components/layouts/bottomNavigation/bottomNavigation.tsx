@@ -56,23 +56,31 @@ export const BottomNavigation = () => {
       pattern: '/s/[[...params]]',
       privateRoute: false,
     },
-    {
-      name: 'نوبت های من',
-      icon: (
-        <div className="relative">
-          {!!turnsCount.presence && (
-            <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
-              {turnsCount.presence}
+    user.provider?.job_title === 'doctor' && isShowDashboard
+      ? {
+          name: 'مراجعین من',
+          icon: <CalenderIcon />,
+          link: '/dashboard/apps/drapp/appointments/',
+          exact: true,
+          privateRoute: true,
+        }
+      : {
+          name: 'نوبت های من',
+          icon: (
+            <div className="relative">
+              {!!turnsCount.presence && (
+                <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
+                  {turnsCount.presence}
+                </div>
+              )}
+              <CalenderIcon />
             </div>
-          )}
-          <CalenderIcon />
-        </div>
-      ),
-      link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
-      ...(isShowDashboard && { exact: true }),
-      pattern: '/patient/appointments',
-      privateRoute: true,
-    },
+          ),
+          link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
+          ...(isShowDashboard && { exact: true }),
+          pattern: '/patient/appointments',
+          privateRoute: true,
+        },
     user.id && isShowDashboard
       ? {
           name: 'داشبورد',
