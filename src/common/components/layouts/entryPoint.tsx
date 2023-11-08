@@ -15,7 +15,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   const getUser = useGetUser();
   const getMe = useGetMe();
-  const getProvider = useProviders({ user_id: getMe?.data?.id }, { enabled: !!getMe?.data?.id });
+  const getProvider = useProviders();
 
   useEffect(() => {
     handleUserLogin();
@@ -26,12 +26,22 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       if (getCookie('certificate')) {
         setPending(true);
         const { data } = await getUser.mutateAsync();
-        await getMe.mutateAsync();
+        const userData = await getMe.mutateAsync();
+        const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+
         if (data.status === ClinicStatus.EXPIRED_CERTIFICATE) {
           setPending(false);
           removeInfo();
           return;
         }
+
+        setUserInfo({
+          image: data?.result?.image,
+          provider: providerData,
+          ...userData,
+        });
+
+        setPending(false);
         return;
       }
       setPending(false);
@@ -45,17 +55,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       }
     }
   };
-
-  useEffect(() => {
-    if (getProvider.isSuccess && getUser.isSuccess && getMe.isSuccess) {
-      setUserInfo({
-        provider: getProvider.data?.data?.providers?.[0],
-        image: getUser.data?.data?.result?.image,
-        ...getMe.data,
-      });
-      setPending(false);
-    }
-  }, [getProvider.status]);
 
   return <>{children}</>;
 };

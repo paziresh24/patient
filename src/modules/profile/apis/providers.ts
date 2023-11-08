@@ -1,5 +1,5 @@
 import { apiGatewayClient } from '@/common/apis/client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 interface ProvidersParams {
   slug?: string;
@@ -7,8 +7,9 @@ interface ProvidersParams {
 }
 
 export const providers = async (params: ProvidersParams) => {
-  return await apiGatewayClient.get(`/v1/providers`, { params });
+  const { data } = await apiGatewayClient.get(`/v1/providers`, { params });
+
+  return data?.providers?.[0];
 };
 
-export const useProviders = (params: ProvidersParams, options?: any) =>
-  useQuery(['providers', params], () => providers(params), { ...options });
+export const useProviders = () => useMutation(providers);

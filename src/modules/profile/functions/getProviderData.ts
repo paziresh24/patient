@@ -4,14 +4,13 @@ import { providers } from '../apis/providers';
 type GetProviderData = { slug: string };
 
 export const getProviderData = async ({ slug }: GetProviderData) => {
-  const { data: response } = await providers({ slug });
-  const firstItemData = response.providers?.[0] as Record<string, string>;
+  const providerData: Record<string, string> = await providers({ slug });
 
-  if (!firstItemData?.user_id || !firstItemData?.employee_id) {
-    Sentry.captureMessage(`user_id:${firstItemData?.user_id} employee_id:${firstItemData?.employee_id}`);
+  if (!providerData?.user_id || !providerData?.employee_id) {
+    Sentry.captureMessage(`user_id:${providerData?.user_id} employee_id:${providerData?.employee_id}`);
   }
 
   return {
-    ...firstItemData,
+    ...providerData,
   };
 };

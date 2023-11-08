@@ -7,7 +7,6 @@ import { dayToSecond } from '@/common/utils/dayToSecond';
 import { useProviders } from '@/modules/profile/apis/providers';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
-import { useEffect } from 'react';
 import { useUserInfoStore } from '../store/userInfo';
 
 export const useLogin = () => {
@@ -16,7 +15,7 @@ export const useLogin = () => {
   const logout = useUserInfoStore(state => state.logout);
   const getMe = useGetMe();
   const getUser = useGetUser();
-  const getProvider = useProviders({ user_id: getMe?.data?.id }, { enabled: !!getMe?.data?.id });
+  const getProvider = useProviders();
   const university = useCustomize(state => state.customize?.partnerKey);
 
   const handleLogin = async ({ username, password }: { username: string; password: string }) => {
@@ -38,12 +37,19 @@ export const useLogin = () => {
             maxAge: dayToSecond(365),
           });
 
-        await getUser.mutateAsync();
-        await getMe.mutateAsync();
+        const { data: imageData } = await getUser.mutateAsync();
+        const userData = await getMe.mutateAsync();
+        const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
 
         if (window?.Android) window.Android.login(data.certificate);
 
-        return Promise.resolve({ ...getMe.data });
+        setUserInfo({
+          image: imageData?.result?.image,
+          provider: providerData,
+          ...userData,
+        });
+
+        return Promise.resolve({ image: imageData?.result?.image, provider: providerData, ...userData });
       }
       return Promise.reject(data);
     } catch (error) {
@@ -57,15 +63,5 @@ export const useLogin = () => {
     }
   };
 
-  useEffect(() => {
-    if (getProvider.isSuccess && getUser.isSuccess && getMe.isSuccess) {
-      setUserInfo({
-        provider: getProvider.data?.data?.providers?.[0],
-        image: getUser.data?.data?.result?.image,
-        ...getMe.data,
-      });
-    }
-  }, [getProvider.status]);
-
-  return { login: handleLogin, isLoading: loginRequest.isLoading || getUser.isLoading || getMe.isLoading };
+  return { login: handleLogin, isLoading: loginRequest.isLoading || getUser.isLoading || getMe.isLoading || getProvider.isLoading };
 };
