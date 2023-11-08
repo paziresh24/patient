@@ -11,6 +11,7 @@ import { useClickAway } from 'react-use';
 interface MenuItemProps {
   name: string;
   icon?: string | ReactNode;
+  button?: ReactNode;
   link?: string;
   subMenu?: MenuItemProps[];
   className?: string;
@@ -18,7 +19,7 @@ interface MenuItemProps {
   pattern?: string;
 }
 
-export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
+export const MenuItem = ({ name, icon, button, link, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
   const router = useRouter();
   const isSubMenu = !!subMenu && subMenu?.length > 0;
   const { isMobile } = useResponsive();
@@ -41,30 +42,31 @@ export const MenuItem = ({ name, icon, link, subMenu, className, type = 'parent'
           ...(subMenu && subMenu?.length > 0 && { onClick: () => setIsOpen(prev => !prev) }),
         }}
         className={classNames(
-          'flex cursor-pointer  rounded-md items-center px-3 py-2 whitespace-nowrap',
+          'flex cursor-pointer  rounded-md items-center px-2 py-2 whitespace-nowrap',
           {
-            'justify-between': isSubMenu,
             '!pr-6 before:transition-all before:duration-300 before:opacity-0 hover:opacity-80 duration-300 transition-all':
               type === 'children',
-            ' hover:bg-slate-50 duration-300 transition-all': type === 'parent',
+            ' hover:bg-slate-50 duration-300 transition-all justify-between': type === 'parent',
             'bg-slate-100': type === 'parent' && router.asPath === link,
             'before:absolute before:opacity-100  before:content before:right-[-1.5px] before:rounded-full before:w-1 before:h-[80%] relative before:bg-primary':
               type === 'children' && router.asPath == link,
+            'pl-4': isSubMenu,
           },
           className,
         )}
       >
-        <div className="flex items-center space-s-2 ">
+        <div className="flex items-center space-s-2">
           {icon && (isValidElement(icon) ? icon : <img src={icon as string} width={23} height={23} alt={name} />)}
           <Text fontWeight="medium" fontSize="sm">
             {name}
           </Text>
         </div>
+        {button}
         {isSubMenu && <ChevronIcon dir={isOpen ? 'left' : 'bottom'} />}
       </ComponentWrapper>
       {isSubMenu && (
         <Transition match={isOpen} animation="right">
-          <div className="relative mr-[1.4rem] mt-1 before:content  before:absolute flex flex-col justify-center before:right-0 before:rounded-full before:bg-slate-200 before:w-[2px] before:h-[80%]">
+          <div className="relative mr-[1.15rem] mt-1 before:content  before:absolute flex flex-col justify-center before:right-0 before:rounded-full before:bg-slate-200 before:w-[2px] before:h-[80%]">
             {subMenu?.map(menuItem => (
               <MenuItem className="py-2 rounded-none" key={menuItem.name} {...menuItem} type="children" />
             ))}
