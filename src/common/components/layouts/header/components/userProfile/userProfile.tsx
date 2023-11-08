@@ -46,8 +46,10 @@ export const UserProfile = () => {
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+
   const isShowDashboard =
-    isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
+    !customize.partnerKey &&
+    (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
   const ref = useRef(null);
   useClickAway(ref, () => {
