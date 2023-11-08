@@ -12,6 +12,7 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
 import ElementIcon from '@/common/components/icons/element';
+import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
@@ -68,7 +69,19 @@ export const UserProfile = () => {
           badge: !!turnsCount.presence && (
             <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
           ),
-          shouldShow: true,
+          shouldShow: userInfo.provider?.job_title !== 'doctor',
+        },
+        {
+          name: 'مراجعین من',
+          icon: <CalenderIcon />,
+          link: '/dashboard/apps/drapp/appointments',
+          shouldShow: userInfo.provider?.job_title === 'doctor',
+        },
+        {
+          name: 'مشاهده پروفایل عمومی',
+          icon: <EyeIcon />,
+          link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,
+          shouldShow: userInfo.provider?.job_title === 'doctor',
         },
       ].filter(item => item.shouldShow)
     : [
@@ -139,10 +152,10 @@ export const UserProfile = () => {
             <Transition
               match={open}
               animation="bottom"
-              className="absolute max-w-xs min-w-full px-2 py-3 overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
+              className="absolute max-w-xs min-w-full px-2  overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
-                <div className="flex items-center w-64 p-2 pb-3 space-s-3">
+                <div className="flex items-center w-64 px-2 py-3 space-s-3">
                   <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
                   <div className="flex flex-col space-y-2">
                     {pending ? (
@@ -165,7 +178,7 @@ export const UserProfile = () => {
                 </div>
               </Link>
               <Divider />
-              <div className="flex flex-col px-0 py-0">
+              <div className="flex flex-col px-0 py-2">
                 {isShowPremiumFeatures && (
                   <>
                     <div className="px-3 py-4">
@@ -174,15 +187,15 @@ export const UserProfile = () => {
                     <Divider />
                   </>
                 )}
-                <MenuList className="px-3">
+                <MenuList className="space-y-1">
                   {menuItems.map(item => (
                     <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
                       {item.badge}
                     </MenuItem>
                   ))}
                 </MenuList>
-                <Divider className="my-1" />
-                <MenuList className="px-3">
+                <Divider className="my-2" />
+                <MenuList>
                   <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
                 </MenuList>
               </div>

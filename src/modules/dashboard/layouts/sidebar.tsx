@@ -1,7 +1,13 @@
 import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
 import Transition from '@/common/components/atom/transition';
+import BookmarkIcon from '@/common/components/icons/bookmark';
+import CalenderIcon from '@/common/components/icons/calender';
+import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
+import ShopIcon from '@/common/components/icons/shop';
+import UserEditIcon from '@/common/components/icons/userEdit';
+import UsersIcon from '@/common/components/icons/users';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import range from 'lodash/range';
@@ -9,7 +15,6 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
-import { defaultMenuData } from '../constants/defaultMenuData';
 
 export type App = {
   key: string;
@@ -36,6 +41,57 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   }, [user, isUserPending]);
 
   const apps = appsData.data?.data;
+
+  const openProfileView = () => {
+    window.open(`/dr/${user.provider?.slug}?@timestamp=${new Date().getTime()}`);
+  };
+
+  const defaultMenuData = [
+    {
+      icon: <UserEditIcon />,
+      label: 'ویرایش پروفایل',
+      url: '/dashboard/profile',
+      ...(user.provider?.job_title === 'doctor' && {
+        button: (
+          <div
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              openProfileView();
+            }}
+            className="rounded-md p-1 hover:bg-slate-200/50 transition-colors"
+          >
+            <EyeIcon width={18} height={18} />
+          </div>
+        ),
+      }),
+      shouldShowDoctor: true,
+    },
+    {
+      icon: <ShopIcon />,
+      label: 'بازارچه',
+      url: '/dashboard/bazaar',
+      shouldShowDoctor: true,
+    },
+    {
+      icon: <CalenderIcon />,
+      label: 'نوبت های من',
+      url: '/dashboard/appointments',
+      shouldShowDoctor: true,
+    },
+    {
+      icon: <BookmarkIcon />,
+      label: 'لیست پزشکان من',
+      url: '/dashboard/bookmarks',
+      shouldShowDoctor: true,
+    },
+    {
+      icon: <UsersIcon />,
+      label: 'کاربران زیرمجموعه',
+      url: '/dashboard/subuser',
+      shouldShowDoctor: true,
+    },
+  ];
 
   return (
     <>
@@ -101,7 +157,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     ))}
                 {((appsData.isSuccess && apps.some((app: any) => !app.pin)) || appsData.isLoading) && <Divider />}
                 {defaultMenuData.map(menu => (
-                  <MenuItem key={menu.url} name={menu.label} icon={menu.icon} link={`${menu.url}/`} />
+                  <MenuItem key={menu.url} name={menu.label} icon={menu.icon} button={menu?.button} link={`${menu.url}/`} />
                 ))}
               </div>
               <div onClick={logout}>
