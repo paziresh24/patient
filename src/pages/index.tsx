@@ -7,7 +7,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
-import VisitOnlinePromote from '@/modules/home/components/visitOnlinePromote/visitOnlinePromote';
+import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
@@ -52,7 +52,7 @@ const Home = () => {
         )}
         <Suggestion />
         {recent.length > 0 && <RecentSearch />}
-        {customize.showConsultServices && <VisitOnlinePromote />}
+        {customize.showConsultServices && <OnlineVisitPromote />}
         {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}

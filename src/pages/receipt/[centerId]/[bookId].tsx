@@ -36,7 +36,7 @@ import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';

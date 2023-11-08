@@ -7,6 +7,8 @@ import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkSearchInstance } from '@/common/services/splunk';
+import random from 'lodash/random';
+import { useMemo } from 'react';
 import { useSearch as useSearchUtils } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import SearchCard from '../card/card';
@@ -27,8 +29,7 @@ export const ConsultBanner = () => {
       enabled: modalProps.isOpen,
     },
   );
-
-  const substituteDoctor = searchData.data?.search?.result?.[0] ?? {};
+  const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
 
   const handleClick = () => {
     changeRoute({
@@ -202,6 +203,7 @@ export const ConsultBanner = () => {
             </Alert>
             <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
               <SearchCard
+                avatarSize="lg"
                 baseInfo={{
                   displayName: substituteDoctor.title,
                   expertise: substituteDoctor.display_expertise,

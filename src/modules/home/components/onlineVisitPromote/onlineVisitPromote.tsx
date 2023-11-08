@@ -7,8 +7,10 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkSearchInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
+import random from 'lodash/random';
+import { useMemo } from 'react';
 
-export const VisitOnlinePromote = () => {
+export const OnlineVisitPromote = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
 
   const searchData = useSearch(
@@ -23,7 +25,7 @@ export const VisitOnlinePromote = () => {
     },
   );
 
-  const substituteDoctor = searchData.data?.search?.result?.[0] ?? {};
+  const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
 
   const handleOpenSubstituteDoctorModal = () => {
     splunkSearchInstance().sendEvent({
@@ -77,6 +79,7 @@ export const VisitOnlinePromote = () => {
             </Alert>
             <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
               <SearchCard
+                avatarSize="lg"
                 baseInfo={{
                   displayName: substituteDoctor.title,
                   expertise: substituteDoctor.display_expertise,
@@ -119,4 +122,4 @@ export const VisitOnlinePromote = () => {
   );
 };
 
-export default VisitOnlinePromote;
+export default OnlineVisitPromote;
