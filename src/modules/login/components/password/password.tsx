@@ -44,7 +44,14 @@ export const Password = (props: PasswordProps) => {
           description={t('steps.password.description', { mobileNumber: mobileNumberValue })}
         />
       </div>
-      <TextField autoComplete="off" onChange={e => setPassword(e.target.value)} type="password" style={{ direction: 'ltr' }} autoFocus />
+      <TextField
+        onKeyDown={event => event.key === 'Enter' && handleLogin(password)}
+        autoComplete="off"
+        onChange={e => setPassword(e.target.value)}
+        type="password"
+        style={{ direction: 'ltr' }}
+        autoFocus
+      />
       <Button onClick={() => handleLogin(password)} loading={isLoading}>
         {t('steps.password.action')}
       </Button>
