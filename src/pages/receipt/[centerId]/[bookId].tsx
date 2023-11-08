@@ -93,7 +93,7 @@ const Receipt = () => {
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
-      router.push(`/login?redirect_url=${router.asPath}`);
+      router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
 
