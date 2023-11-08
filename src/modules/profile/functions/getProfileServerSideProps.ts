@@ -209,7 +209,13 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }
           }
           if (shouldUseAverageWaitingTime) {
-            const parallelRequests = [await getAverageWaitingTime({ slug: slugFormmated })];
+            const parallelRequests = [
+              await getAverageWaitingTime({
+                slug: slugFormmated,
+                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                end_date: moment().format('YYYY-MM-DD'),
+              }),
+            ];
             const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
 
             if (averageWaitingTimeData.status === 'fulfilled') {
