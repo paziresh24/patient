@@ -1,5 +1,6 @@
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
 import useApplication from '@/common/hooks/useApplication';
+import useCustomize from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -24,11 +25,13 @@ export const BottomNavigation = () => {
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const city = useSearchStore(state => state.city);
   const isApplication = useApplication();
+  const customize = useCustomize(state => state.customize);
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const isShowDashboard =
-    isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
+    !customize.partnerKey &&
+    (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();

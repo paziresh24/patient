@@ -1,7 +1,7 @@
 import Divider from '@/common/components/atom/divider';
 import Skeleton from '@/common/components/atom/skeleton';
 import Transition from '@/common/components/atom/transition';
-import BookmarkIcon from '@/common/components/icons/bookmark';
+import BookmarksIcon from '@/common/components/icons/bookmarks';
 import CalenderIcon from '@/common/components/icons/calender';
 import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
@@ -36,7 +36,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
 
   useEffect(() => {
     if (!user.cell && !isUserPending) {
-      router.push(`/login?redirect_url=${asPath}`);
+      router.replace(`/login?redirect_url=${asPath}`);
     }
   }, [user, isUserPending]);
 
@@ -80,7 +80,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       shouldShowDoctor: true,
     },
     {
-      icon: <BookmarkIcon />,
+      icon: <BookmarksIcon />,
       label: 'لیست پزشکان من',
       url: '/dashboard/bookmarks',
       shouldShowDoctor: true,

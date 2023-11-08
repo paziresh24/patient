@@ -6,7 +6,7 @@ import Divider from '@/common/components/atom/divider';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import BookmarkIcon from '@/common/components/icons/bookmark';
+import BookmarksIcon from '@/common/components/icons/bookmarks';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
 import DiamondIcon from '@/common/components/icons/diamond';
@@ -46,8 +46,10 @@ export const UserProfile = () => {
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+
   const isShowDashboard =
-    isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
+    !customize.partnerKey &&
+    (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -58,7 +60,7 @@ export const UserProfile = () => {
     ? [
         {
           name: 'داشبورد',
-          icon: <ElementIcon />,
+          icon: <ElementIcon width={22} height={22} />,
           link: '/dashboard',
           shouldShow: true,
         },
@@ -73,13 +75,13 @@ export const UserProfile = () => {
         },
         {
           name: 'مراجعین من',
-          icon: <CalenderIcon />,
+          icon: <CalenderIcon width={22} height={22} />,
           link: '/dashboard/apps/drapp/appointments',
           shouldShow: userInfo.provider?.job_title === 'doctor',
         },
         {
           name: 'مشاهده پروفایل عمومی',
-          icon: <EyeIcon />,
+          icon: <EyeIcon width={22} height={22} />,
           link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,
           shouldShow: userInfo.provider?.job_title === 'doctor',
         },
@@ -87,7 +89,7 @@ export const UserProfile = () => {
     : [
         {
           name: t('patient/common:menu.myTurns'),
-          icon: <CalenderIcon />,
+          icon: <CalenderIcon width={22} height={22} />,
           link: '/patient/appointments',
           badge: !!turnsCount.presence && (
             <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
@@ -96,13 +98,13 @@ export const UserProfile = () => {
         },
         {
           name: t('patient/common:menu.bookmarks'),
-          icon: <BookmarkIcon />,
+          icon: <BookmarksIcon width={22} height={22} />,
           link: '/patient/bookmarks',
           shouldShow: customize.bookMark,
         },
         {
           name: t('patient/common:menu.subuser'),
-          icon: <UsersIcon />,
+          icon: <UsersIcon width={22} height={22} />,
           link: '/patient/subuser',
           shouldShow: true,
         },
@@ -196,7 +198,7 @@ export const UserProfile = () => {
                 </MenuList>
                 <Divider className="my-2" />
                 <MenuList>
-                  <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon />} />
+                  <MenuItem name={t('patient/common:menu.logout')} onClick={logout} icon={<LogoutIcon width={22} height={22} />} />
                 </MenuList>
               </div>
             </Transition>

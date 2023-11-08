@@ -47,6 +47,7 @@ export const PatinetProfile = () => {
   useEffect(() => {
     if (
       userInfo.id &&
+      !customize.partnerKey &&
       (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
     ) {
       router.replace(`/dashboard`);
