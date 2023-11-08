@@ -10,6 +10,7 @@ import UserEditIcon from '@/common/components/icons/userEdit';
 import UsersIcon from '@/common/components/icons/users';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import range from 'lodash/range';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
@@ -33,6 +34,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   );
   const isUserPending = useUserInfoStore(state => state.pending);
   const { asPath, ...router } = useRouter();
+  const shouldShowBazaarMenu = useFeatureIsOn('dashboard:bazaar-menu|enable');
 
   useEffect(() => {
     if (!user.cell && !isUserPending) {
@@ -66,32 +68,37 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
         ),
       }),
       shouldShowDoctor: true,
+      shouldShow: true,
     },
     {
       icon: <ShopIcon />,
       label: 'بازارچه',
       url: '/dashboard/bazaar',
       shouldShowDoctor: true,
+      shouldShow: shouldShowBazaarMenu,
     },
     {
       icon: <CalenderIcon />,
       label: 'نوبت های من',
       url: '/dashboard/appointments',
       shouldShowDoctor: true,
+      shouldShow: true,
     },
     {
       icon: <BookmarksIcon />,
       label: 'لیست پزشکان من',
       url: '/dashboard/bookmarks',
       shouldShowDoctor: true,
+      shouldShow: true,
     },
     {
       icon: <UsersIcon />,
       label: 'کاربران زیرمجموعه',
       url: '/dashboard/subuser',
       shouldShowDoctor: true,
+      shouldShow: true,
     },
-  ];
+  ].filter(item => item.shouldShow);
 
   return (
     <>
