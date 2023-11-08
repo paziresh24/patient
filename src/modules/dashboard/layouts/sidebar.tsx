@@ -4,7 +4,7 @@ import Transition from '@/common/components/atom/transition';
 import LogoutIcon from '@/common/components/icons/logout';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { range } from 'lodash';
+import range from 'lodash/range';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { useApps } from '../apis/apps';

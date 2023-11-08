@@ -7,7 +7,7 @@ import { useApps } from '@/modules/dashboard/apis/apps';
 import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';

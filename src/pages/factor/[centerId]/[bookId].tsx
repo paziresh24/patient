@@ -59,9 +59,9 @@ const Factor = () => {
         </div>
         <div
           className={classNames(
-            'w-full p-3 mb-[0.6rem] space-y-1 bg-white border border-solid border-[#d0d2d6] rounded-lg shadow-card md:mb-0 md:w-2/5 relative',
+            'w-full p-3 mb-[0.6rem] space-y-1 bg-white border border-solid border-[#d0d2d6] shadow-card rounded-lg  md:mb-0 md:w-2/5 relative',
             {
-              'border-primary': isOnlineVisitTurn,
+              'border-primary/50  shadow-xl shadow-primary/10': isOnlineVisitTurn,
             },
           )}
         >
@@ -86,24 +86,28 @@ const Factor = () => {
           {isOnlineVisitTurn && (
             <Badge
               text="ویزیت آنلاین"
-              className="bg-[#f9f8fd] !rounded-md  text-[0.75rem] text-[#56d4bf] p-2 whitespace-nowrap absolute top-2 left-4"
+              fontWeight="medium"
+              fontSize="xs"
+              className="bg-slate-200/50 !rounded-md text-secondary p-2 whitespace-nowrap absolute top-2 left-2"
             />
           )}
           {isOnlineVisitTurn && <Divider />}
           {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
-            <Text
-              fontWeight="semiBold"
-              dangerouslySetInnerHTML={{
-                __html: `سلام. من دکتر ${bookDetailsData?.doctor_name} ${
-                  bookDetailsData?.doctor_family
-                } هستم.<br /> شما <b class="text-primary">ویزیت آنلاین از طریق ${
-                  messengers[bookDetailsData?.book_params?.online_channel]?.text
-                } </b> را انتخاب کرده اید.<br /><b class="text-primary">${convertTime(
-                  bookDetailsData?.book_time_string,
-                )}</b> (تا حداکثر 3 ساعت بعد از آن) پاسخگو سوالات شما خواهم بود. توجه داشته باشید در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، درخواست شما به صورت اتوماتیک لغو و هزینه به حساب شما باز میگردد.`,
-              }}
-              className="text-[#77777c] !leading-7 text-justify lg:text-[0.75rem] text-[0.85rem] block"
-            />
+            <div className="p-2 flex flex-col space-y-1">
+              <Text fontSize="sm" as="p">
+                سلام. من دکتر {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
+              </Text>
+              <Text as="p" fontSize="sm" align="justify" className="leading-6">
+                پس از نهایی شدن نوبت،{' '}
+                <Text className="text-primary" fontWeight="semiBold">
+                  {convertTime(bookDetailsData?.book_time_string)}، از طریق {messengers[bookDetailsData?.book_params?.online_channel]?.text}
+                </Text>{' '}
+                شما را ویزیت خواهم کرد.
+              </Text>
+              <Text as="p" fontWeight="semiBold" className="leading-6" fontSize="xs" align="justify">
+                * در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، نوبت شما لغو و هزینه به حساب شما باز می‌گردد.
+              </Text>
+            </div>
           )}
           {centerId !== CENTERS.CONSULT && (
             <div>

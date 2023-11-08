@@ -1,6 +1,6 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
-import { flatten } from 'lodash';
 import flatMap from 'lodash/flatMap';
+import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
