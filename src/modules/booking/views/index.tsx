@@ -702,7 +702,6 @@ const BookingSteps = (props: BookingStepsProps) => {
                 <TextField
                   {...inputProps}
                   helperText="مثال: 1372/12/03"
-                  type="number"
                   inputMode="numeric"
                   dir="ltr"
                   placeholder="____/__/__"
