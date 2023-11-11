@@ -1,5 +1,6 @@
 import { splunk } from '@paziresh24/splunk-event';
 import { getCookie } from 'cookies-next';
+import { isPWA } from '../utils/isPwa';
 
 export const splunkInstance = () =>
   splunk.create({
@@ -8,6 +9,7 @@ export const splunkInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
 
@@ -18,6 +20,7 @@ export const splunkCenterProfileInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
 
@@ -28,6 +31,7 @@ export const splunkBookingInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
 
@@ -38,6 +42,7 @@ export const splunkSearchInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
 
@@ -48,6 +53,7 @@ export const logErrorToSplunk = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
 
@@ -64,5 +70,6 @@ export const coreWebVitalsSplunk = () =>
       },
       userAgent: window.navigator.userAgent,
       terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
     },
   });
