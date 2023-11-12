@@ -15,6 +15,9 @@ export const sendFirstFreeTimeEvent = ({ data, doctorInfo }: { data: any; doctor
         response_time: data.meta?.responseTime / 1000,
         user_agent: window.navigator.userAgent,
         terminal_id: getCookie('terminal_id'),
+        ...(!!data?.difference_freeTurn_profile_by_real && {
+          difference_freeTurn_profile_by_real: data.difference_freeTurn_profile_by_real,
+        }),
       },
     },
   });
