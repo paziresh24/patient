@@ -38,11 +38,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ...appManifests
         .reverse()
         .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: true }),
+        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: true, manifest: item.value?.config?.url }),
       ...defaultDoctorAppsManifests
         .reverse()
         .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: false }),
+        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: false, manifest: item.value?.config?.url }),
     ];
 
     let merged = appsArray.reduce((accumulator, item) => {
