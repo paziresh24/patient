@@ -473,11 +473,18 @@ const BookingSteps = (props: BookingStepsProps) => {
               handleOpenRecommendModal();
             },
             events: {
-              onFirstFreeTime: ({ server_name, server_id, status, message, result, meta }: any) =>
+              onFirstFreeTime: ({ server_name, server_id, status, message, result, meta }: any) => {
                 sendFirstFreeTimeEvent({
-                  data: { full_date: result?.full_date, status, message, meta },
+                  data: {
+                    full_date: result?.full_date,
+                    status,
+                    message,
+                    meta,
+                    difference_freeTurn_profile_by_real: result?.timestamp - center?.freeturn ?? null,
+                  },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
-                }),
+                });
+              },
               onOtherFreeTime: ({ status, message }: any) =>
                 sendOtherFreeTimeEvent({
                   data: { status, message },
