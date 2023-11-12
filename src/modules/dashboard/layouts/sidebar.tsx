@@ -8,6 +8,7 @@ import LogoutIcon from '@/common/components/icons/logout';
 import ShopIcon from '@/common/components/icons/shop';
 import UserEditIcon from '@/common/components/icons/userEdit';
 import UsersIcon from '@/common/components/icons/users';
+import { dashboardSplunk } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -40,6 +41,18 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     if (!user.cell && !isUserPending) {
       router.replace(`/login?redirect_url=${asPath}`);
     }
+    if (user.id) {
+      dashboardSplunk().sendEvent({
+        group: 'dashboard',
+        type: 'dashboard_page_load',
+        event: {
+          data: {
+            user_id: user.id,
+            job_title: user.provider?.job_title ?? 'normal',
+          },
+        },
+      });
+    }
   }, [user, isUserPending]);
 
   const apps = appsData.data?.data;
@@ -61,7 +74,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
               e.stopPropagation();
               openProfileView();
             }}
-            className="rounded-md p-1 hover:bg-slate-200/50 transition-colors"
+            className="p-1 transition-colors rounded-md hover:bg-slate-200/50"
           >
             <EyeIcon width={18} height={18} />
           </div>
@@ -99,6 +112,22 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       shouldShow: true,
     },
   ].filter(item => item.shouldShow);
+
+  const appClickEvent = ({ menu_name, app_key, app_manifest }: { menu_name: string; app_key: string; app_manifest?: string }) => {
+    dashboardSplunk().sendEvent({
+      group: 'dashboard',
+      type: 'dashboard_page_load',
+      event: {
+        data: {
+          user_id: user.id,
+          job_title: user.provider?.job_title ?? 'normal',
+          menu_name,
+          app_key,
+          app_manifest,
+        },
+      },
+    });
+  };
 
   return (
     <>
@@ -138,6 +167,13 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                             name: item.label,
                             link: `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
+                        onEvent={label =>
+                          appClickEvent({
+                            app_key: app.key,
+                            menu_name: label,
+                            app_manifest: app.manifest,
+                          })
+                        }
                       />
                     ))}
                 {appsData.isSuccess && apps.some((app: any) => app.pin) && <Divider />}
@@ -160,11 +196,30 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                             name: item.label,
                             link: `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
+                        onEvent={label =>
+                          appClickEvent({
+                            app_key: app.key,
+                            menu_name: label,
+                            app_manifest: app.manifest,
+                          })
+                        }
                       />
                     ))}
                 {((appsData.isSuccess && apps.some((app: any) => !app.pin)) || appsData.isLoading) && <Divider />}
                 {defaultMenuData.map(menu => (
-                  <MenuItem key={menu.url} name={menu.label} icon={menu.icon} button={menu?.button} link={`${menu.url}/`} />
+                  <MenuItem
+                    key={menu.url}
+                    name={menu.label}
+                    icon={menu.icon}
+                    button={menu?.button}
+                    link={`${menu.url}/`}
+                    onEvent={label =>
+                      appClickEvent({
+                        app_key: 'default_app',
+                        menu_name: label,
+                      })
+                    }
+                  />
                 ))}
               </div>
               <div onClick={logout}>

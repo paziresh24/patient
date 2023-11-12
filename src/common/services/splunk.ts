@@ -73,3 +73,20 @@ export const coreWebVitalsSplunk = () =>
       isApplication: isPWA(),
     },
   });
+
+export const dashboardSplunk = () =>
+  splunk.create({
+    baseUrl: 'https://p24splk.paziresh24.com',
+    token: 'f2287603-5e9d-4bdd-a8ef-33344421838b',
+    constant: {
+      url: {
+        href: window.location.href,
+        qurey: window.location.search,
+        pathname: window.location.pathname,
+        host: window.location.host,
+      },
+      userAgent: window.navigator.userAgent,
+      terminal_id: getCookie('terminal_id'),
+      isApplication: isPWA(),
+    },
+  });

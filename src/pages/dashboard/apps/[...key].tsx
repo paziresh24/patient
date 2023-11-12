@@ -52,7 +52,7 @@ export const Dashboard = () => {
             key={selctedMenu?.key}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`${selctedMenu?.url}?user_id=${user.id}`}
+            src={`${selctedMenu?.url}?embedded=1&user_id=${user.id}`}
           />
         )}
       </div>

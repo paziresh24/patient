@@ -17,9 +17,10 @@ interface MenuItemProps {
   className?: string;
   type?: 'parent' | 'children';
   pattern?: string;
+  onEvent?: (label: string) => void;
 }
 
-export const MenuItem = ({ name, icon, button, link, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
+export const MenuItem = ({ name, icon, button, link, onEvent, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
   const router = useRouter();
   const isSubMenu = !!subMenu && subMenu?.length > 0;
   const { isMobile } = useResponsive();
@@ -38,8 +39,14 @@ export const MenuItem = ({ name, icon, button, link, subMenu, className, type = 
     <div ref={ref}>
       <ComponentWrapper
         {...{
-          ...(link && { href: link }),
-          ...(subMenu && subMenu?.length > 0 && { onClick: () => setIsOpen(prev => !prev) }),
+          ...(link && { href: link, onClick: () => onEvent?.(name) }),
+          ...(subMenu &&
+            subMenu?.length > 0 && {
+              onClick: () => {
+                setIsOpen(prev => !prev);
+                onEvent?.(name);
+              },
+            }),
         }}
         className={classNames(
           'flex cursor-pointer  rounded-md items-center px-2 py-2 whitespace-nowrap',
@@ -68,7 +75,7 @@ export const MenuItem = ({ name, icon, button, link, subMenu, className, type = 
         <Transition match={isOpen} animation="right">
           <div className="relative mr-[1.15rem] mt-1 before:content  before:absolute flex flex-col justify-center before:right-0 before:rounded-full before:bg-slate-200 before:w-[2px] before:h-[80%]">
             {subMenu?.map(menuItem => (
-              <MenuItem className="py-2 rounded-none" key={menuItem.name} {...menuItem} type="children" />
+              <MenuItem className="py-2 rounded-none" onEvent={onEvent} key={menuItem.name} {...menuItem} type="children" />
             ))}
           </div>
         </Transition>
