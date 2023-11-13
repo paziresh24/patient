@@ -1,3 +1,4 @@
+import { usePatchUser } from '@/common/apis/services/auth/user/patchUser';
 import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
 import Avatar from '@/common/components/atom/avatar';
 import Text from '@/common/components/atom/text';
@@ -7,9 +8,11 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { PatinetProfileForm } from '@/modules/patient/views/form';
+import axios from 'axios';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -23,20 +26,26 @@ export const PatinetProfile = () => {
   const userInfoPending = useUserInfoStore(state => state.pending);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const updateUser = useUpdateUser();
+  const patchUser = usePatchUser();
 
-  const handleUpdateUser = async (data: any) => {
-    const res = await updateUser.mutateAsync({
-      ...data,
-      gender: data.gender.value,
-      province: data.province.value,
-      city: data.city.value,
-      user_id: userInfo.id,
-    });
-    if (res.data.status === ClinicStatus.SUCCESS) {
+  const handleUpdateUser = async ({ is_foreigner, ...data }: any) => {
+    try {
+      await patchUser.mutateAsync({
+        ...data,
+        gender: data.gender.value,
+        user_id: userInfo.id,
+      });
       toast.success('اطلاعات شما با موفقیت ویرایش شد.');
-      return setUserInfo({ ...res.data.result });
+      return setUserInfo({
+        ...userInfo,
+        ...data,
+        gender: data.gender.value,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message);
+      }
     }
-    toast.error(res.data.message);
   };
 
   const handleUploadUserAvatar = async (file: FileList | null) => {
@@ -55,12 +64,12 @@ export const PatinetProfile = () => {
       <AppBar title={t('title')} className="hidden pwa:!flex" backButton={query.referrer === 'profile'} />
 
       <div className="flex flex-col p-5 bg-white">
-        <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5">
+        <Text fontWeight="black" fontSize="xl" className="mb-5 pwa:hidden">
           {t('title')}
         </Text>
         <label
           htmlFor="userAvatar"
-          className="flex mb-5 items-center self-center justify-center text-white transition-all cursor-pointer hover:text-transparent"
+          className="flex items-center self-center justify-center mb-5 text-white transition-all cursor-pointer hover:text-transparent"
         >
           <Avatar
             className="transition-all brightness-50 hover:brightness-100"
@@ -80,18 +89,16 @@ export const PatinetProfile = () => {
         />
         {!userInfoPending && (
           <PatinetProfileForm
-            fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CITIES', 'PROVINCES']}
+            fields={['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE']}
             defaultValues={{
               NAME: userInfo.name,
               FAMILY: userInfo.family,
               GENDER: userInfo.gender,
               NATIONAL_CODE: userInfo.national_code,
-              CITY: userInfo.city_id,
-              PROVINCE: userInfo.province_id,
             }}
             onSubmit={handleUpdateUser}
-            loading={updateUser.isLoading}
-            errorsField={{ ...updateUser.data?.data?.details }}
+            loading={patchUser.isLoading}
+            errorsField={{ ...patchUser.data?.data?.details }}
           />
         )}
       </div>
@@ -107,12 +114,14 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default PatinetProfile;

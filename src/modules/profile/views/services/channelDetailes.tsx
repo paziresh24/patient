@@ -10,7 +10,7 @@ export type Messenger = {
 
 interface ChannelDetailesProps {
   title?: string;
-  messengers: Messenger[];
+  messengers?: Messenger[];
   wrapperClassName?: string;
   className?: string;
 }
@@ -21,7 +21,7 @@ export const ChannelDetailes = (props: ChannelDetailesProps) => {
     <div className={clsx('flex justify-between', wrapperClassName)}>
       {!!title && <Text>{title}</Text>}
       <div className={clsx('flex justify-end gap-4', className)}>
-        {messengers.map((messenger: Messenger) => (
+        {messengers?.map?.((messenger: Messenger) => (
           <div key={messenger.id} className="flex">
             <div className="flex items-center gap-2">
               {!!messenger.image && <Image src={messenger.image} alt="icon" width={30} height={30} className="max-w-6 max-h-6" />}

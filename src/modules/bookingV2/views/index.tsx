@@ -50,10 +50,8 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { FakeData } from '@/common/constants/fakeData';
-import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import { splunkBookingInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
@@ -108,8 +106,6 @@ export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT
 const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
-  const isApplication = useApplication();
-  const university = useServerQuery(state => state.queries.university);
   const { slug, defaultStep, className } = props;
   const { data: providerResponse, isLoading: providerLoading } = useProviders({ slug });
   const providerData = providerResponse?.data?.providers?.[0];
@@ -483,7 +479,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             </div>
           )}
           <Text fontWeight="bold" className="block mb-3">
-            برای درمان چه بیماری به پزشک مراجعه کردید؟
+            برای درمان چه بیماری به پزشک مراجعه می‌کنید؟
           </Text>
           <SelectSymptoms
             symptoms={symptoms}
@@ -520,53 +516,6 @@ const BookingSteps = (props: BookingStepsProps) => {
               setUser(user);
               if (service?.can_request) {
                 handleChangeStep('BOOK_REQUEST');
-                return;
-              }
-
-              try {
-                if (center.id === '455' && user.national_code) {
-                  const { data } = await getNationalCodeConfirmation.mutateAsync({
-                    nationalCode: user.national_code!,
-                    centerId: center.id,
-                  });
-
-                  if (data?.info?.insurances) {
-                    const insurances: any[] = Object.values(data?.info?.insurances);
-                    if (insurances.length === 1) {
-                      const insurance = insurances[0];
-                      return handleBookAction({
-                        ...user,
-                        name: data?.info?.name,
-                        family: data?.info?.family,
-                        gender: convertNumberToStringGender(data?.info?.gender),
-                        insurance_id: insurance.id,
-                      });
-                    }
-                    handleOpenInsuranceModal();
-                    return;
-                  }
-                }
-                // eslint-disable-next-line no-empty
-              } catch (e) {
-                handleShowErrorModal({
-                  text: `<p class="font-bold">در استعلام بیمه شما خطایی رخ داده است، لطفا چند دقیقه دیگر تلاش کنید.</p>
-                  <p>چنانچه مایلید بیمه شما به صورت آزاد محاسبه شود، فرایند نوبت دهی را ادامه داده و در نظر داشته باشید، هزینه اضافی پرداخت شده به شما برگشت داده نخواهد شد.</p>`,
-                  buttons: [
-                    {
-                      text: 'ادامه',
-                      variant: 'primary',
-                      onClick: () => {
-                        handleBookAction(user);
-                        handleCloseErrorModal();
-                      },
-                    },
-                    {
-                      text: 'انصراف',
-                      variant: 'secondary',
-                      onClick: handleCloseErrorModal,
-                    },
-                  ],
-                });
                 return;
               }
 
@@ -664,7 +613,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
             {firstFreeTimeErrorText}
           </Text>
-          {!university && (
+          {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
                 برترین پزشکان{' '}

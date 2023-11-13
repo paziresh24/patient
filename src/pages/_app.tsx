@@ -1,7 +1,8 @@
+import ErrorBoundary from '@/common/components/layouts/errorBoundary';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { splunkInstance } from '@/common/services/splunk';
+import { coreWebVitalsSplunk, splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
@@ -29,7 +30,7 @@ const iransansFont = localFont({
 const { publicRuntimeConfig } = getConfig();
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
-const growthbook = new GrowthBook({
+export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
@@ -89,61 +90,45 @@ function MyApp(props: AppProps) {
   }, []);
 
   useEffect(() => {
-    useCustomize.getState().setCustomize(pageProps.query);
+    useCustomize.getState().setCustomize(pageProps.themeConfing);
     useServerQuery.getState().setQueries(pageProps.query);
-  }, [pageProps.query]);
+  }, [pageProps.query, pageProps.themeConfing]);
 
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
-    <Provider pageProps={pageProps}>
-      <style jsx global>{`
-        :root {
-          --font-iran-sans: ${iransansFont.style.fontFamily};
-        }
-      `}</style>
-      <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
-      <Head>
-        <meta
-          name="viewport"
-          content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-      </Head>
+    <ErrorBoundary>
       <GrowthBookProvider growthbook={growthbook}>
-        <Hydrate state={pageProps.dehydratedState}>
-          {getLayout(
-            <Component
-              {...pageProps}
-              config={{
-                compactFooter: pageProps.query?.['footer:type'] === 'compact',
-              }}
-            />,
-            router,
-          )}
-        </Hydrate>
+        <Provider pageProps={pageProps}>
+          <style jsx global>{`
+            :root {
+              --font-iran-sans: ${iransansFont.style.fontFamily};
+            }
+          `}</style>
+          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
+          <Head>
+            <meta
+              name="viewport"
+              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+            />
+          </Head>
+          <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+        </Provider>
       </GrowthBookProvider>
-    </Provider>
+    </ErrorBoundary>
   );
 }
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === 'custom' || !publicRuntimeConfig.IS_PRODUCTION) return;
 
-  const body = JSON.stringify({
-    ...metric,
-    attribution: {
-      ...metric.attribution,
-      userAgent: window.navigator.userAgent,
-      url: window.location.pathname,
+  coreWebVitalsSplunk().sendEvent({
+    group: 'core_web_vitals',
+    type: `${metric.label}_${metric.name}`,
+    event: {
+      ...metric,
     },
   });
-  const url = '/patient/api/webvitals/';
-
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(url, body);
-  } else {
-    fetch(url, { body, method: 'POST', keepalive: true });
-  }
 }
 
 export default MyApp;

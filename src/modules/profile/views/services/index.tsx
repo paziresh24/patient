@@ -100,7 +100,7 @@ export const Services = ({
               <OnlineVisitWrapper
                 key={service.id}
                 channelType={doctorMessenger?.length ? doctorMessenger : ['phone']}
-                title={service.desk}
+                title="همین الان آنلاین ویزیت شوید"
                 price={service.free_price}
                 duration={
                   expertises.group_expertises[0].id === 21 || expertises.group_expertises[0].id === 47
@@ -108,7 +108,9 @@ export const Services = ({
                     : undefined
                 }
                 doctorId={doctor.id}
+                waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id === CENTERS.CONSULT) ?? {}}
                 slug={slug}
+                fullName={doctor.display_name}
                 id={service.id}
                 userCenterId={centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
                 city={{
@@ -124,7 +126,7 @@ export const Services = ({
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
-            waitingTime={waitingTimeInfo?.waiting_time_title}
+            waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id !== CENTERS.CONSULT)?.waiting_time_title}
             onBook={({ centerId, serviceId }) =>
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
             }

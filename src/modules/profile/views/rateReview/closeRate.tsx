@@ -8,9 +8,9 @@ interface CloseRateProps {
 
 export const CloseRate = ({ message }: CloseRateProps) => {
   return (
-    <div className="h-auto w-full relative flex flex-col items-center">
-      <div className="h-full m-4 blur-[0.32rem]">
-        <p className="text-green-700 text-sm font-bold flex gap-1 items-center">
+    <div className="relative flex flex-col items-center w-full h-auto">
+      <div className="h-full m-4 blur-[0.62rem]">
+        <p className="flex items-center gap-1 text-sm font-bold text-green-700">
           این پزشک را پیشنهاد داده اند
           <LikeIcon style={{ transform: 'rotateY(180deg)' }} className="mb-1" />
         </p>
@@ -23,9 +23,9 @@ export const CloseRate = ({ message }: CloseRateProps) => {
           طراحی اساسا مورد استفاده قرار گیرد.
         </p>
       </div>
-      <div className=" text-center flex flex-col justify-center items-center h-full w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.25]">
-        <AlertIcon className="[&>path]:fill-[#FFAD0D] w-10 h-10" />
-        <Text fontWeight="medium" className="text-[#0F1D40] leading-8">
+      <div className=" text-center flex flex-col justify-center items-center h-full px-10 w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.05]">
+        <AlertIcon className="[&>path]:fill-[#eea812] w-10 h-10" />
+        <Text fontWeight="bold" fontSize="sm" className="text-[#0F1D40] leading-8">
           {message ?? ''}
         </Text>
       </div>

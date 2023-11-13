@@ -46,11 +46,13 @@ export const ServiceCard = (props: ServiceCardProps) => {
         </div>
       )}
       {body && body.description?.length > 0 && (
-        <div className="flex flex-col px-2 py-1 mx-4 space-y-2 border-r-2 border-slate-200">
+        <ul className="flex flex-col px-2 list-disc pr-7 py-1 mx-4 space-y-1 border-r-2 border-slate-200">
           {body.description?.map(item => (
-            <Text fontSize="sm" key={item} dangerouslySetInnerHTML={{ __html: item ?? '' }} />
+            <li key={item}>
+              <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item ?? '' }} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
       {footer && (
         <div className="px-4">

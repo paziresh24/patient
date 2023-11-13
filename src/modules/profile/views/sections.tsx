@@ -54,7 +54,7 @@ export const sections = ({
   [
     // Own Page
     {
-      isShow: isBulk,
+      isShow: isBulk && !customize?.partnerKey,
       function: () => {
         return {
           fullname: information.display_name,
@@ -67,14 +67,12 @@ export const sections = ({
       title: 'درباره پزشک',
       id: 'about_section',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
-      isShow: information.biography || information.awards || information.scientific,
-      isShowFallback: !information.biography && !information.awards && !information.scientific && editable,
+      isShow: information.biography,
+      isShowFallback: !information.biography && editable,
       function: () => {
-        const { biography, awards, scientific } = information;
+        const { biography } = information;
         return {
-          biography,
-          awards,
-          scientific,
+          content: biography,
         };
       },
       children: (props: any) => <Biography className="bg-white md:rounded-lg" {...props} />,

@@ -1,5 +1,6 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import flatMap from 'lodash/flatMap';
+import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
@@ -14,6 +15,14 @@ export type OverwriteProfileData = {
     provider_id?: string;
     user_id?: string;
     expertises?: any;
+    experience?: string;
+  };
+  history: {
+    insert_at_age?: string;
+    count_of_page_view?: string;
+  };
+  feedbacks: {
+    waiting_time_info?: any;
   };
 };
 
@@ -21,8 +30,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source.id,
     server_id: source.server_id,
-    awards: source.awards,
-    scientific: source.scientific,
     display_name: source.display_name,
     name: source.name,
     family: source.family,
@@ -80,6 +87,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     insert_at_age: source.insert_at_age,
     count_of_consult_books: source.followConsultBoosk,
     count_of_page_view: source.number_of_visits,
+    ...overwriteData.history,
   };
 
   const similarLinks = source.similar_links;
@@ -89,7 +97,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     channels: source.online_visit_channel_types,
   };
 
-  const waitingTimeInfo = source.waiting_time_info;
+  const waitingTimeInfo = flatten([overwriteData?.feedbacks?.waiting_time_info, source.waiting_time_info].filter((items: any) => !!items));
 
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };

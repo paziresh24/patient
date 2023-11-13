@@ -368,3 +368,10 @@ export const withDoctorMenu = [
     link: `${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth?utm_source=home&utm_medium=click&utm_campaign=login-register-auth`,
   },
 ];
+
+export const medicalCenterMenu = [
+  {
+    title: 'ثبت نام مراکز درمانی',
+    link: `https://survey.porsline.ir/s/7GFKVQz`,
+  },
+];

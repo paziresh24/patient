@@ -1,5 +1,5 @@
 import { useEditSubuser } from '@/common/apis/services/auth/subuser/editSubuser';
-import { useUpdateUser } from '@/common/apis/services/auth/user/updateUser';
+import { usePatchUser } from '@/common/apis/services/auth/user/patchUser';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import EditIcon from '@/common/components/icons/edit';
@@ -9,8 +9,10 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useFeatureValue } from '@growthbook/growthbook-react';
+import axios from 'axios';
 import { useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import { defaultMessengers } from '../../constants/defaultMessengers';
 import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
 
@@ -34,15 +36,17 @@ export const UserCard = (props: UserCardProps) => {
     props;
 
   const editSubuser = useEditSubuser();
-  const updateUser = useUpdateUser();
+  const patchUser = usePatchUser();
   const { handleOpen, handleClose, modalProps } = useModal();
   const allMessenger = useProfileDataStore.getState().messenger;
-  const messengers = useFeatureValue<any>('channeldescription', {});
+  const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
   const doctorMessenger = Object.values(messengers).filter((item: any) =>
     uniqMessengers(allMessenger, Object.keys(messengers)).includes(item.type),
   );
 
+  const userInfo = useUserInfoStore(state => state.info);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
+
   const fields = useMemo(
     () =>
       type === 'subUser'
@@ -59,19 +63,25 @@ export const UserCard = (props: UserCardProps) => {
 
   const handleEditUser = async (data: any) => {
     if (type === 'user') {
-      const res = await updateUser.mutateAsync({
-        ...data,
-        gender: data.gender.value,
-        is_foreigner: data.is_foreigner ? '1' : '0',
-        is_foreigner_web: data.is_foreigner,
-        user_id: userId,
-      });
-      if (res.data.status === ClinicStatus.SUCCESS) {
+      try {
+        const { is_foreigner, ...userData } = data;
+        await patchUser.mutateAsync({
+          ...userData,
+          user_id: userId,
+          gender: userData.gender.value,
+        });
+
         handleClose();
-        setUserInfo(res.data.result);
-        return;
+        return setUserInfo({
+          ...userInfo,
+          ...data,
+          gender: data.gender.value,
+        });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data?.message);
+        }
       }
-      toast.error(res.data.message);
       return;
     }
     const res = await editSubuser.mutateAsync({
@@ -106,7 +116,7 @@ export const UserCard = (props: UserCardProps) => {
         action={() => {
           handleOpen();
           editSubuser.reset();
-          updateUser.reset();
+          patchUser.reset();
         }}
       >
         {select && shouldShowMessengers && (
@@ -114,7 +124,7 @@ export const UserCard = (props: UserCardProps) => {
             <Text fontWeight="medium" fontSize="sm">
               از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
             </Text>
-            <div className="flex items-center mt-3 space-s-3 select-none">
+            <div className="flex items-center mt-3 select-none space-s-3">
               {doctorMessenger.map((messenger: any) => (
                 <div className="w-full" key={messenger.id}>
                   <input
@@ -149,12 +159,12 @@ export const UserCard = (props: UserCardProps) => {
             IS_FOREIGNER: isForeigner,
           }}
           onSubmit={handleEditUser}
-          loading={editSubuser.isLoading || updateUser.isLoading}
+          loading={editSubuser.isLoading || patchUser.isLoading}
           errorsField={{
             ...(type === 'subUser'
               ? { ...editSubuser.data?.data?.details }
               : {
-                  ...updateUser.data?.data?.details,
+                  ...patchUser.data?.data?.details,
                 }),
           }}
         />

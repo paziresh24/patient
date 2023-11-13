@@ -12,10 +12,11 @@ interface HeaderLogoProps {
 
 export const HeaderLogo = (props: HeaderLogoProps) => {
   const { showPartnerLogo, brandType, partnerLogo, size } = props;
+
   return showPartnerLogo ? (
     partnerLogo ? (
       <img
-        src={publicRuntimeConfig.PARTNER_LOGO_BASE_URL + partnerLogo}
+        src={publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + partnerLogo}
         alt=""
         height={40}
         className={size === 'mobile' ? 'max-w-[190px]' : 'max-w-[250px]'}

@@ -1,3 +1,4 @@
+import { clinicClient } from '@/common/apis/client';
 import { isPWA } from '@/common/utils/isPwa';
 import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { getCookie, removeCookies } from 'cookies-next';
@@ -35,6 +36,13 @@ export type UserInfo = {
   is_doctor?: boolean;
   profile?: any;
   vip?: string;
+  insurance_id?: string;
+  father_name?: string;
+  birth_date?: string;
+  provider?: {
+    job_title?: 'doctor';
+    slug?: string;
+  };
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
@@ -51,6 +59,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     set(() => ({
       info: {
         ...info,
+        cell: `0${info.cell}`,
         is_foreigner: info.is_foreigner == '1',
       },
       isLogin: true,
@@ -77,6 +86,10 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   logout: () => {
     removeCookies('certificate');
     removeCookies('token');
-    location.assign(`${publicRuntimeConfig.CLINIC_BASE_URL}/logout?url=${location.pathname}`);
+    clinicClient.get('/logout');
+    set(() => ({
+      info: {},
+      isLogin: false,
+    }));
   },
 }));

@@ -4,7 +4,7 @@ import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect } from 'react';
 import Text from '../../atom/text/text';
@@ -26,7 +26,9 @@ export const BottomNavigation = () => {
   const isApplication = useApplication();
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(user?.id ?? '') || dashboardDoctorList.ids.includes('*');
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isShowDashboard =
+    isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();
@@ -54,23 +56,32 @@ export const BottomNavigation = () => {
       pattern: '/s/[[...params]]',
       privateRoute: false,
     },
-    {
-      name: 'نوبت های من',
-      icon: (
-        <div className="relative">
-          {!!turnsCount.presence && (
-            <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
-              {turnsCount.presence}
+    user.provider?.job_title === 'doctor' && isShowDashboard
+      ? {
+          name: 'مراجعین من',
+          icon: <CalenderIcon />,
+          link: '/dashboard/apps/drapp/appointments/',
+          exact: true,
+          pattern: '',
+          privateRoute: true,
+        }
+      : {
+          name: 'نوبت های من',
+          icon: (
+            <div className="relative">
+              {!!turnsCount.presence && (
+                <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
+                  {turnsCount.presence}
+                </div>
+              )}
+              <CalenderIcon />
             </div>
-          )}
-          <CalenderIcon />
-        </div>
-      ),
-      link: isShowDashboard ? '/dashboard/apps/@paziresh24/appointments/' : '/patient/appointments',
-      ...(isShowDashboard && { exact: true }),
-      pattern: '/patient/appointments',
-      privateRoute: true,
-    },
+          ),
+          link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
+          ...(isShowDashboard && { exact: true }),
+          pattern: '/patient/appointments',
+          privateRoute: true,
+        },
     user.id && isShowDashboard
       ? {
           name: 'داشبورد',

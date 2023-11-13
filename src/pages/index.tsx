@@ -6,8 +6,8 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
-import useServerQuery from '@/common/hooks/useServerQuery';
 import classNames from '@/common/utils/classNames';
+import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
@@ -25,7 +25,6 @@ const Home = () => {
   const router = useRouter();
   const { recent } = useRecentSearch();
 
-  const university = useServerQuery(state => state.queries.university);
   const customize = useCustomize(state => state.customize);
 
   useEffect(() => {
@@ -37,7 +36,7 @@ const Home = () => {
     <>
       <main
         className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
-          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': university,
+          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
         })}
       >
         {!customize.partnerTitle && <Logo className="text-2xl md:text-3xl" width={55} />}
@@ -53,10 +52,17 @@ const Home = () => {
         )}
         <Suggestion />
         {recent.length > 0 && <RecentSearch />}
-        {!recent.length && <div className="h-[68px] md:h-6" />}
-        {university && <CentersList />}
+        {customize.showConsultServices && <OnlineVisitPromote />}
+        {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
+      {!customize.partnerKey && (
+        <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
+          <Text fontWeight="semiBold" fontSize="sm" as="h1" className="text-slate-400">
+            نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان
+          </Text>
+        </div>
+      )}
     </>
   );
 };

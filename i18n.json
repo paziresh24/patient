@@ -13,7 +13,9 @@
     "/patient/bookmarks": ["patient/bookmarks"],
     "/patient/appointments": ["patient/appointments"],
     "/patient/premium": ["patient/premium"],
-    "/dashboard": ["patient/appointments", "patient/bookmarks", "patient/profile", "patient/subuser"],
-    "/dashboard/apps/[...key]": ["patient/appointments", "patient/bookmarks", "patient/profile", "patient/subuser"]
+    "/dashboard/profile": ["patient/profile"],
+    "/dashboard/subuser": ["patient/subuser"],
+    "/dashboard/bookmarks": ["patient/bookmarks"],
+    "/dashboard/appointments": ["patient/appointments"]
   }
 }

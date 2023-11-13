@@ -21,26 +21,21 @@ import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFea
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
-import config from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
-const { publicRuntimeConfig } = config();
 
 export const UserProfile = () => {
-  const router = useRouter();
   const { handleOpenLoginModal } = useLoginModalContext();
   const { t } = useTranslation('common');
-  const { isLogin, userInfo, pending } = useUserInfoStore(state => ({
-    isLogin: state.isLogin,
-    userInfo: state.info,
-    pending: state.pending,
-  }));
+
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+  const pending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
@@ -49,7 +44,9 @@ export const UserProfile = () => {
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isShowDashboard = dashboardDoctorList.ids.includes(userInfo?.id ?? '') || dashboardDoctorList.ids.includes('*');
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isShowDashboard =
+    isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*');
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -67,7 +64,7 @@ export const UserProfile = () => {
         {
           name: t('patient/common:menu.myTurns'),
           icon: <CalenderIcon />,
-          link: '/dashboard/apps/@paziresh24/appointments',
+          link: '/dashboard/appointments',
           badge: !!turnsCount.presence && (
             <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
           ),
@@ -161,7 +158,7 @@ export const UserProfile = () => {
                           </Text>
                           <EditIcon className="w-5 h-5" />
                         </div>
-                        <Text fontSize="xs">{userInfo.username}</Text>
+                        <Text fontSize="xs">{userInfo.cell}</Text>
                       </>
                     )}
                   </div>

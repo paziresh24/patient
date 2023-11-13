@@ -1,4 +1,5 @@
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import LoginForm from '@/modules/login/views/loginForm';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -19,12 +20,14 @@ const LoginPage = () => {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default LoginPage;

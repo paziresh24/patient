@@ -6,6 +6,7 @@ import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
@@ -69,7 +70,10 @@ const Booking = () => {
     if (
       payloads.includes('centerId') &&
       payloads.includes('serviceId') &&
-      (payloads.includes('timeId') || payloads.includes('time') || payloads.includes('reserveId'))
+      (payloads.includes('timeId') ||
+        payloads.includes('time') ||
+        payloads.includes('reserveId') ||
+        payloads.includes('skipTimeSelectStep'))
     ) {
       return {
         step: 'SELECT_USER',
@@ -194,22 +198,24 @@ Booking.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  const { id, center_id } = context.query;
-  if (id && center_id) {
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    const { id, center_id } = context.query;
+    if (id && center_id) {
+      return {
+        redirect: {
+          statusCode: 302,
+          destination: `/receipt/${center_id}/${id}`,
+        },
+      };
+    }
+
     return {
-      redirect: {
-        statusCode: 302,
-        destination: `/receipt/${center_id}/${id}`,
+      props: {
+        query: context.query,
       },
     };
-  }
-
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+  }),
+);
 
 export default Booking;

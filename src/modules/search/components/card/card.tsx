@@ -48,12 +48,12 @@ interface SearchCardProps {
     outline: boolean;
   }[];
   sendEventWhenClick?: ({ element, content }: { element: string; content?: string }) => void;
-  avatarPriority?: boolean;
+  avatarSize?: 'md' | 'lg';
   className?: string;
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type, sendEventWhenClick, className } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className } = props;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
@@ -69,8 +69,8 @@ export const SearchCard = (props: SearchCardProps) => {
             <Avatar
               src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
               alt={imageAlt}
-              width={80}
-              height={80}
+              width={avatarSize === 'md' ? 80 : 100}
+              height={avatarSize === 'md' ? 80 : 100}
               className={classNames('border-2 border-slate-200', {
                 'border-primary': baseInfo?.isVerify,
                 'border-green-400': baseInfo?.isOnline,

@@ -1,3 +1,11 @@
+if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
+  try {
+    require('newrelic');
+  } catch (error) {
+    console.error('newrelic', error);
+  }
+}
+
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
@@ -6,7 +14,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
   return (
-    <Html lang="fa-IR" dir={dir}>
+    <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
@@ -25,7 +33,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="google" content="notranslate" />
       </Head>
       <body
-        className={classNames('bg-slate-100 antialiased scroll-smooth pwa:select-none', {
+        className={classNames('bg-slate-100 antialiased  pwa:select-none', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

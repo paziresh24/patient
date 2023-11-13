@@ -13,7 +13,8 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
-import useServerQuery from '@/common/hooks/useServerQuery';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
+import useCustomize from '@/common/hooks/useCustomize';
 import { splunkInstance } from '@/common/services/splunk';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -31,7 +32,7 @@ import { GetServerSidePropsContext } from 'next/types';
 
 type BookType = 'book' | 'book_request';
 
-export const Appointments = ({ query: queryServer }: any) => {
+export const Appointments = () => {
   const { query, ...router } = useRouter();
   const { t } = useTranslation('patient/appointments');
   const [page, setPage] = useState<number>(1);
@@ -40,7 +41,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   const [type, setType] = useState<BookType>('book');
   const { handleOpenLoginModal } = useLoginModalContext();
   const serverTime = useGetServerTime();
-  const university = useServerQuery(state => state.queries.university);
+  const university = useCustomize(state => state.customize?.partnerKey);
   const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
   const user = useUserInfoStore(state => state.info);
   const sendEventForLocalTypeBookCenterList = useFeatureValue('appointments.remove-sync|center-list', { centers: [''] });
@@ -48,7 +49,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   const getBooks = useGetBooks({
     page,
     return_type: type,
-    university: queryServer?.university ?? university,
+    university: university,
   });
 
   const [ref, inView] = useInView({
@@ -79,7 +80,7 @@ export const Appointments = ({ query: queryServer }: any) => {
   useEffect(() => {
     refetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, type]);
+  }, [page, type, university]);
 
   useEffect(() => {
     if (getBooks.isSuccess) {
@@ -242,12 +243,14 @@ Appointments.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default Appointments;

@@ -11,7 +11,7 @@ interface Item {
   icon?: React.ReactNode;
 }
 interface SubMenuProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   className?: '';
   menuItem: Item[];
   hasIcon?: boolean;
@@ -40,11 +40,11 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
 
   return (
     <li ref={ref} className="relative flex items-center" onClick={() => setOpen(prev => !prev)}>
-      <div className="flex items-center text-center cursor-pointer">
-        <Text fontSize="sm" className="p-3" fontWeight="medium">
+      <div className="flex  items-center  p-3 text-center cursor-pointer">
+        <Text fontSize="sm" fontWeight="medium">
           {title}
         </Text>
-        {hasIcon && <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} />}
+        {hasIcon && <ChevronIcon className="mr-3" dir={`${open ? 'top' : 'bottom'}`} />}
       </div>
       <Transition
         as="ul"

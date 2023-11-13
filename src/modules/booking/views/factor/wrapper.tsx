@@ -115,10 +115,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
               bookId,
             })
           }
-          className="self-end w-full md:w-44"
+          className="self-end w-full md:w-auto"
           loading={centerPayment.isLoading || consultPayment.isLoading}
         >
-          {centerId === CENTERS.CONSULT ? 'پرداخت و رزرو گفتگو' : 'پرداخت و ثبت نوبت'}
+          {centerId === CENTERS.CONSULT ? 'پرداخت و آغاز گفتگو با پزشک' : 'پرداخت و ثبت نوبت'}
         </Button>
       </div>
     </div>

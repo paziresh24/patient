@@ -4,6 +4,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import CenterIcon from '@/common/components/icons/center';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
 import HeadphoneIcon from '@/common/components/icons/headphone';
@@ -18,12 +19,12 @@ import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
-import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import config from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -33,7 +34,6 @@ const { publicRuntimeConfig } = config();
 
 export const PatinetProfile = () => {
   const router = useRouter();
-  const { getRatingAppLink } = usePwa();
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
@@ -42,9 +42,13 @@ export const PatinetProfile = () => {
   const share = useShare();
   const { customize } = useCustomize();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
 
   useEffect(() => {
-    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
+    if (
+      userInfo.id &&
+      (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
+    ) {
       router.replace(`/dashboard`);
     }
   }, [userInfo.id]);
@@ -65,6 +69,19 @@ export const PatinetProfile = () => {
   const openPrivateLink = (link: string) => {
     if (!isLogin) return openLoginForm(link);
     router.push(link);
+  };
+
+  const getRatingAppLink = () => {
+    const downloadSource = localStorage.getItem('app:download_source');
+
+    const rateLinks = {
+      direct: 'market://details?id=com.paziresh24.paziresh24',
+      bazaar: 'bazaar://details?id=com.paziresh24.paziresh24',
+      myket: 'myket://comment?id=com.paziresh24.paziresh24',
+      google_play: 'market://details?id=com.paziresh24.paziresh24',
+    };
+
+    return downloadSource && rateLinks[downloadSource as 'direct' | 'bazaar' | 'myket' | 'google_play'];
   };
 
   return (
@@ -97,7 +114,7 @@ export const PatinetProfile = () => {
                         </Text>
                         <EditIcon className="w-5 h-5" />
                       </div>
-                      <Text fontSize="sm">{userInfo.username}</Text>
+                      <Text fontSize="sm">{userInfo.cell}</Text>
                     </>
                   )}
                 </div>
@@ -183,21 +200,32 @@ export const PatinetProfile = () => {
               </a>
             )}
             {customize.showSupplierRegister && (
-              <Link
-                href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
-                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
-              >
-                <DoctorIcon />
-                <Text fontWeight="medium" fontSize="sm">
-                  پزشک یا منشی هستید؟
-                </Text>
-              </Link>
+              <>
+                <Link
+                  href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/fordoctors/`}
+                  className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                >
+                  <DoctorIcon />
+                  <Text fontWeight="medium" fontSize="sm">
+                    پزشک یا منشی هستید؟
+                  </Text>
+                </Link>
+                <Link
+                  href="https://survey.porsline.ir/s/7GFKVQz"
+                  className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                >
+                  <CenterIcon />
+                  <Text fontWeight="medium" fontSize="sm">
+                    ثبت نام مراکز درمانی
+                  </Text>
+                </Link>
+              </>
             )}
-            {!!getRatingAppLink && (
+            {getRatingAppLink() && (
               <div
                 className="items-center hidden px-5 py-4 border-b pwa:flex space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
-                  location.assign((getRatingAppLink as string) ?? '#');
+                  location.assign(getRatingAppLink() ?? '#');
                 }}
               >
                 <StarIcon />
@@ -245,12 +273,14 @@ PatinetProfile.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default PatinetProfile;

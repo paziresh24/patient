@@ -5,7 +5,7 @@ import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import FrownIcon from '@/common/components/icons/frown';
 import SmileIcon from '@/common/components/icons/smile';
-import { range } from 'lodash';
+import range from 'lodash/range';
 import { useEffect } from 'react';
 
 interface DoctorTagsProps {

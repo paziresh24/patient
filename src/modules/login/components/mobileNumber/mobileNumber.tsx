@@ -84,8 +84,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
         <Trans
           i18nKey="login:steps.mobileNumber.termAndprivacyPolicyNotice"
           components={[
-            <a key={0} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/rules/`} className="text-blue-700" />,
-            <a key={1} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`} className="text-blue-700" />,
+            <a key={0} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/rules/`} target="_blank" className="text-blue-700" />,
+            <a key={1} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`} target="_blank" className="text-blue-700" />,
           ]}
         />
       </Text>

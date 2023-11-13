@@ -1,9 +1,12 @@
 import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptDetails';
 import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
+import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
+import Divider from '@/common/components/atom/divider';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
+import TextField from '@/common/components/atom/textField';
 import ErrorIcon from '@/common/components/icons/error';
 import SuccessIcon from '@/common/components/icons/success';
 import TrashIcon from '@/common/components/icons/trash';
@@ -11,16 +14,15 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
+import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
-import usePwa from '@/common/hooks/usePwa';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
-import { isPWA } from '@/common/utils/isPwa';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -34,7 +36,7 @@ import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -48,14 +50,8 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
-  const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
-  const {
-    handleOpen: handleOpenSuccessfulMessageeModal,
-    handleClose: handleCloseSuccessfulMessageeModal,
-    modalProps: successfulMessage,
-  } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -63,6 +59,8 @@ const Receipt = () => {
     handleClose: handleCloseWaitingTimeModal,
     modalProps: waitingTimeModalProps,
   } = useModal();
+  const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
+  const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -103,9 +101,6 @@ const Receipt = () => {
     if (getReceiptDetails.isSuccess) {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
         handleOpenWaitingTimeModal();
-      }
-      if (isPWA()) {
-        handleOpenSuccessfulMessageeModal();
       }
     }
   }, [getReceiptDetails.status]);
@@ -330,6 +325,37 @@ const Receipt = () => {
                   {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
                 </Button>
               )}
+              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
+                <>
+                  <Divider />
+                  <div className="flex flex-col space-y-2">
+                    <Button
+                      size="sm"
+                      className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                      block
+                      variant="secondary"
+                      onClick={handleOpenWaitingTimeFollowUpModal}
+                    >
+                      پیگیری تاخیر پزشک
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="border-slate-300 text-slate-500 hover:bg-slate-50"
+                      block
+                      variant="secondary"
+                      onClick={() =>
+                        location.assign(
+                          `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
+                            (pincode as string) ?? (user.id && md5(user.id))
+                          }`,
+                        )
+                      }
+                    >
+                      درخواست پشتیبانی این نوبت
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -378,20 +404,26 @@ const Receipt = () => {
             </Button>
           </div>
         </Modal>
-        <Modal title="نوبت با موفقیت ثبت شد" {...successfulMessage}>
-          <div className="flex flex-col space-y-3 items-center">
-            <SuccessIcon className="text-green-600" />
-            <Text fontWeight="bold">نوبت شما با موفقیت ثبت شد</Text>
-            <Text className="text-center" fontSize="sm" fontWeight="medium">
-              با ثبت نظر خود از پذیرش 24 در {appDownloadSource} حمایت کنید!
-            </Text>
-            <Button block onClick={() => location.assign((getRatingAppLink as string) ?? '#')}>
-              حمایت کردن
+        <Modal {...waitingTimeFollowUpModalProps} title="پیگیری تاخیر پزشک">
+          <form
+            method="post"
+            onSubmit={() => setIsWattingTimeFollowUpLoadingButton(true)}
+            action="https://n8n.paziresh24.com/webhook/doctordelayfollowup"
+            className="flex flex-col space-y-3"
+          >
+            <Alert severity="warning" className="p-2">
+              <Text fontWeight="medium" fontSize="sm" className="text-orange-700">
+                با ارسال این فرم شما تایید می کنید که در زمان مقرر در پیامرسان انتخاب شده به پزشک پیام ارسال کرده اید و هنوز پاسخی دریافت
+                نکرده اید.
+              </Text>
+            </Alert>
+            <input name="book-id" value={bookDetailsData.book_id} type="hidden" />
+            <input name="pincode" value={(pincode as string) ?? (user.id && md5(user.id))} type="hidden" />
+            <TextField name="description" label="توضیحات" multiLine className="h-28" />
+            <Button type="submit" loading={isWattingTimeFollowUpLoadingButton}>
+              ارسال درخواست پیگیری
             </Button>
-            <Button variant="secondary" block onClick={handleCloseSuccessfulMessageeModal}>
-              مشاهده رسید نوبت
-            </Button>
-          </div>
+          </form>
         </Modal>
       </div>
     </>
@@ -424,12 +456,14 @@ Receipt.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(async (context: GetServerSidePropsContext) => {
-  return {
-    props: {
-      query: context.query,
-    },
-  };
-});
+export const getServerSideProps = withCSR(
+  withServerUtils(async (context: GetServerSidePropsContext) => {
+    return {
+      props: {
+        query: context.query,
+      },
+    };
+  }),
+);
 
 export default Receipt;

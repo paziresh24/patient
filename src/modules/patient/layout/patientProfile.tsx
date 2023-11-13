@@ -8,7 +8,7 @@ import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -19,16 +19,19 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
   const loginPending = useUserInfoStore(state => state.pending);
   const { customize } = useCustomize();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
+  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const { t } = useTranslation('patient/common');
 
   const router = useRouter();
 
   useEffect(() => {
-    if ((userInfo.id && dashboardDoctorList.ids.includes(userInfo?.id ?? '')) || dashboardDoctorList.ids.includes('*')) {
-      router.replace(`/dashboard/apps/@paziresh24/${router.pathname.replace('patient', '')}`);
+    if (
+      userInfo.id &&
+      (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
+    ) {
+      router.replace(`/dashboard${router.pathname.replace('/patient', '')}`);
     }
   }, [userInfo.id]);
-
-  const { t } = useTranslation('patient/common');
 
   return (
     <div className="max-w-screen-xl w-full min-h-[70vh] md:grid md:grid-cols-12 mx-auto md:pt-10 md:space-s-8">
@@ -50,7 +53,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
                     </Text>
                     <EditIcon className="w-5 h-5" />
                   </div>
-                  <Text fontSize="sm">{userInfo.username}</Text>
+                  <Text fontSize="sm">{userInfo.cell}</Text>
                 </>
               )}
             </div>

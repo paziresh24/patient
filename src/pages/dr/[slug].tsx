@@ -1,3 +1,4 @@
+import { useIncrementPageView } from '@/common/apis/services/profile/incrementPageView';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
@@ -31,6 +32,7 @@ import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { push } from '@socialgouv/matomo-next';
 import { getCookie } from 'cookies-next';
+import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 
@@ -51,6 +53,8 @@ const DoctorProfile = ({
   expertises,
   feedbacks,
   waitingTimeInfo,
+  dontShowRateAndReviewMessage,
+  shouldUseIncrementPageView,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -59,6 +63,8 @@ const DoctorProfile = ({
   const isWebView = useWebView();
 
   const addPageView = usePageView();
+  const incrementPageView = useIncrementPageView();
+
   const { recommendEvent } = useProfileSplunkEvent();
 
   // Modal
@@ -94,10 +100,17 @@ const DoctorProfile = ({
         isWebView: !!isWebView || !!isApplication,
       });
       push(['trackEvent', 'contact', 'doctor profile']);
+      if (shouldUseIncrementPageView) {
+        incrementPageView.mutate({
+          provider_id: information.provider_id,
+        });
+      }
+
       addPageView.mutate({
         doctorId: information.id,
         serverId: information.server_id,
       });
+
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
@@ -106,7 +119,7 @@ const DoctorProfile = ({
   }, [isBulk, information]);
 
   useEffect(() => {
-    if (!!userInfo.is_doctor && slug === userInfo?.profile?.slug) {
+    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
       setEditable(true);
       splunkInstance().sendEvent({
         group: 'profile',
@@ -119,7 +132,7 @@ const DoctorProfile = ({
         },
       });
     }
-  }, [userInfo.is_doctor, slug]);
+  }, [userInfo, slug]);
 
   const toolBarItems = useToolBarController({ slug, displayName: information?.display_name, documentTitle: title, editable });
 
@@ -204,10 +217,10 @@ const DoctorProfile = ({
             image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
             title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
-            serviceList={profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title)}
+            serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && profileData.feedbacks?.details?.satisfaction}
+            satisfaction={customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction}
             rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}

@@ -5,11 +5,10 @@ import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { splunkCenterProfileInstance } from '@/common/services/splunk';
-import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import SearchCard from '@/modules/search/components/card/card';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useRef } from 'react';
 
 type ExpertiseType = {
   lable: string;
@@ -19,11 +18,15 @@ interface ListOfDoctorsProps {
   doctors: any[];
   expertises: ExpertiseType[];
   onSearch: (query: string) => void;
+  searchQuery: string;
   onSelectExpertise: (expertise: string) => void;
   loading?: boolean;
   showRateAndReviews?: boolean;
   defaultValue?: ExpertiseType;
   expertiseListLoading?: boolean;
+  onChangePage: (page: number) => void;
+  hasNextPage: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
@@ -31,17 +34,19 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     doctors,
     expertises,
     onSearch,
+    searchQuery,
     onSelectExpertise,
     defaultValue,
     loading = false,
     expertiseListLoading = false,
     showRateAndReviews = true,
+    onChangePage,
+    hasNextPage,
+    isFetchingNextPage,
   } = props;
-  const [page, setPage] = useState(1);
+  const page = useRef<number>(1);
   const router = useRouter();
   const removePrefixDoctorName = useRemovePrefixDoctorName();
-
-  const sliceData = useMemo(() => doctors.slice(0, page * 5), [page, doctors]);
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
     splunkCenterProfileInstance().sendEvent({
@@ -68,16 +73,19 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
         <div className="flex flex-col items-center space-y-2 md:space-y-0 md:flex-row md:space-s-2">
           <TextField
             placeholder="جستجوی نام پزشک ..."
+            value={searchQuery}
             onChange={e => {
               onSearch(e.target.value);
-              setPage(1);
+              page.current = 1;
+              onChangePage(page.current);
             }}
           />
           <Autocomplete
             options={[{ label: 'همه تخصص ها', value: '' }, ...expertises]}
             onChange={e => {
               onSelectExpertise(e.target.value.value);
-              setPage(1);
+              page.current = 1;
+              onChangePage(page.current);
             }}
             classNameWrapper="w-full md:max-w-[15rem] font-medium !text-sm"
             defaultValue={defaultValue}
@@ -102,7 +110,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           </div>
         )}
         {!loading &&
-          sliceData.map(doctor => (
+          doctors.map(doctor => (
             <SearchCard
               key={doctor.title}
               type="doctor"
@@ -110,41 +118,41 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                 displayName: removePrefixDoctorName(doctor.title),
                 avatar: doctor.image,
                 url: doctor.url,
-                expertise: doctor.sub_title,
+                expertise: doctor.display_expertise,
+                isVerify: !doctor.is_bulk,
                 ...(showRateAndReviews && {
                   rate: {
                     count: doctor.rates_count,
-                    satisfaction: doctor.calculated_rate,
+                    satisfaction: doctor.satisfaction,
                   },
                 }),
-                viewCount: convertLongToCompactNumber(doctor.number_of_vist),
+                viewCount: doctor.view,
               }}
               details={{
-                address: { text: doctor.display_address ?? '' },
-                ...(doctor.available_time_text && {
-                  badges: [
-                    {
-                      type: 'info',
-                      title: `فعال شدن نوبت دهی اینترنتی ${doctor.available_time_text}`,
-                    },
-                  ],
-                }),
+                badges: doctor.badges,
               }}
-              actions={[
-                {
-                  text: doctor.is_bulk ? 'مشاهده پروفایل' : 'دریافت نوبت',
-                  ...(doctor.freeturn_text && !doctor.is_bulk && { description: `اولین نوبت: ${doctor.freeturn_text}` }),
+              actions={doctor.actions
+                .filter((action: any) => action.title !== 'ویزیت آنلاین')
+                ?.map((action: any) => ({
+                  text: action.title,
+                  description: action.top_title,
+                  outline: action.outline,
                   action: () => {
-                    router.push(doctor.url);
+                    router.push(action.url);
                   },
-                  outline: doctor.is_bulk,
-                },
-              ]}
+                }))}
               sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
             />
           ))}
-        {sliceData.length !== doctors.length && (
-          <Button variant="secondary" onClick={() => setPage(prev => prev + 1)}>
+        {hasNextPage && !loading && (
+          <Button
+            variant="secondary"
+            onClick={() => {
+              page.current += 1;
+              return onChangePage(page.current);
+            }}
+            loading={isFetchingNextPage}
+          >
             مشاهده بیشتر
           </Button>
         )}
