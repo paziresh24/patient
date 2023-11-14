@@ -45,7 +45,7 @@ export const OtpCode = (props: OtpCodeProps) => {
     setShouldShowResetButton(false);
     const { data: resetPasswordRes } = await resetPassword.mutateAsync({
       cell: +mobileNumberValue,
-      number_reset_password: retryGetPasswordNumber,
+      number_reset_password: retryGetPasswordNumber + 1,
     });
     setRetryGetPasswordNumber(prev => ++prev);
     if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
@@ -65,10 +65,10 @@ export const OtpCode = (props: OtpCodeProps) => {
         <button className="absolute top-0 self-end px-5 py-1 rounded-md bg-slate-100" onClick={handleReset}>
           {shouldShowResetButton ? (
             <Text fontWeight="semiBold" fontSize="sm">
-              {retryGetPasswordNumber >= 3 ? t('steps.otpCode.voiceCallWay') : t('steps.otpCode.resend')}
+              {retryGetPasswordNumber >= 1 ? t('steps.otpCode.voiceCallWay') : t('steps.otpCode.resend')}
             </Text>
           ) : (
-            <Timer target={120} defaultTime="01:59" ended={() => setShouldShowResetButton(true)} className="!text-slate-500 font-medium" />
+            <Timer target={60} defaultTime="00:59" ended={() => setShouldShowResetButton(true)} className="!text-slate-500 font-medium" />
           )}
         </button>
       </div>
