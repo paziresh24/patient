@@ -29,13 +29,13 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { text }, host }: any) => {
+const CenterProfile = ({ query: { text, expertise }, host }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
   const slug = query.slug as string;
   const [searchQuery, setSearchQuery] = useState(text ?? '');
-  const [selectedExpertise, setSelectedExpertise] = useState('');
+  const [selectedExpertise, setSelectedExpertise] = useState(expertise ? `ir/exp-${expertise}/` : '');
 
   const profile = useSlugProfile(
     { slug },
@@ -95,20 +95,20 @@ const CenterProfile = ({ query: { text }, host }: any) => {
   );
 
   const defaultExpertise = useMemo(() => {
-    const selectedExpertise = expertises.data?.[0]?.items?.[0]?.sub_items
-      ?.filter((item: any) => item.id === +query.expertise_id!)
+    const data = expertises.data?.[0]?.items?.[0]?.sub_items
+      ?.filter((item: any) => item.url === `/s/${selectedExpertise}`)
       ?.map((expertise: any) => ({
         label: expertise.name,
         value: expertise.name,
       }))[0];
 
     return (
-      selectedExpertise ?? {
+      data ?? {
         label: 'همه تخصص ها',
         value: '',
       }
     );
-  }, [query.expertise_id, expertises]);
+  }, [expertises, selectedExpertise]);
 
   useEffect(() => {
     if (profileData) {
@@ -368,6 +368,7 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   const { slug, ...query } = context.query;
   const text = query?.text as string;
+  const expertise = query?.expertise as string;
 
   const slugFormatted = slug as string;
   try {
@@ -413,14 +414,14 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       [
         ServerStateKeysEnum.Search,
         {
-          route: '',
+          route: expertise ? `ir/exp-${expertise}/` : '',
           query: {
             ...filters,
             page: 1,
           },
         },
       ],
-      () => searchApi({ route: '', query: { ...filters, page: 1 } }).then(data => ({ pages: [data] })),
+      () => searchApi({ route: expertise ? `ir/exp-${expertise}/` : '', query: { ...filters, page: 1 } }).then(data => ({ pages: [data] })),
     );
 
     return {
