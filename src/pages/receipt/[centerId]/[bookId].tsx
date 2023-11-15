@@ -17,12 +17,14 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
+import usePwa from '@/common/hooks/usePwa';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
+import { isPWA } from '@/common/utils/isPwa';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -34,9 +36,9 @@ import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/s
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
-import shuffle from 'lodash/shuffle';
+import { shuffle } from 'lodash';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -50,8 +52,10 @@ const Receipt = () => {
     query: { bookId, centerId, pincode },
     ...router
   } = useRouter();
+  const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -77,6 +81,8 @@ const Receipt = () => {
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
+  const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
+  const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);
@@ -99,8 +105,13 @@ const Receipt = () => {
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
-      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
+      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت' && !shuoldShowRateAppModal) {
         handleOpenWaitingTimeModal();
+        return;
+      }
+      if (isPWA() && isActiveTurn && shuoldShowRateAppModal) {
+        handleOpenRateAppModal();
+        return;
       }
     }
   }, [getReceiptDetails.status]);
@@ -142,7 +153,7 @@ const Receipt = () => {
     notVisitedTurn: bookDetailsData.book_status === 'not_visited',
     visitedTurn: bookDetailsData.book_status === 'visited',
   };
-
+  const isActiveTurn = !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
@@ -212,6 +223,25 @@ const Receipt = () => {
       type: 'patient',
       event: {
         action: 'receipt',
+        data: {
+          referenceCode: bookDetailsData.reference_code,
+          doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
+          patient: {
+            cell: bookDetailsData.patient.cell,
+            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            nationalCode: bookDetailsData.national_code,
+          },
+        },
+      },
+    });
+  };
+
+  const handleRedirectToStore = () => {
+    location.assign((getRatingAppLink as string) ?? '#');
+    splunkBookingInstance().sendEvent({
+      group: 'rate app',
+      type: 'rate app click button',
+      event: {
         data: {
           referenceCode: bookDetailsData.reference_code,
           doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
@@ -424,6 +454,33 @@ const Receipt = () => {
               ارسال درخواست پیگیری
             </Button>
           </form>
+        </Modal>
+        <Modal title={rateAppModalInfo?.modal_title} {...rateAppModal}>
+          <div className="flex flex-col space-y-3 items-center">
+            <SuccessIcon className="text-green-600" />
+            <Text fontWeight="bold" className="text-green-600">
+              {rateAppModalInfo?.title}
+            </Text>
+            <Text className="text-center" fontSize="sm" fontWeight="medium">
+              {rateAppModalInfo?.description?.replace('{appDownloadSource}', appDownloadSource)}
+            </Text>
+            {bookDetailsData?.center?.waiting_time === 'بیشتر از یک ساعت' && (
+              <Alert severity="warning" className="flex flex-col items-center gap-2 p-2">
+                <Text fontWeight="bold" fontSize="sm">
+                  احتمال معطلی بیش از یک ساعت!
+                </Text>
+                <Text fontWeight="medium" fontSize="sm" className="text-center">
+                  با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.
+                </Text>
+              </Alert>
+            )}
+            <Button block onClick={handleRedirectToStore}>
+              {rateAppModalInfo?.button_rate_app_text}
+            </Button>
+            <Button variant="secondary" block onClick={handleCloseRateAppModal}>
+              {rateAppModalInfo?.button_show_receipt_text}
+            </Button>
+          </div>
         </Modal>
       </div>
     </>
