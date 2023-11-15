@@ -33,7 +33,7 @@ import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/s
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
@@ -52,11 +52,7 @@ const Receipt = () => {
   const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
-  const {
-    handleOpen: handleOpenSuccessfulMessageeModal,
-    handleClose: handleCloseSuccessfulMessageeModal,
-    modalProps: successfulMessage,
-  } = useModal();
+  const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -80,6 +76,8 @@ const Receipt = () => {
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
+  const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
+  const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);
@@ -102,11 +100,11 @@ const Receipt = () => {
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
-      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت') {
+      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت' && !shuoldShowRateAppModal) {
         handleOpenWaitingTimeModal();
       }
-      if (!isPWA() && isActiveTurn) {
-        handleOpenSuccessfulMessageeModal();
+      if (!isPWA() && isActiveTurn && shuoldShowRateAppModal) {
+        handleOpenRateAppModal();
       }
     }
   }, [getReceiptDetails.status]);
@@ -152,8 +150,6 @@ const Receipt = () => {
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
-
-  console.log(bookDetailsData?.center?.waiting_time);
 
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
@@ -381,12 +377,14 @@ const Receipt = () => {
             </Button>
           </div>
         </Modal>
-        <Modal title="نوبت با موفقیت ثبت شد" {...successfulMessage}>
+        <Modal title={rateAppModalInfo?.modal_title} {...rateAppModal}>
           <div className="flex flex-col space-y-3 items-center">
             <SuccessIcon className="text-green-600" />
-            <Text fontWeight="bold">نوبت شما با موفقیت ثبت شد</Text>
+            <Text fontWeight="bold" className="text-green-600">
+              {rateAppModalInfo?.title}
+            </Text>
             <Text className="text-center" fontSize="sm" fontWeight="medium">
-              با ثبت نظر خود از پذیرش 24 در {appDownloadSource} حمایت کنید!
+              {rateAppModalInfo?.description?.replace('{appDownloadSource}', appDownloadSource)}
             </Text>
             {bookDetailsData?.center?.waiting_time === 'بیشتر از یک ساعت' && (
               <Alert severity="warning" className="flex flex-col items-center gap-2 p-2">
@@ -399,10 +397,10 @@ const Receipt = () => {
               </Alert>
             )}
             <Button block onClick={() => location.assign((getRatingAppLink as string) ?? '#')}>
-              حمایت کردن
+              {rateAppModalInfo?.button_rate_app_text}
             </Button>
-            <Button variant="secondary" block onClick={handleCloseSuccessfulMessageeModal}>
-              مشاهده رسید نوبت
+            <Button variant="secondary" block onClick={handleCloseRateAppModal}>
+              {rateAppModalInfo?.button_show_receipt_text}
             </Button>
           </div>
         </Modal>
