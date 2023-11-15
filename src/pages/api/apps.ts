@@ -4,24 +4,29 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ message: 'Method Not Allowed' });
   const isDoctor = req.query.is_doctor === 'true';
+  let apps: any[] = [];
 
   try {
-    const installedApps = await axios.get(
-      `https://bazaar.paziresh24.com/wp-json/custom/v1/orders-by-phone/?phone=${req.query.phone_number}`,
-    );
+    try {
+      const installedApps = await axios.get(
+        `https://bazaar.paziresh24.com/wp-json/custom/v1/orders-by-phone/?phone=${req.query.phone_number}`,
+      );
+      apps = [
+        ...installedApps.data.map(
+          async (item: any) =>
+            await axios.get(item.app_link).catch(error => {
+              return {
+                data: {
+                  navigation_items: [],
+                },
+              };
+            }),
+        ),
+      ];
+    } catch (error) {
+      console.error('ERROR: /api/apps >>>>', error);
+    }
 
-    const apps = [
-      ...installedApps.data.map(
-        async (item: any) =>
-          await axios.get(item.app_link).catch(error => {
-            return {
-              data: {
-                navigation_items: [],
-              },
-            };
-          }),
-      ),
-    ];
     let defaultDoctorApps: any = [];
     if (isDoctor) {
       apps.push(await axios.get('https://dr.paziresh24.com/drapp-manifest.json'));
