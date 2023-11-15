@@ -107,9 +107,11 @@ const Receipt = () => {
     if (getReceiptDetails.isSuccess) {
       if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت' && !shuoldShowRateAppModal) {
         handleOpenWaitingTimeModal();
+        return;
       }
       if (isPWA() && isActiveTurn && shuoldShowRateAppModal) {
         handleOpenRateAppModal();
+        return;
       }
     }
   }, [getReceiptDetails.status]);
