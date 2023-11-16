@@ -1,6 +1,5 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
-import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 
 interface Params {
@@ -14,7 +13,6 @@ export const moveBook = (params: Params) => {
     '/api/moveBook',
     formData({
       ...params,
-      certificate: getCookie('certificate'),
     }),
   );
 };

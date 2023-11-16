@@ -1,7 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
-import { AxiosResponse } from 'axios';
-import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import { setTerminal } from '../auth/setTerminal';
 
 interface Params {
@@ -25,7 +24,6 @@ export const discountInquiry = (params: Params): Promise<AxiosResponse<Response>
   return clinicClient.get('/api/discount/v1/inquiry', {
     params: {
       ...params,
-      certificate: getCookie('certificate'),
     },
   });
 };

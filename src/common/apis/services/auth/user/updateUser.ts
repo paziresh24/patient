@@ -2,7 +2,6 @@ import { apiGatewayClient, clinicClient } from '@/common/apis/client';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import formData from '@/common/utils/formData';
 import { useMutation } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
 
 interface Params {
   user_id?: string;
@@ -20,7 +19,6 @@ export const updateUser = async ({ user_id, ...params }: Params) => {
   const data = await clinicClient.post(
     `/api/userUpdate`,
     formData({
-      certificate: getCookie('certificate'),
       ...params,
     }),
   );

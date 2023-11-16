@@ -1,6 +1,5 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
-import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
@@ -14,7 +13,6 @@ export const replyFeedback = ({ feedback_id, description, doctor_id, server_id }
   return clinicClient.post(
     `/api/replyFeedback/`,
     formData({
-      certificate: getCookie('certificate'),
       feedback_id: feedback_id,
       description: description,
       doctor_id: doctor_id,

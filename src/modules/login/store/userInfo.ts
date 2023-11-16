@@ -1,7 +1,7 @@
 import { clinicClient } from '@/common/apis/client';
 import { isPWA } from '@/common/utils/isPwa';
 import { firebaseCloudMessaging } from '@/firebase/fcm';
-import { getCookie, removeCookies } from 'cookies-next';
+import { removeCookies } from 'cookies-next';
 import config from 'next/config';
 import { create } from 'zustand';
 
@@ -46,7 +46,7 @@ export type UserInfo = {
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
-  isLogin: !!getCookie('certificate'),
+  isLogin: false,
   info: {},
   pending: true,
   turnsCount: {

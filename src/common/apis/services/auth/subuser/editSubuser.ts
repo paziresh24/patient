@@ -1,6 +1,5 @@
 import { clinicClient } from '@/common/apis/client';
 import formData from '@/common/utils/formData';
-import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 
 interface Params {
@@ -16,7 +15,6 @@ export const editSubuser = async (params: Params) => {
   return await clinicClient.post(
     `/api/updateSubUser`,
     formData({
-      certificate: getCookie('certificate'),
       ...params,
     }),
   );

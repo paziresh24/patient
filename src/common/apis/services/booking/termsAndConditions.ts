@@ -1,6 +1,5 @@
 import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
-import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
 
@@ -17,7 +16,6 @@ export const termsAndConditions = (params: Params) => {
     '/api/termsAndConditions',
     formData({
       ...params,
-      certificate: getCookie('certificate'),
     }),
   );
 };
