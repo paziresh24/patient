@@ -26,20 +26,15 @@ export const useLogin = () => {
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
-        setCookie('certificate', data.certificate, {
-          path: '/',
-          maxAge: dayToSecond(365),
-        });
-
         if (university)
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),
           });
 
-        const { data: imageData } = await getUser.mutateAsync();
         const userData = await getMe.mutateAsync();
         const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+        const { data: imageData } = await getUser.mutateAsync();
 
         if (window?.Android) window.Android.login(data.certificate);
 
