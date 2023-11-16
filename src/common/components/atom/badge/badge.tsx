@@ -2,7 +2,7 @@ import classNames from '@/common/utils/classNames';
 import Text from '../text/text';
 
 interface BadgeProps {
-  text: string;
+  text: string | React.ReactNode;
   icon?: React.ReactNode;
   fontSize?: 'base' | 'xs' | 'sm' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl';
   fontWeight?: 'bold' | 'thin' | 'extraLight' | 'light' | 'normal' | 'medium' | 'semiBold' | 'extraBold' | 'black';

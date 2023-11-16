@@ -29,9 +29,14 @@ export const Timer: React.FC<TimerProps> = props => {
   const [timer, setTimer] = useState('00:00:00');
 
   const startTimer = (deadline: Date) => {
-    let { total, minutes, seconds } = getTimeRemaining(deadline);
+    let { total, minutes, seconds, hours } = getTimeRemaining(deadline);
     if (total >= 0) {
-      setTimer((minutes > 9 ? minutes : '0' + minutes) + ':' + (seconds > 9 ? seconds : '0' + seconds));
+      setTimer(
+        (hours > 0 ? (hours > 9 ? hours : '0' + hours) + ':' : '') +
+          (minutes > 9 ? minutes : '0' + minutes) +
+          ':' +
+          (seconds > 9 ? seconds : '0' + seconds),
+      );
       return;
     }
     clearInterval(Ref.current);

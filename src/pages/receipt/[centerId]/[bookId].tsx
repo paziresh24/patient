@@ -2,11 +2,13 @@ import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptD
 import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
 import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
+import Chips from '@/common/components/atom/chips';
 import Divider from '@/common/components/atom/divider';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
+import Timer from '@/common/components/atom/timer';
 import ErrorIcon from '@/common/components/icons/error';
 import SuccessIcon from '@/common/components/icons/success';
 import TrashIcon from '@/common/components/icons/trash';
@@ -38,6 +40,7 @@ import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
+import moment from 'jalali-moment';
 import { shuffle } from 'lodash';
 import md5 from 'md5';
 import getConfig from 'next/config';
@@ -140,6 +143,17 @@ const Receipt = () => {
       });
     }
   }, [bookDetailsData]);
+
+  const duration = moment.duration(
+    moment(bookDetailsData.book_time * 1000)
+      .add(1, 'hour')
+      .diff(moment(serverTime?.data?.data?.data.timestamp * 1000)),
+  );
+
+  let minutes = Math.floor(duration.minutes());
+  let seconds = Math.floor(duration.seconds());
+
+  let formattedDuration = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   useEffect(() => {
     // Prefetch the doctor profile page
@@ -355,37 +369,63 @@ const Receipt = () => {
                   {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
                 </Button>
               )}
-              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <>
-                  <Divider />
-                  <div className="flex flex-col space-y-2">
-                    <Button
-                      size="sm"
-                      className="border-orange-300 text-orange-600 hover:bg-orange-50"
-                      block
-                      variant="secondary"
-                      onClick={handleOpenWaitingTimeFollowUpModal}
-                    >
-                      پیگیری تاخیر پزشک
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="border-slate-300 text-slate-500 hover:bg-slate-50"
-                      block
-                      variant="secondary"
-                      onClick={() =>
-                        location.assign(
-                          `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
-                            (pincode as string) ?? (user.id && md5(user.id))
-                          }`,
-                        )
-                      }
-                    >
-                      درخواست پشتیبانی این نوبت
-                    </Button>
-                  </div>
-                </>
-              )}
+
+              {!!bookDetailsData &&
+                !turnStatus.deletedTurn &&
+                possibilityBeingVisited &&
+                serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
+                  <>
+                    <Divider />
+                    <div className="flex relative  flex-col space-y-2">
+                      <Button
+                        size="sm"
+                        className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                        block
+                        variant="secondary"
+                        onClick={handleOpenWaitingTimeFollowUpModal}
+                        disabled={
+                          serverTime?.data?.data?.data.timestamp <
+                          moment(bookDetailsData.book_time * 1000)
+                            .add(1, 'hour')
+                            .unix()
+                        }
+                      >
+                        پیگیری تاخیر پزشک
+                        {serverTime?.data?.data?.data.timestamp <
+                          moment(bookDetailsData.book_time * 1000)
+                            .add(1, 'hour')
+                            .unix() && (
+                          <Chips>
+                            <Timer
+                              defaultTime={formattedDuration}
+                              target={
+                                moment(bookDetailsData.book_time * 1000)
+                                  .add(1, 'hour')
+                                  .unix() - serverTime?.data?.data?.data.timestamp
+                              }
+                              className="!text-slate-800 font-medium"
+                            />
+                          </Chips>
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="border-slate-300 text-slate-500 hover:bg-slate-50"
+                        block
+                        variant="secondary"
+                        onClick={() =>
+                          location.assign(
+                            `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
+                              (pincode as string) ?? (user.id && md5(user.id))
+                            }`,
+                          )
+                        }
+                      >
+                        درخواست پشتیبانی این نوبت
+                      </Button>
+                    </div>
+                  </>
+                )}
             </div>
           )}
         </div>
