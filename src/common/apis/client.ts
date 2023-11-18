@@ -46,6 +46,9 @@ export const workflowClient = axios.create({
 
 clinicClient.interceptors.request.use(
   config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
     config = {
       ...config,
       meta: {
