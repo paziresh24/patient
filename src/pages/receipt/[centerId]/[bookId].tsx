@@ -17,6 +17,7 @@ import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
@@ -57,6 +58,7 @@ const Receipt = () => {
   } = useRouter();
   const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
+  const customize = useCustomize(state => state.customize);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
@@ -112,7 +114,7 @@ const Receipt = () => {
         handleOpenWaitingTimeModal();
         return;
       }
-      if (isPWA() && isActiveTurn && shuoldShowRateAppModal) {
+      if (isPWA() && isActiveTurn && shuoldShowRateAppModal && customize.showPromoteApp) {
         handleOpenRateAppModal();
         return;
       }
