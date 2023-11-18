@@ -24,6 +24,7 @@ export const SelectUser = (props: SelectUserProps) => {
   const { onSelect, className, shouldShowMessengers } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const isUserPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { data, mutate, isSuccess, isLoading, isIdle } = useGetSubuser();
   const addSubUser = useAddSubuser();
@@ -31,7 +32,7 @@ export const SelectUser = (props: SelectUserProps) => {
   const [userSelected, setUserSelected] = useState(userInfo.id);
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!isLogin && !isUserPending) {
       setTimeout(
         () =>
           handleOpenLoginModal({
@@ -41,7 +42,7 @@ export const SelectUser = (props: SelectUserProps) => {
         0,
       );
     }
-    if (isLogin && userInfo) {
+    if (isLogin && userInfo && !isUserPending) {
       mutate();
       setUserSelected(userInfo.id);
       handleSelectUser(userInfo);
@@ -52,7 +53,7 @@ export const SelectUser = (props: SelectUserProps) => {
         state: false,
       });
     };
-  }, [isLogin, userInfo]);
+  }, [isLogin, userInfo, isUserPending]);
 
   const handleOpenAddSubuserModal = () => {
     addSubUser.reset();

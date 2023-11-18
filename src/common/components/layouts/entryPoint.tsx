@@ -27,7 +27,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   const handleUserLogin = async () => {
     try {
-      if (!getCookie('certificate') && shouldCheckCertificate && !customize.partnerKey) {
+      if (!getCookie('certificate') && shouldCheckCertificate && !customize.partnerKey && process.env.NODE_ENV !== 'development') {
         removeInfo();
         setPending(false);
         return;
