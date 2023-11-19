@@ -9,10 +9,10 @@ export const usePwa = () => {
 
   const appDownloadSource = () => {
     const stores: any = {
-      direct: 'کوگل پلی',
+      direct: 'گوگل پلی',
       bazaar: 'کافه بازار',
       myket: 'مایکت',
-      google_play: 'کوگل پلی',
+      google_play: 'گوگل پلی',
     };
     return stores[downloadSource ?? ''];
   };
