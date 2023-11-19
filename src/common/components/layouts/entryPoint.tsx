@@ -1,5 +1,6 @@
 import { useGetUser } from '@/common/apis/services/auth/getUser';
 import { useGetMe } from '@/common/apis/services/auth/me';
+import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -14,6 +15,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setPending = useUserInfoStore(state => state.setPending);
   const logout = useUserInfoStore(state => state.logout);
   const shouldCheckCertificate = useFeatureIsOn('login:certificate-check');
+  const customize = useCustomize(state => state.customize);
 
   const getUser = useGetUser();
   const getMe = useGetMe();
@@ -25,7 +27,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   const handleUserLogin = async () => {
     try {
-      if (!getCookie('certificate') && shouldCheckCertificate) {
+      if (!getCookie('certificate') && shouldCheckCertificate && !customize.partnerKey && process.env.NODE_ENV !== 'development') {
         removeInfo();
         setPending(false);
         return;
