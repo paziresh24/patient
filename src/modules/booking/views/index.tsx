@@ -213,6 +213,15 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (!reserveId) {
       const timeData = await getFirstFreeTime.getFirstFreeTime();
       if (!timeData.timeId) return toast.error(timeData?.message ?? 'خطا در دریافت نوبت خالی پزشک.');
+      sendFirstFreeTimeEvent({
+        data: {
+          full_date: timeData?.full_date,
+          status: 200,
+          message: timeData?.message,
+          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - center?.freeturn ?? null,
+        },
+        doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
+      });
       reserveId = timeData.timeId;
     }
 
@@ -237,6 +246,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               date: moment().format('jYYYY/jMM/jDD - HH:mm'),
               preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
+              ...data?.book_info,
             },
           });
           if (user.messengerType)
@@ -260,7 +270,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
             userInfo: user,
           });
-          router.replace(`/receipt/${center.id}/${data.book_info.id}`);
+          // router.replace(`/receipt/${center.id}/${data.book_info.id}`);
         },
         onExpire(data) {
           toast.error(data.message, {
