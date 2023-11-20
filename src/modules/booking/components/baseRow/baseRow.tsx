@@ -63,31 +63,33 @@ export const BaseRow = (props: BaseRowProps) => {
           <Accordion className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2" title={data.name ?? ''}>
             {
               <div className="flex flex-col gap-4">
-                {data.value?.map((item: Omit<Data, 'shouldShow'>) => (
-                  <div key={item.id}>
-                    {item.type === 'Text' && (
-                      <RowText
-                        title={item.name ?? ''}
-                        value={item.value}
-                        titleFontSize="sm"
-                        titleFontWeight="medium"
-                        valueFontSize="sm"
-                        valueFontWeight="medium"
-                      />
-                    )}
-                    {item.type === 'Button' && (
-                      <RowButton
-                        title={item.name ?? ''}
-                        value={item.value}
-                        buttonAction={item.buttonAction}
-                        titleFontSize="sm"
-                        titleFontWeight="medium"
-                        variant="secondary"
-                      />
-                    )}
-                    {item.type === 'Label' && <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.name ?? '' }} />}
-                  </div>
-                ))}
+                {data.value?.map((item: Omit<Data, 'shouldShow'>) =>
+                  item.value ? (
+                    <div key={item.id}>
+                      {item.type === 'Text' && (
+                        <RowText
+                          title={item.name ?? ''}
+                          value={item.value}
+                          titleFontSize="sm"
+                          titleFontWeight="medium"
+                          valueFontSize="sm"
+                          valueFontWeight="medium"
+                        />
+                      )}
+                      {item.type === 'Button' && (
+                        <RowButton
+                          title={item.name ?? ''}
+                          value={item.value}
+                          buttonAction={item.buttonAction}
+                          titleFontSize="sm"
+                          titleFontWeight="medium"
+                          variant="secondary"
+                        />
+                      )}
+                      {item.type === 'Label' && <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: item.name ?? '' }} />}
+                    </div>
+                  ) : null,
+                )}
               </div>
             }
           </Accordion>
