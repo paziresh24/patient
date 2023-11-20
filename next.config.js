@@ -46,7 +46,7 @@ const nextConfig = {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
   },
   publicRuntimeConfig: {
-    IS_PRODUCTION: isProduction,
+    IS_PRODUCTION: isProduction && !process.env?.IS_DEVELOPMENT,
     API_GATEWAY_BASE_URL: process.env.API_GATEWAY_BASE_URL,
     CLINIC_BASE_URL: process.env.CLINIC_BASE_URL,
     CONTENT_BASE_URL: process.env.CONTENT_BASE_URL,

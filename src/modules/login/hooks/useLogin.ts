@@ -7,7 +7,9 @@ import { dayToSecond } from '@/common/utils/dayToSecond';
 import { useProviders } from '@/modules/profile/apis/providers';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
+import getConfig from 'next/config';
 import { useUserInfoStore } from '../store/userInfo';
+const { publicRuntimeConfig } = getConfig();
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
@@ -26,7 +28,7 @@ export const useLogin = () => {
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
-        if (university)
+        if (university || !publicRuntimeConfig.IS_PRODUCTION)
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),

@@ -6,8 +6,11 @@ import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
+import getConfig from 'next/config';
 import { ReactElement, useEffect } from 'react';
 import { growthbook } from 'src/pages/_app';
+
+const { publicRuntimeConfig } = getConfig();
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
@@ -27,7 +30,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   const handleUserLogin = async () => {
     try {
-      if (!getCookie('certificate') && shouldCheckCertificate && !customize.partnerKey && process.env.NODE_ENV !== 'development') {
+      if (!getCookie('certificate') && shouldCheckCertificate && !customize.partnerKey && !publicRuntimeConfig.IS_PRODUCTION) {
         removeInfo();
         setPending(false);
         return;
