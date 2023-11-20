@@ -40,23 +40,21 @@ localSelf.addEventListener('notificationclick', function (event) {
 });
 
 localSelf.addEventListener('push', event => {
-  let response = event.data && event.data.text();
-  let title = JSON.parse(response).notification.title;
-  let body = JSON.parse(response).notification.body;
-  let actions = JSON.parse(response).data.actions;
-  if (!actions) {
-    actions = '[]';
+  let response = event.data && event.data.json();
+  let title = response.notification.title;
+  let body = response.notification.body;
+  let actions = null;
+  let icon = null;
+  let url = null;
+  let image = null;
+  if (response.data) {
+    actions = response.data.actions ? response.data.actions : [];
+    icon = response.data.icon ? response.data.icon : 'https://www.paziresh24.com/img/pz24-icon.png';
+    url = response.data.url ? response.data.url : 'https://www.paziresh24.com/apphome';
+    image = response.data.image ? response.data.image : response.data.image;
   }
-  let icon = JSON.parse(response).data.icon;
-  if (!icon) {
-    icon = 'https://www.paziresh24.com/img/pz24-icon.png';
-  }
-  let image = JSON.parse(response).notification.image;
-  let url = JSON.parse(response).data.deeplink;
-  if (!url) {
-    url = JSON.parse(response).data.url;
-  }
-  let messageId = JSON.parse(response).fcmMessageId;
+
+  let messageId = response.fcmMessageId;
 
   const notificationOptions = {
     body: body,
@@ -64,9 +62,9 @@ localSelf.addEventListener('push', event => {
     icon: icon,
     image: image,
     vibrate: [200, 100, 200, 100, 200, 100, 200],
-    actions: JSON.parse(actions),
+    actions: actions,
     data: {
-      url: url ? url : 'https://www.paziresh24.com/apphome',
+      url: url,
       messageId: messageId,
     },
   };
