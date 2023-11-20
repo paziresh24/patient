@@ -7,6 +7,7 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
+import { Novu } from '@novu/node';
 import { init as matomoInit } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
@@ -48,6 +49,8 @@ export const growthbook = new GrowthBook({
     });
   },
 });
+
+export const novu = new Novu(publicRuntimeConfig.NOVU_API_KEY);
 
 function updateGrowthBookURL() {
   growthbook.setURL(window.location.href);

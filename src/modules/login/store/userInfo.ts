@@ -1,5 +1,4 @@
 import { clinicClient } from '@/common/apis/client';
-import { isPWA } from '@/common/utils/isPwa';
 import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { removeCookies } from 'cookies-next';
 import config from 'next/config';
@@ -53,9 +52,14 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     presence: 0,
   },
   setUserInfo: info => {
-    if (isPWA()) {
-      firebaseCloudMessaging.init(info.id ?? '');
-    }
+    firebaseCloudMessaging.init({
+      id: info.id,
+      firstName: info.name,
+      lastName: info.family,
+      phone: info.cell,
+      avatar: info.image,
+      isDoctor: info.provider?.job_title === 'doctor',
+    });
     set(() => ({
       info: {
         ...info,

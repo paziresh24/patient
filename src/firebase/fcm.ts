@@ -1,17 +1,41 @@
-import { isPWA } from '@/common/utils/isPwa';
-import axios from 'axios';
+import { PushProviderIdEnum } from '@novu/node';
 import { getApps } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 import getConfig from 'next/config';
+import { novu } from 'src/pages/_app';
 import app from './config';
 const { publicRuntimeConfig } = getConfig();
 
 const firebaseCloudMessaging = {
-  init: async (id: string) => {
+  init: async ({
+    id,
+    firstName,
+    lastName,
+    phone,
+    avatar,
+    isDoctor,
+  }: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    avatar: string;
+    isDoctor?: boolean;
+  }) => {
     if (getApps().length) {
       try {
         const messaging = getMessaging(app);
         const status = await Notification.requestPermission();
+        await novu.subscribers.identify(id.toString(), {
+          firstName,
+          lastName,
+          phone,
+          avatar,
+          data: {
+            isDoctor,
+          },
+        });
+
         if (status && status === 'granted') {
           const currentToken = await getToken(messaging, {
             vapidKey: 'BLDC9m-xU9lW32bJyeCVCBPIDVpA3OD0T_V_bqe_uy0UuOO1r8HwuzhAX0qbXOhwxVduP_oiVkgfLmw9WlJnRaQ',
@@ -19,11 +43,8 @@ const firebaseCloudMessaging = {
           if (currentToken) {
             if (localStorage.getItem('fcm_token') !== currentToken) {
               localStorage.setItem('fcm_token', currentToken);
-              await axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
-                user_id: id,
-                client_id: currentToken,
-                user_agent: window.navigator.userAgent,
-                terminal: isPWA() ? 'app' : 'web',
+              novu.subscribers.setCredentials(id.toString(), PushProviderIdEnum.FCM, {
+                deviceTokens: [currentToken],
               });
             }
             return currentToken;
