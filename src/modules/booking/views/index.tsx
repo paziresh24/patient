@@ -270,7 +270,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             doctorInfo: reformattedDoctorInfoForEvent({ center, service, doctor: profile }),
             userInfo: user,
           });
-          // router.replace(`/receipt/${center.id}/${data.book_info.id}`);
+          router.replace(`/receipt/${center.id}/${data.book_info.id}`);
         },
         onExpire(data) {
           toast.error(data.message, {
