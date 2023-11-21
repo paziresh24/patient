@@ -258,8 +258,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       links,
     }).catch(error => console.error(error));
 
-    let feedbackDataWithoutPagination;
-
     let dontShowRateAndReviewMessage = '';
     try {
       let feedbackData;
@@ -294,24 +292,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       }
       feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
-
-      if (!isCSR)
-        feedbackDataWithoutPagination = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Feedbacks,
-            {
-              doctor_id: id,
-              server_id: server_id,
-              no_page_limit: true,
-            },
-          ],
-          () =>
-            getFeedbacks({
-              doctor_id: id,
-              server_id: server_id,
-              no_page_limit: true,
-            }),
-        );
     } catch (error) {
       console.error(error);
     }
@@ -345,7 +325,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
-        feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
       },
     };
   } catch (error) {

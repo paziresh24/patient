@@ -19,6 +19,7 @@ import NextNProgress from 'nextjs-progressbar';
 import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
+import '../styles/nprogress.css';
 
 const iransansFont = localFont({
   src: '../fonts/IRANSansXV.woff2',
@@ -106,11 +107,11 @@ function MyApp(props: AppProps) {
               --font-iran-sans: ${iransansFont.style.fontFamily};
             }
           `}</style>
-          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} />
+          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
           <Head>
             <meta
               name="viewport"
-              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
             />
           </Head>
           <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>

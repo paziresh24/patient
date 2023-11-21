@@ -49,7 +49,7 @@ export const Head = (props: HeadProps) => {
   } = props;
 
   return (
-    <div className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
+    <section className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
         <div className="flex justify-between">
           {toolBarItems && <ToolBar items={toolBarItems} />}
@@ -102,7 +102,7 @@ export const Head = (props: HeadProps) => {
         </div>
       )}
       {children}
-    </div>
+    </section>
   );
 };
 
