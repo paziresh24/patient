@@ -11,6 +11,7 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import moment from 'jalali-moment';
+import { isEmpty } from 'lodash';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
@@ -173,7 +174,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 : '',
             }),
           };
-
           profileData.history = {
             ...(shouldUseCreatedAt && {
               insert_at_age: formatDurationInMonths(providerData.value?.created_at),
@@ -220,8 +220,29 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
             if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
-                waiting_time_info: averageWaitingTimeData?.value?.result,
+                waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
               };
+            }
+            if (
+              isEmpty(
+                profileData.feedbacks?.waiting_time_info_online_visit?.find?.((item: any) => item?.center_id === '5532')
+                  ?.waiting_time_title,
+              )
+            ) {
+              const parallelRequests = [
+                await getAverageWaitingTime({
+                  slug: slugFormmated,
+                  limit: '30',
+                }),
+              ];
+              const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
+
+              if (averageWaitingTimeData.status === 'fulfilled') {
+                console.log(averageWaitingTimeData);
+                profileData.feedbacks = {
+                  waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
+                };
+              }
             }
           }
         }
