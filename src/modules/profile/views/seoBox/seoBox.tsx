@@ -20,8 +20,10 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
   const { about, breadcrumbs, similarLinks } = props;
   return (
     <div className="flex pwa:hidden flex-col space-y-3">
-      {similarLinks && (
-        <div className="p-4 transition-all bg-white md:rounded-lg">
+      {breadcrumbs && <Breadcrumbs className="px-4 md:px-0" items={breadcrumbs} />}
+      <div className="p-4 space-y-3 transition-all bg-white md:rounded-lg">
+        {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
+        {similarLinks && (
           <Opener openButtonText="مشاهده بیشتر" closeButtonText="مشاهده کمتر">
             <MenuList className="flex !flex-row flex-wrap gap-x-14">
               {similarLinks.map(({ name, url }) => (
@@ -31,14 +33,8 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
               ))}
             </MenuList>
           </Opener>
-        </div>
-      )}
-      {breadcrumbs && <Breadcrumbs className="px-4 md:px-0" items={breadcrumbs} />}
-      {about && (
-        <div className="p-4 bg-white md:rounded-lg">
-          <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

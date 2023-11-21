@@ -253,29 +253,63 @@ const DoctorProfile = ({
               </div>
             )}
           </Head>
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
-            <div onClick={() => scrollIntoViewWithOffset('#services_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                دریافت نوبت
-              </Text>
-            </div>
-            {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
-              <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-                <Text fontSize="sm" fontWeight="medium">
-                  آدرس و تلفن
-                </Text>
-              </div>
-            )}
-            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                درباره پزشک
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                نظرات
-              </Text>
-            </div>
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
+            <ul className="flex justify-around">
+              <li>
+                <a
+                  href="#book-me"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#book-me', 90);
+                  }}
+                  title="دریافت نوبت"
+                  className="text-sm font-medium"
+                >
+                  دریافت نوبت
+                </a>
+              </li>
+              {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+                <li>
+                  <a
+                    href="#phone-and-address"
+                    onClick={e => {
+                      e.preventDefault();
+                      scrollIntoViewWithOffset('#phone-and-address', 90);
+                    }}
+                    title="آدرس و تلفن"
+                    className="text-sm font-medium"
+                  >
+                    آدرس و تلفن
+                  </a>
+                </li>
+              )}
+              <li>
+                <a
+                  href="#about-me"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#about-me', 90);
+                  }}
+                  title="درباره من"
+                  className="text-sm font-medium"
+                >
+                  درباره من
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#reviews"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#reviews', 90);
+                  }}
+                  title="نظرات"
+                  className="text-sm font-medium"
+                >
+                  نظرات
+                </a>
+              </li>
+            </ul>
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
