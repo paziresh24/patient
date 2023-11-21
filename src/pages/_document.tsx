@@ -22,8 +22,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
-        <meta name="content-language" content="fa" />
-        <meta name="Language" content="fa" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-tap-highlight" content="no" />
