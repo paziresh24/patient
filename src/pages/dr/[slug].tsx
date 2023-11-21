@@ -357,20 +357,21 @@ const DoctorProfile = ({
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers, information, feedbacks, feedbackDataWithoutPagination, host } = page.props;
+  const { title, description, slug, expertises, centers, information, feedbacks, host } = page.props;
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
   const getJsonlds = () => {
-    const center = centers.find((cn: any) => cn.id !== '5532');
-    const date = new Date();
+    const center = centers.find((cn: any) => cn.id !== CENTERS.CONSULT);
+    const visitOnlineCenter = centers.find((cn: any) => cn.id === CENTERS.CONSULT);
+    const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
     return [
       {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
-        'priceRange': '$$',
+        'priceRange': visitOnlinePrice > 0 ? visitOnlinePrice.toString() : '$$',
         'name': information.display_name,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
@@ -389,31 +390,12 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        ...(feedbackDataWithoutPagination.length > 0 && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'bestRating': 5,
-            'worstRating': 0,
-            'ratingValue': feedbacks.details.avg_star,
-            'ratingCount': feedbacks.details.number_of_feedbacks,
-          },
-        }),
-        'review':
-          feedbackDataWithoutPagination?.map((item: any) => ({
-            '@type': 'Review',
-            'author': {
-              '@type': 'Person',
-              'name': item.user_name,
-            },
-            'description': item.description,
-            'reviewRating': {
-              '@type': 'Rating',
-              'bestRating': 5,
-              'worstRating': 0,
-              'datePublished': `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`,
-              'ratingValue': item.avg_star === '0.0' || item.avg_star === 0.0 ? '0.5' : item.avg_star,
-            },
-          })) ?? [],
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'bestRating': 5,
+          'ratingCount': feedbacks.details.number_of_feedbacks,
+          'ratingValue': feedbacks.details.avg_star,
+        },
       },
       {
         '@context': 'http://www.schema.org',
