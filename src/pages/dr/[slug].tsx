@@ -198,11 +198,11 @@ const DoctorProfile = ({
 
   return (
     <>
-      <div
+      <main
         key={information.id}
         className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24"
       >
-        <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+        <section className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
             <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
               <InfoIcon className="min-w-6" />
@@ -337,7 +337,7 @@ const DoctorProfile = ({
                 {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
               </Section>
             ))}
-        </div>
+        </section>
 
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
           {aside(profileData)
@@ -348,7 +348,7 @@ const DoctorProfile = ({
               </Section>
             ))}
         </aside>
-      </div>
+      </main>
       <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
         <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
       </Modal>

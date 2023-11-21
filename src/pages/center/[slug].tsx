@@ -236,8 +236,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         }}
         host={host}
       />
-      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
-        <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+      <main className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+        <section className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
             pageViewCount={profileData?.number_of_visits}
             displayName={profileData?.name}
@@ -356,8 +356,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             </section>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
-        </div>
-        <div className="sticky flex-col hidden w-full space-y-3 top-5 md:flex md:basis-5/12">
+        </section>
+        <aside className="sticky flex-col hidden w-full space-y-3 top-5 md:flex md:basis-5/12">
           <Text fontWeight="bold" className="px-4 md:px-0">
             آدرس و تلفن تماس
           </Text>
@@ -375,8 +375,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
               },
             ]}
           />
-        </div>
-      </div>
+        </aside>
+      </main>
     </>
   );
 };

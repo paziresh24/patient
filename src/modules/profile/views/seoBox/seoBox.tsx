@@ -19,7 +19,7 @@ interface ProfileSeoBoxProps {
 export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
   const { about, breadcrumbs, similarLinks } = props;
   return (
-    <div className="flex pwa:hidden flex-col space-y-3">
+    <section className="flex pwa:hidden flex-col space-y-3">
       {breadcrumbs && <Breadcrumbs className="px-4 md:px-0" items={breadcrumbs} />}
       <div className="p-4 space-y-3 transition-all bg-white md:rounded-lg">
         {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
@@ -35,7 +35,7 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
           </Opener>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
