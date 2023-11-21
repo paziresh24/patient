@@ -64,8 +64,8 @@ export const sections = ({
     },
     // About
     {
-      title: 'درباره پزشک',
-      id: 'about_section',
+      title: 'درباره من',
+      id: 'about-me',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
       isShow: information.biography,
       isShowFallback: !information.biography && editable,
@@ -117,7 +117,7 @@ export const sections = ({
     },
     // Activity
     {
-      title: `فعالیت ها ${information.display_name}`,
+      title: `فعالیت ها`,
       isShow: customize.showActivityProfile,
       function: () => {
         return {
@@ -137,7 +137,7 @@ export const sections = ({
     },
     // Reviews
     {
-      id: 'reviews_section',
+      id: 'reviews',
       title: `نظرات در مورد ${information.display_name}`,
       isShow: customize.showRateAndReviews,
       function: () => {

@@ -253,28 +253,52 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             ]}
             className="shadow-card md:rounded-lg"
           />
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
-            <div onClick={() => scrollIntoViewWithOffset('#doctors-list_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
+            <ul className="flex justify-around">
+              <a
+                href="#doctors-list"
+                onClick={e => {
+                  e.preventDefault();
+                  scrollIntoViewWithOffset('#doctors-list', 90);
+                }}
+                title="لیست پرشکان"
+                className="text-sm font-medium"
+              >
                 لیست پزشکان
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                آدرس و تلفن
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                درباره مرکز
-              </Text>
-            </div>
+              </a>
+              <li>
+                <a
+                  href="#phone-and-address"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#phone-and-address', 90);
+                  }}
+                  title="آدرس و تلفن"
+                  className="text-sm font-medium"
+                >
+                  آدرس و تلفن
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#about"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#about', 90);
+                  }}
+                  title="درباره مرکز"
+                  className="text-sm font-medium"
+                >
+                  درباره مرکز
+                </a>
+              </li>
+            </ul>
           </nav>
-          <div id="doctors-list_section" className="flex flex-col w-full space-y-3">
+          <section id="doctors-list" className="flex flex-col w-full space-y-3">
             <Text fontWeight="bold" className="px-4 md:px-0">
               لیست پزشکان
             </Text>
-            <div id="doctors-list_section" className="px-4 md:p-0">
+            <div className="px-4 md:p-0">
               <ListOfDoctors
                 doctors={flatten(doctors?.pages?.map(page => page?.search?.result as any[]) ?? []) ?? []}
                 expertises={
@@ -303,8 +327,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                 defaultValue={defaultExpertise}
               />
             </div>
-          </div>
-          <div id="center-info_section" className="flex flex-col w-full space-y-3 md:hidden">
+          </section>
+          <section id="phone-and-address" className="flex flex-col w-full space-y-3 md:hidden">
             <Text fontWeight="bold" className="px-4 md:px-0">
               آدرس و تلفن تماس
             </Text>
@@ -322,14 +346,14 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                 },
               ]}
             />
-          </div>
+          </section>
           {profileData.biography && (
-            <div id="about_section" className="flex flex-col w-full space-y-3">
+            <section id="about" className="flex flex-col w-full space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره مرکز درمانی
               </Text>
               <Biography content={profileData.biography} className="bg-white md:rounded-lg" />
-            </div>
+            </section>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
         </div>
