@@ -13,6 +13,7 @@ import axios from 'axios';
 import moment from 'jalali-moment';
 import { isEmpty } from 'lodash';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { deletedBooksRate } from '../apis/deletedBooksRate';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
@@ -88,6 +89,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
     let shouldUsePageView: boolean = false;
+    let shouldShowDeletedBooksRate: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -139,6 +141,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
       shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
+
+      // Deleted Books Rate Api
+      const showDeletedBooksRateDoctorList = growthbook.getFeatureValue('profile:show-deleted-books-rate|doctor-list', { slugs: [''] });
+      shouldShowDeletedBooksRate = newApiFeatureFlaggingCondition(showDeletedBooksRateDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -248,6 +254,19 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         }
       } catch (error) {
         console.error(error);
+      }
+    }
+
+    if (shouldShowDeletedBooksRate) {
+      const visitOnlineData = fullProfileData.centers?.find((center: { id: string }) => center.id === CENTERS.CONSULT);
+
+      if (visitOnlineData) {
+        try {
+          const { data } = await deletedBooksRate({ user_center_id: visitOnlineData.user_center_id });
+          profileData.history.deleted_books_rate = data?.rate_of_deleted_book ?? null;
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
 

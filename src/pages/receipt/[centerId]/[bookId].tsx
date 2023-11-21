@@ -506,16 +506,6 @@ const Receipt = () => {
             <Text className="text-center" fontSize="sm" fontWeight="medium">
               {rateAppModalInfo?.description?.replace('{appDownloadSource}', appDownloadSource)}
             </Text>
-            {bookDetailsData?.center?.waiting_time === 'بیشتر از یک ساعت' && (
-              <Alert severity="warning" className="flex flex-col items-center gap-2 p-2">
-                <Text fontWeight="bold" fontSize="sm">
-                  احتمال معطلی بیش از یک ساعت!
-                </Text>
-                <Text fontWeight="medium" fontSize="sm" className="text-center">
-                  با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.
-                </Text>
-              </Alert>
-            )}
             <Button block onClick={handleRedirectToStore}>
               {rateAppModalInfo?.button_rate_app_text}
             </Button>

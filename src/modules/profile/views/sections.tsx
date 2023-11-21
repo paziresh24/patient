@@ -1,6 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
+import SuccessIcon from '@/common/components/icons/success';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 
@@ -125,6 +126,11 @@ export const sections = ({
             history.count_of_consult_books && {
               icon: <ChatIcon className="min-w-fit w-max" />,
               text: `<b>${history.count_of_consult_books}</b> مشاوره فعال`,
+            },
+            history.deleted_books_rate && {
+              icon: <SuccessIcon className="min-w-fit w-6 h-6" />,
+              text: `<b>${history.deleted_books_rate}</b> مشاوره موفق`,
+              hint: 'مشاوره هایی که بعد از زمان نوبت حذف نشدند.',
             },
             {
               icon: <AwardIcon className="min-w-fit w-max" />,
