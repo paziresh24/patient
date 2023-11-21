@@ -41,6 +41,7 @@ export const SearchBar = (props: SearchBarProps) => {
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
         onKeyPress={e => e.key === 'Enter' && onEnter && onEnter(e.currentTarget?.value)}
+        id="suggestion-search-input"
         {...rest}
       />
       {customize.showSelectCityInSuggestion && (
