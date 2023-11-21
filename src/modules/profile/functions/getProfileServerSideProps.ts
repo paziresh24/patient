@@ -11,7 +11,7 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import moment from 'jalali-moment';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { deletedBooksRate } from '../apis/deletedBooksRate';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
