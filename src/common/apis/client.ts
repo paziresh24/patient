@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
+import { isPWA } from '../utils/isPwa';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -75,6 +76,9 @@ apiGatewayClient.interceptors.request.use(
   config => {
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    if (isPWA()) {
+      (config as any).headers['isApplication'] = true;
     }
     return config;
   },

@@ -4,8 +4,6 @@ import * as Sentry from '@sentry/nextjs';
 type GetAverageWaitingTimeParams = { slug: string; start_date?: string; end_date?: string; limit?: string };
 
 export const getAverageWaitingTime = async ({ slug, end_date, start_date, limit }: GetAverageWaitingTimeParams) => {
-  console.log(limit, start_date, slug);
-
   const { data: response } = await averageWaitingTime({ slug, end_date, start_date, limit });
 
   if (!response) {

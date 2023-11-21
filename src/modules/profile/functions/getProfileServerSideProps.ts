@@ -244,7 +244,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
 
               if (averageWaitingTimeData.status === 'fulfilled') {
-                console.log(averageWaitingTimeData);
                 profileData.feedbacks = {
                   waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
                 };

@@ -97,7 +97,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     enabled: source.consult_active_booking,
     channels: source.online_visit_channel_types,
   };
-  console.log(overwriteData);
 
   const waitingTimeInfo = flatten(
     [overwriteData?.feedbacks?.waiting_time_info_online_visit, source.waiting_time_info].filter((items: any) => !!items),
