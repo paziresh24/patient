@@ -22,7 +22,6 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import InfoIcon from '@/common/components/icons/info';
 import InputMask from 'react-input-mask';
-import Recommend from '../components/recommend';
 import SelectSymptoms from '../components/selectSymptoms';
 
 // Booking Steps
@@ -52,15 +51,18 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { useInquiryIdentityInformation } from '@/common/apis/services/booking/inquiryIdentityInformation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import Alert from '@/common/components/atom/alert';
 import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkSearchInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import axios from 'axios';
 import moment from 'jalali-moment';
+import OnlineVisitRecommend from '../components/onlineVisitRecommend';
 import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
@@ -158,6 +160,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
   const inquiryIdentityInformation = useInquiryIdentityInformation();
   const unsuspend = useUnsuspend();
+  const { changeRoute } = useSearchRouting();
   const getFirstFreeTime = useFirstFreeTime({
     enabled: false,
     centerId: center?.id,
@@ -379,6 +382,24 @@ const BookingSteps = (props: BookingStepsProps) => {
 
     insurances.push({ label: 'آزاد', value: -1 });
     return insurances;
+  };
+
+  const handleClickMoreDoctors = () => {
+    splunkSearchInstance().sendEvent({
+      group: 'booking-freeturn-error',
+      type: 'booking-freeturn-error-click-doctor-card',
+    });
+
+    changeRoute({
+      query: {
+        turn_type: 'consult',
+      },
+      params: {
+        city: 'ir',
+        category: profile.expertises[0]?.expertise_groups[0].en_slug,
+      },
+      previousQueries: false,
+    });
   };
 
   const handleShowErrorModal = ({
@@ -768,25 +789,46 @@ const BookingSteps = (props: BookingStepsProps) => {
         className="bg-slate-100"
       >
         <div className="flex flex-col space-y-5">
-          <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
-            {firstFreeTimeErrorText}
-          </Text>
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
-              <Text fontSize="sm" className="leading-6">
-                برترین پزشکان{' '}
-                <Text fontWeight="bold">
-                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
-                </Text>{' '}
-                از دیدگاه بیماران
-              </Text>
               {profile && (
-                <Recommend
-                  doctorId={profile.id}
-                  city={profile.city_en_slug}
-                  category={profile.expertises[0]?.expertise_groups[0].en_slug}
-                  centerId={center?.id}
-                />
+                <div className="flex flex-col gap-2">
+                  <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+                    <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {profile.display_name} تعریف نشده است.</Text>
+                  </Alert>
+                  <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+                    بدون خروج از منزل، آنلاین ویزیت شوید.
+                  </Alert>
+                  <OnlineVisitRecommend
+                    route={`ir/${profile.expertises[0]?.expertise_groups[0].en_slug}`}
+                    turn_type="consult"
+                    classnames="shadow-none !py-4 lg:!py-4 cursor-pointer"
+                    avatarSize="lg"
+                    type="doctor"
+                    details={{
+                      badges: [
+                        {
+                          title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+                          icon: 'shield-icon',
+                          type: 'error',
+                        },
+                      ],
+                    }}
+                    event={{
+                      group: 'booking-freeturn-error',
+                      type: 'booking-freeturn-error-click-doctor-card',
+                      data: {
+                        doctor_name: profile?.display_name,
+                        doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
+                        center_id: center?.id,
+                        service_id: service?.id,
+                      },
+                    }}
+                  />
+                  <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
+                    مشاهده سایر پزشکان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                  </Button>
+                </div>
               )}
             </div>
           )}
