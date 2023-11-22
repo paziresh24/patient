@@ -23,7 +23,7 @@ export type OverwriteProfileData = {
     deleted_books_rate?: string;
   };
   feedbacks: {
-    waiting_time_info?: any;
+    waiting_time_info_online_visit?: any;
   };
 };
 
@@ -98,7 +98,9 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     channels: source.online_visit_channel_types,
   };
 
-  const waitingTimeInfo = flatten([overwriteData?.feedbacks?.waiting_time_info, source.waiting_time_info].filter((items: any) => !!items));
+  const waitingTimeInfo = flatten(
+    [overwriteData?.feedbacks?.waiting_time_info_online_visit, source.waiting_time_info].filter((items: any) => !!items),
+  );
 
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };
