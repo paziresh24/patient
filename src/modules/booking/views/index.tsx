@@ -794,7 +794,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               {profile && (
                 <div className="flex flex-col gap-2">
                   <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-                    <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {profile.display_name} تعریف نشده است.</Text>
+                    <Text className="text-sm font-medium"> {firstFreeTimeErrorText}</Text>
                   </Alert>
                   <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
                     بدون خروج از منزل، آنلاین ویزیت شوید.
