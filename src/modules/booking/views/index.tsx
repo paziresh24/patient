@@ -22,6 +22,7 @@ import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import InfoIcon from '@/common/components/icons/info';
 import InputMask from 'react-input-mask';
+import Recommend from '../components/recommend';
 import SelectSymptoms from '../components/selectSymptoms';
 
 // Booking Steps
@@ -135,6 +136,12 @@ const BookingSteps = (props: BookingStepsProps) => {
   const shouldUseInquiryIdentityInformation = useFeatureValue<{ ids: string[] }>('booking:inquiry-identity-information|center-list', {
     ids: [],
   });
+
+  const onlineVisitDoctorList = useFeatureValue<{ slugs: string[] }>('booking:online-visit-recommend-modal', {
+    slugs: [],
+  });
+  const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile.slug);
+
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
 
@@ -789,46 +796,71 @@ const BookingSteps = (props: BookingStepsProps) => {
         className="bg-slate-100"
       >
         <div className="flex flex-col space-y-5">
+          {!shouldShowOnlineVistRecommendModal && (
+            <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
+              {firstFreeTimeErrorText}
+            </Text>
+          )}
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
+              {!shouldShowOnlineVistRecommendModal && (
+                <Text fontSize="sm" className="leading-6">
+                  برترین پزشکان{' '}
+                  <Text fontWeight="bold">
+                    {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
+                  </Text>{' '}
+                  از دیدگاه بیماران
+                </Text>
+              )}
               {profile && (
-                <div className="flex flex-col gap-2">
-                  <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-                    <Text className="text-sm font-medium"> {firstFreeTimeErrorText}</Text>
-                  </Alert>
-                  <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
-                    بدون خروج از منزل، آنلاین ویزیت شوید.
-                  </Alert>
-                  <OnlineVisitRecommend
-                    route={`ir/${profile.expertises[0]?.expertise_groups[0].en_slug}`}
-                    turn_type="consult"
-                    classnames="shadow-none !py-4 lg:!py-4 cursor-pointer"
-                    avatarSize="lg"
-                    type="doctor"
-                    details={{
-                      badges: [
-                        {
-                          title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                          icon: 'shield-icon',
-                          type: 'error',
-                        },
-                      ],
-                    }}
-                    event={{
-                      group: 'booking-freeturn-error',
-                      type: 'booking-freeturn-error-click-doctor-card',
-                      data: {
-                        doctor_name: profile?.display_name,
-                        doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
-                        center_id: center?.id,
-                        service_id: service?.id,
-                      },
-                    }}
-                  />
-                  <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-                    مشاهده سایر پزشکان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
-                  </Button>
-                </div>
+                <>
+                  {shouldShowOnlineVistRecommendModal ? (
+                    <div className="flex flex-col gap-2">
+                      <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+                        <Text className="text-sm font-medium"> {firstFreeTimeErrorText}</Text>
+                      </Alert>
+                      <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+                        بدون خروج از منزل، آنلاین ویزیت شوید.
+                      </Alert>
+                      <OnlineVisitRecommend
+                        route={`ir/${profile.expertises[0]?.expertise_groups[0].en_slug}`}
+                        turn_type="consult"
+                        classnames="shadow-none !py-4 lg:!py-4 cursor-pointer"
+                        avatarSize="lg"
+                        type="doctor"
+                        details={{
+                          badges: [
+                            {
+                              title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+                              icon: 'shield-icon',
+                              type: 'error',
+                            },
+                          ],
+                        }}
+                        event={{
+                          group: 'booking-freeturn-error',
+                          type: 'booking-freeturn-error-click-doctor-card',
+                          data: {
+                            doctor_name: profile?.display_name,
+                            doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
+                            center_id: center?.id,
+                            service_id: service?.id,
+                          },
+                        }}
+                      />
+                      <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
+                        مشاهده سایر پزشکان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Recommend
+                      doctorId={profile.id}
+                      city={profile.city_en_slug}
+                      category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                      centerId={center?.id}
+                    />
+                  )}
+                </>
               )}
             </div>
           )}
