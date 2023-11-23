@@ -129,8 +129,8 @@ export const sections = ({
             },
             history.deleted_books_rate && {
               icon: <SuccessIcon className="min-w-fit w-6 h-6" />,
-              text: `<b>${history.deleted_books_rate}</b> مشاوره موفق`,
-              hint: 'مشاوره هایی که بعد از زمان نوبت حذف نشدند.',
+              text: `<b>${history.deleted_books_rate}</b> ویزیت آنلاین موفق`,
+              hint: 'این شاخص براساس تعداد ویزیت آنلاینی که پس از زمان نوبت با موفقیت انجام شده‌اند و حذف نشده‌اند محاسبه می‌شود.',
             },
             {
               icon: <AwardIcon className="min-w-fit w-max" />,
