@@ -263,8 +263,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 Object.values(reviewData.value)?.map?.((feedback: any) => ({
                   description: feedback?.cooked ?? '',
                   id: feedback?.id,
-                  doctor_id: '38c7a67a-2046-11ec-8a2e-005056ade667',
-                  server_id: '1',
+                  doctor_id: fullProfileData?.id ?? '',
+                  server_id: fullProfileData?.server_id ?? '',
                   user_id: feedback?.user_id,
                   recommended: 0,
                   created_at: feedback?.created_at,
@@ -307,20 +307,22 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let dontShowRateAndReviewMessage = '';
     try {
       let feedbackData;
-      feedbackData = await queryClient.fetchQuery(
-        [
-          ServerStateKeysEnum.Feedbacks,
-          {
-            doctor_id: id,
-            server_id: server_id,
-          },
-        ],
-        () =>
-          getFeedbacks({
-            doctor_id: id,
-            server_id: server_id,
-          }),
-      );
+      if (!shouldUseFeedback) {
+        feedbackData = await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Feedbacks,
+            {
+              doctor_id: id,
+              server_id: server_id,
+            },
+          ],
+          () =>
+            getFeedbacks({
+              doctor_id: id,
+              server_id: server_id,
+            }),
+        );
+      }
 
       feedbacks.feedbacks = shouldUseFeedback ? profileData.feedbacks.reviews : feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
