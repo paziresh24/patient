@@ -12,7 +12,10 @@ export const SearchSeoBox = () => {
 
   return (
     <>
-      <Breadcrumbs className="py-5" items={seoInfo?.breadcrumbs!} />
+      <Breadcrumbs
+        className="py-5"
+        items={seoInfo?.breadcrumbs?.map((item, index, items) => ({ ...item, href: index + 1 < items.length ? item.href : '' }))}
+      />
       {customize.showSeoBoxs && (
         <div className="flex pwa:hidden flex-col !mt-5 space-y-2">
           <Text as="h1" fontWeight="bold">
