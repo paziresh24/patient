@@ -30,6 +30,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
+import { addCommas } from '@persian-tools/persian-tools';
 import { push } from '@socialgouv/matomo-next';
 import { getCookie } from 'cookies-next';
 import flatMapDeep from 'lodash/flatMapDeep';
@@ -371,7 +372,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
-        'priceRange': visitOnlinePrice > 0 ? visitOnlinePrice.toString() : '$$',
+        'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
         'name': information.display_name,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
@@ -390,12 +391,14 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        'aggregateRating': {
-          '@type': 'AggregateRating',
-          'bestRating': 5,
-          'ratingCount': feedbacks.details.number_of_feedbacks,
-          'ratingValue': feedbacks.details.avg_star,
-        },
+        ...(feedbacks.details.avg_star && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            'bestRating': 5,
+            'ratingCount': feedbacks.details.number_of_feedbacks,
+            'ratingValue': feedbacks.details.avg_star,
+          },
+        }),
       },
       {
         '@context': 'http://www.schema.org',

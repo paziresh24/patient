@@ -5,7 +5,7 @@ import { BreadcrumbItem } from './item';
 interface BreadcrumbsProps extends React.HTMLAttributes<HTMLDivElement> {
   items: Array<{
     text: string;
-    href: string;
+    href?: string;
   }>;
 }
 
