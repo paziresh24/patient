@@ -6,13 +6,18 @@ export const useBooking = () => {
   const handleBook = async (
     {
       user,
-      membershipId,
-      serviceId,
+      easybookProviderId,
+      easybookServiceId,
+      slug,
+      providerId,
+      userId,
       time,
     }: {
       user: any;
-      membershipId: string;
-      serviceId: string;
+      easybookProviderId: string;
+      easybookServiceId: string;
+      slug: string;
+      providerId: string;
       userId?: string;
       time: string;
     },
@@ -28,11 +33,21 @@ export const useBooking = () => {
   ) => {
     try {
       const { data } = await book.mutateAsync({
-        provider_id: membershipId,
-        service_id: serviceId,
-        first_name: user.name,
-        last_name: user.family,
-        phone: user.cell,
+        easybook: {
+          provider_id: easybookProviderId,
+          service_id: easybookServiceId,
+        },
+        provider: {
+          id: providerId,
+          user_id: userId,
+          slug,
+        },
+        user: {
+          id: user.id,
+          first_name: user.name,
+          last_name: user.family,
+          phone: user.cell,
+        },
         time,
       });
       return onSuccess && onSuccess({ ...data });

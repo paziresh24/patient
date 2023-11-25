@@ -105,10 +105,12 @@ const BookingSteps = (props: BookingStepsProps) => {
 
     handleBook(
       {
-        membershipId: membershipsData?.id,
-        serviceId: services.find(service => service.channel === user.messengerType).id.toString(),
+        easybookProviderId: membershipsData?.id,
+        easybookServiceId: services.find(service => service.channel === user.messengerType).id.toString(),
         time: getAvailability.data?.data?.first_availability!,
+        providerId,
         userId,
+        slug,
         user: {
           ...user,
           name: userConfimation?.name ?? user.name,
@@ -180,7 +182,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       />
       <Modal noHeader {...factorModalProps}>
         <div className="flex flex-col space-y-3">
-          <div className="flex flex-col space-y-1 justify-center items-center">
+          <div className="flex flex-col items-center justify-center space-y-1">
             <Text fontSize="sm">زمان شروع گفتگو: </Text>
             {getAvailability.isLoading && <Skeleton h="1.3rem" w="50%" rounded="full" className="!mt-2" />}
             {getAvailability.isSuccess && (
