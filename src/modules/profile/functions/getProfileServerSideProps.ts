@@ -1,7 +1,6 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
-import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
@@ -17,6 +16,7 @@ import { deletedBooksRate } from '../apis/deletedBooksRate';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
@@ -250,6 +250,32 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               }
             }
           }
+          if (shouldUseFeedback) {
+            const parallelRequests = [
+              await getReviewsData({
+                external_id: `doctor_${fullProfileData.id}_1`,
+              }),
+            ];
+            const [reviewData] = await Promise.allSettled(parallelRequests);
+
+            if (reviewData.status === 'fulfilled') {
+              profileData.feedbacks.reviews =
+                Object.values(reviewData.value)?.map?.((feedback: any) => ({
+                  description: feedback?.cooked ?? '',
+                  id: feedback?.id,
+                  doctor_id: '38c7a67a-2046-11ec-8a2e-005056ade667',
+                  server_id: '1',
+                  user_id: feedback?.user_id,
+                  recommended: 0,
+                  created_at: feedback?.created_at,
+                  update_at: feedback?.updated_at,
+                  feedback_symptomes: [],
+                  user_name: feedback?.name,
+                  user_image: null,
+                  like: 0,
+                })) ?? [];
+            }
+          }
         }
       } catch (error) {
         console.error(error);
@@ -281,36 +307,22 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let dontShowRateAndReviewMessage = '';
     try {
       let feedbackData;
-      if (shouldUseFeedback) {
-        feedbackData = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Reviews,
-            {
-              external_id: `doctor_${fullProfileData.id}_1`,
-            },
-          ],
-          () =>
-            getReviews({
-              external_id: `doctor_${fullProfileData.id}_1`,
-            }),
-        );
-      } else {
-        feedbackData = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Feedbacks,
-            {
-              doctor_id: id,
-              server_id: server_id,
-            },
-          ],
-          () =>
-            getFeedbacks({
-              doctor_id: id,
-              server_id: server_id,
-            }),
-        );
-      }
-      feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
+      feedbackData = await queryClient.fetchQuery(
+        [
+          ServerStateKeysEnum.Feedbacks,
+          {
+            doctor_id: id,
+            server_id: server_id,
+          },
+        ],
+        () =>
+          getFeedbacks({
+            doctor_id: id,
+            server_id: server_id,
+          }),
+      );
+
+      feedbacks.feedbacks = shouldUseFeedback ? profileData.feedbacks.reviews : feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
     } catch (error) {
       console.error(error);
