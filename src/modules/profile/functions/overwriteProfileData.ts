@@ -24,6 +24,7 @@ export type OverwriteProfileData = {
   };
   feedbacks: {
     waiting_time_info_online_visit?: any;
+    reviews?: any;
   };
 };
 
