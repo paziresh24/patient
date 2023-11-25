@@ -9,7 +9,7 @@ export const splunkInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -20,7 +20,7 @@ export const splunkCenterProfileInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -31,7 +31,7 @@ export const splunkBookingInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -40,6 +40,7 @@ export const splunkSearchInstance = () =>
     baseUrl: 'https://p24splk.paziresh24.com',
     token: '7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd',
     constant: {
+      current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
       is_application: isPWA(),
     },
@@ -52,7 +53,7 @@ export const logErrorToSplunk = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -69,7 +70,7 @@ export const coreWebVitalsSplunk = () =>
       },
       userAgent: window.navigator.userAgent,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -86,6 +87,6 @@ export const dashboardSplunk = () =>
       },
       userAgent: window.navigator.userAgent,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });

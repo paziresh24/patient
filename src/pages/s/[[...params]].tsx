@@ -62,43 +62,41 @@ const Search = ({ host }: any) => {
   }, [params, city, isLoading]);
 
   useEffect(() => {
-    if (growthbook.ready) {
+    if (growthbook.ready && !userPending && !isLoading) {
       if (
         shouldUseSearchViewEventRoutesList.routes?.some(route => asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        if (!userPending) {
-          splunkSearchInstance().sendEvent({
-            group: 'search_metrics',
-            type: 'search_view',
-            event: {
-              filters: selectedFilters,
-              result: result.map(item => ({
-                action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
-                _id: item._id,
-                position: item.position,
-                server_id: item.server_id,
-                title: item.title,
-                type: item.type,
-                url: item.url,
-                rates_count: item.rates_count,
-                satisfaction: item.satisfaction,
-              })),
-              result_count: result.length,
-              location: city.en_slug,
-              city_id: city.id,
-              query_id: search.query_id,
-              user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
-              url: {
-                href: window.location.href,
-                qurey: { ...queries },
-                pathname: window.location.pathname,
-                host: window.location.host,
-              },
+        splunkSearchInstance().sendEvent({
+          group: 'search_metrics',
+          type: 'search_view',
+          event: {
+            filters: selectedFilters,
+            result: result.map(item => ({
+              action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
+              _id: item._id,
+              position: item.position,
+              server_id: item.server_id,
+              title: item.title,
+              type: item.type,
+              url: item.url,
+              rates_count: item.rates_count,
+              satisfaction: item.satisfaction,
+            })),
+            result_count: result.length,
+            location: city.en_slug,
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
             },
-          });
-        }
+          },
+        });
 
         return;
       }
@@ -109,7 +107,7 @@ const Search = ({ host }: any) => {
         ...(!isLanding && { centerTypeFilterPresence: 1 }),
       });
     }
-  }, [result, userPending, growthbook.ready]);
+  }, [result, userPending, isLoading, growthbook.ready]);
 
   return (
     <>
