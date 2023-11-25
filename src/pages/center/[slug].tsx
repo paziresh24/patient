@@ -25,6 +25,7 @@ import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { useDebounce } from 'react-use';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -35,6 +36,15 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
   const { customize } = useCustomize();
   const slug = query.slug as string;
   const [searchQuery, setSearchQuery] = useState(text ?? '');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(text ?? '');
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchQuery);
+      remove();
+    },
+    600,
+    [searchQuery],
+  );
   const [selectedExpertise, setSelectedExpertise] = useState(expertise ? `ir/exp-${expertise}/` : '');
 
   const profile = useSlugProfile(
@@ -45,11 +55,14 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
     },
   );
   const profileData = profile.data?.result?.data;
-  const filters = {
-    center: profileData.id,
-    result_type: 'پزشکان+بیمارستانی',
-    ...(searchQuery && { text: searchQuery }),
-  };
+  const filters = useMemo(
+    () => ({
+      center: profileData.id,
+      result_type: 'پزشکان+بیمارستانی',
+      ...(debouncedSearchTerm && { text: debouncedSearchTerm, page: 1 }),
+    }),
+    [debouncedSearchTerm, profileData.id],
+  );
 
   const {
     data: doctors,
@@ -64,8 +77,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       {
         route: selectedExpertise ?? '',
         query: {
-          ...filters,
           page: 1,
+          ...filters,
         },
       },
     ],
@@ -73,12 +86,14 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       searchApi({
         route: selectedExpertise ?? '',
         query: {
+          page: pageParam?.page ?? 1,
           ...filters,
-          page: pageParam ?? 1,
         },
       }),
     getNextPageParam: (lastPage, pages) => {
-      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total ? lastPage : undefined;
+      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total
+        ? { pages: lastPage }
+        : undefined;
     },
     refetchOnMount: false,
   });
@@ -308,7 +323,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                   })) ?? []
                 }
                 onChangePage={page => {
-                  fetchNextPage({ pageParam: page });
+                  fetchNextPage({ pageParam: { page } });
                 }}
                 hasNextPage={hasNextPage ?? true}
                 showRateAndReviews={customize.showRateAndReviews}
@@ -316,12 +331,10 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                 loading={isLoading}
                 isFetchingNextPage={isFetchingNextPage}
                 onSelectExpertise={expertise => {
-                  remove();
                   setSelectedExpertise(expertise.replace('/s/', ''));
                 }}
                 searchQuery={searchQuery}
                 onSearch={query => {
-                  remove();
                   setSearchQuery(query);
                 }}
                 defaultValue={defaultExpertise}
