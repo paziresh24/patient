@@ -7,7 +7,7 @@ interface ReviewParams {
 }
 
 export const getReviews = async (params: ReviewParams) => {
-  return await apiGatewayClient.get(`/t/external_id/${params.external_id}.json`);
+  return await apiGatewayClient.get(`/ravi/t/external_id/${params.external_id}.json`);
 };
 
 export const useGetReview = (params: ReviewParams, options?: any) =>
