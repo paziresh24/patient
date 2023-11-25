@@ -206,7 +206,7 @@ export const sections = ({
           expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
         } در شهر ${center?.city} است. مطب ${information.display_name} در ${
           center?.address
-        } واقع شده است که در صورت نیاز می‌توانید با شماره ${center?.display_number_array[0] ?? ''} تماس بگیرید.</p>
+        } واقع شده است که در صورت نیاز می‌توانید با شماره <span>${center?.display_number_array[0] ?? ''}</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
           expertises?.expertises[0]?.degree_name + ' ' + expertises?.group_expertises?.[0].name ?? 'سایر'
         }  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction ?? 0}٪ مراجعین (${
@@ -228,7 +228,7 @@ export const sections = ({
         <ui>
         <li>آدرس ${center?.name}: ${center.city + '، ' + center?.address ?? 'ثبت نشده'}</li>
         <li>تلفن ${center?.name}: ${center?.display_number_array[0] ?? 'ثبت نشده'}</li>
-        <li>تخصص ${information?.display_name}: ${expertises.expertises[0]?.alias_title && 'ثبت نشده'}</li>
+        <li>تخصص ${information?.display_name}: ${expertises.expertises[0]?.alias_title ?? expertises.expertises[0]?.name}</li>
         </ui>
         `;
 
