@@ -12,10 +12,11 @@ interface RecommendProps extends HTMLAttributes<HTMLDivElement> {
   city: string;
   doctorId: string;
   centerId?: string;
+  limit?: number;
   clickRecommendEvent?: (doctor: any, elementName?: string, elementContent?: string) => void;
 }
 
-export const Recommend = ({ className, clickRecommendEvent, ...props }: RecommendProps) => {
+export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: RecommendProps) => {
   const useVisitOnlineDoctorSubstitute = useFeatureIsOn('profile.use-visit-online-doctor-substitute');
 
   const recommendDoctor = useSearchRecommendByDoctor(
@@ -49,7 +50,7 @@ export const Recommend = ({ className, clickRecommendEvent, ...props }: Recommen
       ) : (
         <RecommendCard
           listOfDoctors={
-            doctors?.map((doctor: any) => ({
+            (!limit ? doctors : doctors.slice(0, limit))?.map((doctor: any) => ({
               image: doctor.image,
               ...(!useVisitOnlineDoctorSubstitute && { displayAddress: doctor.display_address }),
               displayExpertise: doctor.display_expertise,
