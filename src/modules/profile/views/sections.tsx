@@ -201,7 +201,7 @@ export const sections = ({
     {
       isShow: customize.showSeoBoxs,
       function: () => {
-        const center = centers.find((item: any) => item?.center_type === 1);
+        const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
         const about = `<p>${information.display_name}، ${
           expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
         } در شهر ${center?.city} است. مطب ${information.display_name} در ${
