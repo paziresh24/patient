@@ -22,12 +22,17 @@ interface BulkServiceProps {
 export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
-  const searchData = useSearch({
-    route: decodeURIComponent(`ir/${expertises.group_expertises[0].en_slug}`),
-    query: {
-      turn_type: 'consult',
+  const searchData = useSearch(
+    {
+      route: decodeURIComponent(`ir/${expertises.group_expertises[0].en_slug}`),
+      query: {
+        turn_type: 'consult',
+      },
     },
-  });
+    {
+      enabled: !customize.partnerKey,
+    },
+  );
   const { changeRoute } = useSearchRouting();
 
   const handleOpenSubstituteDoctorModal = () => {
@@ -71,7 +76,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   return (
     <>
       {searchData.isLoading && <Skeleton w="100%" h="5rem" className="md:rounded-md" />}
-      {substituteDoctor?.url && (
+      {substituteDoctor?.url && !customize.partnerKey && (
         <Card className="space-y-3 !rounded-none md:!rounded-lg">
           <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
             <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
@@ -85,7 +90,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
         <Card className="space-y-3 !rounded-none md:!rounded-lg">
           <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
             <ErrorIcon className="w-5 h-5" />
-            <Text className="text-sm font-medium">در حال حاضر این پزشک با پذیرش24 همکاری ندارد.</Text>
+            <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
           </Alert>
           <Text fontWeight="medium" fontSize="sm" className="text-slate-500">
             شما می توانید از سایر پزشکان حاذق در این حوزه نوبت بگیرید.
