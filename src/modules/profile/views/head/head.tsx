@@ -90,7 +90,7 @@ export const Head = (props: HeadProps) => {
         </ScrollContainer>
       )}
       {!!satisfaction && !editable && (
-        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
+        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
           <RateBadge
             text={`${satisfaction}%`}
             icon={<LikeIcon className="w-5 text-white" />}
