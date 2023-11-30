@@ -206,29 +206,33 @@ export const sections = ({
           expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
         } در شهر ${center?.city} است. مطب ${information.display_name} در ${
           center?.address
-        } واقع شده است که در صورت نیاز می‌توانید با شماره <span>${center?.display_number_array[0] ?? ''}</span> تماس بگیرید.</p>
+        } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
+          center?.display_number_array[0] ?? ''
+        }</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
           expertises?.expertises[0]?.degree_name + ' ' + expertises?.group_expertises?.[0].name ?? 'سایر'
         }  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction ?? 0}٪ مراجعین (${
           feedbacks?.details?.number_of_feedbacks ?? 0
-        }نظر ثبت شده) از ایشان رضایت داشته‌اند و ${' ' + feedbacks?.details?.like ?? 0} نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${
+        } نظر ثبت شده) از ایشان رضایت داشته‌اند و ${feedbacks?.details?.like ?? 0} نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${
           information?.display_name
         }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
         ${
           center.freeturn_text
-            ? `<p>زودترین زمان رزرو نوبت ${center?.freeturn_text} ${center?.name} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
+            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
             : ''
         }
-        <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در پذیرش۲۴ سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${
+        <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${
           'متخصص ' + expertises.group_expertises?.[0].name ?? 'سایر'
         } <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
         <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
-        <li>آدرس ${center?.name}: ${center.city + '، ' + center?.address ?? 'ثبت نشده'}</li>
-        <li>تلفن ${center?.name}: ${center?.display_number_array[0] ?? 'ثبت نشده'}</li>
-        <li>تخصص ${information?.display_name}: ${expertises.expertises[0]?.alias_title ?? expertises.expertises[0]?.name}</li>
+        <li>آدرس مطب ${information.display_name}: ${center.city + '، ' + center?.address ?? 'ثبت نشده'}</li>
+        <li>تلفن ${center?.name}: <span class="inline-block">${center?.display_number_array[0] ?? 'ثبت نشده'}</span></li>
+        <li>تخصص ${information?.display_name}: ${
+          expertises.expertises?.map?.((item: any) => item.alias_title)?.join('/ ') ?? expertises.expertises[0]?.name
+        }</li>
         </ui>
         `;
 
