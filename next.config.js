@@ -77,7 +77,7 @@ const nextConfig = {
     FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-    RAVI_BASE_URL:process.env.RAVI_BASE_URL
+    RAVI_BASE_URL: process.env.RAVI_BASE_URL
   },
   images: {
     domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
