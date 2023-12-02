@@ -1,3 +1,4 @@
+import Accordion from '@/common/components/atom/accordion';
 import Breadcrumbs from '@/common/components/atom/breadcrumbs/breadcrumbs';
 import { MenuItem, MenuList } from '@/common/components/atom/menu';
 import Opener from '@/common/components/atom/opener';
@@ -27,18 +28,20 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
         />
       )}
       <div className="p-4 space-y-3 transition-all bg-white md:rounded-lg">
-        {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
-        {similarLinks && (
-          <Opener openButtonText="مشاهده بیشتر" closeButtonText="مشاهده کمتر">
-            <MenuList className="flex !flex-row flex-wrap gap-x-14">
-              {similarLinks.map(({ name, url }) => (
-                <MenuItem key={name} name={name} link={url} className="flex-[1_1_10rem] !justify-start">
-                  <ChevronIcon dir="left" />
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Opener>
-        )}
+        <Opener openButtonText="مشاهده بیشتر" height={120} closeButtonText="مشاهده کمتر">
+          {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
+          {similarLinks && (
+            <Accordion title="تخصص های مرتبط" className="mt-2">
+              <MenuList className="flex !flex-row flex-wrap gap-x-14">
+                {similarLinks.map(({ name, url }) => (
+                  <MenuItem key={name} name={name} link={url} className="flex-[1_1_10rem] !justify-start">
+                    <ChevronIcon dir="left" />
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Accordion>
+          )}
+        </Opener>
       </div>
     </section>
   );
