@@ -22,6 +22,7 @@ import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
 import TrashIcon from '@/common/components/icons/trash';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
@@ -50,6 +51,7 @@ const DoctorTags = dynamic(() => import('./doctorTags'));
 const DoctorTagsFallback = dynamic(() => import('./doctorTagsFallback'), {
   ssr: false,
 });
+const RaviAuthIframe = dynamic(() => import('@/modules/login/components/providers/raviAuthIframe'));
 const { publicRuntimeConfig } = config();
 
 interface RateReviewProps {
@@ -139,7 +141,9 @@ export const RateReview = (props: RateReviewProps) => {
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
   const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
+  const listOfDoctorForLoginInDiscourse = useFeatureValue<any>('profile:discourse-sso-login', { slugs: [] });
 
+  const shouldLoginWithDiscourse = newApiFeatureFlaggingCondition(listOfDoctorForLoginInDiscourse?.slugs, `${router.query.slug}`);
   const isShowOption = (key: string) => {
     return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
   };
@@ -602,6 +606,7 @@ export const RateReview = (props: RateReviewProps) => {
             </Button>
           </div>
         )}
+        {shouldLoginWithDiscourse && <RaviAuthIframe />}
       </div>
       <Modal title="گزارش نظر" {...reportModalProps}>
         <TextField
