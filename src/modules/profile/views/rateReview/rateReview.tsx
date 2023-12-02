@@ -51,6 +51,7 @@ const DoctorTags = dynamic(() => import('./doctorTags'));
 const DoctorTagsFallback = dynamic(() => import('./doctorTagsFallback'), {
   ssr: false,
 });
+const RaviAuthIframe = dynamic(() => import('@/modules/login/components/providers/raviAuthIframe'));
 const { publicRuntimeConfig } = config();
 
 interface RateReviewProps {
@@ -605,9 +606,7 @@ export const RateReview = (props: RateReviewProps) => {
             </Button>
           </div>
         )}
-        {shouldLoginWithDiscourse && (
-          <iframe src={`${publicRuntimeConfig.RAVI_BASE_URL}/auth/oauth2_basic`} width={1} height={1} key={isLogin ? 1 : 0} />
-        )}
+        {shouldLoginWithDiscourse && <RaviAuthIframe key={isLogin ? 1 : 0} />}
       </div>
       <Modal title="گزارش نظر" {...reportModalProps}>
         <TextField
