@@ -606,7 +606,7 @@ export const RateReview = (props: RateReviewProps) => {
             </Button>
           </div>
         )}
-        {shouldLoginWithDiscourse && <RaviAuthIframe key={isLogin ? 1 : 0} />}
+        {shouldLoginWithDiscourse && <RaviAuthIframe />}
       </div>
       <Modal title="گزارش نظر" {...reportModalProps}>
         <TextField
