@@ -139,7 +139,10 @@ export const RateReview = (props: RateReviewProps) => {
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
   const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
+  const listOfDoctorForLoginInDiscourse = useFeatureValue<any>('profile:discourse-sso-login', { slugs: [] });
 
+  const shouldLoginWithDiscourse =
+    listOfDoctorForLoginInDiscourse?.slugs?.includes(router.query.slug) || listOfDoctorForLoginInDiscourse?.slugs?.includes?.('*');
   const isShowOption = (key: string) => {
     return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
   };
@@ -601,6 +604,9 @@ export const RateReview = (props: RateReviewProps) => {
               نمایش بیشتر
             </Button>
           </div>
+        )}
+        {shouldLoginWithDiscourse && (
+          <iframe src={`${publicRuntimeConfig.RAVI_BASE_URL}/auth/oauth2_basic`} width={1} height={1} key={isLogin ? 1 : 0} />
         )}
       </div>
       <Modal title="گزارش نظر" {...reportModalProps}>
