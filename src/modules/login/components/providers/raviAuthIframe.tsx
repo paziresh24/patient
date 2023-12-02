@@ -2,7 +2,7 @@ import config from 'next/config';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 export const RaviAuthIframe = () => {
-  const { isLogin, userInfo } = useUserInfoStore(state => ({
+  const { isLogin } = useUserInfoStore(state => ({
     isLogin: state.isLogin
   }));
   const { publicRuntimeConfig } = config();
