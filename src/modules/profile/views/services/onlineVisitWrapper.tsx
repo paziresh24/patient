@@ -60,6 +60,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const destination = useFeatureValue('profile:online_visit_button_destination', 'BOOKING');
   const discountPercentage = useFeatureValue('premium.online_visit_discount_percentage', 0);
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const checkLogin = (callback: () => any) => {
@@ -116,7 +117,14 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
   };
   const redirectBookingPage = () => {
     profileEvent('doctor profile press online visit book button');
-    router.push(`/booking/${slug}/?centerId=${CENTERS.CONSULT}&serviceId=${id}`);
+    router.push({
+      pathname: `/booking/${slug}/`,
+      query: {
+        centerId: CENTERS.CONSULT,
+        serviceId: id,
+        ...(destination === 'BOOKING_SKIP_TIME_SELECT_STEP' && { skipTimeSelectStep: true }),
+      },
+    });
   };
 
   return (
