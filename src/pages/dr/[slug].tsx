@@ -385,7 +385,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           '@type': 'PostalAddress',
           'addressCountry': {
             '@type': 'Country',
-            'name': 'IRN',
+            'name': 'IR',
           },
           'addressLocality': center?.city,
           'addressRegion': center?.province,
@@ -395,6 +395,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           aggregateRating: {
             '@type': 'AggregateRating',
             'bestRating': 5,
+            'worstRating': 0,
             'ratingCount': feedbacks.details.number_of_feedbacks,
             'ratingValue': feedbacks.details.avg_star,
           },
@@ -412,7 +413,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           '@type': 'PostalAddress',
           'addressCountry': {
             '@type': 'Country',
-            'name': 'IRN',
+            'name': 'IR',
           },
           'addressLocality': center?.city,
           'addressRegion': center?.province,
