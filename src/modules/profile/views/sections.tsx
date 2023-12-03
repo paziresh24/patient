@@ -2,6 +2,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import SuccessIcon from '@/common/components/icons/success';
+import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -202,12 +203,13 @@ export const sections = ({
       isShow: customize.showSeoBoxs,
       function: () => {
         const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
+        const isOnlineVisitCenter = center.id === CENTERS.CONSULT;
         const about = `<p>${information.display_name}، ${
           expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
         } در شهر ${center?.city} است. مطب ${information.display_name} در ${
           center?.address
         } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
-          center?.display_number_array[0] ?? ''
+          !isOnlineVisitCenter ? center?.display_number_array[0] : '(ثبت نشده)'
         }</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
           expertises?.expertises[0]?.degree_name + ' ' + expertises?.group_expertises?.[0].name ?? 'سایر'
@@ -228,8 +230,10 @@ export const sections = ({
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
-        <li>آدرس مطب ${information.display_name}: ${center.city + '، ' + center?.address ?? 'ثبت نشده'}</li>
-        <li>تلفن ${center?.name}: <span class="inline-block">${center?.display_number_array[0] ?? 'ثبت نشده'}</span></li>
+        <li>آدرس مطب ${information.display_name}: ${isOnlineVisitCenter ? 'ثبت نشده' : center.city + '، ' + center?.address ?? ''}</li>
+        <li>تلفن مطب ${information.display_name}: <span class="inline-block">${
+          isOnlineVisitCenter ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
+        }</span></li>
         <li>تخصص ${information?.display_name}: ${
           expertises.expertises?.map?.((item: any) => item.alias_title)?.join('/ ') ?? expertises.expertises[0]?.name
         }</li>
