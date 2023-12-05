@@ -206,7 +206,7 @@ export const sections = ({
         const isOnlineVisitCenter = center.id === CENTERS.CONSULT;
         const about = `<p>${information.display_name}، ${
           expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
-        } در شهر ${center?.city} است. مطب ${information.display_name} در ${
+        } در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${information.display_name} در ${
           center?.address
         } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
           !isOnlineVisitCenter ? center?.display_number_array[0] : '(ثبت نشده)'
@@ -230,7 +230,9 @@ export const sections = ({
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
-        <li>آدرس مطب ${information.display_name}: ${isOnlineVisitCenter ? 'ثبت نشده' : center.city + '، ' + center?.address ?? ''}</li>
+        <li>آدرس مطب ${information.display_name}: ${
+          isOnlineVisitCenter ? 'ثبت نشده' : center.city ?? '(ثبت نشده)' + '، ' + center?.address ?? ''
+        }</li>
         <li>تلفن مطب ${information.display_name}: <span class="inline-block">${
           isOnlineVisitCenter ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
         }</span></li>
