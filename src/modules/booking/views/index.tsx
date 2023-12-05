@@ -229,18 +229,18 @@ const BookingSteps = (props: BookingStepsProps) => {
     let reserveId: string | undefined = timeId;
 
     if (!reserveId) {
-      const timeData = await getFirstFreeTime.getFirstFreeTime();
-      if (!timeData.timeId) return toast.error(timeData?.message ?? 'خطا در دریافت نوبت خالی پزشک.');
+      const freeturnData = await getFirstFreeTime.getFirstFreeTime();
+      if (!freeturnData.timeId) return toast.error(freeturnData?.message ?? 'خطا در دریافت نوبت خالی پزشک.');
       sendFirstFreeTimeEvent({
         data: {
-          full_date: timeData?.full_date,
-          status: 200,
-          message: timeData?.message,
+          full_date: freeturnData?.full_date,
+          status: freeturnData?.status,
+          message: freeturnData?.message,
           difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - center?.freeturn ?? null,
         },
         doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
       });
-      reserveId = timeData.timeId;
+      reserveId = freeturnData.timeId;
     }
 
     handleBook(
