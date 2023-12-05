@@ -5,7 +5,6 @@ import { useReplyfeedback } from '@/common/apis/services/rate/replyFeedback';
 import { useReportFeedback } from '@/common/apis/services/rate/report';
 import { useAddReview } from '@/common/apis/services/reviews/addReview';
 import { useDeleteFeedback } from '@/common/apis/services/reviews/delete';
-import { useDislikeReview } from '@/common/apis/services/reviews/dislike';
 import { useEditComment } from '@/common/apis/services/reviews/edit';
 import { useLikeReview } from '@/common/apis/services/reviews/like';
 import { useReplyComment } from '@/common/apis/services/reviews/reply';
@@ -124,7 +123,6 @@ export const RateReview = (props: RateReviewProps) => {
   const router = useRouter();
   const likeFeedback = useLikeFeedback();
   const likeReviews = useLikeReview();
-  const dislikeReviews = useDislikeReview();
   const replyFeedback = useReplyfeedback();
   const replyComment = useReplyComment();
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -472,8 +470,8 @@ export const RateReview = (props: RateReviewProps) => {
     const isLiked = feedbacksData.find((item: any) => item?.id === id)?.isLiked;
     try {
       if (isSpecialDoctor) {
-        if (!isLiked) return likeReviews.mutate({ id, user_id: userInfo.id });
-        dislikeReviews.mutate({ id, user_id: userInfo.id });
+        if (!isLiked) return likeReviews.mutate({ id, flag_topic: true, post_action_type_id: 2 });
+        likeReviews.mutate({ id, flag_topic: false, post_action_type_id: 2 });
         return;
       }
       likeFeedback.mutate({
