@@ -27,7 +27,7 @@ export const PromoteAppBanner = () => {
       <div className="flex items-center space-s-2">
         <CloseIcon className="cursor-pointer" onClick={handleHide} />
         <a href="/app" className="flex items-center space-s-2">
-          <img className="w-12 h-12 p-1 border border-solid rounded-md" width={48} height={48} src={logoSvg.src} alt="" />
+          <img className="w-12 h-12 p-1 border border-solid rounded-md" width={48} height={48} src={logoSvg.src} alt="اپلیکیشن پذیرش24" />
           <div className="flex flex-col">
             <Text fontSize="sm" fontWeight="bold">
               پذیرش24

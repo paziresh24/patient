@@ -31,7 +31,6 @@ import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
-import { push } from '@socialgouv/matomo-next';
 import { getCookie } from 'cookies-next';
 import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
@@ -100,7 +99,6 @@ const DoctorProfile = ({
         isBulk,
         isWebView: !!isWebView || !!isApplication,
       });
-      push(['trackEvent', 'contact', 'doctor profile']);
       if (shouldUseIncrementPageView) {
         incrementPageView.mutate({
           provider_id: information.provider_id,

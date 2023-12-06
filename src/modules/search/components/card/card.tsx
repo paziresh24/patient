@@ -50,10 +50,11 @@ interface SearchCardProps {
   sendEventWhenClick?: ({ element, content }: { element: string; content?: string }) => void;
   avatarSize?: 'md' | 'lg';
   className?: string;
+  avatarPriority?: boolean;
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false } = props;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
@@ -75,7 +76,7 @@ export const SearchCard = (props: SearchCardProps) => {
                 'border-primary': baseInfo?.isVerify,
                 'border-green-400': baseInfo?.isOnline,
               })}
-              loading="lazy"
+              {...(!avatarPriority && { loading: 'lazy' })}
             />
             {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
           </div>

@@ -7,13 +7,11 @@ import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import Card from '../../components/card';
 import { Result as ResultType, useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 const CategoryCard = dynamic(() => import('../../components/categoryCard'), {
   loading: () => <Loading line />,
-});
-const Card = dynamic(() => import('../../components/card'), {
-  loading: () => <Loading />,
 });
 const NotFound = dynamic(() => import('../../components/notFound'));
 
@@ -105,6 +103,7 @@ export const Result = () => {
                 router.push(action.url);
               },
             }))}
+            avatarPriority={index <= 1}
             sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(item, element, content)}
           />
         ),
