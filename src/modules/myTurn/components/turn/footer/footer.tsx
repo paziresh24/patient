@@ -14,6 +14,7 @@ import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
 import Select from '@/modules/booking/components/select/select';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import { useEasyDeleteAppointments } from '@/modules/bookingV3/apis/easyapp-delete-appointments';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -94,6 +95,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
+  const easyDeleteAppointments = useEasyDeleteAppointments();
   const { removeBook, moveBook } = useBookStore();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
@@ -132,6 +134,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
+    if (centerId === 'easybook') {
+      router.push(`/booking/easybook/${slug}`);
+      return;
+    }
     router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`);
   };
 
@@ -148,6 +154,40 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   );
 
   const removeBookAction = () => {
+    if (centerId === 'easybook') {
+      easyDeleteAppointments.mutate(
+        {
+          id,
+        },
+        {
+          onSuccess: data => {
+            removeBook({ bookId: id });
+            handleCloseRemoveTurnModal();
+            if (isOnlineVisitTurn) {
+              splunkInstance().sendEvent({
+                group: 'my-turn',
+                type: 'delete-turn-reason',
+                event: {
+                  terminal_id: getCookie('terminal_id'),
+                  doctorName,
+                  expertise,
+                  nationalCode,
+                  trackingCode,
+                  patientName,
+                  phoneNumber,
+                  reason: reasonDeleteTurn,
+                  isVisited: status === BookStatus.visited,
+                },
+              });
+            }
+          },
+          onError: (error: any) => {
+            toast.error(error.response.data.message);
+          },
+        },
+      );
+      return;
+    }
     return removeBookApi.mutateAsync(
       {
         center_id: centerId,
@@ -281,7 +321,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   return (
     <>
-      {status === BookStatus.notVisited && centerType !== CenterType.consult && ClinicPrimaryButton}
       {shouldShowMessengerButton && (
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between lg:gap-4">
           <MessengerButton channel={onlineVisitChannel} />
@@ -300,7 +339,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
           </Button>
         )}
-        {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && (
+        {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && !isOnlineVisitTurn && (
           <Button variant="secondary" block={true} icon={<RefreshIcon width={23} height={23} />} onClick={handleMoveButton}>
             جابجایی نوبت
           </Button>
@@ -392,7 +431,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               theme="error"
               block
               onClick={removeBookAction}
-              loading={removeBookApi.isLoading}
+              loading={removeBookApi.isLoading || easyDeleteAppointments.isLoading}
               data-testid="modal__remove-turn-button"
               disabled={isOnlineVisitTurn && !reasonDeleteTurn}
             >

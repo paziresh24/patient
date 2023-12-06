@@ -13,11 +13,13 @@ export const Tabs = ({ children, value, onChange, className, ...rest }: TabsProp
 
   useEffect(() => {
     if (value && children) {
-      children.forEach((child, i) => {
-        if (child.props.value === value) {
-          setSelected(i);
-        }
-      });
+      children
+        .filter(tab => !!tab?.props?.value)
+        .forEach((child, i) => {
+          if (child.props.value === value) {
+            setSelected(i);
+          }
+        });
     }
   }, [value, children]);
 
@@ -27,21 +29,23 @@ export const Tabs = ({ children, value, onChange, className, ...rest }: TabsProp
 
   return (
     <div className={classNames('flex', [className])}>
-      {children.map((tab, i) => (
-        <button
-          key={tab.props.value}
-          className={classNames(
-            'p-4 text-sm font-medium text-neutral-600',
-            {
-              'border-b-2 border-solid border-primary !text-primary': i === selected,
-            },
-            [tab.props.className],
-          )}
-          onClick={() => selectTab(i)}
-        >
-          {tab}
-        </button>
-      ))}
+      {children
+        .filter(tab => !!tab?.props?.value)
+        .map((tab, i) => (
+          <button
+            key={tab.props.value}
+            className={classNames(
+              'p-4 text-sm font-medium text-neutral-600',
+              {
+                'border-b-2 border-solid border-primary !text-primary': i === selected,
+              },
+              [tab.props.className],
+            )}
+            onClick={() => selectTab(i)}
+          >
+            {tab}
+          </button>
+        ))}
     </div>
   );
 };

@@ -5,15 +5,14 @@ import Text from '@/common/components/atom/text/text';
 import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
-import BookingSteps from '@/modules/booking/views';
+// import BookingSteps from '@/modules/booking/views';
 import { useMembership } from '@/modules/bookingV2/apis/membership';
-import BookingStepsV2 from '@/modules/bookingV2/views';
+import BookingStepsV3 from '@/modules/bookingV3/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useFeatureValue } from '@growthbook/growthbook-react';
@@ -30,14 +29,6 @@ const Booking = () => {
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
   const removePrefixDoctorName = useRemovePrefixDoctorName();
-  const easybookDoctorList = useFeatureValue('booking:easy-book|doctor-list', { ids: [] });
-  const shouldUseEasybook = newApiFeatureFlaggingCondition(easybookDoctorList.ids, router.query?.userId as string);
-
-  useEffect(() => {
-    if (shouldUseEasybook) {
-      router.replace(`/booking/easybook/${router.query?.slug as string}`);
-    }
-  }, [shouldUseEasybook]);
 
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
     { provider_id: router.query.providerId as string },
@@ -140,11 +131,7 @@ const Booking = () => {
             </div>
           )}
           <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
-            {membershipData?.data?.memberships?.some((center: any) => center.center_id === router.query.centerId) ? (
-              <BookingStepsV2 defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
-            ) : (
-              <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
-            )}
+            <BookingStepsV3 slug={router.query?.slug?.toString() ?? '/'} />
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">

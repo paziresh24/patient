@@ -17,20 +17,23 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import { splunkInstance } from '@/common/services/splunk';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
+import { useEasyAppointmentsList } from '@/modules/bookingV3/apis/easyapp-appointments-list';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Turn from '@/modules/myTurn/components/turn';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
+import moment from 'jalali-moment';
+import { GetServerSidePropsContext } from 'next';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
 
-type BookType = 'book' | 'book_request';
+type BookType = 'book' | 'book_request' | 'online_visit';
 
 export const Appointments = () => {
   const { query, ...router } = useRouter();
@@ -46,11 +49,16 @@ export const Appointments = () => {
   const user = useUserInfoStore(state => state.info);
   const sendEventForLocalTypeBookCenterList = useFeatureValue('appointments.remove-sync|center-list', { centers: [''] });
 
-  const getBooks = useGetBooks({
-    page,
-    return_type: type,
-    university: university,
-  });
+  const getBooks = useGetBooks(
+    {
+      page,
+      return_type: type,
+      university: university,
+    },
+    { enabled: false },
+  );
+
+  const getEasyBookVisitOnline = useEasyAppointmentsList({ user_phone: user.cell! });
 
   const [ref, inView] = useInView({
     threshold: 0,
@@ -78,9 +86,46 @@ export const Appointments = () => {
   }, [inView]);
 
   useEffect(() => {
-    refetchBook();
+    if (type !== 'online_visit') refetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, type, university]);
+
+  useEffect(() => {
+    if (getEasyBookVisitOnline.isSuccess && type === 'online_visit') {
+      setIsLoading(false);
+      if (getEasyBookVisitOnline.data?.data?.appointments?.length > 0) {
+        addBooks(
+          getEasyBookVisitOnline.data?.data?.appointments.map((item: any) => ({
+            book_id: item.book_id,
+            doctor_info: {
+              name: item.provider_name,
+              family: item.provider_family,
+              display_expertise: item.provider_specialty,
+              book_id: item.id,
+              slug: item.provider_slug,
+            },
+            center: {
+              id: 'easybook',
+            },
+            patient_info: {
+              name: user.name,
+              family: user.family,
+            },
+            book_time_string: moment(item.session_time).locale('fa').format('YYYY/MM/DD HH:mm'),
+            from: moment(item.session_time).unix(),
+            ref_id: item.refid,
+            book_status: BookStatus.notVisited,
+            payment_status: PaymentStatus.paid,
+            selected_online_visit_channel: {
+              type: item.contactpoint_name,
+              channel: item.contactpoint_name,
+              channel_link: item.contactpoint_link,
+            },
+          })),
+        );
+      }
+    }
+  }, [getEasyBookVisitOnline.status, type]);
 
   useEffect(() => {
     if (getBooks.isSuccess) {
@@ -149,6 +194,11 @@ export const Appointments = () => {
         <div className="sticky top-0 z-10 justify-center w-full bg-white border-b border-solid lg:flex md:shadow-none border-slate-200">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
             <Tab value="book" label={t('tunrsTabName')} className="w-full lg:w-auto" />
+            {getEasyBookVisitOnline.data?.data?.appointments?.length > 0 ? (
+              <Tab value="online_visit" label={t('visitOnlineTabName')} className="w-full lg:w-auto" />
+            ) : (
+              <></>
+            )}
             <Tab value="book_request" label={t('requestsTabName')} className="w-full lg:w-auto" />
           </Tabs>
         </div>
@@ -171,7 +221,11 @@ export const Appointments = () => {
               paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={
-                turn.center?.center_type === 1 ? CenterType.clinic : turn.center?.id === '5532' ? CenterType.consult : CenterType.hospital
+                turn.center?.center_type === 1
+                  ? CenterType.clinic
+                  : turn.center?.id === '5532' || turn.center?.id === 'easybook'
+                  ? CenterType.consult
+                  : CenterType.hospital
               }
               centerInfo={{
                 centerId: turn.center?.id,
@@ -185,17 +239,19 @@ export const Appointments = () => {
                 avatar: turn.doctor_info?.image,
                 firstName: turn.doctor_info?.name,
                 lastName: turn.doctor_info?.family,
-                expertise: getDisplayDoctorExpertise({
-                  aliasTitle: turn.doctor_info?.expertises?.[0]?.alias_title,
-                  degree: turn.doctor_info?.expertises?.[0]?.degree?.name,
-                  expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
-                }),
+                expertise:
+                  turn.doctor_info?.display_expertise ??
+                  getDisplayDoctorExpertise({
+                    aliasTitle: turn.doctor_info?.expertises?.[0]?.alias_title,
+                    degree: turn.doctor_info?.expertises?.[0]?.degree?.name,
+                    expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
+                  }),
                 slug: turn.doctor_info?.slug,
                 onlineVisitChannel: turn?.selected_online_visit_channel?.type ? turn?.selected_online_visit_channel : undefined,
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
-                cell: turn.patient_info.cell,
+                cell: turn.patient_info?.cell,
               }}
               turnDetails={{
                 bookTime: turn.book_time_string,
@@ -220,7 +276,7 @@ export const Appointments = () => {
               }}
             />
           ))}
-        {!isLoading && getBooks.data?.status !== 204 && (
+        {!isLoading && type !== 'online_visit' && getBooks.data?.status !== 204 && (
           <div ref={ref} className="flex justify-center w-full py-8">
             <Loading />
           </div>
