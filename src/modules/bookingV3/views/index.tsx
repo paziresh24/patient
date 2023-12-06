@@ -77,8 +77,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       const servicesRequest = servicesResponose?.data?.services?.map(async (item: any) => await easyServices({ service_id: item }));
 
       Promise.all(servicesRequest).then(data => {
-        console.log(data);
-
         Promise.all(data.map(async item => await easyChannels({ channel_id: item.data.categoryId }))).then((channels: any) => {
           setServices(
             data.map(item => ({

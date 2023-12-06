@@ -94,8 +94,8 @@ export const SelectUser = (props: SelectUserProps) => {
   return (
     <div className={classNames('flex flex-col space-y-6', className)}>
       <div className="flex flex-col w-full space-y-3">
-        {(isLoading || isIdle) && <SubUserLoading />}
-        {isSuccess && (
+        {(isLoading || isIdle || messengers?.length === 0) && <SubUserLoading />}
+        {isSuccess && messengers?.length !== 0 && (
           <>
             <UserCard
               userId={userInfo.id ?? ''}

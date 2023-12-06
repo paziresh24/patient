@@ -7,8 +7,8 @@ interface FreeturnParams {
   pincode: string;
 }
 
-export const easyShortlink = async ({ id, ...params }: FreeturnParams) => {
-  return await apiGatewayClient.get(`/v1/easyapp/share/${id}`, {
+export const easyShortlink = async ({ ...params }: FreeturnParams) => {
+  return await apiGatewayClient.get(`/v1/easyapp/share/`, {
     params,
   });
 };

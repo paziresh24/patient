@@ -2,13 +2,10 @@ import { useGetServerTime } from '@/common/apis/services/general/getServerTime';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
-import Chips from '@/common/components/atom/chips';
-import Divider from '@/common/components/atom/divider';
 import Modal from '@/common/components/atom/modal/modal';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
-import Timer from '@/common/components/atom/timer';
 import SuccessIcon from '@/common/components/icons/success';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
@@ -18,10 +15,12 @@ import useModal from '@/common/hooks/useModal';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { useEasyAppointments } from '@/modules/bookingV3/apis/easyapp-appointments';
 import { useEasyChannels } from '@/modules/bookingV3/apis/easyapp-channels';
 import { useEasyCustomers } from '@/modules/bookingV3/apis/easyapp-customer';
 import { useEasyServices } from '@/modules/bookingV3/apis/easyapp-services';
+import { useEasyShortlink } from '@/modules/bookingV3/apis/easyapp-shortlink';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
@@ -56,6 +55,11 @@ const Receipt = () => {
 
   const getChannel = useEasyChannels({ channel_id: getService.data?.data?.categoryId }, { enabled: !!getService.data?.data?.categoryId });
   const getCustomer = useEasyCustomers({ id: getAppoinment.data?.data?.customerId }, { enabled: !!getAppoinment.data?.data?.customerId });
+  const getShareLink = useEasyShortlink({
+    id: bookId as string,
+    slug: slug as string,
+    pincode: (pincode as string) ?? (user.id && md5(user.id)),
+  });
 
   useEffect(() => {
     getProvider.mutateAsync({ slug: slug as string });
@@ -65,6 +69,12 @@ const Receipt = () => {
   const userPednding = useUserInfoStore(state => state.pending);
   const serverTime = useGetServerTime();
   const centerType = CenterType.consult;
+
+  const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
+    numberDay: 3,
+    currentTime: serverTime?.data?.data?.data.timestamp,
+    timestamp: moment(getAppoinment?.data?.data?.start).unix(),
+  });
 
   const removePrefixDoctorName = useRemovePrefixDoctorName();
 
@@ -129,12 +139,12 @@ const Receipt = () => {
                   family: getCustomer?.data?.data?.lastName,
                   cell: getCustomer?.data?.data?.phone,
                 },
-                share_url: '',
+                share_url: getShareLink.data?.data?.shorturl,
                 duration_conversation_doctor: 3,
                 book_time_string: moment(getAppoinment?.data?.data?.start).locale('fa').format('jYYYY/jMM/DD HH:mm'),
                 is_online_visit: true,
               }}
-              loading={getChannel.isLoading || getAppoinment.isLoading || getService.isLoading}
+              loading={getChannel.isLoading || getAppoinment.isLoading || getService.isLoading || getShareLink.isLoading}
               centerId={'5532'}
             />
           </div>
@@ -147,59 +157,17 @@ const Receipt = () => {
             </>
           )}
 
-          {getChannel.data?.data?.name && (
+          {getChannel.data?.data?.name && possibilityBeingVisited && (
             <div className="grid gap-2">
               <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-4">
                 <MessengerButton
                   channel={{
                     type: getChannel.data?.data?.name,
-                    channel_link: '',
+                    channel_link: getService.data?.data?.location,
                     channel: '',
                   }}
                 />
               </div>
-
-              {serverTime?.data?.data?.data.timestamp > moment(getAppoinment?.data?.data?.start).unix() && (
-                <>
-                  <Divider />
-                  <div className="flex relative  flex-col space-y-2">
-                    <Button
-                      size="sm"
-                      className="border-orange-300 text-orange-600 hover:bg-orange-50"
-                      block
-                      variant="secondary"
-                      onClick={handleOpenWaitingTimeFollowUpModal}
-                      disabled={serverTime?.data?.data?.data.timestamp < moment(getAppoinment?.data?.data?.start).add(1, 'hour').unix()}
-                    >
-                      پیگیری تاخیر پزشک
-                      {serverTime?.data?.data?.data.timestamp < moment(getAppoinment?.data?.data?.start).add(1, 'hour').unix() && (
-                        <Chips>
-                          <Timer
-                            defaultTime={formattedDuration}
-                            target={moment(getAppoinment?.data?.data?.start).add(1, 'hour').unix() - serverTime?.data?.data?.data.timestamp}
-                            className="!text-slate-800 font-medium"
-                          />
-                        </Chips>
-                      )}
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="border-slate-300 text-slate-500 hover:bg-slate-50"
-                      block
-                      variant="secondary"
-                      onClick={() =>
-                        location.assign(
-                          `https://support.paziresh24.com/ticketbyturn/?book-id=${getAppoinment.data?.data?.id}&pincode=${
-                            (pincode as string) ?? (user.id && md5(user.id))
-                          }`,
-                        )
-                      }
-                    >
-                      درخواست پشتیبانی این نوبت
-                    </Button>
-                  </div>
-                </>
-              )}
             </div>
           )}
         </div>
