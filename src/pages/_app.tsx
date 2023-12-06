@@ -8,7 +8,6 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
-import { init as matomoInit } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -81,16 +80,6 @@ function MyApp(props: AppProps) {
     return () => {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
-  }, []);
-
-  useEffect(() => {
-    if (publicRuntimeConfig.MATOMO_URL && publicRuntimeConfig.MATOMO_SITE_ID) {
-      matomoInit({
-        url: publicRuntimeConfig.MATOMO_URL,
-        siteId: publicRuntimeConfig.MATOMO_SITE_ID,
-        excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
-      });
-    }
   }, []);
 
   useEffect(() => {

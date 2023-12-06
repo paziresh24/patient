@@ -2,10 +2,9 @@ import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
-import dynamic from 'next/dynamic';
 import { useSearchStore } from '../../store/search';
+import CitySelect from './suggestionAtoms/citySelect';
 import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
-const CitySelect = dynamic(() => import('./suggestionAtoms/citySelect'));
 
 interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;

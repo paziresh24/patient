@@ -15,7 +15,6 @@ import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
-import { push } from '@socialgouv/matomo-next';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
@@ -127,7 +126,6 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
 
   useEffect(() => {
     if (profileData) {
-      push(['trackEvent', 'contact', 'center profile']);
       splunkCenterProfileInstance().sendEvent({
         group: 'center_profile',
         type: 'load_center_profile',
