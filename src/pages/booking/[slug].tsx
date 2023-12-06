@@ -34,10 +34,10 @@ const Booking = () => {
   const shouldUseEasybook = newApiFeatureFlaggingCondition(easybookDoctorList.ids, router.query?.userId as string);
 
   useEffect(() => {
-    if (shouldUseEasybook) {
+    if (shouldUseEasybook && router.query.centerId === CENTERS.CONSULT) {
       router.replace(`/booking/easybook/${router.query?.slug as string}`);
     }
-  }, [shouldUseEasybook]);
+  }, [shouldUseEasybook, router.query.centerId]);
 
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
     { provider_id: router.query.providerId as string },
