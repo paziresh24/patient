@@ -14,13 +14,13 @@ const RecommendWrapper = dynamic(() => import('./recommend'));
 export const aside = ({ information, centers, expertises, waitingTimeInfo, onlineVisit, isBulk, customize, editable, seo }: any) => [
   // Bulk
   {
-    id: 'services_section',
+    id: 'book-me',
     isShow: isBulk,
     children: () => <BulkService displayName={information.display_name} expertises={expertises} />,
   },
   // Services
   {
-    id: 'services_section',
+    id: 'book-me',
     isShow: !isBulk,
     function: () => {
       return {
@@ -71,7 +71,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
   },
   // Centers Info
   {
-    id: 'center-info_section',
+    id: 'phone-and-address',
     title: 'آدرس و تلفن تماس',
     isShow: centers.some((center: any) => center.id !== CENTERS.CONSULT),
     ActionButton: customize.showContribute && !editable && (

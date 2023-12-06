@@ -15,7 +15,6 @@ import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
-import { push } from '@socialgouv/matomo-next';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
@@ -25,6 +24,7 @@ import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { useDebounce } from 'react-use';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -35,6 +35,15 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
   const { customize } = useCustomize();
   const slug = query.slug as string;
   const [searchQuery, setSearchQuery] = useState(text ?? '');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(text ?? '');
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchQuery);
+      remove();
+    },
+    600,
+    [searchQuery],
+  );
   const [selectedExpertise, setSelectedExpertise] = useState(expertise ? `ir/exp-${expertise}/` : '');
 
   const profile = useSlugProfile(
@@ -45,11 +54,14 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
     },
   );
   const profileData = profile.data?.result?.data;
-  const filters = {
-    center: profileData.id,
-    result_type: 'پزشکان+بیمارستانی',
-    ...(searchQuery && { text: searchQuery }),
-  };
+  const filters = useMemo(
+    () => ({
+      center: profileData.id,
+      result_type: 'پزشکان+بیمارستانی',
+      ...(debouncedSearchTerm && { text: debouncedSearchTerm, page: 1 }),
+    }),
+    [debouncedSearchTerm, profileData.id],
+  );
 
   const {
     data: doctors,
@@ -64,8 +76,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       {
         route: selectedExpertise ?? '',
         query: {
-          ...filters,
           page: 1,
+          ...filters,
         },
       },
     ],
@@ -73,12 +85,14 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       searchApi({
         route: selectedExpertise ?? '',
         query: {
+          page: pageParam?.page ?? 1,
           ...filters,
-          page: pageParam ?? 1,
         },
       }),
     getNextPageParam: (lastPage, pages) => {
-      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total ? lastPage : undefined;
+      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total
+        ? { pages: lastPage }
+        : undefined;
     },
     refetchOnMount: false,
   });
@@ -112,7 +126,6 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
 
   useEffect(() => {
     if (profileData) {
-      push(['trackEvent', 'contact', 'center profile']);
       splunkCenterProfileInstance().sendEvent({
         group: 'center_profile',
         type: 'load_center_profile',
@@ -236,8 +249,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         }}
         host={host}
       />
-      <div className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
-        <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+      <main className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+        <section className="flex flex-col w-full space-y-3 md:basis-7/12">
           <Head
             pageViewCount={profileData?.number_of_visits}
             displayName={profileData?.name}
@@ -253,28 +266,52 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             ]}
             className="shadow-card md:rounded-lg"
           />
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
-            <div onClick={() => scrollIntoViewWithOffset('#doctors-list_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
+            <ul className="flex justify-around">
+              <a
+                href="#doctors-list"
+                onClick={e => {
+                  e.preventDefault();
+                  scrollIntoViewWithOffset('#doctors-list', 90);
+                }}
+                title="لیست پرشکان"
+                className="text-sm font-medium"
+              >
                 لیست پزشکان
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                آدرس و تلفن
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                درباره مرکز
-              </Text>
-            </div>
+              </a>
+              <li>
+                <a
+                  href="#phone-and-address"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#phone-and-address', 90);
+                  }}
+                  title="آدرس و تلفن"
+                  className="text-sm font-medium"
+                >
+                  آدرس و تلفن
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#about"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#about', 90);
+                  }}
+                  title="درباره مرکز"
+                  className="text-sm font-medium"
+                >
+                  درباره مرکز
+                </a>
+              </li>
+            </ul>
           </nav>
-          <div id="doctors-list_section" className="flex flex-col w-full space-y-3">
+          <section id="doctors-list" className="flex flex-col w-full space-y-3">
             <Text fontWeight="bold" className="px-4 md:px-0">
               لیست پزشکان
             </Text>
-            <div id="doctors-list_section" className="px-4 md:p-0">
+            <div className="px-4 md:p-0">
               <ListOfDoctors
                 doctors={flatten(doctors?.pages?.map(page => page?.search?.result as any[]) ?? []) ?? []}
                 expertises={
@@ -284,7 +321,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                   })) ?? []
                 }
                 onChangePage={page => {
-                  fetchNextPage({ pageParam: page });
+                  fetchNextPage({ pageParam: { page } });
                 }}
                 hasNextPage={hasNextPage ?? true}
                 showRateAndReviews={customize.showRateAndReviews}
@@ -292,19 +329,17 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                 loading={isLoading}
                 isFetchingNextPage={isFetchingNextPage}
                 onSelectExpertise={expertise => {
-                  remove();
                   setSelectedExpertise(expertise.replace('/s/', ''));
                 }}
                 searchQuery={searchQuery}
                 onSearch={query => {
-                  remove();
                   setSearchQuery(query);
                 }}
                 defaultValue={defaultExpertise}
               />
             </div>
-          </div>
-          <div id="center-info_section" className="flex flex-col w-full space-y-3 md:hidden">
+          </section>
+          <section id="phone-and-address" className="flex flex-col w-full space-y-3 md:hidden">
             <Text fontWeight="bold" className="px-4 md:px-0">
               آدرس و تلفن تماس
             </Text>
@@ -322,18 +357,18 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                 },
               ]}
             />
-          </div>
+          </section>
           {profileData.biography && (
-            <div id="about_section" className="flex flex-col w-full space-y-3">
+            <section id="about" className="flex flex-col w-full space-y-3">
               <Text fontWeight="bold" className="px-4 md:px-0">
                 درباره مرکز درمانی
               </Text>
               <Biography content={profileData.biography} className="bg-white md:rounded-lg" />
-            </div>
+            </section>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
-        </div>
-        <div className="sticky flex-col hidden w-full space-y-3 top-5 md:flex md:basis-5/12">
+        </section>
+        <aside className="sticky flex-col hidden w-full space-y-3 top-5 md:flex md:basis-5/12">
           <Text fontWeight="bold" className="px-4 md:px-0">
             آدرس و تلفن تماس
           </Text>
@@ -351,8 +386,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
               },
             ]}
           />
-        </div>
-      </div>
+        </aside>
+      </main>
     </>
   );
 };

@@ -415,13 +415,23 @@ const Receipt = () => {
                         className="border-slate-300 text-slate-500 hover:bg-slate-50"
                         block
                         variant="secondary"
-                        onClick={() =>
+                        onClick={() => {
+                          splunkInstance().sendEvent({
+                            group: 'support-receipt',
+                            type: 'request-support-book',
+                            event: {
+                              doctor_name: bookDetailsData?.doctor?.display_name,
+                              book_id: bookDetailsData.book_id,
+                              reference_code: bookDetailsData.reference_code,
+                              book_date: bookDetailsData.book_time_strings,
+                            },
+                          });
                           location.assign(
                             `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
                               (pincode as string) ?? (user.id && md5(user.id))
                             }`,
-                          )
-                        }
+                          );
+                        }}
                       >
                         درخواست پشتیبانی این نوبت
                       </Button>
@@ -479,7 +489,19 @@ const Receipt = () => {
         <Modal {...waitingTimeFollowUpModalProps} title="پیگیری تاخیر پزشک">
           <form
             method="post"
-            onSubmit={() => setIsWattingTimeFollowUpLoadingButton(true)}
+            onSubmit={() => {
+              splunkInstance().sendEvent({
+                group: 'support-receipt',
+                type: 'follow-doctor-delay',
+                event: {
+                  doctor_name: bookDetailsData?.doctor?.display_name,
+                  book_id: bookDetailsData.book_id,
+                  reference_code: bookDetailsData.reference_code,
+                  book_date: bookDetailsData.book_time_strings,
+                },
+              });
+              setIsWattingTimeFollowUpLoadingButton(true);
+            }}
             action="https://n8n.paziresh24.com/webhook/doctordelayfollowup"
             className="flex flex-col space-y-3"
           >
@@ -506,16 +528,6 @@ const Receipt = () => {
             <Text className="text-center" fontSize="sm" fontWeight="medium">
               {rateAppModalInfo?.description?.replace('{appDownloadSource}', appDownloadSource)}
             </Text>
-            {bookDetailsData?.center?.waiting_time === 'بیشتر از یک ساعت' && (
-              <Alert severity="warning" className="flex flex-col items-center gap-2 p-2">
-                <Text fontWeight="bold" fontSize="sm">
-                  احتمال معطلی بیش از یک ساعت!
-                </Text>
-                <Text fontWeight="medium" fontSize="sm" className="text-center">
-                  با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.
-                </Text>
-              </Alert>
-            )}
             <Button block onClick={handleRedirectToStore}>
               {rateAppModalInfo?.button_rate_app_text}
             </Button>

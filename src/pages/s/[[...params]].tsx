@@ -11,6 +11,8 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import { splunkSearchInstance } from '@/common/services/splunk';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
@@ -20,6 +22,7 @@ import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
@@ -27,17 +30,22 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
+import { growthbook } from '../_app';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
 const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
+  const userInfo = useUserInfoStore(state => state.info);
+  const userPending = useUserInfoStore(state => state.pending);
+  const shouldUseSearchViewEventRoutesList = useFeatureValue('search:use-front-end-search-view-event', { routes: [''] });
+
   const {
     asPath,
-    query: { params },
+    query: { params, ...queries },
   } = useRouter();
 
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search } = useSearch();
   const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
@@ -54,13 +62,52 @@ const Search = ({ host }: any) => {
   }, [params, city, isLoading]);
 
   useEffect(() => {
-    stat.mutate({
-      route: asPath,
-      filters: selectedFilters,
-      result: result,
-      ...(!isLanding && { centerTypeFilterPresence: 1 }),
-    });
-  }, [asPath]);
+    if (growthbook.ready && !userPending && !isLoading) {
+      if (
+        shouldUseSearchViewEventRoutesList.routes?.some(route => asPath.includes(route)) ||
+        shouldUseSearchViewEventRoutesList.routes?.includes('*')
+      ) {
+        splunkSearchInstance().sendEvent({
+          group: 'search_metrics',
+          type: 'search_view',
+          event: {
+            filters: selectedFilters,
+            result: result.map(item => ({
+              action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
+              _id: item._id,
+              position: item.position,
+              server_id: item.server_id,
+              title: item.title,
+              type: item.type,
+              url: item.url,
+              rates_count: item.rates_count,
+              satisfaction: item.satisfaction,
+            })),
+            result_count: result.length,
+            location: city.en_slug,
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
+            },
+          },
+        });
+
+        return;
+      }
+      stat.mutate({
+        route: asPath,
+        filters: selectedFilters,
+        result: result,
+        ...(!isLanding && { centerTypeFilterPresence: 1 }),
+      });
+    }
+  }, [result, userPending, isLoading, growthbook.ready]);
 
   return (
     <>

@@ -9,7 +9,7 @@ export const splunkInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -20,7 +20,7 @@ export const splunkCenterProfileInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -31,7 +31,7 @@ export const splunkBookingInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -42,7 +42,7 @@ export const splunkSearchInstance = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -53,7 +53,7 @@ export const logErrorToSplunk = () =>
     constant: {
       current_url: window.location.href,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -70,7 +70,7 @@ export const coreWebVitalsSplunk = () =>
       },
       userAgent: window.navigator.userAgent,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });
 
@@ -87,6 +87,6 @@ export const dashboardSplunk = () =>
       },
       userAgent: window.navigator.userAgent,
       terminal_id: getCookie('terminal_id'),
-      isApplication: isPWA(),
+      is_application: isPWA(),
     },
   });

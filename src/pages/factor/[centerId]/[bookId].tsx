@@ -104,9 +104,6 @@ const Factor = () => {
                 </Text>{' '}
                 شما را ویزیت خواهم کرد.
               </Text>
-              <Text as="p" fontWeight="semiBold" className="leading-6" fontSize="xs" align="justify">
-                * در صورتی که از زمان نوبت تا 3 ساعت بعد از آن پاسخگوی شما نبودم، نوبت شما لغو و هزینه به حساب شما باز می‌گردد.
-              </Text>
             </div>
           )}
           {centerId !== CENTERS.CONSULT && (

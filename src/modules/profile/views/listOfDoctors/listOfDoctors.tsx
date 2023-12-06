@@ -76,16 +76,12 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
             value={searchQuery}
             onChange={e => {
               onSearch(e.target.value);
-              page.current = 1;
-              onChangePage(page.current);
             }}
           />
           <Autocomplete
             options={[{ label: 'همه تخصص ها', value: '' }, ...expertises]}
             onChange={e => {
               onSelectExpertise(e.target.value.value);
-              page.current = 1;
-              onChangePage(page.current);
             }}
             classNameWrapper="w-full md:max-w-[15rem] font-medium !text-sm"
             defaultValue={defaultValue}
@@ -112,7 +108,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
         {!loading &&
           doctors.map(doctor => (
             <SearchCard
-              key={doctor.title}
+              key={doctor.id}
               type="doctor"
               baseInfo={{
                 displayName: removePrefixDoctorName(doctor.title),

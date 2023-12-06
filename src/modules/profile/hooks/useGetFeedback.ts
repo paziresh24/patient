@@ -14,7 +14,6 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
   const getFeedbacks = useGetFeedbacks(
     {
       ...filterParams,
-      ...(typeof window !== 'undefined' && window.location.hash && { id: window.location.hash?.split('-')?.[1] }),
     },
     {
       refetchOnMount: false,

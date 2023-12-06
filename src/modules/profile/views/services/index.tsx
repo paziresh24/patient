@@ -141,7 +141,7 @@ export const Services = ({
             'bottom-0': isWebView,
           })}
         >
-          <Button onClick={() => scrollIntoViewWithOffset('#services_section', 90)} block>
+          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block>
             دریافت نوبت
           </Button>
         </div>

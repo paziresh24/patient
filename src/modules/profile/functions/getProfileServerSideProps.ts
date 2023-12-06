@@ -1,7 +1,6 @@
 import { getFeedbacks } from '@/apis/services/rate/getFeedbacks';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
-import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
@@ -11,10 +10,13 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import moment from 'jalali-moment';
+import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { deletedBooksRate } from '../apis/deletedBooksRate';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
@@ -87,6 +89,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
     let shouldUsePageView: boolean = false;
+    let shouldShowDeletedBooksRate: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -138,6 +141,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
       shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
+
+      // Deleted Books Rate Api
+      const showDeletedBooksRateDoctorList = growthbook.getFeatureValue('profile:show-deleted-books-rate|doctor-list', { slugs: [''] });
+      shouldShowDeletedBooksRate = newApiFeatureFlaggingCondition(showDeletedBooksRateDoctorList.slugs, slugFormmated);
     } catch (error) {
       console.error(error);
     }
@@ -173,7 +180,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 : '',
             }),
           };
-
           profileData.history = {
             ...(shouldUseCreatedAt && {
               insert_at_age: formatDurationInMonths(providerData.value?.created_at),
@@ -220,13 +226,72 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
             if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
-                waiting_time_info: averageWaitingTimeData?.value?.result,
+                waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
               };
+            }
+            if (
+              isEmpty(
+                profileData.feedbacks?.waiting_time_info_online_visit?.find?.((item: any) => item?.center_id === '5532')
+                  ?.waiting_time_title,
+              )
+            ) {
+              const parallelRequests = [
+                await getAverageWaitingTime({
+                  slug: slugFormmated,
+                  limit: '30',
+                }),
+              ];
+              const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
+
+              if (averageWaitingTimeData.status === 'fulfilled') {
+                profileData.feedbacks = {
+                  waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
+                };
+              }
+            }
+          }
+          if (shouldUseFeedback) {
+            const parallelRequests = [
+              await getReviewsData({
+                external_id: `doctor_${fullProfileData.id}_1`,
+              }),
+            ];
+            const [reviewData] = await Promise.allSettled(parallelRequests);
+
+            if (reviewData.status === 'fulfilled') {
+              profileData.feedbacks.reviews =
+                Object.values(reviewData.value)?.map?.((feedback: any) => ({
+                  description: feedback?.cooked ?? '',
+                  id: feedback?.id,
+                  doctor_id: fullProfileData?.id ?? '',
+                  server_id: fullProfileData?.server_id ?? '',
+                  user_id: feedback?.user_id,
+                  recommended: 0,
+                  created_at: feedback?.created_at,
+                  update_at: feedback?.updated_at,
+                  feedback_symptomes: [],
+                  user_name: feedback?.name,
+                  user_image: null,
+                  like: 0,
+                })) ?? [];
             }
           }
         }
       } catch (error) {
         console.error(error);
+      }
+    }
+
+    if (shouldShowDeletedBooksRate) {
+      const visitOnlineData = fullProfileData.centers?.find((center: { id: string }) => center.id === CENTERS.CONSULT);
+
+      if (visitOnlineData) {
+        try {
+          const { data } = await deletedBooksRate({ user_center_id: visitOnlineData.user_center_id });
+          profileData.history.deleted_books_rate = data?.rate_of_deleted_book ?? null;
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
 
@@ -239,25 +304,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       links,
     }).catch(error => console.error(error));
 
-    let feedbackDataWithoutPagination;
-
     let dontShowRateAndReviewMessage = '';
     try {
       let feedbackData;
-      if (shouldUseFeedback) {
-        feedbackData = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Reviews,
-            {
-              external_id: `doctor_${fullProfileData.id}_1`,
-            },
-          ],
-          () =>
-            getReviews({
-              external_id: `doctor_${fullProfileData.id}_1`,
-            }),
-        );
-      } else {
+      if (!shouldUseFeedback) {
         feedbackData = await queryClient.fetchQuery(
           [
             ServerStateKeysEnum.Feedbacks,
@@ -273,26 +323,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }),
         );
       }
-      feedbacks.feedbacks = shouldUseFeedback ? feedbackData?.feedbacks : feedbackData?.result ?? [];
-      dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
 
-      if (!isCSR)
-        feedbackDataWithoutPagination = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Feedbacks,
-            {
-              doctor_id: id,
-              server_id: server_id,
-              no_page_limit: true,
-            },
-          ],
-          () =>
-            getFeedbacks({
-              doctor_id: id,
-              server_id: server_id,
-              no_page_limit: true,
-            }),
-        );
+      feedbacks.feedbacks = shouldUseFeedback ? profileData.feedbacks.reviews : feedbackData?.result ?? [];
+      dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
     } catch (error) {
       console.error(error);
     }
@@ -326,7 +359,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
-        feedbackDataWithoutPagination: feedbackDataWithoutPagination?.result ?? [],
       },
     };
   } catch (error) {

@@ -10,7 +10,7 @@ import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile
 // Hooks
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
 
 // Components
@@ -52,15 +52,21 @@ import { UserInfo } from '@/modules/login/store/userInfo';
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
 import { useInquiryIdentityInformation } from '@/common/apis/services/booking/inquiryIdentityInformation';
 import { useUnsuspend } from '@/common/apis/services/booking/unsuspend';
+import { useSearch } from '@/common/apis/services/search/search';
+import Alert from '@/common/components/atom/alert';
+import Loading from '@/common/components/atom/loading';
 import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkBookingInstance, splunkSearchInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
+import SearchCard from '@/modules/search/components/card/card';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import axios from 'axios';
 import moment from 'jalali-moment';
+import random from 'lodash/random';
 import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
@@ -133,6 +139,11 @@ const BookingSteps = (props: BookingStepsProps) => {
   const shouldUseInquiryIdentityInformation = useFeatureValue<{ ids: string[] }>('booking:inquiry-identity-information|center-list', {
     ids: [],
   });
+  const onlineVisitDoctorList = useFeatureValue<{ slugs: string[] }>('booking:online-visit-recommend-modal', {
+    slugs: [],
+  });
+  const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile.slug);
+
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
 
@@ -158,13 +169,20 @@ const BookingSteps = (props: BookingStepsProps) => {
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
   const inquiryIdentityInformation = useInquiryIdentityInformation();
   const unsuspend = useUnsuspend();
+  const { changeRoute } = useSearchRouting();
   const getFirstFreeTime = useFirstFreeTime({
     enabled: false,
     centerId: center?.id,
     serviceId: service?.id,
     userCenterId: center?.user_center_id,
   });
-
+  const searchData = useSearch({
+    route: decodeURIComponent(`ir/${profile.expertises[0]?.expertise_groups[0].en_slug}`),
+    query: {
+      turn_type: 'consult',
+    },
+  });
+  const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
 
   useEffect(() => {
@@ -213,6 +231,15 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (!reserveId) {
       const timeData = await getFirstFreeTime.getFirstFreeTime();
       if (!timeData.timeId) return toast.error(timeData?.message ?? 'خطا در دریافت نوبت خالی پزشک.');
+      sendFirstFreeTimeEvent({
+        data: {
+          full_date: timeData?.full_date,
+          status: 200,
+          message: timeData?.message,
+          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - center?.freeturn ?? null,
+        },
+        doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
+      });
       reserveId = timeData.timeId;
     }
 
@@ -237,6 +264,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               date: moment().format('jYYYY/jMM/jDD - HH:mm'),
               preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
+              ...data?.book_info,
             },
           });
           if (user.messengerType)
@@ -371,6 +399,24 @@ const BookingSteps = (props: BookingStepsProps) => {
     return insurances;
   };
 
+  const handleClickMoreDoctors = () => {
+    splunkSearchInstance().sendEvent({
+      group: 'booking-freeturn-error',
+      type: 'booking-freeturn-error-click-doctor-card',
+    });
+
+    changeRoute({
+      query: {
+        turn_type: 'consult',
+      },
+      params: {
+        city: 'ir',
+        category: profile.expertises[0]?.expertise_groups[0].en_slug,
+      },
+      previousQueries: false,
+    });
+  };
+
   const handleShowErrorModal = ({
     text,
     buttons,
@@ -387,6 +433,21 @@ const BookingSteps = (props: BookingStepsProps) => {
       buttons,
     });
     handleOpenErrorModal();
+  };
+
+  const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
+    splunkSearchInstance().sendEvent({
+      group: 'booking-freeturn-error',
+      type: 'booking-freeturn-error-click-doctor-card',
+      event: {
+        slug: url.replace('/dr/', ''),
+        doctor_name: profile?.display_name,
+        doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
+        center_id: center?.id,
+        service_id: service?.id,
+      },
+    });
+    location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
   };
 
   return (
@@ -758,25 +819,87 @@ const BookingSteps = (props: BookingStepsProps) => {
         className="bg-slate-100"
       >
         <div className="flex flex-col space-y-5">
-          <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
-            {firstFreeTimeErrorText}
-          </Text>
+          {!shouldShowOnlineVistRecommendModal && (
+            <Text className="p-5 leading-7 bg-white rounded-lg" fontWeight="bold">
+              {firstFreeTimeErrorText}
+            </Text>
+          )}
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
-              <Text fontSize="sm" className="leading-6">
-                برترین پزشکان{' '}
-                <Text fontWeight="bold">
-                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
-                </Text>{' '}
-                از دیدگاه بیماران
-              </Text>
+              {!shouldShowOnlineVistRecommendModal && (
+                <Text fontSize="sm" className="leading-6">
+                  برترین پزشکان{' '}
+                  <Text fontWeight="bold">
+                    {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
+                  </Text>{' '}
+                  از دیدگاه بیماران
+                </Text>
+              )}
               {profile && (
-                <Recommend
-                  doctorId={profile.id}
-                  city={profile.city_en_slug}
-                  category={profile.expertises[0]?.expertise_groups[0].en_slug}
-                  centerId={center?.id}
-                />
+                <>
+                  {shouldShowOnlineVistRecommendModal ? (
+                    <div className="flex flex-col gap-2">
+                      <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+                        <Text className="text-sm font-medium"> {firstFreeTimeErrorText}</Text>
+                      </Alert>
+                      <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+                        بدون خروج از منزل، آنلاین ویزیت شوید.
+                      </Alert>
+                      <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
+                        {(searchData.isLoading || !substituteDoctor?.url) && (
+                          <div className="flex justify-center w-full">
+                            <Loading className="w-8 h-8 my-8 " />
+                          </div>
+                        )}
+                        {searchData.isSuccess && substituteDoctor?.url && (
+                          <SearchCard
+                            avatarSize="lg"
+                            baseInfo={{
+                              displayName: substituteDoctor.title,
+                              expertise: substituteDoctor.display_expertise,
+                              experience: substituteDoctor.experience,
+                              isVerify: true,
+                              avatar: substituteDoctor.image,
+                              rate: {
+                                count: substituteDoctor.rates_count,
+                                satisfaction: substituteDoctor.satisfaction,
+                              },
+                              isOnline: true,
+                            }}
+                            details={{
+                              badges: [
+                                {
+                                  title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+                                  icon: 'shield-icon',
+                                  type: 'error',
+                                },
+                              ],
+                            }}
+                            className="shadow-none !py-2 lg:!py-2 cursor-pointer"
+                            type="doctor"
+                            actions={[
+                              {
+                                text: `گفتگو با ${substituteDoctor.title}`,
+                                outline: false,
+                                description: '',
+                              },
+                            ]}
+                          />
+                        )}
+                      </div>
+                      <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
+                        مشاهده سایر پزشکان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Recommend
+                      doctorId={profile.id}
+                      city={profile.city_en_slug}
+                      category={profile.expertises[0]?.expertise_groups[0].en_slug}
+                      centerId={center?.id}
+                    />
+                  )}
+                </>
               )}
             </div>
           )}

@@ -49,7 +49,7 @@ export const Head = (props: HeadProps) => {
   } = props;
 
   return (
-    <div className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
+    <section className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
       <div className="px-4 space-y-3">
         <div className="flex justify-between">
           {toolBarItems && <ToolBar items={toolBarItems} />}
@@ -90,7 +90,7 @@ export const Head = (props: HeadProps) => {
         </ScrollContainer>
       )}
       {!!satisfaction && !editable && (
-        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
+        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
           <RateBadge
             text={`${satisfaction}%`}
             icon={<LikeIcon className="w-5 text-white" />}
@@ -102,7 +102,7 @@ export const Head = (props: HeadProps) => {
         </div>
       )}
       {children}
-    </div>
+    </section>
   );
 };
 

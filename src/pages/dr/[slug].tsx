@@ -30,7 +30,7 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
-import { push } from '@socialgouv/matomo-next';
+import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
@@ -99,7 +99,6 @@ const DoctorProfile = ({
         isBulk,
         isWebView: !!isWebView || !!isApplication,
       });
-      push(['trackEvent', 'contact', 'doctor profile']);
       if (shouldUseIncrementPageView) {
         incrementPageView.mutate({
           provider_id: information.provider_id,
@@ -198,11 +197,11 @@ const DoctorProfile = ({
 
   return (
     <>
-      <div
+      <main
         key={information.id}
         className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 pwa:pb-24"
       >
-        <div className="flex flex-col w-full space-y-3 md:basis-7/12">
+        <section className="flex flex-col w-full space-y-3 md:basis-7/12">
           {editable && (
             <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
               <InfoIcon className="min-w-6" />
@@ -253,29 +252,63 @@ const DoctorProfile = ({
               </div>
             )}
           </Head>
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white flex justify-around">
-            <div onClick={() => scrollIntoViewWithOffset('#services_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                دریافت نوبت
-              </Text>
-            </div>
-            {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
-              <div onClick={() => scrollIntoViewWithOffset('#center-info_section', 90)}>
-                <Text fontSize="sm" fontWeight="medium">
-                  آدرس و تلفن
-                </Text>
-              </div>
-            )}
-            <div onClick={() => scrollIntoViewWithOffset('#about_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                درباره پزشک
-              </Text>
-            </div>
-            <div onClick={() => scrollIntoViewWithOffset('#reviews_section', 90)}>
-              <Text fontSize="sm" fontWeight="medium">
-                نظرات
-              </Text>
-            </div>
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
+            <ul className="flex justify-around">
+              <li>
+                <a
+                  href="#book-me"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#book-me', 90);
+                  }}
+                  title="دریافت نوبت"
+                  className="text-sm font-medium"
+                >
+                  دریافت نوبت
+                </a>
+              </li>
+              {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+                <li>
+                  <a
+                    href="#phone-and-address"
+                    onClick={e => {
+                      e.preventDefault();
+                      scrollIntoViewWithOffset('#phone-and-address', 90);
+                    }}
+                    title="آدرس و تلفن"
+                    className="text-sm font-medium"
+                  >
+                    آدرس و تلفن
+                  </a>
+                </li>
+              )}
+              <li>
+                <a
+                  href="#about-me"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#about-me', 90);
+                  }}
+                  title="درباره من"
+                  className="text-sm font-medium"
+                >
+                  درباره من
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#reviews"
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollIntoViewWithOffset('#reviews', 90);
+                  }}
+                  title="نظرات"
+                  className="text-sm font-medium"
+                >
+                  نظرات
+                </a>
+              </li>
+            </ul>
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
@@ -303,7 +336,7 @@ const DoctorProfile = ({
                 {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
               </Section>
             ))}
-        </div>
+        </section>
 
         <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
           {aside(profileData)
@@ -314,7 +347,7 @@ const DoctorProfile = ({
               </Section>
             ))}
         </aside>
-      </div>
+      </main>
       <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
         <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
       </Modal>
@@ -323,20 +356,21 @@ const DoctorProfile = ({
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers, information, feedbacks, feedbackDataWithoutPagination, host } = page.props;
+  const { title, description, slug, expertises, centers, information, feedbacks, host } = page.props;
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
   const getJsonlds = () => {
-    const center = centers.find((cn: any) => cn.id !== '5532');
-    const date = new Date();
+    const center = centers.find((cn: any) => cn.id !== CENTERS.CONSULT);
+    const visitOnlineCenter = centers.find((cn: any) => cn.id === CENTERS.CONSULT);
+    const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
     return [
       {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
-        'priceRange': '$$',
+        'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
         'name': information.display_name,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
@@ -349,37 +383,21 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           '@type': 'PostalAddress',
           'addressCountry': {
             '@type': 'Country',
-            'name': 'IRN',
+            'name': 'IR',
           },
           'addressLocality': center?.city,
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        ...(feedbackDataWithoutPagination.length > 0 && {
+        ...(feedbacks.details.avg_star && {
           aggregateRating: {
             '@type': 'AggregateRating',
             'bestRating': 5,
             'worstRating': 0,
-            'ratingValue': feedbacks.details.avg_star,
             'ratingCount': feedbacks.details.number_of_feedbacks,
+            'ratingValue': feedbacks.details.avg_star,
           },
         }),
-        'review':
-          feedbackDataWithoutPagination?.map((item: any) => ({
-            '@type': 'Review',
-            'author': {
-              '@type': 'Person',
-              'name': item.user_name,
-            },
-            'description': item.description,
-            'reviewRating': {
-              '@type': 'Rating',
-              'bestRating': 5,
-              'worstRating': 0,
-              'datePublished': `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`,
-              'ratingValue': item.avg_star === '0.0' || item.avg_star === 0.0 ? '0.5' : item.avg_star,
-            },
-          })) ?? [],
       },
       {
         '@context': 'http://www.schema.org',
@@ -393,7 +411,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           '@type': 'PostalAddress',
           'addressCountry': {
             '@type': 'Country',
-            'name': 'IRN',
+            'name': 'IR',
           },
           'addressLocality': center?.city,
           'addressRegion': center?.province,
