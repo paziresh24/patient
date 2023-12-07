@@ -72,17 +72,6 @@ const Search = ({ host }: any) => {
           type: 'search_view',
           event: {
             filters: selectedFilters,
-            result: result.map(item => ({
-              action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
-              _id: item._id,
-              position: item.position,
-              server_id: item.server_id,
-              title: item.title,
-              type: item.type,
-              url: item.url,
-              rates_count: item.rates_count,
-              satisfaction: item.satisfaction,
-            })),
             result_count: result.length,
             location: city.en_slug,
             city_id: city.id,
@@ -96,6 +85,37 @@ const Search = ({ host }: any) => {
               host: window.location.host,
             },
           },
+        });
+
+        splunkSearchInstance().sendBatchEvent({
+          group: 'search_metrics',
+          type: 'search_card_view',
+          events: result.map(item => ({
+            card_data: {
+              action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
+              _id: item._id,
+              position: item.position,
+              server_id: item.server_id,
+              title: item.title,
+              type: item.type,
+              url: item.url,
+              rates_count: item.rates_count,
+              satisfaction: item.satisfaction,
+            },
+            filters: selectedFilters,
+            result_count: result.length,
+            location: city.en_slug,
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
+            },
+          })),
         });
 
         return;
