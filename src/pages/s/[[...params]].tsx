@@ -38,7 +38,9 @@ const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
-  const shouldUseSearchViewEventRoutesList = useFeatureValue('search:use-front-end-search-view-event', { routes: [''] });
+  const shouldUseSearchViewEventRoutesList = useFeatureValue<{ routes: Array<string | null> }>('search:use-front-end-search-view-event', {
+    routes: [],
+  });
 
   const {
     asPath,
@@ -64,7 +66,7 @@ const Search = ({ host }: any) => {
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
       if (
-        shouldUseSearchViewEventRoutesList.routes?.some(route => asPath.includes(route)) ||
+        shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
         splunkSearchInstance().sendEvent({
