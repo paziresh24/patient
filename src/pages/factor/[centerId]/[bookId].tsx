@@ -5,20 +5,24 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
+import calculateTimeDifference from '@/common/utils/calculateTimeDifference';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { getAverageWaitingTime } from '@/modules/profile/functions/getAverageWaitingTime';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
+import isEmpty from 'lodash/isEmpty';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
 const Factor = () => {
@@ -26,7 +30,29 @@ const Factor = () => {
     query: { bookId, centerId },
   } = useRouter();
   const getBookDetails = useGetBookDetails();
+  const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
+  const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
+  const onlineVisitTimeInfo = useFeatureValue<any>('factor:online-visit-turn-info', {});
+  const [centersWatingTime, setCentersWatingTime] = useState<any>([]);
+  const calculateTime = moment
+    .unix(bookDetailsData?.book_from)
+    .add(centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time ?? '00:00:00', 'minute')
+    .format('HH:mm');
+
+  useEffect(() => {
+    if (!isEmpty(bookDetailsData) && newApiFeatureFlaggingCondition(onlineVisitTimeInfo?.slugs, bookDetailsData?.doctor_slug)) {
+      const waitingTimes = getAverageWaitingTime({
+        slug: bookDetailsData?.doctor_slug,
+        start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+        end_date: moment().format('YYYY-MM-DD'),
+        limit: 30,
+      });
+      waitingTimes.then((result: any) => {
+        if (result?.result) return setCentersWatingTime(result?.result);
+      });
+    }
+  }, [bookDetailsData, onlineVisitTimeInfo]);
 
   useEffect(() => {
     if (bookId)
@@ -36,13 +62,21 @@ const Factor = () => {
       });
   }, [bookId]);
 
-  const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
-  const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
       nextWeek: 'dddd',
       sameElse: 'dddd',
     });
+  };
+
+  const onlineVisitTimeList: any = {
+    visit_time: convertTime(bookDetailsData?.book_time_string ?? ''),
+    visit_time_combine_with_waiting_time: `امروز ساعت ${calculateTime}`,
+    waiting_time: `تا ${
+      calculateTimeDifference(calculateTime, 'minutes') < 60
+        ? `${calculateTimeDifference(calculateTime, 'minutes')} دقیقه دیگر`
+        : `${calculateTimeDifference(calculateTime, 'hours')} ساعت دیگر`
+    }`,
   };
 
   return (
@@ -92,7 +126,7 @@ const Factor = () => {
             />
           )}
           {isOnlineVisitTurn && <Divider />}
-          {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
+          {!!bookDetailsData && !!calculateTime && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
             <div className="p-2 flex flex-col space-y-1">
               <Text fontSize="sm" as="p">
                 سلام. من دکتر {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
@@ -100,7 +134,8 @@ const Factor = () => {
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
                 <Text className="text-primary" fontWeight="semiBold">
-                  {convertTime(bookDetailsData?.book_time_string)}، از طریق {messengers[bookDetailsData?.book_params?.online_channel]?.text}
+                  {onlineVisitTimeList[onlineVisitTimeInfo?.visit_time_mode ?? 'visit_time']}، از طریق{' '}
+                  {messengers[bookDetailsData?.book_params?.online_channel]?.text}
                 </Text>{' '}
                 شما را ویزیت خواهم کرد.
               </Text>

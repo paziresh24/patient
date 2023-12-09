@@ -312,7 +312,12 @@ const Receipt = () => {
                 )}
               </>
             )}
-            <BookInfo turnData={bookDetailsData} loading={getReceiptDetails.isLoading} centerId={centerId?.toString()!} />
+            <BookInfo
+              turnData={bookDetailsData}
+              loading={getReceiptDetails.isLoading}
+              centerId={centerId?.toString()!}
+              serverTime={serverTime?.data?.data?.data.timestamp}
+            />
           </div>
           {showOptionalButton && (
             <>

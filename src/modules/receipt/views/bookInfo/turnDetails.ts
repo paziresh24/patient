@@ -17,7 +17,7 @@ type MessengerDataType = {
 };
 interface TurnDetailsDataParam {
   data: {
-    bookTime: string;
+    bookTime: string | number;
     waitingTime?: string;
     turnStatus?: string;
     trackingCode: string;
@@ -32,6 +32,7 @@ interface TurnDetailsDataParam {
     patientInfo: Patient;
     rules?: string[];
     messengerList?: Record<string, MessengerDataType>;
+    formattedDuration?: string;
   };
   centerType: CenterType;
 }
@@ -53,6 +54,7 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     durationConversation,
     turnStatus,
     messengerList,
+    formattedDuration,
   } = data;
 
   const lists = [
@@ -69,8 +71,9 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
       value: bookTime,
       shouldShow: turnStatus !== BookStatus.requested,
-      type: 'Text',
+      type: 'Timer',
       isBoldValue: true,
+      defaultValue: formattedDuration,
     },
     {
       id: 13,

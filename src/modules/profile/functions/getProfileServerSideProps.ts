@@ -10,7 +10,6 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import moment from 'jalali-moment';
-import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { deletedBooksRate } from '../apis/deletedBooksRate';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
@@ -220,6 +219,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 slug: slugFormmated,
                 start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
                 end_date: moment().format('YYYY-MM-DD'),
+                limit: 30,
               }),
             ];
             const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
@@ -228,26 +228,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               profileData.feedbacks = {
                 waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
               };
-            }
-            if (
-              isEmpty(
-                profileData.feedbacks?.waiting_time_info_online_visit?.find?.((item: any) => item?.center_id === '5532')
-                  ?.waiting_time_title,
-              )
-            ) {
-              const parallelRequests = [
-                await getAverageWaitingTime({
-                  slug: slugFormmated,
-                  limit: '30',
-                }),
-              ];
-              const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
-
-              if (averageWaitingTimeData.status === 'fulfilled') {
-                profileData.feedbacks = {
-                  waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
-                };
-              }
             }
           }
           if (shouldUseFeedback) {
