@@ -32,7 +32,6 @@ interface TurnDetailsDataParam {
     patientInfo: Patient;
     rules?: string[];
     messengerList?: Record<string, MessengerDataType>;
-    formattedDuration?: string;
   };
   centerType: CenterType;
 }
@@ -54,7 +53,6 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     durationConversation,
     turnStatus,
     messengerList,
-    formattedDuration,
   } = data;
 
   const lists = [
@@ -71,9 +69,8 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
       value: bookTime,
       shouldShow: turnStatus !== BookStatus.requested,
-      type: 'Timer',
+      type: 'Text',
       isBoldValue: true,
-      defaultValue: formattedDuration,
     },
     {
       id: 13,

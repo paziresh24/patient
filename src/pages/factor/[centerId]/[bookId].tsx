@@ -5,7 +5,6 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
@@ -41,7 +40,7 @@ const Factor = () => {
     .format('HH:mm');
 
   useEffect(() => {
-    if (!isEmpty(bookDetailsData) && newApiFeatureFlaggingCondition(onlineVisitTimeInfo?.slugs, bookDetailsData?.doctor_slug)) {
+    if (!isEmpty(bookDetailsData)) {
       const waitingTimes = getAverageWaitingTime({
         slug: bookDetailsData?.doctor_slug,
         start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),

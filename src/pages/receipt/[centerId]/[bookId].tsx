@@ -25,7 +25,9 @@ import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorN
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import calculateTimeDifference from '@/common/utils/calculateTimeDifference';
 import classNames from '@/common/utils/classNames';
+import convertTime from '@/common/utils/convertTime';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isPWA } from '@/common/utils/isPwa';
 import Select from '@/modules/booking/components/select/select';
@@ -38,11 +40,13 @@ import MessengerButton from '@/modules/myTurn/components/messengerButton/messeng
 import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { getAverageWaitingTime } from '@/modules/profile/functions/getAverageWaitingTime';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
-import { shuffle } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import shuffle from 'lodash/shuffle';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -63,6 +67,7 @@ const Receipt = () => {
   const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
+  const [centersWatingTime, setCentersWatingTime] = useState<any>([]);
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -88,6 +93,7 @@ const Receipt = () => {
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
+  const onlineVisitTimeInfo = useFeatureValue<any>('factor:online-visit-turn-info', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);
@@ -100,7 +106,37 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const calculateTime = moment
+    .unix(bookDetailsData?.book_from)
+    .add(centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time ?? '00:00:00', 'minute')
+    .format('HH:mm');
   const removePrefixDoctorName = useRemovePrefixDoctorName();
+
+  const onlineVisitTimeList: any = {
+    visit_time: convertTime(bookDetailsData?.book_time_string ?? ''),
+    visit_time_combine_with_waiting_time: `امروز ساعت ${calculateTime}`,
+    waiting_time: `تا ${
+      calculateTimeDifference(calculateTime, 'minutes') < 60
+        ? `${calculateTimeDifference(calculateTime, 'minutes')} دقیقه دیگر`
+        : `${calculateTimeDifference(calculateTime, 'hours')} ساعت دیگر`
+    }`,
+  };
+
+  useEffect(() => {
+    if (!isEmpty(bookDetailsData)) {
+      const waitingTimes = getAverageWaitingTime({
+        slug: bookDetailsData?.doctor_slug,
+        start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+        end_date: moment().format('YYYY-MM-DD'),
+        limit: 30,
+      });
+      waitingTimes.then((result: any) => {
+        if (result?.result) return setCentersWatingTime(result?.result);
+      });
+    }
+  }, [bookDetailsData, onlineVisitTimeInfo]);
+
+  console.log(centersWatingTime);
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -312,12 +348,7 @@ const Receipt = () => {
                 )}
               </>
             )}
-            <BookInfo
-              turnData={bookDetailsData}
-              loading={getReceiptDetails.isLoading}
-              centerId={centerId?.toString()!}
-              serverTime={serverTime?.data?.data?.data.timestamp}
-            />
+            <BookInfo turnData={bookDetailsData} loading={getReceiptDetails.isLoading} centerId={centerId?.toString()!} />
           </div>
           {showOptionalButton && (
             <>

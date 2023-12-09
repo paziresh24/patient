@@ -3,7 +3,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import moment from 'jalali-moment';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
 
@@ -11,26 +10,15 @@ interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
   centerId: string;
-  serverTime: number;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData, centerId, serverTime } = props;
+  const { loading = false, turnData, centerId } = props;
   const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
-
-  const duration = moment.duration(moment(turnData.book_time * 1000).diff(moment(serverTime * 1000)));
-
-  let minutes = Math.floor(duration.minutes());
-  let seconds = Math.floor(duration.seconds());
-  let hours = Math.floor(duration.hours());
-
-  let formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
-    .toString()
-    .padStart(2, '0')}`;
 
   return (
     <div className="flex flex-col space-y-6">
@@ -58,12 +46,11 @@ export const BookInfo = (props: PaymentDetailsProps) => {
         {!loading &&
           turnDetailsData({
             data: {
-              bookTime: moment(turnData.book_time * 1000).unix() - serverTime,
+              bookTime: turnData.book_time_string,
               centerName: turnData.center?.name,
               trackingCode: turnData.reference_code,
               waitingTime: turnData?.center?.waiting_time,
               centerPhone: turnData?.center?.display_number,
-              formattedDuration: formattedDuration,
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               durationConversation: turnData?.duration_conversation_doctor,

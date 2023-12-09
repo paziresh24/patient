@@ -1,9 +1,7 @@
 import Accordion from '@/common/components/atom/accordion/accordion';
 import Text from '@/common/components/atom/text/text';
-import Timer from '@/common/components/atom/timer';
 import RowButton from '@/modules/booking/components/rowButton/rowButton';
 import RowText from '@/modules/booking/components/rowText/rowText';
-import moment from 'jalali-moment';
 import { ReactNode } from 'react';
 
 export type Data = {
@@ -49,12 +47,6 @@ export const BaseRow = (props: BaseRowProps) => {
             titleFontWeight="medium"
             variant="secondary"
           />
-        )}
-        {data.type === 'Timer' && (
-          <div className="flex justify-between">
-            <p>{data.name}</p>
-            <Timer defaultTime={data.defaultValue!} target={moment(data.value).unix()} className="!text-slate-800 font-medium" />
-          </div>
         )}
         {data.type === 'Label' &&
           (Array.isArray(data.value) ? (
