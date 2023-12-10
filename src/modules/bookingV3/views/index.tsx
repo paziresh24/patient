@@ -1,9 +1,7 @@
 import { toast } from 'react-hot-toast';
 
-// Apis
-
 // Hooks
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // Components
 import Modal from '@/common/components/atom/modal';
@@ -16,22 +14,26 @@ import SelectUserWrapper from './selectUser/wrapper';
 // Analytics
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 
-// Constants
-
-// Global Store
-
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
+import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
+import { useSearch } from '@/common/apis/services/search/search';
+import Alert from '@/common/components/atom/alert';
 import Button from '@/common/components/atom/button';
+import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import { providers } from '@/modules/profile/apis/providers';
+import SearchCard from '@/modules/search/components/card/card';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'jalali-moment';
+import { random } from 'lodash';
+import { useRouter } from 'next/router';
 import { useEasyAvailability } from '../apis/easyapp-availability';
 import { easyChannels } from '../apis/easyapp-channels';
 import { useEasyPidConverter } from '../apis/easyapp-pid';
@@ -48,6 +50,7 @@ interface BookingStepsProps {
 const BookingSteps = (props: BookingStepsProps) => {
   const { customize } = useCustomize();
   const { slug, className } = props;
+  const router = useRouter();
   const { data: providerResponse } = useQuery(['getProviders', slug], () => providers({ slug }));
   const providerData = providerResponse;
   const providerId = providerData?.id;
@@ -58,6 +61,35 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const getAvailability = useEasyAvailability();
   const messengers = useFeatureValue<any>('channeldescription', {});
+  const { data: profileData, isLoading } = useGetProfileData(
+    {
+      slug,
+    },
+    {
+      enabled: !!slug,
+    },
+  );
+  const profile = profileData?.data;
+  const gexp = useMemo(
+    () =>
+      profile?.expertises[0]?.expertise_groups?.[0]?.en_slug === 'other'
+        ? profile?.expertises?.[1]?.expertise_groups?.[0]
+        : profile?.expertises?.[0]?.expertise_groups?.[0],
+    [profile?.expertise],
+  );
+
+  const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
+  const searchData = useSearch(
+    {
+      route: decodeURIComponent(`ir/${gexp?.en_slug}`),
+      query: {
+        turn_type: 'consult',
+      },
+    },
+    { enabled: !!gexp?.en_slug && recommendModalProps.isOpen },
+  );
+  const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const { changeRoute } = useSearchRouting();
 
   const membershipsData = {
     id: membershipResponse?.data?.ea_pid,
@@ -91,7 +123,7 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const [user, setUser] = useState<any>({});
 
-  const { handleOpen: handleOpenFactorModal, modalProps: factorModalProps } = useModal();
+  const { handleOpen: handleOpenFactorModal, modalProps: factorModalProps, handleClose: handleCloseFactorModal } = useModal();
   const { handleBook, isLoading: bookLoading } = useBooking();
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
 
@@ -138,6 +170,22 @@ const BookingSteps = (props: BookingStepsProps) => {
     );
   };
 
+  const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
+    location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
+  };
+
+  const handleClickMoreDoctors = () => {
+    changeRoute({
+      query: {
+        turn_type: 'consult',
+      },
+      params: {
+        city: 'ir',
+        category: gexp?.en_slug,
+      },
+      previousQueries: false,
+    });
+  };
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
       {services?.length === 1 && (
@@ -170,10 +218,16 @@ const BookingSteps = (props: BookingStepsProps) => {
             ...user,
             messengerType: user.messengerType ? user.messengerType : services?.[0]?.channel,
           };
-          const { data } = await getAvailability.mutateAsync({
-            provider_id: membershipsData.id,
-            service_id: services.find(service => service.channel === user.messengerType).id,
-          });
+
+          try {
+            const { data } = await getAvailability.mutateAsync({
+              provider_id: membershipsData.id,
+              service_id: services.find(service => service.channel === user.messengerType).id,
+            });
+          } catch (error) {
+            handleCloseFactorModal();
+            handleOpenRecommendModal();
+          }
 
           setUser(user);
         }}
@@ -211,6 +265,77 @@ const BookingSteps = (props: BookingStepsProps) => {
           >
             پرداخت
           </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        noHeader
+        {...recommendModalProps}
+        onClose={() => {
+          recommendModalProps.onClose();
+          router.replace(`/dr/${slug}`);
+        }}
+        bodyClassName="bg-slate-100"
+        className="bg-slate-100"
+      >
+        <div className="flex flex-col space-y-5">
+          {!customize?.partnerKey && (
+            <div className="flex flex-col space-y-3">
+              <div className="flex flex-col gap-2">
+                <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+                  <Text className="text-sm font-medium">نوبت خالی برای پزشک یافت نشد.</Text>
+                </Alert>
+                <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+                  بدون خروج از منزل، آنلاین ویزیت شوید.
+                </Alert>
+                <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
+                  {!substituteDoctor?.url && (
+                    <div className="flex justify-center w-full">
+                      <Loading className="w-8 h-8 my-8 " />
+                    </div>
+                  )}
+                  {substituteDoctor?.url && (
+                    <SearchCard
+                      avatarSize="lg"
+                      baseInfo={{
+                        displayName: substituteDoctor.title,
+                        expertise: substituteDoctor.display_expertise,
+                        experience: substituteDoctor.experience,
+                        isVerify: true,
+                        avatar: substituteDoctor.image,
+                        rate: {
+                          count: substituteDoctor.rates_count,
+                          satisfaction: substituteDoctor.satisfaction,
+                        },
+                        isOnline: true,
+                      }}
+                      details={{
+                        badges: [
+                          {
+                            title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+                            icon: 'shield-icon',
+                            type: 'error',
+                          },
+                        ],
+                      }}
+                      className="shadow-none !py-2 lg:!py-2 cursor-pointer"
+                      type="doctor"
+                      actions={[
+                        {
+                          text: `گفتگو با ${substituteDoctor.title}`,
+                          outline: false,
+                          description: '',
+                        },
+                      ]}
+                    />
+                  )}
+                </div>
+                <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
+                  مشاهده سایر پزشکان آنلاین {gexp?.name}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
     </div>
