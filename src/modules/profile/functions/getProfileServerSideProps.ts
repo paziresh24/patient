@@ -12,7 +12,7 @@ import axios from 'axios';
 import moment from 'jalali-moment';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
-import { deletedBooksRate } from '../apis/deletedBooksRate';
+import { appointmentsCount } from '../apis/appointmentsCount';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
@@ -287,8 +287,27 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
       if (visitOnlineData) {
         try {
-          const { data } = await deletedBooksRate({ user_center_id: visitOnlineData.user_center_id });
-          profileData.history.deleted_books_rate = data?.rate_of_deleted_book ?? null;
+          const [allBooksCountData, deletedBooksCountData] = await Promise.allSettled([
+            await appointmentsCount({
+              user_center_id: visitOnlineData.user_center_id,
+              payment_status_in: [3, 4, 5, 6, 7, 8, 9],
+              from_less_than: moment().startOf('jDay').unix(),
+              from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
+            }),
+            await appointmentsCount({
+              user_center_id: visitOnlineData.user_center_id,
+              payment_status_in: [4],
+              from_less_than: moment().startOf('jDay').unix(),
+              from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
+              deleted_at_greater_than: 'from',
+            }),
+          ]);
+
+          if (allBooksCountData.status === 'fulfilled' && deletedBooksCountData.status === 'fulfilled') {
+            profileData.history.deleted_books_rate = `${Math.ceil(
+              100 - ((deletedBooksCountData.value?.data?.count_book ?? 0) / (allBooksCountData.value?.data?.count_book ?? 0)) * 100,
+            )}%`;
+          }
         } catch (error) {
           console.error(error);
         }
