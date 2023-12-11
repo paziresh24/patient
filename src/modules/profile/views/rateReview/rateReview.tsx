@@ -558,7 +558,7 @@ export const RateReview = (props: RateReviewProps) => {
 
   const addReviewHandler = async (description: string) => {
     try {
-      await addReview.mutateAsync({ external_id: `doctor_${doctor.id}_1`, description, user_id: userInfo?.id });
+      await addReview.mutateAsync({ topic_id: `doctor_${doctor.id}_1`, raw: description, nested_post: false });
       toast.success('نظر شما با موفقیت ثبت شد');
       handleCloseAddReviewModal();
       return;

@@ -2,24 +2,17 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
-  external_id: string;
-  description?: string;
-  user_id?: string;
+  raw: string;
+  topic_id: string;
+  nested_post?: boolean;
 }
 
-export const addReview = async ({ external_id, description, user_id }: Params) => {
-  return apiGatewayClient.post(
-    `/v1/feedbacks`,
-    {
-      description,
-      external_id,
-    },
-    {
-      headers: {
-        'x-user-id': user_id,
-      },
-    },
-  );
+export const addReview = async ({ raw, topic_id, nested_post }: Params) => {
+  return apiGatewayClient.post(`/ravi/posts`, {
+    raw,
+    topic_id,
+    nested_post,
+  });
 };
 
 export const useAddReview = () => {
