@@ -9,13 +9,13 @@ import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
+import Suggestion from '@/modules/search/view/suggestion';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
-const Suggestion = dynamic(() => import('@/modules/search/view/suggestion'));
 const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'), {
   loading: () => <div className="h-[68px] md:h-6" />,
 });
@@ -39,7 +39,7 @@ const Home = () => {
           'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
         })}
       >
-        {!customize.partnerTitle && <Logo className="text-2xl md:text-3xl" width={55} />}
+        {!customize.partnerTitle && <Logo as="h1" className="text-2xl md:text-3xl" width={55} />}
         {customize.partnerTitle && (
           <Text fontWeight="bold" className="text-primary md:text-lg">
             {customize.partnerTitle}
@@ -58,7 +58,7 @@ const Home = () => {
       {isMobile && customize.showPromoteApp && <Promote />}
       {!customize.partnerKey && (
         <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
-          <Text fontWeight="semiBold" fontSize="sm" as="h1" className="text-slate-400">
+          <Text fontWeight="semiBold" fontSize="sm" as="h2" className="text-slate-400">
             نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان
           </Text>
         </div>

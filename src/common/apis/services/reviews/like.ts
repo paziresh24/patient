@@ -1,21 +1,14 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
-interface Params {
+interface LikeParams {
   id: string;
-  user_id?: string;
+  post_action_type_id: number;
+  flag_topic: boolean;
 }
 
-const likeReview = ({ id, user_id }: Params) => {
-  return apiGatewayClient.post(
-    `/v1/feedbacks/${id}/like`,
-    {},
-    {
-      headers: {
-        'x-user-id': user_id,
-      },
-    },
-  );
+const likeReview = (params: LikeParams) => {
+  return apiGatewayClient.post(`/ravi/post_actions`, { ...params });
 };
 
 export const useLikeReview = () => {

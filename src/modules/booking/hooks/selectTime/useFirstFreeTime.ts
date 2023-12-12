@@ -20,6 +20,7 @@ type FirstFreeTime = {
   full_date?: string;
   timeId?: string;
   message?: string;
+  status?: number;
 };
 
 export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = true, onError, onEvent }: UseFirstFreeTime) => {
@@ -45,7 +46,7 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
 
     if (status === ClinicStatus.SUCCESS) {
       const data = pick(result, ['from', 'to', 'full_date', 'request_code']);
-      const dataFormatted = { ...data, timeId: data.request_code };
+      const dataFormatted = { ...data, timeId: data.request_code, status: status };
       setData(dataFormatted);
       return dataFormatted;
     }

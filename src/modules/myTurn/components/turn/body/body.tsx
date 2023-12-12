@@ -38,7 +38,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
 
   const handleClickCard = () => {
     if (paymentStatus !== PaymentStatus.paying) {
-      router.push(`/receipt/${centerId}/${id}`);
+      router.push(`/receipt/${centerId}/${id}?slug=${doctorInfo.slug}`);
       return;
     }
   };

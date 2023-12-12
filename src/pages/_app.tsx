@@ -1,4 +1,5 @@
 import ErrorBoundary from '@/common/components/layouts/errorBoundary';
+import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
@@ -7,7 +8,6 @@ import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import localFont from '@next/font/local';
-import { init as matomoInit } from '@socialgouv/matomo-next';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -67,6 +67,7 @@ type AppProps = Omit<NextAppProps<withQueryProps & Record<string, unknown>>, 'Co
 function MyApp(props: AppProps) {
   const { Component, pageProps, router } = props;
   useNetworkStatus();
+  const isApplication = useApplication();
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
@@ -79,16 +80,6 @@ function MyApp(props: AppProps) {
     return () => {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
-  }, []);
-
-  useEffect(() => {
-    if (publicRuntimeConfig.MATOMO_URL && publicRuntimeConfig.MATOMO_SITE_ID) {
-      matomoInit({
-        url: publicRuntimeConfig.MATOMO_URL,
-        siteId: publicRuntimeConfig.MATOMO_SITE_ID,
-        excludeUrlsPatterns: [/^\/s/, /^\/booking/, /^\/factor/, /^\/receipt/, /^\/patient/, /^\/payment/, /^\/$/],
-      });
-    }
   }, []);
 
   useEffect(() => {
@@ -111,7 +102,9 @@ function MyApp(props: AppProps) {
           <Head>
             <meta
               name="viewport"
-              content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
+              content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
+                isApplication ? '1.0' : '5.0'
+              }`}
             />
           </Head>
           <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>

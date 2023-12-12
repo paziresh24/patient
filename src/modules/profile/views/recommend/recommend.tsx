@@ -35,7 +35,7 @@ export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommen
         category={groupExpertise.en_slug}
         city={city.en_slug}
         clickRecommendEvent={clickRecommendEvent}
-        limit={2}
+        limit={3}
       />
     </div>
   );

@@ -16,7 +16,14 @@ export const Card = (props: CardProps) => {
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
         <div className="flex justify-between w-full">
           <div className="flex items-center">
-            <Avatar loading="lazy" src={avatar} name={name} width={details?.length ? 55 : 40} height={details?.length ? 55 : 40} />
+            <Avatar
+              loading="lazy"
+              src={avatar}
+              name={name}
+              alt={name}
+              width={details?.length ? 55 : 40}
+              height={details?.length ? 55 : 40}
+            />
             <div className="mr-2 space-y-2">
               <div className="flex items-center space-s-1">
                 <Text fontWeight="bold" fontSize="sm">
