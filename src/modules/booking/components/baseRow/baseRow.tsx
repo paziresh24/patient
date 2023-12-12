@@ -49,14 +49,14 @@ export const BaseRow = (props: BaseRowProps) => {
         {data.type === 'Label' &&
           (Array.isArray(data.value) ? (
             <div className="flex flex-col space-y-1">
-              {data.value.map(item => (
-                <Text key={item} fontSize="sm" dangerouslySetInnerHTML={{ __html: item }} />
-              ))}
+              {data.value.map(item =>
+                typeof item === 'string' ? <Text key={item} fontSize="sm" dangerouslySetInnerHTML={{ __html: item }} /> : item,
+              )}
             </div>
           ) : (
             <div className="[&>svg]:inline-block space-s-1">
               {data.icon}
-              <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: data.value }} />
+              {typeof data.value === 'string' ? <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: data.value }} /> : data.value}
             </div>
           ))}
         {data.type === 'Accordion' && (
