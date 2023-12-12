@@ -1,5 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import useCustomize from '@/common/hooks/useCustomize';
+import { CENTERS } from '@/common/types/centers';
+import isTimestampPast from '@/common/utils/isTimestampPast';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { useFeatureValue } from '@growthbook/growthbook-react';
@@ -46,7 +48,10 @@ export const BookInfo = (props: PaymentDetailsProps) => {
         {!loading &&
           turnDetailsData({
             data: {
-              bookTime: turnData.book_time_string,
+              bookTime:
+                centerId === CENTERS.CONSULT && !isTimestampPast(turnData?.book_time)
+                  ? turnData.online_visit_time
+                  : turnData.book_time_string,
               centerName: turnData.center?.name,
               trackingCode: turnData.reference_code,
               waitingTime: turnData?.center?.waiting_time,

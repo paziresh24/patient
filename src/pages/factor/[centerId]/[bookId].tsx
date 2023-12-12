@@ -8,6 +8,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
+import addTimes from '@/common/utils/addTimes';
 import calculateTimeDifference from '@/common/utils/calculateTimeDifference';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
@@ -34,10 +35,10 @@ const Factor = () => {
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const onlineVisitTimeInfo = useFeatureValue<any>('factor:online-visit-turn-info', {});
   const [centersWatingTime, setCentersWatingTime] = useState<any>([]);
-  const calculateTime = moment
-    .unix(bookDetailsData?.book_from)
-    .add(centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time ?? '00:00:00', 'minute')
-    .format('HH:mm');
+  const calculateTime = addTimes(
+    bookDetailsData?.book_from,
+    centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time,
+  );
 
   useEffect(() => {
     if (!isEmpty(bookDetailsData)) {
