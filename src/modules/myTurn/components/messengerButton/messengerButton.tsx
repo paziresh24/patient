@@ -18,6 +18,9 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
             splunkBookingInstance().sendEvent({
               group: 'link-visit-online',
               type: channel.type,
+              event: {
+                button_type: 'OUTLINE',
+              },
             });
             window.open(channel?.channel_link);
           }}
@@ -34,6 +37,9 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
             splunkBookingInstance().sendEvent({
               group: 'link-visit-online',
               type: channel.type,
+              event: {
+                button_type: 'SOLID',
+              },
             });
             window.open(channel?.channel_link);
           }}
@@ -54,6 +60,9 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
             splunkBookingInstance().sendEvent({
               group: 'link-visit-online',
               type: channel.type,
+              event: {
+                button_type: 'COLOR_FULL',
+              },
             });
             window.open(channel?.channel_link);
           }}
