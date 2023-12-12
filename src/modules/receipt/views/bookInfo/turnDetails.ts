@@ -76,14 +76,14 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     {
       id: 17,
       name: 'نام پیام رسان',
-      value: onlineChannel && messengerList?.[onlineChannel].text,
+      value: onlineChannel && messengerList?.[onlineChannel]?.text,
       shouldShow: centerType === CenterType.consult && onlineChannel,
       type: 'Text',
       isBoldValue: true,
     },
     {
       id: 13,
-      name: `شماره ${messengerList?.[onlineChannel ?? ''].text} پزشک`,
+      name: `شماره ${messengerList?.[onlineChannel ?? '']?.text} پزشک`,
       value: doctorPhone,
       shouldShow: centerType === CenterType.consult && doctorPhone && onlineChannel && onlineChannel !== 'rocketchat',
       type: 'Text',
@@ -213,7 +213,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       name: centerType === CenterType.consult ? 'نحوه ویزیت آنلاین' : 'قوانین',
       value: rules?.map((items, index) => ({
         id: index,
-        name: items,
+        value: items,
         type: 'Label',
       })),
       shouldShow: !!rules && centerType === CenterType.clinic,
