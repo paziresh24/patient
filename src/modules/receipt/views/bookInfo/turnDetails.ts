@@ -1,4 +1,5 @@
 import InfoIcon from '@/common/components/icons/info';
+import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { createElement } from 'react';
@@ -32,11 +33,17 @@ interface TurnDetailsDataParam {
     patientInfo: Patient;
     rules?: string[];
     messengerList?: Record<string, MessengerDataType>;
+    selectedChannel?: any;
+    isDeleted?: boolean;
   };
   centerType: CenterType;
+  metaData?: {
+    messengerButtonType?: string;
+    possibilityBeingVisited?: boolean;
+  };
 }
 
-export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
+export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataParam) => {
   const {
     bookTime,
     trackingCode,
@@ -53,17 +60,11 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
     durationConversation,
     turnStatus,
     messengerList,
+    selectedChannel,
+    isDeleted,
   } = data;
 
   const lists = [
-    {
-      id: 17,
-      name: 'نام پیام رسان',
-      value: onlineChannel && messengerList?.[onlineChannel].text,
-      shouldShow: centerType === CenterType.consult && onlineChannel,
-      type: 'Text',
-      isBoldValue: true,
-    },
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
@@ -73,12 +74,35 @@ export const turnDetailsData = ({ data, centerType }: TurnDetailsDataParam) => {
       isBoldValue: true,
     },
     {
+      id: 17,
+      name: 'نام پیام رسان',
+      value: onlineChannel && messengerList?.[onlineChannel].text,
+      shouldShow: centerType === CenterType.consult && onlineChannel,
+      type: 'Text',
+      isBoldValue: true,
+    },
+    {
       id: 13,
-      name: 'شماره پزشک',
+      name: `شماره ${messengerList?.[onlineChannel ?? ''].text} پزشک`,
       value: doctorPhone,
       shouldShow: centerType === CenterType.consult && doctorPhone && onlineChannel && onlineChannel !== 'rocketchat',
       type: 'Text',
       isBoldValue: false,
+    },
+    {
+      id: 2,
+      value: createElement(MessengerButton, {
+        channel: selectedChannel,
+        colorFull: true,
+      }),
+      shouldShow:
+        metaData?.messengerButtonType === 'COLOR_FULL' &&
+        metaData?.possibilityBeingVisited &&
+        centerType === CenterType.consult &&
+        !isDeleted &&
+        onlineChannel,
+      type: 'Label',
+      isBoldValue: true,
     },
     {
       id: 2,

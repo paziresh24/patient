@@ -10,13 +10,15 @@ interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
   centerId: string;
+  possibilityBeingVisited?: boolean;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData, centerId } = props;
+  const { loading = false, turnData, centerId, possibilityBeingVisited } = props;
   const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
+  const messengerButtonType = useFeatureValue('receipt:messenger-button-type', 'OUTLINE');
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
 
@@ -53,6 +55,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               centerPhone: turnData?.center?.display_number,
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
+              isDeleted: turnData?.is_deleted,
               durationConversation: turnData?.duration_conversation_doctor,
               doctorPhone: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel.channel
@@ -69,6 +72,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 nationalCode: turnData?.patient?.national_code,
                 selectServeis: turnData?.services?.[0]?.title,
               },
+              selectedChannel: turnData.selected_online_visit_channel,
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
                   ? specialServiceInfo?.messenger
@@ -92,6 +96,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               }),
             },
             centerType: turnData.is_online_visit ? CenterType.consult : CenterType.clinic,
+            metaData: { messengerButtonType, possibilityBeingVisited },
           }).map(item => (
             <div key={item.id} className="px-5 py-3">
               <BaseRow data={item as any} key={item.id} />
