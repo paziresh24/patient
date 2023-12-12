@@ -100,6 +100,7 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+
   const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   useEffect(() => {
@@ -312,7 +313,12 @@ const Receipt = () => {
                 )}
               </>
             )}
-            <BookInfo turnData={bookDetailsData} loading={getReceiptDetails.isLoading} centerId={centerId?.toString()!} />
+            <BookInfo
+              turnData={bookDetailsData}
+              loading={getReceiptDetails.isLoading}
+              possibilityBeingVisited={possibilityBeingVisited}
+              centerId={centerId?.toString()!}
+            />
           </div>
           {showOptionalButton && (
             <>
@@ -351,7 +357,7 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-4">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
                   <MessengerButton
                     channel={
                       bookDetailsData.selected_online_visit_channel?.type
