@@ -74,7 +74,7 @@ const Factor = () => {
   const onlineVisitTimeList: any = {
     visit_time: convertTime(bookDetailsData?.book_time_string ?? ''),
     visit_time_combine_with_waiting_time: `امروز ساعت ${calculateTime}`,
-    waiting_time: `تا ${
+    visit_time_combine_with_waiting_time_text: `تا ${
       calculateTimeDifference(calculateTime, 'minutes') < 60
         ? `${calculateTimeDifference(calculateTime, 'minutes')} دقیقه دیگر`
         : `${calculateTimeDifference(calculateTime, 'hours')} ساعت دیگر`
