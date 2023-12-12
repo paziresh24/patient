@@ -94,7 +94,7 @@ const Receipt = () => {
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
-  const onlineVisitTimeInfo = useFeatureValue<any>('factor:online-visit-turn-info', {});
+  const onlineVisitTimeInfo = useFeatureValue<any>('booking:online-visit-info', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);

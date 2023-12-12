@@ -33,7 +33,7 @@ const Factor = () => {
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
-  const onlineVisitTimeInfo = useFeatureValue<any>('factor:online-visit-turn-info', {});
+  const onlineVisitTimeInfo = useFeatureValue<any>('booking:online-visit-info', {});
   const [centersWatingTime, setCentersWatingTime] = useState<any>([]);
   const calculateTime = addTimes(
     bookDetailsData?.book_from,
