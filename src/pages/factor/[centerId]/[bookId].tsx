@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
@@ -35,13 +36,14 @@ const Factor = () => {
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const onlineVisitTimeInfo = useFeatureValue<any>('booking:online-visit-info', {});
   const [centersWatingTime, setCentersWatingTime] = useState<any>([]);
+  const isRolloutDoctors = newApiFeatureFlaggingCondition(onlineVisitTimeInfo?.slugs, bookDetailsData?.doctor_slug);
   const calculateTime = addTimes(
     bookDetailsData?.book_from,
     centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time,
   );
 
   useEffect(() => {
-    if (!isEmpty(bookDetailsData)) {
+    if (!isEmpty(bookDetailsData) && isRolloutDoctors) {
       const waitingTimes = getAverageWaitingTime({
         slug: bookDetailsData?.doctor_slug,
         start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
@@ -134,7 +136,7 @@ const Factor = () => {
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
                 <Text className="text-primary" fontWeight="semiBold">
-                  {onlineVisitTimeList[onlineVisitTimeInfo?.visit_time_mode ?? 'visit_time']}، از طریق{' '}
+                  {onlineVisitTimeList[isRolloutDoctors ? onlineVisitTimeInfo?.visit_time_mode : 'visit_time']}، از طریق{' '}
                   {messengers[bookDetailsData?.book_params?.online_channel]?.text}
                 </Text>{' '}
                 شما را ویزیت خواهم کرد.

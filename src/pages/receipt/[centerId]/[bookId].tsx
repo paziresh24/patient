@@ -15,6 +15,7 @@ import TrashIcon from '@/common/components/icons/trash';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -107,6 +108,7 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const isRolloutDoctors = newApiFeatureFlaggingCondition(onlineVisitTimeInfo?.slugs, bookDetailsData?.doctor?.slug);
   const calculateTime = addTimes(
     bookDetailsData?.book_from,
     centersWatingTime?.find?.((item: any) => item?.center_id === CENTERS.CONSULT)?.average_waiting_time,
@@ -124,7 +126,7 @@ const Receipt = () => {
   };
 
   useEffect(() => {
-    if (!isEmpty(bookDetailsData)) {
+    if (!isEmpty(bookDetailsData) && isRolloutDoctors) {
       const waitingTimes = getAverageWaitingTime({
         slug: bookDetailsData?.doctor?.slug,
         start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
@@ -350,7 +352,7 @@ const Receipt = () => {
             <BookInfo
               turnData={{
                 ...bookDetailsData,
-                online_visit_time: onlineVisitTimeList[onlineVisitTimeInfo?.visit_time_mode ?? 'visit_time'],
+                online_visit_time: onlineVisitTimeList[isRolloutDoctors ? onlineVisitTimeInfo?.visit_time_mode : 'visit_time'],
               }}
               loading={getReceiptDetails.isLoading}
               centerId={centerId?.toString()!}
