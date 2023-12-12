@@ -135,7 +135,7 @@ const Receipt = () => {
         if (result?.result) return setCentersWatingTime(result?.result);
       });
     }
-  }, [bookDetailsData, onlineVisitTimeInfo]);
+  }, [bookDetailsData]);
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
