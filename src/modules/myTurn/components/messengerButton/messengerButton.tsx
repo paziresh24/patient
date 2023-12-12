@@ -7,7 +7,7 @@ import { OnlineVisitChannel } from '../turn/turnType';
 export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitChannel; colorFull?: Boolean }) => {
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const buttonType = useFeatureValue('receipt:messenger-button-type', 'OUTLINE');
-  if (!channel || (colorFull && buttonType !== 'COLOR_FULL')) return null;
+  if (!channel || (!colorFull && buttonType === 'COLOR_FULL')) return null;
   return (
     <div className="flex flex-col w-full gap-3">
       {buttonType === 'OUTLINE' && !colorFull && (
