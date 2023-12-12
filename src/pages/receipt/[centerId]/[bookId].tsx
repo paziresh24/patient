@@ -100,7 +100,6 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
-  console.log({ dd: possibilityBeingVisited });
 
   const removePrefixDoctorName = useRemovePrefixDoctorName();
 
