@@ -392,8 +392,6 @@ export const RateReview = (props: RateReviewProps) => {
 
   const showReplyModal = (id: string, isDoctor: boolean) => {
     rateSplunkEvent('reply first reply box');
-    console.log(id);
-
     setFeedbackDetails({
       id: id,
       isDoctor: isDoctor,
