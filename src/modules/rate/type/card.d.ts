@@ -36,6 +36,8 @@ export type Card = {
   };
   description?: string;
   className?: string;
+  topic_id?: string;
+  post_number?: string;
 };
 
 export interface CardProps extends Card {}

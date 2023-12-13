@@ -273,6 +273,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   user_name: feedback?.name,
                   user_image: null,
                   like: 0,
+                  topic_id: feedback?.topic_id,
+                  post_number: feedback?.post_number,
                 })) ?? [];
             }
           }

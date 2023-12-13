@@ -7,9 +7,10 @@ export interface Params {
 }
 
 export const deleteFeedback = ({ id, user_id }: Params) => {
-  return apiGatewayClient.delete(`/v1/feedbacks/${id}`, {
+  return apiGatewayClient.delete(`/ravi/posts/${id}.json`, {
     headers: {
-      'x-user-id': user_id,
+      'Api-Key': '060c32e3d34c15b4648baebeed75f43cd86d72f71b598ab2d07da71dba9328c8',
+      'Api-Username': user_id,
     },
   });
 };
