@@ -80,9 +80,7 @@ export const Result = () => {
               displayName: removePrefixDoctorName(item.title),
               avatar: item.image,
               expertise: item.display_expertise,
-              viewCount: item.view,
               isVerify: !item.is_bulk,
-              experience: item.experience,
               rate: {
                 count: item.rates_count,
                 satisfaction: item.satisfaction,
