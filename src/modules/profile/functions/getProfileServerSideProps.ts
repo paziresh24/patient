@@ -265,7 +265,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   id: feedback?.id,
                   doctor_id: fullProfileData?.id ?? '',
                   server_id: fullProfileData?.server_id ?? '',
-                  user_id: feedback?.user_id,
+                  user_id: feedback?.username,
                   recommended: 0,
                   created_at: feedback?.created_at,
                   update_at: feedback?.updated_at,

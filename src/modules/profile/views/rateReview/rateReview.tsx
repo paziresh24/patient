@@ -538,7 +538,7 @@ export const RateReview = (props: RateReviewProps) => {
       if (isSpecialDoctor) {
         await editComment.mutateAsync({
           id: feedbackDetails?.id,
-          description,
+          raw: description,
           user_id: userInfo?.id,
         });
       } else {
