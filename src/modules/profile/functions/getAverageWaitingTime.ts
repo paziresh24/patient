@@ -1,6 +1,6 @@
 import { averageWaitingTime } from '@/common/apis/services/reviews/averageWaitingTime';
 import { CENTERS } from '@/common/types/centers';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 type GetAverageWaitingTimeParams = { slug: string; start_date?: string; end_date?: string; limit?: number };
 
