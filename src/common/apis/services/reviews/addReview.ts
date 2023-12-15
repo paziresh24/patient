@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
@@ -11,22 +11,13 @@ export interface Params {
 }
 
 export const addReview = async ({ raw, topic_id, nested_post, draft_key, user_id, reply_to_post_number }: Params) => {
-  return apiGatewayClient.post(
-    `/ravi/posts`,
-    {
-      raw,
-      topic_id,
-      nested_post,
-      draft_key,
-      reply_to_post_number,
-    },
-    {
-      headers: {
-        'Api-Key': '060c32e3d34c15b4648baebeed75f43cd86d72f71b598ab2d07da71dba9328c8',
-        'Api-Username': user_id,
-      },
-    },
-  );
+  return raviClient.post(`/posts`, {
+    raw,
+    topic_id,
+    nested_post,
+    draft_key,
+    reply_to_post_number,
+  });
 };
 
 export const useAddReview = () => {
