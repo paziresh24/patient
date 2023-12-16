@@ -93,3 +93,5 @@ export const ActivityWrapper = (props: ActivityProps) => {
 
   return <Activity className={className} items={items} />;
 };
+
+export default ActivityWrapper;

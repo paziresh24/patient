@@ -5,14 +5,11 @@ import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
-import { ActivityWrapper } from './activity/activityWrapper';
 
 const { publicRuntimeConfig } = config();
 
-const AwardIcon = dynamic(() => import('@/common/components/icons/award'));
-const ChatIcon = dynamic(() => import('@/common/components/icons/chat'));
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const Activity = dynamic(() => import('./activity'), {
+const ActivityWrapper = dynamic(() => import('./activity/activityWrapper'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
   },
