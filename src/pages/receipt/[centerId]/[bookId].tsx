@@ -85,7 +85,6 @@ const Receipt = () => {
   });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
-  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const share = useShare();
@@ -367,7 +366,7 @@ const Receipt = () => {
                           )[0]
                     }
                   />
-                  {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
+                  {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
                     <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
                   )}
                 </div>
