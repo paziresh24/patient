@@ -1,4 +1,4 @@
-FROM node:18.15.0-alpine3.17
+FROM node:18.15.0-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 ENV DOCKER_BUILDKIT 1
