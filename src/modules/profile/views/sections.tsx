@@ -1,7 +1,6 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
-import SuccessIcon from '@/common/components/icons/success';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import config from 'next/config';
@@ -9,10 +8,8 @@ import dynamic from 'next/dynamic';
 
 const { publicRuntimeConfig } = config();
 
-const AwardIcon = dynamic(() => import('@/common/components/icons/award'));
-const ChatIcon = dynamic(() => import('@/common/components/icons/chat'));
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const Activity = dynamic(() => import('./activity'), {
+const ActivityWrapper = dynamic(() => import('./activity/activityWrapper'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
   },
@@ -53,6 +50,7 @@ export const sections = ({
   editable,
   handleViewAs,
   seo,
+  onlineVisit,
 }: any) =>
   [
     // Own Page
@@ -124,24 +122,14 @@ export const sections = ({
       isShow: customize.showActivityProfile,
       function: () => {
         return {
-          items: [
-            history.count_of_consult_books && {
-              icon: <ChatIcon className="min-w-fit w-max" />,
-              text: `<b>${history.count_of_consult_books}</b> مشاوره فعال`,
-            },
-            history.deleted_books_rate && {
-              icon: <SuccessIcon className="min-w-fit w-6 h-6" />,
-              text: `<b>${history.deleted_books_rate}</b> ویزیت آنلاین موفق`,
-              hint: 'این شاخص براساس تعداد ویزیت آنلاینی که پس از زمان نوبت با موفقیت انجام شده‌اند و حذف نشده‌اند محاسبه می‌شود.',
-            },
-            {
-              icon: <AwardIcon className="min-w-fit w-max" />,
-              text: `پذیرش24 بیش از ${history.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${information.display_name} را داشته است.`,
-            },
-          ].filter(Boolean),
+          history,
+          onlineVisitEnabled: onlineVisit.enabled,
+          displayName: information.display_name,
+          onlineVisitUserCenterId: centers?.find((center: { id: string }) => center.id === CENTERS.CONSULT)?.user_center_id,
+          slug: seo.slug,
         };
       },
-      children: (props: any) => <Activity className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) => <ActivityWrapper className="bg-white md:rounded-lg" {...props} />,
     },
     // Reviews
     {
