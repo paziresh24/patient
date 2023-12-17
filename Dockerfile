@@ -9,7 +9,7 @@ ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
 ENV NEW_RELIC_LOG=stdout
 ENV NODE_ENV=production
 
-COPY package.json package-lock.json ./ 
+COPY package.json ./ 
 #RUN yarn cache clean
 #RUN yarn --network-timeout 10000000
 #RUN yarn
