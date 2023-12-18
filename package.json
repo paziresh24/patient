@@ -10,7 +10,7 @@
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "husky install",
+    "prepare": "husky install",
     "format": "prettier --write .",
     "pre-commit": "lint-staged",
     "test": "jest --watch",
