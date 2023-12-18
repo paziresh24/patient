@@ -492,7 +492,6 @@ export const RateReview = (props: RateReviewProps) => {
         raw: text,
         nested_post: false,
         draft_key: `topic_${feedbacksData[0]?.topic_id}`,
-        user_id: userInfo.id,
         reply_to_post_number: id,
       });
     } else {
@@ -513,7 +512,6 @@ export const RateReview = (props: RateReviewProps) => {
       if (isSpecialDoctor) {
         await deleteComment.mutateAsync({
           id: feedbackDetails?.id,
-          user_id: userInfo?.id,
         });
       } else {
         await removeComment.mutateAsync({
@@ -537,7 +535,6 @@ export const RateReview = (props: RateReviewProps) => {
         await editComment.mutateAsync({
           id: feedbackDetails?.id,
           raw: description,
-          user_id: userInfo?.id,
         });
       } else {
         await editFeedback.mutateAsync({
@@ -564,7 +561,6 @@ export const RateReview = (props: RateReviewProps) => {
         raw: description,
         nested_post: false,
         draft_key: `topic_${feedbacksData[0]?.topic_id}`,
-        user_id: userInfo.id,
       });
       toast.success('نظر شما با موفقیت ثبت شد');
       handleCloseAddReviewModal();
