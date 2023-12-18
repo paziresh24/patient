@@ -10,7 +10,7 @@
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare": "husky install",
+    "prepare": "test -d node_modules/husky && husky install || echo \"husky is not installed\"",
     "format": "prettier --write .",
     "pre-commit": "lint-staged",
     "test": "jest --watch",
