@@ -1,5 +1,4 @@
 FROM node:20.7.0
-RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
