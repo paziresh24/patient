@@ -30,34 +30,38 @@ export const ActivityWrapper = (props: ActivityProps) => {
 
   const deletedBooksRateHandler = async () => {
     setIsLoading(true);
-    const [allBooksCountData, deletedBooksCountData] = await Promise.allSettled([
-      await appointmentsCount({
-        user_center_id: visitOnlineUserCenterId,
-        payment_status_in: [3, 4, 5, 6, 7, 8, 9],
-        from_less_than: moment().startOf('jDay').unix(),
-        from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
-      }),
-      await appointmentsCount({
-        user_center_id: visitOnlineUserCenterId,
-        payment_status_in: [4],
-        from_less_than: moment().startOf('jDay').unix(),
-        from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
-        deleted_at_greater_than: 'from',
-      }),
-    ]);
-    if (allBooksCountData.status === 'fulfilled' && deletedBooksCountData.status === 'fulfilled') {
-      setIsLoading(false);
-      setDeletedBookRate(
-        `${Math.ceil(
-          100 -
-            ((+deletedBooksCountData.value?.data?.count_book ? +deletedBooksCountData.value?.data?.count_book : 0) /
-              (+allBooksCountData.value?.data?.count_book ? +allBooksCountData.value?.data?.count_book : 1)) *
-              100,
-        )}%`,
-      );
-      return;
+    try {
+      const [allBooksCountData, deletedBooksCountData] = await Promise.allSettled([
+        appointmentsCount({
+          user_center_id: visitOnlineUserCenterId,
+          payment_status_in: [3, 4, 5, 6, 7, 8, 9],
+          from_less_than: moment().startOf('jDay').unix(),
+          from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
+        }),
+        appointmentsCount({
+          user_center_id: visitOnlineUserCenterId,
+          payment_status_in: [4],
+          from_less_than: moment().startOf('jDay').unix(),
+          from_greather_than: moment().subtract(30, 'jDay').startOf('jDay').unix(),
+          deleted_at_greater_than: 'from',
+        }),
+      ]);
+      if (allBooksCountData.status === 'fulfilled' && deletedBooksCountData.status === 'fulfilled') {
+        setIsLoading(false);
+        setDeletedBookRate(
+          `${Math.ceil(
+            100 -
+              ((+deletedBooksCountData.value?.data?.count_book ? +deletedBooksCountData.value?.data?.count_book : 0) /
+                (+allBooksCountData.value?.data?.count_book ? +allBooksCountData.value?.data?.count_book : 1)) *
+                100,
+          )}%`,
+        );
+        return;
+      }
+      setIsError(true);
+    } catch (error) {
+      setIsError(true);
     }
-    setIsError(true);
   };
 
   useEffect(() => {
