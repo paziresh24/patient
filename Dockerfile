@@ -1,4 +1,5 @@
 FROM node:20.7.0
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
@@ -9,7 +10,8 @@ ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
 ENV NEW_RELIC_LOG=stdout
 ENV NODE_ENV=production
 
-COPY package.json ./ 
+COPY package.json package-lock.json ./ 
+RUN rm -rf package-lock.json 
 #RUN yarn cache clean
 #RUN yarn --network-timeout 10000000
 #RUN yarn
