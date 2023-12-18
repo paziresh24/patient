@@ -25,7 +25,7 @@ export const apiGatewayClient = axios.create({
 });
 
 export const raviClient = axios.create({
-  baseURL: 'https://ravi.paziresh24.com',
+  baseURL: publicRuntimeConfig.RAVI_BASE_URL,
   withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
@@ -83,6 +83,18 @@ apiGatewayClient.interceptors.request.use(
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
+    if (isPWA()) {
+      (config as any).headers['isApplication'] = true;
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  },
+);
+
+raviClient.interceptors.request.use(
+  config => {
     if (isPWA()) {
       (config as any).headers['isApplication'] = true;
     }
