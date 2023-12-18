@@ -11,8 +11,8 @@ export const Activity = (props: ActivityProps) => {
 
   return (
     <div className={classNames('flex flex-col p-4 space-y-2', className)}>
-      {items.map(item => (
-        <Item key={item.text} {...item} />
+      {items.map((item, index) => (
+        <Item key={index} {...item} />
       ))}
     </div>
   );
