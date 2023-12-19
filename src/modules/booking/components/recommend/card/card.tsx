@@ -74,7 +74,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
             sendEventWhenClick={({ element, content }) => clickRecommendEvent?.(doctor.id, element, content)}
           />
         ))}
-        {!!showMore && (
+        {!!showMore && listOfDoctors && (
           <div
             className={clsx('w-[15rem] min-w-[15rem] !space-y-0 bg-primary rounded-md cursor-pointer', showMore.classname)}
             onClick={() => router.push(showMore.url)}
