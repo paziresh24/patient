@@ -192,12 +192,16 @@ export const sections = ({
       function: () => {
         const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
         const isOnlineVisitCenter = center.id === CENTERS.CONSULT;
+        console.log(expertises);
+
         const about = `<p>${information.display_name}، ${
-          expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ?? 'سایر'
+          expertises?.expertises?.[0]?.alias_title ??
+          expertises?.expertises?.[0]?.degree_name + ' ' + expertises?.group_expertises?.[0]?.name ??
+          'سایر'
         } در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${information.display_name} در ${
-          center?.address
+          center?.address ?? '(ثبت نشده)'
         } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
-          !isOnlineVisitCenter ? center?.display_number_array[0] : '(ثبت نشده)'
+          !isOnlineVisitCenter && !!center?.display_number_array[0] ? center?.display_number_array[0] : '(ثبت نشده)'
         }</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
           expertises?.expertises[0]?.degree_name + ' ' + expertises?.group_expertises?.[0].name ?? 'سایر'
@@ -212,14 +216,14 @@ export const sections = ({
             : ''
         }
         <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${
-          'متخصص ' + expertises.group_expertises?.[0].name ?? 'سایر'
+          expertises?.expertises?.[0]?.alias_title ?? 'متخصص ' + expertises.group_expertises?.[0].name ?? 'سایر'
         } <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
         <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
         <li>آدرس مطب ${information.display_name}: ${
-          isOnlineVisitCenter ? 'ثبت نشده' : center.city ?? '(ثبت نشده)' + '، ' + center?.address ?? ''
+          isOnlineVisitCenter || (!center.address && !center.city) ? 'ثبت نشده' : `${center.city}، ${center?.address}`
         }</li>
         <li>تلفن مطب ${information.display_name}: <span class="inline-block">${
           isOnlineVisitCenter ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
