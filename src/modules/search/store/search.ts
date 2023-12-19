@@ -18,6 +18,8 @@ interface SearchStore {
   setSelectedFilters: (selectedFilters: Record<string, string | string[]>) => void;
   seoInfo: SeoInfo | undefined;
   setSeoInfo: (seoInfo: SeoInfo) => void;
+  setGeoLocation: (geoLocation: { lat: number; lon: number } | undefined) => void;
+  geoLocation: { lat: number; lon: number } | undefined;
 }
 
 export type Category = {
@@ -77,6 +79,7 @@ export const useSearchStore = create<SearchStore>(set => ({
   selectedSubCategory: undefined,
   selectedCategory: undefined,
   seoInfo: undefined,
+  geoLocation: undefined,
   setIsOpenSuggestion: isOpenSuggestion =>
     set(state => ({
       ...state,
@@ -125,4 +128,5 @@ export const useSearchStore = create<SearchStore>(set => ({
         ?.sub_categories?.find((item: any) => item.value === `exp-${(selectedFilters?.sub_category as string)?.replace('exp-', '')}`),
     })),
   setSeoInfo: seoInfo => set(state => ({ ...state, seoInfo })),
+  setGeoLocation: geoLocation => set(state => ({ ...state, geoLocation })),
 }));

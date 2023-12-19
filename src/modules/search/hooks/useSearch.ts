@@ -3,6 +3,7 @@ import { useSearch as useSearchRequest } from '@/common/apis/services/search/sea
 import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchStore } from '../store/search';
 
 type Filter = {
   items: {
@@ -95,12 +96,16 @@ export const useSearch = () => {
     query: { params, ...query },
     asPath,
   } = useRouter();
+  const geoLocation = useSearchStore(state => state.geoLocation);
 
   const baseInfo = useGetBaseInfo({ table: ['city', 'province'] });
   const searchRequest = useSearchRequest({
     route: (params as string[])?.join('/') ?? '',
     query: {
       ...query,
+      ...(geoLocation && {
+        ...geoLocation,
+      }),
     },
   });
 
@@ -149,8 +154,8 @@ export const useSearch = () => {
   }, [search]);
 
   const isLanding = useMemo(
-    () => (!isLoading && search.is_landing) || (params?.length === 1 && query.text === undefined),
-    [params, query, search, isLoading],
+    () => (!isLoading ? search.is_landing : params?.length === 1 && query.text === undefined),
+    [params, query, search.is_landing, isLoading],
   );
 
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);

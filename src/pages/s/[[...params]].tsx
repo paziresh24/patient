@@ -59,7 +59,7 @@ const Search = ({ host }: any) => {
     }
 
     if (!isLoading && !selectedFilters.city && city.en_slug !== 'ir') {
-      changeRoute({ params: { city: city?.en_slug }, replace: true });
+      changeRoute({ params: { city: city?.en_slug }, query: { lat: null, lon: null }, replace: true });
     }
   }, [params, city, isLoading]);
 
