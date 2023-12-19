@@ -153,26 +153,26 @@ export const sections = ({
         };
 
         const rateDetails = {
-          satisfaction: feedbacks.details?.satisfaction,
-          count: feedbacks.details.number_of_feedbacks,
+          satisfaction: feedbacks.details?.satisfaction_percent,
+          count: feedbacks.details.count_of_feedbacks,
           information: [
             {
               id: 1,
               title: 'برخورد مناسب پزشک',
-              satisfaction: feedbacks.details.doctor_encounter * 20,
-              avg_star: feedbacks.details.doctor_encounter,
+              satisfaction: feedbacks.details.average_rates.average_doctor_encounter * 20,
+              avg_star: feedbacks.details.average_rates.average_doctor_encounter,
             },
             {
               id: 2,
               title: 'توضیح پزشک در هنگام ویزیت',
-              satisfaction: feedbacks.details.explanation_of_issue * 20,
-              avg_star: feedbacks.details.explanation_of_issue,
+              satisfaction: feedbacks.details.average_rates.average_explanation_of_issue * 20,
+              avg_star: feedbacks.details.average_rates.average_explanation_of_issue,
             },
             {
               id: 3,
               title: 'مهارت و تخصص پزشک',
-              satisfaction: feedbacks.details.quality_of_treatment * 20,
-              avg_star: feedbacks.details.quality_of_treatment,
+              satisfaction: feedbacks.details.average_rates.average_quality_of_treatment * 20,
+              avg_star: feedbacks.details.average_rates.average_quality_of_treatment,
             },
           ],
         };
@@ -201,8 +201,8 @@ export const sections = ({
         }</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
           expertises?.expertises[0]?.degree_name + ' ' + expertises?.group_expertises?.[0].name ?? 'سایر'
-        }  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction ?? 0}٪ مراجعین (${
-          feedbacks?.details?.number_of_feedbacks ?? 0
+        }  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction_percent ?? 0}٪ مراجعین (${
+          feedbacks?.details?.count_of_feedbacks ?? 0
         } نظر ثبت شده) از ایشان رضایت داشته‌اند و ${feedbacks?.details?.like ?? 0} نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${
           information?.display_name
         }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
