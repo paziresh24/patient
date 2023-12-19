@@ -1,6 +1,7 @@
 import { useSearchRecommendByDoctor } from '@/common/apis/services/search/recommend';
 import { useSearch } from '@/common/apis/services/search/search';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import BackIcon from '@/common/components/icons/back';
 import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { HTMLAttributes } from 'react';
@@ -84,6 +85,12 @@ export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: R
               elementContent,
             )
           }
+          showMore={{
+            text: 'نمایش نتایج بیشتر',
+            url: `/s/${props.city}/${props.category}/?turn_type=consult`,
+            icon: <BackIcon className="rotate-180 text-white" />,
+            classname: 'flex justify-center items-center gap-1 [&>span]:!text-white',
+          }}
         />
       )}
     </div>

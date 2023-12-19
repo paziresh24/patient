@@ -1,4 +1,6 @@
+import Text from '@/common/components/atom/text';
 import Card from '@/modules/search/components/card';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
@@ -19,13 +21,21 @@ type Recommends = {
   price?: string;
 };
 
+type ShowMore = {
+  url: string;
+  text: string;
+  classname?: string;
+  icon?: React.ReactNode;
+};
+
 interface RecommendCardProps {
   listOfDoctors: Recommends[];
+  showMore?: ShowMore;
   clickRecommendEvent?: (id: string, elementName?: string, elementContent?: string) => void;
 }
 
 export const RecommendCard = (props: RecommendCardProps) => {
-  const { listOfDoctors, clickRecommendEvent } = props;
+  const { listOfDoctors, clickRecommendEvent, showMore } = props;
   const router = useRouter();
 
   return (
@@ -64,6 +74,15 @@ export const RecommendCard = (props: RecommendCardProps) => {
             sendEventWhenClick={({ element, content }) => clickRecommendEvent?.(doctor.id, element, content)}
           />
         ))}
+        {!!showMore && (
+          <div
+            className={clsx('w-[15rem] min-w-[15rem] !space-y-0 bg-primary rounded-md cursor-pointer', showMore.classname)}
+            onClick={() => router.push(showMore.url)}
+          >
+            <Text>{showMore.text}</Text>
+            {showMore?.icon ?? ''}
+          </div>
+        )}
       </ScrollContainer>
     </>
   );
