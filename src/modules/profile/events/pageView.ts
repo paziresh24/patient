@@ -67,8 +67,8 @@ export const pageViewEvent = async ({
         viewable_service_selection_modal:
           centers.filter((center: any) => center.id !== '5532').length === 1 && centers[0].services.length > 1 ? 1 : 0,
         first_freeTurn: some(centers, 'freeturn_text') ? compact(centers.map((center: any) => center?.freeturn_text)) : 'blank',
-        rates_count: feedbacks?.details?.number_of_feedbacks,
-        rate: feedbacks?.details?.satisfaction,
+        rates_count: feedbacks?.details?.count_of_feedbacks,
+        rate: feedbacks?.details?.satisfaction_percent,
         disable_booking: centers?.every((center: any) => !center.is_active),
         can_booking: centers?.some((center: any) => center.services.some((service: any) => service?.can_booking === 1)),
         hours_of_work: centers?.some((center: any) => center.services.some((service: any) => !!service?.hours_of_work)),

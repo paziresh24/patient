@@ -16,8 +16,8 @@ export interface DoctorParams {
 
 export type Feedback = {
   details: {
-    satisfaction?: number;
-    number_of_feedbacks?: number;
+    satisfaction_percent?: number;
+    count_of_feedbacks?: number;
   };
 };
 
