@@ -1,4 +1,5 @@
 import omit from 'lodash/omit';
+import omitBy from 'lodash/omitBy';
 import { useRouter } from 'next/router';
 import { ParsedUrlQueryInput } from 'querystring';
 
@@ -36,10 +37,15 @@ export const useSearchRouting = () => {
     router[replace ? 'replace' : 'push'](
       {
         pathname: `/s/${formattedSlug}`,
-        query: {
-          ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
-          ...query,
-        },
+        query: omitBy(
+          {
+            ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
+            ...query,
+          },
+          value => {
+            if (!value) return true;
+          },
+        ),
       },
       undefined,
       { shallow: true, scroll },
