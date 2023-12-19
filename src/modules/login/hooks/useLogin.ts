@@ -2,9 +2,13 @@ import { useGetUser } from '@/common/apis/services/auth/getUser';
 import { useLogin as useLoginRequest } from '@/common/apis/services/auth/login';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
+import { isPWA } from '@/common/utils/isPwa';
+import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { useProviders } from '@/modules/profile/apis/providers';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
@@ -17,6 +21,7 @@ export const useLogin = () => {
   const getUser = useGetUser();
   const getProvider = useProviders();
   const university = useCustomize(state => state.customize?.partnerKey);
+  const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
 
   const handleLogin = async ({ username, password }: { username: string; password: string }) => {
     try {
@@ -43,6 +48,12 @@ export const useLogin = () => {
           provider: providerData,
           ...userData,
         });
+
+        const shouldUseWebPushNotification = newApiFeatureFlaggingCondition(webPushNotificationUserList.ids, userData?.id);
+
+        if (isPWA() || shouldUseWebPushNotification) {
+          firebaseCloudMessaging.init(userData?.id ?? '');
+        }
 
         return Promise.resolve({ image: imageData?.result?.image, provider: providerData, ...userData });
       }

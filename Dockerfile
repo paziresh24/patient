@@ -1,12 +1,13 @@
-#FROM docker.paziresh24.info/node:14.18.2-alpine
-FROM docker.paziresh24.info/node:18.15.0-alpine3.17
-RUN apk add --no-cache libc6-compat
+FROM node:18.17.0
+
 WORKDIR /app
+
 ENV DOCKER_BUILDKIT 1
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NEW_RELIC_NO_CONFIG_FILE=true
 ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
 ENV NEW_RELIC_LOG=stdout
+ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./ 
 RUN rm -rf package-lock.json 
@@ -20,7 +21,6 @@ COPY . .
 
 
 #RUN yarn build && \
-#    yarn cache clean
 RUN npm run build && npm cache clean --force
 
 EXPOSE 3000

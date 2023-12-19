@@ -143,7 +143,9 @@ const Receipt = () => {
                 duration_conversation_doctor: 3,
                 book_time_string: moment(getAppoinment?.data?.data?.start).locale('fa').format('jYYYY/jMM/DD HH:mm'),
                 is_online_visit: true,
+                is_deleted: false,
               }}
+              possibilityBeingVisited={possibilityBeingVisited}
               loading={getChannel.isLoading || getAppoinment.isLoading || getService.isLoading || getShareLink.isLoading}
               centerId={'5532'}
             />

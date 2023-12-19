@@ -5,7 +5,7 @@ import useModal from '@/common/hooks/useModal';
 import { ReactNode } from 'react';
 
 export interface ItemProps {
-  text: string;
+  text: string | ReactNode;
   icon: ReactNode;
   hint?: string;
 }
@@ -18,7 +18,7 @@ export const Item = (props: ItemProps) => {
     <>
       <div className="flex items-center p-4 rounded-lg space-s-2 bg-slate-100">
         {icon}
-        <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: text }} />
+        {typeof text === 'string' ? <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: text }} /> : text}
         {hint && <InfoIcon className="w-5 h-5 opacity-80 cursor-pointer !mr-1" onClick={handleOpen} />}
       </div>
       <Modal {...modalProps} noHeader>

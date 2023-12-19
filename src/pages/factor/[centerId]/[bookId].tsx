@@ -66,8 +66,8 @@ const Factor = () => {
 
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
-      nextWeek: 'dddd',
-      sameElse: 'dddd',
+      nextWeek: 'YYYY/MM/DD(dddd) ساعت HH:mm',
+      sameElse: 'YYYY/MM/DD ساعت HH:mm',
     });
   };
 

@@ -92,7 +92,6 @@ const Receipt = () => {
   });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
-  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const onlineVisitTimeInfo = useFeatureValue<any>('booking:online-visit-info', {});
@@ -355,6 +354,7 @@ const Receipt = () => {
                 online_visit_time: onlineVisitTimeList[isRolloutDoctors ? onlineVisitTimeInfo?.visit_time_mode : 'visit_time'],
               }}
               loading={getReceiptDetails.isLoading}
+              possibilityBeingVisited={possibilityBeingVisited}
               centerId={centerId?.toString()!}
             />
           </div>
@@ -395,7 +395,7 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-4">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
                   <MessengerButton
                     channel={
                       bookDetailsData.selected_online_visit_channel?.type
@@ -405,7 +405,7 @@ const Receipt = () => {
                           )[0]
                     }
                   />
-                  {safeCallModuleInfo.service_id.includes(bookDetailsData.services[0].id) && (
+                  {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
                     <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
                   )}
                 </div>
