@@ -1,5 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import { removeCookies } from 'cookies-next';
+import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
 
 interface UseUserInfoStore {
@@ -48,14 +49,20 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     presence: 0,
   },
   setUserInfo: info => {
-    set(() => ({
-      info: {
-        ...info,
-        cell: `0${info.cell}`,
-        is_foreigner: info.is_foreigner == '1',
-      },
-      isLogin: true,
-    }));
+    set(() => {
+      growthbook.setAttributes({
+        user_id: info.id,
+        is_doctor: info.provider?.job_title === 'doctor',
+      });
+      return {
+        info: {
+          ...info,
+          cell: `0${info.cell}`,
+          is_foreigner: info.is_foreigner == '1',
+        },
+        isLogin: true,
+      };
+    });
   },
   removeInfo: () => {
     set(() => ({
@@ -79,6 +86,9 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     removeCookies('certificate');
     removeCookies('token');
     clinicClient.get('/logout');
+    growthbook.setAttributes({
+      user_id: undefined,
+    });
     set(() => ({
       info: {},
       isLogin: false,

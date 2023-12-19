@@ -10,6 +10,7 @@ import SearchIcon from '@/common/components/icons/search';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { useSearchStore } from '@/modules/search/store/search';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
 
@@ -36,6 +37,7 @@ export const CitySelect = (props: CitySelectProps) => {
   const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>('provinces');
   const provincesData = useRef<locationParam[]>([]);
   const citiesData = useRef<locationParam[]>([]);
+  const shouldShowAroundMeButton = useFeatureIsOn('search:around-me-button|enabled');
   const [filtredLocation, setFiltredLocation] = useState<
     {
       name: string;
@@ -101,20 +103,22 @@ export const CitySelect = (props: CitySelectProps) => {
       </Button>
       <Modal fullScreen bodyClassName="pt-2 md:pt-5" title="انتخاب شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
-          <div className="md:hidden">
-            <Button
-              block
-              variant="text"
-              size="sm"
-              className="text-right hover:bg-transparent px-0 justify-start"
-              onClick={() => {
-                handleClickCity('-1', true);
-              }}
-              icon={<DirectionIcon />}
-            >
-              اطراف من
-            </Button>
-          </div>
+          {shouldShowAroundMeButton && (
+            <div className="md:hidden">
+              <Button
+                block
+                variant="text"
+                size="sm"
+                className="text-right hover:bg-transparent px-0 justify-start"
+                onClick={() => {
+                  handleClickCity('-1', true);
+                }}
+                icon={<DirectionIcon />}
+              >
+                اطراف من
+              </Button>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             {popularCities.map(city => (
               <Button
