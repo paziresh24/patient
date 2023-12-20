@@ -4,7 +4,7 @@ import ProgressBar from '../../../../common/components/atom/progressBar/progress
 import { DetailsProps } from '../../type/rate';
 
 export const Details = (props: DetailsProps) => {
-  const { satisfaction, title, count, count_text, information } = props;
+  const { satisfaction, satisfactionHint, title, count, count_text, information } = props;
   return (
     <>
       {!!satisfaction && (
@@ -15,6 +15,7 @@ export const Details = (props: DetailsProps) => {
           className="mt-1"
           fontSize="sm"
           caption={`${title} (${count} ${count_text ?? ''})`}
+          hint={satisfactionHint}
         />
       )}
       <div className="flex flex-col gap-3">

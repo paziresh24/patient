@@ -96,6 +96,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         ? (overwriteData.feedbacks?.satisfactionPercent / 20).toFixed(1)
         : source.feedbacks?.details?.avg_star,
       like: source.feedbacks?.details?.like,
+      is_new_rate_calculations: !!overwriteData.feedbacks?.satisfactionPercent,
     },
   };
 

@@ -28,6 +28,7 @@ export type DetailsProps = {
   count?: number;
   count_text?: string;
   information: information[];
+  satisfactionHint?: string;
 };
 
 type Controller = {
