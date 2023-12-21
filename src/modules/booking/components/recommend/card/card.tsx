@@ -1,4 +1,5 @@
 import Text from '@/common/components/atom/text';
+import BackIcon from '@/common/components/icons/back';
 import Card from '@/modules/search/components/card';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
@@ -25,7 +26,6 @@ type ShowMore = {
   url: string;
   text: string;
   classname?: string;
-  icon?: React.ReactNode;
 };
 
 interface RecommendCardProps {
@@ -76,11 +76,14 @@ export const RecommendCard = (props: RecommendCardProps) => {
         ))}
         {!!showMore && listOfDoctors && (
           <div
-            className={clsx('w-[15rem] min-w-[15rem] !space-y-0 bg-primary rounded-md cursor-pointer', showMore.classname)}
+            className={clsx(
+              'w-[15rem] min-w-[15rem] bg-primary rounded-md cursor-pointer flex justify-center items-center gap-1',
+              showMore.classname,
+            )}
             onClick={() => router.push(showMore.url)}
           >
-            <Text>{showMore.text}</Text>
-            {showMore?.icon ?? ''}
+            <Text className="text-white">{showMore.text}</Text>
+            <BackIcon className="rotate-180 text-white" />
           </div>
         )}
       </ScrollContainer>
