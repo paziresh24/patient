@@ -61,10 +61,6 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         book_id: bookId,
         ...(discountToken && { discount_token: discountToken }),
       });
-      if (isApplication) {
-        window.open(data.url, '_blank');
-        return;
-      }
       if (data.status) {
         location.assign(data.url);
         return;
