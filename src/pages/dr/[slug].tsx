@@ -219,8 +219,10 @@ const DoctorProfile = ({
             serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
-            satisfaction={customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction}
-            rateCount={profileData.feedbacks?.details?.number_of_feedbacks}
+            satisfaction={
+              customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction_percent
+            }
+            rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
             infoEditAction={() => handleViewAs('information')}
@@ -389,13 +391,13 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        ...(feedbacks.details.avg_star && {
+        ...(feedbacks.details.satisfaction && {
           aggregateRating: {
             '@type': 'AggregateRating',
             'bestRating': 5,
             'worstRating': 0,
-            'ratingCount': feedbacks.details.number_of_feedbacks,
-            'ratingValue': feedbacks.details.avg_star,
+            'ratingCount': feedbacks.details.count_of_feedbacks,
+            'ratingValue': feedbacks.details.satisfaction,
           },
         }),
       },

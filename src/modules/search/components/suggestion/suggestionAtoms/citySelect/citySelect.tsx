@@ -4,10 +4,13 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
 import ChevronIcon from '@/common/components/icons/chevron';
+import DirectionIcon from '@/common/components/icons/direction';
 import LocationIcon from '@/common/components/icons/location';
 import SearchIcon from '@/common/components/icons/search';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
+import { useSearchStore } from '@/modules/search/store/search';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useEffect, useRef, useState } from 'react';
 import { popularCities } from '../../../../constants/cityList/popularCities';
 
@@ -27,12 +30,14 @@ export const CitySelect = (props: CitySelectProps) => {
   const { city, onChange } = props;
   const { handleOpen, handleClose, modalProps } = useModal();
 
+  const geoLocation = useSearchStore(state => state.geoLocation);
   const containerRef = useRef<HTMLDivElement>(null);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
   const [userSearchInput, setUserSearchInput] = useState('');
   const [stepSelect, setStepSelect] = useState<'provinces' | 'cities'>('provinces');
   const provincesData = useRef<locationParam[]>([]);
   const citiesData = useRef<locationParam[]>([]);
+  const shouldShowAroundMeButton = useFeatureIsOn('search:around-me-button|enabled');
   const [filtredLocation, setFiltredLocation] = useState<
     {
       name: string;
@@ -61,12 +66,13 @@ export const CitySelect = (props: CitySelectProps) => {
     setFiltredLocation(citiesData.current.filter(city => city.province_id === provinceId).map(item => ({ ...item, isProvince: false })));
   };
 
-  const handleClickCity = (cityId: string) => {
+  const handleClickCity = (cityId: string, isAroundMe?: boolean) => {
     onChange({
       ...citiesData.current.find(item => item.id === cityId),
       id: cityId,
       name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
       en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? 'ir',
+      is_aroundme: isAroundMe,
     });
     handleClose();
   };
@@ -81,14 +87,38 @@ export const CitySelect = (props: CitySelectProps) => {
     <>
       <Button
         variant="text"
-        icon={<LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />}
+        icon={
+          geoLocation ? (
+            <DirectionIcon className="w-6 h-6 stroke-2 min-w-[1.25rem]" />
+          ) : (
+            <LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />
+          )
+        }
         onClick={handleOpen}
-        className="!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg"
+        className={classNames('!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg', {
+          '!text-primary': geoLocation,
+        })}
       >
-        <Text fontSize="sm">{city?.name}</Text>
+        <Text fontSize="sm">{geoLocation ? 'اطراف من' : city?.name}</Text>
       </Button>
-      <Modal fullScreen title="انتخاب شهر" {...modalProps}>
+      <Modal fullScreen bodyClassName="pt-2 md:pt-5" title="انتخاب شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
+          {shouldShowAroundMeButton && (
+            <div className="md:hidden">
+              <Button
+                block
+                variant="text"
+                size="sm"
+                className="text-right hover:bg-transparent px-0 justify-start"
+                onClick={() => {
+                  handleClickCity('-1', true);
+                }}
+                icon={<DirectionIcon />}
+              >
+                اطراف من
+              </Button>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             {popularCities.map(city => (
               <Button

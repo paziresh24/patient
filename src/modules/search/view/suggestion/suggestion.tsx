@@ -25,6 +25,7 @@ export const Suggestion = (props: SuggestionProps) => {
   const router = useRouter();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+  const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const { isMobile } = useResponsive();
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
@@ -125,12 +126,35 @@ export const Suggestion = (props: SuggestionProps) => {
     setCity({
       ...city,
     });
+    if (city.is_aroundme) {
+      navigator.geolocation.getCurrentPosition(position => {
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+        setGeoLocation({
+          lat,
+          lon: long,
+        });
+        router.pathname.startsWith('/s/') &&
+          changeRoute({
+            params: { city: 'ir' },
+            query: {
+              ...(router.query.city_id && { city_id: city.id }),
+              lat,
+              lon: long,
+            },
+            previousQueries: false,
+          });
+      });
+      return;
+    }
+    setGeoLocation(undefined);
     router.pathname.startsWith('/s/') &&
       changeRoute({
         params: { city: city.en_slug },
         query: {
           ...(router.query.city_id && { city_id: city.id }),
         },
+        previousQueries: false,
       });
   };
 

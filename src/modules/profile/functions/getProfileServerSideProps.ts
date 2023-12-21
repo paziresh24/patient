@@ -15,6 +15,7 @@ import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
+import { getRateDetailsData } from './getRateDetailsData';
 import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
@@ -88,6 +89,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
     let shouldUsePageView: boolean = false;
+    let shouldUseNewRateCalculations: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -139,6 +141,17 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
       shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
+
+      // New Rate Calculations
+      const newRateCalculationsDoctorList = growthbook.getFeatureValue('profile:new-rate-calculations|slugs-enabled', { slugs: [''] });
+      const newRateCalculationsDoctorExpertisesList = growthbook.getFeatureValue('profile:new-rate-calculations|expertises-enabled', {
+        expertises: [''],
+      });
+      shouldUseNewRateCalculations =
+        newApiFeatureFlaggingCondition(newRateCalculationsDoctorList.slugs, slugFormmated) ||
+        fullProfileData.group_expertises.some((group: any) =>
+          newApiFeatureFlaggingCondition(newRateCalculationsDoctorExpertisesList.expertises, group.id),
+        );
     } catch (error) {
       console.error(error);
     }
@@ -274,6 +287,16 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       } catch (error) {
         console.error(error);
       }
+    }
+
+    if (shouldUseNewRateCalculations) {
+      const { averageRates, countOfFeedbacks, satisfactionPercent } = await getRateDetailsData({ slug: slugFormmated });
+      profileData.feedbacks = {
+        ...profileData.feedbacks,
+        averageRates,
+        countOfFeedbacks,
+        satisfactionPercent,
+      };
     }
 
     const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =

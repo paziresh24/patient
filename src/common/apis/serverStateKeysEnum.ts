@@ -16,4 +16,7 @@ export enum ServerStateKeysEnum {
   AvailabilityNotification = 'availabilityNotification',
   InquiryPayment = 'inquiryPayment',
   Reviews = 'reviews',
+  AverageRates = 'averageRates',
+  CountOfFeedbacks = 'countOfFeedbacks',
+  SatisfactionPercent = 'satisfactionPercent',
 }

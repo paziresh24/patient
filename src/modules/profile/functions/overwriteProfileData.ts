@@ -25,6 +25,9 @@ export type OverwriteProfileData = {
   feedbacks: {
     waiting_time_info_online_visit?: any;
     reviews?: any;
+    averageRates?: any;
+    countOfFeedbacks?: number;
+    satisfactionPercent?: number;
   };
 };
 
@@ -80,7 +83,23 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         })),
   };
 
-  const feedbacks = { ...source.feedbacks };
+  const feedbacks = {
+    ...source.feedbacks,
+    details: {
+      average_rates: {
+        average_doctor_encounter: source.feedbacks?.details?.doctor_encounter,
+        average_explanation_of_issue: source.feedbacks?.details?.explanation_of_issue,
+        average_quality_of_treatment: source.feedbacks?.details?.quality_of_treatment,
+        ...overwriteData.feedbacks?.averageRates,
+      },
+      count_of_feedbacks: overwriteData.feedbacks?.countOfFeedbacks ?? source.feedbacks?.details?.number_of_feedbacks,
+      satisfaction_percent: overwriteData.feedbacks?.satisfactionPercent ?? source.feedbacks?.details?.satisfaction,
+      satisfaction: overwriteData.feedbacks?.satisfactionPercent
+        ? (overwriteData.feedbacks?.satisfactionPercent / 20).toFixed(1)
+        : source.feedbacks?.details?.avg_star,
+      like: source.feedbacks?.details?.like,
+    },
+  };
 
   const media = {
     aparat: source.aparat_video_code,
