@@ -69,6 +69,7 @@ interface RateReviewProps {
   serverId: string;
   userId?: number;
   rateDetails: {
+    satisfactionHint?: string;
     satisfaction: number;
     count: number;
     information: {
@@ -578,6 +579,7 @@ export const RateReview = (props: RateReviewProps) => {
               count_text={details.count_text}
               title={details.title}
               information={details.information}
+              satisfactionHint={rateDetails.satisfactionHint}
             />
           </div>
         </div>

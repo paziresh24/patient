@@ -155,6 +155,10 @@ export const sections = ({
         const rateDetails = {
           satisfaction: feedbacks.details?.satisfaction_percent,
           count: feedbacks.details.count_of_feedbacks,
+          ...(feedbacks.details?.is_new_rate_calculations && {
+            satisfactionHint:
+              'درصد رضایت، حاصل میانگین سه پارامتر <b>"برخورد"، "توضیح" و "مهارت و تخصص"</b> پزشک می باشد که همگی توسط بیماران اعلام گردیده اند.',
+          }),
           information: [
             {
               id: 1,
