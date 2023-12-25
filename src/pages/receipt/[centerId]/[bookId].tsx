@@ -425,6 +425,9 @@ const Receipt = () => {
                             group: 'support-receipt',
                             type: 'request-support-book',
                             event: {
+                              doctor_id: bookDetailsData?.doctor?.id,
+                              slug: bookDetailsData?.doctor?.slug,
+                              server_id: bookDetailsData?.doctor?.server_id,
                               doctor_name: bookDetailsData?.doctor?.display_name,
                               book_id: bookDetailsData.book_id,
                               reference_code: bookDetailsData.reference_code,
@@ -499,6 +502,9 @@ const Receipt = () => {
                 group: 'support-receipt',
                 type: 'follow-doctor-delay',
                 event: {
+                  doctor_id: bookDetailsData?.doctor?.id,
+                  slug: bookDetailsData?.doctor?.slug,
+                  server_id: bookDetailsData?.doctor?.server_id,
                   doctor_name: bookDetailsData?.doctor?.display_name,
                   book_id: bookDetailsData.book_id,
                   reference_code: bookDetailsData.reference_code,
