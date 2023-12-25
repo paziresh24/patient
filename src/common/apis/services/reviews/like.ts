@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 interface LikeParams {
@@ -8,7 +8,7 @@ interface LikeParams {
 }
 
 const likeReview = (params: LikeParams) => {
-  return apiGatewayClient.post(`/ravi/post_actions`, { ...params });
+  return raviClient.post(`/post_actions`, { ...params });
 };
 
 export const useLikeReview = () => {

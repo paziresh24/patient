@@ -7,7 +7,6 @@ import { useAddReview } from '@/common/apis/services/reviews/addReview';
 import { useDeleteFeedback } from '@/common/apis/services/reviews/delete';
 import { useEditComment } from '@/common/apis/services/reviews/edit';
 import { useLikeReview } from '@/common/apis/services/reviews/like';
-import { useReplyComment } from '@/common/apis/services/reviews/reply';
 import Button from '@/common/components/atom/button/button';
 import MessageBox from '@/common/components/atom/messageBox/messageBox';
 import Modal from '@/common/components/atom/modal/modal';
@@ -125,7 +124,6 @@ export const RateReview = (props: RateReviewProps) => {
   const likeFeedback = useLikeFeedback();
   const likeReviews = useLikeReview();
   const replyFeedback = useReplyfeedback();
-  const replyComment = useReplyComment();
   const { handleOpenLoginModal } = useLoginModalContext();
   const replyText = useRef<HTMLInputElement>();
   const editText = useRef<HTMLInputElement>();
@@ -203,7 +201,7 @@ export const RateReview = (props: RateReviewProps) => {
             id: feedback.id,
             title: 'نظرات',
             isShow: feedbackReplyModalDetails.find(reply => reply.id === feedback.id)?.isShow ?? false,
-            handleOpen: () => showReplyModal(feedback.id, feedback.is_doctor),
+            handleOpen: () => showReplyModal(isSpecialDoctor ? feedback.post_number : feedback.id, feedback.is_doctor),
             onClose: () =>
               setFeedbackReplyModalDetails(
                 feedbackReplyModalDetails.map(reply => (reply.id === feedback.id ? { id: reply.id, isShow: false } : reply)),
@@ -290,7 +288,7 @@ export const RateReview = (props: RateReviewProps) => {
                 {
                   id: feedback.id,
                   name: 'پاسخ',
-                  action: () => showReplyModal(feedback.id, feedback.is_doctor),
+                  action: () => showReplyModal(isSpecialDoctor ? feedback.post_number : feedback.id, feedback.is_doctor),
                   type: 'button',
                   icon: <ReplyIcon />,
                 },
@@ -301,7 +299,7 @@ export const RateReview = (props: RateReviewProps) => {
           messageBox: {
             placeholder: 'نظر خود را بنویسید...',
             submitText: 'ارسال',
-            onSubmit: (text: string) => submitReplyHandler(feedback.id, text),
+            onSubmit: (text: string) => submitReplyHandler(isSpecialDoctor ? feedback.post_number : feedback.id, text),
           },
         },
     );
@@ -490,10 +488,12 @@ export const RateReview = (props: RateReviewProps) => {
       });
     if (!text) return toast.error('لطفا متنی را وارد کنید');
     if (isSpecialDoctor) {
-      await replyComment.mutate({
-        description: text,
-        id,
-        user_id: userInfo.id,
+      await addReview.mutateAsync({
+        topic_id: feedbacksData[0]?.topic_id ?? '0',
+        raw: text,
+        nested_post: false,
+        draft_key: `topic_${feedbacksData[0]?.topic_id}`,
+        reply_to_post_number: id,
       });
     } else {
       await replyFeedback.mutate({
@@ -513,7 +513,6 @@ export const RateReview = (props: RateReviewProps) => {
       if (isSpecialDoctor) {
         await deleteComment.mutateAsync({
           id: feedbackDetails?.id,
-          user_id: userInfo?.id,
         });
       } else {
         await removeComment.mutateAsync({
@@ -536,8 +535,7 @@ export const RateReview = (props: RateReviewProps) => {
       if (isSpecialDoctor) {
         await editComment.mutateAsync({
           id: feedbackDetails?.id,
-          description,
-          user_id: userInfo?.id,
+          raw: description,
         });
       } else {
         await editFeedback.mutateAsync({
@@ -559,7 +557,12 @@ export const RateReview = (props: RateReviewProps) => {
 
   const addReviewHandler = async (description: string) => {
     try {
-      await addReview.mutateAsync({ external_id: `doctor_${doctor.id}_1`, description, user_id: userInfo?.id });
+      await addReview.mutateAsync({
+        topic_id: feedbacksData[0]?.topic_id ?? '0',
+        raw: description,
+        nested_post: false,
+        draft_key: `topic_${feedbacksData[0]?.topic_id}`,
+      });
       toast.success('نظر شما با موفقیت ثبت شد');
       handleCloseAddReviewModal();
       return;

@@ -1,24 +1,15 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
 
 export interface Params {
+  raw: string;
   id: string;
-  description?: string;
-  user_id?: string;
 }
 
-export const editComment = ({ id, description, user_id }: Params) => {
-  return apiGatewayClient.patch(
-    `/v1/feedbacks/${id}`,
-    {
-      description,
-    },
-    {
-      headers: {
-        'x-user-id': user_id,
-      },
-    },
-  );
+export const editComment = ({ raw, id }: Params) => {
+  return raviClient.put(`/posts/${id}.json`, {
+    raw,
+  });
 };
 
 export const useEditComment = () => {
