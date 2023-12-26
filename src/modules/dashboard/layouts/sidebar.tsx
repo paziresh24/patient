@@ -108,7 +108,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     router.push(`/dashboard/apps/${event.data?.manifest?.key}/${event.data?.manifest?.navigation_items[0]?.key}/`);
                     toast.dismiss(t.id);
                   }}
-                  className="w-full border border-transparent rounded-none rounded-l-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-transparent rounded-none rounded-l-lg p-4 flex items-center justify-center text-sm font-medium text-primary hover:text-primary/60 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   مشاهده
                 </button>
