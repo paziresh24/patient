@@ -12,6 +12,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkSearchInstance } from '@/common/services/splunk';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import UnknownCity from '@/modules/search/components/unknownCity';
@@ -94,7 +95,9 @@ const Search = ({ host }: any) => {
           type: 'search_card_view',
           events: result.map(item => ({
             card_data: {
-              action: item.actions?.map?.(item => JSON.stringify({ outline: item.outline, title: item.title })),
+              action: item.actions?.map?.(item =>
+                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+              ),
               _id: item._id,
               position: item.position,
               server_id: item.server_id,
