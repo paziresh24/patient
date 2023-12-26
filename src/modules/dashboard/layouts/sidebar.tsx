@@ -257,7 +257,8 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     }
                   />
                 )}
-                {((appsData.isSuccess && apps.some((app: any) => !app.pin)) || appsData.isLoading) && <Divider />}
+                {((appsData.isSuccess && (apps.some((app: any) => !app.pin) || shouldShowBazaarMenu)) ||
+                  (user.provider?.job_title === 'doctor' || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
                 {defaultMenuData.map(menu => (
                   <MenuItem
                     key={menu.url}
