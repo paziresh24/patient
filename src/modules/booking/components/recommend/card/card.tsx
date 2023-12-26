@@ -25,7 +25,7 @@ type Recommends = {
 type ShowMore = {
   url: string;
   text: string;
-  classname?: string;
+  className?: string;
 };
 
 interface RecommendCardProps {
@@ -78,7 +78,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
           <div
             className={clsx(
               'w-[15rem] min-w-[15rem] bg-primary rounded-md cursor-pointer flex justify-center items-center gap-1',
-              showMore.classname,
+              showMore.className,
             )}
             onClick={() => router.push(showMore.url)}
           >
