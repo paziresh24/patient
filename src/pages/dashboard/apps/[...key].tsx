@@ -10,7 +10,7 @@ import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = () => {
   const user = useUserInfoStore(state => state.info);
@@ -32,10 +32,6 @@ export const Dashboard = () => {
 
   const selctedMenu = useMemo(() => app?.navigation_items.find((item: any) => item.key === menuKey), [app, isReady, menuKey, appKey]);
   const appName = selctedMenu?.label ?? app?.name ?? 'داشبورد';
-
-  useEffect(() => {
-    setIsAppLoading(true);
-  }, []);
 
   return (
     <div className="flex flex-col w-full">

@@ -4,46 +4,27 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ message: 'Method Not Allowed' });
   const isDoctor = req.query.is_doctor === 'true';
-  let apps: any[] = [];
 
   try {
-    try {
-      const installedApps = await axios.get(
-        `https://bazaar.paziresh24.com/wp-json/custom/v1/orders-by-phone/?phone=${req.query.phone_number}`,
-      );
-      apps = [
-        ...installedApps.data.map(
-          async (item: any) =>
-            await axios.get(item.app_link).catch(error => {
-              return {
-                data: {
-                  navigation_items: [],
-                },
-              };
-            }),
-        ),
-      ];
-    } catch (error) {
-      console.error('ERROR: /api/apps >>>>', error);
-    }
-
     let defaultDoctorApps: any = [];
     if (isDoctor) {
-      apps.push(await axios.get('https://dr.paziresh24.com/drapp-manifest.json'));
       defaultDoctorApps = [
         await axios.get('https://dr.paziresh24.com/wallet-manifest.json'),
         await axios.get('https://dr.paziresh24.com/ravi-manifest.json'),
         await axios.get('https://dr.paziresh24.com/forough-manifest.json'),
+        await axios.get('https://dr.paziresh24.com/drapp-manifest.json'),
       ];
     }
-    const appManifests = await Promise.allSettled(apps);
     const defaultDoctorAppsManifests = await Promise.allSettled(defaultDoctorApps);
-
+    let installedApp: any[] = [];
+    try {
+      const installedAppsRes = await axios.get(`https://bazaar.paziresh24.com/api/v1/installations?user_id=${req.query.user_id}`);
+      installedApp = [...installedAppsRes.data.map((item: any) => ({ ...item.manifest, installation_id: item.id }))];
+    } catch (error) {
+      console.error('ERROR: /api/apps >>>>', error);
+    }
     const appsArray = [
-      ...appManifests
-        .reverse()
-        .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: true, manifest: item.value?.config?.url }),
+      ...installedApp.map(item => ({ ...item, pin: true, manifest: '' })),
       ...defaultDoctorAppsManifests
         .reverse()
         .filter(item => item.status === 'fulfilled')
