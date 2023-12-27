@@ -22,7 +22,8 @@ export interface TurnProps {
     lastName: string;
     expertise?: string;
     slug: string;
-    onlineVisitChannel?: OnlineVisitChannel;
+    onlineVisitChannels?: OnlineVisitChannel[];
+    selectedOnlineVisitChannel?: OnlineVisitChannel;
   };
   patientInfo: {
     nationalCode: string;

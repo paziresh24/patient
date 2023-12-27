@@ -247,7 +247,8 @@ export const Appointments = () => {
                     expertise: turn.doctor_info?.expertises?.[0]?.expertise?.name,
                   }),
                 slug: turn.doctor_info?.slug,
-                onlineVisitChannel: turn?.selected_online_visit_channel?.type ? turn?.selected_online_visit_channel : undefined,
+                onlineVisitChannels: turn.doctor_info?.online_visit_channels,
+                selectedOnlineVisitChannel: turn?.selected_online_visit_channel?.type ? turn?.selected_online_visit_channel : undefined,
               }}
               patientInfo={{
                 nationalCode: turn.patient_info?.national_code,
