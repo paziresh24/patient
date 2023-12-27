@@ -49,7 +49,8 @@ interface TurnFooterProps {
   phoneNumber: string;
   doctorName: string;
   expertise: string;
-  onlineVisitChannel?: OnlineVisitChannel;
+  onlineVisitChannels?: OnlineVisitChannel[];
+  selectedOnlineVisitChannel?: OnlineVisitChannel;
   serviceId: string;
   userCenterId: string;
   activePaymentStatus: boolean;
@@ -70,7 +71,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     centerType,
     hasPaging,
     bookTime,
-    onlineVisitChannel,
+    onlineVisitChannels,
+    selectedOnlineVisitChannel,
     possibilityBeingVisited,
     centerId,
     nationalCode,
@@ -112,7 +114,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     isOnlineVisitTurn &&
     paymentStatus !== PaymentStatus.paying &&
     status !== BookStatus.deleted &&
-    onlineVisitChannel &&
+    selectedOnlineVisitChannel &&
     possibilityBeingVisited;
 
   const showPrescription = () => {
@@ -323,8 +325,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {shouldShowMessengerButton && (
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between lg:gap-4">
-          <MessengerButton channel={onlineVisitChannel} />
-          {safeCallModuleInfo.service_id.includes(serviceId) && <SecureCallButton bookId={id} extraAction={() => handleSafeCallAction()} />}
+          <MessengerButton channel={selectedOnlineVisitChannel} />
+          {onlineVisitChannels?.some((channel: { type: string }) => channel.type === 'secure_call') && (
+            <SecureCallButton bookId={id} extraAction={() => handleSafeCallAction()} />
+          )}
         </div>
       )}
       <div className="flex items-center space-s-3">

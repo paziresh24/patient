@@ -61,8 +61,8 @@ export const ActivityWrapper = (props: ActivityProps) => {
   };
 
   useEffect(() => {
-    shouldShowDeletedBooksRate && deletedBooksRateHandler();
-  }, [shouldShowDeletedBooksRate]);
+    if (shouldShowDeletedBooksRate && onlineVisitEnabled) deletedBooksRateHandler();
+  }, [shouldShowDeletedBooksRate, onlineVisitEnabled]);
 
   const items = [
     history?.count_of_consult_books && {
