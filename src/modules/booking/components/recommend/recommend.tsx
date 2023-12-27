@@ -84,6 +84,10 @@ export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: R
               elementContent,
             )
           }
+          showMore={{
+            text: 'نمایش نتایج بیشتر',
+            url: `/s/${props.city}/${props.category}/?turn_type=consult`,
+          }}
         />
       )}
     </div>

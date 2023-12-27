@@ -27,8 +27,8 @@ export const Dashboard = () => {
         return;
       }
       router.push(
-        `/dashboard/apps/${(flatten(apps.data.data)?.[0] as any)?.key}/${
-          (flatten(apps.data.data)?.[0] as any)?.navigation_items?.[0]?.key
+        `/dashboard/apps/${(flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.key}/${
+          (flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.navigation_items?.[0]?.key
         }/`,
       );
     }

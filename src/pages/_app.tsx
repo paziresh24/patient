@@ -73,6 +73,7 @@ function MyApp(props: AppProps) {
     if (isEnabledGrowthbook) {
       growthbook.loadFeatures({ autoRefresh: true });
       growthbook.setAttributes({
+        ...growthbook.getAttributes(),
         id: getCookie('terminal_id'),
       });
       router.events.on('routeChangeComplete', updateGrowthBookURL);

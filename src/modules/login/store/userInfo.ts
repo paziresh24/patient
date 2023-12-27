@@ -51,6 +51,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   setUserInfo: info => {
     set(() => {
       growthbook.setAttributes({
+        ...growthbook.getAttributes(),
         user_id: info.id,
         is_doctor: info.provider?.job_title === 'doctor',
       });
@@ -87,7 +88,9 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     removeCookies('token');
     clinicClient.get('/logout');
     growthbook.setAttributes({
+      ...growthbook.getAttributes(),
       user_id: undefined,
+      is_doctor: false,
     });
     set(() => ({
       info: {},
