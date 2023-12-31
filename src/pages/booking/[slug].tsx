@@ -64,6 +64,20 @@ const Booking = () => {
     },
   );
 
+  const profileData = data?.data;
+
+  useEffect(() => {
+    if (data?.redirect) {
+      router.replace(data.redirect?.route?.replace('/dr', '/booking') + location.search);
+    }
+  }, [data?.redirect]);
+
+  useEffect(() => {
+    if (profileData && !profileData?.centers?.some((item: any) => item.id === router.query?.centerId)) {
+      router.replace(`/booking/${router.query?.slug?.toString()}`);
+    }
+  }, [profileData]);
+
   const isLoading =
     fullProfileLoading ||
     (!!router.query.userId &&
@@ -71,8 +85,6 @@ const Booking = () => {
         !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
         !!isMembershipCity.cities?.includes?.('*')) &&
       membershipLoading);
-
-  const profileData = data?.data;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
@@ -150,7 +162,7 @@ const Booking = () => {
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            isLoading={isLoading}
+            isLoading={isLoading || !profileData}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
             fullName={removePrefixDoctorName(profileData?.display_name)}
             expertise={getDisplayDoctorExpertise({
@@ -169,7 +181,7 @@ const Booking = () => {
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
                   {router.query.centerId === CENTERS.CONSULT
-                    ? `ویزیت آنلاین ${profileData.online_visit_channel_types?.length > 0 ? 'در پیام رسان' : ''}`
+                    ? `ویزیت آنلاین ${profileData?.online_visit_channel_types?.length > 0 ? 'در پیام رسان' : ''}`
                     : centerName}
                 </Text>
               )}

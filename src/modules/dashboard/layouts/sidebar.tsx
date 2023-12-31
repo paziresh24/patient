@@ -77,8 +77,6 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     window.addEventListener('message', function (event) {
       if (event.data.state === 'installed') {
         toast.remove('install-app-toast');
-        // console.log('hi');
-
         const updatedData = {
           ...currentData,
           data: [...(currentData?.data ?? []), { ...event.data.manifest, installation_id: event.data?.installation_id, pin: true }],
@@ -90,13 +88,13 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
         // toast.success('hi');
         toast.custom(
           t => (
-            <div className="max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5">
+            <div className="flex w-full max-w-md bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5">
               <div className="flex-1 w-0 p-4">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 pt-0.5">
                     <img className="h-10 w-10 min-w-[2.5rem] rounded-full" src={event.data?.item?.logo?.src} alt="" />
                   </div>
-                  <div className="ml-3 flex-1">
+                  <div className="flex-1 ml-3">
                     <p className="text-sm font-medium text-slate-900">اَبزارک {event.data?.item.name} نصب شد.</p>
                     {/* <p className="mt-1 text-sm text-gray-500">Sure! 8:30pm works great!</p> */}
                   </div>
@@ -108,7 +106,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     router.push(`/dashboard/apps/${event.data?.manifest?.key}/${event.data?.manifest?.navigation_items[0]?.key}/`);
                     toast.dismiss(t.id);
                   }}
-                  className="w-full border border-transparent rounded-none rounded-l-lg p-4 flex items-center justify-center text-sm font-medium text-primary hover:text-primary/60 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="flex items-center justify-center w-full p-4 text-sm font-medium border border-transparent rounded-none rounded-l-lg text-primary hover:text-primary/60 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   مشاهده
                 </button>
