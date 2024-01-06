@@ -17,6 +17,7 @@ import Badge, { BadgeProps } from '../badge';
 const { publicRuntimeConfig } = getConfig();
 
 interface SearchCardProps {
+  alt?: string;
   baseInfo: {
     displayName?: string;
     name?: string;
@@ -54,7 +55,7 @@ interface SearchCardProps {
 }
 
 export const SearchCard = (props: SearchCardProps) => {
-  const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false } = props;
+  const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
@@ -65,11 +66,14 @@ export const SearchCard = (props: SearchCardProps) => {
   return (
     <Card className={classNames('relative justify-between !p-3 md:!p-4 space-y-3', className)}>
       <div className="flex items-center space-s-2">
-        <LinkInhance onClick={() => sendEventWhenClick?.({ element: 'avatar' })} {...(baseInfo?.url && { href: baseInfo?.url })}>
+        <LinkInhance
+          onClick={() => sendEventWhenClick?.({ element: 'avatar' })}
+          {...(baseInfo?.url && { href: baseInfo?.url, title: alt })}
+        >
           <div className="relative">
             <Avatar
               src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
-              alt={imageAlt}
+              alt={alt ?? imageAlt}
               width={avatarSize === 'md' ? 80 : 100}
               height={avatarSize === 'md' ? 80 : 100}
               className={classNames('border-2 border-slate-200', {
@@ -88,7 +92,7 @@ export const SearchCard = (props: SearchCardProps) => {
               onClick={() =>
                 sendEventWhenClick?.({ element: 'display_name', content: baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}` })
               }
-              {...(baseInfo?.url && { href: baseInfo?.url })}
+              {...(baseInfo?.url && { href: baseInfo?.url, title: alt })}
             >
               <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
                 {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}

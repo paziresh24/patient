@@ -12,7 +12,6 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useModal from '@/common/hooks/useModal';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
@@ -75,8 +74,6 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: moment(getAppoinment?.data?.data?.start).unix(),
   });
-
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -177,7 +174,7 @@ const Receipt = () => {
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
             {...(getProfileImage.data?.data?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + getProfileImage.data?.data?.image })}
-            fullName={removePrefixDoctorName(getProfileImage.data?.data?.display_name)}
+            fullName={getProfileImage.data?.data?.display_name}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: getProfileImage.data?.data?.expertises?.[0]?.alias_title,
               degree: getProfileImage.data?.data?.expertises?.[0]?.degree?.name,

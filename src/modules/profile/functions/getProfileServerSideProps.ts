@@ -217,7 +217,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 ...profileData.provider,
                 name: userData.value?.name,
                 family: userData.value?.family,
-                display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
+                prefix: providerData.value?.prefix ?? 'دکتر',
+                display_name: `${userData.value?.name} ${userData.value?.family}`,
               };
             }
           }
@@ -336,10 +337,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
 
-    const title = `${information?.display_name}، ${expertises.expertises[0].alias_title} ${
+    const title = `${information.prefix} ${information.display_name}، ${expertises.expertises[0].alias_title} ${
       doctorCity ? `${doctorCity}،` : ''
     } نوبت دهی آنلاین و شماره تلفن`;
-    const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+    const description = `نوبت دهی اینترنتی ${information.prefix} ${information.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {
       props: {

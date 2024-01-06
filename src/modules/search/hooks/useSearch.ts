@@ -45,6 +45,7 @@ export type Result = {
   display_expertise: string;
   experience: number;
   image: string;
+  prefix: string;
   is_bulk: boolean;
   rates_count: number;
   satisfaction: number;
