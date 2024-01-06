@@ -2,7 +2,6 @@ import { useClickThroughRate } from '@/common/apis/services/search/clickThroughR
 import { useStat } from '@/common/apis/services/search/position';
 import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
@@ -21,7 +20,6 @@ export const Result = () => {
     asPath,
     ...router
   } = useRouter();
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   const { result, pagination, total, isLanding, isLoading, isSuccess, selectedFilters, search } = useSearch();
   const { changeRoute } = useSearchRouting();
@@ -76,8 +74,9 @@ export const Result = () => {
         ) : (
           <Card
             key={index}
+            alt={`${item.prefix} ${item.title} ${item.display_expertise}`}
             baseInfo={{
-              displayName: removePrefixDoctorName(item.title),
+              displayName: item.title,
               avatar: item.image,
               expertise: item.display_expertise,
               isVerify: !item.is_bulk,

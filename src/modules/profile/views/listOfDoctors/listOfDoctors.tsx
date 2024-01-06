@@ -3,7 +3,6 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { splunkCenterProfileInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { getCookie } from 'cookies-next';
@@ -46,7 +45,6 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
     splunkCenterProfileInstance().sendEvent({
@@ -111,7 +109,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               key={doctor.id}
               type="doctor"
               baseInfo={{
-                displayName: removePrefixDoctorName(doctor.title),
+                displayName: doctor.title,
                 avatar: doctor.image,
                 url: doctor.url,
                 expertise: doctor.display_expertise,

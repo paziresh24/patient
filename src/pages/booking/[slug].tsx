@@ -8,13 +8,13 @@ import Seo from '@/common/components/layouts/seo';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
 import { useMembership } from '@/modules/bookingV2/apis/membership';
 import BookingStepsV2 from '@/modules/bookingV2/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { useProfileName } from '@/modules/profile/hooks/useProfileName';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import moment from 'jalali-moment';
@@ -29,9 +29,9 @@ const Booking = () => {
   const setProfileData = useProfileDataStore(state => state.setData);
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
   const easybookDoctorList = useFeatureValue('booking:easy-book|doctor-list', { ids: [] });
   const shouldUseEasybook = newApiFeatureFlaggingCondition(easybookDoctorList.ids, router.query?.userId as string);
+  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: router.query?.slug as string });
 
   useEffect(() => {
     if (shouldUseEasybook && router.query.centerId === CENTERS.CONSULT) {
@@ -65,6 +65,8 @@ const Booking = () => {
   );
 
   const profileData = data?.data;
+
+  const doctorName = display_name ?? profileData?.display_name ?? '';
 
   useEffect(() => {
     if (data?.redirect) {
@@ -138,12 +140,12 @@ const Booking = () => {
 
   const centerName = useMemo(() => {
     const center = profileData?.centers?.find((center: any) => center.id === router.query.centerId);
-    return center?.center_type === 1 ? `مطب ${profileData.display_name}` : center?.name;
+    return center?.center_type === 1 ? `مطب ${doctorName}` : center?.name;
   }, [router.query.centerId, profileData]);
 
   return (
     <>
-      <Seo title={`دریافت نوبت ${profileData?.display_name ? `از ${profileData?.display_name}` : ''}`} noIndex />
+      <Seo title={`دریافت نوبت ${doctorName ? `از ${doctorName}` : ''}`} noIndex />
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
           {isLoading && (
@@ -162,9 +164,9 @@ const Booking = () => {
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            isLoading={isLoading || !profileData}
+            isLoading={isLoading || profileNameLoading || !profileData}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
-            fullName={removePrefixDoctorName(profileData?.display_name)}
+            fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: profileData?.expertises?.[0]?.alias_title,
               degree: profileData?.expertises?.[0]?.degree?.name,

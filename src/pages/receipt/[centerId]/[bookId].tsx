@@ -21,7 +21,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useShare from '@/common/hooks/useShare';
 import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
@@ -38,6 +37,7 @@ import MessengerButton from '@/modules/myTurn/components/messengerButton/messeng
 import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useProfileName } from '@/modules/profile/hooks/useProfileName';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
@@ -99,8 +99,8 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
-
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
+  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: bookDetailsData?.doctor?.slug });
+  const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -130,7 +130,7 @@ const Receipt = () => {
           reference_code: bookDetailsData.reference_code,
         },
         doctorInfo: {
-          doctor_name: bookDetailsData.doctor.display_name,
+          doctor_name: doctorName,
           group_expertises: bookDetailsData.doctor.display_expertise,
           server_id: bookDetailsData.server_id,
           center_type_name: bookDetailsData.is_online_visit ? 'ویزیت آنلاین' : bookDetailsData.server_id === 1 ? 'مطب' : 'بیمارستان',
@@ -192,7 +192,7 @@ const Receipt = () => {
                 type: 'delete-turn-reason',
                 event: {
                   terminal_id: getCookie('terminal_id'),
-                  doctorName: bookDetailsData.doctor?.display_name,
+                  doctorName: doctorName,
                   expertise: bookDetailsData.doctor?.display_expertise,
                   phoneNumber: bookDetailsData?.patient?.cell,
                   nationalCode: bookDetailsData?.patient?.national_code,
@@ -222,7 +222,7 @@ const Receipt = () => {
 
   const handleShareAction = () => {
     share({
-      text: `رسید نوبت ${bookDetailsData?.doctor.display_name} برای ${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
+      text: `رسید نوبت ${doctorName} برای ${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
       title: 'رسیدنوبت',
       url: bookDetailsData.share_url,
     });
@@ -383,10 +383,10 @@ const Receipt = () => {
                 serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
                   <>
                     <Divider />
-                    <div className="flex relative  flex-col space-y-2">
+                    <div className="relative flex flex-col space-y-2">
                       <Button
                         size="sm"
-                        className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                        className="text-orange-600 border-orange-300 hover:bg-orange-50"
                         block
                         variant="secondary"
                         onClick={handleOpenWaitingTimeFollowUpModal}
@@ -428,7 +428,7 @@ const Receipt = () => {
                               doctor_id: bookDetailsData?.doctor?.id,
                               slug: bookDetailsData?.doctor?.slug,
                               server_id: bookDetailsData?.doctor?.server_id,
-                              doctor_name: bookDetailsData?.doctor?.display_name,
+                              doctor_name: doctorName,
                               book_id: bookDetailsData.book_id,
                               reference_code: bookDetailsData.reference_code,
                               book_date: bookDetailsData.book_time_strings,
@@ -453,9 +453,9 @@ const Receipt = () => {
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
             {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image })}
-            fullName={removePrefixDoctorName(bookDetailsData.doctor?.display_name)}
+            fullName={doctorName}
             expertise={bookDetailsData.doctor?.display_expertise}
-            isLoading={getReceiptDetails.isLoading}
+            isLoading={getReceiptDetails.isLoading || profileNameLoading}
           />
         </div>
         <Modal
@@ -505,7 +505,7 @@ const Receipt = () => {
                   doctor_id: bookDetailsData?.doctor?.id,
                   slug: bookDetailsData?.doctor?.slug,
                   server_id: bookDetailsData?.doctor?.server_id,
-                  doctor_name: bookDetailsData?.doctor?.display_name,
+                  doctor_name: doctorName,
                   book_id: bookDetailsData.book_id,
                   reference_code: bookDetailsData.reference_code,
                   book_date: bookDetailsData.book_time_strings,
@@ -531,7 +531,7 @@ const Receipt = () => {
           </form>
         </Modal>
         <Modal title={rateAppModalInfo?.modal_title} {...rateAppModal}>
-          <div className="flex flex-col space-y-3 items-center">
+          <div className="flex flex-col items-center space-y-3">
             <SuccessIcon className="text-green-600" />
             <Text fontWeight="bold" className="text-green-600">
               {rateAppModalInfo?.title}

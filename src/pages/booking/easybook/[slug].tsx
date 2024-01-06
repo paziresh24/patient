@@ -7,7 +7,6 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 // import BookingSteps from '@/modules/booking/views';
@@ -28,7 +27,6 @@ const Booking = () => {
   const setProfileData = useProfileDataStore(state => state.setData);
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
 
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
     { provider_id: router.query.providerId as string },
@@ -139,7 +137,7 @@ const Booking = () => {
             className="p-4 rounded-lg bg-slate-50"
             isLoading={isLoading}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
-            fullName={removePrefixDoctorName(profileData?.display_name)}
+            fullName={profileData?.display_name}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: profileData?.expertises?.[0]?.alias_title,
               degree: profileData?.expertises?.[0]?.degree?.name,

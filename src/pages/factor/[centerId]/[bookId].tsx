@@ -12,6 +12,7 @@ import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { useProfileName } from '@/modules/profile/hooks/useProfileName';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
@@ -27,6 +28,7 @@ const Factor = () => {
   } = useRouter();
   const getBookDetails = useGetBookDetails();
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
+  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: getBookDetails.data?.data?.result?.[0]?.doctor_slug });
 
   useEffect(() => {
     if (bookId)
@@ -37,6 +39,7 @@ const Factor = () => {
   }, [bookId]);
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
+  const doctorName = display_name ?? bookDetailsData?.doctor_display_name ?? '';
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
@@ -71,14 +74,13 @@ const Factor = () => {
               '!p-0': isOnlineVisitTurn,
             })}
             avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
-            firstName={bookDetailsData?.doctor_name}
-            lastName={bookDetailsData?.doctor_family}
+            fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,
               degree: bookDetailsData?.expertises?.[0]?.degree?.name,
               expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
             })}
-            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
+            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData || profileNameLoading}
           />
           {centerId === CENTERS.CONSULT && (getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
             <Skeleton w="100%" h="8rem" className="!mt-2" rounded="md" />
@@ -93,7 +95,7 @@ const Factor = () => {
           )}
           {isOnlineVisitTurn && <Divider />}
           {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
-            <div className="p-2 flex flex-col space-y-1">
+            <div className="flex flex-col p-2 space-y-1">
               <Text fontSize="sm" as="p">
                 سلام. من دکتر {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
               </Text>
