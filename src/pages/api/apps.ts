@@ -10,7 +10,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (isDoctor) {
       defaultDoctorApps = [
         await axios.get('https://dr.paziresh24.com/wallet-manifest.json'),
-        await axios.get('https://dr.paziresh24.com/ravi-manifest.json'),
         await axios.get('https://dr.paziresh24.com/forough-manifest.json'),
         await axios.get('https://dr.paziresh24.com/drapp-manifest.json'),
       ];

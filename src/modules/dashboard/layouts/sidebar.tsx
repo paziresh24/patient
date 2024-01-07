@@ -3,6 +3,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Transition from '@/common/components/atom/transition';
 import BookmarksIcon from '@/common/components/icons/bookmarks';
 import CalenderIcon from '@/common/components/icons/calender';
+import CommentIcon from '@/common/components/icons/comment';
 import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
 import ShopIcon from '@/common/components/icons/shop';
@@ -156,16 +157,16 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       shouldShow: true,
     },
     {
-      icon: <ShopIcon />,
-      label: 'بازارچه',
-      url: '/dashboard/bazaar',
-      shouldShowDoctor: true,
-      shouldShow: false,
-    },
-    {
       icon: <CalenderIcon />,
       label: 'نوبت های من',
       url: '/dashboard/appointments',
+      shouldShowDoctor: true,
+      shouldShow: true,
+    },
+    {
+      icon: <CommentIcon />,
+      label: 'نظرات من',
+      url: '/dashboard/reviews',
       shouldShowDoctor: true,
       shouldShow: true,
     },
