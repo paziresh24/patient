@@ -164,6 +164,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
         employee_id: fullProfileData.medical_code ?? '',
+        prefix: 'دکتر',
       },
     };
 

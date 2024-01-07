@@ -141,7 +141,8 @@ export const RateReview = (props: RateReviewProps) => {
   const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
   const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
   const listOfDoctorForLoginInDiscourse = useFeatureValue<any>('profile:discourse-sso-login', { slugs: [] });
-
+  const listOfDoctorForRaviProfile = useFeatureValue('ravi:profile|enabled', { slugs: [] });
+  const shouldLinkToRaviProfile = newApiFeatureFlaggingCondition(listOfDoctorForRaviProfile?.slugs, doctor.slug);
   const shouldLoginWithDiscourse = newApiFeatureFlaggingCondition(listOfDoctorForLoginInDiscourse?.slugs, `${router.query.slug}`);
   const isShowOption = (key: string) => {
     return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
@@ -195,6 +196,7 @@ export const RateReview = (props: RateReviewProps) => {
           type: 'parent',
           name: feedback.user_name ?? feedback.name,
           id: feedback.id,
+          ...(shouldLinkToRaviProfile && { userId: feedback.user_id }),
           description: feedback.description,
           avatar: feedback.user_image,
           external: feedback?.external_score,
@@ -283,6 +285,7 @@ export const RateReview = (props: RateReviewProps) => {
             return {
               type: 'reply',
               id: feedback.id,
+              ...(shouldLinkToRaviProfile && { userId: feedback.user_id }),
               name: feedback.user_name,
               description: feedback.description,
               avatar: feedback.user_image,

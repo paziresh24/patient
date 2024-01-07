@@ -5,9 +5,11 @@ import Text from '@/common/components/atom/text/text';
 import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import classNames from '@/common/utils/classNames';
 import { CardProps } from '@/modules/rate/type/card';
+import { useRouter } from 'next/router';
 
 export const Card = (props: CardProps) => {
-  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend } = props;
+  const { id, avatar, name, tag, options, details, description, symptomes, className, recommend, userId } = props;
+  const router = useRouter();
 
   const dropDownMenuItems = options?.items?.filter(item => item.type === 'dropdown') ?? [];
 
@@ -15,7 +17,12 @@ export const Card = (props: CardProps) => {
     <>
       <div id={id} className={classNames('w-full h-auto bg-white !px-4', className)}>
         <div className="flex justify-between w-full">
-          <div className="flex items-center">
+          <div
+            className={classNames('flex items-center', {
+              'cursor-pointer': !!userId,
+            })}
+            onClick={() => userId && router.push(`/ravi/${userId}`)}
+          >
             <Avatar
               loading="lazy"
               src={avatar}
