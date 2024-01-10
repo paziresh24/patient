@@ -588,9 +588,7 @@ export const RateReview = (props: RateReviewProps) => {
         </div>
       )}
 
-      {isShowPremiumFeatures && checkPremiumUser(userInfo.vip) && (
-        <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
-      )}
+      <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
       {isShowPremiumFeatures && !checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
       <div className={classNames('w-full bg-white', className)}>
         <Rate
