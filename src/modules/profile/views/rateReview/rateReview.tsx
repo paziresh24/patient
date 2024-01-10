@@ -142,8 +142,11 @@ export const RateReview = (props: RateReviewProps) => {
   const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
   const listOfDoctorForLoginInDiscourse = useFeatureValue<any>('profile:discourse-sso-login', { slugs: [] });
   const listOfDoctorForRaviProfile = useFeatureValue('ravi:profile|enabled', { slugs: [] });
+  const listOfShowDoctorTags = useFeatureValue('profile:doctor-tags|enabled', { slugs: [] });
   const shouldLinkToRaviProfile = newApiFeatureFlaggingCondition(listOfDoctorForRaviProfile?.slugs, doctor.slug);
-  const shouldLoginWithDiscourse = newApiFeatureFlaggingCondition(listOfDoctorForLoginInDiscourse?.slugs, `${router.query.slug}`);
+  const shouldLoginWithDiscourse = newApiFeatureFlaggingCondition(listOfDoctorForLoginInDiscourse?.slugs, doctor.slug);
+  const shouldShowDoctorTags = newApiFeatureFlaggingCondition(listOfShowDoctorTags?.slugs, doctor.slug);
+
   const isShowOption = (key: string) => {
     return (options?.card as string[])?.includes?.(key) || (options?.dropdown as string[])?.includes?.(key);
   };
@@ -587,8 +590,7 @@ export const RateReview = (props: RateReviewProps) => {
           </div>
         </div>
       )}
-
-      <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />
+      {shouldShowDoctorTags && <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />}
       {isShowPremiumFeatures && !checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
       <div className={classNames('w-full bg-white', className)}>
         <Rate

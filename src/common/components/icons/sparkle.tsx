@@ -1,6 +1,6 @@
 import { memo, SVGAttributes } from 'react';
 
-export const ShopIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
+export const SparkleIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
     <path
       d="M4.43251 2.43991C4.75756 1.85336 5.61114 1.85336 5.93618 2.43991L6.20504 2.92507C6.48814 3.43591 6.91373 3.85593 7.43136 4.13533L7.92295 4.40067C8.51727 4.72146 8.51727 5.56386 7.92295 5.88465L7.43136 6.15C6.91373 6.42939 6.48814 6.84941 6.20504 7.36026L5.93618 7.84542C5.61114 8.43196 4.75756 8.43196 4.43251 7.84542L4.16365 7.36026C3.88055 6.84941 3.45496 6.42939 2.93734 6.15L2.44574 5.88466C1.85142 5.56386 1.85142 4.72146 2.44574 4.40067L2.93734 4.13533C3.45496 3.85593 3.88055 3.43591 4.16365 2.92507L4.43251 2.43991Z"
@@ -15,4 +15,4 @@ export const ShopIcon = memo(({ ...rest }: SVGAttributes<SVGElement>) => (
   </svg>
 ));
 
-export default ShopIcon;
+export default SparkleIcon;
