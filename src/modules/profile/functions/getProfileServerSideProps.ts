@@ -94,6 +94,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ slug: slugFormmated });
       await growthbook.loadFeatures({ timeout: 1000 });
 
       // Providers Api

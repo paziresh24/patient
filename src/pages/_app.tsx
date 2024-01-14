@@ -36,7 +36,6 @@ export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
-
   trackingCallback: (experiment: any, result: any) => {
     splunkInstance().sendEvent({
       group: 'growth-book',
