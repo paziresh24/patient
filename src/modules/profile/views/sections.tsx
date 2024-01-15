@@ -53,16 +53,6 @@ export const sections = ({
   onlineVisit,
 }: any) =>
   [
-    // Own Page
-    {
-      isShow: isBulk && !customize?.partnerKey,
-      function: () => {
-        return {
-          fullname: information.display_name,
-        };
-      },
-      children: (props: any) => <OwnPage {...props} />,
-    },
     // About
     {
       title: 'درباره من',
@@ -130,6 +120,16 @@ export const sections = ({
         };
       },
       children: (props: any) => <ActivityWrapper className="bg-white md:rounded-lg" {...props} />,
+    },
+    // Own Page
+    {
+      isShow: isBulk && !customize?.partnerKey,
+      function: () => {
+        return {
+          fullname: information.display_name,
+        };
+      },
+      children: (props: any) => <OwnPage {...props} />,
     },
     // Reviews
     {
