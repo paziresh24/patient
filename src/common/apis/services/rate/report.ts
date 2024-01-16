@@ -6,7 +6,7 @@ export interface Params {
 }
 
 export const reportFeedback = ({ feedback_id }: Params) => {
-  return feedbacksClient.post(`/v1/report-feedback`, {
+  return feedbacksClient.post(`/v1/feedbacks/report`, {
     feedback_id: feedback_id,
   });
 };
