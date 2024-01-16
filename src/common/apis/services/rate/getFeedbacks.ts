@@ -15,7 +15,7 @@ export interface FeedbackParams {
 }
 
 export const getFeedbacks = async (params: FeedbackParams) => {
-  const { data } = await feedbacksClient.get(`/v1/search/feedbacks/`, {
+  const { data } = await feedbacksClient.get(`/v1/feedbacks/`, {
     params,
   });
   return data;
