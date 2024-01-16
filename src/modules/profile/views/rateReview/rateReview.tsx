@@ -81,10 +81,11 @@ interface RateReviewProps {
   };
   symptomes?: string[];
   className?: string;
+  plasmicData?: any;
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails, className, symptomes = [] } = props;
+  const { doctor, serverId, rateDetails, className, symptomes = [], plasmicData } = props;
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
@@ -601,6 +602,7 @@ export const RateReview = (props: RateReviewProps) => {
           controller={submitRateDetails}
           isLoading={!showMoreButtonLoading && isLoading}
           message={message}
+          plasmicData={plasmicData}
         />
         {!message && (showMoreButtonLoading || !isLoading) && !!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
           <div className="p-4">

@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['var(--font-iran-sans)', ...fontFamily.sans],
-        'iran-sans': ['var(--font-iran-sans)', ...fontFamily.sans],
+        'sans': ['var(--IRANSansXFaNum)', ...fontFamily.sans],
+        'iran-sans': ['var(--IRANSansXFaNum)', ...fontFamily.sans],
       },
       screens: {
         pwa: { raw: '(display-mode: standalone)' },
