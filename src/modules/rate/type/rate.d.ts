@@ -1,4 +1,4 @@
-import { FeedbackParams } from '../components/feedbackCard/feedbackCard';
+import { Feedbacks } from '../components/feedbackCard/feedbackCard';
 
 export type information = {
   id: number;
@@ -40,8 +40,9 @@ interface RateProps {
   details: DetailsProps;
   filters: FilterInputParams[];
   search: SearchInputParams;
-  feedbacks: FeedbackParams[];
+  feedbacks: Feedbacks[];
   controller?: Controller;
   message?: string;
   isLoading?: boolean;
+  plasmicData?: any;
 }

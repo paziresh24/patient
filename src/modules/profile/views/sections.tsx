@@ -51,6 +51,7 @@ export const sections = ({
   handleViewAs,
   seo,
   onlineVisit,
+  plasmicData,
 }: any) =>
   [
     // About
@@ -186,6 +187,7 @@ export const sections = ({
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
+          plasmicData,
         };
       },
       children: (props: any) => <RateReview {...props} />,

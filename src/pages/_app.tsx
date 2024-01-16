@@ -23,7 +23,7 @@ import '../styles/nprogress.css';
 
 const iransansFont = localFont({
   src: '../fonts/IRANSansXV.woff2',
-  variable: '--font-iran-sans',
+  variable: '--IRANSansXFaNum',
   preload: true,
   display: 'swap',
 });
@@ -95,7 +95,7 @@ function MyApp(props: AppProps) {
         <Provider pageProps={pageProps}>
           <style jsx global>{`
             :root {
-              --font-iran-sans: ${iransansFont.style.fontFamily};
+              --IRANSansXFaNum: ${iransansFont.style.fontFamily};
             }
           `}</style>
           <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
