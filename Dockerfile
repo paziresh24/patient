@@ -11,7 +11,7 @@ ENV NODE_ENV=production
 
 COPY package.json package-lock.json .npmrc ./ 
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
-RUN  npm cache verify
+RUN npm cache verify
 RUN npm install --force
 
 COPY . .
