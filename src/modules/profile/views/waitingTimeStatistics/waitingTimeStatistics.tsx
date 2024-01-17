@@ -4,7 +4,7 @@ import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface statistics {
+interface Statistics {
   waiting_time: number,
   waiting_time_title: string,
   waiting_time_count: number,
@@ -12,9 +12,8 @@ interface statistics {
 }
 
 interface WaitingTimeStatisticsProps {
-  slug: string;
   className?: string;
-  statistics: statistics[];
+  statistics: Statistics[];
 }
 
 const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
@@ -27,7 +26,7 @@ const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
       total: total,
       data: statistics,
       values: statistics.map((wt: any) => wt.waiting_time_percent),
-      legendLabels: statistics.map((wt, index) => `%‎${wt.waiting_time_percent.toLocaleString('fa')} ` + wt.waiting_time_title),
+      legendLabels: statistics.map((wt) => `%‎${wt.waiting_time_percent.toLocaleString('fa')} ${wt.waiting_time_title}`),
     }
   }, [statistics]);
 
