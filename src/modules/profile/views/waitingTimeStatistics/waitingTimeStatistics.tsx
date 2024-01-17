@@ -22,12 +22,12 @@ const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
   const [options, setOptions] = useState<ChartOptions<'pie'>>({});
 
   const datasets = useMemo(() => {
-    const total = Object.values(statistics).length
+    const total = statistics.length
     return {
       total: total,
-      data: Object.values(statistics),
-      values: Object.values(statistics).map((wt: any) => wt.waiting_time_percent),
-      legendLabels: Object.values(statistics).map((wt, index) => `%‎${wt.waiting_time_percent.toLocaleString('fa')} ` + wt.waiting_time_title),
+      data: statistics,
+      values: statistics.map((wt: any) => wt.waiting_time_percent),
+      legendLabels: statistics.map((wt, index) => `%‎${wt.waiting_time_percent.toLocaleString('fa')} ` + wt.waiting_time_title),
     }
   }, [statistics]);
 
