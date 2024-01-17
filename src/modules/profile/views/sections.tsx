@@ -19,6 +19,11 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="8rem" rounded="lg" />;
+  },
+});
 const OwnPage = dynamic(() => import('./ownPage'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
@@ -130,6 +135,22 @@ export const sections = ({
         };
       },
       children: (props: any) => <ActivityWrapper className="bg-white md:rounded-lg" {...props} />,
+    },
+    // Waiting Time Statistics
+    {
+      title: `نمودار زمان انتظار بیماران ${information.display_name}`,
+      isShow: customize.showActivityProfile,
+      function: () => {
+        const statistics =
+          feedbacks?.statistics?.flatMap((centerStat: any) =>
+            Array.isArray(centerStat.statistics) ? centerStat.statistics : Object.values(centerStat.statistics),
+          ) ?? [];
+        return {
+          slug: seo.slug,
+          statistics,
+        };
+      },
+      children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg" {...props} />,
     },
     // Reviews
     {

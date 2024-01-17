@@ -19,6 +19,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
+import { getWaitingTimeStatistics } from './getWaitingTimeStatistics';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
@@ -88,6 +89,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
+    let shouldUseWaitingTimeStatistics: boolean = false;
     let shouldUsePageView: boolean = false;
     let shouldUseNewRateCalculations: boolean = false;
 
@@ -138,6 +140,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
       shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
 
+      // WaitingTimeStatistics Api
+      const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-list', { slugs: [''] });
+      shouldUseWaitingTimeStatistics = newApiFeatureFlaggingCondition(WaitingTimeStatisticsApiDoctorList.slugs, slugFormmated);
+
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
       shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
@@ -168,7 +174,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       },
     };
 
-    if (shouldUseProvider) {
+      if (shouldUseProvider) {
       try {
         const parallelRequests = [await getProviderData({ slug: slugFormmated })];
 
@@ -257,6 +263,21 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
                 };
               }
+            }
+          }
+          // waiting statistics
+          if (shouldUseWaitingTimeStatistics) {
+            const parallelRequests = [
+              await getWaitingTimeStatistics({
+                slug: slugFormmated,
+                // start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                // end_date: moment().format('YYYY-MM-DD'),
+              }),
+            ];
+            const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
+
+            if (waitingTimeStatisticsData.status === 'fulfilled') {
+              profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
             }
           }
           if (shouldUseFeedback) {
