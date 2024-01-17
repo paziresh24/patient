@@ -20,6 +20,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
+import { getWaitingTimeStatistics } from './getWaitingTimeStatistics';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
@@ -28,7 +29,14 @@ const getSearchLinks = ({ centers, group_expertises }: any) => {
   return ['/s/', ...(center?.city ? [`/s/${center.city_en_slug}/`, `/s/${center.city_en_slug}/${gexp.en_slug}/`] : [])];
 };
 
-const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
+const createBreadcrumb = (
+  links: {
+    orginalLink: string;
+    title: string;
+  }[],
+  displayName: string,
+  currentPathName: string,
+) => {
   const reformmatedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
 
   reformmatedBreadcrumb.unshift({
@@ -89,6 +97,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
+    let shouldUseWaitingTimeStatistics: boolean = false;
     let shouldUsePageView: boolean = false;
     let shouldUseNewRateCalculations: boolean = false;
     let shouldUsePlasmicReviewCard: boolean = false;
@@ -140,6 +149,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       // AverageWaitingTime Api
       const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
       shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
+
+      // WaitingTimeStatistics Api
+      const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-details', {
+        slugs: [''],
+      });
+      shouldUseWaitingTimeStatistics = newApiFeatureFlaggingCondition(WaitingTimeStatisticsApiDoctorList.slugs, slugFormmated);
 
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
@@ -263,6 +278,19 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
                 };
               }
+            }
+          }
+          // waiting statistics
+          if (shouldUseWaitingTimeStatistics) {
+            const parallelRequests = [
+              await getWaitingTimeStatistics({
+                slug: slugFormmated,
+              }),
+            ];
+            const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
+
+            if (waitingTimeStatisticsData.status === 'fulfilled') {
+              profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
             }
           }
           if (shouldUseFeedback) {

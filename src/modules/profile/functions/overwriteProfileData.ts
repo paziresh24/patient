@@ -24,6 +24,7 @@ export type OverwriteProfileData = {
   };
   feedbacks: {
     waiting_time_info_online_visit?: any;
+    waiting_time_statistics?: any;
     reviews?: any;
     averageRates?: any;
     countOfFeedbacks?: number;
@@ -85,6 +86,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const feedbacks = {
     ...source.feedbacks,
+    statistics: overwriteData.feedbacks.waiting_time_statistics || null,
     details: {
       average_rates: {
         average_doctor_encounter: source.feedbacks?.details?.doctor_encounter,
