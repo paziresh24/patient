@@ -9,23 +9,17 @@ ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
 ENV NEW_RELIC_LOG=stdout
 ENV NODE_ENV=production
 
-COPY package.json package-lock.json ./ 
-RUN rm -rf package-lock.json 
-#RUN yarn cache clean
-#RUN yarn --network-timeout 10000000
-#RUN yarn
+COPY package.json package-lock.json .npmrc ./ 
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
-RUN npm install --force && npm cache clean --force
+RUN npm cache verify
+RUN npm install --force
 
 COPY . .
 
-
-#RUN yarn build && \
-RUN npm run build && npm cache clean --force
+RUN npm run build
 
 EXPOSE 3000
 
 ENV PORT 3000
 
-#CMD ["yarn", "start"]
 CMD ["npm", "start"]

@@ -56,18 +56,9 @@ export const sections = ({
   handleViewAs,
   seo,
   onlineVisit,
+  plasmicData,
 }: any) =>
   [
-    // Own Page
-    {
-      isShow: isBulk && !customize?.partnerKey,
-      function: () => {
-        return {
-          fullname: information.display_name,
-        };
-      },
-      children: (props: any) => <OwnPage {...props} />,
-    },
     // About
     {
       title: 'درباره من',
@@ -148,6 +139,16 @@ export const sections = ({
       },
       children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg" {...props} />,
     },
+    // Own Page
+    {
+      isShow: isBulk && !customize?.partnerKey,
+      function: () => {
+        return {
+          fullname: information.display_name,
+        };
+      },
+      children: (props: any) => <OwnPage {...props} />,
+    },
     // Reviews
     {
       id: 'reviews',
@@ -203,6 +204,7 @@ export const sections = ({
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
+          plasmicData,
         };
       },
       children: (props: any) => <RateReview {...props} />,

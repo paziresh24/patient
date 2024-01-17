@@ -12,6 +12,7 @@ import axios from 'axios';
 import moment from 'jalali-moment';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { PLASMIC } from 'plasmic-init';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
@@ -99,10 +100,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseWaitingTimeStatistics: boolean = false;
     let shouldUsePageView: boolean = false;
     let shouldUseNewRateCalculations: boolean = false;
+    let shouldUsePlasmicReviewCard: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ slug: slugFormmated });
       await growthbook.loadFeatures({ timeout: 1000 });
 
       // Providers Api
@@ -167,6 +170,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         fullProfileData.group_expertises.some((group: any) =>
           newApiFeatureFlaggingCondition(newRateCalculationsDoctorExpertisesList.expertises, group.id),
         );
+
+      // Plasmic Reviews Card
+      shouldUsePlasmicReviewCard = growthbook.isOn('plasmic:review-card|slugs');
     } catch (error) {
       console.error(error);
     }
@@ -364,6 +370,18 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.error(error);
     }
 
+    let plasmicData = null;
+    try {
+      if (shouldUsePlasmicReviewCard) {
+        plasmicData = await PLASMIC.fetchComponentData('ReviewCard');
+        if (!plasmicData) {
+          throw new Error('No Plasmic design found');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
 
     const title = `${information.prefix} ${information.display_name}، ${expertises.expertises[0].alias_title} ${
@@ -393,6 +411,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
+        plasmicData,
       },
     };
   } catch (error) {

@@ -60,7 +60,7 @@ body {
 }
 
 button {
-  font-family: var(--font-iran-sans), tahoma !important;
+  font-family: var(--IRANSansXFaNum), tahoma !important;
 }
 
 .no-scroll::-webkit-scrollbar {
