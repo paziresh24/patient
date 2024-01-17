@@ -130,11 +130,11 @@ export const sections = ({
     // Waiting Time Statistics
     {
       title: `نمودار زمان انتظار بیماران ${information.display_name}`,
-      isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === '5532')?.statistics?.length > 0,
+      isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
       function: () => {
         return {
           slug: seo.slug,
-          statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === '5532').statistics,
+          statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT).statistics,
         };
       },
       children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg" {...props} />,
