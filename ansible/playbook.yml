@@ -1,5 +1,0 @@
----
-- name: Deploy and update clinic frontend project
-  hosts: main_servers
-  roles:
-    - patient_frontend
