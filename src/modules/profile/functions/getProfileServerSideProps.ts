@@ -28,7 +28,14 @@ const getSearchLinks = ({ centers, group_expertises }: any) => {
   return ['/s/', ...(center?.city ? [`/s/${center.city_en_slug}/`, `/s/${center.city_en_slug}/${gexp.en_slug}/`] : [])];
 };
 
-const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
+const createBreadcrumb = (
+  links: {
+    orginalLink: string;
+    title: string;
+  }[],
+  displayName: string,
+  currentPathName: string,
+) => {
   const reformmatedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
 
   reformmatedBreadcrumb.unshift({
@@ -141,7 +148,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
 
       // WaitingTimeStatistics Api
-      const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-list', { slugs: [''] });
+      const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-details', {
+        slugs: [''],
+      });
       shouldUseWaitingTimeStatistics = newApiFeatureFlaggingCondition(WaitingTimeStatisticsApiDoctorList.slugs, slugFormmated);
 
       // Page View Api
@@ -174,7 +183,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       },
     };
 
-      if (shouldUseProvider) {
+    if (shouldUseProvider) {
       try {
         const parallelRequests = [await getProviderData({ slug: slugFormmated })];
 
@@ -270,8 +279,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             const parallelRequests = [
               await getWaitingTimeStatistics({
                 slug: slugFormmated,
-                // start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                // end_date: moment().format('YYYY-MM-DD'),
               }),
             ];
             const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);

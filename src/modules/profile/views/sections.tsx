@@ -139,15 +139,11 @@ export const sections = ({
     // Waiting Time Statistics
     {
       title: `نمودار زمان انتظار بیماران ${information.display_name}`,
-      isShow: customize.showActivityProfile,
+      isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === '5532')?.statistics?.length > 0,
       function: () => {
-        const statistics =
-          feedbacks?.statistics?.flatMap((centerStat: any) =>
-            Array.isArray(centerStat.statistics) ? centerStat.statistics : Object.values(centerStat.statistics),
-          ) ?? [];
         return {
           slug: seo.slug,
-          statistics,
+          statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === '5532').statistics,
         };
       },
       children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg" {...props} />,
