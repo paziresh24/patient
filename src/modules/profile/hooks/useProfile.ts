@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
 import { useProviders } from '../apis/providers';
+import { useSpecialities } from '../apis/specialities';
 import { useUsers } from '../apis/users';
 
 interface UseProfileName {
   slug: string;
+  includeData?: Array<'SPECIALITIES'>;
 }
 
-export const useProfileName = ({ slug }: UseProfileName) => {
+export const useProfile = ({ slug, includeData }: UseProfileName) => {
   const providers = useProviders();
   const users = useUsers();
+  const specialities = useSpecialities();
 
   useEffect(() => {
     if (slug) {
@@ -16,6 +19,9 @@ export const useProfileName = ({ slug }: UseProfileName) => {
         { slug },
         {
           onSuccess(data) {
+            if (includeData?.includes('SPECIALITIES')) {
+              specialities.mutate({ provider_id: data.id });
+            }
             users.mutate({ user_id: data.user_id });
           },
         },
@@ -31,6 +37,8 @@ export const useProfileName = ({ slug }: UseProfileName) => {
     family: user?.family,
     display_name: user?.name || user?.family ? `${user?.name} ${user?.family}` : null,
     prefix: provider.prefix,
-    isLoading: providers.isLoading || users?.isLoading,
+    isLoading: providers.isLoading || users?.isLoading || specialities?.isLoading,
+    provideId: provider.id,
+    specialities: specialities?.data?.data?.providers_specialities ?? [],
   };
 };
