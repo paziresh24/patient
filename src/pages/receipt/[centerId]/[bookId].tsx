@@ -49,6 +49,8 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import MedicalRecordButton from '@/modules/receipt/components/MedicalRecordButton';
+
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -86,6 +88,7 @@ const Receipt = () => {
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
+  const shouldShowGoftinoBtn = useFeatureIsOn('abstract-sickness-receipt-online-visit');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -278,6 +281,10 @@ const Receipt = () => {
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
+  useEffect(() => {
+    console.log(bookDetailsData);
+  }, []);
+
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
@@ -356,20 +363,30 @@ const Receipt = () => {
           {centerType === 'consult' && (
             <div className="grid gap-2">
               {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
-                  <MessengerButton
-                    channel={
-                      bookDetailsData.selected_online_visit_channel?.type
-                        ? bookDetailsData?.selected_online_visit_channel
-                        : bookDetailsData?.doctor?.online_visit_channels?.filter(
-                            (item: any) => !(item.type as string).endsWith('_number'),
-                          )[0]
-                    }
-                  />
-                  {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
-                    <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                <>
+                  <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
+                    <MessengerButton
+                      channel={
+                        bookDetailsData.selected_online_visit_channel?.type
+                          ? bookDetailsData?.selected_online_visit_channel
+                          : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                              (item: any) => !(item.type as string).endsWith('_number'),
+                            )[0]
+                      }
+                    />
+                    {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
+                      <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                    )}
+                  </div>
+                  {shouldShowGoftinoBtn && (
+                    <MedicalRecordButton
+                      bookId={bookId}
+                      bookTime={bookDetailsData.book_time}
+                      currentTime={serverTime?.data?.data?.data.timestamp}
+                      visitedTurn={turnStatus.visitedTurn}
+                    />
                   )}
-                </div>
+                </>
               )}
               {isShowRemoveButtonForOnlineVisit && (
                 <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
