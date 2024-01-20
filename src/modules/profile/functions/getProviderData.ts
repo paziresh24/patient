@@ -7,7 +7,7 @@ export const getProviderData = async ({ slug }: GetProviderData) => {
   const providerData: Record<string, string> = await providers({ slug });
 
   if (!providerData?.user_id) {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'empty-providers',
       type: 'empty-providers-profile',
       event: {

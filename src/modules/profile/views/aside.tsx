@@ -44,7 +44,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
         city: { name: centers[0].city, en_slug: information.city_en_slug },
         groupExpertise: expertises.group_expertises[0],
         clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'recommend',
             type: 'clickrecommend',
             event: {
@@ -98,7 +98,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
           })),
         onEventPhoneNumber: (centerId: any) => {
           const center = centers.find((center: any) => center.id === centerId);
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'doctor profile',
             type: 'see center phone',
             event: {
@@ -126,7 +126,7 @@ export const aside = ({ information, centers, expertises, waitingTimeInfo, onlin
         },
         onEventAddress: (centerId: any) => {
           const center = centers.find((center: any) => center.id === centerId);
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'doctor profile',
             type: 'see center map',
             event: {

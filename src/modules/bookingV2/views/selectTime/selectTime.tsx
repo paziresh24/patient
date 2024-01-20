@@ -1,4 +1,4 @@
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import axios from 'axios';
 import moment from 'jalali-moment';
@@ -52,7 +52,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       reserveAvailabilityTime(data?.[0]?.slots?.[0]?.time);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        splunkBookingInstance().sendEvent({
+        splunkInstance('booking').sendEvent({
           group: 'booking-error',
           type: 'booking-availability-api-error',
           event: {

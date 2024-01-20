@@ -14,7 +14,7 @@ export const usePageViewEvent = () => {
   const { query } = useRouter();
 
   const sendPageViewEvent = ({ group, type, data }: UsePageViewEvent) =>
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group,
       type,
       event: {

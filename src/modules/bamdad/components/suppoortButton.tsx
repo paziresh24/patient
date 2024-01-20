@@ -13,7 +13,7 @@ export const SupportButtonBamdad = () => {
     <a
       href={`tel:${phoneNumber}`}
       onClick={() =>
-        splunkInstance().sendEvent({
+        splunkInstance('doctor-profile').sendEvent({
           group: 'bamdad',
           type: 'support_call',
         })

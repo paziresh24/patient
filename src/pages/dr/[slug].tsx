@@ -77,7 +77,7 @@ const DoctorProfile = ({
 
   useEffect(() => {
     if (isShowPremiumFeatures) {
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'bamdad',
         type: 'profile_page-view',
         event: {
@@ -119,7 +119,7 @@ const DoctorProfile = ({
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
       setEditable(true);
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'profile',
         type: 'view-as',
         event: {
@@ -160,7 +160,7 @@ const DoctorProfile = ({
     setViewAsData({
       ...views[key],
     });
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'profile',
       type: 'view-as',
       event: {
@@ -234,7 +234,7 @@ const DoctorProfile = ({
                   icon={<ReceiptIcon className="w-6 h-6" />}
                   onClick={() => {
                     window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
-                    splunkInstance().sendEvent({
+                    splunkInstance('doctor-profile').sendEvent({
                       group: 'profile',
                       type: 'view-as',
                       event: {
