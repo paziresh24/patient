@@ -6,7 +6,7 @@ import TrashIcon from '@/common/components/icons/trash';
 import WarningIcon from '@/common/components/icons/warning';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
@@ -118,7 +118,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     possibilityBeingVisited;
 
   const showPrescription = () => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'my-booking',
       type: 'treatment-details',
       event: {
@@ -166,7 +166,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
             if (isOnlineVisitTurn) {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'my-turn',
                 type: 'delete-turn-reason',
                 event: {
@@ -202,7 +202,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
             if (isOnlineVisitTurn) {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'my-turn',
                 type: 'delete-turn-reason',
                 event: {
@@ -228,7 +228,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const showRemoveTurnModal = () => {
     handleOpenRemoveTurn();
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'my-turn',
       type: 'delete-turn-footer',
       event: {
@@ -252,7 +252,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         bookId: id,
         from,
       });
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'move-book',
         type: 'confirm',
         event: {
@@ -274,7 +274,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const handleMoveButton = () => {
     handleOpenMoveTurnModal();
 
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'move-book',
       type: 'button',
       event: {
@@ -290,7 +290,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const handleSafeCallAction = () => {
-    splunkBookingInstance().sendEvent({
+    splunkInstance('booking').sendEvent({
       group: 'safe-call',
       type: 'patient',
       event: {
@@ -306,7 +306,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const redirectToFactor = () => {
     router.push(`/factor/${centerId}/${id}`);
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'basket_butten',
       type: centerId === CENTERS.CONSULT ? 'consult' : 'office',
       event: {
@@ -384,7 +384,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           loading={moveBookApi.isLoading}
           events={{
             onOtherFreeTime() {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'move-book',
                 type: 'other-free-time',
                 event: {

@@ -22,7 +22,7 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
-import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
@@ -200,7 +200,7 @@ const Receipt = () => {
             handleCloseRemoveModal();
             toast.success('نوبت شما با موفقیت لغو شد!');
             if (centerType === 'consult') {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'my-turn',
                 type: 'delete-turn-reason',
                 event: {
@@ -247,7 +247,7 @@ const Receipt = () => {
   };
 
   const handleSafeCallAction = () => {
-    splunkBookingInstance().sendEvent({
+    splunkInstance('booking').sendEvent({
       group: 'safe-call',
       type: 'patient',
       event: {
@@ -267,7 +267,7 @@ const Receipt = () => {
 
   const handleRedirectToStore = () => {
     location.assign((getRatingAppLink as string) ?? '#');
-    splunkBookingInstance().sendEvent({
+    splunkInstance('booking').sendEvent({
       group: 'rate app',
       type: 'rate app click button',
       event: {
@@ -333,14 +333,17 @@ const Receipt = () => {
             />
           </div>
           <div className="p-5">
-            {growthbook.ready && shouldUsePlasmicActionButtons && !userPednding && centerType === 'consult' && (
-              <PlasmicRootProvider loader={PLASMIC} disableLoadingBoundary={true} skipFonts>
+            {growthbook.ready && shouldUsePlasmicActionButtons && (
+              <PlasmicRootProvider loader={PLASMIC} suspenseFallback={<ReceiptButtonLoading />} skipFonts>
                 <PlasmicComponent
                   component="ReceiptActionButtons"
                   componentProps={{
                     bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
                     specialities,
                     currentUserId: user.id,
+                    variants: {
+                      type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
+                    },
                   }}
                 />
               </PlasmicRootProvider>
@@ -448,7 +451,7 @@ const Receipt = () => {
                           block
                           variant="secondary"
                           onClick={() => {
-                            splunkInstance().sendEvent({
+                            splunkInstance('doctor-profile').sendEvent({
                               group: 'support-receipt',
                               type: 'request-support-book',
                               event: {
@@ -526,7 +529,7 @@ const Receipt = () => {
           <form
             method="post"
             onSubmit={() => {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'support-receipt',
                 type: 'follow-doctor-delay',
                 event: {

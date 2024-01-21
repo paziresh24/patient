@@ -1,5 +1,5 @@
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { getCookie } from 'cookies-next';
 import { Item, Section } from '../types/suggestion';
@@ -19,7 +19,7 @@ export const suggestionEvents = {
       category: 'Search Suggestion Click Result',
       label: `Search Suggestion ${item.formatted_title}`,
     });
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'suggestion_events',
       type: 'record_click',
       event: {
@@ -38,7 +38,7 @@ export const suggestionEvents = {
     });
   },
   view: ({ cityName, userSearchValue, item }: { cityName: string; userSearchValue: string; item: Section[] }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'suggestion_events',
       type: 'suggestion_view',
       event: {
@@ -53,7 +53,7 @@ export const suggestionEvents = {
     });
   },
   open: ({ cityName }: { cityName: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'suggestion_events',
       type: 'suggestion_open',
       event: {

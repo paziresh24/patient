@@ -28,7 +28,7 @@ const firebaseCloudMessaging = {
                 terminal: isPWA() ? 'app' : 'web',
               });
             }
-            splunkInstance().sendEvent({
+            splunkInstance('doctor-profile').sendEvent({
               group: 'notification',
               type: 'web-push-notification-granted',
               event: {
@@ -42,7 +42,7 @@ const firebaseCloudMessaging = {
         }
 
         if (status && status === 'denied') {
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'notification',
             type: 'web-push-notification-denied',
             event: {
@@ -51,7 +51,7 @@ const firebaseCloudMessaging = {
           });
         }
       } catch (error) {
-        splunkInstance().sendEvent({
+        splunkInstance('doctor-profile').sendEvent({
           group: 'notification',
           type: 'web-push-notification-error',
           event: {

@@ -1,9 +1,9 @@
 import { sendGaEvent } from '@/common/services/sendGaEvent';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
 
 export const sendFirstFreeTimeEvent = ({ data, doctorInfo }: { data: any; doctorInfo: any }) => {
-  splunkBookingInstance().sendEvent({
+  splunkInstance('booking').sendEvent({
     group: 'doctor profile',
     type: 'doctor profile freeturn see',
     event: {
@@ -25,7 +25,7 @@ export const sendFirstFreeTimeEvent = ({ data, doctorInfo }: { data: any; doctor
 
 export const sendOtherFreeTimeEvent = ({ data, doctorInfo }: { data: any; doctorInfo: any }) => {
   sendGaEvent({ action: 'P24DrsPage', category: 'select-another-time', label: 'select-another-time' });
-  splunkBookingInstance().sendEvent({
+  splunkInstance('booking').sendEvent({
     group: 'doctor profile',
     type: 'doctor profile another FreeTurns See',
     event: {
