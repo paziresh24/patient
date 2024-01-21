@@ -27,6 +27,7 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isPWA } from '@/common/utils/isPwa';
+import { firebaseCloudMessaging } from '@/firebase/fcm';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -49,7 +50,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { PLASMIC } from 'plasmic-init';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 const { publicRuntimeConfig } = getConfig();
@@ -72,6 +73,11 @@ const Receipt = () => {
     modalProps: waitingTimeModalProps,
   } = useModal();
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
+  const {
+    handleOpen: handleOpenNotificationGrantAccses,
+    handleClose: handleCloseNotificationGrantAccses,
+    modalProps: notificationGrantAccsesModalProps,
+  } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
 
   const getReceiptDetails = useGetReceiptDetails({
@@ -104,6 +110,7 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const {
     display_name,
     isLoading: profileNameLoading,
@@ -120,6 +127,27 @@ const Receipt = () => {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
+
+  const notificationGrantAccsesModalInterval = useRef<any>(null);
+  useEffect(() => {
+    if (
+      !userPednding &&
+      isLogin &&
+      Notification.permission !== 'denied' &&
+      Notification.permission !== 'granted' &&
+      notificationGrantAccsesModalText
+    ) {
+      notificationGrantAccsesModalInterval.current = setTimeout(async () => {
+        handleOpenNotificationGrantAccses();
+        Notification.requestPermission().then(() => {
+          handleCloseNotificationGrantAccses();
+        });
+        firebaseCloudMessaging.init(user?.id ?? '');
+      }, 8000);
+    }
+
+    return () => clearTimeout(notificationGrantAccsesModalInterval.current);
+  }, [userPednding, isLogin]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -577,6 +605,9 @@ const Receipt = () => {
               {rateAppModalInfo?.button_show_receipt_text}
             </Button>
           </div>
+        </Modal>
+        <Modal {...notificationGrantAccsesModalProps} noHeader>
+          <span className="text-base font-bold leading-7">{notificationGrantAccsesModalText}</span>
         </Modal>
       </div>
     </>
