@@ -21,7 +21,7 @@ const firebaseCloudMessaging = {
           if (currentToken) {
             if (localStorage.getItem('fcm_token') !== currentToken) {
               localStorage.setItem('fcm_token', currentToken);
-              await axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
+              axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
                 user_id: id,
                 client_id: currentToken,
                 user_agent: window.navigator.userAgent,
@@ -49,6 +49,7 @@ const firebaseCloudMessaging = {
               user_id: id,
             },
           });
+          return null;
         }
       } catch (error) {
         splunkInstance('doctor-profile').sendEvent({
