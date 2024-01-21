@@ -1,14 +1,11 @@
-import { ArcElement, Chart as ChartJS, type ChartOptions, Legend, Tooltip } from 'chart.js';
-import { useEffect, useMemo, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import { useMemo } from 'react';
+import WaitingRechart from './waitingTimeChart';
 
 interface Statistics {
-  waiting_time: number,
-  waiting_time_title: string,
-  waiting_time_count: number,
-  waiting_time_percent: number
+  waiting_time: number;
+  waiting_time_title: string;
+  waiting_time_count: number;
+  waiting_time_percent: number;
 }
 
 interface WaitingTimeStatisticsProps {
@@ -18,68 +15,24 @@ interface WaitingTimeStatisticsProps {
 
 const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
   const { className, statistics = [] } = props;
-  const [options, setOptions] = useState<ChartOptions<'pie'>>({});
 
-  const datasets = useMemo(() => {
-    const total = statistics.length
-    return {
-      total: total,
-      data: statistics,
-      values: statistics.map((wt: any) => wt.waiting_time_percent),
-      legendLabels: statistics.map((wt) => `%‎${wt.waiting_time_percent.toLocaleString('fa')} ${wt.waiting_time_title}`),
-    }
-  }, [statistics]);
-
-  const data = {
-    labels: datasets.legendLabels,
-    datasets: [
-      {
-        data: datasets.values,
-        backgroundColor: ['rgba(57, 146, 61, 1)', 'rgba(58, 180, 64, 1)', 'rgba(255, 173, 13, 1)', 'rgba(240, 115, 0, 1)'],
-        borderColor: 'rgba(255, 255, 255, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  useEffect(() => {
-    const style = getComputedStyle(document.body);
-    const font = style.getPropertyValue('--font-iran-sans');
-    setOptions({
-      responsive: true,
-      aspectRatio: 1,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'left',
-          maxWidth: 500,
-          rtl: true,
-          textDirection: 'rtl',
-          labels: {
-            padding: 15,
-            usePointStyle: true,
-            color: 'black',
-            font: {
-              size: 12,
-              weight: 'normal',
-              family: font,
-            },
-          },
-        },
-        tooltip: {
-          enabled: false,
-        },
-      },
-    });
-  }, []);
+  const data = useMemo(
+    () =>
+      statistics.map((item: Statistics) => {
+        const round_percent = Math.round(item.waiting_time_percent);
+        return {
+          ...item,
+          value: round_percent,
+          name: item.waiting_time_title,
+        };
+      }),
+    [],
+  );
 
   return (
     <div className={className}>
-      <div className={`flex justify-center`}>
-        <div>
-          <Pie data={data} options={options} className="!w-[300px] !h-[200px]" />
-        </div>
+      <div className={`w-[300px] mx-auto`}>
+        <WaitingRechart data={data} />
       </div>
     </div>
   );
