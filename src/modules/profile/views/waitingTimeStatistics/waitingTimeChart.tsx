@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Sector } from 'recharts';
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Sector, DefaultLegendContentProps } from 'recharts';
 
-const COLORS = ['rgba(57, 146, 61, 1)', 'rgba(58, 180, 64, 1)', 'rgba(255, 173, 13, 1)', 'rgba(240, 115, 0, 1)'];
-
-interface Label {
+interface LabelProps {
   cx: number;
   cy: number;
   midAngle: number;
@@ -12,18 +10,21 @@ interface Label {
   percent: number;
 }
 
-interface Data {
-  waiting_time: number;
-  waiting_time_title: string;
-  waiting_time_count: number;
-  waiting_time_percent: number;
+interface WaitingTimeData {
+  type: number;
   name: string;
   value: number;
   index: number;
 }
 
+interface WaitingTimeChartProps {
+  data: WaitingTimeData[]
+}
+
 const RADIAN = Math.PI / 170;
-const renderCustomizedLabel = (props: Label) => {
+const COLORS = ['#39923D', '#3AB440', '#FFAD0D', '#F07300'];
+
+const CustomizedLabel = (props: LabelProps) => {
   const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.8;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -40,32 +41,29 @@ const renderCustomizedLabel = (props: Label) => {
       dominantBaseline="central"
       className="text-xs font-semibold outline-none"
     >
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${Math.round(percent * 100)}%`}
     </text>
   );
 };
 
-const InActiveSectorMark = (props: any) => (
-  <g>
-    <Sector {...props} fillOpacity={0.3} />
-  </g>
-);
+const InActiveSectorMark = (props: any) => <Sector {...props} fillOpacity={0.3} />;
 
-export default function WaitingTimeChart({ data }: { data: Data[] }) {
+export default function WaitingTimeChart(props: WaitingTimeChartProps) {
+  const { data } = props;
   const [activeSectorIndex, setActiveSectorIndex] = useState<undefined | number>(undefined);
 
-  const renderCustomLegend = (props: any) => {
+  const CustomLegend = (props: DefaultLegendContentProps) => {
     const { payload } = props;
-    return payload.map((item: any, index: number) => (
+    return payload?.map((item: any, index: number) => (
       <div
         onMouseEnter={() => setActiveSectorIndex(index)}
         onMouseLeave={() => setActiveSectorIndex(undefined)}
-        className={`flex items-center gap-3 ${index === activeSectorIndex ? 'scale-105' : 'scale-100'}`}
+        className={`flex items-center gap-3 ${index === activeSectorIndex ? 'scale-105' : 'scale-100'} origin-right`}
         key={item.value}
       >
         <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
         <div className="flex gap-1">
-          <p className="text-xs font-semibold">{item.payload.value}%</p>
+          <p className="text-xs font-semibold">{Math.round(item.payload.value)}%</p>
           <p className="text-xs">{item.value}</p>
         </div>
       </div>
@@ -85,19 +83,18 @@ export default function WaitingTimeChart({ data }: { data: Data[] }) {
           startAngle={450}
           endAngle={90}
           labelLine={false}
-          label={renderCustomizedLabel}
+          label={CustomizedLabel}
           outerRadius={60}
-          fill="#8884d8"
           dataKey="value"
           onMouseEnter={({ index }) => setActiveSectorIndex(index)}
           onMouseLeave={() => setActiveSectorIndex(undefined)}
         >
           {data.map((entry, index: number) => (
-            <Cell key={`cell-${index}`} fill={COLORS[entry.waiting_time]} />
+            <Cell key={`cell-${index}`} fill={COLORS[entry.type]} />
           ))}
         </Pie>
         <Legend
-          content={renderCustomLegend}
+          content={CustomLegend}
           layout="vertical"
           verticalAlign="middle"
           align="left"

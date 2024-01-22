@@ -20,15 +20,14 @@ const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
   const data = useMemo(() => {
     const sortedData = _.sortBy(statistics, 'waiting_time');
     return sortedData.map((item: Statistics, index) => {
-      const round_percent = Math.round(item.waiting_time_percent);
       return {
-        ...item,
         index,
-        value: round_percent,
+        type: item.waiting_time,
+        value: item.waiting_time_percent,
         name: item.waiting_time_title,
       };
     });
-  }, []);
+  }, [statistics]);
 
   return (
     <div className={className}>
