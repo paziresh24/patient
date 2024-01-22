@@ -20,7 +20,7 @@ export const OnlineVisitDiscountFallback = ({ className }: { className: string }
       </div>
       <GoldButton
         onClick={() => {
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'bamdad',
             type: 'doctor_profile_button',
           });

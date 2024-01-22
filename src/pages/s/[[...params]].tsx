@@ -11,7 +11,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -70,7 +70,7 @@ const Search = ({ host }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        splunkSearchInstance().sendEvent({
+        splunkInstance('search').sendEvent({
           group: 'search_metrics',
           type: 'search_view',
           event: {
@@ -90,7 +90,7 @@ const Search = ({ host }: any) => {
           },
         });
 
-        splunkSearchInstance().sendBatchEvent({
+        splunkInstance('search').sendBatchEvent({
           group: 'search_metrics',
           type: 'search_card_view',
           events: result.map(item => ({

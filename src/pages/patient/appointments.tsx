@@ -138,7 +138,7 @@ export const Appointments = () => {
             item?.book_type_id !== 8 &&
             sendEventForLocalTypeBookCenterList?.centers?.includes?.(item?.center_id)
           ) {
-            splunkInstance().sendEvent({
+            splunkInstance('doctor-profile').sendEvent({
               group: 'appointments',
               type: 'see-local-book',
               event: {

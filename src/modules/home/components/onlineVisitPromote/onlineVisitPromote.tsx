@@ -5,7 +5,7 @@ import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import random from 'lodash/random';
 import { useMemo } from 'react';
@@ -28,7 +28,7 @@ export const OnlineVisitPromote = () => {
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
 
   const handleOpenSubstituteDoctorModal = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'home_visit_online_doctor_recommendation',
       type: 'home_visit_online_doctor_recommendation-open-modal',
     });
@@ -36,7 +36,7 @@ export const OnlineVisitPromote = () => {
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'home_visit_online_doctor_recommendation',
       type: 'home_visit_online_doctor_recommendation-click-doctor-card',
       event: {
@@ -47,7 +47,7 @@ export const OnlineVisitPromote = () => {
   };
 
   const handleClickMoreDoctors = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'home_visit_online_doctor_recommendation',
       type: 'home_visit_online_doctor_recommendation-click-more-doctors',
     });

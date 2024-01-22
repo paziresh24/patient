@@ -21,14 +21,14 @@ const firebaseCloudMessaging = {
           if (currentToken) {
             if (localStorage.getItem('fcm_token') !== currentToken) {
               localStorage.setItem('fcm_token', currentToken);
-              await axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
+              axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
                 user_id: id,
                 client_id: currentToken,
                 user_agent: window.navigator.userAgent,
                 terminal: isPWA() ? 'app' : 'web',
               });
             }
-            splunkInstance().sendEvent({
+            splunkInstance('doctor-profile').sendEvent({
               group: 'notification',
               type: 'web-push-notification-granted',
               event: {
@@ -42,16 +42,17 @@ const firebaseCloudMessaging = {
         }
 
         if (status && status === 'denied') {
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'notification',
             type: 'web-push-notification-denied',
             event: {
               user_id: id,
             },
           });
+          return null;
         }
       } catch (error) {
-        splunkInstance().sendEvent({
+        splunkInstance('doctor-profile').sendEvent({
           group: 'notification',
           type: 'web-push-notification-error',
           event: {

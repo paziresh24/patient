@@ -3,7 +3,7 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
-import { splunkCenterProfileInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
@@ -47,7 +47,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   const router = useRouter();
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
-    splunkCenterProfileInstance().sendEvent({
+    splunkInstance('center-profile').sendEvent({
       group: 'center_profile',
       type: 'doctor_card_click',
       event: {

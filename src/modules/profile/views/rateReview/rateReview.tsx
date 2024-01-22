@@ -415,7 +415,7 @@ export const RateReview = (props: RateReviewProps) => {
         state: true,
       });
     if (text.length < 10) return toast.error('حداقل مقدار مجاز ۱۰ کاراکتر می باشد.');
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'report',
       type: 'report-group',
       event: {

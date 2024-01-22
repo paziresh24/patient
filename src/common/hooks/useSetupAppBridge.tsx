@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import Modal from '../components/atom/modal';
 import { ModalProps } from '../components/atom/modal/modal';
+import { splunkInstance } from '../services/splunk';
 import useModal from './useModal';
 
 export const useSetupAppBridge = () => {
@@ -28,6 +29,7 @@ export const useSetupAppBridge = () => {
   const appBridge = {
     toast: toast,
     modal: modal,
+    logger: splunkInstance,
   };
 
   useEffect(() => {

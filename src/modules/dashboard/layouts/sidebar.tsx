@@ -9,7 +9,7 @@ import LogoutIcon from '@/common/components/icons/logout';
 import ShopIcon from '@/common/components/icons/shop';
 import UserEditIcon from '@/common/components/icons/userEdit';
 import UsersIcon from '@/common/components/icons/users';
-import { dashboardSplunk } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -46,7 +46,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       router.replace(`/login?redirect_url=${asPath}`);
     }
     if (user.id) {
-      dashboardSplunk().sendEvent({
+      splunkInstance('dashboard').sendEvent({
         group: 'dashboard',
         type: 'dashboard_page_load',
         event: {
@@ -187,7 +187,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   ].filter(item => item.shouldShow);
 
   const appClickEvent = ({ menu_name, app_key, app_manifest }: { menu_name: string; app_key: string; app_manifest?: string }) => {
-    dashboardSplunk().sendEvent({
+    splunkInstance('dashboard').sendEvent({
       group: 'dashboard',
       type: 'dashboard_page_load',
       event: {

@@ -30,7 +30,7 @@ export const Premium = () => {
   useEffect(() => {
     if (isSuccess) {
       setFire(Math.random());
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'bamdad',
         type: 'after_buy',
       });

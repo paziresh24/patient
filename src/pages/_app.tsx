@@ -3,11 +3,10 @@ import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { coreWebVitalsSplunk, splunkInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
-import localFont from '@next/font/local';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -21,13 +20,6 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 
-const iransansFont = localFont({
-  src: '../fonts/IRANSansXV.woff2',
-  variable: '--IRANSansXFaNum',
-  preload: true,
-  display: 'swap',
-});
-
 const { publicRuntimeConfig } = getConfig();
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
@@ -37,7 +29,7 @@ export const growthbook = new GrowthBook({
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   trackingCallback: (experiment: any, result: any) => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'growth-book',
       type: 'growth-book-event',
       event: {
@@ -93,11 +85,6 @@ function MyApp(props: AppProps) {
     <ErrorBoundary>
       <GrowthBookProvider growthbook={growthbook}>
         <Provider pageProps={pageProps}>
-          <style jsx global>{`
-            :root {
-              --IRANSansXFaNum: ${iransansFont.style.fontFamily};
-            }
-          `}</style>
           <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
           <Head>
             <meta
@@ -117,7 +104,7 @@ function MyApp(props: AppProps) {
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === 'custom' || !publicRuntimeConfig.IS_PRODUCTION) return;
 
-  coreWebVitalsSplunk().sendEvent({
+  splunkInstance('cwv').sendEvent({
     group: 'core_web_vitals',
     type: `${metric.label}_${metric.name}`,
     event: {

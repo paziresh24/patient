@@ -36,7 +36,7 @@ export const CreditDuration = () => {
           href="/patient/premium"
           className="flex items-center space-s-2"
           onClick={() => {
-            splunkInstance().sendEvent({
+            splunkInstance('doctor-profile').sendEvent({
               group: 'bamdad',
               type: 'patient_profile_button',
             });

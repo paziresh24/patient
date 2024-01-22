@@ -1,8 +1,8 @@
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { getCookie } from 'cookies-next';
 
 export const sendSelectServiceEvent = (doctorInfo: any) => {
-  splunkBookingInstance().sendEvent({
+  splunkInstance('booking').sendEvent({
     group: 'doctor profile',
     type: 'doctor profile select service button',
     event: {

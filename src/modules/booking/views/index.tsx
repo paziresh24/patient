@@ -59,7 +59,7 @@ import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance, splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import SearchCard from '@/modules/search/components/card/card';
@@ -255,7 +255,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
-          splunkBookingInstance().sendEvent({
+          splunkInstance('booking').sendEvent({
             group: 'booking',
             type: 'book-date',
             event: {
@@ -268,7 +268,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             },
           });
           if (user.messengerType)
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'patient-visit-online',
               type: 'app',
               event: {
@@ -400,7 +400,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   const handleClickMoreDoctors = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'booking-freeturn-error',
       type: 'booking-freeturn-error-click-doctor-card',
     });
@@ -436,7 +436,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'booking-freeturn-error',
       type: 'booking-freeturn-error-click-doctor-card',
       event: {
