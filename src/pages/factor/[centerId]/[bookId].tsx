@@ -12,7 +12,7 @@ import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import { useProfileName } from '@/modules/profile/hooks/useProfileName';
+import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
@@ -28,7 +28,7 @@ const Factor = () => {
   } = useRouter();
   const getBookDetails = useGetBookDetails();
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
-  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: getBookDetails.data?.data?.result?.[0]?.doctor_slug });
+  const { display_name, isLoading: profileNameLoading } = useProfile({ slug: getBookDetails.data?.data?.result?.[0]?.doctor_slug });
 
   useEffect(() => {
     if (bookId)

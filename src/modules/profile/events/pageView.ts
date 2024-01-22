@@ -39,7 +39,7 @@ export const pageViewEvent = async ({
   if (isBulk) {
     sendGaEvent({ action: 'bulkprofile', category: 'load', label: 'load' });
   }
-  splunkInstance().sendEvent({
+  splunkInstance('doctor-profile').sendEvent({
     group: 'doctor profile',
     type: 'doctor profile page view',
     event: {

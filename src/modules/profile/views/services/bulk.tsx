@@ -9,7 +9,7 @@ import Text from '@/common/components/atom/text/text';
 import ErrorIcon from '@/common/components/icons/error';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import random from 'lodash/random';
@@ -36,7 +36,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   const { changeRoute } = useSearchRouting();
 
   const handleOpenSubstituteDoctorModal = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-open-modal',
     });
@@ -44,7 +44,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-click-doctor-card',
       event: {
@@ -55,7 +55,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   };
 
   const handleClickMoreDoctors = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-click-more-doctors',
     });

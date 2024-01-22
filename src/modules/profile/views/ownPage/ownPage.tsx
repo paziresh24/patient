@@ -15,7 +15,7 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
   });
 
   const handleClick = useCallback(() => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'register',
       type: 'doctor-profile',
       event: {

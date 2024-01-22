@@ -22,24 +22,26 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
-import { splunkBookingInstance, splunkInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isPWA } from '@/common/utils/isPwa';
+import { firebaseCloudMessaging } from '@/firebase/fcm';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
+import MessengerButton from '@/modules/myTurn/components/messengerButton';
 import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { useProfileName } from '@/modules/profile/hooks/useProfileName';
+import { useProfile } from '@/modules/profile/hooks/useProfile';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
+import { PlasmicComponent, PlasmicRootProvider } from '@plasmicapp/loader-nextjs';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
 import { shuffle } from 'lodash';
@@ -47,8 +49,10 @@ import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { PLASMIC } from 'plasmic-init';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { growthbook } from 'src/pages/_app';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -69,6 +73,11 @@ const Receipt = () => {
     modalProps: waitingTimeModalProps,
   } = useModal();
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
+  const {
+    handleOpen: handleOpenNotificationGrantAccses,
+    handleClose: handleCloseNotificationGrantAccses,
+    modalProps: notificationGrantAccsesModalProps,
+  } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
 
   const getReceiptDetails = useGetReceiptDetails({
@@ -83,10 +92,12 @@ const Receipt = () => {
     pageSize: 'a4',
     scale: 2,
   });
+
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
-  const shuoldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
+  const shouldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
+  const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);
@@ -99,7 +110,16 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
-  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: bookDetailsData?.doctor?.slug });
+  const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
+  const {
+    display_name,
+    isLoading: profileNameLoading,
+    specialities,
+  } = useProfile({
+    slug: bookDetailsData?.doctor?.slug,
+    includeData: ['SPECIALITIES'],
+  });
+
   const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
@@ -108,13 +128,34 @@ const Receipt = () => {
     }
   }, [isLogin, userPednding, pincode]);
 
+  const notificationGrantAccsesModalInterval = useRef<any>(null);
+  useEffect(() => {
+    if (
+      !userPednding &&
+      isLogin &&
+      Notification.permission !== 'denied' &&
+      Notification.permission !== 'granted' &&
+      notificationGrantAccsesModalText
+    ) {
+      notificationGrantAccsesModalInterval.current = setTimeout(async () => {
+        handleOpenNotificationGrantAccses();
+        Notification.requestPermission().then(() => {
+          handleCloseNotificationGrantAccses();
+        });
+        firebaseCloudMessaging.init(user?.id ?? '');
+      }, 8000);
+    }
+
+    return () => clearTimeout(notificationGrantAccsesModalInterval.current);
+  }, [userPednding, isLogin]);
+
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
-      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت' && !shuoldShowRateAppModal) {
+      if (getReceiptDetails.data.data?.data?.center?.waiting_time === 'بیشتر از یک ساعت' && !shouldShowRateAppModal) {
         handleOpenWaitingTimeModal();
         return;
       }
-      if (isPWA() && isActiveTurn && shuoldShowRateAppModal && customize.showPromoteApp) {
+      if (isPWA() && isActiveTurn && shouldShowRateAppModal && customize.showPromoteApp) {
         handleOpenRateAppModal();
         return;
       }
@@ -187,7 +228,7 @@ const Receipt = () => {
             handleCloseRemoveModal();
             toast.success('نوبت شما با موفقیت لغو شد!');
             if (centerType === 'consult') {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'my-turn',
                 type: 'delete-turn-reason',
                 event: {
@@ -234,7 +275,7 @@ const Receipt = () => {
   };
 
   const handleSafeCallAction = () => {
-    splunkBookingInstance().sendEvent({
+    splunkInstance('booking').sendEvent({
       group: 'safe-call',
       type: 'patient',
       event: {
@@ -254,7 +295,7 @@ const Receipt = () => {
 
   const handleRedirectToStore = () => {
     location.assign((getRatingAppLink as string) ?? '#');
-    splunkBookingInstance().sendEvent({
+    splunkInstance('booking').sendEvent({
       group: 'rate app',
       type: 'rate app click button',
       event: {
@@ -282,8 +323,8 @@ const Receipt = () => {
     <>
       <Seo title="رسید نوبت" noIndex />
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
-        <div className="w-full p-5 space-y-6 bg-white md:basis-4/6 md:rounded-lg shadow-card">
-          <div id="receipt" className="flex flex-col space-y-4">
+        <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
+          <div id="receipt" className="flex flex-col px-5 pt-5 space-y-4">
             {!turnStatus.requestedTurn && !!statusText && (
               <>
                 {getReceiptDetails.isSuccess ? (
@@ -319,135 +360,153 @@ const Receipt = () => {
               centerId={centerId?.toString()!}
             />
           </div>
-          {showOptionalButton && (
-            <>
-              {getReceiptDetails.isSuccess ? (
-                <div className="flex flex-col space-y-3">
-                  <div className="flex space-s-3">
-                    <Button block variant="secondary" onClick={pdfGenerator}>
-                      دانلود رسید نوبت
-                    </Button>
-                    <Button block variant="secondary" onClick={handleShareAction}>
-                      اشتراک گذاری
-                    </Button>
-                  </div>
-                  <div className="flex space-s-3">
-                    <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                      نوبت های من
-                    </Button>
-                    <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
-                      لغو نوبت
-                    </Button>
-                  </div>
-                  <Button block variant="secondary" onClick={() => centerMap(bookDetailsData.center?.location)}>
-                    مشاهده در نقشه و مسیریابی
-                  </Button>
-                </div>
-              ) : (
-                <ReceiptButtonLoading />
-              )}
-            </>
-          )}
-          {turnStatus.requestedTurn && (
-            <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-              نوبت های من
-            </Button>
-          )}
-          {centerType === 'consult' && (
-            <div className="grid gap-2">
-              {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
-                  <MessengerButton
-                    channel={
-                      bookDetailsData.selected_online_visit_channel?.type
-                        ? bookDetailsData?.selected_online_visit_channel
-                        : bookDetailsData?.doctor?.online_visit_channels?.filter(
-                            (item: any) => !(item.type as string).endsWith('_number'),
-                          )[0]
-                    }
-                  />
-                  {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
-                    <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
-                  )}
-                </div>
-              )}
-              {isShowRemoveButtonForOnlineVisit && (
-                <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
-                  {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
-                </Button>
-              )}
-
-              {!!bookDetailsData &&
-                !turnStatus.deletedTurn &&
-                possibilityBeingVisited &&
-                serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
-                  <>
-                    <Divider />
-                    <div className="relative flex flex-col space-y-2">
-                      <Button
-                        size="sm"
-                        className="text-orange-600 border-orange-300 hover:bg-orange-50"
-                        block
-                        variant="secondary"
-                        onClick={handleOpenWaitingTimeFollowUpModal}
-                        disabled={
-                          serverTime?.data?.data?.data.timestamp <
-                          moment(bookDetailsData.book_time * 1000)
-                            .add(1, 'hour')
-                            .unix()
-                        }
-                      >
-                        پیگیری تاخیر پزشک
-                        {serverTime?.data?.data?.data.timestamp <
-                          moment(bookDetailsData.book_time * 1000)
-                            .add(1, 'hour')
-                            .unix() && (
-                          <Chips>
-                            <Timer
-                              defaultTime={formattedDuration}
-                              target={
-                                moment(bookDetailsData.book_time * 1000)
-                                  .add(1, 'hour')
-                                  .unix() - serverTime?.data?.data?.data.timestamp
-                              }
-                              className="!text-slate-800 font-medium"
-                            />
-                          </Chips>
-                        )}
+          <div className="p-5">
+            {growthbook.ready && shouldUsePlasmicActionButtons && (
+              <PlasmicRootProvider loader={PLASMIC} suspenseFallback={<ReceiptButtonLoading />} skipFonts>
+                <PlasmicComponent
+                  component="ReceiptActionButtons"
+                  componentProps={{
+                    bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
+                    specialities,
+                    currentUserId: user.id,
+                    variants: {
+                      type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
+                    },
+                  }}
+                />
+              </PlasmicRootProvider>
+            )}
+            {showOptionalButton && (
+              <>
+                {getReceiptDetails.isSuccess ? (
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex space-s-3">
+                      <Button block variant="secondary" onClick={pdfGenerator}>
+                        دانلود رسید نوبت
                       </Button>
-                      <Button
-                        size="sm"
-                        className="border-slate-300 text-slate-500 hover:bg-slate-50"
-                        block
-                        variant="secondary"
-                        onClick={() => {
-                          splunkInstance().sendEvent({
-                            group: 'support-receipt',
-                            type: 'request-support-book',
-                            event: {
-                              doctor_id: bookDetailsData?.doctor?.id,
-                              slug: bookDetailsData?.doctor?.slug,
-                              server_id: bookDetailsData?.doctor?.server_id,
-                              doctor_name: doctorName,
-                              book_id: bookDetailsData.book_id,
-                              reference_code: bookDetailsData.reference_code,
-                              book_date: bookDetailsData.book_time_strings,
-                            },
-                          });
-                          location.assign(
-                            `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
-                              (pincode as string) ?? (user.id && md5(user.id))
-                            }`,
-                          );
-                        }}
-                      >
-                        درخواست پشتیبانی این نوبت
+                      <Button block variant="secondary" onClick={handleShareAction}>
+                        اشتراک گذاری
                       </Button>
                     </div>
-                  </>
+                    <div className="flex space-s-3">
+                      <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                        نوبت های من
+                      </Button>
+                      <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                        لغو نوبت
+                      </Button>
+                    </div>
+                    <Button block variant="secondary" onClick={() => centerMap(bookDetailsData.center?.location)}>
+                      مشاهده در نقشه و مسیریابی
+                    </Button>
+                  </div>
+                ) : (
+                  <ReceiptButtonLoading />
                 )}
-            </div>
-          )}
+              </>
+            )}
+            {turnStatus.requestedTurn && (
+              <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                نوبت های من
+              </Button>
+            )}
+            {centerType === 'consult' && !userPednding && growthbook.ready && !shouldUsePlasmicActionButtons && (
+              <div className="grid gap-2">
+                {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
+                  <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
+                    <MessengerButton
+                      channel={
+                        bookDetailsData.selected_online_visit_channel?.type
+                          ? bookDetailsData?.selected_online_visit_channel
+                          : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                              (item: any) => !(item.type as string).endsWith('_number'),
+                            )[0]
+                      }
+                    />
+                    {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
+                      <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                    )}
+                  </div>
+                )}
+
+                {isShowRemoveButtonForOnlineVisit && (
+                  <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                    {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
+                  </Button>
+                )}
+
+                {!!bookDetailsData &&
+                  !turnStatus.deletedTurn &&
+                  possibilityBeingVisited &&
+                  serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
+                    <>
+                      <Divider />
+                      <div className="relative flex flex-col space-y-2">
+                        <Button
+                          size="sm"
+                          className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                          block
+                          variant="secondary"
+                          onClick={handleOpenWaitingTimeFollowUpModal}
+                          disabled={
+                            serverTime?.data?.data?.data.timestamp <
+                            moment(bookDetailsData.book_time * 1000)
+                              .add(1, 'hour')
+                              .unix()
+                          }
+                        >
+                          پیگیری تاخیر پزشک
+                          {serverTime?.data?.data?.data.timestamp <
+                            moment(bookDetailsData.book_time * 1000)
+                              .add(1, 'hour')
+                              .unix() && (
+                            <Chips>
+                              <Timer
+                                defaultTime={formattedDuration}
+                                target={
+                                  moment(bookDetailsData.book_time * 1000)
+                                    .add(1, 'hour')
+                                    .unix() - serverTime?.data?.data?.data.timestamp
+                                }
+                                className="!text-slate-800 font-medium"
+                              />
+                            </Chips>
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="border-slate-300 text-slate-500 hover:bg-slate-50"
+                          block
+                          variant="secondary"
+                          onClick={() => {
+                            splunkInstance('doctor-profile').sendEvent({
+                              group: 'support-receipt',
+                              type: 'request-support-book',
+                              event: {
+                                doctor_id: bookDetailsData?.doctor?.id,
+                                slug: bookDetailsData?.doctor?.slug,
+                                server_id: bookDetailsData?.doctor?.server_id,
+                                doctor_name: doctorName,
+                                book_id: bookDetailsData.book_id,
+                                reference_code: bookDetailsData.reference_code,
+                                book_date: bookDetailsData.book_time_strings,
+                              },
+                            });
+                            location.assign(
+                              `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
+                                (pincode as string) ?? (user.id && md5(user.id))
+                              }`,
+                            );
+                          }}
+                        >
+                          درخواست پشتیبانی این نوبت
+                        </Button>
+                      </div>
+                    </>
+                  )}
+              </div>
+            )}
+          </div>
         </div>
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
@@ -498,7 +557,7 @@ const Receipt = () => {
           <form
             method="post"
             onSubmit={() => {
-              splunkInstance().sendEvent({
+              splunkInstance('doctor-profile').sendEvent({
                 group: 'support-receipt',
                 type: 'follow-doctor-delay',
                 event: {
@@ -546,6 +605,9 @@ const Receipt = () => {
               {rateAppModalInfo?.button_show_receipt_text}
             </Button>
           </div>
+        </Modal>
+        <Modal {...notificationGrantAccsesModalProps} noHeader>
+          <span className="text-base font-bold leading-7">{notificationGrantAccsesModalText}</span>
         </Modal>
       </div>
     </>

@@ -6,7 +6,7 @@ import uniq from 'lodash/uniq';
 export const useProfileSplunkEvent = () => {
   const profileData = useProfileDataStore(state => state.data);
   const rateSplunkEvent = (eventType: string, eventData?: any) => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'patient-review-card',
       type: eventType,
       event: {
@@ -27,7 +27,7 @@ export const useProfileSplunkEvent = () => {
   };
 
   const profileEvent = (eventType: string, eventData?: any) => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'doctor profile',
       type: eventType,
       event: {
@@ -46,7 +46,7 @@ export const useProfileSplunkEvent = () => {
   };
 
   const recommendEvent = (eventType: string, eventData?: any) => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'recommend',
       type: eventType,
       event: {

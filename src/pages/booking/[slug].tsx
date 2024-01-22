@@ -14,7 +14,7 @@ import BookingSteps from '@/modules/booking/views';
 import { useMembership } from '@/modules/bookingV2/apis/membership';
 import BookingStepsV2 from '@/modules/bookingV2/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import { useProfileName } from '@/modules/profile/hooks/useProfileName';
+import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import moment from 'jalali-moment';
@@ -31,7 +31,7 @@ const Booking = () => {
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
   const easybookDoctorList = useFeatureValue('booking:easy-book|doctor-list', { ids: [] });
   const shouldUseEasybook = newApiFeatureFlaggingCondition(easybookDoctorList.ids, router.query?.userId as string);
-  const { display_name, isLoading: profileNameLoading } = useProfileName({ slug: router.query?.slug as string });
+  const { display_name, isLoading: profileNameLoading } = useProfile({ slug: router.query?.slug as string });
 
   useEffect(() => {
     if (shouldUseEasybook && router.query.centerId === CENTERS.CONSULT) {

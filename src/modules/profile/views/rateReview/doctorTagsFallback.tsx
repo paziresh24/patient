@@ -34,7 +34,7 @@ export const DoctorTagsFallback = () => {
       </Text>
       <GoldButton
         onClick={() => {
-          splunkInstance().sendEvent({
+          splunkInstance('doctor-profile').sendEvent({
             group: 'bamdad',
             type: 'doctor_profile_button',
           });

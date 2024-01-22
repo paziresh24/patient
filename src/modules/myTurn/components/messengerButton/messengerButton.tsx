@@ -1,5 +1,5 @@
 import Button from '@/common/components/atom/button';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { OnlineVisitChannel } from '../turn/turnType';
@@ -15,7 +15,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
           variant="secondary"
           block={true}
           onClick={() => {
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'link-visit-online',
               type: channel.type,
               event: {
@@ -34,7 +34,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
           variant="primary"
           block={true}
           onClick={() => {
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'link-visit-online',
               type: channel.type,
               event: {
@@ -57,7 +57,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
             'border-orange-500/50 !text-orange-500 hover:bg-orange-500/5': channel.type === 'eitaa',
           })}
           onClick={() => {
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'link-visit-online',
               type: channel.type,
               event: {

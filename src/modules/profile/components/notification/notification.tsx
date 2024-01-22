@@ -78,7 +78,7 @@ export const Notification = (props: NotificationProps) => {
         cell: phoneNumberWithZero(phoneNumberField.current.value),
       });
       setIsExists(true);
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'bamdad',
         type: 'notify-me',
         event: {

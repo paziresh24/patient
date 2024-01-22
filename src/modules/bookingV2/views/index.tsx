@@ -52,7 +52,7 @@ import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/g
 import { FakeData } from '@/common/constants/fakeData';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import { providers } from '@/modules/profile/apis/providers';
@@ -224,7 +224,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
-          splunkBookingInstance().sendEvent({
+          splunkInstance('booking').sendEvent({
             group: 'booking',
             type: 'book-date',
             event: {
@@ -236,7 +236,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             },
           });
           if (user.messengerType)
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'patient-visit-online',
               type: 'app',
               event: {
