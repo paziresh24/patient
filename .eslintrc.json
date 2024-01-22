@@ -14,7 +14,8 @@
   "rules": {
     "no-unused-vars": [0, { "args": "after-used", "argsIgnorePattern": "^_" }],
     "react-hooks/exhaustive-deps": 0,
-    "react/display-name": 0
+    "react/display-name": 0,
+    "@next/next/no-img-element": 0
   },
   "plugins": ["jest"]
 }
