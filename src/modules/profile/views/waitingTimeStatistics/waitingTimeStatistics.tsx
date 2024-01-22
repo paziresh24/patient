@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import WaitingRechart from './waitingTimeChart';
+import WaitingTimeChart from './waitingTimeChart';
+import _ from 'lodash';
 
 interface Statistics {
   waiting_time: number;
@@ -16,23 +17,23 @@ interface WaitingTimeStatisticsProps {
 const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
   const { className, statistics = [] } = props;
 
-  const data = useMemo(
-    () =>
-      statistics.map((item: Statistics) => {
-        const round_percent = Math.round(item.waiting_time_percent);
-        return {
-          ...item,
-          value: round_percent,
-          name: item.waiting_time_title,
-        };
-      }),
-    [],
-  );
+  const data = useMemo(() => {
+    const sortedData = _.sortBy(statistics, 'waiting_time');
+    return sortedData.map((item: Statistics, index) => {
+      const round_percent = Math.round(item.waiting_time_percent);
+      return {
+        ...item,
+        index,
+        value: round_percent,
+        name: item.waiting_time_title,
+      };
+    });
+  }, []);
 
   return (
     <div className={className}>
       <div className={`w-[300px] mx-auto`}>
-        <WaitingRechart data={data} />
+        <WaitingTimeChart data={data} />
       </div>
     </div>
   );
