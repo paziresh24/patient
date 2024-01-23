@@ -129,7 +129,7 @@ export const sections = ({
     },
     // Waiting Time Statistics
     {
-      title: `نمودار زمان انتظار بیماران ${information.display_name}`,
+      title: "نمودار زمان انتظار بیماران ویزیت آنلاین",
       isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
       function: () => {
         return {

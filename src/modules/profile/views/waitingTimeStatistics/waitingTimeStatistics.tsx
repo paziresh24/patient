@@ -31,7 +31,7 @@ const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
 
   return (
     <div className={className}>
-      <div className={`w-[300px] mx-auto`}>
+      <div className={`w-[350px] mx-auto`}>
         <WaitingTimeChart data={data} />
       </div>
     </div>

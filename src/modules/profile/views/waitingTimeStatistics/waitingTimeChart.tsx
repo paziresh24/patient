@@ -39,7 +39,7 @@ const CustomizedLabel = (props: LabelProps) => {
       fill="white"
       textAnchor={x > cx ? 'start' : 'end'}
       dominantBaseline="central"
-      className="text-xs font-semibold outline-none"
+      className="text-sm font-semibold outline-none"
     >
       {`${Math.round(percent * 100)}%`}
     </text>
@@ -61,17 +61,17 @@ export default function WaitingTimeChart(props: WaitingTimeChartProps) {
         className={`flex items-center gap-3 ${index === activeSectorIndex ? 'scale-105' : 'scale-100'} origin-right`}
         key={item.value}
       >
-        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
+        <span className="w-[14px] h-[14px] rounded-full" style={{ backgroundColor: item.color }}></span>
         <div className="flex gap-1">
-          <p className="text-xs font-semibold">{Math.round(item.payload.value)}%</p>
-          <p className="text-xs">{item.value}</p>
+          <p className="text-sm font-semibold">{Math.round(item.payload.value)}%</p>
+          <p className="text-sm">{item.value}</p>
         </div>
       </div>
     ));
   };
 
   return (
-    <ResponsiveContainer width={300} height={120}>
+    <ResponsiveContainer width={350} height={160}>
       <PieChart>
         <Pie
           data={data}
@@ -84,7 +84,7 @@ export default function WaitingTimeChart(props: WaitingTimeChartProps) {
           endAngle={90}
           labelLine={false}
           label={CustomizedLabel}
-          outerRadius={60}
+          outerRadius={80}
           dataKey="value"
           onMouseEnter={({ index }) => setActiveSectorIndex(index)}
           onMouseLeave={() => setActiveSectorIndex(undefined)}
@@ -100,7 +100,7 @@ export default function WaitingTimeChart(props: WaitingTimeChartProps) {
           align="left"
           iconType="circle"
           iconSize={12}
-          fontSize={12}
+          fontSize={14}
           wrapperStyle={{
             lineHeight: '40px',
             display: 'flex',
