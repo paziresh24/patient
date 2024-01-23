@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import WaitingTimeChart from './waitingTimeChart';
-import _ from 'lodash';
+import { sortBy } from 'lodash';
 
 interface Statistics {
   waiting_time: number;
@@ -18,7 +18,7 @@ const WaitingTimeStatistics = (props: WaitingTimeStatisticsProps) => {
   const { className, statistics = [] } = props;
 
   const data = useMemo(() => {
-    const sortedData = _.sortBy(statistics, 'waiting_time');
+    const sortedData = sortBy(statistics, 'waiting_time');
     return sortedData.map((item: Statistics, index) => {
       return {
         index,
