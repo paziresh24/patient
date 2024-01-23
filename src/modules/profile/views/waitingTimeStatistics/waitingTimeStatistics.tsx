@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import WaitingTimeChart from './waitingTimeChart';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 
 interface Statistics {
   waiting_time: number;
