@@ -4,7 +4,8 @@
     "titles": {
       "categories": "دسته بندی ها",
       "forPatients": "برای بیماران",
-      "forDoctors": "برای پزشکان"
+      "forDoctors": "برای پزشکان",
+      "developers": "توسعه دهندگان"
     },
     "userProfile": {
       "useNotloggedIn": "ورود | ثبت‌نام"
