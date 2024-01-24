@@ -375,3 +375,22 @@ export const medicalCenterMenu = [
     link: `https://survey.porsline.ir/s/7GFKVQz`,
   },
 ];
+
+export const developersMenu = [
+  {
+    title: 'وب سرویس ها',
+    link: 'https://developers.paziresh24.com/rest',
+  },
+  {
+    title: 'مستندات بازارچه',
+    link: 'https://developers.paziresh24.com/rest/bazaar',
+  },
+  {
+    title: 'جامعه توسعه دهندگان',
+    link: 'https://community.paziresh24.com/',
+  },
+  {
+    title: 'گیت هاب پذیرش24',
+    link: 'https://github.com/paziresh24',
+  },
+];

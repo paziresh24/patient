@@ -1,7 +1,7 @@
 {
   "brandName": "Paziresh24",
   "header": {
-    "titles": { "categories": "Categories", "forPatients": "For Patients", "forDoctors": "For Doctors" },
+    "titles": { "categories": "Categories", "forPatients": "For Patients", "forDoctors": "For Doctors", "developers": "Developers" },
     "userProfile": {
       "useNotloggedIn": "Login | Register"
     }
