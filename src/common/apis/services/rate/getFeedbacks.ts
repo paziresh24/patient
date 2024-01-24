@@ -9,6 +9,7 @@ export interface FeedbackParams {
   order_by?: string;
   my_feedbacks?: boolean;
   has_nobat?: boolean;
+  recommended?: number;
   center_id?: string;
   page?: number;
   no_page_limit?: boolean;
