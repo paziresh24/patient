@@ -18,6 +18,7 @@ export interface ThemeConfig {
   footerType: FooterType;
   showConsultServices: boolean;
   showActivityProfile: boolean;
+  showWaitingTimeStatistics: boolean;
   showGalleryProfile: boolean;
   showTermsAndConditions: boolean;
   bookMark: boolean;
@@ -51,6 +52,7 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
     showPartnerLogoInPrimaryPlace: false,
     showConsultServices: true,
     showActivityProfile: true,
+    showWaitingTimeStatistics: true,
     showGalleryProfile: true,
     showTermsAndConditions: true,
     bookMark: true,

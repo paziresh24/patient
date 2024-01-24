@@ -28,7 +28,6 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
-import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import Select from '@/modules/booking/components/select/select';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -89,16 +88,20 @@ export const RateReview = (props: RateReviewProps) => {
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
+    order_by: 'created_at',
   });
   const toggleLike = useFeedbackDataStore(state => state.toggleLike);
   const { rateSplunkEvent } = useProfileSplunkEvent();
-  const [rateFilter, setRateFilter] = useState<{ label: string; value: 'my_feedbacks' | 'has_nobat' | 'center_id' | 'all' }>({
+  const [rateFilter, setRateFilter] = useState<{
+    label: string;
+    value: 'my_feedbacks' | 'has_nobat' | 'recommended' | 'center_id' | 'all';
+  }>({
     label: 'همه نظرات',
     value: 'all',
   });
   const [rateSort, setRateSort] = useState<{ label: string; value: 'default_order' | 'like' | 'created_at' }>({
-    label: 'مرتبط ترین',
-    value: 'default_order',
+    label: 'جدیدترین نظر',
+    value: 'created_at',
   });
   const { isLogin, userInfo } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
@@ -342,6 +345,7 @@ export const RateReview = (props: RateReviewProps) => {
         options: [
           { label: 'همه نظرات', value: 'all' },
           isLogin && { label: 'نظرات من', value: 'my_feedbacks' },
+          { label: 'نظرات منفی', value: 'recommended' },
           { label: 'بیماران دارای نوبت', value: 'has_nobat' },
           ...centerOption,
         ].filter(Boolean),
@@ -351,9 +355,9 @@ export const RateReview = (props: RateReviewProps) => {
       {
         id: 2,
         options: [
-          { label: 'مرتبط ترین نظر', value: 'default_order' },
-          { label: 'جدید ترین نظر', value: 'created_at' },
-          { label: 'محبوب ترین نظر', value: 'like' },
+          { label: 'جدیدترین نظر', value: 'created_at' },
+          { label: 'مرتبط‌ترین نظر', value: 'default_order' },
+          { label: 'محبوب‌ترین نظر', value: 'like' },
         ],
         value: rateSort,
         onChange: (e: any) => changeSortSelect(e),
@@ -576,9 +580,9 @@ export const RateReview = (props: RateReviewProps) => {
   };
 
   return (
-    <div ref={rateRef} className="flex flex-col space-y-2 md:rounded-lg md:overflow-hidden md:space-y-1">
+    <div ref={rateRef} className="flex flex-col space-y-2 md:space-y-1">
       {!!details.count && !message && (
-        <div className="w-full p-4 bg-white">
+        <div className="w-full p-4 bg-white md:rounded-t-lg">
           <div className="space-y-3">
             <Details
               satisfaction={details.satisfaction}
@@ -591,9 +595,16 @@ export const RateReview = (props: RateReviewProps) => {
           </div>
         </div>
       )}
-      {shouldShowDoctorTags && <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />}
-      {isShowPremiumFeatures && !checkPremiumUser(userInfo.vip) && <DoctorTagsFallback />}
-      <div className={classNames('w-full bg-white', className)}>
+      {shouldShowDoctorTags && !message && <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />}
+      <div
+        className={classNames(
+          'w-full bg-white md:rounded-b-lg',
+          {
+            'md:rounded-t-lg': !details.count || message,
+          },
+          className,
+        )}
+      >
         <Rate
           details={details}
           filters={rateSearchInputs}

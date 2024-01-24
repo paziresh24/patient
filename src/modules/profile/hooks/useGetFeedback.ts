@@ -39,14 +39,15 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
 
   const rateSortFilter = debounce((order: string) => {
     setPage(1);
-    setFilterParams(prev => ({ ...prev, order_by: order }));
+    setFilterParams(prev => ({ ...prev, order_by: order ?? 'created_at' }));
   }, 10);
 
-  const rateFilterType = debounce((type: 'my_feedbacks' | 'has_nobat' | 'all') => {
-    const removeFilters = omit(filterParams, ['has_nobat', 'my_feedbacks']);
+  const rateFilterType = debounce((type: 'my_feedbacks' | 'has_nobat' | 'all' | 'recommended') => {
+    const removeFilters = omit(filterParams, ['has_nobat', 'my_feedbacks', 'recommended']);
     const filterTypes = {
       my_feedbacks: { my_feedbacks: true },
       has_nobat: { has_nobat: true },
+      recommended: { recommended: 0 },
       all: {},
     };
     setPage(1);

@@ -9,6 +9,7 @@ import Text from '@/common/components/atom/text';
 import BookmarksIcon from '@/common/components/icons/bookmarks';
 import CalenderIcon from '@/common/components/icons/calender';
 import ChevronIcon from '@/common/components/icons/chevron';
+import CommentIcon from '@/common/components/icons/comment';
 import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
 import ElementIcon from '@/common/components/icons/element';
@@ -78,6 +79,12 @@ export const UserProfile = () => {
           icon: <CalenderIcon width={22} height={22} />,
           link: '/dashboard/apps/drapp/appointments',
           shouldShow: userInfo.provider?.job_title === 'doctor',
+        },
+        {
+          name: 'نظرات من',
+          icon: <CommentIcon width={22} height={22} />,
+          link: '/dashboard/reviews',
+          shouldShow: true,
         },
         {
           name: 'مشاهده پروفایل عمومی',
@@ -154,7 +161,7 @@ export const UserProfile = () => {
             <Transition
               match={open}
               animation="bottom"
-              className="absolute max-w-xs min-w-full px-2  overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
+              className="absolute max-w-xs min-w-full px-2 overflow-auto font-medium bg-white border shadow-md z-infinity top-14 md:top-16 text-slate-700 whitespace-nowrap border-slate-200 rounded-2xl w-max md:ml-0"
             >
               <Link href="/patient/profile" prefetch={false}>
                 <div className="flex items-center w-64 px-2 py-3 space-s-3">
