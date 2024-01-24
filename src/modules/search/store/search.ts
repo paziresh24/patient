@@ -67,7 +67,7 @@ type City = {
 export const useSearchStore = create<SearchStore>(set => ({
   city: {
     id: '-1',
-    name: 'همه ایران',
+    name: 'همه شهرها',
     en_slug: 'ir',
     province_id: '-1',
   },

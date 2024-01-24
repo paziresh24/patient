@@ -129,7 +129,7 @@ export const sections = ({
     },
     // Waiting Time Statistics
     {
-      title: `نمودار زمان انتظار بیماران ${information.display_name}`,
+      title: "نمودار زمان انتظار بیماران ویزیت آنلاین",
       isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
       function: () => {
         return {
@@ -137,7 +137,7 @@ export const sections = ({
           statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT).statistics,
         };
       },
-      children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg p-4" {...props} />,
     },
     // Own Page
     {

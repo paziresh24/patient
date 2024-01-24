@@ -180,3 +180,8 @@ input[type='range']::-webkit-slider-thumb {
 .loader {
   @apply animate-spin;
 }
+
+.recharts-layer.recharts-pie,
+.recharts-sector:focus {
+    outline: none !important;
+}

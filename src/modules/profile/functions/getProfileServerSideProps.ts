@@ -285,6 +285,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             const parallelRequests = [
               await getWaitingTimeStatistics({
                 slug: slugFormmated,
+                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                end_date: moment().format('YYYY-MM-DD'),
               }),
             ];
             const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
