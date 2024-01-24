@@ -354,12 +354,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             {
               doctor_id: id,
               server_id: server_id,
+              order_by: 'created_at',
             },
           ],
           () =>
             getFeedbacks({
               doctor_id: id,
               server_id: server_id,
+              order_by: 'created_at',
             }),
         );
       }
