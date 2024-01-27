@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import { articleMenus, consultMenus, medicalCenterMenu, withDoctorMenu, withUserMenu } from '../../data/links';
+import { articleMenus, consultMenus, developersMenu, medicalCenterMenu, withDoctorMenu, withUserMenu } from '../../data/links';
 import HeaderLogo from '../logo/logo';
 import UserProfile from '../userProfile';
 const Sidebar = dynamic(() => import('./sidebar'));
@@ -54,6 +54,11 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     {
       id: 6,
       sub_menu: medicalCenterMenu,
+    },
+    {
+      id: 7,
+      title: 'توسعه دهندگان',
+      sub_menu: developersMenu,
     },
   ];
 
