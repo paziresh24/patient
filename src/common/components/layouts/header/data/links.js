@@ -383,7 +383,7 @@ export const developersMenu = [
   },
   {
     title: 'مستندات بازارچه',
-    link: 'https://developers.paziresh24.com/rest/bazaar',
+    link: 'https://developers.paziresh24.com/apps',
   },
   {
     title: 'جامعه توسعه دهندگان',
