@@ -281,10 +281,6 @@ const Receipt = () => {
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
-  useEffect(() => {
-    console.log(bookDetailsData);
-  }, []);
-
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
@@ -384,6 +380,8 @@ const Receipt = () => {
                       bookTime={bookDetailsData.book_time}
                       currentTime={serverTime?.data?.data?.data.timestamp}
                       visitedTurn={turnStatus.visitedTurn}
+                      centerId={bookDetailsData.center_id}
+                      doctorName={bookDetailsData?.doctor?.doctor_name}
                     />
                   )}
                 </>
