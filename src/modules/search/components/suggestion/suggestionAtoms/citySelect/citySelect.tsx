@@ -12,7 +12,6 @@ import classNames from '@/common/utils/classNames';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useEffect, useRef, useState } from 'react';
-import { popularCities } from '../../../../constants/cityList/popularCities';
 
 interface CitySelectProps {
   city: locationParam;
@@ -70,7 +69,7 @@ export const CitySelect = (props: CitySelectProps) => {
     onChange({
       ...citiesData.current.find(item => item.id === cityId),
       id: cityId,
-      name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه ایران',
+      name: citiesData.current.find(item => item.id === cityId)?.name ?? 'همه شهرها',
       en_slug: citiesData.current.find(item => item.id === cityId)?.en_slug ?? 'ir',
       is_aroundme: isAroundMe,
     });
@@ -103,6 +102,20 @@ export const CitySelect = (props: CitySelectProps) => {
       </Button>
       <Modal fullScreen bodyClassName="pt-2 md:pt-5" title="انتخاب شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
+          <div className="relative">
+            <SearchIcon className="absolute top-[0.6rem] rtl:right-[0.6rem] ltr:left-[0.6rem] h-5 w-5" />
+            <TextField
+              size="small"
+              placeholder={`جستجوی در شهرها`}
+              onChange={e => {
+                scrollTop();
+                setUserSearchInput(e.target.value);
+              }}
+              value={userSearchInput}
+              className="px-9"
+            />
+          </div>
+
           {shouldShowAroundMeButton && (
             <div className="md:hidden">
               <Button
@@ -119,31 +132,16 @@ export const CitySelect = (props: CitySelectProps) => {
               </Button>
             </div>
           )}
+
           <div className="flex flex-wrap gap-2">
-            {popularCities.map(city => (
-              <Button
-                key={city.id}
-                onClick={() => handleClickCity(city.id)}
-                variant="secondary"
-                size="sm"
-                className="!border-slate-300  !text-slate-700 font-medium"
-              >
-                {city?.name}
-              </Button>
-            ))}
-          </div>
-          <div className="relative">
-            <SearchIcon className="absolute top-[0.6rem] rtl:right-[0.6rem] ltr:left-[0.6rem] h-5 w-5" />
-            <TextField
-              size="small"
-              placeholder={`جستجوی در شهرها`}
-              onChange={e => {
-                scrollTop();
-                setUserSearchInput(e.target.value);
-              }}
-              value={userSearchInput}
-              className="px-9"
-            />
+            <Button
+              onClick={() => handleClickCity('-1')}
+              variant="secondary"
+              size="sm"
+              className="!border-slate-300  !text-slate-700 font-medium"
+            >
+              همه شهرها
+            </Button>
           </div>
 
           <div ref={containerRef} className="flex flex-col h-full pb-32 overflow-auto no-scroll">

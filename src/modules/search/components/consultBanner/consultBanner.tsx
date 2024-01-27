@@ -6,7 +6,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
-import { splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import random from 'lodash/random';
 import { useMemo } from 'react';
 import { useSearch as useSearchUtils } from '../../hooks/useSearch';
@@ -40,7 +40,7 @@ export const ConsultBanner = () => {
   };
 
   const handleOpenSubstituteDoctorModal = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'search_visit_online_doctor_recommendation',
       type: 'search_visit_online_doctor_recommendation-open-modal',
     });
@@ -48,7 +48,7 @@ export const ConsultBanner = () => {
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'search_visit_online_doctor_recommendation',
       type: 'search_visit_online_doctor_recommendation-click-doctor-card',
       event: {
@@ -59,7 +59,7 @@ export const ConsultBanner = () => {
   };
 
   const handleClickMoreDoctors = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'search_visit_online_doctor_recommendation',
       type: 'search_visit_online_doctor_recommendation-click-more-doctors',
     });

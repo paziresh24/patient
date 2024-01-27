@@ -19,6 +19,11 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
+  loading(loadingProps) {
+    return <Skeleton w="100%" h="8rem" rounded="lg" />;
+  },
+});
 const OwnPage = dynamic(() => import('./ownPage'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
@@ -51,18 +56,9 @@ export const sections = ({
   handleViewAs,
   seo,
   onlineVisit,
+  plasmicData,
 }: any) =>
   [
-    // Own Page
-    {
-      isShow: isBulk && !customize?.partnerKey,
-      function: () => {
-        return {
-          fullname: information.display_name,
-        };
-      },
-      children: (props: any) => <OwnPage {...props} />,
-    },
     // About
     {
       title: 'درباره من',
@@ -131,6 +127,28 @@ export const sections = ({
       },
       children: (props: any) => <ActivityWrapper className="bg-white md:rounded-lg" {...props} />,
     },
+    // Waiting Time Statistics
+    {
+      title: "نمودار زمان انتظار بیماران ویزیت آنلاین",
+      isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
+      function: () => {
+        return {
+          slug: seo.slug,
+          statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT).statistics,
+        };
+      },
+      children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg p-4" {...props} />,
+    },
+    // Own Page
+    {
+      isShow: isBulk && !customize?.partnerKey,
+      function: () => {
+        return {
+          fullname: information.display_name,
+        };
+      },
+      children: (props: any) => <OwnPage {...props} />,
+    },
     // Reviews
     {
       id: 'reviews',
@@ -186,6 +204,7 @@ export const sections = ({
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
+          plasmicData,
         };
       },
       children: (props: any) => <RateReview {...props} />,
@@ -197,37 +216,39 @@ export const sections = ({
         const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
         const isOnlineVisitCenter = center.id === CENTERS.CONSULT;
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name} ${expertises?.expertises?.[0]?.expertise_name}`;
-        const about = `<p>${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${
-          information.display_name
-        } در ${center?.address ?? '(ثبت نشده)'} واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
+        const about = `<p>${information.prefix} ${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${
+          center?.city ?? '(ثبت نشده)'
+        } است. مطب ${information.prefix} ${information.display_name} در ${
+          center?.address ?? '(ثبت نشده)'
+        } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
           !isOnlineVisitCenter && !!center?.display_number_array[0] ? center?.display_number_array[0] : '(ثبت نشده)'
         }</span> تماس بگیرید.</p>
-        <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information?.display_name}، ${
-          doctorExpertise ?? 'سایر'
-        }  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction_percent ?? 0}٪ مراجعین (${
+        <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information.prefix} ${
+          information.display_name
+        }، ${doctorExpertise ?? 'سایر'}  بازدید کرده‌اند؛ همچنین ${feedbacks?.details?.satisfaction_percent ?? 0}٪ مراجعین (${
           feedbacks?.details?.count_of_feedbacks ?? 0
         } نظر ثبت شده) از ایشان رضایت داشته‌اند و ${feedbacks?.details?.like ?? 0} نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${
-          information?.display_name
-        }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
+          information.prefix
+        } ${information.display_name}</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
         ${
           center.freeturn_text
-            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
+            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.prefix} ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
             : ''
         }
         <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${
           doctorExpertise ?? 'سایر'
         } <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
-        <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${
+        <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${information.prefix} ${
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
-        <li>آدرس مطب ${information.display_name}: ${
+        <li>آدرس مطب ${information.prefix} ${information.display_name}: ${
           isOnlineVisitCenter || (!center.address && !center.city) ? 'ثبت نشده' : `${center.city}، ${center?.address}`
         }</li>
-        <li>تلفن مطب ${information.display_name}: <span class="inline-block">${
+        <li>تلفن مطب ${information.prefix} ${information.display_name}: <span class="inline-block">${
           isOnlineVisitCenter || !center?.display_number_array[0] ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
         }</span></li>
-        <li>تخصص ${information?.display_name}: ${
+        <li>تخصص ${information.prefix} ${information.display_name}: ${
           expertises.expertises?.map?.((item: any) => item.alias_title)?.join('/ ') ?? expertises.expertises[0]?.name
         }</li>
         </ui>

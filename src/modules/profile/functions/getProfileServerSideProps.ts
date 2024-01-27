@@ -12,6 +12,7 @@ import axios from 'axios';
 import moment from 'jalali-moment';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { PLASMIC } from 'plasmic-init';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
@@ -19,6 +20,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
+import { getWaitingTimeStatistics } from './getWaitingTimeStatistics';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
@@ -27,7 +29,14 @@ const getSearchLinks = ({ centers, group_expertises }: any) => {
   return ['/s/', ...(center?.city ? [`/s/${center.city_en_slug}/`, `/s/${center.city_en_slug}/${gexp.en_slug}/`] : [])];
 };
 
-const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
+const createBreadcrumb = (
+  links: {
+    orginalLink: string;
+    title: string;
+  }[],
+  displayName: string,
+  currentPathName: string,
+) => {
   const reformmatedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
 
   reformmatedBreadcrumb.unshift({
@@ -88,12 +97,15 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseCreatedAt: boolean = false;
     let shouldUseFeedback: boolean = false;
     let shouldUseAverageWaitingTime: boolean = false;
+    let shouldUseWaitingTimeStatistics: boolean = false;
     let shouldUsePageView: boolean = false;
     let shouldUseNewRateCalculations: boolean = false;
+    let shouldUsePlasmicReviewCard: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ slug: slugFormmated });
       await growthbook.loadFeatures({ timeout: 1000 });
 
       // Providers Api
@@ -138,6 +150,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
       shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
 
+      // WaitingTimeStatistics Api
+      const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-details', {
+        slugs: [''],
+      });
+      shouldUseWaitingTimeStatistics = newApiFeatureFlaggingCondition(WaitingTimeStatisticsApiDoctorList.slugs, slugFormmated);
+
       // Page View Api
       const pageViewDoctorList = growthbook.getFeatureValue('profile:page-view-api|doctor-list', { slugs: [''] });
       shouldUsePageView = newApiFeatureFlaggingCondition(pageViewDoctorList.slugs, slugFormmated);
@@ -152,6 +170,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         fullProfileData.group_expertises.some((group: any) =>
           newApiFeatureFlaggingCondition(newRateCalculationsDoctorExpertisesList.expertises, group.id),
         );
+
+      // Plasmic Reviews Card
+      shouldUsePlasmicReviewCard = growthbook.isOn('plasmic:review-card|slugs');
     } catch (error) {
       console.error(error);
     }
@@ -164,6 +185,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         display_name: fullProfileData.display_name ?? '',
         biography: fullProfileData.biography ?? '',
         employee_id: fullProfileData.medical_code ?? '',
+        prefix: 'دکتر',
       },
     };
 
@@ -217,7 +239,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                 ...profileData.provider,
                 name: userData.value?.name,
                 family: userData.value?.family,
-                display_name: `${providerData.value?.prefix} ${userData.value?.name} ${userData.value?.family}`,
+                prefix: providerData.value?.prefix ?? 'دکتر',
+                display_name: `${userData.value?.name} ${userData.value?.family}`,
               };
             }
           }
@@ -255,6 +278,21 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
                 };
               }
+            }
+          }
+          // waiting statistics
+          if (shouldUseWaitingTimeStatistics) {
+            const parallelRequests = [
+              await getWaitingTimeStatistics({
+                slug: slugFormmated,
+                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                end_date: moment().format('YYYY-MM-DD'),
+              }),
+            ];
+            const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
+
+            if (waitingTimeStatisticsData.status === 'fulfilled') {
+              profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
             }
           }
           if (shouldUseFeedback) {
@@ -318,12 +356,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             {
               doctor_id: id,
               server_id: server_id,
+              order_by: 'created_at',
             },
           ],
           () =>
             getFeedbacks({
               doctor_id: id,
               server_id: server_id,
+              order_by: 'created_at',
             }),
         );
       }
@@ -334,12 +374,24 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.error(error);
     }
 
+    let plasmicData = null;
+    try {
+      if (shouldUsePlasmicReviewCard) {
+        plasmicData = await PLASMIC.fetchComponentData('ReviewCard');
+        if (!plasmicData) {
+          throw new Error('No Plasmic design found');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
 
-    const title = `${information?.display_name}، ${expertises.expertises[0].alias_title} ${
+    const title = `${information.prefix} ${information.display_name}، ${expertises.expertises[0].alias_title} ${
       doctorCity ? `${doctorCity}،` : ''
     } نوبت دهی آنلاین و شماره تلفن`;
-    const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+    const description = `نوبت دهی اینترنتی ${information.prefix} ${information.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {
       props: {
@@ -363,6 +415,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
+        plasmicData,
       },
     };
   } catch (error) {

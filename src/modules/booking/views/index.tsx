@@ -59,7 +59,7 @@ import { FakeData } from '@/common/constants/fakeData';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { splunkBookingInstance, splunkSearchInstance } from '@/common/services/splunk';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import SearchCard from '@/modules/search/components/card/card';
@@ -142,7 +142,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const onlineVisitDoctorList = useFeatureValue<{ slugs: string[] }>('booking:online-visit-recommend-modal', {
     slugs: [],
   });
-  const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile.slug);
+  const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile?.slug);
 
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
@@ -177,7 +177,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     userCenterId: center?.user_center_id,
   });
   const searchData = useSearch({
-    route: decodeURIComponent(`ir/${profile.expertises[0]?.expertise_groups[0].en_slug}`),
+    route: decodeURIComponent(`ir/${profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug}`),
     query: {
       turn_type: 'consult',
     },
@@ -213,7 +213,7 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   useEffect(() => {
     const fetchSymptomsAutoComplete = async () => {
-      const { data } = await symptomsAutoComplete.mutateAsync(symptomSearchText || profile.group_expertises?.[0]?.name);
+      const { data } = await symptomsAutoComplete.mutateAsync(symptomSearchText || profile?.group_expertises?.[0]?.name);
       data.length && setSymptoms(data);
       return data;
     };
@@ -255,12 +255,12 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
-          splunkBookingInstance().sendEvent({
+          splunkInstance('booking').sendEvent({
             group: 'booking',
             type: 'book-date',
             event: {
               patient_cell: user.cell,
-              doctor_name: profile.display_name,
+              doctor_name: profile?.display_name,
               date: moment().format('jYYYY/jMM/jDD - HH:mm'),
               preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
               confirmed_book_date: data?.details?.from,
@@ -268,7 +268,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             },
           });
           if (user.messengerType)
-            splunkBookingInstance().sendEvent({
+            splunkInstance('booking').sendEvent({
               group: 'patient-visit-online',
               type: 'app',
               event: {
@@ -400,7 +400,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   const handleClickMoreDoctors = () => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'booking-freeturn-error',
       type: 'booking-freeturn-error-click-doctor-card',
     });
@@ -436,7 +436,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    splunkSearchInstance().sendEvent({
+    splunkInstance('search').sendEvent({
       group: 'booking-freeturn-error',
       type: 'booking-freeturn-error-click-doctor-card',
       event: {
@@ -457,8 +457,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب مرکز درمانی"
           Component={SelectCenter}
           data={{
-            loading: isLoading,
-            centers: reformattedCentersProperty({ centers, displayName: profile.display_name }),
+            loading: isLoading && !profile,
+            centers: reformattedCentersProperty({ centers, displayName: profile?.display_name }),
             doctorName: profile?.display_name,
           }}
           nextStep={(center: Center) => {
@@ -487,7 +487,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب خدمت"
           Component={SelectService}
           data={{
-            loading: isLoading || !center,
+            loading: isLoading || !center || !profile,
             services: reformattedServicesProperty({ services: center?.services, center }),
             doctorName: profile?.display_name,
             center: center,
@@ -519,7 +519,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             )
           }
           data={{
-            loading: isLoading || !center || !service,
+            loading: isLoading || !center || !service || !profile,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             userCenterId: service?.user_center_id,
@@ -600,7 +600,11 @@ const BookingSteps = (props: BookingStepsProps) => {
             Component={SelectUserWrapper}
             data={{
               loading:
-                bookLoading || getFirstFreeTime.loading || getNationalCodeConfirmation.isLoading || inquiryIdentityInformation.isLoading,
+                bookLoading ||
+                getFirstFreeTime.loading ||
+                getNationalCodeConfirmation.isLoading ||
+                inquiryIdentityInformation.isLoading ||
+                !profile,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
               shouldShowMessengers,
@@ -842,7 +846,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                       <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
                         <Text className="text-sm font-medium"> {firstFreeTimeErrorText}</Text>
                       </Alert>
-                      <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+                      <Alert severity="success" className="p-3 text-sm font-medium text-green-700">
                         بدون خروج از منزل، آنلاین ویزیت شوید.
                       </Alert>
                       <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>

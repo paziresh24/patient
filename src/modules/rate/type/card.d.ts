@@ -16,6 +16,7 @@ export type Options = {
 
 export type Card = {
   id?: string;
+  userId?: string;
   avatar?: any;
   name?: string;
   tag?: Tags[];

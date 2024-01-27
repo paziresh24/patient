@@ -19,4 +19,5 @@ export enum ServerStateKeysEnum {
   AverageRates = 'averageRates',
   CountOfFeedbacks = 'countOfFeedbacks',
   SatisfactionPercent = 'satisfactionPercent',
+  DoctorTags = 'doctorTags',
 }

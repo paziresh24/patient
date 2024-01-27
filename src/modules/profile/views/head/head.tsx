@@ -15,6 +15,7 @@ import EditButton from '../../components/viewAs/editButton';
 
 interface HeadProps {
   image: string;
+  imageAlt?: string;
   displayName: string;
   title?: string;
   subTitle: string;
@@ -34,6 +35,7 @@ export const Head = (props: HeadProps) => {
   const {
     displayName,
     image,
+    imageAlt,
     title,
     subTitle,
     serviceList,
@@ -60,7 +62,15 @@ export const Head = (props: HeadProps) => {
             </div>
           )}
         </div>
-        <Info image={image} displayName={displayName} title={title} subTitle={subTitle} editable={editable} editAction={infoEditAction} />
+        <Info
+          image={image}
+          imageAlt={imageAlt}
+          displayName={displayName}
+          title={title}
+          subTitle={subTitle}
+          editable={editable}
+          editAction={infoEditAction}
+        />
       </div>
       {serviceList?.length === 0 && editable && (
         <div

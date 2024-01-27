@@ -76,9 +76,18 @@ const nextConfig = {
     FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
     RAVI_BASE_URL: process.env.RAVI_BASE_URL,
+    RAVI_IFRAME_BASE_URL: process.env.RAVI_IFRAME_BASE_URL,
+    PLASMIC_PROJECT_ID: process.env.PLASMIC_PROJECT_ID,
+    PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
   },
   images: {
-    domains: ['www.paziresh24.com', 'www.paziresh24.dev', 'www.sepehrsalamat.ir', 'clinic-s3.paziresh24.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.paziresh24.**',
+        port: '',
+      },
+    ],
   },
   async redirects() {
     return [

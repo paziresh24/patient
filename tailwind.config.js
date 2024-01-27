@@ -6,10 +6,6 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        'sans': ['var(--font-iran-sans)', ...fontFamily.sans],
-        'iran-sans': ['var(--font-iran-sans)', ...fontFamily.sans],
-      },
       screens: {
         pwa: { raw: '(display-mode: standalone)' },
       },

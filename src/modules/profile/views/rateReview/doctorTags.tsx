@@ -2,11 +2,10 @@ import { useGetDoctorTags } from '@/common/apis/services/rate/tags';
 import Chips from '@/common/components/atom/chips/chips';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
-import DiamondIcon from '@/common/components/icons/diamond';
 import FrownIcon from '@/common/components/icons/frown';
 import SmileIcon from '@/common/components/icons/smile';
+import SparkleIcon from '@/common/components/icons/sparkle';
 import range from 'lodash/range';
-import { useEffect } from 'react';
 
 interface DoctorTagsProps {
   symptomes?: string[];
@@ -16,26 +15,17 @@ interface DoctorTagsProps {
 
 export const DoctorTags = (props: DoctorTagsProps) => {
   const { symptomes = [], doctorId, serverId } = props;
-  const getDoctorTags = useGetDoctorTags();
-
-  useEffect(() => {
-    getDoctorTags.mutate({
-      doctor_id: doctorId,
-      server_id: serverId,
-    });
-  }, [doctorId, serverId]);
+  const getDoctorTags = useGetDoctorTags({ doctor_id: doctorId, server_id: serverId });
 
   return (
     <div className="flex flex-col w-full p-4 space-y-4 bg-white/50">
       <div className="flex flex-col w-full space-y-3">
         <div className="flex flex-col space-y-1">
-          <div className="flex items-center space-s-1">
-            <DiamondIcon className="text-amber-500" />
-            <Text fontWeight="bold">خلاصه نظرات کاربران</Text>
+          <Text fontWeight="bold">خلاصه نظرات کاربران</Text>
+          <div className="flex items-center space-s-1 opacity-75">
+            <SparkleIcon className="w-5 md:w-4 md:h-4 h-5 text-purple-600" />
+            <Text fontSize="sm">خلاصه نظرات کاربران توسط هوش مصنوعی تولید گردیده است.</Text>
           </div>
-          <Text fontSize="sm" className="opacity-75">
-            خلاصه نظرات کاربران توسط هوش مصنوعی تولید گردیده است.
-          </Text>
         </div>
         <div className="flex flex-col w-full space-y-3 md:flex-row md:space-y-0 md:space-s-3">
           <div className="flex flex-col w-full p-4 space-y-3 bg-white border rounded-lg shadow-lg shadow-slate-400/20 border-slate-100">
@@ -46,8 +36,7 @@ export const DoctorTags = (props: DoctorTagsProps) => {
               </Text>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {(getDoctorTags.isLoading || getDoctorTags.isIdle) &&
-                range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
+              {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
               {getDoctorTags.data?.data?.positive_tags?.map?.((tag: string) => (
                 <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={tag}>
                   <Text className="line-clamp-1">{tag}</Text>
@@ -63,8 +52,7 @@ export const DoctorTags = (props: DoctorTagsProps) => {
               </Text>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {(getDoctorTags.isLoading || getDoctorTags.isIdle) &&
-                range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
+              {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
               {getDoctorTags.data?.data?.negative_tags?.map?.((tag: string) => (
                 <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={tag}>
                   <Text className="line-clamp-1">{tag}</Text>
@@ -83,7 +71,6 @@ export const DoctorTags = (props: DoctorTagsProps) => {
         <div className="flex flex-col w-full space-y-3">
           <div className="flex flex-col space-y-1">
             <div className="flex items-center space-s-1">
-              <DiamondIcon className="text-amber-500" />
               <Text fontWeight="bold">دلایل مراجعه سایر بیماران به پزشک</Text>
             </div>
             <Text fontSize="sm" className="opacity-75">

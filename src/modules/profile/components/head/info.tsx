@@ -7,6 +7,7 @@ import EditButton from '../viewAs/editButton';
 
 interface InfoProps {
   image: string;
+  imageAlt?: string;
   displayName: string;
   title?: string;
   subTitle?: string;
@@ -15,7 +16,7 @@ interface InfoProps {
 }
 
 export const Info = (props: InfoProps) => {
-  const { image, displayName, title, subTitle, editable, editAction } = props;
+  const { image, imageAlt, displayName, title, subTitle, editable, editAction } = props;
   return (
     <div
       className={classNames('relative flex p-4 rounded-lg bg-slate-50', {
@@ -31,7 +32,7 @@ export const Info = (props: InfoProps) => {
             onClick: editAction,
           })}
         >
-          <Avatar width={85} height={85} className="border-2 border-slate-200" src={image} alt={displayName} />
+          <Avatar width={85} height={85} className="border-2 border-slate-200" src={image} alt={imageAlt ?? displayName} />
           {editable && (
             <div className="absolute right-0 flex items-center justify-center w-6 h-6 border-2 rounded-full bg-slate-50 bottom-1 border-slate-200">
               <EditIcon className="w-4 h-4" />

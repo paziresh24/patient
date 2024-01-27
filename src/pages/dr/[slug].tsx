@@ -12,7 +12,6 @@ import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
-import { useRemovePrefixDoctorName } from '@/common/hooks/useRemovePrefixDoctorName';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
@@ -55,11 +54,11 @@ const DoctorProfile = ({
   waitingTimeInfo,
   dontShowRateAndReviewMessage,
   shouldUseIncrementPageView,
+  plasmicData,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
   const isApplication = useApplication();
-  const removePrefixDoctorName = useRemovePrefixDoctorName();
   const isWebView = useWebView();
 
   const addPageView = usePageView();
@@ -78,7 +77,7 @@ const DoctorProfile = ({
 
   useEffect(() => {
     if (isShowPremiumFeatures) {
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'bamdad',
         type: 'profile_page-view',
         event: {
@@ -120,7 +119,7 @@ const DoctorProfile = ({
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
       setEditable(true);
-      splunkInstance().sendEvent({
+      splunkInstance('doctor-profile').sendEvent({
         group: 'profile',
         type: 'view-as',
         event: {
@@ -161,7 +160,7 @@ const DoctorProfile = ({
     setViewAsData({
       ...views[key],
     });
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'profile',
       type: 'view-as',
       event: {
@@ -177,7 +176,7 @@ const DoctorProfile = ({
   const profileData = {
     information: {
       ...(information ?? {}),
-      display_name: removePrefixDoctorName(information?.display_name),
+      display_name: information?.display_name,
     },
     centers,
     expertises,
@@ -214,6 +213,7 @@ const DoctorProfile = ({
             pageViewCount={profileData.history?.count_of_page_view}
             displayName={profileData.information.display_name}
             image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
+            imageAlt={`${information.prefix} ${information.display_name}`}
             title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
             serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
@@ -234,7 +234,7 @@ const DoctorProfile = ({
                   icon={<ReceiptIcon className="w-6 h-6" />}
                   onClick={() => {
                     window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
-                    splunkInstance().sendEvent({
+                    splunkInstance('doctor-profile').sendEvent({
                       group: 'profile',
                       type: 'view-as',
                       event: {
@@ -331,7 +331,7 @@ const DoctorProfile = ({
               ))}
           </div>
 
-          {sections(profileData)
+          {sections({ ...profileData, plasmicData })
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
@@ -373,7 +373,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
         'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-        'name': information.display_name,
+        'name': `${information.prefix} ${information.display_name}`,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
         'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
@@ -405,7 +405,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'name': information.display_name,
+        'name': `${information.prefix} ${information.display_name}`,
         'telephone': center?.display_number,
         'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
@@ -437,7 +437,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             'position': 2,
             'item': {
               '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-              'name': information.display_name,
+              'name': `${information.prefix} ${information.display_name}`,
             },
           },
         ],
@@ -454,7 +454,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         openGraph={{
           image: {
             src: publicRuntimeConfig.CLINIC_BASE_URL + information?.image,
-            alt: information?.display_name,
+            alt: `${information.prefix} ${information.display_name}`,
             type: 'image/jpg',
           },
         }}

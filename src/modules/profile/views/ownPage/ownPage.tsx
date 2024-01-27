@@ -3,9 +3,7 @@ import Text from '@/common/components/atom/text';
 import { splunkInstance } from '@/common/services/splunk';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import config from 'next/config';
 import { useCallback } from 'react';
-const { publicRuntimeConfig } = config();
 
 export const OwnPage = ({ fullname }: { fullname: string }) => {
   const { info, isLogin } = useUserInfoStore();
@@ -17,7 +15,7 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
   });
 
   const handleClick = useCallback(() => {
-    splunkInstance().sendEvent({
+    splunkInstance('doctor-profile').sendEvent({
       group: 'register',
       type: 'doctor-profile',
       event: {
@@ -28,7 +26,7 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
         },
       },
     });
-    location.assign(`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth/?q=profile`);
+    location.assign(`https://www.paziresh24.com/home/intermediate-registration-form/`);
   }, [info, isLogin]);
 
   return (

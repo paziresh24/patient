@@ -23,7 +23,7 @@ export const CloseRate = ({ message }: CloseRateProps) => {
           طراحی اساسا مورد استفاده قرار گیرد.
         </p>
       </div>
-      <div className=" text-center flex flex-col justify-center items-center h-full px-10 w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.05]">
+      <div className="text-center flex flex-col justify-center items-center md:rounded-lg h-full px-10 w-full absolute bottom-0 gap-3 bg-[#FFAD0D]/[0.05]">
         <AlertIcon className="[&>path]:fill-[#eea812] w-10 h-10" />
         <Text fontWeight="bold" fontSize="sm" className="text-[#0F1D40] leading-8">
           {message ?? ''}

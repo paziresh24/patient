@@ -9,13 +9,14 @@ export interface FeedbackParams {
   order_by?: string;
   my_feedbacks?: boolean;
   has_nobat?: boolean;
+  recommended?: number;
   center_id?: string;
   page?: number;
   no_page_limit?: boolean;
 }
 
 export const getFeedbacks = async (params: FeedbackParams) => {
-  const { data } = await feedbacksClient.get(`/v1/search/feedbacks/`, {
+  const { data } = await feedbacksClient.get(`/v1/feedbacks/`, {
     params,
   });
   return data;

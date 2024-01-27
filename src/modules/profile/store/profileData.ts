@@ -17,7 +17,7 @@ export const useProfileDataStore = create<ProfileDataStore>(set => ({
   setData: data =>
     set(() => ({
       data,
-      centers: data.centers,
-      messenger: data.online_visit_channel_types ?? [],
+      centers: data?.centers,
+      messenger: data?.online_visit_channel_types ?? [],
     })),
 }));
