@@ -129,19 +129,21 @@ export const sections = ({
     },
     // Waiting Time Statistics
     {
-      title: "نمودار زمان انتظار بیماران ویزیت آنلاین",
-      isShow: customize.showWaitingTimeStatistics && feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
+      title: 'نمودار زمان انتظار بیماران ویزیت آنلاین',
+      isShow:
+        customize.showWaitingTimeStatistics &&
+        feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
       function: () => {
         return {
           slug: seo.slug,
           statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT).statistics,
         };
       },
-      children: (props: any) => <WaitingTimeStatistics className="bg-white md:rounded-lg p-4" {...props} />,
+      children: (props: any) => <WaitingTimeStatistics className="p-4 bg-white md:rounded-lg" {...props} />,
     },
     // Own Page
     {
-      isShow: isBulk && !customize?.partnerKey,
+      isShow: centers.every((center: any) => center.status === 2) && !customize?.partnerKey,
       function: () => {
         return {
           fullname: information.display_name,
