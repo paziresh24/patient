@@ -21,12 +21,12 @@ interface WaitingTimeChartProps {
   data: WaitingTimeData[]
 }
 
-const RADIAN = Math.PI / 170;
+const RADIAN = Math.PI / 180;
 const COLORS = ['#39923D', '#3AB440', '#FFAD0D', '#F07300'];
 
 const CustomizedLabel = (props: LabelProps) => {
   const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.8;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -37,7 +37,7 @@ const CustomizedLabel = (props: LabelProps) => {
       x={x}
       y={y}
       fill="white"
-      textAnchor={x > cx ? 'start' : 'end'}
+      textAnchor="middle"
       dominantBaseline="central"
       className="text-sm font-semibold outline-none"
     >
