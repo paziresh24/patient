@@ -81,6 +81,12 @@ To view the designs, please visit our Figma page at [link to Figma](https://www.
 
 Please see our [contributing guide](/CONTRIBUTING.md).
 
-## License
-
-test
+<p align=center>
+ We appreciate all people who are participating in this project. Some people here and many many more outside of Github. It means a lot to us. ♥
+ </p>
+ 
+<p align=center> 
+ <a href="https://github.com/paziresh24/patient/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=paziresh24/patient" />
+</a>
+</p>
