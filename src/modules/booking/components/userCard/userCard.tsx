@@ -10,11 +10,12 @@ import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
-import { useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { defaultMessengers } from '../../constants/defaultMessengers';
 import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
+import Loading from '@/common/components/atom/loading/loading';
 
 interface UserCardProps {
   name: string;
@@ -29,11 +30,36 @@ interface UserCardProps {
   onSelect: (id: string, payload?: Record<string, unknown>) => void;
   type: 'user' | 'subUser';
   shouldShowMessengers: boolean;
+  loading?: boolean;
 }
 
+const LoadingWrapper = ({ children }: { children: ReactNode }) => {
+  return (
+    <div className="relative">
+      <div className="absolute w-full h-full backdrop-blur-sm rounded-md overflow-hidden grid place-content-center">
+        <Loading />
+      </div>
+      {children}
+    </div>
+  );
+};
+
 export const UserCard = (props: UserCardProps) => {
-  const { userId, name, family, cell, nationalCode, isForeigner, gender, refetchData, select, onSelect, type, shouldShowMessengers } =
-    props;
+  const {
+    userId,
+    name,
+    family,
+    cell,
+    nationalCode,
+    isForeigner,
+    gender,
+    refetchData,
+    select,
+    onSelect,
+    type,
+    shouldShowMessengers,
+    loading,
+  } = props;
 
   const editSubuser = useEditSubuser();
   const patchUser = usePatchUser();
@@ -104,49 +130,53 @@ export const UserCard = (props: UserCardProps) => {
     });
   };
 
+  const selectUser = (
+    <Select
+      title={`${name} ${family}`}
+      subTitle={cell}
+      selected={select}
+      onSelect={() => !loading && handleSelect()}
+      actionText="ویرایش"
+      actionIcon={<EditIcon width={18} height={18} />}
+      action={() => {
+        handleOpen();
+        editSubuser.reset();
+        patchUser.reset();
+      }}
+    >
+      {select && shouldShowMessengers && (
+        <>
+          <Text fontWeight="medium" fontSize="sm">
+            از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
+          </Text>
+          <div className="flex items-center mt-3 select-none space-s-3">
+            {doctorMessenger.map((messenger: any) => (
+              <div className="w-full" key={messenger.id}>
+                <input
+                  onChange={e => e.target.checked && handleSelect(messenger.type)}
+                  className="absolute hidden peer"
+                  type="radio"
+                  name="messagenrs"
+                  id={messenger.type}
+                />
+                <label
+                  htmlFor={messenger.type}
+                  className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
+                >
+                  <img src={messenger.image} width={21} height={21} alt="" />
+                  <Text fontWeight="medium">{messenger.name}</Text>
+                </label>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </Select>
+  );
+
   return (
     <>
-      <Select
-        title={`${name} ${family}`}
-        subTitle={cell}
-        selected={select}
-        onSelect={() => handleSelect()}
-        actionText="ویرایش"
-        actionIcon={<EditIcon width={18} height={18} />}
-        action={() => {
-          handleOpen();
-          editSubuser.reset();
-          patchUser.reset();
-        }}
-      >
-        {select && shouldShowMessengers && (
-          <>
-            <Text fontWeight="medium" fontSize="sm">
-              از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
-            </Text>
-            <div className="flex items-center mt-3 select-none space-s-3">
-              {doctorMessenger.map((messenger: any) => (
-                <div className="w-full" key={messenger.id}>
-                  <input
-                    onChange={e => e.target.checked && handleSelect(messenger.type)}
-                    className="absolute hidden peer"
-                    type="radio"
-                    name="messagenrs"
-                    id={messenger.type}
-                  />
-                  <label
-                    htmlFor={messenger.type}
-                    className="flex items-center justify-center w-full py-2 transition-colors border rounded-lg cursor-pointer peer-checked:bg-primary/5 peer-checked:border-primary peer-checked:text-primary space-s-2 border-slate-200 text-slate-400"
-                  >
-                    <img src={messenger.image} width={21} height={21} alt="" />
-                    <Text fontWeight="medium">{messenger.name}</Text>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </Select>
+      {loading ? <LoadingWrapper>{selectUser}</LoadingWrapper> : selectUser}
       <Modal title="ویرایش کاربر" {...modalProps}>
         <PatinetProfileForm
           fields={fields as FormFields}

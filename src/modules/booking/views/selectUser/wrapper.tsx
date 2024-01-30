@@ -32,7 +32,7 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
 
   return (
     <div className="flex flex-col space-y-3">
-      <SelectUser shouldShowMessengers={shouldShowMessengers} className={className} onSelect={handleSelect} />
+      <SelectUser loading={loading} shouldShowMessengers={shouldShowMessengers} className={className} onSelect={handleSelect} />
       <div
         className={classNames(
           'fixed bottom-0 right-0 flex flex-col w-full p-4 space-y-3 bg-white border-t md:border-none border-slate-100 md:space-y-0 md:items-center md:justify-between md:flex-row md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none',
