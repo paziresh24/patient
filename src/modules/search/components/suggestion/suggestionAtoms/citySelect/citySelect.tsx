@@ -106,7 +106,7 @@ export const CitySelect = (props: CitySelectProps) => {
             <SearchIcon className="absolute top-[0.6rem] rtl:right-[0.6rem] ltr:left-[0.6rem] h-5 w-5" />
             <TextField
               size="small"
-              placeholder={`جستجوی در شهرها`}
+              placeholder={`جستجو در شهرها`}
               onChange={e => {
                 scrollTop();
                 setUserSearchInput(e.target.value);
