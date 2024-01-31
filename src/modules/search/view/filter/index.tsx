@@ -18,7 +18,7 @@ export const Filter = (props: FilterProps) => {
 
   return (
     <div className="md:w-[23rem] md:min-w-[23rem] flex flex-col space-y-3">
-      {(!isEmpty(selectedFilters) || isLoading) && <SelectedFilters isLoading={isLoading} />}
+      {(!isEmpty(selectedFilters) || isLoading) && !isMobile && <SelectedFilters isLoading={isLoading} />}
 
       {!isMobile && isEmpty(selectedFilters) && isEmpty(filters) && (
         <Skeleton w="100%" h="42.2rem" rounded="lg" className="hidden md:block" />
