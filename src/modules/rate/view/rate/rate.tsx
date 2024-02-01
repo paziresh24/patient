@@ -4,16 +4,15 @@ import Divider from '@/common/components/atom/divider/divider';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import { Roye } from '@/common/roye';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import CloseRate from '@/modules/profile/views/rateReview/closeRate';
-import { PlasmicComponent, PlasmicRootProvider } from '@plasmicapp/loader-nextjs';
-import { PLASMIC } from 'plasmic-init';
-import FeedbackCard from '../../components/feedbackCard/feedbackCard';
+import FeedbackCard from '../../components/feedbackCard';
 import { RateProps } from '../../type/rate';
 
 export const Rate = (props: RateProps) => {
-  const { details, filters, search, feedbacks, isLoading, controller, message, plasmicData } = props;
+  const { details, filters, search, feedbacks, isLoading, controller, message, shouldUseRoyeReviewCard } = props;
   const user = useUserInfoStore(user => user.info);
 
   return (
@@ -58,47 +57,18 @@ export const Rate = (props: RateProps) => {
                   </div>
                 )}
                 <div className={classNames('mt-2', { '!mt-0': !feedbacks.length })}>
-                  {plasmicData ? (
-                    <PlasmicRootProvider
-                      loader={PLASMIC}
-                      prefetchedData={plasmicData}
-                      pageRoute={plasmicData?.entryCompMetas?.[0]?.path}
-                      pageParams={plasmicData?.entryCompMetas?.[0]?.params}
-                      disableLoadingBoundary={true}
-                      user={{
-                        email: user.username ?? '',
-                        properties: {
-                          ...user,
-                        },
-                        roleId: user.id ?? '',
-                        roleIds: [user.id ?? ''],
-                        roleName: `${user.name} ${user.family}`,
-                        roleNames: [`${user.name} ${user.family}`],
-                      }}
-                      skipFonts
-                    >
-                      {!!feedbacks?.length &&
-                        !isLoading &&
-                        feedbacks.map((feedback, index) => (
-                          <>
-                            <PlasmicComponent
-                              key={index + 1}
-                              component={plasmicData?.entryCompMetas?.[0]?.displayName}
-                              componentProps={{
-                                ...feedback,
-                              }}
-                            />
-                            <Divider className="opacity-60" />
-                          </>
-                        ))}
-                    </PlasmicRootProvider>
-                  ) : (
-                    <>
-                      {!!feedbacks?.length &&
-                        !isLoading &&
-                        feedbacks.map((feedback, index) => <FeedbackCard key={index + 1} className="border-b-0" feedback={feedback} />)}
-                    </>
-                  )}
+                  {!!feedbacks?.length &&
+                    !isLoading &&
+                    feedbacks.map((feedback, index) =>
+                      shouldUseRoyeReviewCard ? (
+                        <>
+                          <Roye key={index + 1} name="ReviewCard" props={{ ...feedback }} />
+                          <Divider className="opacity-60" />
+                        </>
+                      ) : (
+                        <FeedbackCard key={index + 1} className="border-b-0" feedback={feedback} />
+                      ),
+                    )}
                   {isLoading && <RateLoading />}
                   {!feedbacks?.length && !isLoading && (
                     <div className="p-4 pt-0">
