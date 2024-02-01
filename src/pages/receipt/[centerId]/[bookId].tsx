@@ -572,7 +572,7 @@ const Receipt = () => {
               });
               setIsWattingTimeFollowUpLoadingButton(true);
             }}
-            action="https://n8n.paziresh24.com/webhook/doctordelayfollowup"
+            action={`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/support/doctordelayfollowup`}
             className="flex flex-col space-y-3"
           >
             <Alert severity="warning" className="p-2">
