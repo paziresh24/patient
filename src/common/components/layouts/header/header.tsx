@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import HeaderLogo from './components/logo/logo';
-import { articleMenus, consultMenus, medicalCenterMenu, withDoctorMenu, withUserMenu } from './data/links';
+import { articleMenus, consultMenus, developersMenu, medicalCenterMenu, withDoctorMenu, withUserMenu } from './data/links';
 const ButtonSuggestion = dynamic(() => import('@/modules/search/view/suggestion/button'));
 const Transition = dynamic(() => import('../../atom/transition'));
 const MobileNavbar = dynamic(() => import('./components/mobileNavbar'));
@@ -122,6 +122,7 @@ const Header = (props: HeaderProps) => {
                 <SubMenu title={t('header.titles.forPatients')} menuItem={withUserMenu} />
                 <SubMenu menuItem={withDoctorMenu} />
                 <SubMenu menuItem={medicalCenterMenu} />
+                <SubMenu title={t('header.titles.developers')} menuItem={developersMenu} />
               </ul>
             </nav>
           )}
