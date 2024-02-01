@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run plasmic-sync && cross-env NODE_OPTIONS='--inspect' node server.js",
-    "build": "npm run plasmic-sync && next build",
+    "build": "next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "next start",
     "lint": "next lint",
