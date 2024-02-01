@@ -48,7 +48,3 @@ yarn-error.log*
 /public/workbox-*.js*
 /public/worker-*.js*
 /public/fallback-*.js*
-
-# Plasmic
-.plasmic
-plasmic.lock
