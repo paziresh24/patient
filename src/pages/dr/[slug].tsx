@@ -54,7 +54,7 @@ const DoctorProfile = ({
   waitingTimeInfo,
   dontShowRateAndReviewMessage,
   shouldUseIncrementPageView,
-  plasmicData,
+  royeComponents,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -331,7 +331,7 @@ const DoctorProfile = ({
               ))}
           </div>
 
-          {sections({ ...profileData, plasmicData })
+          {sections({ ...profileData, royeComponents })
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
               <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
