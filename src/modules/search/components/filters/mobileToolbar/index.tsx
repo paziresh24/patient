@@ -131,12 +131,12 @@ export const MobileToolbar = () => {
     ];
   };
 
-  const data = useMemo(() => {
+  const navFilters = useMemo(() => {
     const selectedFreeturn = freeturnItemsFormatted.find(item => item.value === filters['freeturn']);
     const selectedGender = gendersItemsFormatted.find(item => item.value === filters['gender']);
     const selectedTurnType = turnTypeItemsFormatted.find(item => item.value === filters['turn_type']);
     const selectedDegree = degreeItemsFormatted?.find(item => item.value === filters['degree']);
-    return [
+    const items = [
       {
         title: 'فیلترها',
         icon: (
@@ -198,6 +198,7 @@ export const MobileToolbar = () => {
         filterKey: 'turn_type',
       },
     ];
+    return items.sort((first, second) => +second.isActive - +first.isActive);
   }, [filters]);
 
   if (isLanding) {
@@ -215,7 +216,7 @@ export const MobileToolbar = () => {
   return (
     <>
       <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
-        {data.map((item, index) => (
+        {navFilters.map((item, index) => (
           <ToolbarChip key={index} {...item} />
         ))}
       </div>
