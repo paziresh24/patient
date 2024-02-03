@@ -9,11 +9,14 @@ interface Props {
   children: ReactNode;
   className?: string;
   dataAttributes?: Record<string, string>;
+  noWrapper?: boolean;
 }
 
 export const Section: FunctionComponent<Props> = props => {
-  const { id, children, title, ActionButton, className, dataAttributes } = props;
-
+  const { id, children, title, ActionButton, className, dataAttributes, noWrapper = false } = props;
+  if (noWrapper) {
+    return <>{children}</>;
+  }
   return (
     <section {...{ id }} className={classNames('flex flex-col w-full gap-y-3', className)} {...dataAttributes}>
       {(title || ActionButton) && (

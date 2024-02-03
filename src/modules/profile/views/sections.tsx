@@ -1,7 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
-import { Roye } from '@/common/roye';
+import { Fragment } from '@/common/fragment';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import { pick } from 'lodash';
@@ -58,7 +58,7 @@ export const sections = (data: any) => {
     handleViewAs,
     seo,
     onlineVisit,
-    royeComponents,
+    fragmentComponents,
   } = data;
 
   const profileData = pick(data, ['information', 'centers', 'expertises', 'feedbacks', 'media', 'history', 'symptomes', 'seo']);
@@ -149,7 +149,8 @@ export const sections = (data: any) => {
     // Own Page
     {
       isShow: !customize?.partnerKey,
-      children: () => <Roye name="Claim" props={{ ...profileData }} />,
+      noWrapper: true,
+      children: () => <Fragment name="Claim" props={{ ...profileData }} />,
     },
     // Reviews
     {
@@ -206,7 +207,7 @@ export const sections = (data: any) => {
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
-          shouldUseRoyeReviewCard: royeComponents.reviewCard,
+          shouldUseFragmentReviewCard: fragmentComponents.reviewCard,
         };
       },
       children: (props: any) => <RateReview {...props} />,

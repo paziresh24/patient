@@ -22,7 +22,7 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
-import { Roye } from '@/common/roye';
+import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
@@ -362,7 +362,7 @@ const Receipt = () => {
           {bookDetailsData.book_id && growthbook.ready && !userPednding && (
             <div className="p-5">
               {shouldUsePlasmicActionButtons && (
-                <Roye
+                <Fragment
                   name="ReceiptActionButtons"
                   props={{
                     bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
