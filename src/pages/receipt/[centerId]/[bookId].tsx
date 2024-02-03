@@ -122,6 +122,19 @@ const Receipt = () => {
   const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug: bookDetailsData?.doctor?.slug,
+    });
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
+      });
+    };
+  }, [bookDetailsData?.doctor?.slug]);
+
+  useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
