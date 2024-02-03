@@ -142,20 +142,22 @@ const Receipt = () => {
 
   const notificationGrantAccsesModalInterval = useRef<any>(null);
   useEffect(() => {
-    if (
-      !userPednding &&
-      isLogin &&
-      Notification.permission !== 'denied' &&
-      Notification.permission !== 'granted' &&
-      notificationGrantAccsesModalText
-    ) {
-      notificationGrantAccsesModalInterval.current = setTimeout(async () => {
-        handleOpenNotificationGrantAccses();
-        Notification.requestPermission().then(() => {
-          handleCloseNotificationGrantAccses();
-        });
-        firebaseCloudMessaging.init(user?.id ?? '');
-      }, 8000);
+    if ('Notification' in window) {
+      if (
+        !userPednding &&
+        isLogin &&
+        Notification?.permission !== 'denied' &&
+        Notification?.permission !== 'granted' &&
+        notificationGrantAccsesModalText
+      ) {
+        notificationGrantAccsesModalInterval.current = setTimeout(async () => {
+          handleOpenNotificationGrantAccses();
+          Notification.requestPermission().then(() => {
+            handleCloseNotificationGrantAccses();
+          });
+          firebaseCloudMessaging.init(user?.id ?? '');
+        }, 8000);
+      }
     }
 
     return () => clearTimeout(notificationGrantAccsesModalInterval.current);
