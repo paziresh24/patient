@@ -65,7 +65,6 @@ import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import { useScreenVariants as useScreenVariantsce5BTtZuA7Fm } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: ce5BTtZuA7fm/globalVariant
 
@@ -100,11 +99,13 @@ export const PlasmicReceiptActionButtons__VariantProps =
 export type PlasmicReceiptActionButtons__ArgsType = {
   bookDetailsData?: any;
   specialities?: any;
+  showSubstituteDoctorAlert?: boolean;
 };
 type ArgPropType = keyof PlasmicReceiptActionButtons__ArgsType;
 export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
   "bookDetailsData",
-  "specialities"
+  "specialities",
+  "showSubstituteDoctorAlert"
 );
 
 export type PlasmicReceiptActionButtons__OverridesType = {
@@ -122,6 +123,7 @@ export type PlasmicReceiptActionButtons__OverridesType = {
 export interface DefaultReceiptActionButtonsProps {
   bookDetailsData?: any;
   specialities?: any;
+  showSubstituteDoctorAlert?: boolean;
   type?: SingleChoiceArg<"visitOnline">;
   className?: string;
 }
@@ -148,7 +150,16 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          showSubstituteDoctorAlert: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -355,6 +366,32 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
+                  $steps["sendEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return window.paziresh24
+                              ?.logger("booking")
+                              .sendEvent({
+                                group: "link-visit-online",
+                                type: $props.bookDetailsData
+                                  .selected_online_visit_channel.type
+                              });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendEvent"] != null &&
+                    typeof $steps["sendEvent"] === "object" &&
+                    typeof $steps["sendEvent"].then === "function"
+                  ) {
+                    $steps["sendEvent"] = await $steps["sendEvent"];
+                  }
+
                   $steps["goToPage"] = true
                     ? (() => {
                         const actionArgs = {
@@ -473,7 +510,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   onClick={async event => {
                     const $steps = {};
 
-                    $steps["updateSecureCallLoading2"] = true
+                    $steps["startLoading"] = true
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -500,17 +537,14 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["updateSecureCallLoading2"] != null &&
-                      typeof $steps["updateSecureCallLoading2"] === "object" &&
-                      typeof $steps["updateSecureCallLoading2"].then ===
-                        "function"
+                      $steps["startLoading"] != null &&
+                      typeof $steps["startLoading"] === "object" &&
+                      typeof $steps["startLoading"].then === "function"
                     ) {
-                      $steps["updateSecureCallLoading2"] = await $steps[
-                        "updateSecureCallLoading2"
-                      ];
+                      $steps["startLoading"] = await $steps["startLoading"];
                     }
 
-                    $steps["runCode"] = true
+                    $steps["_function"] = true
                       ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
@@ -536,11 +570,11 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["runCode"] != null &&
-                      typeof $steps["runCode"] === "object" &&
-                      typeof $steps["runCode"].then === "function"
+                      $steps["_function"] != null &&
+                      typeof $steps["_function"] === "object" &&
+                      typeof $steps["_function"].then === "function"
                     ) {
-                      $steps["runCode"] = await $steps["runCode"];
+                      $steps["_function"] = await $steps["_function"];
                     }
 
                     $steps["showToast"] = true
@@ -565,7 +599,52 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       $steps["showToast"] = await $steps["showToast"];
                     }
 
-                    $steps["updateSecureCallLoading"] = true
+                    $steps["sendEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24
+                                ?.logger("booking")
+                                .sendEvent({
+                                  group: "safe-call",
+                                  type: "patient",
+                                  event: {
+                                    action: "receipt",
+                                    data: {
+                                      referenceCode:
+                                        $props.bookDetailsData.reference_code,
+                                      doctor: {
+                                        centerId:
+                                          $props.bookDetailsData.center_id,
+                                        name: $props.bookDetailsData?.doctor
+                                          ?.doctor_name
+                                      },
+                                      patient: {
+                                        cell: $props.bookDetailsData.patient
+                                          .cell,
+                                        name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
+                                        nationalCode:
+                                          $props.bookDetailsData.national_code
+                                      }
+                                    }
+                                  }
+                                });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendEvent"] != null &&
+                      typeof $steps["sendEvent"] === "object" &&
+                      typeof $steps["sendEvent"].then === "function"
+                    ) {
+                      $steps["sendEvent"] = await $steps["sendEvent"];
+                    }
+
+                    $steps["endLoading"] = true
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -592,14 +671,11 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["updateSecureCallLoading"] != null &&
-                      typeof $steps["updateSecureCallLoading"] === "object" &&
-                      typeof $steps["updateSecureCallLoading"].then ===
-                        "function"
+                      $steps["endLoading"] != null &&
+                      typeof $steps["endLoading"] === "object" &&
+                      typeof $steps["endLoading"].then === "function"
                     ) {
-                      $steps["updateSecureCallLoading"] = await $steps[
-                        "updateSecureCallLoading"
-                      ];
+                      $steps["endLoading"] = await $steps["endLoading"];
                     }
                   }}
                   outline={true}
@@ -637,7 +713,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       return (
                         currentTime - bookTime > oneHourInSeconds &&
                         $props.bookDetailsData.book_status != "visited" &&
-                        !$props.bookDetailsData.is_deleted
+                        !$props.bookDetailsData.is_deleted &&
+                        $props.showSubstituteDoctorAlert
                       );
                     })();
                   } catch (e) {
@@ -808,7 +885,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               primaryButtonOnClick={async () => {
                                 const $steps = {};
 
-                                $steps["updateDeleteLoading"] = true
+                                $steps["startLoading"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         variable: {
@@ -836,18 +913,17 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["updateDeleteLoading"] != null &&
-                                  typeof $steps["updateDeleteLoading"] ===
-                                    "object" &&
-                                  typeof $steps["updateDeleteLoading"].then ===
+                                  $steps["startLoading"] != null &&
+                                  typeof $steps["startLoading"] === "object" &&
+                                  typeof $steps["startLoading"].then ===
                                     "function"
                                 ) {
-                                  $steps["updateDeleteLoading"] = await $steps[
-                                    "updateDeleteLoading"
+                                  $steps["startLoading"] = await $steps[
+                                    "startLoading"
                                   ];
                                 }
 
-                                $steps["runCode"] = true
+                                $steps["removeBook"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         customFunction: async () => {
@@ -881,11 +957,65 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["runCode"] != null &&
-                                  typeof $steps["runCode"] === "object" &&
-                                  typeof $steps["runCode"].then === "function"
+                                  $steps["removeBook"] != null &&
+                                  typeof $steps["removeBook"] === "object" &&
+                                  typeof $steps["removeBook"].then ===
+                                    "function"
                                 ) {
-                                  $steps["runCode"] = await $steps["runCode"];
+                                  $steps["removeBook"] = await $steps[
+                                    "removeBook"
+                                  ];
+                                }
+
+                                $steps["sendEvent"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        customFunction: async () => {
+                                          return window.paziresh24
+                                            ?.logger("booking")
+                                            .sendEvent({
+                                              group: "substitute",
+                                              type: "remove-book-and-view-booking",
+                                              event: {
+                                                doctor_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.id,
+                                                slug: $props.bookDetailsData
+                                                  ?.doctor?.slug,
+                                                server_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.server_id,
+                                                doctor_name:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.display_name,
+                                                book_id:
+                                                  $props.bookDetailsData
+                                                    .book_id,
+                                                reference_code:
+                                                  $props.bookDetailsData
+                                                    .reference_code,
+                                                book_date:
+                                                  $props.bookDetailsData
+                                                    .book_time_strings,
+                                                substitute_doctor_name:
+                                                  $state.substituteDoctor?.title
+                                              }
+                                            });
+                                        }
+                                      };
+                                      return (({ customFunction }) => {
+                                        return customFunction();
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["sendEvent"] != null &&
+                                  typeof $steps["sendEvent"] === "object" &&
+                                  typeof $steps["sendEvent"].then === "function"
+                                ) {
+                                  $steps["sendEvent"] = await $steps[
+                                    "sendEvent"
+                                  ];
                                 }
 
                                 $steps["goToPage"] = true
@@ -991,7 +1121,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               onClick={async event => {
                                 const $steps = {};
 
-                                $steps["updateDeleteLoading"] = true
+                                $steps["startLoading"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         variable: {
@@ -1019,18 +1149,17 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["updateDeleteLoading"] != null &&
-                                  typeof $steps["updateDeleteLoading"] ===
-                                    "object" &&
-                                  typeof $steps["updateDeleteLoading"].then ===
+                                  $steps["startLoading"] != null &&
+                                  typeof $steps["startLoading"] === "object" &&
+                                  typeof $steps["startLoading"].then ===
                                     "function"
                                 ) {
-                                  $steps["updateDeleteLoading"] = await $steps[
-                                    "updateDeleteLoading"
+                                  $steps["startLoading"] = await $steps[
+                                    "startLoading"
                                   ];
                                 }
 
-                                $steps["runCode"] = true
+                                $steps["removeBook"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         customFunction: async () => {
@@ -1064,11 +1193,63 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["runCode"] != null &&
-                                  typeof $steps["runCode"] === "object" &&
-                                  typeof $steps["runCode"].then === "function"
+                                  $steps["removeBook"] != null &&
+                                  typeof $steps["removeBook"] === "object" &&
+                                  typeof $steps["removeBook"].then ===
+                                    "function"
                                 ) {
-                                  $steps["runCode"] = await $steps["runCode"];
+                                  $steps["removeBook"] = await $steps[
+                                    "removeBook"
+                                  ];
+                                }
+
+                                $steps["sendEvent"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        customFunction: async () => {
+                                          return window.paziresh24
+                                            ?.logger("booking")
+                                            .sendEvent({
+                                              group: "substitute",
+                                              type: "remove-book-and-view-search",
+                                              event: {
+                                                doctor_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.id,
+                                                slug: $props.bookDetailsData
+                                                  ?.doctor?.slug,
+                                                server_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.server_id,
+                                                doctor_name:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.display_name,
+                                                book_id:
+                                                  $props.bookDetailsData
+                                                    .book_id,
+                                                reference_code:
+                                                  $props.bookDetailsData
+                                                    .reference_code,
+                                                book_date:
+                                                  $props.bookDetailsData
+                                                    .book_time_strings
+                                              }
+                                            });
+                                        }
+                                      };
+                                      return (({ customFunction }) => {
+                                        return customFunction();
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["sendEvent"] != null &&
+                                  typeof $steps["sendEvent"] === "object" &&
+                                  typeof $steps["sendEvent"].then === "function"
+                                ) {
+                                  $steps["sendEvent"] = await $steps[
+                                    "sendEvent"
+                                  ];
                                 }
 
                                 $steps["goToPage"] = true
@@ -1197,7 +1378,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         onClick={async event => {
                           const $steps = {};
 
-                          $steps["updateSubstitueDoctorLoading"] = true
+                          $steps["startLoading"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1224,17 +1405,16 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstitueDoctorLoading"] != null &&
-                            typeof $steps["updateSubstitueDoctorLoading"] ===
-                              "object" &&
-                            typeof $steps["updateSubstitueDoctorLoading"]
-                              .then === "function"
+                            $steps["startLoading"] != null &&
+                            typeof $steps["startLoading"] === "object" &&
+                            typeof $steps["startLoading"].then === "function"
                           ) {
-                            $steps["updateSubstitueDoctorLoading"] =
-                              await $steps["updateSubstitueDoctorLoading"];
+                            $steps["startLoading"] = await $steps[
+                              "startLoading"
+                            ];
                           }
 
-                          $steps["httpGet"] = true
+                          $steps["request"] = true
                             ? (() => {
                                 const actionArgs = {
                                   customFunction: async () => {
@@ -1249,14 +1429,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["httpGet"] != null &&
-                            typeof $steps["httpGet"] === "object" &&
-                            typeof $steps["httpGet"].then === "function"
+                            $steps["request"] != null &&
+                            typeof $steps["request"] === "object" &&
+                            typeof $steps["request"].then === "function"
                           ) {
-                            $steps["httpGet"] = await $steps["httpGet"];
+                            $steps["request"] = await $steps["request"];
                           }
 
-                          $steps["updateSubstituteDoctors"] = true
+                          $steps["_function"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1265,7 +1445,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                                   },
                                   operation: 0,
                                   value:
-                                    $steps.httpGet?.data?.search?.result?.filter(
+                                    $steps.request?.data?.search?.result?.filter(
                                       item =>
                                         item.id !==
                                         $props.bookDetailsData?.doctor?.id
@@ -1288,18 +1468,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstituteDoctors"] != null &&
-                            typeof $steps["updateSubstituteDoctors"] ===
-                              "object" &&
-                            typeof $steps["updateSubstituteDoctors"].then ===
-                              "function"
+                            $steps["_function"] != null &&
+                            typeof $steps["_function"] === "object" &&
+                            typeof $steps["_function"].then === "function"
                           ) {
-                            $steps["updateSubstituteDoctors"] = await $steps[
-                              "updateSubstituteDoctors"
-                            ];
+                            $steps["_function"] = await $steps["_function"];
                           }
 
-                          $steps["updateSubstitueDoctorLoading2"] = true
+                          $steps["endLoading"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1326,14 +1502,11 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstitueDoctorLoading2"] != null &&
-                            typeof $steps["updateSubstitueDoctorLoading2"] ===
-                              "object" &&
-                            typeof $steps["updateSubstitueDoctorLoading2"]
-                              .then === "function"
+                            $steps["endLoading"] != null &&
+                            typeof $steps["endLoading"] === "object" &&
+                            typeof $steps["endLoading"].then === "function"
                           ) {
-                            $steps["updateSubstitueDoctorLoading2"] =
-                              await $steps["updateSubstitueDoctorLoading2"];
+                            $steps["endLoading"] = await $steps["endLoading"];
                           }
                         }}
                       >
@@ -1718,6 +1891,51 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     })()}
                     className={classNames(projectcss.all, sty.form)}
                     method={"POST"}
+                    onSubmit={async event => {
+                      const $steps = {};
+
+                      $steps["sendEvent"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24
+                                  ?.logger("booking")
+                                  .sendEvent({
+                                    group: "support-receipt",
+                                    type: "follow-doctor-delay",
+                                    event: {
+                                      doctor_id:
+                                        $props.bookDetailsData?.doctor?.id,
+                                      slug: $props.bookDetailsData?.doctor
+                                        ?.slug,
+                                      server_id:
+                                        $props.bookDetailsData?.doctor
+                                          ?.server_id,
+                                      doctor_name:
+                                        $props.bookDetailsData?.doctor
+                                          ?.display_name,
+                                      book_id: $props.bookDetailsData.book_id,
+                                      reference_code:
+                                        $props.bookDetailsData.reference_code,
+                                      book_date:
+                                        $props.bookDetailsData.book_time_strings
+                                    }
+                                  });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["sendEvent"] != null &&
+                        typeof $steps["sendEvent"] === "object" &&
+                        typeof $steps["sendEvent"].then === "function"
+                      ) {
+                        $steps["sendEvent"] = await $steps["sendEvent"];
+                      }
+                    }}
                   >
                     <Alert
                       body={
@@ -2007,6 +2225,45 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                 color={"sand"}
                 onClick={async event => {
                   const $steps = {};
+
+                  $steps["sendEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return window.paziresh24
+                              ?.logger("booking")
+                              .sendEvent({
+                                group: "support-receipt",
+                                type: "request-support-book",
+                                event: {
+                                  doctor_id: $props.bookDetailsData?.doctor?.id,
+                                  slug: $props.bookDetailsData?.doctor?.slug,
+                                  server_id:
+                                    $props.bookDetailsData?.doctor?.server_id,
+                                  doctor_name:
+                                    $props.bookDetailsData?.doctor
+                                      ?.display_name,
+                                  book_id: $props.bookDetailsData.book_id,
+                                  reference_code:
+                                    $props.bookDetailsData.reference_code,
+                                  book_date:
+                                    $props.bookDetailsData.book_time_strings
+                                }
+                              });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendEvent"] != null &&
+                    typeof $steps["sendEvent"] === "object" &&
+                    typeof $steps["sendEvent"].then === "function"
+                  ) {
+                    $steps["sendEvent"] = await $steps["sendEvent"];
+                  }
 
                   $steps["goToPage"] = true
                     ? (() => {
