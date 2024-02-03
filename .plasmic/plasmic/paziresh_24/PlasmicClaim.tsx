@@ -79,11 +79,13 @@ export const PlasmicClaim__VariantProps = new Array<VariantPropType>();
 export type PlasmicClaim__ArgsType = {
   information?: any;
   centers?: any;
+  showClaim?: boolean;
 };
 type ArgPropType = keyof PlasmicClaim__ArgsType;
 export const PlasmicClaim__ArgProps = new Array<ArgPropType>(
   "information",
-  "centers"
+  "centers",
+  "showClaim"
 );
 
 export type PlasmicClaim__OverridesType = {
@@ -94,6 +96,7 @@ export type PlasmicClaim__OverridesType = {
 export interface DefaultClaimProps {
   information?: any;
   centers?: any;
+  showClaim?: boolean;
   className?: string;
 }
 
@@ -114,7 +117,16 @@ function PlasmicClaim__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          showClaim: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -275,6 +287,29 @@ function PlasmicClaim__RenderFunc(props: {
           {
             "\u0627\u06cc\u0646 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u0627 \u0647\u062f\u0641 \u062a\u0633\u0647\u06cc\u0644 \u062f\u0631 \u06cc\u0627\u0641\u062a\u0646 \u0627\u0639\u0636\u0627\u06cc \u062c\u0627\u0645\u0639\u0647 \u067e\u0632\u0634\u06a9\u06cc \u0648 \u062f\u0631 \u0631\u0627\u0633\u062a\u0627\u06cc \u0627\u062c\u0631\u0627\u06cc \u0642\u0627\u0646\u0648\u0646 \u0627\u0646\u062a\u0634\u0627\u0631 \u0648 \u062f\u0633\u062a\u0631\u0633\u06cc \u0622\u0632\u0627\u062f \u0628\u0647 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0635\u0648\u0628 \u0645\u062c\u0644\u0633 \u0634\u0648\u0631\u0627\u06cc \u0627\u0633\u0644\u0627\u0645\u06cc \u0627\u0631\u0627\u0626\u0647 \u0634\u062f\u0647 \u0627\u0633\u062a."
           }
+        </div>
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__y8G0J
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return `${$props.showClaim}`;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
         </div>
       </Stack__>
     ) : null
