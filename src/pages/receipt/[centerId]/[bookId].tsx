@@ -22,6 +22,7 @@ import useModal from '@/common/hooks/useModal';
 import usePdfGenerator from '@/common/hooks/usePdfGenerator';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
+import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
@@ -41,7 +42,6 @@ import { CenterType } from '@/modules/myTurn/types/centerType';
 import { useProfile } from '@/modules/profile/hooks/useProfile';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
-import { PlasmicComponent, PlasmicRootProvider } from '@plasmicapp/loader-nextjs';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
 import { shuffle } from 'lodash';
@@ -49,13 +49,13 @@ import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { PLASMIC } from 'plasmic-init';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
+  const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
   const {
     query: { bookId, centerId, pincode },
     ...router
@@ -83,7 +83,7 @@ const Receipt = () => {
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
-    pincode: (pincode as string) ?? (user.id && md5(user.id)),
+    pincode: pincode as string,
   });
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
@@ -97,7 +97,6 @@ const Receipt = () => {
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const shouldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
-  const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPednding = useUserInfoStore(state => state.pending);
@@ -121,6 +120,19 @@ const Receipt = () => {
   });
 
   const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug: bookDetailsData?.doctor?.slug,
+    });
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
+      });
+    };
+  }, [bookDetailsData?.doctor?.slug]);
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -360,153 +372,158 @@ const Receipt = () => {
               centerId={centerId?.toString()!}
             />
           </div>
-          <div className="p-5">
-            {growthbook.ready && shouldUsePlasmicActionButtons && (
-              <PlasmicRootProvider loader={PLASMIC} suspenseFallback={<ReceiptButtonLoading />} skipFonts>
-                <PlasmicComponent
-                  component="ReceiptActionButtons"
-                  componentProps={{
+          {bookDetailsData.book_id && growthbook.ready && !userPednding && (
+            <div className="p-5">
+              {shouldUsePlasmicActionButtons && (
+                <Fragment
+                  name="ReceiptActionButtons"
+                  props={{
                     bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
                     specialities,
                     currentUserId: user.id,
-                    variants: {
-                      type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
-                    },
+                  }}
+                  variants={{
+                    type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
                   }}
                 />
-              </PlasmicRootProvider>
-            )}
-            {showOptionalButton && (
-              <>
-                {getReceiptDetails.isSuccess ? (
-                  <div className="flex flex-col space-y-3">
-                    <div className="flex space-s-3">
-                      <Button block variant="secondary" onClick={pdfGenerator}>
-                        دانلود رسید نوبت
-                      </Button>
-                      <Button block variant="secondary" onClick={handleShareAction}>
-                        اشتراک گذاری
-                      </Button>
-                    </div>
-                    <div className="flex space-s-3">
-                      <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                        نوبت های من
-                      </Button>
-                      <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
-                        لغو نوبت
-                      </Button>
-                    </div>
-                    <Button block variant="secondary" onClick={() => centerMap(bookDetailsData.center?.location)}>
-                      مشاهده در نقشه و مسیریابی
-                    </Button>
-                  </div>
-                ) : (
-                  <ReceiptButtonLoading />
-                )}
-              </>
-            )}
-            {turnStatus.requestedTurn && (
-              <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                نوبت های من
-              </Button>
-            )}
-            {centerType === 'consult' && !userPednding && growthbook.ready && !shouldUsePlasmicActionButtons && (
-              <div className="grid gap-2">
-                {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
-                  <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
-                    <MessengerButton
-                      channel={
-                        bookDetailsData.selected_online_visit_channel?.type
-                          ? bookDetailsData?.selected_online_visit_channel
-                          : bookDetailsData?.doctor?.online_visit_channels?.filter(
-                              (item: any) => !(item.type as string).endsWith('_number'),
-                            )[0]
-                      }
-                    />
-                    {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
-                      <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
-                    )}
-                  </div>
-                )}
-
-                {isShowRemoveButtonForOnlineVisit && (
-                  <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
-                    {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
-                  </Button>
-                )}
-
-                {!!bookDetailsData &&
-                  !turnStatus.deletedTurn &&
-                  possibilityBeingVisited &&
-                  serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
-                    <>
-                      <Divider />
-                      <div className="relative flex flex-col space-y-2">
-                        <Button
-                          size="sm"
-                          className="text-orange-600 border-orange-300 hover:bg-orange-50"
-                          block
-                          variant="secondary"
-                          onClick={handleOpenWaitingTimeFollowUpModal}
-                          disabled={
-                            serverTime?.data?.data?.data.timestamp <
-                            moment(bookDetailsData.book_time * 1000)
-                              .add(1, 'hour')
-                              .unix()
-                          }
-                        >
-                          پیگیری تاخیر پزشک
-                          {serverTime?.data?.data?.data.timestamp <
-                            moment(bookDetailsData.book_time * 1000)
-                              .add(1, 'hour')
-                              .unix() && (
-                            <Chips>
-                              <Timer
-                                defaultTime={formattedDuration}
-                                target={
-                                  moment(bookDetailsData.book_time * 1000)
-                                    .add(1, 'hour')
-                                    .unix() - serverTime?.data?.data?.data.timestamp
-                                }
-                                className="!text-slate-800 font-medium"
-                              />
-                            </Chips>
-                          )}
+              )}
+              {showOptionalButton && (
+                <>
+                  {getReceiptDetails.isSuccess ? (
+                    <div className="flex flex-col space-y-3">
+                      <div className="flex space-s-3">
+                        <Button block variant="secondary" onClick={pdfGenerator}>
+                          دانلود رسید نوبت
                         </Button>
-                        <Button
-                          size="sm"
-                          className="border-slate-300 text-slate-500 hover:bg-slate-50"
-                          block
-                          variant="secondary"
-                          onClick={() => {
-                            splunkInstance('doctor-profile').sendEvent({
-                              group: 'support-receipt',
-                              type: 'request-support-book',
-                              event: {
-                                doctor_id: bookDetailsData?.doctor?.id,
-                                slug: bookDetailsData?.doctor?.slug,
-                                server_id: bookDetailsData?.doctor?.server_id,
-                                doctor_name: doctorName,
-                                book_id: bookDetailsData.book_id,
-                                reference_code: bookDetailsData.reference_code,
-                                book_date: bookDetailsData.book_time_strings,
-                              },
-                            });
-                            location.assign(
-                              `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
-                                (pincode as string) ?? (user.id && md5(user.id))
-                              }`,
-                            );
-                          }}
-                        >
-                          درخواست پشتیبانی این نوبت
+                        <Button block variant="secondary" onClick={handleShareAction}>
+                          اشتراک گذاری
                         </Button>
                       </div>
-                    </>
+                      <div className="flex space-s-3">
+                        <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                          نوبت های من
+                        </Button>
+                        <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                          لغو نوبت
+                        </Button>
+                      </div>
+                      <Button block variant="secondary" onClick={() => centerMap(bookDetailsData.center?.location)}>
+                        مشاهده در نقشه و مسیریابی
+                      </Button>
+                    </div>
+                  ) : (
+                    <ReceiptButtonLoading />
                   )}
-              </div>
-            )}
-          </div>
+                </>
+              )}
+              {turnStatus.requestedTurn && (
+                <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                  نوبت های من
+                </Button>
+              )}
+              {centerType === 'consult' && !shouldUsePlasmicActionButtons && (
+                <div className="grid gap-2">
+                  {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
+                    <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
+                      <MessengerButton
+                        channel={
+                          bookDetailsData.selected_online_visit_channel?.type
+                            ? bookDetailsData?.selected_online_visit_channel
+                            : bookDetailsData?.doctor?.online_visit_channels?.filter(
+                                (item: any) => !(item.type as string).endsWith('_number'),
+                              )[0]
+                        }
+                      />
+                      {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
+                        <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
+                      )}
+                    </div>
+                  )}
+
+                  {isShowRemoveButtonForOnlineVisit && (
+                    <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                      {turnStatus.visitedTurn ? 'استرداد وجه' : 'لغو نوبت'}
+                    </Button>
+                  )}
+
+                  {!!bookDetailsData &&
+                    !turnStatus.deletedTurn &&
+                    possibilityBeingVisited &&
+                    serverTime?.data?.data?.data.timestamp > moment(bookDetailsData.book_time * 1000).unix() && (
+                      <>
+                        <Divider />
+                        <div className="relative flex flex-col space-y-2">
+                          <Button
+                            size="sm"
+                            className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                            block
+                            variant="secondary"
+                            onClick={handleOpenWaitingTimeFollowUpModal}
+                            disabled={
+                              serverTime?.data?.data?.data.timestamp <
+                              moment(bookDetailsData.book_time * 1000)
+                                .add(1, 'hour')
+                                .unix()
+                            }
+                          >
+                            پیگیری تاخیر پزشک
+                            {serverTime?.data?.data?.data.timestamp <
+                              moment(bookDetailsData.book_time * 1000)
+                                .add(1, 'hour')
+                                .unix() && (
+                              <Chips>
+                                <Timer
+                                  defaultTime={formattedDuration}
+                                  target={
+                                    moment(bookDetailsData.book_time * 1000)
+                                      .add(1, 'hour')
+                                      .unix() - serverTime?.data?.data?.data.timestamp
+                                  }
+                                  className="!text-slate-800 font-medium"
+                                />
+                              </Chips>
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="border-slate-300 text-slate-500 hover:bg-slate-50"
+                            block
+                            variant="secondary"
+                            onClick={() => {
+                              splunkInstance('doctor-profile').sendEvent({
+                                group: 'support-receipt',
+                                type: 'request-support-book',
+                                event: {
+                                  doctor_id: bookDetailsData?.doctor?.id,
+                                  slug: bookDetailsData?.doctor?.slug,
+                                  server_id: bookDetailsData?.doctor?.server_id,
+                                  doctor_name: doctorName,
+                                  book_id: bookDetailsData.book_id,
+                                  reference_code: bookDetailsData.reference_code,
+                                  book_date: bookDetailsData.book_time_strings,
+                                },
+                              });
+                              location.assign(
+                                `https://support.paziresh24.com/ticketbyturn/?book-id=${bookDetailsData.book_id}&pincode=${
+                                  (pincode as string) ?? (user.id && md5(user.id))
+                                }`,
+                              );
+                            }}
+                          >
+                            درخواست پشتیبانی این نوبت
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                </div>
+              )}
+            </div>
+          )}
+          {(!bookDetailsData.book_id || !growthbook.ready || userPednding) && (
+            <div className="p-5">
+              <ReceiptButtonLoading />
+            </div>
+          )}
         </div>
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo

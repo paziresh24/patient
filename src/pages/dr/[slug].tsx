@@ -34,6 +34,7 @@ import { getCookie } from 'cookies-next';
 import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
+import { growthbook } from '../_app';
 
 const { publicRuntimeConfig } = config();
 
@@ -54,7 +55,7 @@ const DoctorProfile = ({
   waitingTimeInfo,
   dontShowRateAndReviewMessage,
   shouldUseIncrementPageView,
-  plasmicData,
+  fragmentComponents,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -73,19 +74,19 @@ const DoctorProfile = ({
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
   const setProfileData = useProfileDataStore(state => state.setData);
-  const isShowPremiumFeatures = useShowPremiumFeatures();
 
   useEffect(() => {
-    if (isShowPremiumFeatures) {
-      splunkInstance('doctor-profile').sendEvent({
-        group: 'bamdad',
-        type: 'profile_page-view',
-        event: {
-          terminal_id: getCookie('terminal_id'),
-        },
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
       });
-    }
-  }, [isShowPremiumFeatures]);
+    };
+  }, [slug]);
 
   useEffect(() => {
     if (information) {
@@ -331,10 +332,10 @@ const DoctorProfile = ({
               ))}
           </div>
 
-          {sections({ ...profileData, plasmicData })
+          {sections({ ...profileData, fragmentComponents })
             .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
             .map((section: any, index: number) => (
-              <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
+              <Section key={index} {...section}>
                 {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
               </Section>
             ))}

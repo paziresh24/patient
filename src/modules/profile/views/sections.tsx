@@ -1,8 +1,10 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
+import { Fragment } from '@/common/fragment';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { pick } from 'lodash';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 
@@ -41,24 +43,27 @@ const RateReview = dynamic(() => import('./rateReview'), {
 });
 const ProfileSeoBox = dynamic(() => import('./seoBox'));
 
-export const sections = ({
-  information,
-  centers,
-  expertises,
-  feedbacks,
-  media,
-  history,
-  symptomes,
-  similarLinks,
-  isBulk,
-  customize,
-  editable,
-  handleViewAs,
-  seo,
-  onlineVisit,
-  plasmicData,
-}: any) =>
-  [
+export const sections = (data: any) => {
+  const {
+    information,
+    centers,
+    expertises,
+    feedbacks,
+    media,
+    history,
+    symptomes,
+    similarLinks,
+    customize,
+    editable,
+    handleViewAs,
+    seo,
+    onlineVisit,
+    fragmentComponents,
+  } = data;
+
+  const profileData = pick(data, ['information', 'centers', 'expertises', 'feedbacks', 'media', 'history', 'symptomes', 'seo']);
+
+  return [
     // About
     {
       title: 'درباره من',
@@ -143,13 +148,9 @@ export const sections = ({
     },
     // Own Page
     {
-      isShow: centers.every((center: any) => center.status === 2) && !customize?.partnerKey,
-      function: () => {
-        return {
-          fullname: information.display_name,
-        };
-      },
-      children: (props: any) => <OwnPage {...props} />,
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () => <Fragment name="Claim" props={{ ...profileData }} />,
     },
     // Reviews
     {
@@ -206,7 +207,7 @@ export const sections = ({
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
-          plasmicData,
+          shouldUseFragmentReviewCard: fragmentComponents.reviewCard,
         };
       },
       children: (props: any) => <RateReview {...props} />,
@@ -265,3 +266,4 @@ export const sections = ({
       children: (props: any) => <ProfileSeoBox {...props} />,
     },
   ] as const;
+};

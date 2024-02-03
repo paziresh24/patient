@@ -7,6 +7,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
+import { PlasmicRootProvider } from '@plasmicapp/react-web';
 import { Hydrate } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
@@ -85,16 +86,18 @@ function MyApp(props: AppProps) {
     <ErrorBoundary>
       <GrowthBookProvider growthbook={growthbook}>
         <Provider pageProps={pageProps}>
-          <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-          <Head>
-            <meta
-              name="viewport"
-              content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
-                isApplication ? '1.0' : '5.0'
-              }`}
-            />
-          </Head>
-          <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+          <PlasmicRootProvider disableLoadingBoundary>
+            <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+            <Head>
+              <meta
+                name="viewport"
+                content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
+                  isApplication ? '1.0' : '5.0'
+                }`}
+              />
+            </Head>
+            <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+          </PlasmicRootProvider>
         </Provider>
       </GrowthBookProvider>
     </ErrorBoundary>

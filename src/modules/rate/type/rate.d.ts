@@ -44,5 +44,5 @@ interface RateProps {
   controller?: Controller;
   message?: string;
   isLoading?: boolean;
-  plasmicData?: any;
+  shouldUseFragmentReviewCard?: boolean;
 }

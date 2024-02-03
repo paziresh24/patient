@@ -79,6 +79,7 @@ const nextConfig = {
     RAVI_IFRAME_BASE_URL: process.env.RAVI_IFRAME_BASE_URL,
     PLASMIC_PROJECT_ID: process.env.PLASMIC_PROJECT_ID,
     PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
+    PLASMIC_PREVIEW: process.env.PLASMIC_PREVIEW,
   },
   images: {
     remotePatterns: [
