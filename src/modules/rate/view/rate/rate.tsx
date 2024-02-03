@@ -4,7 +4,7 @@ import Divider from '@/common/components/atom/divider/divider';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
-import { Roye } from '@/common/roye';
+import { Fragment } from '@/common/fragment';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import CloseRate from '@/modules/profile/views/rateReview/closeRate';
@@ -12,7 +12,7 @@ import FeedbackCard from '../../components/feedbackCard';
 import { RateProps } from '../../type/rate';
 
 export const Rate = (props: RateProps) => {
-  const { details, filters, search, feedbacks, isLoading, controller, message, shouldUseRoyeReviewCard } = props;
+  const { details, filters, search, feedbacks, isLoading, controller, message, shouldUseFragmentReviewCard } = props;
   const user = useUserInfoStore(user => user.info);
 
   return (
@@ -60,9 +60,9 @@ export const Rate = (props: RateProps) => {
                   {!!feedbacks?.length &&
                     !isLoading &&
                     feedbacks.map((feedback, index) =>
-                      shouldUseRoyeReviewCard ? (
+                      shouldUseFragmentReviewCard ? (
                         <>
-                          <Roye key={index + 1} name="ReviewCard" props={{ ...feedback }} />
+                          <Fragment key={index + 1} name="ReviewCard" props={{ ...feedback }} />
                           <Divider className="opacity-60" />
                         </>
                       ) : (

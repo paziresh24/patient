@@ -401,7 +401,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
-        royeComponents: {
+        fragmentComponents: {
           reviewCard: shouldUsePlasmicReviewCard,
         },
       },

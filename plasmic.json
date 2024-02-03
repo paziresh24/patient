@@ -1,7 +1,7 @@
 {
   "platform": "nextjs",
   "code": {
-    "lang": "js",
+    "lang": "ts",
     "scheme": "blackbox",
     "reactRuntime": "classic"
   },
@@ -191,9 +191,9 @@
           "name": "Button",
           "type": "managed",
           "projectId": "sqPBLwEBBKHA2WDuGb17eV",
-          "renderModuleFilePath": "plasmic/radix_ui/PlasmicButton.jsx",
+          "renderModuleFilePath": "plasmic/radix_ui/PlasmicButton.tsx",
           "importSpec": {
-            "modulePath": "Button.jsx"
+            "modulePath": "Button.tsx"
           },
           "cssFilePath": "plasmic/radix_ui/PlasmicButton.module.css",
           "scheme": "blackbox",
@@ -205,12 +205,12 @@
         {
           "id": "Wyt3GMMsLefj",
           "name": "ChecksvgIcon",
-          "moduleFilePath": "plasmic/radix_ui/icons/PlasmicIcon__Checksvg.jsx"
+          "moduleFilePath": "plasmic/radix_ui/icons/PlasmicIcon__Checksvg.tsx"
         },
         {
           "id": "MbDRsJU0e3bw",
           "name": "IconIcon",
-          "moduleFilePath": "plasmic/radix_ui/icons/PlasmicIcon__Icon.jsx"
+          "moduleFilePath": "plasmic/radix_ui/icons/PlasmicIcon__Icon.tsx"
         }
       ],
       "images": [],
@@ -281,9 +281,9 @@
           "name": "ReviewCard",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReviewCard.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReviewCard.tsx",
           "importSpec": {
-            "modulePath": "ReviewCard.jsx"
+            "modulePath": "ReviewCard.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicReviewCard.module.css",
           "scheme": "blackbox",
@@ -294,9 +294,9 @@
           "name": "TextInput",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicTextInput.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicTextInput.tsx",
           "importSpec": {
-            "modulePath": "TextInput.jsx"
+            "modulePath": "TextInput.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicTextInput.module.css",
           "scheme": "blackbox",
@@ -308,9 +308,9 @@
           "name": "Button",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicButton.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicButton.tsx",
           "importSpec": {
-            "modulePath": "Button.jsx"
+            "modulePath": "Button.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicButton.module.css",
           "scheme": "blackbox",
@@ -322,9 +322,9 @@
           "name": "Dialog",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicDialog.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicDialog.tsx",
           "importSpec": {
-            "modulePath": "Dialog.jsx"
+            "modulePath": "Dialog.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicDialog.module.css",
           "scheme": "blackbox",
@@ -335,9 +335,9 @@
           "name": "ReceiptActionButtons",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReceiptActionButtons.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReceiptActionButtons.tsx",
           "importSpec": {
-            "modulePath": "ReceiptActionButtons.jsx"
+            "modulePath": "ReceiptActionButtons.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicReceiptActionButtons.module.css",
           "scheme": "blackbox",
@@ -348,9 +348,9 @@
           "name": "Alert",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicAlert.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicAlert.tsx",
           "importSpec": {
-            "modulePath": "Alert.jsx"
+            "modulePath": "Alert.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicAlert.module.css",
           "scheme": "blackbox",
@@ -361,9 +361,9 @@
           "name": "DoctorCard",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicDoctorCard.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicDoctorCard.tsx",
           "importSpec": {
-            "modulePath": "DoctorCard.jsx"
+            "modulePath": "DoctorCard.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicDoctorCard.module.css",
           "scheme": "blackbox",
@@ -374,9 +374,9 @@
           "name": "Card",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicCard.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicCard.tsx",
           "importSpec": {
-            "modulePath": "Card.jsx"
+            "modulePath": "Card.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicCard.module.css",
           "scheme": "blackbox",
@@ -387,9 +387,9 @@
           "name": "Avatar",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicAvatar.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicAvatar.tsx",
           "importSpec": {
-            "modulePath": "Avatar.jsx"
+            "modulePath": "Avatar.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicAvatar.module.css",
           "scheme": "blackbox",
@@ -400,9 +400,9 @@
           "name": "Select",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect.tsx",
           "importSpec": {
-            "modulePath": "Select.jsx"
+            "modulePath": "Select.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicSelect.module.css",
           "scheme": "blackbox",
@@ -414,9 +414,9 @@
           "name": "Select__Option",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__Option.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__Option.tsx",
           "importSpec": {
-            "modulePath": "Select__Option.jsx"
+            "modulePath": "Select__Option.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicSelect__Option.module.css",
           "scheme": "blackbox",
@@ -428,9 +428,9 @@
           "name": "Select__OptionGroup",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__OptionGroup.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__OptionGroup.tsx",
           "importSpec": {
-            "modulePath": "Select__OptionGroup.jsx"
+            "modulePath": "Select__OptionGroup.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicSelect__OptionGroup.module.css",
           "scheme": "blackbox",
@@ -442,9 +442,9 @@
           "name": "Select__Overlay",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__Overlay.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSelect__Overlay.tsx",
           "importSpec": {
-            "modulePath": "Select__Overlay.jsx"
+            "modulePath": "Select__Overlay.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicSelect__Overlay.module.css",
           "scheme": "blackbox",
@@ -456,9 +456,9 @@
           "name": "ReplyCard",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReplyCard.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicReplyCard.tsx",
           "importSpec": {
-            "modulePath": "ReplyCard.jsx"
+            "modulePath": "ReplyCard.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicReplyCard.module.css",
           "scheme": "blackbox",
@@ -469,9 +469,9 @@
           "name": "Claim",
           "type": "managed",
           "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicClaim.jsx",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicClaim.tsx",
           "importSpec": {
-            "modulePath": "Claim.jsx"
+            "modulePath": "Claim.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24/PlasmicClaim.module.css",
           "scheme": "blackbox",
@@ -482,112 +482,112 @@
         {
           "id": "zpYSlVMt-Ium",
           "name": "IconIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon.tsx"
         },
         {
           "id": "Lc9Jz5PI3tel",
           "name": "Icon2Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon2.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon2.tsx"
         },
         {
           "id": "zxD5K_Hf3kNg",
           "name": "Icon3Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon3.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon3.tsx"
         },
         {
           "id": "zsOosa-1VDPP",
           "name": "Icon4Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon4.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon4.tsx"
         },
         {
           "id": "p4tVEsplySFb",
           "name": "Icon5Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon5.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon5.tsx"
         },
         {
           "id": "iIYeRAdEZp9l",
           "name": "SearchsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Searchsvg.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Searchsvg.tsx"
         },
         {
           "id": "Zop7nqClMso8",
           "name": "ChecksvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Checksvg.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Checksvg.tsx"
         },
         {
           "id": "UYWDQf69XzlE",
           "name": "Icon6Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon6.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon6.tsx"
         },
         {
           "id": "je9zsyvTNz9E",
           "name": "Icon7Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon7.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon7.tsx"
         },
         {
           "id": "w8HZEw2oFpPD",
           "name": "Icon8Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon8.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon8.tsx"
         },
         {
           "id": "JnhceMeBu7rd",
           "name": "Icon9Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon9.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon9.tsx"
         },
         {
           "id": "Z5JVHYJlHhEy",
           "name": "Icon10Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon10.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon10.tsx"
         },
         {
           "id": "R-D5rrnSi86T",
           "name": "Icon11Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon11.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon11.tsx"
         },
         {
           "id": "zCwXncSoUStt",
           "name": "ChevronDownsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronDownsvg.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronDownsvg.tsx"
         },
         {
           "id": "EyMvPikEuDUD",
           "name": "ChevronUpsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronUpsvg.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronUpsvg.tsx"
         },
         {
           "id": "xWGtBmgD-AZH",
           "name": "Icon12Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon12.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon12.tsx"
         },
         {
           "id": "M2IpxUmMZTqA",
           "name": "Icon13Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon13.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon13.tsx"
         },
         {
           "id": "x8zKpWpxm06O",
           "name": "Icon14Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon14.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon14.tsx"
         },
         {
           "id": "adnXBC4RyXG9",
           "name": "Icon15Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon15.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon15.tsx"
         },
         {
           "id": "sYZ7eaHcWA9p",
           "name": "Icon16Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon16.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon16.tsx"
         },
         {
           "id": "egi8lj9xHHo3",
           "name": "Icon17Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon17.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon17.tsx"
         },
         {
           "id": "rNlcBlswymjS",
           "name": "Icon18Icon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon18.jsx"
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon18.tsx"
         }
       ],
       "images": [],
@@ -640,7 +640,7 @@
         "id": "ce5BTtZuA7fm",
         "name": "Screen",
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-        "contextFilePath": "plasmic/paziresh_24/PlasmicGlobalVariant__Screen.jsx"
+        "contextFilePath": "plasmic/paziresh_24/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },

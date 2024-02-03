@@ -1,1 +1,0 @@
-export { Roye } from './roye';

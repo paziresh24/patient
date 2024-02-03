@@ -80,11 +80,11 @@ interface RateReviewProps {
   };
   symptomes?: string[];
   className?: string;
-  shouldUseRoyeReviewCard?: boolean;
+  shouldUseFragmentReviewCard?: boolean;
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails, className, symptomes = [], shouldUseRoyeReviewCard } = props;
+  const { doctor, serverId, rateDetails, className, symptomes = [], shouldUseFragmentReviewCard } = props;
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
@@ -613,7 +613,7 @@ export const RateReview = (props: RateReviewProps) => {
           controller={submitRateDetails}
           isLoading={!showMoreButtonLoading && isLoading}
           message={message}
-          shouldUseRoyeReviewCard={shouldUseRoyeReviewCard}
+          shouldUseFragmentReviewCard={shouldUseFragmentReviewCard}
         />
         {!message && (showMoreButtonLoading || !isLoading) && !!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
           <div className="p-4">
