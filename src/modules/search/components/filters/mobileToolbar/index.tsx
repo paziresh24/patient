@@ -182,6 +182,7 @@ export const MobileToolbar = () => {
         handleClick: handleOpenGenderModal,
         removable: !!selectedGender,
         filterKey: 'gender',
+        display: !!gendersItemsFormatted.length,
       },
       {
         title: selectedDegree?.title ?? 'میزان تخصص',
@@ -189,6 +190,7 @@ export const MobileToolbar = () => {
         handleClick: handleOpenDegreeModal,
         removable: !!selectedDegree,
         filterKey: 'degree',
+        display: !!degreeItemsFormatted.length,
       },
       {
         title: selectedTurnType?.title ?? 'نوع خدمت',
@@ -196,6 +198,7 @@ export const MobileToolbar = () => {
         handleClick: handleOpenTurnTypeModal,
         removable: !!selectedTurnType,
         filterKey: 'turn_type',
+        display: !!turnTypeItemsFormatted.length,
       },
     ];
     return items.sort((first, second) => +second.isActive - +first.isActive);
@@ -216,9 +219,11 @@ export const MobileToolbar = () => {
   return (
     <>
       <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
-        {navFilters.map((item, index) => (
-          <ToolbarChip key={index} {...item} />
-        ))}
+        {navFilters
+          .filter(item => item.display !== false)
+          .map((item, index) => (
+            <ToolbarChip key={index} {...item} />
+          ))}
       </div>
       <Modal fullScreen title="فیلترها" {...filtersModalProps}>
         <div className="space-y-3 pb-36">
