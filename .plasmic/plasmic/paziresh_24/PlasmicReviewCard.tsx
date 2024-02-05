@@ -737,6 +737,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                 <Button
                   data-plasmic-name={"button"}
                   data-plasmic-override={overrides.button}
+                  children2={
+                    "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
+                  }
                   className={classNames("__wab_instance", sty.button)}
                   onClick={async event => {
                     const $steps = {};
@@ -809,11 +812,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                       ];
                     }
                   }}
-                >
-                  {
-                    "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
-                  }
-                </Button>
+                />
               </Stack__>
             }
             className={classNames("__wab_instance", sty.dialog)}

@@ -1,0 +1,31 @@
+.root:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+}
+.text__y1PxJ {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  position: relative;
+}
+.freeBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: auto;
+  height: auto;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-shadow: 0px 4px 16px 0px #00000033;
+  background: white;
+  left: auto;
+  top: auto;
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+}
+.text {
+  font-size: var(--token-9YpWDRZpBZcs);
+  font-weight: 400;
+}
