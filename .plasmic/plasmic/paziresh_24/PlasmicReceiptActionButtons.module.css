@@ -22,9 +22,12 @@
   margin-top: var(--token-Bi0wtDhzOf2Z);
 }
 .roottype_visitOnline {
-  width: auto;
+  width: 100%;
   justify-self: flex-start;
-  display: inline-flex;
+  min-width: 0;
+}
+.roottype_visitOnline > :global(.__wab_flex-container) {
+  min-width: 0;
 }
 .freeBox__wMEqE {
   display: flex;
