@@ -9,98 +9,30 @@ import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
 import { addCommas } from '@persian-tools/persian-tools';
-import { MouseEvent, MouseEventHandler, ReactNode, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import AdvancedSearch from '../advancedSearch';
 import RadioFilter from '../advancedSearch/sections/radio';
 import MobileCategories from '../mobileCategories';
 import { freeturnItems } from '../sort';
 
-interface ToolbarProps {
-  title: string;
-  icon?: ReactNode;
-  isActive?: boolean;
-  removable?: boolean;
-  handleClick?: MouseEventHandler;
-  name: string;
-  items?: FilterItems[];
-}
-
-type FilterItems = {
-  title: string;
-  value: string;
-  count?: number;
-};
-
-export const ToolbarChip = (props: ToolbarProps) => {
-  const { handleClick, removable, name, title, icon, isActive } = props;
-  const { removeFilter } = useFilterChange();
-
-  const handleRemove = (ev: MouseEvent) => {
-    ev.stopPropagation();
-    removeFilter(name);
-  };
-
-  return (
-    <Chips
-      className={`py-[6px] px-3 border !rounded-3xl flex flex-nowrap gap-1 justify-center items-center ${
-        isActive ? '!text-primary border-primary bg-[#DBE5FF]' : 'text-slate-600 border-slate-200 bg-white'
-      }`}
-      icon={icon}
-      onClick={handleClick}
-    >
-      <div className="flex flex-nowrap justify-center items-center gap-1">
-        {title}
-        {removable && (
-          <button onClick={handleRemove}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M7.99967 15.1663C4.04634 15.1663 0.833008 11.953 0.833008 7.99967C0.833008 4.04634 4.04634 0.833008 7.99967 0.833008C11.953 0.833008 15.1663 4.04634 15.1663 7.99967C15.1663 11.953 11.953 15.1663 7.99967 15.1663Z"
-                fill="white"
-              />
-              <path
-                d="M7.99967 15.1663C4.04634 15.1663 0.833008 11.953 0.833008 7.99967C0.833008 4.04634 4.04634 0.833008 7.99967 0.833008C11.953 0.833008 15.1663 4.04634 15.1663 7.99967C15.1663 11.953 11.953 15.1663 7.99967 15.1663ZM7.99967 1.83301C4.59967 1.83301 1.83301 4.59967 1.83301 7.99967C1.83301 11.3997 4.59967 14.1663 7.99967 14.1663C11.3997 14.1663 14.1663 11.3997 14.1663 7.99967C14.1663 4.59967 11.3997 1.83301 7.99967 1.83301Z"
-                fill="#3861FB"
-              />
-              <path
-                d="M6.11357 10.3869C5.9869 10.3869 5.86023 10.3402 5.76023 10.2402C5.5669 10.0469 5.5669 9.7269 5.76023 9.53357L9.53357 5.76023C9.7269 5.5669 10.0469 5.5669 10.2402 5.76023C10.4336 5.95357 10.4336 6.27357 10.2402 6.4669L6.4669 10.2402C6.37357 10.3402 6.24023 10.3869 6.11357 10.3869Z"
-                fill="#3861FB"
-              />
-              <path
-                d="M9.8869 10.3869C9.76023 10.3869 9.63357 10.3402 9.53357 10.2402L5.76023 6.4669C5.5669 6.27357 5.5669 5.95357 5.76023 5.76023C5.95357 5.5669 6.27357 5.5669 6.4669 5.76023L10.2402 9.53357C10.4336 9.7269 10.4336 10.0469 10.2402 10.2402C10.1402 10.3402 10.0136 10.3869 9.8869 10.3869Z"
-                fill="#3861FB"
-              />
-            </svg>
-          </button>
-        )}
-      </div>
-    </Chips>
-  );
-};
-
 export const MobileToolbar = () => {
-  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory, filters: filterItems } = useSearch();
+  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory } = useSearch();
   const city = useSearchStore(state => state.city);
   const { handleOpen: handleOpenFiltersModal, handleClose: handleCloseFiltersModal, modalProps: filtersModalProps } = useModal();
   const { handleOpen: handleOpenSortsModal, handleClose: handleCloseSortsModal, modalProps: sortsModalProps } = useModal();
+  const { handleOpen: handleOpenFreeturnModal, handleClose: handleCloseFreeturnModal, modalProps: freeturnModalProps } = useModal();
   const { handleOpen: handleOpenCategoryModal, handleClose: handleCloseCategoryModal, modalProps: categoryModalProps } = useModal();
-  const { handleOpen, handleClose, modalProps } = useModal();
   const { changeRoute } = useSearchRouting();
 
-  const { filters, handleChange: changeFilter } = useFilterChange();
+  const { filters } = useFilterChange();
 
   const orderItemsFormatted = useMemo(() => {
     return Object.entries(orderItems).map(([value, label]: any) => ({ title: label, value }));
   }, [orderItems]);
 
   const freeturnItemsFormatted = useMemo(() => {
-    const items = Object.entries(freeturnItems).map(([value, label]: any) => ({ title: label, value }));
-    return {
-      title: 'زمان نوبت',
-      name: 'freeturn',
-      type: 'radio',
-      items,
-    };
-  }, []);
+    return Object.entries(freeturnItems).map(([value, label]: any) => ({ title: label, value }));
+  }, [orderItems]);
 
   const handleRemoveAllFilters = () => {
     changeRoute({ previousQueries: false });
@@ -137,85 +69,9 @@ export const MobileToolbar = () => {
     ];
   };
 
-  const [selectedFilter, setSelectedFilter] = useState<ToolbarProps>(freeturnItemsFormatted);
-
-  const navFilters = useMemo(() => {
-    const selectedSort = orderItemsFormatted.find(item => item.value === filters['sortBy']);
-    const showFilters = [freeturnItemsFormatted, ...filterItems].filter(item => ['switch', 'radio'].includes(item.type));
-    const hasFilter = showFilters.filter(item => {
-      const query = filters[item.name];
-      if (!query) return false;
-      return (
-        (item.type === 'switch' && filters[item.name] === 'true') ||
-        (item.type === 'radio' && item.items.some(filterOption => filterOption.value === query))
-      );
-    });
-
-    const staticItems = [
-      {
-        title: hasFilter.length ? `${hasFilter.length} فیلتر` : 'فیلترها',
-        icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M6.168 7.90708C6.17908 7.91692 6.18954 7.92615 6.2 7.93723C6.864 8.61785 7.23015 9.51938 7.23015 10.4763V12.928L8.60615 12.1785C8.71446 12.1194 8.78154 12.0037 8.78154 11.8763V10.4689C8.78154 9.51569 9.144 8.61723 9.80185 7.94031L12.7785 4.77415C12.9711 4.56923 13.0769 4.30031 13.0769 4.01662V3.44062C13.0769 3.15508 12.8517 2.92308 12.576 2.92308H3.42462C3.14831 2.92308 2.92308 3.15508 2.92308 3.44062V4.01662C2.92308 4.30031 3.02892 4.56923 3.22154 4.77354L6.168 7.90708ZM7.01292 14.0006C6.88862 14.0006 6.76554 13.9674 6.65354 13.9009C6.43692 13.7717 6.30708 13.5434 6.30708 13.2898V10.4763C6.30708 9.77785 6.04677 9.12 5.57231 8.616C5.55815 8.60431 5.544 8.59138 5.53169 8.57785L2.54954 5.40677C2.19508 5.03015 2 4.536 2 4.01662V3.44062C2 2.64615 2.63938 2 3.42462 2H12.576C13.3606 2 14 2.64615 14 3.44062V4.01662C14 4.53538 13.8049 5.02892 13.4517 5.40615L10.4689 8.57785C9.97477 9.08738 9.70462 9.75754 9.70462 10.4689V11.8763C9.70462 12.3415 9.45292 12.7674 9.048 12.9889L7.34892 13.9145C7.24308 13.9717 7.128 14.0006 7.01292 14.0006Z"
-              className={hasFilter.length ? 'fill-primary' : 'fill-slate-400'}
-            />
-          </svg>
-        ),
-        isActive: !!hasFilter.length,
-        handleClick: handleOpenFiltersModal,
-        name: 'filters',
-      },
-      {
-        title: selectedSort?.title ?? 'مرتب سازی',
-        icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M4.79967 2.66699C5.16786 2.66699 5.46634 2.96547 5.46634 3.33366V10.5242L7.12827 8.86225C7.38862 8.6019 7.81073 8.6019 8.07108 8.86225C8.33143 9.1226 8.33143 9.54471 8.07108 9.80506L5.27108 12.6051C5.01073 12.8654 4.58862 12.8654 4.32827 12.6051L1.52827 9.80506C1.26792 9.54471 1.26792 9.1226 1.52827 8.86225C1.78862 8.6019 2.21073 8.6019 2.47108 8.86225L4.13301 10.5242V3.33366C4.13301 2.96547 4.43148 2.66699 4.79967 2.66699ZM7.06634 3.33366C7.06634 2.96547 7.36482 2.66699 7.73301 2.66699H13.333C13.7012 2.66699 13.9997 2.96547 13.9997 3.33366C13.9997 3.70185 13.7012 4.00033 13.333 4.00033H7.73301C7.36482 4.00033 7.06634 3.70185 7.06634 3.33366ZM8.66634 6.53366C8.66634 6.16547 8.96482 5.86699 9.33301 5.86699H13.333C13.7012 5.86699 13.9997 6.16547 13.9997 6.53366C13.9997 6.90185 13.7012 7.20033 13.333 7.20033H9.33301C8.96482 7.20033 8.66634 6.90185 8.66634 6.53366ZM10.6663 9.33366C10.6663 8.96547 10.9648 8.66699 11.333 8.66699H13.333C13.7012 8.66699 13.9997 8.96547 13.9997 9.33366C13.9997 9.70185 13.7012 10.0003 13.333 10.0003H11.333C10.9648 10.0003 10.6663 9.70185 10.6663 9.33366Z"
-              className={selectedSort ? 'fill-primary' : 'fill-slate-400'}
-            />
-          </svg>
-        ),
-        isActive: !!selectedSort,
-        handleClick: handleOpenSortsModal,
-        name: 'sortBy',
-      },
-    ];
-    const changedTitles = {
-      gender: 'جنسیت',
-      degree: 'میزان تخصص',
-      turn_type: 'نوع خدمت',
-    };
-    const dynamicFilters = showFilters
-      .map(filterOptions => {
-        const { type, name, title, items } = filterOptions;
-        const isActive = type === 'switch' ? filters[name] === 'true' : items.some(option => option.value === filters[name]);
-        const handleClick = () => {
-          if (type === 'switch' && !isActive) changeFilter(name, 'true');
-          else if (type === 'radio') {
-            setSelectedFilter(filterOptions);
-            handleOpen();
-          }
-        };
-        return {
-          name,
-          title: type === 'switch' || !isActive ? changedTitles[name] ?? title : items.find(item => item.value === filters[name])?.title,
-          isActive,
-          removable: isActive,
-          handleClick,
-        };
-      })
-      .sort((first, second) => +second.isActive - +first.isActive);
-    return [...staticItems, ...dynamicFilters];
-  }, [filters]);
-
   if (isLanding) {
     return (
-      <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
+      <div className="flex w-full overflow-auto md:hidden space-s-3 no-scroll p-4 border-y border-slate-200">
         {suggestionTags().map((chip, index) => (
           <Chips key={index} className="py-2 !rounded-md !text-black flex justify-center items-center" {...chip}>
             {chip.text}
@@ -227,14 +83,96 @@ export const MobileToolbar = () => {
 
   return (
     <>
-      <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
-        {navFilters.map((item, index) => (
-          <ToolbarChip
-            {...item}
-            key={index}
-            // handleClick={}
-          />
-        ))}
+      <div className="flex w-full overflow-auto rounded-md md:hidden space-s-3 no-scroll p-4 border-y border-slate-200">
+        <Chips
+          className="py-2 !rounded-md !text-black flex justify-center items-center"
+          icon={
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              data-v-9e94fcae=""
+              data-v-1d0c34d2=""
+              className=""
+              data-v-6bcd5181=""
+            >
+              <title data-v-9e94fcae="">icon</title>{' '}
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M6.39256 2.25C6.41294 2.25 6.43338 2.25 6.4539 2.25H17.5465L17.6079 2.25C18.5135 2.24996 19.2762 2.24992 19.8421 2.33146C20.4028 2.41226 21.0685 2.61224 21.3698 3.2831C21.671 3.95396 21.3783 4.58436 21.0661 5.05714C20.7511 5.53425 20.2444 6.10427 19.6427 6.78115L19.6019 6.827L16.2079 10.6453C15.5568 11.3777 15.3133 11.6585 15.1445 11.9693C15.0053 12.2255 14.9012 12.4992 14.835 12.7831C14.7547 13.1276 14.7502 13.4993 14.7502 14.4792V19C14.7502 20.5188 13.519 21.75 12.0002 21.75C10.4814 21.75 9.25021 20.5188 9.25021 19V14.4792C9.25021 13.4993 9.24568 13.1276 9.16539 12.7831C9.09922 12.4992 8.99514 12.2255 8.85597 11.9693C8.68711 11.6585 8.44358 11.3777 7.79256 10.6453L4.39852 6.827C4.38489 6.81167 4.37131 6.79639 4.35777 6.78116C3.75604 6.10428 3.24931 5.53425 2.9343 5.05714C2.62216 4.58436 2.32938 3.95396 2.63063 3.2831C2.93189 2.61224 3.59757 2.41226 4.15831 2.33146C4.72419 2.24992 5.48689 2.24996 6.39256 2.25ZM3.97616 3.92838C3.97547 3.92811 3.97804 3.9249 3.98597 3.91953C3.98083 3.92596 3.97686 3.92864 3.97616 3.92838ZM4.01371 3.90419C4.06214 3.88121 4.16591 3.84586 4.37224 3.81613C4.8179 3.75191 5.47051 3.75 6.4539 3.75H17.5465C18.5299 3.75 19.1825 3.75191 19.6282 3.81613C19.8345 3.84586 19.9383 3.88121 19.9867 3.90419C19.9717 3.95566 19.9292 4.05671 19.8143 4.23067C19.5663 4.60642 19.1341 5.09546 18.4808 5.83046L15.0867 9.64875C15.0665 9.67147 15.0466 9.69391 15.0269 9.71608C14.4558 10.3583 14.0877 10.7723 13.8264 11.2532C13.623 11.6276 13.4709 12.0277 13.3742 12.4427C13.25 12.9757 13.2501 13.5297 13.2502 14.3891C13.2502 14.4188 13.2502 14.4488 13.2502 14.4792V19C13.2502 19.6904 12.6906 20.25 12.0002 20.25C11.3099 20.25 10.7502 19.6904 10.7502 19V14.4792C10.7502 14.4488 10.7502 14.4188 10.7502 14.3891C10.7504 13.5297 10.7505 12.9757 10.6262 12.4427C10.5295 12.0277 10.3774 11.6276 10.174 11.2532C9.91275 10.7723 9.5446 10.3583 8.97354 9.71608C8.95383 9.69392 8.93388 9.67147 8.91368 9.64875L5.51964 5.83046C4.86631 5.09546 4.43417 4.60642 4.18608 4.23067C4.07122 4.0567 4.02871 3.95566 4.01371 3.90419ZM20.0243 3.92838C20.0236 3.92864 20.0196 3.92596 20.0145 3.91954C20.0224 3.9249 20.025 3.92811 20.0243 3.92838ZM19.9937 3.87327C19.9923 3.86516 19.9929 3.86041 19.9936 3.86007C19.9942 3.85972 19.9949 3.86378 19.9937 3.87327ZM4.00674 3.87327C4.00548 3.86378 4.00618 3.85972 4.00684 3.86007C4.00751 3.86041 4.00814 3.86516 4.00674 3.87327Z"
+                fill="currentColor"
+                data-v-9e94fcae=""
+              ></path>
+            </svg>
+          }
+          onClick={handleOpenFiltersModal}
+        >
+          جستجوی پیشرفته
+        </Chips>
+        <Chips
+          className="py-2 !rounded-md !text-black flex justify-center items-center"
+          icon={
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              data-v-552d4a1c=""
+              data-v-1d0c34d2=""
+              className=""
+              data-v-6bcd5181=""
+            >
+              <title data-v-552d4a1c="">icon</title>{' '}
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M17 2.25C15.4812 2.25 14.25 3.48122 14.25 5V6.75V9C14.25 9.41421 14.5858 9.75 15 9.75C15.4142 9.75 15.75 9.41421 15.75 9V7.5H18.25V9C18.25 9.41421 18.5858 9.75 19 9.75C19.4142 9.75 19.75 9.41421 19.75 9V6.75V5C19.75 3.48122 18.5188 2.25 17 2.25ZM18.25 5V6H15.75V5C15.75 4.30964 16.3096 3.75 17 3.75C17.6904 3.75 18.25 4.30964 18.25 5ZM7 5.25C7.41421 5.25 7.75 5.58579 7.75 6V16.1893L9.46967 14.4697C9.76256 14.1768 10.2374 14.1768 10.5303 14.4697C10.8232 14.7626 10.8232 15.2374 10.5303 15.5303L7.53033 18.5303C7.23744 18.8232 6.76256 18.8232 6.46967 18.5303L3.46967 15.5303C3.17678 15.2374 3.17678 14.7626 3.46967 14.4697C3.76256 14.1768 4.23744 14.1768 4.53033 14.4697L6.25 16.1893V6C6.25 5.58579 6.58579 5.25 7 5.25ZM14.25 13C14.25 12.5858 14.5858 12.25 15 12.25H19C19.2766 12.25 19.5307 12.4022 19.6613 12.6461C19.7918 12.89 19.7775 13.1859 19.624 13.416L16.4014 18.25H19C19.4142 18.25 19.75 18.5858 19.75 19C19.75 19.4142 19.4142 19.75 19 19.75H15C14.7234 19.75 14.4693 19.5978 14.3387 19.3539C14.2082 19.11 14.2225 18.8141 14.376 18.584L17.5986 13.75H15C14.5858 13.75 14.25 13.4142 14.25 13Z"
+                fill="currentColor"
+                data-v-552d4a1c=""
+              ></path>
+            </svg>
+          }
+          onClick={handleOpenSortsModal}
+        >
+          مرتب سازی:{' '}
+          {orderItemsFormatted.find(item => item.value === filters['sortBy'])?.title ??
+            orderItemsFormatted.find(item => item.value === 'clinic')?.title}
+        </Chips>
+        <Chips
+          className="py-2 !rounded-md !text-black flex justify-center items-center"
+          icon={
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              data-v-a5e1de1a=""
+              data-v-1d0c34d2=""
+              className=""
+              data-v-6bcd5181=""
+            >
+              <title data-v-a5e1de1a="">icon</title>{' '}
+              <path
+                d="M20 10V7C20 5.89543 19.1046 5 18 5H6C4.89543 5 4 5.89543 4 7V19C4 20.1046 4.89543 21 6 21H9M15 3V7M9 3V7M4 11H9M16 15.2V16.8875L16.9 17.9M20.5 17C20.5 19.4853 18.4853 21.5 16 21.5C13.5147 21.5 11.5 19.4853 11.5 17C11.5 14.5147 13.5147 12.5 16 12.5C18.4853 12.5 20.5 14.5147 20.5 17Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                data-v-a5e1de1a=""
+              ></path>
+            </svg>
+          }
+          onClick={handleOpenFreeturnModal}
+        >
+          نزدیک ترین نوبت:{' '}
+          {freeturnItemsFormatted.find(item => item.value === filters['freeturn'])?.title ??
+            freeturnItemsFormatted.find(item => item.value === 'all')?.title}
+        </Chips>
       </div>
       <Modal fullScreen title="فیلترها" {...filtersModalProps}>
         <div className="space-y-3 pb-36">
@@ -266,8 +204,8 @@ export const MobileToolbar = () => {
       <Modal title="مرتب سازی" {...sortsModalProps}>
         <RadioFilter items={orderItemsFormatted} name="sortBy" onChange={handleCloseSortsModal} />
       </Modal>
-      <Modal title={selectedFilter?.title} {...modalProps}>
-        <RadioFilter items={selectedFilter?.items ?? []} name={selectedFilter?.name} onChange={handleClose} />
+      <Modal title="نزدیک ترین نوبت" {...freeturnModalProps}>
+        <RadioFilter items={freeturnItemsFormatted} name="freeturn" onChange={handleCloseFreeturnModal} />
       </Modal>
     </>
   );

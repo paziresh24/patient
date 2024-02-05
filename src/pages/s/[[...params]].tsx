@@ -15,6 +15,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
+import MobileRowFilter from '@/modules/search/components/filters/rowFilter';
 import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
@@ -23,7 +24,7 @@ import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureValue, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
@@ -42,6 +43,7 @@ const Search = ({ host }: any) => {
   const shouldUseSearchViewEventRoutesList = useFeatureValue<{ routes: Array<string | null> }>('search:use-front-end-search-view-event', {
     routes: [],
   });
+  const shouldUseRowFilter = useFeatureIsOn('search:use-row-search');
 
   const {
     asPath,
@@ -139,7 +141,7 @@ const Search = ({ host }: any) => {
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
         <Suggestion key={asPath.toString()} overlay />
-        <MobileToolbar />
+        {shouldUseRowFilter ? <MobileRowFilter /> : <MobileToolbar />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
         <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-s-5">
