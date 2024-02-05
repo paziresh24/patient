@@ -29,8 +29,10 @@
   --plasmic-token-xl: var(--token-Ztbd0wnflLoW);
   --token-7DXtayCD4IZX: 1.5rem;
   --plasmic-token-2-xl: var(--token-7DXtayCD4IZX);
-  --token-GGIYwKrgzUBJ: var(--antd-colorSuccess);
-  --plasmic-token-system-success: var(--token-GGIYwKrgzUBJ);
+  --token-hWslDZ5dN9go: #f1f5f9;
+  --plasmic-token-slate-100: var(--token-hWslDZ5dN9go);
+  --token-YAfgsQuxALA0: #e2e8f0;
+  --plasmic-token-slate-200: var(--token-YAfgsQuxALA0);
 }
 
 .plasmic_tokens {

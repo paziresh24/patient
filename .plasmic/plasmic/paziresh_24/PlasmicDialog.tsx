@@ -219,18 +219,21 @@ function PlasmicDialog__RenderFunc(props: {
         (hasVariant($state, "noTrigger", "noTrigger") ? false : true)
           ? renderPlasmicSlot({
               defaultContents: (
-                <Button>
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__mtFns
-                    )}
-                  >
-                    {"Show dialog"}
-                  </div>
-                </Button>
+                <Button
+                  children2={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__mtFns
+                      )}
+                    >
+                      {"Show dialog"}
+                    </div>
+                  }
+                />
               ),
+
               value: args.trigger
             })
           : null

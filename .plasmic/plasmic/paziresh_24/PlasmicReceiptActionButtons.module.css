@@ -21,6 +21,11 @@
 .root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
   margin-top: var(--token-Bi0wtDhzOf2Z);
 }
+.roottype_visitOnline {
+  width: auto;
+  justify-self: flex-start;
+  display: inline-flex;
+}
 .freeBox__wMEqE {
   display: flex;
   position: relative;
