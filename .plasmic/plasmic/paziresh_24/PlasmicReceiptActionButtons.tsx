@@ -100,12 +100,14 @@ export type PlasmicReceiptActionButtons__ArgsType = {
   bookDetailsData?: any;
   specialities?: any;
   showSubstituteDoctorAlert?: boolean;
+  currentUserId?: string;
 };
 type ArgPropType = keyof PlasmicReceiptActionButtons__ArgsType;
 export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
   "bookDetailsData",
   "specialities",
-  "showSubstituteDoctorAlert"
+  "showSubstituteDoctorAlert",
+  "currentUserId"
 );
 
 export type PlasmicReceiptActionButtons__OverridesType = {
@@ -124,6 +126,7 @@ export interface DefaultReceiptActionButtonsProps {
   bookDetailsData?: any;
   specialities?: any;
   showSubstituteDoctorAlert?: boolean;
+  currentUserId?: string;
   type?: SingleChoiceArg<"visitOnline">;
   className?: string;
 }
@@ -1930,7 +1933,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     hasGap={true}
                     action={(() => {
                       try {
-                        return `https://n8n.paziresh24.com/webhook/doctordelayfollowup`;
+                        return `https://apigw.paziresh24.com/v1/support/doctordelayfollowup`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -2045,7 +2048,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       data-plasmic-name={"textInput"}
                       data-plasmic-override={overrides.textInput}
                       className={classNames("__wab_instance", sty.textInput)}
-                      name={"book_id"}
+                      name={"book-id"}
                       onChange={(...eventArgs) => {
                         generateStateOnChangeProp($state, [
                           "textInput",
