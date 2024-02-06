@@ -14,8 +14,9 @@ import AdvancedSearch from '../advancedSearch';
 import RadioFilter from '../advancedSearch/sections/radio';
 import MobileCategories from '../mobileCategories';
 import { freeturnItems } from '../sort';
+import sortBy from "lodash/sortBy";
 
-interface FilterProps {
+export interface FilterProps {
   title: string;
   icon?: ReactNode;
   isActive?: boolean;
@@ -31,7 +32,7 @@ type FilterItems = {
   count?: number;
 };
 
-const changedTitles = {
+const changedTitles: { [key: string]: string } = {
   gender: 'جنسیت',
   degree: 'میزان تخصص',
   turn_type: 'نوع خدمت',
@@ -145,7 +146,7 @@ export const MobileRowFilter = () => {
 
   const [selectedFilter, setSelectedFilter] = useState<FilterProps>(freeturnItemsFormatted);
 
-  const navFilters = useMemo(() => {
+  const navFilters: FilterProps[] = useMemo(() => {
     const selectedSort = orderItemsFormatted.find(item => item.value === filters['sortBy']);
     const showFilters = [freeturnItemsFormatted, ...filterItems].filter(item => ['switch', 'radio'].includes(item.type));
     const hasFilter = showFilters.filter(item => {
@@ -192,10 +193,11 @@ export const MobileRowFilter = () => {
       },
     ];
 
-    const dynamicFilters = showFilters
+    const dynamicFilters = sortBy(showFilters
       .map(filterOptions => {
         const { type, name, title, items } = filterOptions;
         const isActive = type === 'switch' ? filters[name] === 'true' : items.some(option => option.value === filters[name]);
+
         const handleClick = () => {
           if (type === 'switch' && !isActive) changeFilter(name, 'true');
           else if (type === 'radio') {
@@ -203,6 +205,7 @@ export const MobileRowFilter = () => {
             handleOpen();
           }
         };
+
         return {
           name,
           title: type === 'switch' || !isActive ? changedTitles[name] ?? title : items.find(item => item.value === filters[name])?.title,
@@ -210,8 +213,7 @@ export const MobileRowFilter = () => {
           removable: isActive,
           handleClick,
         };
-      })
-      .sort((first, second) => +second.isActive - +first.isActive);
+      }), item => !item.isActive);
     return [...staticFilters, ...dynamicFilters];
   }, [filters]);
 
@@ -231,10 +233,7 @@ export const MobileRowFilter = () => {
     <>
       <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
         {navFilters.map((item, index) => (
-          <FilterChip
-            key={index}
-            {...item}
-          />
+          <FilterChip key={index} {...item} />
         ))}
       </div>
       <Modal fullScreen title="فیلترها" {...filtersModalProps}>
