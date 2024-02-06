@@ -232,9 +232,8 @@ export const MobileRowFilter = () => {
       <div className="p-4 border-y border-slate-200 flex w-full overflow-auto md:hidden space-s-2 no-scroll">
         {navFilters.map((item, index) => (
           <FilterChip
-            {...item}
             key={index}
-            // handleClick={}
+            {...item}
           />
         ))}
       </div>

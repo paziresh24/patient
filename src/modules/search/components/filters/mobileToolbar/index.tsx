@@ -83,7 +83,7 @@ export const MobileToolbar = () => {
 
   return (
     <>
-      <div className="flex w-full overflow-auto rounded-md md:hidden space-s-3 no-scroll p-4 border-y border-slate-200">
+      <div className="flex w-full overflow-auto md:hidden space-s-3 no-scroll p-4 border-y border-slate-200">
         <Chips
           className="py-2 !rounded-md !text-black flex justify-center items-center"
           icon={
