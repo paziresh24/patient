@@ -142,7 +142,6 @@ export const Suggestion = (props: SuggestionProps) => {
               lat,
               lon: long,
             },
-            previousQueries: false,
           });
       });
       return;
