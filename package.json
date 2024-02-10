@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' node server.js",
+    "dev": "cross-env PLASMIC_PREVIEW=true NODE_OPTIONS='--inspect' node server.js",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "next start",
@@ -40,7 +40,6 @@
     "chart.js": "3.9.1",
     "clsx": "^1.1.1",
     "cookies-next": "2.1.1",
-    "dotenv": "16.4.1",
     "eventsource": "2.0.2",
     "firebase": "10.4.0",
     "fslightbox-react": "1.6.3",

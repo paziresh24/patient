@@ -6,6 +6,7 @@ import ErrorBoundary from '../components/layouts/errorBoundary';
 import { Components } from './components';
 import { getFeatures } from './features';
 const { publicRuntimeConfig } = config();
+import pick from 'lodash/pick';
 
 interface FragmentProps {
   name: string;
@@ -25,12 +26,12 @@ export const Fragment = ({ name, variants, props }: FragmentProps) => {
           <PlasmicComponent
             component={name}
             componentProps={{
-              'data-fragment-component-id': (Components as any)[name].id,
+              'data-fragment-component-id': (Components as any)?.[name]?.id,
               'data-fragment-component': name,
               'data-fragment-project-id': publicRuntimeConfig.PLASMIC_PROJECT_ID,
+              variants,
               ...features,
               ...props,
-              variants,
             }}
           />
         </PlasmicRootProvider>
@@ -38,15 +39,14 @@ export const Fragment = ({ name, variants, props }: FragmentProps) => {
     );
   }
 
-  const { Component, id } = (Components as any)?.[name] ?? { Component: <div>Error</div>, id: '' };
-
+  const { Component, id, propsAllowed } = (Components as any)?.[name] ?? { Component: <div>Error</div>, id: '', propsAllowed: [] };
   return (
     <ErrorBoundary>
       <Component
         data-fragment-component-id={id}
         data-fragment-project-id={publicRuntimeConfig.PLASMIC_PROJECT_ID}
         data-fragment-component={name}
-        {...{ ...features, ...props, ...variants }}
+        {...{ ...pick({ ...props, ...features }, propsAllowed ?? []), ...variants }}
       />
     </ErrorBoundary>
   );
