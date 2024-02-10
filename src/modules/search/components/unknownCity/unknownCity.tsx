@@ -12,15 +12,17 @@ import { useSearchStore } from '../../store/search';
 
 export const UnknownCity = () => {
   const setCity = useSearchStore(state => state.setCity);
+  const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const { changeRoute } = useSearchRouting();
   const isWebView = useWebView();
   const city = useSearchStore(state => state.city);
-  const { searchCity } = useSearch();
+  const { searchCity, selectedFilters } = useSearch();
   const { handleOpen, handleClose, modalProps } = useModal();
   const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
 
   useEffect(() => {
     !isWebView && handleCheckUserCity();
+    if(selectedFilters.text) setUserSearchValue(selectedFilters.text as string)
     if (!isWebView && isEmpty(currentCity) && searchCity) {
       setCity(searchCity);
     }

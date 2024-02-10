@@ -5,7 +5,6 @@ import useTranslation from 'next-translate/useTranslation';
 import { useSearchStore } from '../../store/search';
 import CitySelect from './suggestionAtoms/citySelect';
 import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
-import { useSearch } from '../../hooks/useSearch';
 
 interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
@@ -21,7 +20,6 @@ export const SearchBar = (props: SearchBarProps) => {
   const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, onChangeCity, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
-  const { selectedFilters } = useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const customize = useCustomize(state => state.customize);
 
@@ -37,7 +35,7 @@ export const SearchBar = (props: SearchBarProps) => {
         onClick={onClickSearchInput}
         onChange={e => setUserSearchValue(e.target.value)}
         onClear={() => setUserSearchValue('')}
-        value={userSearchValue || selectedFilters.text}
+        value={userSearchValue}
         showBackButton={isOpenSuggestion}
         clickBackButton={onClickBackButton}
         clikSearchButton={() => onEnter && onEnter(userSearchValue)}
