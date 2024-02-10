@@ -8,6 +8,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
+import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
 import RecentSearch from '@/modules/search/view/recentSearch';
@@ -121,13 +122,14 @@ const Home = () => {
         </main>
       )}
       {appHomeType === 'SUGGESTION' && (
-        <main className="flex flex-col items-center justify-center flex-grow w-full mx-auto space-y-6 bg-white pb-28 md:w-96">
+        <main className="flex flex-col items-center justify-center flex-grow w-full pb-20 mx-auto space-y-6 bg-white md:w-96">
           <Logo as="h1" className="text-2xl md:text-3xl" width={55} />
 
           <div className="flex justify-center w-full px-4">
             <Suggestion />
           </div>
           <div className="flex justify-center w-full px-4">{recent.length > 0 && <RecentSearch />}</div>
+          <OnlineVisitPromote />
         </main>
       )}
     </>
