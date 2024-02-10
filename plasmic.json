@@ -476,6 +476,45 @@
           "cssFilePath": "plasmic/paziresh_24/PlasmicClaim.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "pggD1apWa_wW",
+          "name": "Activity",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicActivity.tsx",
+          "importSpec": {
+            "modulePath": "Activity.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicActivity.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "7pBiPtIJMz6E",
+          "name": "Tooltip",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicTooltip.tsx",
+          "importSpec": {
+            "modulePath": "Tooltip.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicTooltip.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "q3FGMz6XNu9L",
+          "name": "Services",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicServices.tsx",
+          "importSpec": {
+            "modulePath": "Services.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicServices.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -588,6 +627,46 @@
           "id": "rNlcBlswymjS",
           "name": "Icon18Icon",
           "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon18.tsx"
+        },
+        {
+          "id": "4RsTY71YqzEZ",
+          "name": "Icon19Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon19.tsx"
+        },
+        {
+          "id": "uUHYUjZLzaVg",
+          "name": "Icon20Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon20.tsx"
+        },
+        {
+          "id": "szEV5ojPpvII",
+          "name": "Icon21Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon21.tsx"
+        },
+        {
+          "id": "-KwzHfv-9ot5",
+          "name": "Icon22Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon22.tsx"
+        },
+        {
+          "id": "WqDEZH1sW0Ay",
+          "name": "EitaasvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Eitaasvg.tsx"
+        },
+        {
+          "id": "aiEdwD29mrY6",
+          "name": "WhatsappsvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Whatsappsvg.tsx"
+        },
+        {
+          "id": "0nIlGiQv_m-P",
+          "name": "Icon23Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon23.tsx"
+        },
+        {
+          "id": "bFoMwbPekE8y",
+          "name": "Icon24Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon24.tsx"
         }
       ],
       "images": [],

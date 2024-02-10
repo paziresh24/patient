@@ -315,18 +315,10 @@ const DoctorProfile = ({
           </nav>
 
           <div className="flex flex-col w-full space-y-3 md:hidden">
-            {aside(profileData)
+            {aside({ ...profileData, fragmentComponents })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
-                <Section
-                  key={index}
-                  title={section?.title ?? ''}
-                  {...{
-                    id: section.id,
-                    ActionButton: section.ActionButto,
-                    dataAttributes: section?.dataAttributes,
-                  }}
-                >
+                <Section key={index} {...section}>
                   {section.children(section?.function?.())}
                 </Section>
               ))}
@@ -341,11 +333,11 @@ const DoctorProfile = ({
             ))}
         </section>
 
-        <aside className="flex-col hidden w-full space-y-3 overflow-hidden md:flex md:basis-5/12">
-          {aside(profileData)
+        <aside className="flex-col hidden w-full space-y-3 md:flex md:basis-5/12">
+          {aside({ ...profileData, fragmentComponents })
             .filter(({ isShow }: any) => Boolean(isShow))
             .map((section: any, index: number) => (
-              <Section key={index} title={section?.title ?? ''} {...{ id: section.id, ActionButton: section.ActionButton }}>
+              <Section key={index} {...section}>
                 {section.children(section?.function?.())}
               </Section>
             ))}

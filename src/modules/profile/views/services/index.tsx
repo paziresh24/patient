@@ -1,10 +1,10 @@
 import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import { Fragment } from '@/common/fragment';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
-import humanizeTime from '@/common/utils/humanizeTime';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
@@ -13,11 +13,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-const OnlineVisitWrapper = dynamic(() => import('./onlineVisitWrapper'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="198px" rounded="lg" />;
-  },
-});
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -37,6 +32,7 @@ export const Services = ({
   slug,
   onlineVisit,
   waitingTimeInfo,
+  profileData,
 }: {
   id: string;
   expertises: any;
@@ -45,10 +41,9 @@ export const Services = ({
   slug: string;
   onlineVisit: any;
   waitingTimeInfo: any;
+  profileData: any;
 }) => {
   const router = useRouter();
-  const messengers = useFeatureValue<any>('channeldescription', {});
-  const doctorMessenger = uniqMessengers(onlineVisit?.channels, Object.keys(messengers));
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
@@ -96,32 +91,8 @@ export const Services = ({
         {onlineVisit.enabled &&
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any) => (
-              <OnlineVisitWrapper
-                key={service.id}
-                channelType={doctorMessenger?.length ? doctorMessenger : ['phone']}
-                title="همین الان آنلاین ویزیت شوید"
-                price={service.free_price}
-                duration={
-                  expertises.group_expertises[0].id === 21 || expertises.group_expertises[0].id === 47
-                    ? humanizeTime(service.duration)
-                    : undefined
-                }
-                doctorId={doctor.id}
-                waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id === CENTERS.CONSULT) ?? {}}
-                slug={slug}
-                fullName={doctor.display_name}
-                id={service.id}
-                userCenterId={centers?.find((center: any) => center.id === CENTERS.CONSULT)?.user_center_id}
-                city={{
-                  name: centers[0].city,
-                  slug: doctor.city_en_slug,
-                }}
-                expertise={{
-                  name: expertises.group_expertises?.[0]?.name,
-                  slug: expertises.group_expertises?.[0]?.en_slug,
-                }}
-              />
+            ?.services?.map((service: any, index: number) => (
+              <Fragment key={index} name="Services" props={{ ...profileData, service }} variants={{ type: 'onlineVisit' }} />
             ))}
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence

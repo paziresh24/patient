@@ -172,6 +172,23 @@ function PlasmicClaim__RenderFunc(props: {
         <Button
           data-plasmic-name={"button"}
           data-plasmic-override={overrides.button}
+          children2={
+            <React.Fragment>
+              {(() => {
+                try {
+                  return `من ${$props.information?.display_name} هستم`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "\u0645\u0646 \u062d\u0633\u06cc\u0646 \u062e\u06cc\u0631\u0627\u0646\u062f\u06cc\u0634 \u0647\u0633\u062a\u0645";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          }
           className={classNames("__wab_instance", sty.button)}
           onClick={async event => {
             const $steps = {};
@@ -248,23 +265,8 @@ function PlasmicClaim__RenderFunc(props: {
             }
           }}
           outline={true}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return `من ${$props.information?.display_name} هستم`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "\u0645\u0646 \u062d\u0633\u06cc\u0646 \u062e\u06cc\u0631\u0627\u0646\u062f\u06cc\u0634 \u0647\u0633\u062a\u0645";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </Button>
+        />
+
         <div
           className={classNames(
             projectcss.all,

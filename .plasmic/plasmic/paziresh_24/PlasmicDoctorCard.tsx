@@ -350,6 +350,31 @@ function PlasmicDoctorCard__RenderFunc(props: {
       <Button
         data-plasmic-name={"button"}
         data-plasmic-override={overrides.button}
+        children2={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__wB6R
+            )}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.primaryButtonName;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "Button";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </div>
+        }
         className={classNames("__wab_instance", sty.button)}
         loading={(() => {
           try {
@@ -385,31 +410,7 @@ function PlasmicDoctorCard__RenderFunc(props: {
             ];
           }
         }}
-      >
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__wB6R
-          )}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.primaryButtonName;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "Button";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </div>
-      </Button>
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
