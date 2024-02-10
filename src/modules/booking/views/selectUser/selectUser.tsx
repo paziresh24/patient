@@ -18,10 +18,11 @@ interface SelectUserProps {
   onSelect: (user: any) => void;
   className?: string;
   shouldShowMessengers: boolean;
+  loading?: boolean;
 }
 
 export const SelectUser = (props: SelectUserProps) => {
-  const { onSelect, className, shouldShowMessengers } = props;
+  const { onSelect, className, shouldShowMessengers, loading } = props;
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const isUserPending = useUserInfoStore(state => state.pending);
@@ -95,6 +96,7 @@ export const SelectUser = (props: SelectUserProps) => {
         {isSuccess && (
           <>
             <UserCard
+              loading={loading}
               userId={userInfo.id ?? ''}
               name={userInfo.name ?? ''}
               family={userInfo.family ?? ''}
@@ -110,6 +112,7 @@ export const SelectUser = (props: SelectUserProps) => {
             />
             {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
+                loading={loading}
                 key={item.id}
                 userId={item.id}
                 name={item.name}
