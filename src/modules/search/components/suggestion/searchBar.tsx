@@ -8,6 +8,7 @@ import { SearchInput, SearchInputProps } from './suggestionAtoms/searchInput';
 
 interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
   isOpenSuggestion?: boolean;
+  isGPSLoading: boolean;
   onClickSearchInput?: () => void;
   onClickBackButton?: () => void;
   onEnter?: (text: string) => void;
@@ -17,7 +18,7 @@ interface SearchBarProps extends Omit<SearchInputProps, 'className'> {
 
 export const SearchBar = (props: SearchBarProps) => {
   const { t } = useTranslation('search');
-  const { isOpenSuggestion, onClickSearchInput, onClickBackButton, onEnter, className, onChangeCity, ...rest } = props;
+  const { isOpenSuggestion, isGPSLoading, onClickSearchInput, onClickBackButton, onEnter, className, onChangeCity, ...rest } = props;
   const city = useSearchStore(state => state.city);
   const userSearchValue = useSearchStore(state => state.userSearchValue);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
@@ -46,7 +47,7 @@ export const SearchBar = (props: SearchBarProps) => {
       {customize.showSelectCityInSuggestion && (
         <>
           <Divider orientation="vertical" height="2rem" />
-          <CitySelect onChange={onChangeCity} city={city} key={city?.name} />
+          <CitySelect isGPSLoading={isGPSLoading} onChange={onChangeCity} city={city} key={city?.name} />
         </>
       )}
     </div>

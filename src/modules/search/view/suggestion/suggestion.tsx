@@ -13,6 +13,8 @@ import suggestionEvents from '../../functions/suggestionEvents';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
 import { Section } from '../../types/suggestion';
+import toast from 'react-hot-toast';
+
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
@@ -122,29 +124,37 @@ export const Suggestion = (props: SuggestionProps) => {
     }
   }, [searchSuggestion.data, isOpenSuggestion]);
 
+  const [isGPSLoading, setIsGPSLoading] = useState(false);
   const onChangeCity = (city: any) => {
     setCity({
       ...city,
     });
     if (city.is_aroundme) {
-      navigator.geolocation.getCurrentPosition(position => {
-        let lat = position.coords.latitude;
-        let long = position.coords.longitude;
-        setGeoLocation({
-          lat,
-          lon: long,
-        });
-        router.pathname.startsWith('/s/') &&
-          changeRoute({
-            params: { city: 'ir' },
-            query: {
-              ...(router.query.city_id && { city_id: city.id }),
-              lat,
-              lon: long,
-            },
-            previousQueries: false,
+      setIsGPSLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          setIsGPSLoading(false);
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+          setGeoLocation({
+            lat,
+            lon: long,
           });
-      });
+          router.pathname.startsWith('/s/') &&
+            changeRoute({
+              params: { city: 'ir' },
+              query: {
+                ...(router.query.city_id && { city_id: city.id }),
+                lat,
+                lon: long,
+              },
+            });
+        },
+        () => {
+          setIsGPSLoading(false);
+          toast.error('خطا در دریافت موقعیت مکانی');
+        },
+      );
       return;
     }
     setGeoLocation(undefined);
@@ -165,6 +175,7 @@ export const Suggestion = (props: SuggestionProps) => {
       )}
       <SearchBar
         isOpenSuggestion={isOpenSuggestion}
+        isGPSLoading={isGPSLoading}
         onClickSearchInput={openSuggestionContent}
         onClickBackButton={clickBackButton}
         onChangeCity={onChangeCity}
@@ -183,6 +194,7 @@ export const Suggestion = (props: SuggestionProps) => {
               <SearchBar
                 onEnter={handleRedirectToSearch}
                 isOpenSuggestion={isOpenSuggestion}
+                isGPSLoading={isGPSLoading}
                 onClickBackButton={clickBackButton}
                 onChangeCity={onChangeCity}
                 className="!border-primary"
