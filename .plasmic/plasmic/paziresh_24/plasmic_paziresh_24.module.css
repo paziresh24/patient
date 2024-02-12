@@ -61,12 +61,12 @@
   --mixin-0xUtW9kRwnV4_text-overflow: clip;
   --mixin-A6j7YAiuJ0p5_color: #000000;
   --mixin-A6j7YAiuJ0p5_font-weight: 700;
-  --mixin-A6j7YAiuJ0p5_font-size: 64px;
+  --mixin-A6j7YAiuJ0p5_font-size: var(--token-_Hg225P3bBp0);
   --mixin-A6j7YAiuJ0p5_line-height: 1;
   --mixin-A6j7YAiuJ0p5_letter-spacing: -1px;
   --mixin-A6j7YAiuJ0p5_white-space: pre-wrap;
   --mixin-5yj840HgdLNI_color: #000000;
-  --mixin-5yj840HgdLNI_font-size: 48px;
+  --mixin-5yj840HgdLNI_font-size: var(--token-_Hg225P3bBp0);
   --mixin-5yj840HgdLNI_font-weight: 700;
   --mixin-5yj840HgdLNI_letter-spacing: -0.5px;
   --mixin-5yj840HgdLNI_line-height: 1.1;
@@ -74,12 +74,12 @@
   --mixin-pjGhNH0Jwag8_color: #0070f3;
   --mixin-pjGhNH0Jwag8_white-space: pre-wrap;
   --mixin-slRwt18GBWo1_color: #000000;
-  --mixin-slRwt18GBWo1_font-size: 32px;
+  --mixin-slRwt18GBWo1_font-size: var(--token-_Hg225P3bBp0);
   --mixin-slRwt18GBWo1_font-weight: 600;
   --mixin-slRwt18GBWo1_line-height: 1.2;
   --mixin-slRwt18GBWo1_white-space: pre-wrap;
   --mixin-nABhqkEYMuuM_color: #000000;
-  --mixin-nABhqkEYMuuM_font-size: 24px;
+  --mixin-nABhqkEYMuuM_font-size: var(--token-_Hg225P3bBp0);
   --mixin-nABhqkEYMuuM_font-weight: 600;
   --mixin-nABhqkEYMuuM_line-height: 1.3;
   --mixin-nABhqkEYMuuM_white-space: pre-wrap;
@@ -154,12 +154,12 @@
   --mixin-EeBjysI0-dMD_list-style-type: decimal;
   --mixin-EeBjysI0-dMD_white-space: pre-wrap;
   --mixin-PSMR3dODC8SL_color: #000000;
-  --mixin-PSMR3dODC8SL_font-size: 20px;
+  --mixin-PSMR3dODC8SL_font-size: var(--token-_Hg225P3bBp0);
   --mixin-PSMR3dODC8SL_font-weight: 600;
   --mixin-PSMR3dODC8SL_line-height: 1.5;
   --mixin-PSMR3dODC8SL_white-space: pre-wrap;
   --mixin-vr0byBX05w9p_color: #000000;
-  --mixin-vr0byBX05w9p_font-size: 16px;
+  --mixin-vr0byBX05w9p_font-size: var(--token-_Hg225P3bBp0);
   --mixin-vr0byBX05w9p_font-weight: 600;
   --mixin-vr0byBX05w9p_line-height: 1.5;
   --mixin-vr0byBX05w9p_white-space: pre-wrap;
@@ -167,6 +167,7 @@
   --mixin-SveUmMfHUbMs_white-space: pre-wrap;
   --mixin-_bvXRqkSE1Dv_white-space: pre-wrap;
   --mixin-SKcRuGe6Sm-Z_white-space: pre-wrap;
+  --mixin-5cBKQ2w-OWPE_white-space: pre-wrap;
 }
 
 .plasmic_mixins {
@@ -695,4 +696,11 @@ p:where(.root_reset.p),
 :where(.root_reset .__wab_expr_html_text) p,
 :where(.root_reset_tags) p,
 p:where(.root_reset_tags) {
+}
+
+:where(.root_reset) h2:where(.h2):hover,
+h2:where(.root_reset.h2):hover,
+:where(.root_reset .__wab_expr_html_text) h2:hover,
+:where(.root_reset_tags) h2:hover,
+h2:where(.root_reset_tags):hover {
 }

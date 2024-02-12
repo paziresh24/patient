@@ -783,12 +783,10 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       const actionArgs = {
                         destination: (() => {
                           try {
-                            return (() => {
-                              return (
-                                "https://support.paziresh24.com/mrcreator?book-id=" +
-                                $props.bookDetailsData.book_id
-                              );
-                            })();
+                            return (
+                              "https://support.paziresh24.com/mrcreator?book-id=" +
+                              $props.bookDetailsData.book_id
+                            );
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
