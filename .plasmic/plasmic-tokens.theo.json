@@ -61,16 +61,6 @@
       }
     },
     {
-      "name": "System: Success",
-      "type": "color",
-      "value": "var(--antd-colorSuccess)",
-      "category": "color",
-      "meta": {
-        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
-        "id": "GGIYwKrgzUBJ"
-      }
-    },
-    {
       "name": "base",
       "type": "fontsize",
       "value": "1rem",
@@ -118,6 +108,26 @@
       "meta": {
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
         "id": "iu_TCQ9qnuon"
+      }
+    },
+    {
+      "name": "slate-100",
+      "type": "color",
+      "value": "#F1F5F9",
+      "category": "color",
+      "meta": {
+        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+        "id": "hWslDZ5dN9go"
+      }
+    },
+    {
+      "name": "slate-200",
+      "type": "color",
+      "value": "#E2E8F0",
+      "category": "color",
+      "meta": {
+        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+        "id": "YAfgsQuxALA0"
       }
     },
     {
