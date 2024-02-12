@@ -4,29 +4,19 @@ import AddIcon from '@/common/components/icons/add';
 import { Fragment } from '@/common/fragment';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 
 const { publicRuntimeConfig } = config();
 
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const ActivityWrapper = dynamic(() => import('./activity/activityWrapper'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="8rem" rounded="lg" />;
-  },
-});
 const Biography = dynamic(() => import('./biography'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="8rem" rounded="lg" />;
-  },
-});
-const OwnPage = dynamic(() => import('./ownPage'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
   },
@@ -61,7 +51,17 @@ export const sections = (data: any) => {
     fragmentComponents,
   } = data;
 
-  const profileData = pick(data, ['information', 'centers', 'expertises', 'feedbacks', 'media', 'history', 'symptomes', 'seo']);
+  const profileData = pick(data, [
+    'information',
+    'centers',
+    'expertises',
+    'feedbacks',
+    'media',
+    'history',
+    'symptomes',
+    'onlineVisit',
+    'seo',
+  ]);
 
   return [
     // About
@@ -119,18 +119,9 @@ export const sections = (data: any) => {
     },
     // Activity
     {
-      title: `فعالیت ها`,
-      isShow: customize.showActivityProfile,
-      function: () => {
-        return {
-          history,
-          onlineVisitEnabled: onlineVisit.enabled,
-          displayName: information.display_name,
-          onlineVisitUserCenterId: centers?.find((center: { id: string }) => center.id === CENTERS.CONSULT)?.user_center_id,
-          slug: seo.slug,
-        };
-      },
-      children: (props: any) => <ActivityWrapper className="bg-white md:rounded-lg" {...props} />,
+      isShow: customize?.showActivityProfile,
+      noWrapper: true,
+      children: () => <Fragment name="Activity" props={{ ...profileData }} />,
     },
     // Waiting Time Statistics
     {

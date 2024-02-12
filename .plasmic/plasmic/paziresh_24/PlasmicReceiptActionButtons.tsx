@@ -65,7 +65,6 @@ import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import { useScreenVariants as useScreenVariantsce5BTtZuA7Fm } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: ce5BTtZuA7fm/globalVariant
 
@@ -100,11 +99,15 @@ export const PlasmicReceiptActionButtons__VariantProps =
 export type PlasmicReceiptActionButtons__ArgsType = {
   bookDetailsData?: any;
   specialities?: any;
+  showSubstituteDoctorAlert?: boolean;
+  currentUserId?: string;
 };
 type ArgPropType = keyof PlasmicReceiptActionButtons__ArgsType;
 export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
   "bookDetailsData",
-  "specialities"
+  "specialities",
+  "showSubstituteDoctorAlert",
+  "currentUserId"
 );
 
 export type PlasmicReceiptActionButtons__OverridesType = {
@@ -122,6 +125,8 @@ export type PlasmicReceiptActionButtons__OverridesType = {
 export interface DefaultReceiptActionButtonsProps {
   bookDetailsData?: any;
   specialities?: any;
+  showSubstituteDoctorAlert?: boolean;
+  currentUserId?: string;
   type?: SingleChoiceArg<"visitOnline">;
   className?: string;
 }
@@ -148,7 +153,16 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          showSubstituteDoctorAlert: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -351,9 +365,82 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
               })}
             >
               <Button
+                children2={
+                  <React.Fragment>
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__cZKzi
+                      )}
+                    >
+                      {
+                        "\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631"
+                      }
+                    </div>
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text___3T58C
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return (() => {
+                              function channelName(channel) {
+                                if (channel === "eitaa") return "ایتا";
+                                if (channel === "whatsapp") return "واتساپ";
+                              }
+                              return channelName(
+                                $props.bookDetailsData
+                                  .selected_online_visit_channel.type
+                              );
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  </React.Fragment>
+                }
                 className={classNames("__wab_instance", sty.button___4PRmJ)}
                 onClick={async event => {
                   const $steps = {};
+
+                  $steps["sendEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return window.paziresh24
+                              ?.logger("booking")
+                              .sendEvent({
+                                group: "link-visit-online",
+                                type: $props.bookDetailsData
+                                  .selected_online_visit_channel.type
+                              });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendEvent"] != null &&
+                    typeof $steps["sendEvent"] === "object" &&
+                    typeof $steps["sendEvent"].then === "function"
+                  ) {
+                    $steps["sendEvent"] = await $steps["sendEvent"];
+                  }
 
                   $steps["goToPage"] = true
                     ? (() => {
@@ -395,51 +482,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                     $steps["goToPage"] = await $steps["goToPage"];
                   }
                 }}
-              >
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__cZKzi
-                  )}
-                >
-                  {
-                    "\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631"
-                  }
-                </div>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___3T58C
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return (() => {
-                          function channelName(channel) {
-                            if (channel === "eitaa") return "ایتا";
-                            if (channel === "whatsapp") return "واتساپ";
-                          }
-                          return channelName(
-                            $props.bookDetailsData.selected_online_visit_channel
-                              .type
-                          );
-                        })();
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </div>
-              </Button>
+              />
+
               {(() => {
                 try {
                   return $props.bookDetailsData.doctor.online_visit_channels.some(
@@ -456,6 +500,19 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 }
               })() ? (
                 <Button
+                  children2={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__p3Q8E
+                      )}
+                    >
+                      {
+                        "\u062a\u0645\u0627\u0633 \u0628\u0627 \u067e\u0632\u0634\u06a9"
+                      }
+                    </div>
+                  }
                   className={classNames("__wab_instance", sty.button__zsQjd)}
                   loading={(() => {
                     try {
@@ -473,7 +530,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   onClick={async event => {
                     const $steps = {};
 
-                    $steps["updateSecureCallLoading2"] = true
+                    $steps["startLoading"] = true
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -500,17 +557,14 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["updateSecureCallLoading2"] != null &&
-                      typeof $steps["updateSecureCallLoading2"] === "object" &&
-                      typeof $steps["updateSecureCallLoading2"].then ===
-                        "function"
+                      $steps["startLoading"] != null &&
+                      typeof $steps["startLoading"] === "object" &&
+                      typeof $steps["startLoading"].then === "function"
                     ) {
-                      $steps["updateSecureCallLoading2"] = await $steps[
-                        "updateSecureCallLoading2"
-                      ];
+                      $steps["startLoading"] = await $steps["startLoading"];
                     }
 
-                    $steps["runCode"] = true
+                    $steps["_function"] = true
                       ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
@@ -536,11 +590,11 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["runCode"] != null &&
-                      typeof $steps["runCode"] === "object" &&
-                      typeof $steps["runCode"].then === "function"
+                      $steps["_function"] != null &&
+                      typeof $steps["_function"] === "object" &&
+                      typeof $steps["_function"].then === "function"
                     ) {
-                      $steps["runCode"] = await $steps["runCode"];
+                      $steps["_function"] = await $steps["_function"];
                     }
 
                     $steps["showToast"] = true
@@ -565,7 +619,52 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       $steps["showToast"] = await $steps["showToast"];
                     }
 
-                    $steps["updateSecureCallLoading"] = true
+                    $steps["sendEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24
+                                ?.logger("booking")
+                                .sendEvent({
+                                  group: "safe-call",
+                                  type: "patient",
+                                  event: {
+                                    action: "receipt",
+                                    data: {
+                                      referenceCode:
+                                        $props.bookDetailsData.reference_code,
+                                      doctor: {
+                                        centerId:
+                                          $props.bookDetailsData.center_id,
+                                        name: $props.bookDetailsData?.doctor
+                                          ?.doctor_name
+                                      },
+                                      patient: {
+                                        cell: $props.bookDetailsData.patient
+                                          .cell,
+                                        name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
+                                        nationalCode:
+                                          $props.bookDetailsData.national_code
+                                      }
+                                    }
+                                  }
+                                });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendEvent"] != null &&
+                      typeof $steps["sendEvent"] === "object" &&
+                      typeof $steps["sendEvent"].then === "function"
+                    ) {
+                      $steps["sendEvent"] = await $steps["sendEvent"];
+                    }
+
+                    $steps["endLoading"] = true
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -592,14 +691,11 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         })()
                       : undefined;
                     if (
-                      $steps["updateSecureCallLoading"] != null &&
-                      typeof $steps["updateSecureCallLoading"] === "object" &&
-                      typeof $steps["updateSecureCallLoading"].then ===
-                        "function"
+                      $steps["endLoading"] != null &&
+                      typeof $steps["endLoading"] === "object" &&
+                      typeof $steps["endLoading"].then === "function"
                     ) {
-                      $steps["updateSecureCallLoading"] = await $steps[
-                        "updateSecureCallLoading"
-                      ];
+                      $steps["endLoading"] = await $steps["endLoading"];
                     }
                   }}
                   outline={true}
@@ -610,19 +706,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       role={"img"}
                     />
                   }
-                >
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__p3Q8E
-                    )}
-                  >
-                    {
-                      "\u062a\u0645\u0627\u0633 \u0628\u0627 \u067e\u0632\u0634\u06a9"
-                    }
-                  </div>
-                </Button>
+                />
               ) : null}
             </Stack__>
           ) : null}
@@ -637,7 +721,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       return (
                         currentTime - bookTime > oneHourInSeconds &&
                         $props.bookDetailsData.book_status != "visited" &&
-                        !$props.bookDetailsData.is_deleted
+                        !$props.bookDetailsData.is_deleted &&
+                        $props.showSubstituteDoctorAlert
                       );
                     })();
                   } catch (e) {
@@ -808,7 +893,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               primaryButtonOnClick={async () => {
                                 const $steps = {};
 
-                                $steps["updateDeleteLoading"] = true
+                                $steps["startLoading"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         variable: {
@@ -836,18 +921,17 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["updateDeleteLoading"] != null &&
-                                  typeof $steps["updateDeleteLoading"] ===
-                                    "object" &&
-                                  typeof $steps["updateDeleteLoading"].then ===
+                                  $steps["startLoading"] != null &&
+                                  typeof $steps["startLoading"] === "object" &&
+                                  typeof $steps["startLoading"].then ===
                                     "function"
                                 ) {
-                                  $steps["updateDeleteLoading"] = await $steps[
-                                    "updateDeleteLoading"
+                                  $steps["startLoading"] = await $steps[
+                                    "startLoading"
                                   ];
                                 }
 
-                                $steps["runCode"] = true
+                                $steps["removeBook"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         customFunction: async () => {
@@ -881,11 +965,65 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["runCode"] != null &&
-                                  typeof $steps["runCode"] === "object" &&
-                                  typeof $steps["runCode"].then === "function"
+                                  $steps["removeBook"] != null &&
+                                  typeof $steps["removeBook"] === "object" &&
+                                  typeof $steps["removeBook"].then ===
+                                    "function"
                                 ) {
-                                  $steps["runCode"] = await $steps["runCode"];
+                                  $steps["removeBook"] = await $steps[
+                                    "removeBook"
+                                  ];
+                                }
+
+                                $steps["sendEvent"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        customFunction: async () => {
+                                          return window.paziresh24
+                                            ?.logger("booking")
+                                            .sendEvent({
+                                              group: "substitute",
+                                              type: "remove-book-and-view-booking",
+                                              event: {
+                                                doctor_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.id,
+                                                slug: $props.bookDetailsData
+                                                  ?.doctor?.slug,
+                                                server_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.server_id,
+                                                doctor_name:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.display_name,
+                                                book_id:
+                                                  $props.bookDetailsData
+                                                    .book_id,
+                                                reference_code:
+                                                  $props.bookDetailsData
+                                                    .reference_code,
+                                                book_date:
+                                                  $props.bookDetailsData
+                                                    .book_time_strings,
+                                                substitute_doctor_name:
+                                                  $state.substituteDoctor?.title
+                                              }
+                                            });
+                                        }
+                                      };
+                                      return (({ customFunction }) => {
+                                        return customFunction();
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["sendEvent"] != null &&
+                                  typeof $steps["sendEvent"] === "object" &&
+                                  typeof $steps["sendEvent"].then === "function"
+                                ) {
+                                  $steps["sendEvent"] = await $steps[
+                                    "sendEvent"
+                                  ];
                                 }
 
                                 $steps["goToPage"] = true
@@ -969,6 +1107,19 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                             />
 
                             <Button
+                              children2={
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text___3NL0
+                                  )}
+                                >
+                                  {
+                                    "\u0644\u063a\u0648 \u0646\u0648\u0628\u062a \u0648 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u067e\u0632\u0634\u06a9\u0627\u0646 \u062f\u06cc\u06af\u0631"
+                                  }
+                                </div>
+                              }
                               className={classNames(
                                 "__wab_instance",
                                 sty.button__y6Ijs
@@ -991,7 +1142,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               onClick={async event => {
                                 const $steps = {};
 
-                                $steps["updateDeleteLoading"] = true
+                                $steps["startLoading"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         variable: {
@@ -1019,18 +1170,17 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["updateDeleteLoading"] != null &&
-                                  typeof $steps["updateDeleteLoading"] ===
-                                    "object" &&
-                                  typeof $steps["updateDeleteLoading"].then ===
+                                  $steps["startLoading"] != null &&
+                                  typeof $steps["startLoading"] === "object" &&
+                                  typeof $steps["startLoading"].then ===
                                     "function"
                                 ) {
-                                  $steps["updateDeleteLoading"] = await $steps[
-                                    "updateDeleteLoading"
+                                  $steps["startLoading"] = await $steps[
+                                    "startLoading"
                                   ];
                                 }
 
-                                $steps["runCode"] = true
+                                $steps["removeBook"] = true
                                   ? (() => {
                                       const actionArgs = {
                                         customFunction: async () => {
@@ -1064,11 +1214,63 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                     })()
                                   : undefined;
                                 if (
-                                  $steps["runCode"] != null &&
-                                  typeof $steps["runCode"] === "object" &&
-                                  typeof $steps["runCode"].then === "function"
+                                  $steps["removeBook"] != null &&
+                                  typeof $steps["removeBook"] === "object" &&
+                                  typeof $steps["removeBook"].then ===
+                                    "function"
                                 ) {
-                                  $steps["runCode"] = await $steps["runCode"];
+                                  $steps["removeBook"] = await $steps[
+                                    "removeBook"
+                                  ];
+                                }
+
+                                $steps["sendEvent"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        customFunction: async () => {
+                                          return window.paziresh24
+                                            ?.logger("booking")
+                                            .sendEvent({
+                                              group: "substitute",
+                                              type: "remove-book-and-view-search",
+                                              event: {
+                                                doctor_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.id,
+                                                slug: $props.bookDetailsData
+                                                  ?.doctor?.slug,
+                                                server_id:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.server_id,
+                                                doctor_name:
+                                                  $props.bookDetailsData?.doctor
+                                                    ?.display_name,
+                                                book_id:
+                                                  $props.bookDetailsData
+                                                    .book_id,
+                                                reference_code:
+                                                  $props.bookDetailsData
+                                                    .reference_code,
+                                                book_date:
+                                                  $props.bookDetailsData
+                                                    .book_time_strings
+                                              }
+                                            });
+                                        }
+                                      };
+                                      return (({ customFunction }) => {
+                                        return customFunction();
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["sendEvent"] != null &&
+                                  typeof $steps["sendEvent"] === "object" &&
+                                  typeof $steps["sendEvent"].then === "function"
+                                ) {
+                                  $steps["sendEvent"] = await $steps[
+                                    "sendEvent"
+                                  ];
                                 }
 
                                 $steps["goToPage"] = true
@@ -1115,19 +1317,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                   $steps["goToPage"] = await $steps["goToPage"];
                                 }
                               }}
-                            >
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text___3NL0
-                                )}
-                              >
-                                {
-                                  "\u0644\u063a\u0648 \u0646\u0648\u0628\u062a \u0648 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u067e\u0632\u0634\u06a9\u0627\u0646 \u062f\u06cc\u06af\u0631"
-                                }
-                              </div>
-                            </Button>
+                            />
                           </div>
                         ) : null}
                         {(() => {
@@ -1190,6 +1380,19 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                     }
                     trigger={
                       <Button
+                        children2={
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__hrhsm
+                            )}
+                          >
+                            {
+                              "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0632\u0634\u06a9 \u062c\u0627\u06cc\u06af\u0632\u06cc\u0646"
+                            }
+                          </div>
+                        }
                         className={classNames(
                           "__wab_instance",
                           sty.button__q4NA
@@ -1197,7 +1400,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         onClick={async event => {
                           const $steps = {};
 
-                          $steps["updateSubstitueDoctorLoading"] = true
+                          $steps["startLoading"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1224,17 +1427,61 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstitueDoctorLoading"] != null &&
-                            typeof $steps["updateSubstitueDoctorLoading"] ===
-                              "object" &&
-                            typeof $steps["updateSubstitueDoctorLoading"]
-                              .then === "function"
+                            $steps["startLoading"] != null &&
+                            typeof $steps["startLoading"] === "object" &&
+                            typeof $steps["startLoading"].then === "function"
                           ) {
-                            $steps["updateSubstitueDoctorLoading"] =
-                              await $steps["updateSubstitueDoctorLoading"];
+                            $steps["startLoading"] = await $steps[
+                              "startLoading"
+                            ];
                           }
 
-                          $steps["httpGet"] = true
+                          $steps["sendEvent"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return window.paziresh24
+                                      ?.logger("booking")
+                                      .sendEvent({
+                                        group: "substitute",
+                                        type: "click-substitute-button",
+                                        event: {
+                                          doctor_id:
+                                            $props.bookDetailsData?.doctor?.id,
+                                          slug: $props.bookDetailsData?.doctor
+                                            ?.slug,
+                                          server_id:
+                                            $props.bookDetailsData?.doctor
+                                              ?.server_id,
+                                          doctor_name:
+                                            $props.bookDetailsData?.doctor
+                                              ?.display_name,
+                                          book_id:
+                                            $props.bookDetailsData.book_id,
+                                          reference_code:
+                                            $props.bookDetailsData
+                                              .reference_code,
+                                          book_date:
+                                            $props.bookDetailsData
+                                              .book_time_strings
+                                        }
+                                      });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["sendEvent"] != null &&
+                            typeof $steps["sendEvent"] === "object" &&
+                            typeof $steps["sendEvent"].then === "function"
+                          ) {
+                            $steps["sendEvent"] = await $steps["sendEvent"];
+                          }
+
+                          $steps["request"] = true
                             ? (() => {
                                 const actionArgs = {
                                   customFunction: async () => {
@@ -1249,14 +1496,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["httpGet"] != null &&
-                            typeof $steps["httpGet"] === "object" &&
-                            typeof $steps["httpGet"].then === "function"
+                            $steps["request"] != null &&
+                            typeof $steps["request"] === "object" &&
+                            typeof $steps["request"].then === "function"
                           ) {
-                            $steps["httpGet"] = await $steps["httpGet"];
+                            $steps["request"] = await $steps["request"];
                           }
 
-                          $steps["updateSubstituteDoctors"] = true
+                          $steps["_function"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1265,7 +1512,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                                   },
                                   operation: 0,
                                   value:
-                                    $steps.httpGet?.data?.search?.result?.filter(
+                                    $steps.request?.data?.search?.result?.filter(
                                       item =>
                                         item.id !==
                                         $props.bookDetailsData?.doctor?.id
@@ -1288,18 +1535,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstituteDoctors"] != null &&
-                            typeof $steps["updateSubstituteDoctors"] ===
-                              "object" &&
-                            typeof $steps["updateSubstituteDoctors"].then ===
-                              "function"
+                            $steps["_function"] != null &&
+                            typeof $steps["_function"] === "object" &&
+                            typeof $steps["_function"].then === "function"
                           ) {
-                            $steps["updateSubstituteDoctors"] = await $steps[
-                              "updateSubstituteDoctors"
-                            ];
+                            $steps["_function"] = await $steps["_function"];
                           }
 
-                          $steps["updateSubstitueDoctorLoading2"] = true
+                          $steps["endLoading"] = true
                             ? (() => {
                                 const actionArgs = {
                                   variable: {
@@ -1326,29 +1569,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                               })()
                             : undefined;
                           if (
-                            $steps["updateSubstitueDoctorLoading2"] != null &&
-                            typeof $steps["updateSubstitueDoctorLoading2"] ===
-                              "object" &&
-                            typeof $steps["updateSubstitueDoctorLoading2"]
-                              .then === "function"
+                            $steps["endLoading"] != null &&
+                            typeof $steps["endLoading"] === "object" &&
+                            typeof $steps["endLoading"].then === "function"
                           ) {
-                            $steps["updateSubstitueDoctorLoading2"] =
-                              await $steps["updateSubstitueDoctorLoading2"];
+                            $steps["endLoading"] = await $steps["endLoading"];
                           }
                         }}
-                      >
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__hrhsm
-                          )}
-                        >
-                          {
-                            "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0632\u0634\u06a9 \u062c\u0627\u06cc\u06af\u0632\u06cc\u0646"
-                          }
-                        </div>
-                      </Button>
+                      />
                     }
                   />
                 </Stack__>
@@ -1408,6 +1636,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     className={classNames(projectcss.all, sty.freeBox__hk0YF)}
                   >
                     <Button
+                      children2={"\u0644\u063a\u0648 \u0646\u0648\u0628\u062a"}
                       className={classNames("__wab_instance", sty.button__pAnu)}
                       color={"red"}
                       loading={(() => {
@@ -1535,10 +1764,10 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                         }
                       }}
                       submitsForm={false}
-                    >
-                      {"\u0644\u063a\u0648 \u0646\u0648\u0628\u062a"}
-                    </Button>
+                    />
+
                     <Button
+                      children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
                       className={classNames(
                         "__wab_instance",
                         sty.button__sRfrr
@@ -1588,9 +1817,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       }}
                       outline={true}
                       submitsForm={true}
-                    >
-                      {"\u0627\u0646\u0635\u0631\u0627\u0641"}
-                    </Button>
+                    />
                   </Stack__>
                 }
                 className={classNames("__wab_instance", sty.dialog3, {
@@ -1620,6 +1847,17 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                 }
                 trigger={
                   <Button
+                    children2={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__ez2Vp
+                        )}
+                      >
+                        {"\u0644\u063a\u0648 \u0646\u0648\u0628\u062a"}
+                      </div>
+                    }
                     className={classNames("__wab_instance", sty.button__jfewW)}
                     color={"red"}
                     outline={true}
@@ -1630,17 +1868,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                         role={"img"}
                       />
                     }
-                  >
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__ez2Vp
-                      )}
-                    >
-                      {"\u0644\u063a\u0648 \u0646\u0648\u0628\u062a"}
-                    </div>
-                  </Button>
+                  />
                 }
               />
             ) : null}
@@ -1705,7 +1933,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     hasGap={true}
                     action={(() => {
                       try {
-                        return `https://n8n.paziresh24.com/webhook/doctordelayfollowup`;
+                        return `https://apigw.paziresh24.com/v1/support/doctordelayfollowup`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1718,6 +1946,51 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     })()}
                     className={classNames(projectcss.all, sty.form)}
                     method={"POST"}
+                    onSubmit={async event => {
+                      const $steps = {};
+
+                      $steps["sendEvent"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24
+                                  ?.logger("booking")
+                                  .sendEvent({
+                                    group: "support-receipt",
+                                    type: "follow-doctor-delay",
+                                    event: {
+                                      doctor_id:
+                                        $props.bookDetailsData?.doctor?.id,
+                                      slug: $props.bookDetailsData?.doctor
+                                        ?.slug,
+                                      server_id:
+                                        $props.bookDetailsData?.doctor
+                                          ?.server_id,
+                                      doctor_name:
+                                        $props.bookDetailsData?.doctor
+                                          ?.display_name,
+                                      book_id: $props.bookDetailsData.book_id,
+                                      reference_code:
+                                        $props.bookDetailsData.reference_code,
+                                      book_date:
+                                        $props.bookDetailsData.book_time_strings
+                                    }
+                                  });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["sendEvent"] != null &&
+                        typeof $steps["sendEvent"] === "object" &&
+                        typeof $steps["sendEvent"].then === "function"
+                      ) {
+                        $steps["sendEvent"] = await $steps["sendEvent"];
+                      }
+                    }}
                   >
                     <Alert
                       body={
@@ -1775,7 +2048,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       data-plasmic-name={"textInput"}
                       data-plasmic-override={overrides.textInput}
                       className={classNames("__wab_instance", sty.textInput)}
-                      name={"book_id"}
+                      name={"book-id"}
                       onChange={(...eventArgs) => {
                         generateStateOnChangeProp($state, [
                           "textInput",
@@ -1792,16 +2065,15 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     />
 
                     <Button
+                      children2={
+                        "\u0627\u0631\u0633\u0627\u0644 \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u067e\u06cc\u06af\u06cc\u0631\u06cc"
+                      }
                       className={classNames(
                         "__wab_instance",
                         sty.button__qtTyR
                       )}
                       submitsForm={true}
-                    >
-                      {
-                        "\u0627\u0631\u0633\u0627\u0644 \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u067e\u06cc\u06af\u06cc\u0631\u06cc"
-                      }
-                    </Button>
+                    />
                   </Stack__>
                 }
                 className={classNames("__wab_instance", sty.dialog2)}
@@ -1825,6 +2097,161 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                 }
                 trigger={
                   <Button
+                    children2={
+                      <React.Fragment>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__bvIk2
+                          )}
+                        >
+                          {
+                            "\u067e\u06cc\u06af\u06cc\u0631\u06cc \u062a\u0627\u062e\u06cc\u0631 \u067e\u0632\u0634\u06a9"
+                          }
+                        </div>
+                        {(() => {
+                          try {
+                            return (() => {
+                              const currentTime = Math.floor(Date.now() / 1000);
+                              const bookTime = $props.bookDetailsData.book_time;
+                              const oneHourLater = bookTime + 3600;
+                              const isTimeLessThanOneHourLater =
+                                currentTime < oneHourLater;
+                              return isTimeLessThanOneHourLater;
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return true;
+                            }
+                            throw e;
+                          }
+                        })() ? (
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text___2Jvpq
+                            )}
+                          >
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return (() => {
+                                    const countdown =
+                                      new Date(
+                                        $props.bookDetailsData.book_time *
+                                          1000 +
+                                          3600000
+                                      ) - Date.now();
+                                    const minutes = Math.floor(
+                                      (countdown / 1000 / 60) % 60
+                                    )
+                                      .toString()
+                                      .padStart(2, "0");
+                                    const seconds = Math.floor(
+                                      (countdown / 1000) % 60
+                                    )
+                                      .toString()
+                                      .padStart(2, "0");
+                                    return `${minutes}:${seconds}`;
+                                  })();
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return "";
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
+                          </div>
+                        ) : null}
+                        <Timer
+                          data-plasmic-name={"timer"}
+                          data-plasmic-override={overrides.timer}
+                          className={classNames("__wab_instance", sty.timer)}
+                          intervalSeconds={1}
+                          isRunning={(() => {
+                            try {
+                              return (() => {
+                                const currentTime = Math.floor(
+                                  Date.now() / 1000
+                                );
+                                const bookTime =
+                                  $props.bookDetailsData.book_time;
+                                const oneHourLater = bookTime + 3600;
+                                const isTimeLessThanOneHourLater =
+                                  currentTime < oneHourLater;
+                                return isTimeLessThanOneHourLater;
+                              })();
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return true;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          onTick={async () => {
+                            const $steps = {};
+
+                            $steps["updateDelayDoctorButtonTimer"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    variable: {
+                                      objRoot: $state,
+                                      variablePath: ["delayDoctorButtonTimer"]
+                                    },
+                                    operation: 2
+                                  };
+                                  return (({
+                                    variable,
+                                    value,
+                                    startIndex,
+                                    deleteCount
+                                  }) => {
+                                    if (!variable) {
+                                      return;
+                                    }
+                                    const { objRoot, variablePath } = variable;
+
+                                    const oldValue = $stateGet(
+                                      objRoot,
+                                      variablePath
+                                    );
+                                    $stateSet(
+                                      objRoot,
+                                      variablePath,
+                                      oldValue + 1
+                                    );
+                                    return oldValue + 1;
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["updateDelayDoctorButtonTimer"] != null &&
+                              typeof $steps["updateDelayDoctorButtonTimer"] ===
+                                "object" &&
+                              typeof $steps["updateDelayDoctorButtonTimer"]
+                                .then === "function"
+                            ) {
+                              $steps["updateDelayDoctorButtonTimer"] =
+                                await $steps["updateDelayDoctorButtonTimer"];
+                            }
+                          }}
+                          runWhileEditing={true}
+                        />
+                      </React.Fragment>
+                    }
                     className={classNames("__wab_instance", sty.button__wub4Z)}
                     color={"sand"}
                     isDisabled={(() => {
@@ -1854,159 +2281,67 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                         role={"img"}
                       />
                     }
-                  >
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__bvIk2
-                      )}
-                    >
-                      {
-                        "\u067e\u06cc\u06af\u06cc\u0631\u06cc \u062a\u0627\u062e\u06cc\u0631 \u067e\u0632\u0634\u06a9"
-                      }
-                    </div>
-                    {(() => {
-                      try {
-                        return (() => {
-                          const currentTime = Math.floor(Date.now() / 1000);
-                          const bookTime = $props.bookDetailsData.book_time;
-                          const oneHourLater = bookTime + 3600;
-                          const isTimeLessThanOneHourLater =
-                            currentTime < oneHourLater;
-                          return isTimeLessThanOneHourLater;
-                        })();
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return true;
-                        }
-                        throw e;
-                      }
-                    })() ? (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text___2Jvpq
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return (() => {
-                                const countdown =
-                                  new Date(
-                                    $props.bookDetailsData.book_time * 1000 +
-                                      3600000
-                                  ) - Date.now();
-                                const minutes = Math.floor(
-                                  (countdown / 1000 / 60) % 60
-                                )
-                                  .toString()
-                                  .padStart(2, "0");
-                                const seconds = Math.floor(
-                                  (countdown / 1000) % 60
-                                )
-                                  .toString()
-                                  .padStart(2, "0");
-                                return `${minutes}:${seconds}`;
-                              })();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </div>
-                    ) : null}
-                    <Timer
-                      data-plasmic-name={"timer"}
-                      data-plasmic-override={overrides.timer}
-                      className={classNames("__wab_instance", sty.timer)}
-                      intervalSeconds={1}
-                      isRunning={(() => {
-                        try {
-                          return (() => {
-                            const currentTime = Math.floor(Date.now() / 1000);
-                            const bookTime = $props.bookDetailsData.book_time;
-                            const oneHourLater = bookTime + 3600;
-                            const isTimeLessThanOneHourLater =
-                              currentTime < oneHourLater;
-                            return isTimeLessThanOneHourLater;
-                          })();
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return true;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      onTick={async () => {
-                        const $steps = {};
-
-                        $steps["updateDelayDoctorButtonTimer"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["delayDoctorButtonTimer"]
-                                },
-                                operation: 2
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
-
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, oldValue + 1);
-                                return oldValue + 1;
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                        if (
-                          $steps["updateDelayDoctorButtonTimer"] != null &&
-                          typeof $steps["updateDelayDoctorButtonTimer"] ===
-                            "object" &&
-                          typeof $steps["updateDelayDoctorButtonTimer"].then ===
-                            "function"
-                        ) {
-                          $steps["updateDelayDoctorButtonTimer"] = await $steps[
-                            "updateDelayDoctorButtonTimer"
-                          ];
-                        }
-                      }}
-                      runWhileEditing={true}
-                    />
-                  </Button>
+                  />
                 }
               />
 
               <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___6BkhJ
+                    )}
+                  >
+                    {
+                      "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u0627\u06cc\u0646 \u0646\u0648\u0628\u062a"
+                    }
+                  </div>
+                }
                 className={classNames("__wab_instance", sty.button__eZm5G)}
                 color={"sand"}
                 onClick={async event => {
                   const $steps = {};
+
+                  $steps["sendEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return window.paziresh24
+                              ?.logger("booking")
+                              .sendEvent({
+                                group: "support-receipt",
+                                type: "request-support-book",
+                                event: {
+                                  doctor_id: $props.bookDetailsData?.doctor?.id,
+                                  slug: $props.bookDetailsData?.doctor?.slug,
+                                  server_id:
+                                    $props.bookDetailsData?.doctor?.server_id,
+                                  doctor_name:
+                                    $props.bookDetailsData?.doctor
+                                      ?.display_name,
+                                  book_id: $props.bookDetailsData.book_id,
+                                  reference_code:
+                                    $props.bookDetailsData.reference_code,
+                                  book_date:
+                                    $props.bookDetailsData.book_time_strings
+                                }
+                              });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendEvent"] != null &&
+                    typeof $steps["sendEvent"] === "object" &&
+                    typeof $steps["sendEvent"].then === "function"
+                  ) {
+                    $steps["sendEvent"] = await $steps["sendEvent"];
+                  }
 
                   $steps["goToPage"] = true
                     ? (() => {
@@ -2054,19 +2389,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     role={"img"}
                   />
                 }
-              >
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___6BkhJ
-                  )}
-                >
-                  {
-                    "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u0627\u06cc\u0646 \u0646\u0648\u0628\u062a"
-                  }
-                </div>
-              </Button>
+              />
             </Stack__>
           ) : null}
         </Stack__>

@@ -17,8 +17,8 @@ export const RecentSearch = () => {
   };
 
   return (
-    <div className="flex w-full lg:w-[50rem]">
-      <ScrollContainer className="relative flex w-full items-center overflow-auto no-scroll space-s-3 select-none">
+    <div className="flex w-full">
+      <ScrollContainer className="relative flex items-center w-full overflow-auto select-none no-scroll space-s-3">
         <Text fontWeight="semiBold" fontSize="sm" className="whitespace-nowrap">
           {t('recentSearchTitle')}
         </Text>
