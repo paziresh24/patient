@@ -51,7 +51,11 @@ const Home = () => {
           </Text>
         )}
         <Suggestion />
-        {recent.length > 0 && <RecentSearch />}
+        {recent.length > 0 && (
+          <div className="lg:w-[50rem] w-full">
+            <RecentSearch />
+          </div>
+        )}
         {customize.showConsultServices && <OnlineVisitPromote />}
         {customize?.partnerKey && <CentersList />}
       </main>
