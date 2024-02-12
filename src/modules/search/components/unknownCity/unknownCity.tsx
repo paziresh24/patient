@@ -9,20 +9,26 @@ import { useEffect } from 'react';
 import { useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
+import { useRouter } from 'next/router';
 
 export const UnknownCity = () => {
   const setCity = useSearchStore(state => state.setCity);
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
+  const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const { changeRoute } = useSearchRouting();
   const isWebView = useWebView();
   const city = useSearchStore(state => state.city);
   const { searchCity, selectedFilters } = useSearch();
+  const {
+    query: { lat, lon },
+  } = useRouter();
   const { handleOpen, handleClose, modalProps } = useModal();
   const currentCity = getCookie('new-city') ? JSON.parse((getCookie('new-city') as string) ?? '{}') : {};
 
   useEffect(() => {
     !isWebView && handleCheckUserCity();
-    if(selectedFilters.text) setUserSearchValue(selectedFilters.text as string)
+    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+    if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
     if (!isWebView && isEmpty(currentCity) && searchCity) {
       setCity(searchCity);
     }
