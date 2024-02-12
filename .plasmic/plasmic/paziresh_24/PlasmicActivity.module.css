@@ -28,6 +28,12 @@
   font-weight: 700;
   min-width: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .text__tpL {
+    padding-right: var(--token--IM3__qUOemQ);
+    padding-left: var(--token--IM3__qUOemQ);
+  }
+}
 .freeBox__njTt0 {
   display: flex;
   position: relative;
