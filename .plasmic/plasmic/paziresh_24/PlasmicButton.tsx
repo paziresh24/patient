@@ -92,7 +92,8 @@ export type PlasmicButton__VariantMembers = {
     | "softRed"
     | "softSand"
     | "clear"
-    | "link";
+    | "link"
+    | "text";
   loading: "loading";
   space: "space";
 };
@@ -117,6 +118,7 @@ export type PlasmicButton__VariantsArgs = {
     | "softSand"
     | "clear"
     | "link"
+    | "text"
   >;
   loading?: SingleBooleanChoiceArg<"loading">;
   space?: SingleBooleanChoiceArg<"space">;
@@ -181,6 +183,7 @@ export interface DefaultButtonProps extends pp.BaseButtonProps {
     | "softSand"
     | "clear"
     | "link"
+    | "text"
   >;
   loading?: SingleBooleanChoiceArg<"loading">;
   space?: SingleBooleanChoiceArg<"space">;
@@ -319,6 +322,9 @@ function PlasmicButton__RenderFunc(props: {
             hasVariant($state, "color", "red") &&
             hasVariant($state, "outline", "outline") &&
             triggers.focusVisibleWithin_root,
+          [sty.root___focusVisibleWithin_color_text]:
+            hasVariant($state, "color", "text") &&
+            triggers.focusVisibleWithin_root,
           [sty.rootcolor_blue]: hasVariant($state, "color", "blue"),
           [sty.rootcolor_clear]: hasVariant($state, "color", "clear"),
           [sty.rootcolor_green]: hasVariant($state, "color", "green"),
@@ -345,6 +351,14 @@ function PlasmicButton__RenderFunc(props: {
           [sty.rootcolor_softRed]: hasVariant($state, "color", "softRed"),
           [sty.rootcolor_softSand]: hasVariant($state, "color", "softSand"),
           [sty.rootcolor_softYellow]: hasVariant($state, "color", "softYellow"),
+          [sty.rootcolor_text]: hasVariant($state, "color", "text"),
+          [sty.rootcolor_text_showStartIcon_size_compact]:
+            hasVariant($state, "color", "text") &&
+            hasVariant($state, "size", "compact") &&
+            hasVariant($state, "showStartIcon", "showStartIcon"),
+          [sty.rootcolor_text_size_compact]:
+            hasVariant($state, "color", "text") &&
+            hasVariant($state, "size", "compact"),
           [sty.rootcolor_white]: hasVariant($state, "color", "white"),
           [sty.rootcolor_yellow]: hasVariant($state, "color", "yellow"),
           [sty.rootisDisabled]: hasVariant($state, "isDisabled", "isDisabled"),
@@ -400,6 +414,9 @@ function PlasmicButton__RenderFunc(props: {
             hasVariant($state, "showStartIcon", "showStartIcon"),
           [sty.rootsize_compact]: hasVariant($state, "size", "compact"),
           [sty.rootsize_minimal]: hasVariant($state, "size", "minimal"),
+          [sty.rootsize_minimal_color_text]:
+            hasVariant($state, "color", "text") &&
+            hasVariant($state, "size", "minimal"),
           [sty.rootspace]: hasVariant($state, "space", "space")
         }
       )}
@@ -652,6 +669,11 @@ function PlasmicButton__RenderFunc(props: {
                     $state,
                     "color",
                     "softYellow"
+                  ),
+                  [sty.slotTargetChildren2color_text]: hasVariant(
+                    $state,
+                    "color",
+                    "text"
                   ),
                   [sty.slotTargetChildren2color_white]: hasVariant(
                     $state,
