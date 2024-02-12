@@ -101,17 +101,20 @@ export type PlasmicReceiptActionButtons__ArgsType = {
   specialities?: any;
   showSubstituteDoctorAlert?: boolean;
   currentUserId?: string;
+  illDescription?: boolean;
 };
 type ArgPropType = keyof PlasmicReceiptActionButtons__ArgsType;
 export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
   "bookDetailsData",
   "specialities",
   "showSubstituteDoctorAlert",
-  "currentUserId"
+  "currentUserId",
+  "illDescription"
 );
 
 export type PlasmicReceiptActionButtons__OverridesType = {
   root?: Flex__<"div">;
+  شرحاولهبمار?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   doctorCard?: Flex__<typeof DoctorCard>;
   dialog3?: Flex__<typeof Dialog>;
@@ -127,6 +130,7 @@ export interface DefaultReceiptActionButtonsProps {
   specialities?: any;
   showSubstituteDoctorAlert?: boolean;
   currentUserId?: string;
+  illDescription?: boolean;
   type?: SingleChoiceArg<"visitOnline">;
   className?: string;
 }
@@ -157,7 +161,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          showSubstituteDoctorAlert: false
+          showSubstituteDoctorAlert: false,
+          illDescription: false
         },
         props.args
       ),
@@ -709,6 +714,115 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 />
               ) : null}
             </Stack__>
+          ) : null}
+          {(
+            hasVariant($state, "type", "visitOnline")
+              ? (() => {
+                  try {
+                    return (() => {
+                      const bookTime = new Date(
+                        $props.bookDetailsData.book_time * 1000
+                      );
+                      const currentTime = new Date();
+                      bookTime.setMinutes(bookTime.getMinutes() + 15);
+                      return (
+                        currentTime > bookTime &&
+                        $props.bookDetailsData.book_status !== "visited" &&
+                        $props.illDescription
+                      );
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })()
+              : true
+          ) ? (
+            <Button
+              children2={
+                <div
+                  data-plasmic-name={
+                    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
+                  }
+                  data-plasmic-override={overrides.شرحاولهبمار}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.شرحاولهبمار,
+                    {
+                      [sty.شرحاولهبمارtype_visitOnline]: hasVariant(
+                        $state,
+                        "type",
+                        "visitOnline"
+                      )
+                    }
+                  )}
+                >
+                  {
+                    "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a \u0627\u0648\u0644\u06cc\u0647 \u0628\u06cc\u0645\u0627\u0631\u06cc"
+                  }
+                </div>
+              }
+              className={classNames("__wab_instance", sty.button__ox71N, {
+                [sty.buttontype_visitOnline__ox71NlbrEa]: hasVariant(
+                  $state,
+                  "type",
+                  "visitOnline"
+                )
+              })}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["goToPage"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return (() => {
+                              return (
+                                "https://support.paziresh24.com/mrcreator?book-id=" +
+                                $props.bookDetailsData.book_id
+                              );
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "https://support.paziresh24.com/mrcreator?book-id=' + bookId;";
+                            }
+                            throw e;
+                          }
+                        })()
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
+                ) {
+                  $steps["goToPage"] = await $steps["goToPage"];
+                }
+              }}
+            />
           ) : null}
           {(
             hasVariant($state, "type", "visitOnline")
@@ -2401,6 +2515,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 const PlasmicDescendants = {
   root: [
     "root",
+    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631",
     "dialog",
     "doctorCard",
     "dialog3",
@@ -2409,6 +2524,9 @@ const PlasmicDescendants = {
     "form",
     "textarea",
     "textInput"
+  ],
+  شرحاولهبمار: [
+    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
   ],
   dialog: ["dialog", "doctorCard"],
   doctorCard: ["doctorCard"],
@@ -2424,6 +2542,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  شرحاولهبمار: "div";
   dialog: typeof Dialog;
   doctorCard: typeof DoctorCard;
   dialog3: typeof Dialog;
@@ -2494,6 +2613,9 @@ export const PlasmicReceiptActionButtons = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    شرحاولهبمار: makeNodeComponent(
+      "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
+    ),
     dialog: makeNodeComponent("dialog"),
     doctorCard: makeNodeComponent("doctorCard"),
     dialog3: makeNodeComponent("dialog3"),

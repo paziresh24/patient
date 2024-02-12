@@ -182,6 +182,29 @@
   width: auto;
   height: 1em;
 }
+.button__ox71N:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  width: 100%;
+  height: 2.5rem;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.svg__cXoJg {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.شرحاولهبمار {
+  font-size: var(--token-9YpWDRZpBZcs);
+}
+.svg__fcikG {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
 .alert__auAds:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
