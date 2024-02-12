@@ -66,18 +66,11 @@ export const sections = (data: any) => {
   return [
     // About
     {
-      title: 'درباره من',
-      id: 'about-me',
+      noWrapper: true,
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
       isShow: information.biography,
       isShowFallback: !information.biography && editable,
-      function: () => {
-        const { biography } = information;
-        return {
-          content: biography,
-        };
-      },
-      children: (props: any) => <Biography className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) => <Fragment name="About" props={{ ...profileData }} />,
       fallback: (props: any) => (
         <div
           onClick={() => handleViewAs('biography')}
