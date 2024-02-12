@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   const isUrlValid = isValidHttpUrl(router.query?.redirect_url as string)
     ? new URL(router.query?.redirect_url as string).hostname.includes('paziresh24.com')
-    : (router.query?.redirect_url as string)?.startsWith('/');
+    : (router.query?.redirect_url as string).startsWith('/');
 
   return (
     <div className="flex items-center justify-center h-screen p-8 bg-white">
