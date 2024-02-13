@@ -9,6 +9,11 @@ import { useRouter } from 'next/router';
 import Card from '../../components/card';
 import { Result as ResultType, useSearch } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
+import { splunkInstance } from '@/common/services/splunk';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import { useSearchStore } from '../../store/search';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 const CategoryCard = dynamic(() => import('../../components/categoryCard'), {
   loading: () => <Loading line />,
 });
@@ -25,6 +30,9 @@ export const Result = () => {
   const { changeRoute } = useSearchRouting();
   const sendPositionStatEvent = useStat();
   const sendClickThroughRateEvent = useClickThroughRate();
+  const userInfo = useUserInfoStore(state => state.info);
+  const city = useSearchStore(state => state.city);
+  const shouldUseDirectClickPositionEvent = useFeatureIsOn('search:use-direct-splunk-click-position');
 
   const handleNextPage = () => {
     const currentPage = (query?.page as string) ? (query?.page as string) : 1;
@@ -45,19 +53,58 @@ export const Result = () => {
       server_id: item.server_id,
       type: item.type,
     });
-    sendPositionStatEvent.mutate({
-      id: item._id,
-      filters: selectedFilters,
-      position: item.position,
-      route: asPath,
-      card_data: {
-        ...item,
-        ...(item.type === 'doctor' && { centers_types: item.centers.map(center => center.center_type) }),
-        element_name: elementName,
-        element_content: elementContent ?? '',
-      },
-      terminal_id: getCookie('terminal_id') as string,
-    });
+    if (shouldUseDirectClickPositionEvent) {
+      splunkInstance('search').sendEvent({
+        sourcetype: '_json',
+        event: {
+          event_group: 'search_metrics',
+          event_type: 'search_click_position',
+          current_url: window.location.href,
+          terminal_id: getCookie('terminal_id') as string,
+          is_application: false,
+          card_data: {
+            action: item.actions?.map?.(item =>
+              JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+            ),
+            _id: item._id,
+            position: item.position,
+            server_id: item.server_id,
+            title: item.title,
+            type: item.type,
+            url: item.url,
+            rates_count: item.rates_count,
+            satisfaction: item.satisfaction,
+          },
+          filters: selectedFilters,
+          result_count: result.length,
+          location: city.en_slug,
+          city_id: city.id,
+          query_id: search.query_id,
+          user_id: userInfo.id,
+          user_type: userInfo.provider?.job_title ?? 'normal-user',
+          url: {
+            href: window.location.href,
+            query,
+            pathname: window.location.pathname,
+            host: window.location.host,
+          },
+        },
+      });
+    } else {
+      sendPositionStatEvent.mutate({
+        id: item._id,
+        filters: selectedFilters,
+        position: item.position,
+        route: asPath,
+        card_data: {
+          ...item,
+          ...(item.type === 'doctor' && { centers_types: item.centers.map(center => center.center_type) }),
+          element_name: elementName,
+          element_content: elementContent ?? '',
+        },
+        terminal_id: getCookie('terminal_id') as string,
+      });
+    }
     sendGaEvent({
       action: 'CardSearchClick',
       category: `Card${item.position}`,
