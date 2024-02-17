@@ -530,7 +530,7 @@ const Receipt = () => {
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor?.image })}
+            {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor?.image })}
             fullName={doctorName}
             expertise={bookDetailsData.doctor?.display_expertise}
             isLoading={getReceiptDetails.isLoading || profileNameLoading}

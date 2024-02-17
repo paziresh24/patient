@@ -19,7 +19,7 @@ export const CategoryCard = (props: CategoryCardProps) => {
     <Link href={url} shallow scroll>
       <Card className="flex !flex-row items-center justify-between cursor-pointer">
         <div className="flex items-center space-s-3">
-          <img src={publicRuntimeConfig.CLINIC_BASE_URL + image} alt={title} loading="lazy" className="w-8 h-8" width={32} height={32} />
+          <img src={publicRuntimeConfig.CDN_BASE_URL + image} alt={title} loading="lazy" className="w-8 h-8" width={32} height={32} />
           <Text fontSize="sm" fontWeight="bold">
             {title}
           </Text>

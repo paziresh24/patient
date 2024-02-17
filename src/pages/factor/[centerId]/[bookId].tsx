@@ -73,7 +73,7 @@ const Factor = () => {
               'bg-slate-50 p-4': centerId !== CENTERS.CONSULT,
               '!p-0': isOnlineVisitTurn,
             })}
-            avatar={publicRuntimeConfig.CLINIC_BASE_URL + bookDetailsData?.doctor_image}
+            avatar={publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor_image}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,

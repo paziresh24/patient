@@ -173,7 +173,7 @@ const Receipt = () => {
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            {...(getProfileImage.data?.data?.image && { avatar: publicRuntimeConfig.CLINIC_BASE_URL + getProfileImage.data?.data?.image })}
+            {...(getProfileImage.data?.data?.image && { avatar: publicRuntimeConfig.CDN_BASE_URL + getProfileImage.data?.data?.image })}
             fullName={getProfileImage.data?.data?.display_name}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: getProfileImage.data?.data?.expertises?.[0]?.alias_title,

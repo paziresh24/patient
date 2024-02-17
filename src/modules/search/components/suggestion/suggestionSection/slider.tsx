@@ -29,7 +29,7 @@ export const SliderSection = (props: SliderSectionProps) => {
               })}
             >
               <img
-                src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`}
+                src={`${publicRuntimeConfig.CDN_BASE_URL}${item.image}`}
                 alt=""
                 className="relative rounded-full w-14 h-14 min-w-[3.5rem]"
                 width={56}
