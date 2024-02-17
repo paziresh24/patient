@@ -192,9 +192,17 @@ export const MobileRowFilter = () => {
       name: 'filters',
     };
 
+    const categoryChip = {
+      title: selectedSubCategory?.title ?? selectedCategory?.title ?? 'تخصص',
+      isActive: !!selectedCategory,
+      handleClick: handleOpenCategoryModal,
+      name: 'category',
+    };
+
     const dynamicFilters = sortBy(
       [
         sortChip,
+        categoryChip,
         ...[freeturnItemsFormatted, ...showFilters].map(filterOptions => {
           const { type, name, title, items } = filterOptions;
           const isActive = type === 'switch' ? filters[name] === 'true' : items?.some(option => option.value === filters[name]);
