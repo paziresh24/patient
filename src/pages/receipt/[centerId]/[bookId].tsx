@@ -436,9 +436,9 @@ const Receipt = () => {
                               )[0]
                         }
                       />
-                      {bookDetailsData.doctor.online_visit_channels.some((channel: { type: string }) => channel.type === 'secure_call') && (
-                        <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />
-                      )}
+                      {bookDetailsData.doctor.online_visit_channels?.some(
+                        (channel: { type: string }) => channel.type === 'secure_call',
+                      ) && <SecureCallButton bookId={bookDetailsData.book_id} extraAction={handleSafeCallAction} />}
                     </div>
                   )}
 

@@ -60,27 +60,23 @@
   --mixin-0xUtW9kRwnV4_text-decoration-line: none;
   --mixin-0xUtW9kRwnV4_text-overflow: clip;
   --mixin-A6j7YAiuJ0p5_color: #000000;
-  --mixin-A6j7YAiuJ0p5_font-weight: 700;
-  --mixin-A6j7YAiuJ0p5_font-size: 64px;
+  --mixin-A6j7YAiuJ0p5_font-weight: 400;
   --mixin-A6j7YAiuJ0p5_line-height: 1;
   --mixin-A6j7YAiuJ0p5_letter-spacing: -1px;
   --mixin-A6j7YAiuJ0p5_white-space: pre-wrap;
   --mixin-5yj840HgdLNI_color: #000000;
-  --mixin-5yj840HgdLNI_font-size: 48px;
-  --mixin-5yj840HgdLNI_font-weight: 700;
+  --mixin-5yj840HgdLNI_font-weight: 400;
   --mixin-5yj840HgdLNI_letter-spacing: -0.5px;
   --mixin-5yj840HgdLNI_line-height: 1.1;
   --mixin-5yj840HgdLNI_white-space: pre-wrap;
   --mixin-pjGhNH0Jwag8_color: #0070f3;
   --mixin-pjGhNH0Jwag8_white-space: pre-wrap;
   --mixin-slRwt18GBWo1_color: #000000;
-  --mixin-slRwt18GBWo1_font-size: 32px;
-  --mixin-slRwt18GBWo1_font-weight: 600;
+  --mixin-slRwt18GBWo1_font-weight: 400;
   --mixin-slRwt18GBWo1_line-height: 1.2;
   --mixin-slRwt18GBWo1_white-space: pre-wrap;
   --mixin-nABhqkEYMuuM_color: #000000;
-  --mixin-nABhqkEYMuuM_font-size: 24px;
-  --mixin-nABhqkEYMuuM_font-weight: 600;
+  --mixin-nABhqkEYMuuM_font-weight: 400;
   --mixin-nABhqkEYMuuM_line-height: 1.3;
   --mixin-nABhqkEYMuuM_white-space: pre-wrap;
   --mixin-hHX6DLjOeBTM_background: linear-gradient(#f8f8f8, #f8f8f8);
@@ -154,19 +150,18 @@
   --mixin-EeBjysI0-dMD_list-style-type: decimal;
   --mixin-EeBjysI0-dMD_white-space: pre-wrap;
   --mixin-PSMR3dODC8SL_color: #000000;
-  --mixin-PSMR3dODC8SL_font-size: 20px;
-  --mixin-PSMR3dODC8SL_font-weight: 600;
+  --mixin-PSMR3dODC8SL_font-weight: 400;
   --mixin-PSMR3dODC8SL_line-height: 1.5;
   --mixin-PSMR3dODC8SL_white-space: pre-wrap;
   --mixin-vr0byBX05w9p_color: #000000;
-  --mixin-vr0byBX05w9p_font-size: 16px;
-  --mixin-vr0byBX05w9p_font-weight: 600;
+  --mixin-vr0byBX05w9p_font-weight: 400;
   --mixin-vr0byBX05w9p_line-height: 1.5;
   --mixin-vr0byBX05w9p_white-space: pre-wrap;
   --mixin-SveUmMfHUbMs_color: #3291ff;
   --mixin-SveUmMfHUbMs_white-space: pre-wrap;
   --mixin-_bvXRqkSE1Dv_white-space: pre-wrap;
   --mixin-SKcRuGe6Sm-Z_white-space: pre-wrap;
+  --mixin-5cBKQ2w-OWPE_white-space: pre-wrap;
 }
 
 .plasmic_mixins {
@@ -504,7 +499,6 @@ h1:where(.root_reset.h1),
 h1:where(.root_reset_tags) {
   color: var(--mixin-A6j7YAiuJ0p5_color);
   font-weight: var(--mixin-A6j7YAiuJ0p5_font-weight);
-  font-size: var(--mixin-A6j7YAiuJ0p5_font-size);
   line-height: var(--mixin-A6j7YAiuJ0p5_line-height);
   letter-spacing: var(--mixin-A6j7YAiuJ0p5_letter-spacing);
 }
@@ -515,7 +509,6 @@ h2:where(.root_reset.h2),
 :where(.root_reset_tags) h2,
 h2:where(.root_reset_tags) {
   color: var(--mixin-5yj840HgdLNI_color);
-  font-size: var(--mixin-5yj840HgdLNI_font-size);
   font-weight: var(--mixin-5yj840HgdLNI_font-weight);
   letter-spacing: var(--mixin-5yj840HgdLNI_letter-spacing);
   line-height: var(--mixin-5yj840HgdLNI_line-height);
@@ -535,7 +528,6 @@ h3:where(.root_reset.h3),
 :where(.root_reset_tags) h3,
 h3:where(.root_reset_tags) {
   color: var(--mixin-slRwt18GBWo1_color);
-  font-size: var(--mixin-slRwt18GBWo1_font-size);
   font-weight: var(--mixin-slRwt18GBWo1_font-weight);
   line-height: var(--mixin-slRwt18GBWo1_line-height);
 }
@@ -546,7 +538,6 @@ h4:where(.root_reset.h4),
 :where(.root_reset_tags) h4,
 h4:where(.root_reset_tags) {
   color: var(--mixin-nABhqkEYMuuM_color);
-  font-size: var(--mixin-nABhqkEYMuuM_font-size);
   font-weight: var(--mixin-nABhqkEYMuuM_font-weight);
   line-height: var(--mixin-nABhqkEYMuuM_line-height);
 }
@@ -659,7 +650,6 @@ h5:where(.root_reset.h5),
 :where(.root_reset_tags) h5,
 h5:where(.root_reset_tags) {
   color: var(--mixin-PSMR3dODC8SL_color);
-  font-size: var(--mixin-PSMR3dODC8SL_font-size);
   font-weight: var(--mixin-PSMR3dODC8SL_font-weight);
   line-height: var(--mixin-PSMR3dODC8SL_line-height);
 }
@@ -670,7 +660,6 @@ h6:where(.root_reset.h6),
 :where(.root_reset_tags) h6,
 h6:where(.root_reset_tags) {
   color: var(--mixin-vr0byBX05w9p_color);
-  font-size: var(--mixin-vr0byBX05w9p_font-size);
   font-weight: var(--mixin-vr0byBX05w9p_font-weight);
   line-height: var(--mixin-vr0byBX05w9p_line-height);
 }
@@ -695,4 +684,11 @@ p:where(.root_reset.p),
 :where(.root_reset .__wab_expr_html_text) p,
 :where(.root_reset_tags) p,
 p:where(.root_reset_tags) {
+}
+
+:where(.root_reset) h2:where(.h2):hover,
+h2:where(.root_reset.h2):hover,
+:where(.root_reset .__wab_expr_html_text) h2:hover,
+:where(.root_reset_tags) h2:hover,
+h2:where(.root_reset_tags):hover {
 }
