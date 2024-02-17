@@ -32,6 +32,7 @@ export const Result = () => {
   const sendClickThroughRateEvent = useClickThroughRate();
   const userInfo = useUserInfoStore(state => state.info);
   const city = useSearchStore(state => state.city);
+  const geoLocation = useSearchStore(state => state.geoLocation);
   const shouldUseDirectClickPositionEvent = useFeatureIsOn('search:use-direct-splunk-click-position');
 
   const handleNextPage = () => {
@@ -79,6 +80,7 @@ export const Result = () => {
           result_count: result.length,
           location: city.en_slug,
           city_id: city.id,
+          ...(geoLocation ?? {}),
           query_id: search.query_id,
           user_id: userInfo.id,
           user_type: userInfo.provider?.job_title ?? 'normal-user',
