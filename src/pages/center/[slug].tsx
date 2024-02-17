@@ -198,7 +198,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         'name': profileData.name,
         'telephone': profileData?.tell,
         'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
@@ -218,7 +218,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         'jobTitle': 'physician',
         'name': profileData.name,
         'telephone': profileData?.tell,
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + profileData.image,
+        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
           '@type': 'PostalAddress',
@@ -242,7 +242,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image,
+            src: publicRuntimeConfig.CDN_BASE_URL + profileData?.image,
             alt: profileData?.name,
             type: 'image/jpg',
           },
@@ -254,7 +254,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
           <Head
             pageViewCount={profileData?.number_of_visits}
             displayName={profileData?.name}
-            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
+            image={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
             title={`${profileData?.group_expertises?.length} تخصص پزشکی`}
             subTitle={`پزشک فعال: ${profileData?.doctors?.length}`}
             serviceList={profileData?.expertises?.map((expertise: any) => expertise.alias_title)}

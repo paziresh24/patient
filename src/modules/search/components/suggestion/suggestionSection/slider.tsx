@@ -29,11 +29,7 @@ export const SliderCard = (props: SliderCardProps) => {
     isLoading: satisfactionLoading,
     isError: isSatisfactionError,
   } = useSatisfactionPercent({ slug: slug as string });
-  const { 
-    data: countOfFeedbacks, 
-    isLoading: feedbacksLoading, 
-    isError: isFeedbackError 
-  } = useCountOfFeedbacks({ slug: slug as string });
+  const { data: countOfFeedbacks, isLoading: feedbacksLoading, isError: isFeedbackError } = useCountOfFeedbacks({ slug: slug as string });
 
   return (
     <div>
@@ -48,7 +44,7 @@ export const SliderCard = (props: SliderCardProps) => {
           })}
         >
           <img
-            src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`}
+            src={`${publicRuntimeConfig.CDN_BASE_URL}${item.image}`}
             alt=""
             className="relative rounded-full w-14 h-14 min-w-[3.5rem]"
             width={56}

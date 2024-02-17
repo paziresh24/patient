@@ -94,7 +94,7 @@ export const sections = (data: any) => {
       isShowFallback: editable,
       function: () => {
         const items = media.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CLINIC_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
         return {
           items: reformattedItems,
         };
