@@ -63,9 +63,9 @@ interface SearchCardProps {
 export const SearchCard = (props: SearchCardProps) => {
   const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
 
-  const shouldUseFeedbackWebService = useFeatureIsOn('search:use-feedback-webservice');
+  const shouldUseFeedbackWebService = !useFeatureIsOn('search:use-feedback-webservice');
   const slug = baseInfo.slug ?? '';
-  const enabled = shouldUseFeedbackWebService && !!baseInfo.slug;
+  const enabled = shouldUseFeedbackWebService && !!slug;
 
   const { data: satisfactionPercent, isLoading: satisfactionPercentLoading } = useSatisfactionPercent({ slug }, { enabled });
   const { data: countOfFeedbacks, isLoading: countOfFeedbacksLoading } = useCountOfFeedbacks({ slug }, { enabled });
@@ -126,16 +126,16 @@ export const SearchCard = (props: SearchCardProps) => {
           )}
           {type === 'doctor' && ((!shouldUseFeedbackWebService && (baseInfo?.rate?.count ?? 0) > 0) || shouldUseFeedbackWebService) && (
             <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base whitespace-nowrap">
-              {shouldUseFeedbackWebService ? (
+              {enabled ? (
                 satisfactionPercentLoading || countOfFeedbacksLoading ? (
                   <Skeleton w="7rem" h="22px" rounded="md" />
-                ) : shouldUseFeedbackWebService && !isFetchedData ? null : (
+                ) : !isFetchedData ? null : (
                   <div className="flex items-center space-s-1">
                     <LikeIcon width={22} height={22} className="text-primary" />
                     <Text fontWeight="medium" className="text-primary">
-                      {shouldUseFeedbackWebService ? satisfactionPercent.result.toFixed() : baseInfo?.rate?.satisfaction}٪
+                      {satisfactionPercent.result.toFixed()}٪
                     </Text>
-                    <Text>({shouldUseFeedbackWebService ? countOfFeedbacks.result : baseInfo?.rate?.count} نظر)</Text>
+                    <Text>({countOfFeedbacks.result} نظر)</Text>
                   </div>
                 )
               ) : (
