@@ -63,7 +63,7 @@ interface SearchCardProps {
 export const SearchCard = (props: SearchCardProps) => {
   const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
 
-  const shouldUseFeedbackWebService = !useFeatureIsOn('search:use-feedback-webservice');
+  const shouldUseFeedbackWebService = useFeatureIsOn('search:use-feedback-webservice');
   const slug = baseInfo.slug ?? '';
   const enabled = shouldUseFeedbackWebService && !!slug;
 
