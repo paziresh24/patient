@@ -85,6 +85,7 @@ export const Result = () => {
                 satisfaction: item.satisfaction,
               },
               url: item.url,
+              slug: item.slug
             }}
             type={item.type}
             details={{

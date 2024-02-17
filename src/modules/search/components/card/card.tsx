@@ -3,6 +3,7 @@ import Button from '@/common/components/atom/button';
 import Card from '@/common/components/atom/card';
 import Divider from '@/common/components/atom/divider';
 import Text from '@/common/components/atom/text';
+import Skeleton from '@/common/components/atom/skeleton';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EyeIcon from '@/common/components/icons/eye';
 import LikeIcon from '@/common/components/icons/like';
@@ -14,6 +15,10 @@ import getConfig from 'next/config';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import Badge, { BadgeProps } from '../badge';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useCountOfFeedbacks } from '@/common/apis/services/rate/countOfFeedbacks';
+import { useSatisfactionPercent } from '@/common/apis/services/rate/satisfactionPercent';
+
 const { publicRuntimeConfig } = getConfig();
 
 interface SearchCardProps {
@@ -29,6 +34,7 @@ interface SearchCardProps {
     isOnline?: boolean;
     experience?: number;
     url?: string;
+    slug?: string;
     rate?: {
       satisfaction: number;
       count: number;
@@ -56,6 +62,14 @@ interface SearchCardProps {
 
 export const SearchCard = (props: SearchCardProps) => {
   const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
+
+  const shouldUseFeedbackWebService = useFeatureIsOn('search:use-feedback-webservice');
+  const slug = baseInfo.slug ?? '';
+  const enabled = shouldUseFeedbackWebService && !!baseInfo.slug;
+
+  const { data: satisfactionPercent, isLoading: satisfactionPercentLoading } = useSatisfactionPercent({ slug }, { enabled });
+  const { data: countOfFeedbacks, isLoading: countOfFeedbacksLoading } = useCountOfFeedbacks({ slug }, { enabled });
+  const isFetchedData = satisfactionPercent && countOfFeedbacks && countOfFeedbacks.result > 0;
 
   const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
 
@@ -110,15 +124,29 @@ export const SearchCard = (props: SearchCardProps) => {
               {baseInfo?.expertise}
             </Text>
           )}
-          {type === 'doctor' && (baseInfo?.rate?.count ?? 0) > 0 && (
+          {type === 'doctor' && ((!shouldUseFeedbackWebService && (baseInfo?.rate?.count ?? 0) > 0) || shouldUseFeedbackWebService) && (
             <div className="flex items-center !mt-2 space-s-2 text-sm md:text-base whitespace-nowrap">
-              <div className="flex items-center space-s-1">
-                <LikeIcon width={22} height={22} className="text-primary" />
-                <Text fontWeight="medium" className="text-primary">
-                  {baseInfo?.rate?.satisfaction}٪
-                </Text>
-                <Text>({baseInfo?.rate?.count} نظر)</Text>
-              </div>
+              {shouldUseFeedbackWebService ? (
+                satisfactionPercentLoading || countOfFeedbacksLoading ? (
+                  <Skeleton w="7rem" h="22px" rounded="md" />
+                ) : shouldUseFeedbackWebService && !isFetchedData ? null : (
+                  <div className="flex items-center space-s-1">
+                    <LikeIcon width={22} height={22} className="text-primary" />
+                    <Text fontWeight="medium" className="text-primary">
+                      {shouldUseFeedbackWebService ? satisfactionPercent.result.toFixed() : baseInfo?.rate?.satisfaction}٪
+                    </Text>
+                    <Text>({shouldUseFeedbackWebService ? countOfFeedbacks.result : baseInfo?.rate?.count} نظر)</Text>
+                  </div>
+                )
+              ) : (
+                <div className="flex items-center space-s-1">
+                  <LikeIcon width={22} height={22} className="text-primary" />
+                  <Text fontWeight="medium" className="text-primary">
+                    {baseInfo?.rate?.satisfaction}٪
+                  </Text>
+                  <Text>({baseInfo?.rate?.count} نظر)</Text>
+                </div>
+              )}
               {baseInfo?.experience && (
                 <>
                   <Divider orientation="vertical" height={20} />
