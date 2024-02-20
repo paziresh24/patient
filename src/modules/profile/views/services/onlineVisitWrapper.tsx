@@ -170,11 +170,11 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
           </Text>
           <div className="flex flex-col space-y-3">
             <Text fontSize="sm" className="px-5 leading-6">
-              برترین پزشکان{' '}
+            پزشکان آنلاین{' '}
               <Text fontWeight="bold">
-                {expertise?.name} {city?.name ? `در ${city?.name}` : null}
+                {expertise?.name} 
               </Text>{' '}
-              از دیدگاه بیماران
+              منتخب بیماران
             </Text>
             <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
           </div>
