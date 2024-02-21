@@ -831,13 +831,13 @@ const BookingSteps = (props: BookingStepsProps) => {
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
               {!shouldShowOnlineVistRecommendModal && (
-                <Text fontSize="sm" className="leading-6">
-                  برترین پزشکان{' '}
-                  <Text fontWeight="bold">
-                    {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
-                  </Text>{' '}
-                  از دیدگاه بیماران
-                </Text>
+              <Text fontSize="sm" className="leading-6">
+                <Text fontWeight="bold">
+                پزشکان آنلاین{' '}
+                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}
+                </Text>{' '}
+                منتخب بیماران
+              </Text>
               )}
               {profile && (
                 <>
