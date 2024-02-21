@@ -617,11 +617,11 @@ const BookingSteps = (props: BookingStepsProps) => {
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
-                برترین پزشکان{' '}
                 <Text fontWeight="bold">
-                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name} {center?.city ? `در ${center?.city}` : null}
+                پزشکان آنلاین{' '}
+                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}
                 </Text>{' '}
-                از دیدگاه بیماران
+                منتخب بیماران
               </Text>
               {profile && (
                 <Recommend

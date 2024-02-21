@@ -52,6 +52,7 @@ const Search = ({ host }: any) => {
 
   const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search } = useSearch();
   const city = useSearchStore(state => state.city);
+  const geoLocation = useSearchStore(state => state.geoLocation);
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
@@ -79,6 +80,7 @@ const Search = ({ host }: any) => {
             filters: selectedFilters,
             result_count: result.length,
             location: city.en_slug,
+            ...(geoLocation ?? null),
             city_id: city.id,
             query_id: search.query_id,
             user_id: userInfo?.id ?? null,
@@ -112,6 +114,7 @@ const Search = ({ host }: any) => {
             filters: selectedFilters,
             result_count: result.length,
             location: city.en_slug,
+            ...(geoLocation ?? null),
             city_id: city.id,
             query_id: search.query_id,
             user_id: userInfo?.id ?? null,

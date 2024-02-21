@@ -136,7 +136,7 @@ const Booking = () => {
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
             isLoading={isLoading}
-            avatar={publicRuntimeConfig.CLINIC_BASE_URL + profileData?.image}
+            avatar={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
             fullName={profileData?.display_name}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: profileData?.expertises?.[0]?.alias_title,

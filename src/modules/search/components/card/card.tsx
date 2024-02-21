@@ -72,7 +72,7 @@ export const SearchCard = (props: SearchCardProps) => {
         >
           <div className="relative">
             <Avatar
-              src={publicRuntimeConfig.CLINIC_BASE_URL + baseInfo?.avatar}
+              src={publicRuntimeConfig.CDN_BASE_URL + baseInfo?.avatar}
               alt={alt ?? imageAlt}
               width={avatarSize === 'md' ? 80 : 100}
               height={avatarSize === 'md' ? 80 : 100}

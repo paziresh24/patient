@@ -213,7 +213,7 @@ const DoctorProfile = ({
           <Head
             pageViewCount={profileData.history?.count_of_page_view}
             displayName={profileData.information.display_name}
-            image={publicRuntimeConfig.CLINIC_BASE_URL + profileData.information?.image}
+            image={publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image}
             imageAlt={`${information.prefix} ${information.display_name}`}
             title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
@@ -369,7 +369,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         'name': `${information.prefix} ${information.display_name}`,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
+        'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
         'isAcceptingNewPatients': true,
         'medicalSpecialty': !expertises?.group_expertises ? expertises.group_expertises?.[0]?.name : doctorExpertise,
         'duns': information?.employee_id,
@@ -400,7 +400,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         'jobTitle': 'physician',
         'name': `${information.prefix} ${information.display_name}`,
         'telephone': center?.display_number,
-        'image': publicRuntimeConfig.CLINIC_BASE_URL + information.image,
+        'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',
@@ -446,7 +446,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CLINIC_BASE_URL + information?.image,
+            src: publicRuntimeConfig.CDN_BASE_URL + information?.image,
             alt: `${information.prefix} ${information.display_name}`,
             type: 'image/jpg',
           },
