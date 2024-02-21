@@ -61,6 +61,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token",
+      "type": "lineheight",
+      "value": "100%",
+      "category": "lineheight",
+      "meta": {
+        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+        "id": "Av0T6f3CytZs"
+      }
+    },
+    {
       "name": "base",
       "type": "fontsize",
       "value": "1rem",
@@ -78,6 +88,16 @@
       "meta": {
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
         "id": "Q3Gquahrk2dK"
+      }
+    },
+    {
+      "name": "brand",
+      "type": "color",
+      "value": "#3F4079",
+      "category": "color",
+      "meta": {
+        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+        "id": "6p7j_Z3Hc72R"
       }
     },
     {

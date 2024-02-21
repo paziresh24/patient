@@ -33,6 +33,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { growthbook } from '../_app';
+import { Fragment } from '@/common/fragment';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
@@ -141,6 +142,7 @@ const Search = ({ host }: any) => {
 
   return (
     <>
+      <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
         <Suggestion key={asPath.toString()} overlay />
