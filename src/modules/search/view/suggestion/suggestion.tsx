@@ -159,7 +159,7 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   return (
-    <div className="w-full lg:w-[50rem] relative" ref={ref}>
+    <div className="w-full px-4 py-2 md:px-0 lg:w-[50rem] relative" ref={ref}>
       {isOpenSuggestion && overlay && (
         <div className="fixed top-0 bottom-0 left-0 right-0 z-infinity bg-slate-900 bg-opacity-60" id="modal" onClick={handleClose} />
       )}
