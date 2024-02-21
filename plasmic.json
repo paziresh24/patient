@@ -587,6 +587,71 @@
           "cssFilePath": "plasmic/paziresh_24/PlasmicBreadcrumbs.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "mMSqh73Gt2UC",
+          "name": "Fragment",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicFragment.tsx",
+          "importSpec": {
+            "modulePath": "Fragment.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicFragment.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "kTqhvVPX-KFr",
+          "name": "HomePixel",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicHomePixel.tsx",
+          "importSpec": {
+            "modulePath": "HomePixel.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicHomePixel.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "q10e5tagld7P",
+          "name": "HomePage",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicHomePage.tsx",
+          "importSpec": {
+            "modulePath": "HomePage.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicHomePage.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "tue6WliDgeon",
+          "name": "SubstituteDoctor",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicSubstituteDoctor.tsx",
+          "importSpec": {
+            "modulePath": "SubstituteDoctor.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicSubstituteDoctor.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "oB4wbfvJITFc",
+          "name": "InAppNotification",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicInAppNotification.tsx",
+          "importSpec": {
+            "modulePath": "InAppNotification.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicInAppNotification.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -739,9 +804,45 @@
           "id": "bFoMwbPekE8y",
           "name": "Icon24Icon",
           "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Icon24.tsx"
+        },
+        {
+          "id": "amTbI_YQqIVm",
+          "name": "SvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Svg.tsx"
+        },
+        {
+          "id": "0ro7oXZKGS5w",
+          "name": "Svg2Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Svg2.tsx"
+        },
+        {
+          "id": "Yvl2gjkpp_AV",
+          "name": "Svg3Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Svg3.tsx"
+        },
+        {
+          "id": "Vnellam4ltEV",
+          "name": "NotificationIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Notification.tsx"
+        },
+        {
+          "id": "JNS0DMK9Gxn8",
+          "name": "ChevronLeftIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronLeft.tsx"
+        },
+        {
+          "id": "9uFgIxW230Rt",
+          "name": "Polygon1Icon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Polygon1.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "NPptS-oeiydD",
+          "name": "Ellipse 1",
+          "filePath": "plasmic/paziresh_24/images/ellipse1.svg"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
