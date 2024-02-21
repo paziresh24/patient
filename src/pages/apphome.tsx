@@ -1,6 +1,7 @@
 import Logo from '@/common/components/atom/logo';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { Fragment } from '@/common/fragment';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
@@ -29,7 +30,7 @@ const Home = () => {
   return (
     <>
       <Seo title="اپلیکیشن پذیرش24" noIndex />
-
+      <Fragment name="LocationSelectionScript" />
       <main className="flex flex-col items-center justify-center flex-grow w-full pb-20 mx-auto space-y-6 bg-white md:w-96">
         <Logo as="h1" className="text-2xl md:text-3xl" width={55} />
 
