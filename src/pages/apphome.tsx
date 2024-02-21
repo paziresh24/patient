@@ -1,8 +1,4 @@
-import { useGetAppHome } from '@/common/apis/services/apphome/apphome';
 import Logo from '@/common/components/atom/logo';
-import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import Text from '@/common/components/atom/text/text';
-import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -10,32 +6,16 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
-import { useSearchStore } from '@/modules/search/store/search';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
-import { useFeatureValue } from '@growthbook/growthbook-react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';
-import ScrollContainer from 'react-indiana-drag-scroll';
 
 const Home = () => {
-  const appHome = useGetAppHome();
   const isApplication = useApplication();
-  const city = useSearchStore(state => state.city);
   const { query, isReady } = useRouter();
-  const appHomeType = useFeatureValue('apphome-type', '');
   const { recent } = useRecentSearch();
-
-  const handlePopupRoute = (type: string) => {
-    if (type === 'center') {
-      return `/s/${city.en_slug}/center`;
-    }
-    if (type === 'doctor') {
-      return `/s/${city.en_slug}/doctor`;
-    }
-  };
 
   useEffect(() => {
     if (isReady && isApplication) {
@@ -46,92 +26,19 @@ const Home = () => {
     }
   }, [isReady, query, isApplication]);
 
-  const reformatSlids = (slids: any[]) => {
-    const reversed = Array.from(slids).reverse();
-    return reversed;
-  };
-
   return (
     <>
       <Seo title="اپلیکیشن پذیرش24" noIndex />
 
-      {appHomeType === 'GRID' && (
-        <main className="flex flex-col items-center space-y-3">
-          <div className="flex flex-col items-center w-full py-4 space-y-3 bg-white shadow-card">
-            <Logo className="!mr-1" width={30} />
-            <div className="flex justify-center w-full px-4 md:w-96">
-              <Suggestion />
-            </div>
-          </div>
+      <main className="flex flex-col items-center justify-center flex-grow w-full pb-20 mx-auto space-y-6 bg-white md:w-96">
+        <Logo as="h1" className="text-2xl md:text-3xl" width={55} />
 
-          {appHome.isLoading && (
-            <div className="flex flex-col w-full space-y-3 md:w-96">
-              <ScrollContainer className="flex justify-start w-full px-4 space-s-2">
-                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-                <Skeleton h="10rem" w="20rem" className="min-w-[20rem]" rounded="lg" />
-              </ScrollContainer>
-              <div className="flex flex-col w-full px-4 space-y-4 !mt-4">
-                <Skeleton w="10rem" h="1rem" rounded="full" />
-                <Skeleton w="100%" h="9rem" rounded="lg" />
-              </div>
-              <div className="flex flex-col w-full px-4 space-y-3">
-                <Skeleton w="100%" h="14rem" rounded="lg" />
-              </div>
-            </div>
-          )}
-          <Transition match={appHome.isSuccess} animation="bottom" className="flex flex-col w-full space-y-3 md:w-96">
-            {appHome.data?.data?.result?.map((section: any, index: number) => (
-              <div className="flex flex-col w-full space-y-3" key={index}>
-                {section.title && (
-                  <div className="flex items-center px-4">
-                    {section.icon && <img src={section.icon} className="ml-2" width={16} />}
-                    <Text fontSize="sm" dangerouslySetInnerHTML={{ __html: section.title }} />
-                  </div>
-                )}
-                {section.type === 'slider' && (
-                  <ScrollContainer className="flex justify-start w-full px-4 mb-2 space-s-2">
-                    {reformatSlids(section.body?.images).map((slide: any) => (
-                      <a href={slide.activity.url} key={slide.activity.url}>
-                        <div className="h-40 rounded-xl min-w-[20rem] w-80 bg-slate-100 overflow-hidden">
-                          <img src={slide.image} alt="" />
-                        </div>
-                      </a>
-                    ))}
-                  </ScrollContainer>
-                )}
-                {section.type === 'grid' && (
-                  <div className="grid grid-cols-3 p-3 py-4 mx-4 bg-white border shadow-sm gap-y-5 border-slate-100 rounded-xl">
-                    {section.body.items.map((item: any) => (
-                      <Link
-                        key={item.image.title}
-                        href={!item.activity.is_popup ? item.activity.url : handlePopupRoute(item.activity.popup_return_type)}
-                      >
-                        <div className="flex flex-col items-center space-y-2 whitespace-nowrap">
-                          <img src={item.image.url} alt="" width={70} height={70} />
-                          <Text fontSize="xs" fontWeight="medium">
-                            {item.image.title}
-                          </Text>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </Transition>
-        </main>
-      )}
-      {appHomeType === 'SUGGESTION' && (
-        <main className="flex flex-col items-center justify-center flex-grow w-full pb-20 mx-auto space-y-6 bg-white md:w-96">
-          <Logo as="h1" className="text-2xl md:text-3xl" width={55} />
-
-          <div className="flex justify-center w-full px-4">
-            <Suggestion />
-          </div>
-          <div className="flex justify-center w-full px-4">{recent.length > 0 && <RecentSearch />}</div>
-          <OnlineVisitPromote />
-        </main>
-      )}
+        <div className="flex justify-center w-full px-4">
+          <Suggestion />
+        </div>
+        <div className="flex justify-center w-full px-4">{recent.length > 0 && <RecentSearch />}</div>
+        <OnlineVisitPromote />
+      </main>
     </>
   );
 };
