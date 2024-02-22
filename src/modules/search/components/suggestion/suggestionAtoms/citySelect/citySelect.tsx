@@ -1,5 +1,6 @@
 import { useGetBaseInfo } from '@/common/apis/services/config/baseInfo';
 import Button from '@/common/components/atom/button';
+import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField';
@@ -14,6 +15,7 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface CitySelectProps {
+  isGPSLoading: boolean;
   city: locationParam;
   onChange: (value: any) => void;
 }
@@ -26,7 +28,7 @@ type locationParam = {
 };
 
 export const CitySelect = (props: CitySelectProps) => {
-  const { city, onChange } = props;
+  const { city, onChange, isGPSLoading } = props;
   const { handleOpen, handleClose, modalProps } = useModal();
 
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -86,8 +88,9 @@ export const CitySelect = (props: CitySelectProps) => {
     <>
       <Button
         variant="text"
+        disabled={isGPSLoading}
         icon={
-          geoLocation ? (
+          isGPSLoading ? undefined : geoLocation ? (
             <DirectionIcon className="w-6 h-6 stroke-2 min-w-[1.25rem]" />
           ) : (
             <LocationIcon className="w-5 h-5 stroke-2 fill-slate-700 min-w-[1.25rem]" />
@@ -96,9 +99,10 @@ export const CitySelect = (props: CitySelectProps) => {
         onClick={handleOpen}
         className={classNames('!text-slate-700 !px-3 !pr-1 whitespace-nowrap rounded-3xl rounded-tr-lg rounded-br-lg', {
           '!text-primary': geoLocation,
+          'bg-primary/5': isGPSLoading,
         })}
       >
-        <Text fontSize="sm">{geoLocation ? 'اطراف من' : city?.name}</Text>
+        <Text fontSize="sm">{isGPSLoading ? <Loading className="fill-slate-400" /> : geoLocation ? 'اطراف من' : city?.name}</Text>
       </Button>
       <Modal fullScreen bodyClassName="pt-2 md:pt-5" title="انتخاب شهر" {...modalProps}>
         <div className="flex flex-col h-full space-y-3">
