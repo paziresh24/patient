@@ -23,9 +23,9 @@ export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommen
         </Text>
       ) : (
         <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          برترین پزشکان {groupExpertise.name} {city.name ? `در ${city.name}` : null}{' '}
+          پزشکان آنلاین {groupExpertise.name}{' '}
           <Text fontWeight="medium" fontSize="sm">
-            از دیدگاه بیماران
+            منتخب بیماران
           </Text>
         </Text>
       )}

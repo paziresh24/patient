@@ -522,6 +522,71 @@
           "cssFilePath": "plasmic/paziresh_24/PlasmicServices.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "HdziC2GDkrKd",
+          "name": "Opener",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicOpener.tsx",
+          "importSpec": {
+            "modulePath": "Opener.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicOpener.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "6mjf324FkOZF",
+          "name": "About",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicAbout.tsx",
+          "importSpec": {
+            "modulePath": "About.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicAbout.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "qgBfujLJ7lZw",
+          "name": "LinkPreview",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicLinkPreview.tsx",
+          "importSpec": {
+            "modulePath": "LinkPreview.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicLinkPreview.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "zCfmz7A_Urrp",
+          "name": "DoctorProfileSeoBox",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicDoctorProfileSeoBox.tsx",
+          "importSpec": {
+            "modulePath": "DoctorProfileSeoBox.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicDoctorProfileSeoBox.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "p60lZNLf7UJ8",
+          "name": "Breadcrumbs",
+          "type": "managed",
+          "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+          "renderModuleFilePath": "plasmic/paziresh_24/PlasmicBreadcrumbs.tsx",
+          "importSpec": {
+            "modulePath": "Breadcrumbs.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24/PlasmicBreadcrumbs.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -714,6 +779,29 @@
           "name": "SimpleChart",
           "displayName": "hostless-react-chartjs-2-simple-chart",
           "componentImportPath": "@plasmicpkgs/react-chartjs-2"
+        }
+      ],
+      "customFunctions": [],
+      "jsBundleThemes": []
+    },
+    {
+      "projectId": "3m3vFk1dnCzZnwT8k489Jy",
+      "projectApiToken": "d0NoBGd1tp6wrhDNeukwuqttKcgFIrGA0th3U2rkGpA9QcU5FQsTwupa1shTDJEWiPozbbcBSxeb8w3dAw",
+      "projectName": "plasmic-link-preview",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/plasmic_link_preview/plasmic_plasmic_link_preview.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "4P2nwuVQH3UA",
+          "name": "LinkPreview",
+          "displayName": "plasmic-link-preview",
+          "componentImportPath": "@plasmicpkgs/plasmic-link-preview"
         }
       ],
       "customFunctions": [],

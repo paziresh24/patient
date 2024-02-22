@@ -1,0 +1,63 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-width: 0;
+}
+.freeBox__szq7H {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  overflow: hidden;
+  min-width: 0;
+}
+.freeBox___08FzU {
+  display: block;
+  position: absolute;
+  width: auto;
+  max-width: 100%;
+  left: 0;
+  top: auto;
+  z-index: 1;
+  box-shadow: 0px 0px 40px 35px #ffffff;
+  background: none;
+  flex-shrink: 1;
+  right: 0;
+  bottom: 0;
+}
+.button:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  align-self: flex-end;
+}
+.svg___6QgYe {
+  position: relative;
+  object-fit: cover;
+  width: 24px;
+  height: 24px;
+  color: var(--token-OlVuQmI49cL3);
+  transition-property: all, all, all;
+  transition-duration: 1s, 1s, 1s;
+  -webkit-transition-property: all, all, all;
+  -webkit-transition-duration: 1s, 1s, 1s;
+}
+.svg__ekHWz {
+  position: relative;
+  object-fit: cover;
+  width: 24px;
+  height: 24px;
+  color: var(--token-OlVuQmI49cL3);
+  transition-property: all, all, all;
+  transition-duration: 1s, 1s, 1s;
+  -webkit-transition-property: all, all, all;
+  -webkit-transition-duration: 1s, 1s, 1s;
+}

@@ -80,6 +80,7 @@ const nextConfig = {
     PLASMIC_PROJECT_ID: process.env.PLASMIC_PROJECT_ID,
     PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
     PLASMIC_PREVIEW: process.env.PLASMIC_PREVIEW,
+    CDN_BASE_URL: process.env.CDN_BASE_URL,
   },
   images: {
     remotePatterns: [

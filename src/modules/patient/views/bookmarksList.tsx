@@ -38,7 +38,7 @@ export const BookmarksList = () => {
               <DoctorInfo
                 firstName={item.name}
                 lastName={item.family}
-                avatar={publicRuntimeConfig.CLINIC_BASE_URL + item.image}
+                avatar={publicRuntimeConfig.CDN_BASE_URL + item.image}
                 expertise={getDisplayDoctorExpertise({
                   aliasTitle: item.expertises?.[0]?.alias_title ?? '',
                   degree: item.expertises?.[0]?.degree?.name ?? '',

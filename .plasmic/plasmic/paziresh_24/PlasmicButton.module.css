@@ -100,6 +100,9 @@
 .rootcolor_link {
   background: #ffffff00;
 }
+.rootcolor_text {
+  background: none;
+}
 .rootspace {
   padding-left: 10px;
 }
@@ -177,6 +180,9 @@
 .rootcolor_link:hover {
   background: #ffffff00;
 }
+.rootcolor_text:hover {
+  background: #2b4dcc08;
+}
 .rootcolor_red_outline:hover {
   background: #ec5e4112;
 }
@@ -196,6 +202,10 @@
   box-shadow: none;
   outline: none;
 }
+.rootcolor_text:focus-within {
+  box-shadow: none;
+  outline: none;
+}
 .rootcolor_red_outline:focus-within {
   box-shadow: 0px 0px 0px 3px #edb9ae;
   outline: none;
@@ -212,12 +222,16 @@
   box-shadow: none;
   outline: none;
 }
+.root___focusVisibleWithin_color_text {
+  box-shadow: none;
+  outline: none;
+}
 .root___focusVisibleWithin_color_red_outline {
   box-shadow: 0px 0px 0px 3px #edb9ae;
   outline: none;
 }
 .root:active {
-  background: var(--token-iu_TCQ9qnuon);
+  background: #2644b5;
 }
 .rootoutline:active {
   background: #3861fb1f;
@@ -260,6 +274,9 @@
 }
 .rootcolor_link:active {
   background: #ffffff00;
+}
+.rootcolor_text:active {
+  background: #3861fb1a;
 }
 .rootcolor_red_outline:active {
   background: #f16a5021;
@@ -399,6 +416,9 @@
 }
 .slotTargetChildren2color_link {
   color: #0091ff;
+}
+.slotTargetChildren2color_text {
+  color: var(--token-OlVuQmI49cL3);
 }
 .slotTargetChildren2color_red_outline {
   color: #e54d2e;

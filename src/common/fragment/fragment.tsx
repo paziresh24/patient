@@ -39,7 +39,7 @@ export const Fragment = ({ name, variants, props }: FragmentProps) => {
     );
   }
 
-  const { Component, id, propsAllowed } = (Components as any)?.[name] ?? { Component: <div>Error</div>, id: '', propsAllowed: [] };
+  const { Component, id, propsAllowed } = (Components as any)?.[name] ?? { Component: () => <p>Error</p>, id: '', propsAllowed: [] };
   return (
     <ErrorBoundary>
       <Component

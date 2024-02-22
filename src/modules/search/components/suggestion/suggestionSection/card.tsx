@@ -25,7 +25,7 @@ export const CardSection = (props: CardSectionProps) => {
         >
           <div>
             <img
-              src={`${publicRuntimeConfig.CLINIC_BASE_URL}${item.image}`}
+              src={`${publicRuntimeConfig.CDN_BASE_URL}${item.image}`}
               alt=""
               className="rounded-full w-11 min-w-[2.75rem]"
               width={44}
