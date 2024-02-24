@@ -48,15 +48,22 @@ const Search = ({ host }: any) => {
 
   const {
     asPath,
-    query: { params, ...queries },
+    query: { params, lat, lon, ...queries },
   } = useRouter();
 
   const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search } = useSearch();
-  const city = useSearchStore(state => state.city);
+  const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
+  const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
+  const city = useSearchStore(state => state.city);
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
+
+  useEffect(() => {
+    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+    if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
+  }, []);
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
