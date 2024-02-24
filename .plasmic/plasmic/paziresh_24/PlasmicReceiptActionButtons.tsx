@@ -65,7 +65,6 @@ import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
-import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 
 import { useScreenVariants as useScreenVariantsce5BTtZuA7Fm } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: ce5BTtZuA7fm/globalVariant
 
@@ -124,7 +123,6 @@ export type PlasmicReceiptActionButtons__OverridesType = {
   form?: Flex__<"form">;
   textarea?: Flex__<"textarea">;
   textInput?: Flex__<typeof TextInput>;
-  embedHtml?: Flex__<typeof Embed>;
 };
 
 export interface DefaultReceiptActionButtonsProps {
@@ -577,7 +575,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                             customFunction: async () => {
                               return $$.axios
                                 .post(
-                                  `https://n8n.paziresh24.com/webhook/483835a3-d567-47e6-adfb-fe698f9eb2c6/safe-call/${$props.bookDetailsData.book_id}`,
+                                  `https://apigw.paziresh24.com/v1/book-safe-call/${$props.bookDetailsData.book_id}`,
                                   null,
                                   { withCredentials: true }
                                 )
@@ -2486,20 +2484,6 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
           ) : null}
         </Stack__>
       ) : null}
-      <Embed
-        data-plasmic-name={"embedHtml"}
-        data-plasmic-override={overrides.embedHtml}
-        className={classNames("__wab_instance", sty.embedHtml, {
-          [sty.embedHtmltype_visitOnline]: hasVariant(
-            $state,
-            "type",
-            "visitOnline"
-          )
-        })}
-        code={
-          '<script type="text/javascript">\r\n  !function(){var i="c2z4yd",a=window,d=document;function g(){var g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}"complete"===d.readyState?g():a.attachEvent?a.attachEvent("onload",g):a.addEventListener("load",g,!1);}();\r\n\r\nwindow.addEventListener(\'goftino_ready\', function () {\r\n    Goftino.setWidget({\r\n        hasIcon: false,\r\n        hasSound: false,\r\n    })\r\n})\r\n</script>\r\n'
-        }
-      />
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -2515,8 +2499,7 @@ const PlasmicDescendants = {
     "timer",
     "form",
     "textarea",
-    "textInput",
-    "embedHtml"
+    "textInput"
   ],
   شرحاولهبمار: [
     "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
@@ -2528,8 +2511,7 @@ const PlasmicDescendants = {
   timer: ["timer"],
   form: ["form", "textarea", "textInput"],
   textarea: ["textarea"],
-  textInput: ["textInput"],
-  embedHtml: ["embedHtml"]
+  textInput: ["textInput"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2545,7 +2527,6 @@ type NodeDefaultElementType = {
   form: "form";
   textarea: "textarea";
   textInput: typeof TextInput;
-  embedHtml: typeof Embed;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2619,7 +2600,6 @@ export const PlasmicReceiptActionButtons = Object.assign(
     form: makeNodeComponent("form"),
     textarea: makeNodeComponent("textarea"),
     textInput: makeNodeComponent("textInput"),
-    embedHtml: makeNodeComponent("embedHtml"),
 
     // Metadata about props expected for PlasmicReceiptActionButtons
     internalVariantProps: PlasmicReceiptActionButtons__VariantProps,
