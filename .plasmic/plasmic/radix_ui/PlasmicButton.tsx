@@ -63,7 +63,7 @@ import * as pp from "@plasmicapp/react-web";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic_radix_ui.module.css"; // plasmic-import: sqPBLwEBBKHA2WDuGb17eV/projectcss
+import projectcss from "./plasmic.module.css"; // plasmic-import: sqPBLwEBBKHA2WDuGb17eV/projectcss
 import sty from "./PlasmicButton.module.css"; // plasmic-import: 5nirPCGmCnRD/css
 
 import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Wyt3GMMsLefj/icon

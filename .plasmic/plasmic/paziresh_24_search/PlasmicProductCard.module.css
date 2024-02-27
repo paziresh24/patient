@@ -1,0 +1,441 @@
+.root {
+  display: flex;
+  position: relative;
+  height: auto;
+  flex-direction: column;
+  background: #ffffff;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: 0.5rem;
+  padding: var(--token-Fv8-L_kN-2Ma);
+}
+.root > :global(.__wab_flex-container) {
+  flex-direction: column;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
+  height: calc(100% + var(--token-vMUQwr5Jto1d));
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: var(--token-vMUQwr5Jto1d);
+}
+.freeBox__wJlKm {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__wJlKm > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+  width: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox__wJlKm > :global(.__wab_flex-container) > *,
+.freeBox__wJlKm > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__wJlKm > :global(.__wab_flex-container) > picture > img,
+.freeBox__wJlKm
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-_c276Gs_1FIE);
+}
+.link__hyRw8 {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: auto;
+  max-width: 100%;
+}
+.avatar:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+.freeBox__uwhEa {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  top: auto;
+  left: auto;
+  min-width: 0;
+}
+.freeBox__uwhEa > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
+  height: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox__uwhEa > :global(.__wab_flex-container) > *,
+.freeBox__uwhEa > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__uwhEa > :global(.__wab_flex-container) > picture > img,
+.freeBox__uwhEa
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-_c276Gs_1FIE);
+}
+.link__iYnI7 {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.cardTitle {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-RxWJli6xyBzp);
+  min-width: 0;
+}
+.lineClamp__lmqY:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.cardSubtitle {
+  height: auto;
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre-wrap;
+  min-width: auto;
+}
+.freeBox__zf7Bm {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__zf7Bm > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__zf7Bm > :global(.__wab_flex-container) > *,
+.freeBox__zf7Bm > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__zf7Bm > :global(.__wab_flex-container) > picture > img,
+.freeBox__zf7Bm
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.svg___4KelP {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+  color: var(--token-JDvyxAtm9ONK);
+  margin-bottom: 5px;
+  flex-shrink: 0;
+}
+.span__zMlGi {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  font-weight: 500;
+  font-size: var(--token-tM2Vh4zTir7U);
+}
+.span__qbAn4 {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-tM2Vh4zTir7U);
+}
+.freeBox__rdT8C {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  padding-bottom: 0px;
+  min-width: 0;
+}
+.freeBox__rdT8C > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__rdT8C > :global(.__wab_flex-container) > *,
+.freeBox__rdT8C > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__rdT8C > :global(.__wab_flex-container) > picture > img,
+.freeBox__rdT8C
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.svg__uyLb1 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  flex-shrink: 0;
+}
+.lineClamp__sDffa:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.cardAddressRow {
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre-wrap;
+  width: 100%;
+  min-width: 0;
+}
+.freeBox__ddsL {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__ddsL > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__ddsL > :global(.__wab_flex-container) > *,
+.freeBox__ddsL > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__ddsL > :global(.__wab_flex-container) > picture > img,
+.freeBox__ddsL
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.svg__oF6 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.cardPrice {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  min-width: 0;
+}
+.freeBox__sd0 {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__sd0 > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+  width: calc(100% + var(--token-_c276Gs_1FIE));
+  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
+  height: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox__sd0 > :global(.__wab_flex-container) > *,
+.freeBox__sd0 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__sd0 > :global(.__wab_flex-container) > picture > img,
+.freeBox__sd0
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-_c276Gs_1FIE);
+  margin-top: var(--token-_c276Gs_1FIE);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__sd0 > :global(.__wab_flex-container) {
+    justify-content: flex-start;
+    align-content: flex-start;
+  }
+}
+.dialog:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.badgesChip:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  left: auto;
+  top: auto;
+  z-index: 1;
+  width: auto;
+  transform: translateX(0px) translateY(0px) translateZ(0px);
+}
+.svg__fj8S {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 20px;
+  height: 20px;
+  color: #15803d;
+  min-width: 20px;
+}
+.svg___2BpJ {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 20px;
+  height: 20px;
+  color: #15803d;
+  min-width: 20px;
+}
+.svg___4AT6K {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: #15803d;
+  min-width: 18px;
+}
+.text {
+  max-width: 100%;
+  font-size: var(--token-tM2Vh4zTir7U);
+  font-weight: 500;
+  flex-shrink: 1;
+  flex-grow: 0;
+}
+.freeBox___070Nx {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox___070Nx > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+  width: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox___070Nx > :global(.__wab_flex-container) > *,
+.freeBox___070Nx > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox___070Nx > :global(.__wab_flex-container) > picture > img,
+.freeBox___070Nx
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-_c276Gs_1FIE);
+}
+.freeBox__xozVc {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__xozVc > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
+  height: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox__xozVc > :global(.__wab_flex-container) > *,
+.freeBox__xozVc > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__xozVc > :global(.__wab_flex-container) > picture > img,
+.freeBox__xozVc
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-_c276Gs_1FIE);
+}
+.span__mY5Gg {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-6NbVMeD6zQwn);
+  min-width: 0;
+}
+.button:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+.svg__dDPe {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__b1Zmp {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}

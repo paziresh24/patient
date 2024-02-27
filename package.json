@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env PLASMIC_PREVIEW=true NODE_OPTIONS='--inspect' node server.js",
+    "dev": "cross-env NODE_OPTIONS='--inspect' node server.js",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "next start",

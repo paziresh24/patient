@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicAvatar,
   DefaultAvatarProps
-} from "./plasmic/paziresh_24/PlasmicAvatar";
+} from "./plasmic/paziresh_24_design_system/PlasmicAvatar";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

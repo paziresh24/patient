@@ -63,7 +63,8 @@ import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic_paziresh_24.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicServices.module.css"; // plasmic-import: q3FGMz6XNu9L/css
 
 import Icon22Icon from "./icons/PlasmicIcon__Icon22"; // plasmic-import: -KwzHfv-9ot5/icon
@@ -180,6 +181,7 @@ function PlasmicServices__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root,
         {
           [sty.roottype_onlineVisit]: hasVariant($state, "type", "onlineVisit")

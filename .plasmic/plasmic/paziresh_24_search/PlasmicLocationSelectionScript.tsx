@@ -63,7 +63,8 @@ import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic_website_starter.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicLocationSelectionScript.module.css"; // plasmic-import: 5bzKtjF_q24p/css
 
 createPlasmicElementProxy;
@@ -84,7 +85,7 @@ export const PlasmicLocationSelectionScript__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicLocationSelectionScript__OverridesType = {
   root?: Flex__<"div">;
-  setCityByUsersIpScript?: Flex__<typeof Embed>;
+  locationSelectionScriptEmbed?: Flex__<typeof Embed>;
 };
 
 export interface DefaultLocationSelectionScriptProps {
@@ -144,6 +145,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -161,9 +163,12 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         }
       })() ? (
         <Embed
-          data-plasmic-name={"setCityByUsersIpScript"}
-          data-plasmic-override={overrides.setCityByUsersIpScript}
-          className={classNames("__wab_instance", sty.setCityByUsersIpScript)}
+          data-plasmic-name={"locationSelectionScriptEmbed"}
+          data-plasmic-override={overrides.locationSelectionScriptEmbed}
+          className={classNames(
+            "__wab_instance",
+            sty.locationSelectionScriptEmbed
+          )}
           code={
             "<script>\r\n// Helper function to get cookie value by name\r\nfunction getCookie(name) {\r\n    var cookieArr = document.cookie.split(\";\");\r\n    for(var i = 0; i < cookieArr.length; i++) {\r\n        var cookiePair = cookieArr[i].split(\"=\");\r\n        if(name === cookiePair[0].trim()) {\r\n            // Decode the cookie value and return\r\n            return decodeURIComponent(cookiePair[1]);\r\n        }\r\n    }\r\n    // Return null if not found\r\n    return null;\r\n}\r\n\r\n// Main function to execute the desired actions\r\nfunction setLocationBasedOnIP() {\r\n    // Step 1: Check if 'new-city' cookie exists\r\n    if(getCookie('new-city') !== null) {\r\n        console.log('User city already set.');\r\n        return;\r\n    }\r\n\r\n    // Polyfill for fetch if needed\r\n    if (!window.fetch) {\r\n        console.error('Fetch API not supported, consider adding a polyfill.');\r\n        return;\r\n    }\r\n\r\n    // Simulate async behavior using callbacks\r\n    // Step 2: Find user's IP address\r\n    fetch('https://api64.ipify.org?format=json').then(function(ipResponse) {\r\n        ipResponse.json().then(function(ipData) {\r\n            var userIP = ipData.ip;\r\n\r\n            // Step 3: Find user's city by their IP\r\n            fetch('https://ip-api.ir/info/' + userIP, {\r\n                method: 'GET',\r\n                headers: {\r\n                    'Origin': 'https://paziresh24.com'\r\n                }\r\n            }).then(function(cityResponse) {\r\n                cityResponse.json().then(function(cityData) {\r\n\r\n                    // Step 4: Fetch list of provinces and cities\r\n                    fetch('https://www.paziresh24.com/api/getbaseinfo', {\r\n                        method: 'POST',\r\n                        headers: {\r\n                            'Content-Type': 'application/x-www-form-urlencoded',\r\n                        },\r\n                        body: 'table=[\"city\",\"province\"]&terminal_id=\"undefined\"'\r\n                    }).then(function(baseInfoResponse) {\r\n                        baseInfoResponse.json().then(function(baseInfoData) {\r\n                            // Find the matching city in the list\r\n                            var matchingCity = baseInfoData.result.city.find(function(city) {\r\n                                return city.en_slug === cityData.city.toLowerCase();\r\n                            });\r\n\r\n                            if (matchingCity) {\r\n                                // Step 5: Put new 'new-city' cookie\r\n                                document.cookie = 'new-city=' + encodeURIComponent(JSON.stringify(matchingCity)) + '; path=/';\r\n                                clarity(\"set\", \"auto_set_city\" , \"\u062a\u0646\u0638\u06cc\u0645 \u0627\u062a\u0648\u0645\u0627\u062a\u06cc\u06a9 \u0634\u0647\u0631 \u0627\u0632 \u0622\u06cc \u067e\u06cc\");\r\n                                // Tagging the click action in Clarity\r\n                                if (window.clarity) {\r\n                                  window.clarity(\"set\", \"auto_set_city\" , \"\u062a\u0646\u0638\u06cc\u0645 \u0627\u062a\u0648\u0645\u0627\u062a\u06cc\u06a9 \u0634\u0647\u0631 \u0627\u0632 \u0622\u06cc \u067e\u06cc\");\r\n                                  window.clarity(\"event\", \"\u0627\u0637\u0631\u0627\u0641 \u0645\u0646 \u0627\u062a\u0648\u0645\u0627\u0646\u06cc\u06a9 \u067e\u06cc\u0634\u0641\u0631\u0636\");\r\n                                  console.log('Clarity tag set for set city');\r\n                                }\r\n                                // Step 6: Refresh the page to set new city\r\n                                location.reload();\r\n                            } else {\r\n                                console.log('Could not find a matching city in the list.');\r\n                            }\r\n                        });\r\n                    });\r\n                });\r\n            });\r\n        });\r\n    }).catch(function(error) {\r\n        console.error('An error occurred:', error);\r\n    });\r\n}\r\n\r\n// Execute the function\r\nsetLocationBasedOnIP();\r\n\r\n</script>\r\n"
           }
@@ -174,15 +179,15 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "setCityByUsersIpScript"],
-  setCityByUsersIpScript: ["setCityByUsersIpScript"]
+  root: ["root", "locationSelectionScriptEmbed"],
+  locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  setCityByUsersIpScript: typeof Embed;
+  locationSelectionScriptEmbed: typeof Embed;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -245,7 +250,9 @@ export const PlasmicLocationSelectionScript = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    setCityByUsersIpScript: makeNodeComponent("setCityByUsersIpScript"),
+    locationSelectionScriptEmbed: makeNodeComponent(
+      "locationSelectionScriptEmbed"
+    ),
 
     // Metadata about props expected for PlasmicLocationSelectionScript
     internalVariantProps: PlasmicLocationSelectionScript__VariantProps,

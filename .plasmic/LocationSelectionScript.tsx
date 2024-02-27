@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicLocationSelectionScript,
   DefaultLocationSelectionScriptProps
-} from "./plasmic/website_starter/PlasmicLocationSelectionScript";
+} from "./plasmic/paziresh_24_search/PlasmicLocationSelectionScript";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

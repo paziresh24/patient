@@ -4,7 +4,7 @@ const PlasmicReviewCard = dynamic(() => import('.plasmic/plasmic/paziresh_24/Pla
 const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicServices'));
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
-const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/website_starter/PlasmicLocationSelectionScript'));
+const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript'));
 
 import PlasmicReceiptActionButtons, {
   PlasmicReceiptActionButtons__ArgProps,
@@ -14,7 +14,8 @@ import { PlasmicReviewCard__ArgProps } from '.plasmic/plasmic/paziresh_24/Plasmi
 import { PlasmicServices__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicServices';
 import { PlasmicActivity__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicActivity';
 import { PlasmicAbout__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicAbout';
-import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/website_starter/PlasmicLocationSelectionScript';
+import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript';
+import PlasmicProductCard, { PlasmicProductCard__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicProductCard';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -47,6 +48,12 @@ export const Components = {
     Component: PlasmicLocationSelectionScript,
     id: '5bzKtjF_q24p',
     propsAllowed: PlasmicLocationSelectionScript__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  ProductCard: {
+    Component: PlasmicProductCard,
+    id: 'NhMGML-3Q4Pu',
+    propsAllowed: PlasmicProductCard__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };

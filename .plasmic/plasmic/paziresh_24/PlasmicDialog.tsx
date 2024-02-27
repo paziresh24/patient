@@ -65,11 +65,12 @@ import { DialogContent } from "@plasmicpkgs/radix-ui";
 import { DialogTitle } from "@plasmicpkgs/radix-ui";
 import { DialogClose } from "@plasmicpkgs/radix-ui";
 
-import { useScreenVariants as useScreenVariantsce5BTtZuA7Fm } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: ce5BTtZuA7fm/globalVariant
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../paziresh_24_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic_paziresh_24.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicDialog.module.css"; // plasmic-import: 5NUpgw2K0nJD/css
 
 import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
@@ -180,7 +181,7 @@ function PlasmicDialog__RenderFunc(props: {
   });
 
   const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsce5BTtZuA7Fm()
+    screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
@@ -195,10 +196,10 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.dialog,
         { [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger") }
       )}
-      defaultOpen={true}
       onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
       open={generateStateValueProp($state, ["dialog", "open"])}
       overlayClassName={classNames({
@@ -213,7 +214,8 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens
+        projectcss.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens
       )}
       triggerSlot={
         (hasVariant($state, "noTrigger", "noTrigger") ? false : true)
@@ -247,7 +249,8 @@ function PlasmicDialog__RenderFunc(props: {
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens
+          projectcss.plasmic_tokens,
+          plasmic_paziresh_24_design_system_css.plasmic_tokens
         )}
       >
         <Stack__
