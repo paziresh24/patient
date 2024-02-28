@@ -120,72 +120,74 @@ export const Result = () => {
     });
   };
 
-  return (
+  return useFragmentProductCard ? (
+    <>
+      {isLoading && result.length == 0 && (
+        <div className="flex flex-col w-full space-y-3">
+          <Loading line={isLanding} />
+        </div>
+      )}
+      <Fragment
+        name="SearchResults"
+        props={{
+          searchResultResponse: {
+            search: {
+              ...search,
+              result,
+            },
+            selectedFilters,
+          },
+          nextPageTrigger: handleNextPage,
+          imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+          location: {
+            city_name: city?.en_slug,
+            city_id: city?.id,
+            ...geoLocation,
+          },
+          paginationLoadingStatus: isLoading,
+        }}
+      />
+    </>
+  ) : (
     <div className="flex flex-col w-full space-y-3">
       {!isLoading && result.length === 0 && <NotFound />}
       {result.map((item, index) =>
         isLanding ? (
-          <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
-        ) : (
           <>
-            {useFragmentProductCard ? (
-              <Fragment
-                key={index}
-                name="ProductCard"
-                props={{
-                  title: item.title,
-                  avatarSrc: publicRuntimeConfig.CDN_BASE_URL + item.image,
-                  subTitle: item.display_expertise,
-                  badges: item.badges,
-                  actionButtons: item.actions,
-                  rateCount: item.rates_count,
-                  satisfactionPercent: item.satisfaction,
-                  address: item.display_address,
-                  price: item.price,
-                  avatarVerifiedTick: !item.is_bulk,
-                  avatarRingColor: item.is_bulk ? null : 'blue',
-                  avatarAltText: `${item.prefix} ${item.title} ${item.display_expertise}`,
-                  url: {
-                    destination: item.url,
-                    title: `${item.prefix} ${item.title} ${item.display_expertise}`,
-                  },
-                  eventTrigger: (elementName: string, elementContent: string) => handleClickEelmentEvent(item, elementName, elementContent),
-                }}
-              />
-            ) : (
-              <Card
-                key={index}
-                alt={`${item.prefix} ${item.title} ${item.display_expertise}`}
-                baseInfo={{
-                  displayName: item.title,
-                  avatar: item.image,
-                  expertise: item.display_expertise,
-                  isVerify: !item.is_bulk,
-                  rate: {
-                    count: item.rates_count,
-                    satisfaction: item.satisfaction,
-                  },
-                  url: item.url,
-                }}
-                type={item.type}
-                details={{
-                  address: { text: item.display_address },
-                  price: item.price,
-                  badges: item.badges,
-                }}
-                actions={item?.actions?.map(action => ({
-                  text: action.title,
-                  description: action.top_title,
-                  outline: action.outline,
-                  action: () => {
-                    router.push(action.url);
-                  },
-                }))}
-                avatarPriority={index <= 1}
-                sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(item, element, content)}
-              />
-            )}
+            <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
           </>
+        ) : (
+          <Card
+            key={index}
+            alt={`${item.prefix} ${item.title} ${item.display_expertise}`}
+            baseInfo={{
+              displayName: item.title,
+              avatar: item.image,
+              expertise: item.display_expertise,
+              isVerify: !item.is_bulk,
+              rate: {
+                count: item.rates_count,
+                satisfaction: item.satisfaction,
+              },
+              url: item.url,
+            }}
+            type={item.type}
+            details={{
+              address: { text: item.display_address },
+              price: item.price,
+              badges: item.badges,
+            }}
+            actions={item?.actions?.map(action => ({
+              text: action.title,
+              description: action.top_title,
+              outline: action.outline,
+              action: () => {
+                router.push(action.url);
+              },
+            }))}
+            avatarPriority={index <= 1}
+            sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(item, element, content)}
+          />
         ),
       )}
       {isLoading && <Loading line={isLanding} />}

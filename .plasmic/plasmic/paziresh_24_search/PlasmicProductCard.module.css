@@ -59,12 +59,14 @@
   max-width: 100%;
 }
 .avatar:global(.__wab_instance) {
-  max-width: 100%;
+  max-width: 80px;
   position: relative;
   left: auto;
   top: auto;
   width: 80px;
   height: 80px;
+  max-height: 80px;
+  min-width: 80px;
   flex-shrink: 0;
 }
 .freeBox__uwhEa {

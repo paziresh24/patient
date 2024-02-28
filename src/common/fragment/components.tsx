@@ -16,6 +16,7 @@ import { PlasmicActivity__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicA
 import { PlasmicAbout__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicAbout';
 import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript';
 import PlasmicProductCard, { PlasmicProductCard__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicProductCard';
+import PlasmicSearchResults, { PlasmicSearchResults__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -54,6 +55,12 @@ export const Components = {
     Component: PlasmicProductCard,
     id: 'NhMGML-3Q4Pu',
     propsAllowed: PlasmicProductCard__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  SearchResults: {
+    Component: PlasmicSearchResults,
+    id: 'XhSI4pxMLR3L',
+    propsAllowed: PlasmicSearchResults__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };

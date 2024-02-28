@@ -12,7 +12,36 @@
 .root > :global(.__wab_flex-container) {
   flex-direction: column;
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: center;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  margin-top: calc(0px - var(--token-Fv8-L_kN-2Ma));
+  height: calc(100% + var(--token-Fv8-L_kN-2Ma));
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: var(--token-Fv8-L_kN-2Ma);
+}
+.freeBox__k8Dm8 {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin-right: 0px;
+  background: none;
+  min-width: 0;
+  min-height: 0;
+}
+.freeBox__k8Dm8 > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   flex-wrap: nowrap;
   align-content: stretch;
   min-width: 0;
@@ -20,10 +49,14 @@
   margin-top: calc(0px - var(--token-_c276Gs_1FIE));
   height: calc(100% + var(--token-_c276Gs_1FIE));
 }
-.root > :global(.__wab_flex-container) > *,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.root > :global(.__wab_flex-container) > picture > img,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+.freeBox__k8Dm8 > :global(.__wab_flex-container) > *,
+.freeBox__k8Dm8 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__k8Dm8 > :global(.__wab_flex-container) > picture > img,
+.freeBox__k8Dm8
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
 .productCard:global(.__wab_instance) {
@@ -31,4 +64,109 @@
   position: relative;
   width: 100%;
   min-width: 0;
+}
+.button:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.svg__eDvlU {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__steSm {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.freeBox__aZJcA {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  background: #ffedd5;
+  min-width: 0;
+  border-radius: 8px;
+  padding: var(--token-Fv8-L_kN-2Ma);
+  border: 1px dashed #d8b07a;
+}
+.freeBox__aZJcA > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
+  height: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox__aZJcA > :global(.__wab_flex-container) > *,
+.freeBox__aZJcA > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__aZJcA > :global(.__wab_flex-container) > picture > img,
+.freeBox__aZJcA
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-_c276Gs_1FIE);
+}
+.text__psRc {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-RxWJli6xyBzp);
+  font-weight: 700;
+  min-width: 0;
+}
+.text__fjxY {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-weight: 400;
+  min-width: 0;
+}
+.text__bUp8Z {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.ul__u9LlH {
+  display: flex;
+  flex-direction: column;
+  list-style-position: inside;
+  list-style-type: none;
+  padding: 0px;
+}
+.ul__qa1Fo {
+  display: flex;
+  flex-direction: column;
+  list-style-position: inside;
+  text-align: right;
+  padding-left: 0px;
+  width: 100%;
+  min-width: 0;
+}
+.ul__qa1Fo > :global(.__wab_flex-container) {
+  flex-direction: column;
+  min-width: 0;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-top: calc(0px - var(--token-fhaz6q6bl-fW));
+  height: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.ul__qa1Fo > :global(.__wab_flex-container) > *,
+.ul__qa1Fo > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.ul__qa1Fo > :global(.__wab_flex-container) > picture > img,
+.ul__qa1Fo
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-fhaz6q6bl-fW);
 }

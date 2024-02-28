@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -85,6 +87,8 @@ export const PlasmicLocationSelectionScript__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicLocationSelectionScript__OverridesType = {
   root?: Flex__<"div">;
+  dialog?: Flex__<typeof Dialog>;
+  text?: Flex__<"div">;
   locationSelectionScriptEmbed?: Flex__<typeof Embed>;
 };
 
@@ -133,6 +137,24 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
 
   const currentUser = useCurrentUser?.() || {};
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "dialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -149,6 +171,34 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         sty.root
       )}
     >
+      {false ? (
+        <Dialog
+          data-plasmic-name={"dialog"}
+          data-plasmic-override={overrides.dialog}
+          body={
+            <React.Fragment>
+              <div
+                data-plasmic-name={"text"}
+                data-plasmic-override={overrides.text}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text
+                )}
+              >
+                {"You can insert dialog body content here in this slot."}
+              </div>
+              <SideEffect
+                className={classNames("__wab_instance", sty.sideEffect__oheuf)}
+              />
+            </React.Fragment>
+          }
+          className={classNames("__wab_instance", sty.dialog)}
+          onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+          open={generateStateValueProp($state, ["dialog", "open"])}
+          trigger={null}
+        />
+      ) : null}
       {(() => {
         try {
           return $props.setCityByUsersIp;
@@ -174,12 +224,42 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           }
         />
       ) : null}
+      {false ? (
+        <SideEffect
+          className={classNames("__wab_instance", sty.sideEffect__k00Md)}
+          onMount={async () => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return ($state.dialog.open = true);
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+          }}
+        />
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "locationSelectionScriptEmbed"],
+  root: ["root", "dialog", "text", "locationSelectionScriptEmbed"],
+  dialog: ["dialog", "text"],
+  text: ["text"],
   locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -187,6 +267,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  dialog: typeof Dialog;
+  text: "div";
   locationSelectionScriptEmbed: typeof Embed;
 };
 
@@ -250,6 +332,8 @@ export const PlasmicLocationSelectionScript = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    dialog: makeNodeComponent("dialog"),
+    text: makeNodeComponent("text"),
     locationSelectionScriptEmbed: makeNodeComponent(
       "locationSelectionScriptEmbed"
     ),
