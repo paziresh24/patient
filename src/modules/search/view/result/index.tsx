@@ -127,26 +127,28 @@ export const Result = () => {
           <Loading line={isLanding} />
         </div>
       )}
-      <Fragment
-        name="SearchResults"
-        props={{
-          searchResultResponse: {
-            search: {
-              ...search,
-              result,
+      {(result.length === 0 ? !isLoading : true) && (
+        <Fragment
+          name="SearchResults"
+          props={{
+            searchResultResponse: {
+              search: {
+                ...search,
+                result,
+              },
+              selectedFilters,
             },
-            selectedFilters,
-          },
-          nextPageTrigger: handleNextPage,
-          imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-          location: {
-            city_name: city?.en_slug,
-            city_id: city?.id,
-            ...geoLocation,
-          },
-          paginationLoadingStatus: isLoading,
-        }}
-      />
+            nextPageTrigger: handleNextPage,
+            imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+            location: {
+              city_name: city?.en_slug,
+              city_id: city?.id,
+              ...geoLocation,
+            },
+            paginationLoadingStatus: isLoading,
+          }}
+        />
+      )}
     </>
   ) : (
     <div className="flex flex-col w-full space-y-3">
