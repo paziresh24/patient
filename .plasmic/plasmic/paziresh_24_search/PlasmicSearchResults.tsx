@@ -239,7 +239,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 avatarAltText={(() => {
                   try {
-                    return `${currentItem.prefix} ${currentItem.title} ${currentItem.display_expertise}`;
+                    return `${
+                      currentItem.prefix ? currentItem.prefix + " " : ""
+                    }${currentItem.title ? currentItem.title + " " : ""}${
+                      currentItem.display_expertise
+                        ? currentItem.display_expertise
+                        : ""
+                    }`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -252,7 +258,10 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 avatarRingColor={(() => {
                   try {
-                    return currentItem.is_bulk !== true ? "blue" : undefined;
+                    return !currentItem.is_bulk &&
+                      currentItem.is_bulk !== undefined
+                      ? "blue"
+                      : undefined;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -266,7 +275,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                 avatarSrc={`${$props.imageSrcPrefix}${currentItem.image}`}
                 avatarVerifiedTick={(() => {
                   try {
-                    return !currentItem.is_bulk;
+                    return (
+                      !currentItem.is_bulk && currentItem.is_bulk !== undefined
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -419,7 +430,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                   try {
                     return {
                       destination: currentItem.url,
-                      title: `${currentItem.prefix} ${currentItem.title} ${currentItem.display_expertise}`
+                      title: `${
+                        currentItem.prefix ? currentItem.prefix + " " : ""
+                      }${currentItem.title ? currentItem.title + " " : ""}${
+                        currentItem.display_expertise
+                          ? currentItem.display_expertise
+                          : ""
+                      }`
                     };
                   } catch (e) {
                     if (
@@ -438,11 +455,11 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return (
-            $props.searchResultResponse.search.pagination.limit *
-              $props.searchResultResponse.search.pagination.page <
-            $props.searchResultResponse.search.total
-          );
+          return $props.searchResultResponse.search.pagination.limit === 0
+            ? false
+            : $props.searchResultResponse.search.pagination.limit *
+                $props.searchResultResponse.search.pagination.page <
+                $props.searchResultResponse.search.total;
         } catch (e) {
           if (
             e instanceof TypeError ||

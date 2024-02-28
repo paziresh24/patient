@@ -120,7 +120,7 @@ export const Result = () => {
     });
   };
 
-  return useFragmentProductCard && !isLanding ? (
+  return useFragmentProductCard ? (
     <>
       {isLoading && result.length == 0 && (
         <div className="flex flex-col w-full space-y-3">
@@ -153,7 +153,9 @@ export const Result = () => {
       {!isLoading && result.length === 0 && <NotFound />}
       {result.map((item, index) =>
         isLanding ? (
-          <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
+          <>
+            <CategoryCard key={index} url={item.url} count={item.count} image={item.image} title={item.title} />
+          </>
         ) : (
           <Card
             key={index}
