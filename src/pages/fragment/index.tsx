@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { PlasmicCanvasHost, registerFunction } from '@plasmicapp/react-web/lib/host';
-import { splunkInstanceForPlasmic } from '@/common/services/splunk';
+import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
 }
 
-registerFunction(splunkInstanceForPlasmic, {
+registerFunction(plasmicSplunkEvent, {
   name: 'splunkEvent',
-  importPath: './common/services/splunk',
+  isDefaultExport: true,
+  importPath: '@/common/services/plasmicSplunkEvent',
   description: 'splunk event',
   typescriptDeclaration: `({
     token,

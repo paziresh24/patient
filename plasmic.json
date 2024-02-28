@@ -263,6 +263,21 @@
       "customFunctions": []
     },
     {
+      "projectId": "a3pmZtcpA5asHkNtN3SGoF",
+      "projectApiToken": "1f2n20WEoxaPX0hs2uqNOsnXjfuNVyw4FB2zgrleQqQm7qWQPGlBFi63m7FgGuFbWu1b8lKhAm6fmfGf5CC8A",
+      "projectName": "uuid",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/uuid/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [],
+      "customFunctions": []
+    },
+    {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
       "projectApiToken": "qxq800gYC67BOqHYnTHxD4C7pBBFZm6VP4XdU8vevI8awru5kfW7ofg2msC86kBNrxxuzWwrQOpU6gvdkEg",
       "projectName": "Paziresh24/DesignSystem",
@@ -418,6 +433,32 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicProductCard.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "XhSI4pxMLR3L",
+          "name": "SearchResults",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchResults.tsx",
+          "importSpec": {
+            "modulePath": "SearchResults.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchResults.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "zLShj09Q9POm",
+          "name": "SearchFilters",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchFilters.tsx",
+          "importSpec": {
+            "modulePath": "SearchFilters.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchFilters.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [],
@@ -439,7 +480,15 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [
+        {
+          "defaultExport": true,
+          "id": "splunkEvent",
+          "importPath": "@/common/services/plasmicSplunkEvent",
+          "name": "splunkEvent",
+          "namespace": null
+        }
+      ]
     },
     {
       "projectId": "3m3vFk1dnCzZnwT8k489Jy",

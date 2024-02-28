@@ -238,7 +238,7 @@ function PlasmicProductCard__RenderFunc(props: {
           component={Link}
           href={(() => {
             try {
-              return $props.url.destination;
+              return $props.url?.destination;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -274,7 +274,7 @@ function PlasmicProductCard__RenderFunc(props: {
           platform={"nextjs"}
           target={(() => {
             try {
-              return $props.url.openInNewTab;
+              return $props.url?.openInNewTab;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -287,7 +287,7 @@ function PlasmicProductCard__RenderFunc(props: {
           })()}
           title={(() => {
             try {
-              return $props.url.title;
+              return $props.url?.title;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -371,7 +371,7 @@ function PlasmicProductCard__RenderFunc(props: {
             component={Link}
             href={(() => {
               try {
-                return $props.url.destination;
+                return $props.url?.destination;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -422,7 +422,7 @@ function PlasmicProductCard__RenderFunc(props: {
             platform={"nextjs"}
             target={(() => {
               try {
-                return $props.url.openInNewTab;
+                return $props.url?.openInNewTab;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -435,7 +435,7 @@ function PlasmicProductCard__RenderFunc(props: {
             })()}
             title={(() => {
               try {
-                return $props.url.title;
+                return $props.url?.title;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
