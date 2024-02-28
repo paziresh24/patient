@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import Avatar from "../../Avatar"; // plasmic-import: AkEj38NruNNA/component
+import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import ReplyCard from "../../ReplyCard"; // plasmic-import: W_h5HWBjSAiK/component
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
@@ -67,7 +67,8 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic_paziresh_24.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: 3_YM1K_ShdiP/css
 
 import Icon10Icon from "./icons/PlasmicIcon__Icon10"; // plasmic-import: Z5JVHYJlHhEy/icon
@@ -225,6 +226,7 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
       dir={"rtl"}

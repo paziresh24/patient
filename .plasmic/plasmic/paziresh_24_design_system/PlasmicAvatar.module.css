@@ -22,7 +22,7 @@
   object-fit: cover;
 }
 .imgring_blue {
-  border: 2px solid var(--token-OlVuQmI49cL3);
+  border: 2px solid var(--token-JDvyxAtm9ONK);
 }
 .imgring_green {
   border: 2px solid #2fc75e;
@@ -43,7 +43,7 @@
   padding: 8px;
 }
 .freeBoxring_blue {
-  border: 2px solid var(--token-OlVuQmI49cL3);
+  border: 2px solid var(--token-JDvyxAtm9ONK);
 }
 .freeBoxring_green {
   border: 2px solid #2fc75e;
@@ -57,7 +57,7 @@
   top: auto;
   text-align: center;
   color: #a6b8ca;
-  font-size: var(--token-9YpWDRZpBZcs);
+  font-size: var(--token-6NbVMeD6zQwn);
   font-weight: 700;
   min-width: 0;
 }
@@ -65,12 +65,11 @@
   position: absolute;
   object-fit: cover;
   max-width: 100%;
-  color: var(--token-OlVuQmI49cL3);
   left: 0px;
-  top: 39px;
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
+  top: auto;
+  width: 25%;
+  height: 25%;
+  bottom: 5px;
   display: none;
 }
 .svgbadge_check {
