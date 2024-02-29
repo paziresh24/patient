@@ -63,7 +63,9 @@ function MyApp(props: AppProps) {
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
-      growthbook.loadFeatures({ autoRefresh: true });
+      console.log(router.query);
+
+      growthbook.loadFeatures({ autoRefresh: true, skipCache: router.query.skipFlagsCache === 'true' });
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
         id: getCookie('terminal_id'),
