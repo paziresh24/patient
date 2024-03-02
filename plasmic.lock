@@ -246,7 +246,7 @@
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
-      "version": "9.0.5",
+      "version": "10.1.0",
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "4.0.1",
         "oBJtsp5RgVpcN6KCrDTuQT": "0.5.0",
@@ -263,12 +263,12 @@
         {
           "type": "renderModule",
           "assetId": "5bzKtjF_q24p",
-          "checksum": "d999540495a38f8156e68256480c6095"
+          "checksum": "d742191f05036d7170de3840415bf27b"
         },
         {
           "type": "cssRules",
           "assetId": "5bzKtjF_q24p",
-          "checksum": "d999540495a38f8156e68256480c6095"
+          "checksum": "d742191f05036d7170de3840415bf27b"
         },
         {
           "type": "renderModule",
@@ -299,16 +299,6 @@
           "type": "cssRules",
           "assetId": "zLShj09Q9POm",
           "checksum": "6d6bdd769e694e6f3884cd63e8879079"
-        },
-        {
-          "type": "renderModule",
-          "assetId": "53vYfoliZao5",
-          "checksum": "08cf959038547b9c4d576791d8186b5c"
-        },
-        {
-          "type": "cssRules",
-          "assetId": "53vYfoliZao5",
-          "checksum": "08cf959038547b9c4d576791d8186b5c"
         },
         {
           "type": "icon",
@@ -424,7 +414,7 @@
         "hsyJcmBceSfPzvvXzVTuk7": "0.1.0",
         "9Vr5YWkf3w7jj6SsTcCEta": "0.8.0",
         "3m3vFk1dnCzZnwT8k489Jy": "0.1.0",
-        "sMdpLWyxbzDCruwMRffW2m": "9.0.5",
+        "sMdpLWyxbzDCruwMRffW2m": "10.1.0",
         "h9Dbk9ygddw7UVEq1NNhKi": "4.0.1",
         "oBJtsp5RgVpcN6KCrDTuQT": "0.5.0",
         "a3pmZtcpA5asHkNtN3SGoF": "0.3.0"
@@ -559,12 +549,12 @@
         {
           "type": "renderModule",
           "assetId": "5jjwlzFYfMqI",
-          "checksum": "d8497b5ef5861c5b002dfc639566d0a3"
+          "checksum": "f378b04a881bd918fc0e5b0875599e58"
         },
         {
           "type": "cssRules",
           "assetId": "5jjwlzFYfMqI",
-          "checksum": "d8497b5ef5861c5b002dfc639566d0a3"
+          "checksum": "f378b04a881bd918fc0e5b0875599e58"
         },
         {
           "type": "renderModule",
