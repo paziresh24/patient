@@ -246,7 +246,7 @@
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
-      "version": "10.1.0",
+      "version": "10.2.0",
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "4.0.1",
         "oBJtsp5RgVpcN6KCrDTuQT": "0.5.0",
@@ -263,12 +263,12 @@
         {
           "type": "renderModule",
           "assetId": "5bzKtjF_q24p",
-          "checksum": "d742191f05036d7170de3840415bf27b"
+          "checksum": "d49a717a04e61036b55f7d85e702ed62"
         },
         {
           "type": "cssRules",
           "assetId": "5bzKtjF_q24p",
-          "checksum": "d742191f05036d7170de3840415bf27b"
+          "checksum": "d49a717a04e61036b55f7d85e702ed62"
         },
         {
           "type": "renderModule",
@@ -414,7 +414,7 @@
         "hsyJcmBceSfPzvvXzVTuk7": "0.1.0",
         "9Vr5YWkf3w7jj6SsTcCEta": "0.8.0",
         "3m3vFk1dnCzZnwT8k489Jy": "0.1.0",
-        "sMdpLWyxbzDCruwMRffW2m": "10.1.0",
+        "sMdpLWyxbzDCruwMRffW2m": "10.2.0",
         "h9Dbk9ygddw7UVEq1NNhKi": "4.0.1",
         "oBJtsp5RgVpcN6KCrDTuQT": "0.5.0",
         "a3pmZtcpA5asHkNtN3SGoF": "0.3.0"

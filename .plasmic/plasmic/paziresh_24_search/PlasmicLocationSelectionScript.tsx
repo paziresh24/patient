@@ -60,9 +60,9 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -97,6 +97,7 @@ export type PlasmicLocationSelectionScript__OverridesType = {
   text?: Flex__<"div">;
   freeBox?: Flex__<"div">;
   locationSelectionScriptEmbed?: Flex__<typeof Embed>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultLocationSelectionScriptProps {
@@ -198,10 +199,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                 "\u0628\u0631\u0627\u06cc \u062f\u06cc\u062f\u0646 \u0646\u062a\u0627\u06cc\u062c \u0627\u0637\u0631\u0627\u0641\u062a\u0627\u0646\u060c \u0628\u0647 \u067e\u0630\u06cc\u0631\u063424 \u0627\u062c\u0627\u0632\u0647 \u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u0647 \u0645\u0648\u0642\u0639\u06cc\u062a \u0645\u06a9\u0627\u0646\u06cc \u0631\u0627 \u0628\u062f\u0647\u06cc\u062f."
               }
             </div>
-            <SideEffect
-              className={classNames("__wab_instance", sty.sideEffect__oheuf)}
-            />
-
             <Stack__
               as={"div"}
               data-plasmic-name={"freeBox"}
@@ -263,7 +260,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     ];
                   }
 
-                  $steps["autoPressNearMeButtonRunCode2"] = false
+                  $steps["autoPressNearMeButtonRunCode2"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
@@ -392,45 +389,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                       "autoPressNearMeButtonRunCode2"
                     ];
                   }
-
-                  $steps["goToPage"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return undefined;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        };
-                        return (({ destination }) => {
-                          if (
-                            typeof destination === "string" &&
-                            destination.startsWith("#")
-                          ) {
-                            document
-                              .getElementById(destination.substr(1))
-                              .scrollIntoView({ behavior: "smooth" });
-                          } else {
-                            __nextRouter?.push(destination);
-                          }
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["goToPage"] != null &&
-                    typeof $steps["goToPage"] === "object" &&
-                    typeof $steps["goToPage"].then === "function"
-                  ) {
-                    $steps["goToPage"] = await $steps["goToPage"];
-                  }
                 }}
               />
 
@@ -535,7 +493,9 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         }
       })() ? (
         <SideEffect
-          className={classNames("__wab_instance", sty.sideEffect__k00Md)}
+          data-plasmic-name={"sideEffect"}
+          data-plasmic-override={overrides.sideEffect}
+          className={classNames("__wab_instance", sty.sideEffect)}
           onMount={async () => {
             const $steps = {};
 
@@ -583,7 +543,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                             }
                           });
                         }
-                        var $state = { dialog: { open: false } };
                         return checkConditionsAndOpenDialog();
                       })();
                     }
@@ -608,11 +567,19 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "dialog", "text", "freeBox", "locationSelectionScriptEmbed"],
+  root: [
+    "root",
+    "dialog",
+    "text",
+    "freeBox",
+    "locationSelectionScriptEmbed",
+    "sideEffect"
+  ],
   dialog: ["dialog", "text", "freeBox"],
   text: ["text"],
   freeBox: ["freeBox"],
-  locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"]
+  locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -623,6 +590,7 @@ type NodeDefaultElementType = {
   text: "div";
   freeBox: "div";
   locationSelectionScriptEmbed: typeof Embed;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -691,6 +659,7 @@ export const PlasmicLocationSelectionScript = Object.assign(
     locationSelectionScriptEmbed: makeNodeComponent(
       "locationSelectionScriptEmbed"
     ),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicLocationSelectionScript
     internalVariantProps: PlasmicLocationSelectionScript__VariantProps,
