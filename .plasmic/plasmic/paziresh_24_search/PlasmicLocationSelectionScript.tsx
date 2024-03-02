@@ -61,6 +61,7 @@ import {
 
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -68,6 +69,9 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicLocationSelectionScript.module.css"; // plasmic-import: 5bzKtjF_q24p/css
+
+import ChevronRightIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -79,21 +83,25 @@ export const PlasmicLocationSelectionScript__VariantProps =
 
 export type PlasmicLocationSelectionScript__ArgsType = {
   setCityByUsersIp?: boolean;
+  requestGeolocationAccess?: boolean;
 };
 type ArgPropType = keyof PlasmicLocationSelectionScript__ArgsType;
 export const PlasmicLocationSelectionScript__ArgProps = new Array<ArgPropType>(
-  "setCityByUsersIp"
+  "setCityByUsersIp",
+  "requestGeolocationAccess"
 );
 
 export type PlasmicLocationSelectionScript__OverridesType = {
   root?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   text?: Flex__<"div">;
+  freeBox?: Flex__<"div">;
   locationSelectionScriptEmbed?: Flex__<typeof Embed>;
 };
 
 export interface DefaultLocationSelectionScriptProps {
   setCityByUsersIp?: boolean;
+  requestGeolocationAccess?: boolean;
   className?: string;
 }
 
@@ -118,7 +126,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          setCityByUsersIp: false
+          setCityByUsersIp: false,
+          requestGeolocationAccess: false
         },
         props.args
       ),
@@ -171,34 +180,322 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         sty.root
       )}
     >
-      {false ? (
-        <Dialog
-          data-plasmic-name={"dialog"}
-          data-plasmic-override={overrides.dialog}
-          body={
-            <React.Fragment>
-              <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text
-                )}
-              >
-                {"You can insert dialog body content here in this slot."}
-              </div>
-              <SideEffect
-                className={classNames("__wab_instance", sty.sideEffect__oheuf)}
+      <Dialog
+        data-plasmic-name={"dialog"}
+        data-plasmic-override={overrides.dialog}
+        body={
+          <React.Fragment>
+            <div
+              data-plasmic-name={"text"}
+              data-plasmic-override={overrides.text}
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text
+              )}
+            >
+              {
+                "\u0628\u0631\u0627\u06cc \u062f\u06cc\u062f\u0646 \u0646\u062a\u0627\u06cc\u062c \u0627\u0637\u0631\u0627\u0641\u062a\u0627\u0646\u060c \u0628\u0647 \u067e\u0630\u06cc\u0631\u063424 \u0627\u062c\u0627\u0632\u0647 \u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u0647 \u0645\u0648\u0642\u0639\u06cc\u062a \u0645\u06a9\u0627\u0646\u06cc \u0631\u0627 \u0628\u062f\u0647\u06cc\u062f."
+              }
+            </div>
+            <SideEffect
+              className={classNames("__wab_instance", sty.sideEffect__oheuf)}
+            />
+
+            <Stack__
+              as={"div"}
+              data-plasmic-name={"freeBox"}
+              data-plasmic-override={overrides.freeBox}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox)}
+            >
+              <Button
+                children2={
+                  "\u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u0645\u0648\u0642\u0639\u06cc\u062a \u0645\u06a9\u0627\u0646\u06cc"
+                }
+                className={classNames("__wab_instance", sty.button___1MxKw)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["locationAccessGivingWay1"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return navigator.geolocation.getCurrentPosition(
+                              function (position) {
+                                console.log("Location access granted.");
+                                console.log(
+                                  "Latitude:",
+                                  position.coords.latitude
+                                );
+                                console.log(
+                                  "Longitude:",
+                                  position.coords.longitude
+                                );
+                              },
+                              function (error) {
+                                console.error(
+                                  "Error occurred: ",
+                                  error.message
+                                );
+                              },
+                              {
+                                maximumAge: 60000,
+                                timeout: 5000,
+                                enableHighAccuracy: true
+                              }
+                            );
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["locationAccessGivingWay1"] != null &&
+                    typeof $steps["locationAccessGivingWay1"] === "object" &&
+                    typeof $steps["locationAccessGivingWay1"].then ===
+                      "function"
+                  ) {
+                    $steps["locationAccessGivingWay1"] = await $steps[
+                      "locationAccessGivingWay1"
+                    ];
+                  }
+
+                  $steps["autoPressNearMeButtonRunCode2"] = false
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              function clickButtonByTextAndTagClarity(
+                                text,
+                                hideSelector
+                              ) {
+                                var buttons =
+                                  document.querySelectorAll("button");
+                                var targetButton = Array.prototype.find.call(
+                                  buttons,
+                                  function (button) {
+                                    return (
+                                      button.innerText.includes(text) ||
+                                      button.textContent.includes(text)
+                                    );
+                                  }
+                                );
+                                if (targetButton) {
+                                  console.log(
+                                    'Button "' +
+                                      text +
+                                      '" found, simulating click...'
+                                  );
+                                  targetButton.click();
+                                  clarity(
+                                    "set",
+                                    "auto_clicked_near_me",
+                                    "اطراف من اتومانیک پیشفرض"
+                                  );
+                                  if (window.clarity) {
+                                    window.clarity(
+                                      "set",
+                                      "clicked_" + text,
+                                      true
+                                    );
+                                    window.clarity(
+                                      "event",
+                                      "اطراف من اتومانیک پیشفرض"
+                                    );
+                                    console.log(
+                                      'Clarity tag set for clicking "' +
+                                        text +
+                                        '"'
+                                    );
+                                  }
+                                  if (hideSelector) {
+                                    var elementToHide =
+                                      document.querySelector(hideSelector);
+                                    if (elementToHide) {
+                                      elementToHide.style.display = "none";
+                                      console.log(
+                                        "Hiding element: " + hideSelector
+                                      );
+                                    }
+                                  }
+                                  sendHttpRequest();
+                                  return true;
+                                } else {
+                                  console.log(
+                                    'Button "' + text + '" not found'
+                                  );
+                                  return false;
+                                }
+                              }
+                              function sendHttpRequest() {
+                                var url =
+                                  "https://p24splk.paziresh24.com/services/collector";
+                                var data = JSON.stringify({
+                                  sourcetype: "_json",
+                                  event: {
+                                    event_group: "search_metrics",
+                                    event_type: "near_me_button_auto_press",
+                                    current_url: window.location.href
+                                  }
+                                });
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", url, true);
+                                xhr.setRequestHeader("accept-language", "fa");
+                                xhr.setRequestHeader(
+                                  "authorization",
+                                  "Splunk 7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd"
+                                );
+                                xhr.setRequestHeader(
+                                  "content-type",
+                                  "application/json"
+                                );
+                                xhr.onreadystatechange = function () {
+                                  if (xhr.readyState === 4) {
+                                    console.log("Success:", xhr.responseText);
+                                  }
+                                };
+                                xhr.send(data);
+                              }
+                              if (
+                                clickButtonByTextAndTagClarity(
+                                  "همه شهرها",
+                                  ".module-selector"
+                                )
+                              ) {
+                                return setTimeout(function () {
+                                  clickButtonByTextAndTagClarity("اطراف من");
+                                }, 100);
+                              } else {
+                                return console.log(
+                                  "Failed to click the first button. Aborting sequence."
+                                );
+                              }
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["autoPressNearMeButtonRunCode2"] != null &&
+                    typeof $steps["autoPressNearMeButtonRunCode2"] ===
+                      "object" &&
+                    typeof $steps["autoPressNearMeButtonRunCode2"].then ===
+                      "function"
+                  ) {
+                    $steps["autoPressNearMeButtonRunCode2"] = await $steps[
+                      "autoPressNearMeButtonRunCode2"
+                    ];
+                  }
+
+                  $steps["goToPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          destination: (() => {
+                            try {
+                              return undefined;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["goToPage"] != null &&
+                    typeof $steps["goToPage"] === "object" &&
+                    typeof $steps["goToPage"].then === "function"
+                  ) {
+                    $steps["goToPage"] = await $steps["goToPage"];
+                  }
+                }}
               />
-            </React.Fragment>
-          }
-          className={classNames("__wab_instance", sty.dialog)}
-          onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
-          open={generateStateValueProp($state, ["dialog", "open"])}
-          trigger={null}
-        />
-      ) : null}
+
+              <Button
+                children2={"\u0641\u0639\u0644\u0627 \u0646\u0647"}
+                className={classNames("__wab_instance", sty.button__rvyjl)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runCode"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (document.cookie = `user_geolocation_access_preference=denied; expires=${new Date(
+                              Date.now() + 5184000000
+                            ).toUTCString()}`);
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
+                  }
+
+                  $steps["runCode2"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return ($state.dialog.open = false);
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode2"] != null &&
+                    typeof $steps["runCode2"] === "object" &&
+                    typeof $steps["runCode2"].then === "function"
+                  ) {
+                    $steps["runCode2"] = await $steps["runCode2"];
+                  }
+                }}
+                outline={true}
+              />
+            </Stack__>
+          </React.Fragment>
+        }
+        className={classNames("__wab_instance", sty.dialog)}
+        onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+        open={generateStateValueProp($state, ["dialog", "open"])}
+        title={
+          "\u0645\u06cc\u200c\u062e\u0648\u0627\u0647\u06cc\u062f \u067e\u0632\u0634\u06a9\u0627\u0646 \u0646\u0632\u062f\u06cc\u06a9 \u062e\u0648\u062f \u0631\u0627 \u0628\u0628\u06cc\u0646\u06cc\u062f\u061f"
+        }
+        trigger={null}
+      />
+
       {(() => {
         try {
           return $props.setCityByUsersIp;
@@ -224,7 +521,19 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           }
         />
       ) : null}
-      {false ? (
+      {(() => {
+        try {
+          return $props.requestGeolocationAccess;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
         <SideEffect
           className={classNames("__wab_instance", sty.sideEffect__k00Md)}
           onMount={async () => {
@@ -234,7 +543,49 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return ($state.dialog.open = true);
+                      return (() => {
+                        function checkCookie(name) {
+                          const value = `; ${document.cookie}`;
+                          const parts = value.split(`; ${name}=`);
+                          if (parts.length === 2)
+                            return parts.pop().split(";").shift();
+                          return null;
+                        }
+                        function checkGeolocationPermission(callback) {
+                          if (!navigator.geolocation) {
+                            callback(false);
+                            return;
+                          }
+                          navigator.permissions
+                            .query({ name: "geolocation" })
+                            .then(function (result) {
+                              if (result.state === "granted") {
+                                callback(true);
+                              } else {
+                                callback(false);
+                              }
+                            })
+                            .catch(function () {
+                              callback(false);
+                            });
+                        }
+                        function checkConditionsAndOpenDialog() {
+                          if (
+                            checkCookie("user_geolocation_access_preference")
+                          ) {
+                            return;
+                          }
+                          checkGeolocationPermission(function (
+                            hasPermissionOrSupported
+                          ) {
+                            if (!hasPermissionOrSupported) {
+                              $state.dialog.open = true;
+                            }
+                          });
+                        }
+                        var $state = { dialog: { open: false } };
+                        return checkConditionsAndOpenDialog();
+                      })();
                     }
                   };
                   return (({ customFunction }) => {
@@ -257,9 +608,10 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "dialog", "text", "locationSelectionScriptEmbed"],
-  dialog: ["dialog", "text"],
+  root: ["root", "dialog", "text", "freeBox", "locationSelectionScriptEmbed"],
+  dialog: ["dialog", "text", "freeBox"],
   text: ["text"],
+  freeBox: ["freeBox"],
   locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -269,6 +621,7 @@ type NodeDefaultElementType = {
   root: "div";
   dialog: typeof Dialog;
   text: "div";
+  freeBox: "div";
   locationSelectionScriptEmbed: typeof Embed;
 };
 
@@ -334,6 +687,7 @@ export const PlasmicLocationSelectionScript = Object.assign(
     // Helper components rendering sub-elements
     dialog: makeNodeComponent("dialog"),
     text: makeNodeComponent("text"),
+    freeBox: makeNodeComponent("freeBox"),
     locationSelectionScriptEmbed: makeNodeComponent(
       "locationSelectionScriptEmbed"
     ),

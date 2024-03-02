@@ -166,9 +166,6 @@ function PlasmicClaim__RenderFunc(props: {
             projectcss.__wab_text,
             sty.text___5J4Mt
           )}
-          onClick={async event => {
-            const $steps = {};
-          }}
         >
           {
             "\u062f\u0631\u062e\u0648\u0627\u0633\u062a \u0627\u062d\u0631\u0627\u0632 \u0647\u0648\u06cc\u062a \u0648 \u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u0627\u0644\u06a9\u06cc\u062a \u0635\u0641\u062d\u0647"
