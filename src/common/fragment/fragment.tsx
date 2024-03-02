@@ -7,6 +7,7 @@ import { Components } from './components';
 import { getFeatures } from './features';
 const { publicRuntimeConfig } = config();
 import pick from 'lodash/pick';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 interface FragmentProps {
   name: string;
@@ -15,9 +16,12 @@ interface FragmentProps {
 }
 
 export const Fragment = ({ name, variants, props }: FragmentProps) => {
+  const user_id = useUserInfoStore(state => state.info.id);
+
   if (!name) return null;
 
   const features = getFeatures({ provider: growthbook });
+
   if (publicRuntimeConfig.PLASMIC_PREVIEW) {
     return (
       <ErrorBoundary>
