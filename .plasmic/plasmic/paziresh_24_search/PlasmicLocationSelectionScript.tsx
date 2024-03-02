@@ -389,6 +389,42 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                       "autoPressNearMeButtonRunCode2"
                     ];
                   }
+
+                  $steps["updateDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["dialog", "open"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateDialogOpen"] != null &&
+                    typeof $steps["updateDialogOpen"] === "object" &&
+                    typeof $steps["updateDialogOpen"].then === "function"
+                  ) {
+                    $steps["updateDialogOpen"] = await $steps[
+                      "updateDialogOpen"
+                    ];
+                  }
                 }}
               />
 
