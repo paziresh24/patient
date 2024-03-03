@@ -75,7 +75,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -144,6 +145,11 @@
           "id": "4D7uZNf6OjbV",
           "name": "MoneyIcon",
           "moduleFilePath": "plasmic/paziresh_24_icons/icons/PlasmicIcon__Money.tsx"
+        },
+        {
+          "id": "e2zWN9c_lxv7",
+          "name": "CalendarIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Calendar.tsx"
         }
       ],
       "images": [
@@ -260,7 +266,8 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "a3pmZtcpA5asHkNtN3SGoF",
@@ -275,7 +282,8 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -365,11 +373,6 @@
         }
       ],
       "icons": [
-        {
-          "id": "SjzuLAjbCc2d",
-          "name": "Icon16Icon",
-          "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__Icon16.tsx"
-        },
         {
           "id": "eCsLCdWP9DST",
           "name": "Icon17Icon",
@@ -521,7 +524,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-link-preview"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -543,7 +547,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -558,7 +563,8 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -573,7 +579,8 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -601,7 +608,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -623,7 +631,8 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",

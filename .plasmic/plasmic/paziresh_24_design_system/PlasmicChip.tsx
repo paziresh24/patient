@@ -230,7 +230,10 @@ function PlasmicChip__RenderFunc(props: {
             projectcss.all,
             projectcss.__wab_text,
             sty.text,
-            { [sty.textcolor_green]: hasVariant($state, "color", "green") }
+            {
+              [sty.textcolor_blue]: hasVariant($state, "color", "blue"),
+              [sty.textcolor_green]: hasVariant($state, "color", "green")
+            }
           )}
         >
           <React.Fragment>

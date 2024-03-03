@@ -336,6 +336,15 @@
   color: #15803d;
   min-width: 20px;
 }
+.svg__vdNz {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 20px;
+  height: 20px;
+  color: #1d4ed8;
+  min-width: 20px;
+}
 .svg___2BpJ {
   position: relative;
   object-fit: cover;

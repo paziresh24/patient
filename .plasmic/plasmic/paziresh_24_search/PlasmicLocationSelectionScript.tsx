@@ -66,7 +66,7 @@ import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_fragment_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicLocationSelectionScript.module.css"; // plasmic-import: 5bzKtjF_q24p/css
 
@@ -177,7 +177,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -211,6 +211,12 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   "\u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u0645\u0648\u0642\u0639\u06cc\u062a \u0645\u06a9\u0627\u0646\u06cc"
                 }
                 className={classNames("__wab_instance", sty.button___1MxKw)}
+                endIcon={
+                  <ChevronLeftIcon
+                    className={classNames(projectcss.all, sty.svg__zTqP5)}
+                    role={"img"}
+                  />
+                }
                 onClick={async event => {
                   const $steps = {};
 
@@ -426,11 +432,23 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     ];
                   }
                 }}
+                startIcon={
+                  <ChevronRightIcon
+                    className={classNames(projectcss.all, sty.svg__m2QR0)}
+                    role={"img"}
+                  />
+                }
               />
 
               <Button
                 children2={"\u0641\u0639\u0644\u0627 \u0646\u0647"}
                 className={classNames("__wab_instance", sty.button__rvyjl)}
+                endIcon={
+                  <ChevronLeftIcon
+                    className={classNames(projectcss.all, sty.svg__prdvl)}
+                    role={"img"}
+                  />
+                }
                 onClick={async event => {
                   const $steps = {};
 
@@ -477,6 +495,12 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   }
                 }}
                 outline={true}
+                startIcon={
+                  <ChevronRightIcon
+                    className={classNames(projectcss.all, sty.svg__c5XwP)}
+                    role={"img"}
+                  />
+                }
               />
             </Stack__>
           </React.Fragment>
