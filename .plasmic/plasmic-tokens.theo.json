@@ -112,6 +112,16 @@
     },
     {
       "name": "Unnamed Style Token",
+      "type": "spacing",
+      "value": "1px",
+      "category": "spacing",
+      "meta": {
+        "projectId": "qQzsBf58SqzNJX45iggq96",
+        "id": "V4a2MgMr6yQJ"
+      }
+    },
+    {
+      "name": "Unnamed Style Token",
       "type": "lineheight",
       "value": "100%",
       "category": "lineheight",
@@ -211,6 +221,16 @@
       }
     },
     {
+      "name": "green-500",
+      "type": "color",
+      "value": "#22C55E",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "lw4xv_KKpd4e"
+      }
+    },
+    {
       "name": "large",
       "type": "fontsize",
       "value": "1.125rem",
@@ -271,6 +291,16 @@
       }
     },
     {
+      "name": "red-500",
+      "type": "color",
+      "value": "#EF4444",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "1jTXKEDkeRHC"
+      }
+    },
+    {
       "name": "slate-100",
       "type": "color",
       "value": "#F1F5F9",
@@ -308,6 +338,86 @@
       "meta": {
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
         "id": "YAfgsQuxALA0"
+      }
+    },
+    {
+      "name": "slate-300",
+      "type": "color",
+      "value": "#CBD5E1",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "VeLONbiJQakl"
+      }
+    },
+    {
+      "name": "slate-400",
+      "type": "color",
+      "value": "#94A3B8",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "zGjeYJZOhQzx"
+      }
+    },
+    {
+      "name": "slate-50",
+      "type": "color",
+      "value": "#F8FAFC",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "It8BufY6ejOY"
+      }
+    },
+    {
+      "name": "slate-500",
+      "type": "color",
+      "value": "#64748B",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "sMH6_tUwTYlv"
+      }
+    },
+    {
+      "name": "slate-600",
+      "type": "color",
+      "value": "#475569",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "rjAIDXsTjJqJ"
+      }
+    },
+    {
+      "name": "slate-700",
+      "type": "color",
+      "value": "#334155",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "h60EUZH0cVA6"
+      }
+    },
+    {
+      "name": "slate-800",
+      "type": "color",
+      "value": "#1E293B",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "6sli1sYB-Ose"
+      }
+    },
+    {
+      "name": "slate-900",
+      "type": "color",
+      "value": "#0F172A",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "LPwJqXnrei6F"
       }
     },
     {

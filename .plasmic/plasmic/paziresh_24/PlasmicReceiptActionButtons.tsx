@@ -66,11 +66,12 @@ import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/compo
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
 
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../paziresh_24_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_r_r_css from "../ravi_r_r/plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicReceiptActionButtons.module.css"; // plasmic-import: EifS7TB9I3zC/css
 
@@ -291,7 +292,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_r_r_css.plasmic_tokens,
         sty.root,
         {
           [sty.roottype_visitOnline]: hasVariant($state, "type", "visitOnline")

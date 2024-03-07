@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicLineClamp,
   DefaultLineClampProps
-} from "./plasmic/paziresh_24_design_system/PlasmicLineClamp";
+} from "./plasmic/fragment_design_system/PlasmicLineClamp";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

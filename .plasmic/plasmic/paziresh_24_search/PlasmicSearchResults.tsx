@@ -65,12 +65,12 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
-import ChevronRightIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
@@ -99,8 +99,10 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchResults__OverridesType = {
   root?: Flex__<"div">;
+  resultCardsVerticalStack?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
-  button?: Flex__<typeof Button>;
+  paginationMoreButton?: Flex__<typeof Button>;
+  noResultsBlockVerticalStack?: Flex__<"div">;
 };
 
 export interface DefaultSearchResultsProps {
@@ -168,7 +170,7 @@ function PlasmicSearchResults__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -187,8 +189,10 @@ function PlasmicSearchResults__RenderFunc(props: {
       })() ? (
         <Stack__
           as={"div"}
+          data-plasmic-name={"resultCardsVerticalStack"}
+          data-plasmic-override={overrides.resultCardsVerticalStack}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__k8Dm8)}
+          className={classNames(projectcss.all, sty.resultCardsVerticalStack)}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
@@ -305,7 +309,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                 eventTrigger={async (elementName, elementContent) => {
                   const $steps = {};
 
-                  $steps["runCode"] = true
+                  $steps["runCodeSplunkEvent"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
@@ -353,11 +357,72 @@ function PlasmicSearchResults__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["runCode"] != null &&
-                    typeof $steps["runCode"] === "object" &&
-                    typeof $steps["runCode"].then === "function"
+                    $steps["runCodeSplunkEvent"] != null &&
+                    typeof $steps["runCodeSplunkEvent"] === "object" &&
+                    typeof $steps["runCodeSplunkEvent"].then === "function"
                   ) {
-                    $steps["runCode"] = await $steps["runCode"];
+                    $steps["runCodeSplunkEvent"] = await $steps[
+                      "runCodeSplunkEvent"
+                    ];
+                  }
+
+                  $steps["runCodeSv2CtrRequest"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              return fetch(
+                                "https://www.paziresh24.com/api/sv2ctr",
+                                {
+                                  headers: {
+                                    accept: "application/json, text/plain, */*",
+                                    "accept-language": "fa",
+                                    "content-type": "application/json",
+                                    "sec-fetch-dest": "empty",
+                                    "sec-fetch-mode": "cors",
+                                    "sec-fetch-site": "same-origin"
+                                  },
+                                  body: JSON.stringify({
+                                    terminal_id: document.cookie
+                                      .split("; ")
+                                      .find(row =>
+                                        row.startsWith("terminal_id")
+                                      )
+                                      ? document.cookie
+                                          .split("; ")
+                                          .find(row =>
+                                            row.startsWith("terminal_id")
+                                          )
+                                          .split("=")[1]
+                                      : "sample-empty-terminal-id-cookie",
+                                    id: currentItem._id,
+                                    position: currentItem.position,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id,
+                                    server_id: currentItem.server_id,
+                                    type: currentItem.type
+                                  }),
+                                  method: "POST",
+                                  credentials: "include"
+                                }
+                              );
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCodeSv2CtrRequest"] != null &&
+                    typeof $steps["runCodeSv2CtrRequest"] === "object" &&
+                    typeof $steps["runCodeSv2CtrRequest"].then === "function"
+                  ) {
+                    $steps["runCodeSv2CtrRequest"] = await $steps[
+                      "runCodeSv2CtrRequest"
+                    ];
                   }
                 }}
                 key={currentIndex}
@@ -471,12 +536,18 @@ function PlasmicSearchResults__RenderFunc(props: {
         }
       })() ? (
         <Button
-          data-plasmic-name={"button"}
-          data-plasmic-override={overrides.button}
+          data-plasmic-name={"paginationMoreButton"}
+          data-plasmic-override={overrides.paginationMoreButton}
           children2={
             "\u0646\u0645\u0627\u06cc\u0634 \u0646\u062a\u0627\u06cc\u062c \u0628\u06cc\u0634\u062a\u0631 ..."
           }
-          className={classNames("__wab_instance", sty.button)}
+          className={classNames("__wab_instance", sty.paginationMoreButton)}
+          endIcon={
+            <ChevronLeftIcon
+              className={classNames(projectcss.all, sty.svg__steSm)}
+              role={"img"}
+            />
+          }
           loading={(() => {
             try {
               return $props.paginationLoadingStatus;
@@ -532,6 +603,12 @@ function PlasmicSearchResults__RenderFunc(props: {
             }
           }}
           outline={true}
+          startIcon={
+            <ChevronRightIcon
+              className={classNames(projectcss.all, sty.svg__eDvlU)}
+              role={"img"}
+            />
+          }
         />
       ) : null}
       {(() => {
@@ -549,8 +626,13 @@ function PlasmicSearchResults__RenderFunc(props: {
       })() ? (
         <Stack__
           as={"div"}
+          data-plasmic-name={"noResultsBlockVerticalStack"}
+          data-plasmic-override={overrides.noResultsBlockVerticalStack}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__aZJcA)}
+          className={classNames(
+            projectcss.all,
+            sty.noResultsBlockVerticalStack
+          )}
         >
           <div
             className={classNames(
@@ -664,17 +746,27 @@ function PlasmicSearchResults__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "productCard", "button"],
+  root: [
+    "root",
+    "resultCardsVerticalStack",
+    "productCard",
+    "paginationMoreButton",
+    "noResultsBlockVerticalStack"
+  ],
+  resultCardsVerticalStack: ["resultCardsVerticalStack", "productCard"],
   productCard: ["productCard"],
-  button: ["button"]
+  paginationMoreButton: ["paginationMoreButton"],
+  noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  resultCardsVerticalStack: "div";
   productCard: typeof ProductCard;
-  button: typeof Button;
+  paginationMoreButton: typeof Button;
+  noResultsBlockVerticalStack: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -737,8 +829,12 @@ export const PlasmicSearchResults = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    resultCardsVerticalStack: makeNodeComponent("resultCardsVerticalStack"),
     productCard: makeNodeComponent("productCard"),
-    button: makeNodeComponent("button"),
+    paginationMoreButton: makeNodeComponent("paginationMoreButton"),
+    noResultsBlockVerticalStack: makeNodeComponent(
+      "noResultsBlockVerticalStack"
+    ),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,

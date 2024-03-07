@@ -59,11 +59,10 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { LinkPreview } from "@plasmicpkgs/plasmic-link-preview";
-
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_r_r_css from "../ravi_r_r/plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicLinkPreview.module.css"; // plasmic-import: qgBfujLJ7lZw/css
 
@@ -81,10 +80,7 @@ type ArgPropType = keyof PlasmicLinkPreview__ArgsType;
 export const PlasmicLinkPreview__ArgProps = new Array<ArgPropType>("url");
 
 export type PlasmicLinkPreview__OverridesType = {
-  root?: Flex__<typeof LinkPreview>;
-  img?: Flex__<typeof PlasmicImg__>;
-  h5?: Flex__<"h5">;
-  p?: Flex__<"p">;
+  root?: Flex__<"div">;
 };
 
 export interface DefaultLinkPreviewProps {
@@ -133,170 +129,33 @@ function PlasmicLinkPreview__RenderFunc(props: {
   const currentUser = useCurrentUser?.() || {};
 
   return (
-    <LinkPreview
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       className={classNames(
-        "__wab_instance",
+        projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_r_r_css.plasmic_tokens,
         sty.root
       )}
-      loadingMessage={
-        <DataCtxReader__>
-          {$ctx => (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__doDoj
-              )}
-            >
-              {"loading preview..."}
-            </div>
-          )}
-        </DataCtxReader__>
-      }
-      noPreviewMessage={
-        <DataCtxReader__>
-          {$ctx => (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__pjb3M
-              )}
-            >
-              {"no preview..."}
-            </div>
-          )}
-        </DataCtxReader__>
-      }
-      url={args.url}
-    >
-      <DataCtxReader__>
-        {$ctx => (
-          <div className={classNames(projectcss.all, sty.freeBox__foHkW)}>
-            <PlasmicImg__
-              data-plasmic-name={"img"}
-              data-plasmic-override={overrides.img}
-              alt={""}
-              className={classNames(sty.img)}
-              displayHeight={"auto"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"100%"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"200px"}
-              loading={"lazy"}
-              src={$ctx.metadata.image}
-            />
-
-            <div className={classNames(projectcss.all, sty.freeBox__zMa)}>
-              <div className={classNames(projectcss.all, sty.freeBox___3PjcD)}>
-                <h5
-                  data-plasmic-name={"h5"}
-                  data-plasmic-override={overrides.h5}
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.h5,
-                    projectcss.__wab_text,
-                    sty.h5
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $ctx.metadata.title;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </h5>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__l58HV
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $ctx.metadata.description;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </div>
-              </div>
-              <p
-                data-plasmic-name={"p"}
-                data-plasmic-override={overrides.p}
-                className={classNames(
-                  projectcss.all,
-                  projectcss.p,
-                  projectcss.__wab_text,
-                  sty.p
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $ctx.metadata.hostname;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "";
-                      }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
-              </p>
-            </div>
-          </div>
-        )}
-      </DataCtxReader__>
-    </LinkPreview>
+    />
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img", "h5", "p"],
-  img: ["img"],
-  h5: ["h5"],
-  p: ["p"]
+  root: ["root"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  root: typeof LinkPreview;
-  img: typeof PlasmicImg__;
-  h5: "h5";
-  p: "p";
+  root: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -359,9 +218,6 @@ export const PlasmicLinkPreview = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    img: makeNodeComponent("img"),
-    h5: makeNodeComponent("h5"),
-    p: makeNodeComponent("p"),
 
     // Metadata about props expected for PlasmicLinkPreview
     internalVariantProps: PlasmicLinkPreview__VariantProps,

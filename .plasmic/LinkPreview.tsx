@@ -5,6 +5,7 @@ import {
   PlasmicLinkPreview,
   DefaultLinkPreviewProps
 } from "./plasmic/paziresh_24/PlasmicLinkPreview";
+import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -21,7 +22,7 @@ import {
 // total control over the props for your component.
 export interface LinkPreviewProps extends DefaultLinkPreviewProps {}
 
-function LinkPreview(props: LinkPreviewProps) {
+function LinkPreview_(props: LinkPreviewProps, ref: HTMLElementRefOf<"div">) {
   // Use PlasmicLinkPreview to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -37,7 +38,8 @@ function LinkPreview(props: LinkPreviewProps) {
   // By default, we are just piping all LinkPreviewProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicLinkPreview {...props} />;
+  return <PlasmicLinkPreview root={{ ref }} {...props} />;
 }
 
+const LinkPreview = React.forwardRef(LinkPreview_);
 export default LinkPreview;

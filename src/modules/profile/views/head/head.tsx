@@ -12,6 +12,9 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
 import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
 import EditButton from '../../components/viewAs/editButton';
+import { Fragment } from '@/common/fragment';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
 
 interface HeadProps {
   image: string;
@@ -29,6 +32,8 @@ interface HeadProps {
   infoEditAction?: () => void;
   servicesEditAction?: () => void;
   children?: ReactNode;
+  shouldUseFragmentReviewCard?: boolean;
+  profileData?: any;
 }
 
 export const Head = (props: HeadProps) => {
@@ -48,7 +53,15 @@ export const Head = (props: HeadProps) => {
     infoEditAction,
     servicesEditAction,
     children,
+    shouldUseFragmentReviewCard,
+    profileData,
   } = props;
+
+  const { isLogin, userInfo } = useUserInfoStore(state => ({
+    isLogin: state.isLogin,
+    userInfo: state.info,
+  }));
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   return (
     <section className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
@@ -101,14 +114,34 @@ export const Head = (props: HeadProps) => {
       )}
       {!!satisfaction && !editable && (
         <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-          <RateBadge
-            text={`${satisfaction}%`}
-            icon={<LikeIcon className="w-5 text-white" />}
-            parentClassName="!bg-green-600"
-            className="mt-1"
-            fontSize="sm"
-            caption={`رضایت (${rateCount} نظر)`}
-          />
+          {!shouldUseFragmentReviewCard && (
+            <RateBadge
+              text={`${satisfaction}%`}
+              icon={<LikeIcon className="w-5 text-white" />}
+              parentClassName="!bg-green-600"
+              className="mt-1"
+              fontSize="sm"
+              caption={`رضایت (${rateCount} نظر)`}
+            />
+          )}
+          {shouldUseFragmentReviewCard && (
+            <Fragment
+              name="RateAndCommentCount"
+              props={{
+                ...profileData,
+                user: {
+                  data: userInfo,
+                  isLogin: isLogin,
+                  loginModalTrigger: () =>
+                    handleOpenLoginModal({
+                      state: true,
+                    }),
+                },
+                rateCount: rateCount,
+                rate: satisfaction,
+              }}
+            />
+          )}
         </div>
       )}
       {children}

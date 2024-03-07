@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicReviewCard,
   DefaultReviewCardProps
-} from "./plasmic/paziresh_24/PlasmicReviewCard";
+} from "./plasmic/ravi_r_r/PlasmicReviewCard";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
@@ -38,7 +38,7 @@ function ReviewCard_(props: ReviewCardProps, ref: HTMLElementRefOf<"div">) {
   // By default, we are just piping all ReviewCardProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicReviewCard root={{ ref }} {...props} />;
+  return <PlasmicReviewCard اردنماشنظر={{ ref }} {...props} />;
 }
 
 const ReviewCard = React.forwardRef(ReviewCard_);

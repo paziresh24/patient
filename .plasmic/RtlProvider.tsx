@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicRtlProvider,
   DefaultRtlProviderProps
-} from "./plasmic/paziresh_24_design_system/PlasmicRtlProvider";
+} from "./plasmic/fragment_design_system/PlasmicRtlProvider";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

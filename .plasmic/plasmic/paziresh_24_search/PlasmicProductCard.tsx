@@ -67,18 +67,19 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
-import ThumbUpIcon from "../paziresh_24_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
-import LocationIcon from "../paziresh_24_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
-import MoneyIcon from "../paziresh_24_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
-import SmileIcon from "../paziresh_24_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
-import ClockIcon from "../paziresh_24_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
-import InfoIcon from "../paziresh_24_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
-import ChevronRightIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../paziresh_24_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
+import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
+import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
+import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
+import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
+import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
+import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -223,7 +224,7 @@ function PlasmicProductCard__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
       dir={"rtl"}
@@ -830,7 +831,23 @@ function PlasmicProductCard__RenderFunc(props: {
                     data-plasmic-name={"badgesChip"}
                     data-plasmic-override={overrides.badgesChip}
                     className={classNames("__wab_instance", sty.badgesChip)}
-                    color={"green"}
+                    color={(() => {
+                      try {
+                        return currentItem.type === "success"
+                          ? "green"
+                          : currentItem.type === "info"
+                          ? "blue"
+                          : "";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "green";
+                        }
+                        throw e;
+                      }
+                    })()}
                     content={(() => {
                       try {
                         return currentItem.title;
@@ -892,6 +909,24 @@ function PlasmicProductCard__RenderFunc(props: {
                     })() ? (
                       <SmileIcon
                         className={classNames(projectcss.all, sty.svg__fj8S)}
+                        role={"img"}
+                      />
+                    ) : null}
+                    {(() => {
+                      try {
+                        return currentItem.icon == "forbidden-icon";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <CalendarIcon
+                        className={classNames(projectcss.all, sty.svg__vdNz)}
                         role={"img"}
                       />
                     ) : null}
