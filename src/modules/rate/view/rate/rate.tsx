@@ -59,15 +59,34 @@ export const Rate = (props: RateProps) => {
                 <div className={classNames('mt-2', { '!mt-0': !feedbacks.length })}>
                   {!!feedbacks?.length &&
                     !isLoading &&
-                    feedbacks.map((feedback, index) =>
-                      shouldUseFragmentReviewCard ? (
-                        <>
-                          <Fragment key={index + 1} name="ReviewCard" props={{ ...feedback }} />
-                          <Divider className="opacity-60" />
-                        </>
-                      ) : (
+                    feedbacks.map(
+                      (feedback, index) => (
+                        // shouldUseFragmentReviewCard ? (
+                        //   <>
+                        //     <Fragment
+                        //       key={index + 1}
+                        //       name="ReviewCard"
+                        //       props={{
+                        //         userName: feedback.name,
+                        //         visitedTag: false,
+                        //         userProfile: feedback.avatar,
+                        //         setTime: '',
+                        //         docCenter: '',
+                        //         recommended: feedback.recommend,
+                        //         commentText: feedback.description,
+                        //         like: 0,
+                        //         feedbackId: feedback.id,
+                        //         doctorId: '',
+                        //         serverId: '',
+                        //         replies: feedback.reply,
+                        //       }}
+                        //     />
+                        //     <Divider className="opacity-60" />
+                        //   </>
+                        // ) : (
                         <FeedbackCard key={index + 1} className="border-b-0" feedback={feedback} />
                       ),
+                      // ),
                     )}
                   {isLoading && <RateLoading />}
                   {!feedbacks?.length && !isLoading && (

@@ -188,10 +188,12 @@ export const sections = (data: any) => {
         return {
           doctor: doctorInfo,
           rateDetails,
+          averageRates: feedbacks.details.average_rates,
           feedbacks: feedbacks.feedbacks,
           serverId: information.server_id,
           symptomes: symptomes?.slice?.(0, 5) ?? [],
           shouldUseFragmentReviewCard: fragmentComponents.reviewCard,
+          profileData,
         };
       },
       children: (props: any) => <RateReview {...props} />,

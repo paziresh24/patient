@@ -1,6 +1,8 @@
 import dynamic from 'next/dynamic';
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
-const PlasmicReviewCard = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicReviewCard'));
+const PlasmicReviewList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList'));
+const PlasmicRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount'));
+const PlasmicRateProgressBar = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateProgressBar'));
 const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicServices'));
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
@@ -10,7 +12,10 @@ import PlasmicReceiptActionButtons, {
   PlasmicReceiptActionButtons__ArgProps,
 } from '.plasmic/plasmic/paziresh_24/PlasmicReceiptActionButtons';
 import { PlasmicClaim__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicClaim';
-import { PlasmicReviewCard__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicReviewCard';
+import { PlasmicReviewList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList';
+import { PlasmicRateAndCommentCount__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import { PlasmicRateProgressBar__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicRateProgressBar';
+
 import { PlasmicServices__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicServices';
 import { PlasmicActivity__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicActivity';
 import { PlasmicAbout__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicAbout';
@@ -20,11 +25,23 @@ import PlasmicSearchResults, { PlasmicSearchResults__ArgProps } from '.plasmic/p
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
-  ReviewCard: {
-    Component: PlasmicReviewCard,
-    id: '3_YM1K_ShdiP',
-    propsAllowed: PlasmicReviewCard__ArgProps,
-    projectId: 'iDYgiKJB9Yi7CUB81stQBK',
+  ReviewList: {
+    Component: PlasmicReviewList,
+    id: 'Bx6gxTOoja9k',
+    propsAllowed: PlasmicReviewList__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateAndCommentCount: {
+    Component: PlasmicRateAndCommentCount,
+    id: 'u3Jgb_UfiULc',
+    propsAllowed: PlasmicRateAndCommentCount__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateProgressBar: {
+    Component: PlasmicRateProgressBar,
+    id: 'YorKPsj5-KCA',
+    propsAllowed: PlasmicRateProgressBar__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   ReceiptActionButtons: {
     Component: PlasmicReceiptActionButtons,

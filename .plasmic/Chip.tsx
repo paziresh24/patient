@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   PlasmicChip,
   DefaultChipProps
-} from "./plasmic/paziresh_24_design_system/PlasmicChip";
+} from "./plasmic/fragment_design_system/PlasmicChip";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined

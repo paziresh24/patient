@@ -21,6 +21,7 @@ import ReplyIcon from '@/common/components/icons/reply';
 import SearchIcon from '@/common/components/icons/search';
 import ShareIcon from '@/common/components/icons/share';
 import TrashIcon from '@/common/components/icons/trash';
+import { Fragment } from '@/common/fragment';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
@@ -81,10 +82,12 @@ interface RateReviewProps {
   symptomes?: string[];
   className?: string;
   shouldUseFragmentReviewCard?: boolean;
+  averageRates: Record<string, number>;
+  profileData?: any;
 }
 
 export const RateReview = (props: RateReviewProps) => {
-  const { doctor, serverId, rateDetails, className, symptomes = [], shouldUseFragmentReviewCard } = props;
+  const { doctor, serverId, rateDetails, className, symptomes = [], shouldUseFragmentReviewCard, averageRates, profileData } = props;
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
@@ -583,16 +586,55 @@ export const RateReview = (props: RateReviewProps) => {
     <div ref={rateRef} className="flex flex-col space-y-2 md:space-y-1">
       {!!details.count && !message && (
         <div className="w-full p-4 bg-white md:rounded-t-lg">
-          <div className="space-y-3">
-            <Details
-              satisfaction={details.satisfaction}
-              count={details.count}
-              count_text={details.count_text}
-              title={details.title}
-              information={details.information}
-              satisfactionHint={rateDetails.satisfactionHint}
-            />
-          </div>
+          {!shouldUseFragmentReviewCard && (
+            <div className="space-y-3">
+              <Details
+                satisfaction={details.satisfaction}
+                count={details.count}
+                count_text={details.count_text}
+                title={details.title}
+                information={details.information}
+                satisfactionHint={rateDetails.satisfactionHint}
+              />
+            </div>
+          )}
+          {shouldUseFragmentReviewCard && (
+            <div className="flex flex-col items-center justify-center">
+              <Fragment
+                name="RateAndCommentCount"
+                props={{
+                  ...profileData,
+                  user: {
+                    data: userInfo,
+                    isLogin: isLogin,
+                    loginModalTrigger: () =>
+                      handleOpenLoginModal({
+                        state: true,
+                      }),
+                  },
+                  rateCount: details.count,
+                  rate: details.satisfaction,
+                }}
+              />
+              <Fragment
+                name="RateProgressBar"
+                props={{
+                  ...profileData,
+                  user: {
+                    data: userInfo,
+                    isLogin: isLogin,
+                    loginModalTrigger: () =>
+                      handleOpenLoginModal({
+                        state: true,
+                      }),
+                  },
+                  averageQualityOfTreatment: averageRates.average_quality_of_treatment,
+                  averageDoctorEncounter: averageRates.average_doctor_encounter,
+                  averageExplanationOfIssue: averageRates.average_explanation_of_issue,
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
       {shouldShowDoctorTags && !message && <DoctorTags symptomes={symptomes} doctorId={doctor.id} serverId={doctor.server_id} />}
@@ -605,23 +647,54 @@ export const RateReview = (props: RateReviewProps) => {
           className,
         )}
       >
-        <Rate
-          details={details}
-          filters={rateSearchInputs}
-          search={searchInputParams}
-          feedbacks={feedbackInfo}
-          controller={submitRateDetails}
-          isLoading={!showMoreButtonLoading && isLoading}
-          message={message}
-          shouldUseFragmentReviewCard={shouldUseFragmentReviewCard}
-        />
-        {!message && (showMoreButtonLoading || !isLoading) && !!feedbackInfo.length && rateDetails.count > feedbackInfo.length && (
-          <div className="p-4">
-            <Button variant="secondary" block onClick={showMore} loading={showMoreButtonLoading}>
-              نمایش بیشتر
-            </Button>
-          </div>
+        {!shouldUseFragmentReviewCard && (
+          <Rate
+            details={details}
+            filters={rateSearchInputs}
+            search={searchInputParams}
+            feedbacks={feedbackInfo}
+            controller={submitRateDetails}
+            isLoading={!showMoreButtonLoading && isLoading}
+            message={message}
+            shouldUseFragmentReviewCard={shouldUseFragmentReviewCard}
+          />
         )}
+
+        {shouldUseFragmentReviewCard && (
+          <Fragment
+            name="ReviewList"
+            props={{
+              ...profileData,
+              user: {
+                data: userInfo,
+                isLogin: isLogin,
+                loginModalTrigger: () =>
+                  handleOpenLoginModal({
+                    state: true,
+                  }),
+              },
+              dontShow: !!message,
+              reviewResponse: feedbacksData,
+              nextPageTrigger: () => showMore(),
+              paginationLoadingStatus: showMoreButtonLoading,
+              onSearch: (value: string) => rateSearch(value),
+              onFilter: (value: 'my_feedbacks' | 'has_nobat' | 'all' | 'recommended') => rateFilterType(value),
+              onSort: (value: string) => rateSortFilter(value),
+            }}
+          />
+        )}
+
+        {!shouldUseFragmentReviewCard &&
+          !message &&
+          (showMoreButtonLoading || !isLoading) &&
+          !!feedbackInfo.length &&
+          rateDetails.count > feedbackInfo.length && (
+            <div className="p-4">
+              <Button variant="secondary" block onClick={showMore} loading={showMoreButtonLoading}>
+                نمایش بیشتر
+              </Button>
+            </div>
+          )}
         {shouldLoginWithDiscourse && <RaviAuthIframe />}
       </div>
       <Modal title="گزارش نظر" {...reportModalProps}>

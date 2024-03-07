@@ -1,0 +1,107 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  background: #ffffff;
+  min-width: 0;
+}
+.setNweReview:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.freeBox___3DZjG {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 1px;
+  max-width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  min-width: 0;
+  flex-shrink: 0;
+}
+.filter:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.freeBox__juWhk {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 1px;
+  max-width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  min-width: 0;
+  flex-shrink: 0;
+}
+.cardLine {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 8px;
+}
+.reviewCard:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.freeBox__q1VhB {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 1px;
+  max-width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  min-width: 0;
+  flex-shrink: 0;
+}
+.freeBox__imJd {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--token-Fv8-L_kN-2Ma);
+}
+.button:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+.svg___4DIuJ {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.text {
+  height: auto;
+}
+.svg__shoMe {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}

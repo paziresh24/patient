@@ -35,6 +35,7 @@ import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
+import pick from 'lodash/pick';
 
 const { publicRuntimeConfig } = config();
 
@@ -227,6 +228,18 @@ const DoctorProfile = ({
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
             infoEditAction={() => handleViewAs('information')}
+            shouldUseFragmentReviewCard={fragmentComponents.reviewCard}
+            profileData={pick(profileData, [
+              'information',
+              'centers',
+              'expertises',
+              'feedbacks',
+              'media',
+              'history',
+              'symptomes',
+              'onlineVisit',
+              'seo',
+            ])}
           >
             {editable && (
               <div className="flex mx-4 space-s-2">
