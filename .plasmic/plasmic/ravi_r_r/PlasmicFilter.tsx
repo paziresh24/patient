@@ -259,10 +259,10 @@ function PlasmicFilter__RenderFunc(props: {
               return [
                 { value: "all", label: "همه نظرات" },
                 ...($props.isLoggedIn
-                  ? [{ value: "my feedback", label: "نظرات من" }]
+                  ? [{ value: "my_feedbacks", label: "نظرات من" }]
                   : []),
-                { value: "not-recommend", label: "نظرات منفی" },
-                { value: "visited", label: "بیماران دارای نوبت" },
+                { value: "recommended", label: "نظرات منفی" },
+                { value: "has_nobat", label: "بیماران دارای نوبت" },
                 ...$props.centerList.map(center => ({
                   value: center.id,
                   label: center.name

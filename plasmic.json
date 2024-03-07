@@ -293,6 +293,34 @@
       "customFunctions": []
     },
     {
+      "projectId": "YUiM7yqBWAqsh8KSnrdj7",
+      "projectApiToken": "yLKpJOE8mD6HqoNCSWF3Em8ut0LBzL7qb3QPqNeOLPjQsSBSc12yhYovnSRSekzgt1xjjbugBGDjOMLGMK4w",
+      "projectName": "plasmic-query",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/plasmic_query/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "ae7V86eNoXA",
+          "name": "DataFetcher",
+          "displayName": "hostless-plasmic-query-data-fetcher",
+          "componentImportPath": "@plasmicpkgs/plasmic-query"
+        },
+        {
+          "id": "0DrxdjD45dkx",
+          "name": "GraphqlFetcher",
+          "displayName": "hostless-plasmic-query-graphql-fetcher",
+          "componentImportPath": "@plasmicpkgs/plasmic-query"
+        }
+      ],
+      "customFunctions": []
+    },
+    {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
       "projectApiToken": "qxq800gYC67BOqHYnTHxD4C7pBBFZm6VP4XdU8vevI8awru5kfW7ofg2msC86kBNrxxuzWwrQOpU6gvdkEg",
       "projectName": "Fragment/DesignSystem",
@@ -407,34 +435,6 @@
           "name": "Fetcher",
           "displayName": "plasmic-data-source-fetcher",
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
-        }
-      ],
-      "customFunctions": []
-    },
-    {
-      "projectId": "YUiM7yqBWAqsh8KSnrdj7",
-      "projectApiToken": "yLKpJOE8mD6HqoNCSWF3Em8ut0LBzL7qb3QPqNeOLPjQsSBSc12yhYovnSRSekzgt1xjjbugBGDjOMLGMK4w",
-      "projectName": "plasmic-query",
-      "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_query/plasmic.module.css",
-      "components": [],
-      "icons": [],
-      "images": [],
-      "indirect": true,
-      "globalContextsFilePath": "",
-      "splitsProviderFilePath": "",
-      "codeComponents": [
-        {
-          "id": "ae7V86eNoXA",
-          "name": "DataFetcher",
-          "displayName": "hostless-plasmic-query-data-fetcher",
-          "componentImportPath": "@plasmicpkgs/plasmic-query"
-        },
-        {
-          "id": "0DrxdjD45dkx",
-          "name": "GraphqlFetcher",
-          "displayName": "hostless-plasmic-query-graphql-fetcher",
-          "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
       "customFunctions": []
