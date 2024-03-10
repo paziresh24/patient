@@ -351,8 +351,48 @@ function PlasmicTextInput__RenderFunc(props: {
           hasVariant($state, "isDisabled", "isDisabled") ? true : undefined
         }
         name={args.name}
-        onChange={e => {
-          generateStateOnChangeProp($state, ["input", "value"])(e.target.value);
+        onChange={async (...eventArgs: any) => {
+          (e => {
+            generateStateOnChangeProp($state, ["input", "value"])(
+              e.target.value
+            );
+          }).apply(null, eventArgs);
+          (async event => {
+            const $steps = {};
+
+            $steps["runOnChange"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onChange"],
+                    args: [
+                      (() => {
+                        try {
+                          return $state.input.value;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runOnChange"] != null &&
+              typeof $steps["runOnChange"] === "object" &&
+              typeof $steps["runOnChange"].then === "function"
+            ) {
+              $steps["runOnChange"] = await $steps["runOnChange"];
+            }
+          }).apply(null, eventArgs);
         }}
         placeholder={args.placeholder}
         ref={ref => {

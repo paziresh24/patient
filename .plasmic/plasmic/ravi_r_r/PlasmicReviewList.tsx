@@ -60,7 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import SetNweReview from "../../SetNweReview"; // plasmic-import: ZewL2B_Ktxrj/component
-import Filter from "../../Filter"; // plasmic-import: dtSZu4xyXUej/component
+import Select from "../../Select"; // plasmic-import: zIWWWwAA3-2B/component
+import TextInput from "../../TextInput"; // plasmic-import: iKLtt-X_YZoa/component
 import ReviewCard from "../../ReviewCard"; // plasmic-import: hjUuvN6lhrZV/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
@@ -70,6 +71,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList.module.css"; // plasmic-import: Bx6gxTOoja9k/css
 
+import SearchsvgIcon from "./icons/PlasmicIcon__Searchsvg"; // plasmic-import: W3TLlIDrGJdy/icon
+import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWCYMTObqr7D/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -84,28 +87,44 @@ export type PlasmicReviewList__ArgsType = {
   reviewResponse?: any;
   nextPageTrigger?: (page: number) => void;
   paginationLoadingStatus?: boolean;
+  user?: any;
+  centers?: any;
+  onSearch?: (value: string) => void;
+  onFilter?: (value: string) => void;
+  onSort?: (value: string) => void;
 };
 type ArgPropType = keyof PlasmicReviewList__ArgsType;
 export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
   "reviewResponse",
   "nextPageTrigger",
-  "paginationLoadingStatus"
+  "paginationLoadingStatus",
+  "user",
+  "centers",
+  "onSearch",
+  "onFilter",
+  "onSort"
 );
 
 export type PlasmicReviewList__OverridesType = {
   root?: Flex__<"div">;
   setNweReview?: Flex__<typeof SetNweReview>;
-  filter?: Flex__<typeof Filter>;
+  filterInput?: Flex__<typeof Select>;
+  sortInput?: Flex__<typeof Select>;
+  searchInput?: Flex__<typeof TextInput>;
   cardLine?: Flex__<"div">;
   reviewCard?: Flex__<typeof ReviewCard>;
   button?: Flex__<typeof Button>;
-  text?: Flex__<"div">;
 };
 
 export interface DefaultReviewListProps {
   reviewResponse?: any;
   nextPageTrigger?: (page: number) => void;
   paginationLoadingStatus?: boolean;
+  user?: any;
+  centers?: any;
+  onSearch?: (value: string) => void;
+  onFilter?: (value: string) => void;
+  onSort?: (value: string) => void;
   className?: string;
 }
 
@@ -156,6 +175,24 @@ function PlasmicReviewList__RenderFunc(props: {
         type: "private",
         variableType: "number",
         initFunc: ({ $props, $state, $queries, $ctx }) => 1
+      },
+      {
+        path: "searchInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "filterInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => "all"
+      },
+      {
+        path: "sortInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => "default_order"
       }
     ],
     [$props, $ctx, $refs]
@@ -191,13 +228,237 @@ function PlasmicReviewList__RenderFunc(props: {
 
       <div className={classNames(projectcss.all, sty.freeBox___3DZjG)} />
 
-      <Filter
-        data-plasmic-name={"filter"}
-        data-plasmic-override={overrides.filter}
-        className={classNames("__wab_instance", sty.filter)}
-        isLoggedIn={false}
-      />
+      <Stack__
+        as={"div"}
+        hasGap={true}
+        className={classNames(projectcss.all, sty.freeBox___6RwG3)}
+      >
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__alcob)}
+        >
+          <Select
+            data-plasmic-name={"filterInput"}
+            data-plasmic-override={overrides.filterInput}
+            className={classNames("__wab_instance", sty.filterInput)}
+            onChange={async (...eventArgs: any) => {
+              ((...eventArgs) => {
+                generateStateOnChangeProp($state, ["filterInput", "value"])(
+                  eventArgs[0]
+                );
+              }).apply(null, eventArgs);
+              (async value => {
+                const $steps = {};
 
+                $steps["runOnFilter"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onFilter"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.filterInput.value;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnFilter"] != null &&
+                  typeof $steps["runOnFilter"] === "object" &&
+                  typeof $steps["runOnFilter"].then === "function"
+                ) {
+                  $steps["runOnFilter"] = await $steps["runOnFilter"];
+                }
+              }).apply(null, eventArgs);
+            }}
+            options={(() => {
+              try {
+                return [
+                  { value: "all", label: "همه نظرات" },
+                  ...($props.user.isLogin
+                    ? [{ value: "my_feedbacks", label: "نظرات من" }]
+                    : []),
+                  { value: "recommended", label: "نظرات منفی" },
+                  { value: "has_nobat", label: "بیماران دارای نوبت" },
+                  ...$props.centers.map(center => ({
+                    value: center.id,
+                    label: center.name
+                  }))
+                ];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            value={generateStateValueProp($state, ["filterInput", "value"])}
+          />
+
+          <Select
+            data-plasmic-name={"sortInput"}
+            data-plasmic-override={overrides.sortInput}
+            className={classNames("__wab_instance", sty.sortInput)}
+            onChange={async (...eventArgs: any) => {
+              ((...eventArgs) => {
+                generateStateOnChangeProp($state, ["sortInput", "value"])(
+                  eventArgs[0]
+                );
+              }).apply(null, eventArgs);
+              (async value => {
+                const $steps = {};
+
+                $steps["runOnSort"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onSort"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.sortInput.value;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnSort"] != null &&
+                  typeof $steps["runOnSort"] === "object" &&
+                  typeof $steps["runOnSort"].then === "function"
+                ) {
+                  $steps["runOnSort"] = await $steps["runOnSort"];
+                }
+              }).apply(null, eventArgs);
+            }}
+            options={(() => {
+              const __composite = [
+                { value: null, label: null },
+                { label: null, value: null },
+                { label: null, value: null }
+              ];
+              __composite["0"]["value"] = "default_order";
+              __composite["0"]["label"] =
+                "\u0645\u0631\u062a\u0628\u0637 \u062a\u0631\u06cc\u0646";
+              __composite["1"]["label"] =
+                "\u062c\u062f\u06cc\u062f \u062a\u0631\u06cc\u0646";
+              __composite["1"]["value"] = "created_at";
+              __composite["2"]["label"] =
+                "\u0645\u062d\u0628\u0648\u0628 \u062a\u0631\u06cc\u0646";
+              __composite["2"]["value"] = "like";
+              return __composite;
+            })()}
+            value={generateStateValueProp($state, ["sortInput", "value"])}
+          />
+        </Stack__>
+        <TextInput
+          data-plasmic-name={"searchInput"}
+          data-plasmic-override={overrides.searchInput}
+          className={classNames("__wab_instance", sty.searchInput)}
+          onChange={async (...eventArgs: any) => {
+            ((...eventArgs) => {
+              generateStateOnChangeProp($state, ["searchInput", "value"])(
+                (e => e.target?.value).apply(null, eventArgs)
+              );
+            }).apply(null, eventArgs);
+            (async event => {
+              const $steps = {};
+
+              $steps["runOnSearch"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onSearch"],
+                      args: [
+                        (() => {
+                          try {
+                            return (() => {
+                              console.log("value", $state.searchInput.value);
+                              return $state.searchInput.value;
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnSearch"] != null &&
+                typeof $steps["runOnSearch"] === "object" &&
+                typeof $steps["runOnSearch"].then === "function"
+              ) {
+                $steps["runOnSearch"] = await $steps["runOnSearch"];
+              }
+            }).apply(null, eventArgs);
+          }}
+          placeholder={
+            "\u062c\u0633\u062a\u062c\u0648\u06cc \u0646\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u06cc \u0648... \u062f\u0631 \u0646\u0638\u0631\u0627\u062a"
+          }
+          value={generateStateValueProp($state, ["searchInput", "value"]) ?? ""}
+        />
+
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__zJu53
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return $state.searchInput.value;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
+        </div>
+      </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__juWhk)} />
 
       {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -218,9 +479,11 @@ function PlasmicReviewList__RenderFunc(props: {
         const currentItem = __plasmic_item_0;
         const currentIndex = __plasmic_idx_0;
         return (
-          <div
+          <Stack__
+            as={"div"}
             data-plasmic-name={"cardLine"}
             data-plasmic-override={overrides.cardLine}
+            hasGap={true}
             className={classNames(projectcss.all, sty.cardLine)}
             key={currentIndex}
           >
@@ -387,9 +650,38 @@ function PlasmicReviewList__RenderFunc(props: {
             />
 
             <div className={classNames(projectcss.all, sty.freeBox__q1VhB)} />
-          </div>
+          </Stack__>
         );
       })}
+      {(() => {
+        try {
+          return $props.reviewResponse.length === 0;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <div className={classNames(projectcss.all, sty.freeBox__kwRs)}>
+          <div className={classNames(projectcss.all, sty.freeBox__pnl53)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__x0PVy
+              )}
+            >
+              {
+                "\u0645\u0648\u0631\u062f\u06cc \u06cc\u0627\u0641\u062a \u0646\u0634\u062f!"
+              }
+            </div>
+          </div>
+        </div>
+      ) : null}
       {(() => {
         try {
           return (
@@ -412,12 +704,10 @@ function PlasmicReviewList__RenderFunc(props: {
             data-plasmic-override={overrides.button}
             children2={
               <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
                 className={classNames(
                   projectcss.all,
                   projectcss.__wab_text,
-                  sty.text
+                  sty.text___4XpEt
                 )}
               >
                 {
@@ -519,18 +809,20 @@ const PlasmicDescendants = {
   root: [
     "root",
     "setNweReview",
-    "filter",
+    "filterInput",
+    "sortInput",
+    "searchInput",
     "cardLine",
     "reviewCard",
-    "button",
-    "text"
+    "button"
   ],
   setNweReview: ["setNweReview"],
-  filter: ["filter"],
+  filterInput: ["filterInput"],
+  sortInput: ["sortInput"],
+  searchInput: ["searchInput"],
   cardLine: ["cardLine", "reviewCard"],
   reviewCard: ["reviewCard"],
-  button: ["button", "text"],
-  text: ["text"]
+  button: ["button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -538,11 +830,12 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   setNweReview: typeof SetNweReview;
-  filter: typeof Filter;
+  filterInput: typeof Select;
+  sortInput: typeof Select;
+  searchInput: typeof TextInput;
   cardLine: "div";
   reviewCard: typeof ReviewCard;
   button: typeof Button;
-  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -606,11 +899,12 @@ export const PlasmicReviewList = Object.assign(
   {
     // Helper components rendering sub-elements
     setNweReview: makeNodeComponent("setNweReview"),
-    filter: makeNodeComponent("filter"),
+    filterInput: makeNodeComponent("filterInput"),
+    sortInput: makeNodeComponent("sortInput"),
+    searchInput: makeNodeComponent("searchInput"),
     cardLine: makeNodeComponent("cardLine"),
     reviewCard: makeNodeComponent("reviewCard"),
     button: makeNodeComponent("button"),
-    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicReviewList
     internalVariantProps: PlasmicReviewList__VariantProps,

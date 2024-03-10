@@ -263,7 +263,32 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
             plasmic_fragment_design_system_css.plasmic_tokens
           )}
         >
-          <div className={classNames(projectcss.all, sty.freeBox__ref8W)}>
+          <div
+            className={classNames(projectcss.all, sty.freeBox__ref8W)}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return e.stopPropagation();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }}
+          >
             <InfoIcon
               className={classNames(projectcss.all, sty.svg___6Itud)}
               role={"img"}

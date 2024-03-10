@@ -27,7 +27,7 @@
   max-width: 100%;
   background: var(--token-lw4xv_KKpd4e);
   border-radius: 19px;
-  padding: var(--token-_c276Gs_1FIE);
+  padding: var(--token-fhaz6q6bl-fW) var(--token-_c276Gs_1FIE);
 }
 .freeBox__aawEq > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -61,6 +61,7 @@
   max-width: 100%;
   color: var(--token-It8BufY6ejOY);
   font-weight: 700;
+  font-size: var(--token-6NbVMeD6zQwn);
   border-radius: 6px;
 }
 .popoverCore:global(.__wab_instance) {
@@ -114,4 +115,5 @@
   height: auto;
   max-width: 100%;
   font-weight: 500;
+  font-size: var(--token-6NbVMeD6zQwn);
 }

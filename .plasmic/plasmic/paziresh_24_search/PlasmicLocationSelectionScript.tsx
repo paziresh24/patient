@@ -559,7 +559,9 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           onMount={async () => {
             const $steps = {};
 
-            $steps["runCode"] = true
+            $steps[
+              "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+            ] = true
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
@@ -613,11 +615,48 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
+              $steps[
+                "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+              ] != null &&
+              typeof $steps[
+                "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+              ] === "object" &&
+              typeof $steps[
+                "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+              ].then === "function"
             ) {
-              $steps["runCode"] = await $steps["runCode"];
+              $steps[
+                "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+              ] = await $steps[
+                "managingGeolocationAccessPreferencesWithCookiesAndPermissions"
+              ];
+            }
+
+            $steps["sendClarityCustomTagsEventRunCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return clarity(
+                        "set",
+                        "fragment_component_load",
+                        "location selection script component loaded"
+                      );
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["sendClarityCustomTagsEventRunCode"] != null &&
+              typeof $steps["sendClarityCustomTagsEventRunCode"] === "object" &&
+              typeof $steps["sendClarityCustomTagsEventRunCode"].then ===
+                "function"
+            ) {
+              $steps["sendClarityCustomTagsEventRunCode"] = await $steps[
+                "sendClarityCustomTagsEventRunCode"
+              ];
             }
           }}
         />

@@ -61,6 +61,7 @@ import {
 
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -103,6 +104,7 @@ export type PlasmicSearchResults__OverridesType = {
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchResultsProps {
@@ -741,6 +743,41 @@ function PlasmicSearchResults__RenderFunc(props: {
           </div>
         </Stack__>
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["sendClarityCustomTagsEventRunCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return clarity(
+                      "set",
+                      "fragment_component_load",
+                      "search results"
+                    );
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["sendClarityCustomTagsEventRunCode"] != null &&
+            typeof $steps["sendClarityCustomTagsEventRunCode"] === "object" &&
+            typeof $steps["sendClarityCustomTagsEventRunCode"].then ===
+              "function"
+          ) {
+            $steps["sendClarityCustomTagsEventRunCode"] = await $steps[
+              "sendClarityCustomTagsEventRunCode"
+            ];
+          }
+        }}
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -751,12 +788,14 @@ const PlasmicDescendants = {
     "resultCardsVerticalStack",
     "productCard",
     "paginationMoreButton",
-    "noResultsBlockVerticalStack"
+    "noResultsBlockVerticalStack",
+    "sideEffect"
   ],
   resultCardsVerticalStack: ["resultCardsVerticalStack", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
-  noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"]
+  noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -767,6 +806,7 @@ type NodeDefaultElementType = {
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -835,6 +875,7 @@ export const PlasmicSearchResults = Object.assign(
     noResultsBlockVerticalStack: makeNodeComponent(
       "noResultsBlockVerticalStack"
     ),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,
