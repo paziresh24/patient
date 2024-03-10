@@ -21,6 +21,16 @@
       }
     },
     {
+      "name": "10",
+      "type": "spacing",
+      "value": "2.5rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "QcxRWQfhgyJI"
+      }
+    },
+    {
       "name": "2",
       "type": "spacing",
       "value": "0.5rem",
@@ -108,6 +118,46 @@
       "meta": {
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
         "id": "zB6Sy63cwwn1"
+      }
+    },
+    {
+      "name": "6",
+      "type": "spacing",
+      "value": "1.5rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "UIMkdd_bvvx_"
+      }
+    },
+    {
+      "name": "7",
+      "type": "spacing",
+      "value": "1.75rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "m74yTzJEHMEw"
+      }
+    },
+    {
+      "name": "8",
+      "type": "spacing",
+      "value": "2rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "BCWljTOyDNmw"
+      }
+    },
+    {
+      "name": "9",
+      "type": "spacing",
+      "value": "2.25rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "TDHofVgu3_mN"
       }
     },
     {

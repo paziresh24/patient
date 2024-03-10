@@ -65,6 +65,7 @@ import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -138,6 +139,7 @@ export type PlasmicReviewCard__OverridesType = {
   button?: Flex__<typeof Button>;
   رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
+  multilineTextInput?: Flex__<typeof MultilineTextInput>;
 };
 
 export interface DefaultReviewCardProps {
@@ -235,6 +237,18 @@ function PlasmicReviewCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "reportLoadinButton",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "multilineTextInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -493,38 +507,66 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__yTb2M
-              )}
-            >
-              {"|"}
-            </div>
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__pm0Q5
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.docCenter;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0628\u0627\u0628\u06a9 \u0632\u0645\u0627\u0646\u06cc";
+            {(() => {
+              try {
+                return !!$props.docCenter;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__yTb2M
+                )}
+              >
+                {"|"}
+              </div>
+            ) : null}
+            {(() => {
+              try {
+                return $props.docCenter !== undefined;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__pm0Q5
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.docCenter;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0628\u0627\u0628\u06a9 \u0632\u0645\u0627\u0646\u06cc";
+                      }
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
+                  })()}
+                </React.Fragment>
+              </div>
+            ) : null}
           </Stack__>
         </Stack__>
       </div>
@@ -826,29 +868,45 @@ function PlasmicReviewCard__RenderFunc(props: {
             }
           }}
         >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__zTaJf
-            )}
-          >
-            <React.Fragment>
-              {(() => {
-                try {
-                  return $state.isLike ? Number($props.like) + 1 : $props.like;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "2";
+          {(() => {
+            try {
+              return $props.like != 0;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__zTaJf
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $state.isLike
+                      ? Number($props.like) + 1
+                      : $props.like;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "2";
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()}
-            </React.Fragment>
-          </div>
+                })()}
+              </React.Fragment>
+            </div>
+          ) : null}
           {(() => {
             try {
               return !$state.isLike;
@@ -937,25 +995,31 @@ function PlasmicReviewCard__RenderFunc(props: {
                     role={"img"}
                   />
                 }
+                loading={(() => {
+                  try {
+                    return $state.reportLoadinButton;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["runCode"] = true
+                  $steps["runCode3"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return fetch(
-                              "https://apigw.paziresh24.com/v1/feedbacks/report",
-                              {
-                                headers: { "content-type": "application/json" },
-                                body: JSON.stringify({
-                                  feedback_id: $props.feedbackId,
-                                  report_text: $state.reportText.value
-                                }),
-                                method: "POST",
-                                credentials: "include"
+                            return (() => {
+                              if ($state.reportText.value.length < 10) {
+                                return alert("متن باید بیشتر از 10 حرف باشد");
                               }
-                            );
+                            })();
                           }
                         };
                         return (({ customFunction }) => {
@@ -964,11 +1028,155 @@ function PlasmicReviewCard__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
+                    $steps["runCode3"] != null &&
+                    typeof $steps["runCode3"] === "object" &&
+                    typeof $steps["runCode3"].then === "function"
+                  ) {
+                    $steps["runCode3"] = await $steps["runCode3"];
+                  }
+
+                  $steps["runCode2"] =
+                    $state.reportText.value.length >= 10
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["reportLoadinButton"]
+                            },
+                            operation: 0,
+                            value: true
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["runCode2"] != null &&
+                    typeof $steps["runCode2"] === "object" &&
+                    typeof $steps["runCode2"].then === "function"
+                  ) {
+                    $steps["runCode2"] = await $steps["runCode2"];
+                  }
+
+                  $steps["runCode"] =
+                    $state.reportText.value.length >= 10
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return fetch(
+                                "https://apigw.paziresh24.com/v1/feedbacks/report",
+                                {
+                                  headers: {
+                                    "content-type": "application/json"
+                                  },
+                                  body: JSON.stringify({
+                                    feedback_id: $props.feedbackId,
+                                    report_text: $state.reportText.value
+                                  }),
+                                  method: "POST",
+                                  credentials: "include"
+                                }
+                              );
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
                     $steps["runCode"] != null &&
                     typeof $steps["runCode"] === "object" &&
                     typeof $steps["runCode"].then === "function"
                   ) {
                     $steps["runCode"] = await $steps["runCode"];
+                  }
+
+                  $steps["updateDialogOpen"] =
+                    $state.reportText.value.length >= 10
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["dialog", "open"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["updateDialogOpen"] != null &&
+                    typeof $steps["updateDialogOpen"] === "object" &&
+                    typeof $steps["updateDialogOpen"].then === "function"
+                  ) {
+                    $steps["updateDialogOpen"] = await $steps[
+                      "updateDialogOpen"
+                    ];
+                  }
+
+                  $steps["updateReportLoadinButton"] =
+                    $state.reportText.value.length >= 10
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["reportLoadinButton"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["updateReportLoadinButton"] != null &&
+                    typeof $steps["updateReportLoadinButton"] === "object" &&
+                    typeof $steps["updateReportLoadinButton"].then ===
+                      "function"
+                  ) {
+                    $steps["updateReportLoadinButton"] = await $steps[
+                      "updateReportLoadinButton"
+                    ];
                   }
                 }}
                 startIcon={
@@ -1033,6 +1241,24 @@ function PlasmicReviewCard__RenderFunc(props: {
             $refs["replyText"] = ref;
           }}
           value={generateStateValueProp($state, ["replyText", "value"]) ?? ""}
+        />
+
+        <MultilineTextInput
+          data-plasmic-name={"multilineTextInput"}
+          data-plasmic-override={overrides.multilineTextInput}
+          autoSize={true}
+          className={classNames("__wab_instance", sty.multilineTextInput)}
+          onValueChange={generateStateOnChangeProp($state, [
+            "multilineTextInput",
+            "value"
+          ])}
+          placeholder={
+            "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
+          }
+          value={generateStateValueProp($state, [
+            "multilineTextInput",
+            "value"
+          ])}
         />
 
         <div
@@ -1157,7 +1383,8 @@ const PlasmicDescendants = {
     "reportText",
     "button",
     "\u0631\u0644\u0627",
-    "replyText"
+    "replyText",
+    "multilineTextInput"
   ],
   سهنقطه: ["\u0633\u0647\u0646\u0642\u0637\u0647"],
   نامتتارخ: [
@@ -1182,8 +1409,9 @@ const PlasmicDescendants = {
   dialog: ["dialog", "reportText", "button"],
   reportText: ["reportText"],
   button: ["button"],
-  رلا: ["\u0631\u0644\u0627", "replyText"],
-  replyText: ["replyText"]
+  رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
+  replyText: ["replyText"],
+  multilineTextInput: ["multilineTextInput"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1203,6 +1431,7 @@ type NodeDefaultElementType = {
   button: typeof Button;
   رلا: "div";
   replyText: "textarea";
+  multilineTextInput: typeof MultilineTextInput;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1286,6 +1515,7 @@ export const PlasmicReviewCard = Object.assign(
     button: makeNodeComponent("button"),
     رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
+    multilineTextInput: makeNodeComponent("multilineTextInput"),
 
     // Metadata about props expected for PlasmicReviewCard
     internalVariantProps: PlasmicReviewCard__VariantProps,
