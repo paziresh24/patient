@@ -59,6 +59,7 @@ const Search = ({ host }: any) => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
+  const useFragmentProductCard = useFeatureIsOn('search:use-fragment-card-product');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -175,15 +176,19 @@ const Search = ({ host }: any) => {
             <Result />
           </div>
         </div>
-        <SearchSeoBox />
-        <Button
-          onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
-          variant="text"
-          className="!my-5 gap-2 self-end"
-          icon={<ErrorIcon className="w-5" />}
-        >
-          گزارش مشکل در جستجو
-        </Button>
+        <div className="!mb-16">
+          <SearchSeoBox />
+          {!useFragmentProductCard && (
+            <Button
+              onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
+              variant="text"
+              className="!my-5 gap-2 self-end"
+              icon={<ErrorIcon className="w-5" />}
+            >
+              گزارش مشکل در جستجو
+            </Button>
+          )}
+        </div>
       </div>
       <UnknownCity />
     </>

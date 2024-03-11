@@ -636,11 +636,16 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return clarity(
-                        "set",
-                        "fragment_component_load",
-                        "location selection script component loaded"
-                      );
+                      return (() => {
+                        clarity(
+                          "set",
+                          "fragment_component_load",
+                          "location selection script component loaded"
+                        );
+                        return console.log(
+                          "try to set clarity tag fragment_component_load to location selection script component loaded"
+                        );
+                      })();
                     }
                   };
                   return (({ customFunction }) => {

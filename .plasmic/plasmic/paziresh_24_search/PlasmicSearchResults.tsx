@@ -62,6 +62,7 @@ import {
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -88,6 +89,7 @@ export type PlasmicSearchResults__ArgsType = {
   nextPageTrigger?: () => void;
   paginationLoadingStatus?: boolean;
   location?: any;
+  searchFooterSecondaryTasksObject?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -95,7 +97,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "imageSrcPrefix",
   "nextPageTrigger",
   "paginationLoadingStatus",
-  "location"
+  "location",
+  "searchFooterSecondaryTasksObject"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -105,6 +108,7 @@ export type PlasmicSearchResults__OverridesType = {
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
   sideEffect?: Flex__<typeof SideEffect>;
+  searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
 };
 
 export interface DefaultSearchResultsProps {
@@ -113,6 +117,7 @@ export interface DefaultSearchResultsProps {
   nextPageTrigger?: () => void;
   paginationLoadingStatus?: boolean;
   location?: any;
+  searchFooterSecondaryTasksObject?: any;
   className?: string;
 }
 
@@ -754,11 +759,16 @@ function PlasmicSearchResults__RenderFunc(props: {
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return clarity(
-                      "set",
-                      "fragment_component_load",
-                      "search results"
-                    );
+                    return (() => {
+                      clarity(
+                        "set",
+                        "fragment_component_load",
+                        "search results"
+                      );
+                      return console.log(
+                        "try to set clarity tag fragment_component_load to search results"
+                      );
+                    })();
                   }
                 };
                 return (({ customFunction }) => {
@@ -778,6 +788,31 @@ function PlasmicSearchResults__RenderFunc(props: {
           }
         }}
       />
+
+      <SearchFooterSecondaryTasks
+        data-plasmic-name={"searchFooterSecondaryTasks"}
+        data-plasmic-override={overrides.searchFooterSecondaryTasks}
+        className={classNames("__wab_instance", sty.searchFooterSecondaryTasks)}
+        taskObject={(() => {
+          try {
+            return $props.searchFooterSecondaryTasksObject;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return {
+                destination:
+                  "https://support.paziresh24.com/ticketing/?action=new",
+                title:
+                  "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
+                openInNewTab: false
+              };
+            }
+            throw e;
+          }
+        })()}
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -789,13 +824,15 @@ const PlasmicDescendants = {
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
-    "sideEffect"
+    "sideEffect",
+    "searchFooterSecondaryTasks"
   ],
   resultCardsVerticalStack: ["resultCardsVerticalStack", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
-  sideEffect: ["sideEffect"]
+  sideEffect: ["sideEffect"],
+  searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -807,6 +844,7 @@ type NodeDefaultElementType = {
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
   sideEffect: typeof SideEffect;
+  searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -876,6 +914,7 @@ export const PlasmicSearchResults = Object.assign(
       "noResultsBlockVerticalStack"
     ),
     sideEffect: makeNodeComponent("sideEffect"),
+    searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,

@@ -75,8 +75,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -201,8 +200,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
@@ -292,8 +290,7 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -321,8 +318,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -646,6 +642,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicSetNweReview.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "WD65zwC-xphy",
+          "name": "TestReviewCard",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.tsx",
+          "importSpec": {
+            "modulePath": "TestReviewCard.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -673,6 +682,11 @@
           "id": "YVM63_mcG0ZV",
           "name": "ChevronUpsvgIcon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpsvg.tsx"
+        },
+        {
+          "id": "SNOnlPCvguG2",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
       "images": [],
@@ -762,8 +776,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -821,6 +834,19 @@
             "modulePath": "SearchFilters.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchFilters.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "H6s7UfVqSPjE",
+          "name": "SearchFooterSecondaryTasks",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchFooterSecondaryTasks.tsx",
+          "importSpec": {
+            "modulePath": "SearchFooterSecondaryTasks.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchFooterSecondaryTasks.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -885,8 +911,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -901,8 +926,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -917,8 +941,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -940,8 +963,7 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",

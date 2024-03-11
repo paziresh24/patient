@@ -181,3 +181,8 @@
   object-fit: cover;
   position: relative;
 }
+.searchFooterSecondaryTasks:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+  margin-top: calc(24px + var(--token-Fv8-L_kN-2Ma)) !important;
+}

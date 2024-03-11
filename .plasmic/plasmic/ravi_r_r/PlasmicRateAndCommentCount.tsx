@@ -67,7 +67,7 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicRateAndCommentCount.module.css"; // plasmic-import: u3Jgb_UfiULc/css
 
-import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
+import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvguG2/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 
 createPlasmicElementProxy;
@@ -172,7 +172,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
         hasGap={true}
         className={classNames(projectcss.all, sty.freeBox__aawEq)}
       >
-        <ThumbUpIcon
+        <Icon2Icon
           className={classNames(projectcss.all, sty.svg__yhwpm)}
           role={"img"}
         />
@@ -187,7 +187,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
           <React.Fragment>
             {(() => {
               try {
-                return $props.rate + "%";
+                return $props.rate;
               } catch (e) {
                 if (
                   e instanceof TypeError ||

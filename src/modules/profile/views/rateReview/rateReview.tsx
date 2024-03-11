@@ -677,8 +677,14 @@ export const RateReview = (props: RateReviewProps) => {
               reviewResponse: feedbacksData,
               nextPageTrigger: () => showMore(),
               paginationLoadingStatus: showMoreButtonLoading,
-              onSearch: (value: string) => rateSearch(value),
-              onFilter: (value: 'my_feedbacks' | 'has_nobat' | 'all' | 'recommended') => rateFilterType(value),
+              onSearch: (value: string) => {
+                console.log(value);
+                // rateSearch();
+              },
+              onFilter: (value: 'my_feedbacks' | 'has_nobat' | 'all' | 'recommended') => {
+                console.log(value);
+                rateFilterType(value);
+              },
               onSort: (value: string) => rateSortFilter(value),
             }}
           />
