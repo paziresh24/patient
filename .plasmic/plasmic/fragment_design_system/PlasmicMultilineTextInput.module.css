@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.textarea {
+  position: relative;
+  width: 100%;
+  height: var(--token-QcxRWQfhgyJI);
+  max-width: 100%;
+  min-height: var(--token-QcxRWQfhgyJI);
+  font-size: var(--token-6NbVMeD6zQwn);
+  min-width: 0;
+  flex-shrink: 0;
+  border-radius: 6px;
+  padding: var(--token-_c276Gs_1FIE);
+  border: 1px solid var(--token-Y3HOiwZmAcAF);
+}
+.root .textarea:focus {
+  outline: none;
+  border-color: var(--token-JDvyxAtm9ONK);
+}
+.root .textarea::placeholder {
+  opacity: 1;
+  color: var(--token-Y3HOiwZmAcAF);
+}

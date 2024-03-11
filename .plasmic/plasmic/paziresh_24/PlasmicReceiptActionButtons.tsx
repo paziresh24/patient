@@ -2141,7 +2141,13 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     <TextInput
                       data-plasmic-name={"textInput"}
                       data-plasmic-override={overrides.textInput}
-                      className={classNames("__wab_instance", sty.textInput)}
+                      className={classNames("__wab_instance", sty.textInput, {
+                        [sty.textInputtype_visitOnline]: hasVariant(
+                          $state,
+                          "type",
+                          "visitOnline"
+                        )
+                      })}
                       name={"book-id"}
                       onChange={(...eventArgs) => {
                         generateStateOnChangeProp($state, [

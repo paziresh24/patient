@@ -405,6 +405,19 @@
           "cssFilePath": "plasmic/fragment_design_system/PlasmicLineClamp.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "CZBpNouNw7Ui",
+          "name": "MultilineTextInput",
+          "type": "managed",
+          "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+          "renderModuleFilePath": "plasmic/fragment_design_system/PlasmicMultilineTextInput.tsx",
+          "importSpec": {
+            "modulePath": "MultilineTextInput.tsx"
+          },
+          "cssFilePath": "plasmic/fragment_design_system/PlasmicMultilineTextInput.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -417,6 +430,16 @@
           "id": "xYtO5aWYRBvW",
           "name": "IconIcon",
           "moduleFilePath": "plasmic/fragment_design_system/icons/PlasmicIcon__Icon.tsx"
+        },
+        {
+          "id": "RqwNL88PjcHS",
+          "name": "SearchsvgIcon",
+          "moduleFilePath": "plasmic/fragment_design_system/icons/PlasmicIcon__Searchsvg.tsx"
+        },
+        {
+          "id": "_Qaeb-4Y8N07",
+          "name": "ChecksvgIcon",
+          "moduleFilePath": "plasmic/fragment_design_system/icons/PlasmicIcon__Checksvg.tsx"
         }
       ],
       "images": [],
@@ -619,6 +642,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicSetNweReview.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "WD65zwC-xphy",
+          "name": "TestReviewCard",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.tsx",
+          "importSpec": {
+            "modulePath": "TestReviewCard.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -646,6 +682,11 @@
           "id": "YVM63_mcG0ZV",
           "name": "ChevronUpsvgIcon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpsvg.tsx"
+        },
+        {
+          "id": "SNOnlPCvguG2",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
       "images": [],
@@ -793,6 +834,19 @@
             "modulePath": "SearchFilters.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchFilters.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "H6s7UfVqSPjE",
+          "name": "SearchFooterSecondaryTasks",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchFooterSecondaryTasks.tsx",
+          "importSpec": {
+            "modulePath": "SearchFooterSecondaryTasks.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchFooterSecondaryTasks.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }

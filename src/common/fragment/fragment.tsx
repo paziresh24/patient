@@ -19,7 +19,6 @@ export const Fragment = ({ name, variants, props }: FragmentProps) => {
   const user_id = useUserInfoStore(state => state.info.id);
 
   if (!name) return null;
-
   const features = getFeatures({ provider: growthbook });
 
   if (publicRuntimeConfig.PLASMIC_PREVIEW) {
