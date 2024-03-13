@@ -8,6 +8,11 @@
   align-items: center;
   min-width: 0;
 }
+.jsFuncScripts:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+}
 .dialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
   position: relative;
@@ -53,7 +58,7 @@
   > img {
   margin-left: var(--token-_c276Gs_1FIE);
 }
-.button___1MxKw:global(.__wab_instance) {
+.useMyLocation:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
   left: auto;
@@ -73,7 +78,7 @@
   width: auto;
   height: 1em;
 }
-.button__rvyjl:global(.__wab_instance) {
+.button:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
   left: auto;
