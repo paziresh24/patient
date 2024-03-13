@@ -49,6 +49,9 @@ clinicClient.interceptors.request.use(
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
+    if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
+    }
     config = {
       ...config,
       meta: {
@@ -77,6 +80,9 @@ apiGatewayClient.interceptors.request.use(
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
+    if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
+    }
     if (isPWA()) {
       (config as any).headers['isApplication'] = true;
     }
@@ -91,6 +97,9 @@ paziresh24AppClient.interceptors.request.use(
   config => {
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
     }
     return config;
   },

@@ -43,7 +43,7 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
   }, 10);
 
   const rateFilterType = debounce((type: 'my_feedbacks' | 'has_nobat' | 'all' | 'recommended') => {
-    const removeFilters = omit(filterParams, ['has_nobat', 'my_feedbacks', 'recommended']);
+    const removeFilters = omit(filterParams, ['has_nobat', 'my_feedbacks', 'recommended', 'center_id']);
     const filterTypes = {
       my_feedbacks: { my_feedbacks: true },
       has_nobat: { has_nobat: true },
