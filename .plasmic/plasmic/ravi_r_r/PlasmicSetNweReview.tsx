@@ -77,13 +77,9 @@ export type PlasmicSetNweReview__VariantsArgs = {};
 type VariantPropType = keyof PlasmicSetNweReview__VariantsArgs;
 export const PlasmicSetNweReview__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicSetNweReview__ArgsType = {
-  addCommentPage?: string;
-};
+export type PlasmicSetNweReview__ArgsType = {};
 type ArgPropType = keyof PlasmicSetNweReview__ArgsType;
-export const PlasmicSetNweReview__ArgProps = new Array<ArgPropType>(
-  "addCommentPage"
-);
+export const PlasmicSetNweReview__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicSetNweReview__OverridesType = {
   root?: Flex__<"div">;
@@ -92,7 +88,6 @@ export type PlasmicSetNweReview__OverridesType = {
 };
 
 export interface DefaultSetNweReviewProps {
-  addCommentPage?: string;
   className?: string;
 }
 
@@ -157,29 +152,6 @@ function PlasmicSetNweReview__RenderFunc(props: {
         data-plasmic-override={overrides.button}
         children2={"\u062b\u0628\u062a \u0646\u0638\u0631"}
         className={classNames("__wab_instance", sty.button)}
-        onClick={async event => {
-          const $steps = {};
-
-          $steps["runCode"] = true
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return location.assign($props.addCommentPage);
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["runCode"] != null &&
-            typeof $steps["runCode"] === "object" &&
-            typeof $steps["runCode"].then === "function"
-          ) {
-            $steps["runCode"] = await $steps["runCode"];
-          }
-        }}
         outline={true}
       />
     </div>

@@ -87,26 +87,22 @@ export type PlasmicReviewList__ArgsType = {
   reviewResponse?: any;
   nextPageTrigger?: (page: number) => void;
   paginationLoadingStatus?: boolean;
+  user?: any;
   centers?: any;
   onSearch?: (value: string) => void;
   onFilter?: (value: string) => void;
   onSort?: (value: string) => void;
-  information?: any;
-  seo?: any;
-  expertises?: any;
 };
 type ArgPropType = keyof PlasmicReviewList__ArgsType;
 export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
   "reviewResponse",
   "nextPageTrigger",
   "paginationLoadingStatus",
+  "user",
   "centers",
   "onSearch",
   "onFilter",
-  "onSort",
-  "information",
-  "seo",
-  "expertises"
+  "onSort"
 );
 
 export type PlasmicReviewList__OverridesType = {
@@ -124,13 +120,11 @@ export interface DefaultReviewListProps {
   reviewResponse?: any;
   nextPageTrigger?: (page: number) => void;
   paginationLoadingStatus?: boolean;
+  user?: any;
   centers?: any;
   onSearch?: (value: string) => void;
   onFilter?: (value: string) => void;
   onSort?: (value: string) => void;
-  information?: any;
-  seo?: any;
-  expertises?: any;
   className?: string;
 }
 
@@ -198,7 +192,7 @@ function PlasmicReviewList__RenderFunc(props: {
         path: "sortInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "created_at"
+        initFunc: ({ $props, $state, $queries, $ctx }) => "default_order"
       }
     ],
     [$props, $ctx, $refs]
@@ -229,34 +223,6 @@ function PlasmicReviewList__RenderFunc(props: {
       <SetNweReview
         data-plasmic-name={"setNweReview"}
         data-plasmic-override={overrides.setNweReview}
-        addCommentPage={(() => {
-          try {
-            return (() => {
-              const doctor = {
-                id: $props.information?.id,
-                name: $props.information?.display_name,
-                image: $props.information?.image,
-                group_expertises:
-                  $props.expertises.group_expertises?.[0]?.name ?? "سایر",
-                group_expertises_slug:
-                  $props.expertises.group_expertises?.[0]?.en_slug ?? "other",
-                expertise: $props.expertises?.expertises?.[0]?.alias_title,
-                slug: $props.seo.slug,
-                city: $props.centers?.map(center => center.city),
-                server_id: $props.information?.server_id
-              };
-              return `/comment/?doctorName=${doctor.name}&image=${doctor.image}&group_expertises=${doctor.group_expertises}&group_expertises_slug=${doctor.group_expertises_slug}&expertise=${doctor.expertise}&doctor_id=${doctor.id}&server_id=${doctor.server_id}&doctor_city=${doctor.city[0]}&doctor_slug=${doctor.slug}`;
-            })();
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
         className={classNames("__wab_instance", sty.setNweReview)}
       />
 
@@ -323,7 +289,7 @@ function PlasmicReviewList__RenderFunc(props: {
               try {
                 return [
                   { value: "all", label: "همه نظرات" },
-                  ...($ctx.auth.isLogin
+                  ...($props.user.isLogin
                     ? [{ value: "my_feedbacks", label: "نظرات من" }]
                     : []),
                   { value: "recommended", label: "نظرات منفی" },
@@ -713,19 +679,6 @@ function PlasmicReviewList__RenderFunc(props: {
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
                     return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              visitedTag={(() => {
-                try {
-                  return currentItem.is_visited;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
                   }
                   throw e;
                 }
