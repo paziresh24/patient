@@ -366,7 +366,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         );
       }
 
-      feedbacks.feedbacks = shouldUseFeedback ? profileData.feedbacks.reviews : feedbackData?.result ?? [];
+      feedbacks.feedbacks = feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
     } catch (error) {
       console.error(error);

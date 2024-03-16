@@ -289,7 +289,10 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                               return geoLocationUtils
                                 .checkGeolocationAccess()
                                 .then(status => {
-                                  if (status === "granted") {
+                                  if (
+                                    status === "granted" ||
+                                    status === "prompt"
+                                  ) {
                                     geoLocationUtils.setLatLonToURL();
                                   } else {
                                     console.error(
@@ -323,113 +326,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (() => {
-                              function clickButtonByTextAndTagClarity(
-                                text,
-                                hideSelector
-                              ) {
-                                var buttons =
-                                  document.querySelectorAll("button");
-                                var targetButton = Array.prototype.find.call(
-                                  buttons,
-                                  function (button) {
-                                    return (
-                                      button.innerText.includes(text) ||
-                                      button.textContent.includes(text)
-                                    );
-                                  }
-                                );
-                                if (targetButton) {
-                                  console.log(
-                                    'Button "' +
-                                      text +
-                                      '" found, simulating click...'
-                                  );
-                                  targetButton.click();
-                                  clarity(
-                                    "set",
-                                    "auto_clicked_near_me",
-                                    "اطراف من اتومانیک پیشفرض"
-                                  );
-                                  if (window.clarity) {
-                                    window.clarity(
-                                      "set",
-                                      "clicked_" + text,
-                                      true
-                                    );
-                                    window.clarity(
-                                      "event",
-                                      "اطراف من اتومانیک پیشفرض"
-                                    );
-                                    console.log(
-                                      'Clarity tag set for clicking "' +
-                                        text +
-                                        '"'
-                                    );
-                                  }
-                                  if (hideSelector) {
-                                    var elementToHide =
-                                      document.querySelector(hideSelector);
-                                    if (elementToHide) {
-                                      elementToHide.style.display = "none";
-                                      console.log(
-                                        "Hiding element: " + hideSelector
-                                      );
-                                    }
-                                  }
-                                  sendHttpRequest();
-                                  return true;
-                                } else {
-                                  console.log(
-                                    'Button "' + text + '" not found'
-                                  );
-                                  return false;
-                                }
-                              }
-                              function sendHttpRequest() {
-                                var url =
-                                  "https://p24splk.paziresh24.com/services/collector";
-                                var data = JSON.stringify({
-                                  sourcetype: "_json",
-                                  event: {
-                                    event_group: "search_metrics",
-                                    event_type: "near_me_button_auto_press",
-                                    current_url: window.location.href
-                                  }
-                                });
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("POST", url, true);
-                                xhr.setRequestHeader("accept-language", "fa");
-                                xhr.setRequestHeader(
-                                  "authorization",
-                                  "Splunk 7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd"
-                                );
-                                xhr.setRequestHeader(
-                                  "content-type",
-                                  "application/json"
-                                );
-                                xhr.onreadystatechange = function () {
-                                  if (xhr.readyState === 4) {
-                                    console.log("Success:", xhr.responseText);
-                                  }
-                                };
-                                xhr.send(data);
-                              }
-                              if (
-                                clickButtonByTextAndTagClarity(
-                                  "همه شهرها",
-                                  ".module-selector"
-                                )
-                              ) {
-                                return setTimeout(function () {
-                                  clickButtonByTextAndTagClarity("اطراف من");
-                                }, 100);
-                              } else {
-                                return console.log(
-                                  "Failed to click the first button. Aborting sequence."
-                                );
-                              }
-                            })();
+                            return (() => {})();
                           }
                         };
                         return (({ customFunction }) => {
@@ -446,6 +343,29 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   ) {
                     $steps["autoPressNearMeButtonRunCode2"] = await $steps[
                       "autoPressNearMeButtonRunCode2"
+                    ];
+                  }
+
+                  $steps["endButtonLoading"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return ($props.givLocationButtonLoadingStatus =
+                              false);
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["endButtonLoading"] != null &&
+                    typeof $steps["endButtonLoading"] === "object" &&
+                    typeof $steps["endButtonLoading"].then === "function"
+                  ) {
+                    $steps["endButtonLoading"] = await $steps[
+                      "endButtonLoading"
                     ];
                   }
 
@@ -482,29 +402,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   ) {
                     $steps["updateDialogOpen"] = await $steps[
                       "updateDialogOpen"
-                    ];
-                  }
-
-                  $steps["endButtonLoading"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return ($props.givLocationButtonLoadingStatus =
-                              false);
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["endButtonLoading"] != null &&
-                    typeof $steps["endButtonLoading"] === "object" &&
-                    typeof $steps["endButtonLoading"].then === "function"
-                  ) {
-                    $steps["endButtonLoading"] = await $steps[
-                      "endButtonLoading"
                     ];
                   }
                 }}

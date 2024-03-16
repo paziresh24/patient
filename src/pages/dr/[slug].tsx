@@ -222,7 +222,11 @@ const DoctorProfile = ({
             toolBarItems={toolBarItems as ToolBarItems}
             className="w-full shadow-card md:rounded-lg"
             satisfaction={
-              customize.showRateAndReviews && !dontShowRateAndReviewMessage && profileData.feedbacks?.details?.satisfaction_percent
+              customize.showRateAndReviews &&
+              !dontShowRateAndReviewMessage &&
+              (fragmentComponents.reviewCard
+                ? profileData.feedbacks?.details?.satisfaction
+                : profileData.feedbacks?.details?.satisfaction_percent)
             }
             rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
             editable={editable}

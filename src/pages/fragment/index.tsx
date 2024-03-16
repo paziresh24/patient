@@ -4,10 +4,6 @@ import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
 import { DesignSystemGlobalContext } from '@/common/fragment/designSystemGlobalContext';
 
-export default function PlasmicHost() {
-  return <PlasmicCanvasHost />;
-}
-
 registerFunction(plasmicSplunkEvent, {
   name: 'splunkEvent',
   isDefaultExport: true,
@@ -82,3 +78,7 @@ registerGlobalContext(DesignSystemGlobalContext, {
   },
   importPath: '@/common/fragment/designSystemGlobalContext',
 });
+
+export default function PlasmicHost() {
+  return <PlasmicCanvasHost />;
+}

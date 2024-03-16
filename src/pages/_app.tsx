@@ -20,6 +20,8 @@ import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
+import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
+import { DesignSystemGlobalContext } from '@/common/fragment/designSystemGlobalContext';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -87,16 +89,20 @@ function MyApp(props: AppProps) {
       <GrowthBookProvider growthbook={growthbook}>
         <Provider pageProps={pageProps}>
           <PlasmicRootProvider disableLoadingBoundary>
-            <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-            <Head>
-              <meta
-                name="viewport"
-                content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
-                  isApplication ? '1.0' : '5.0'
-                }`}
-              />
-            </Head>
-            <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+            <AuthGlobalContext>
+              <DesignSystemGlobalContext>
+                <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+                <Head>
+                  <meta
+                    name="viewport"
+                    content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
+                      isApplication ? '1.0' : '5.0'
+                    }`}
+                  />
+                </Head>
+                <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+              </DesignSystemGlobalContext>
+            </AuthGlobalContext>
           </PlasmicRootProvider>
         </Provider>
       </GrowthBookProvider>
