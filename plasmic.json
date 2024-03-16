@@ -696,7 +696,7 @@
       ],
       "images": [],
       "indirect": true,
-      "globalContextsFilePath": "",
+      "globalContextsFilePath": "plasmic/ravi_r_r/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
       "codeComponents": [
         {
@@ -710,6 +710,18 @@
           "name": "Fetcher",
           "displayName": "plasmic-data-source-fetcher",
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        },
+        {
+          "id": "Xco54Kekq-Th",
+          "name": "AuthGlobalContext",
+          "displayName": "AuthGlobalContext",
+          "componentImportPath": "@/common/fragment/authGlobalContext"
+        },
+        {
+          "id": "I9xFO0-CXlvU",
+          "name": "Fragment",
+          "displayName": "Fragment",
+          "componentImportPath": "@/common/fragment/designSystemGlobalContext"
         }
       ],
       "customFunctions": [

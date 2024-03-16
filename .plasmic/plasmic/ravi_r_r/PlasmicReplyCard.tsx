@@ -228,21 +228,24 @@ function PlasmicReplyCard__RenderFunc(props: {
             sty.text__zendm
           )}
         >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.replyText;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
+          <div
+            className={projectcss.__wab_expr_html_text}
+            dangerouslySetInnerHTML={{
+              __html: (() => {
+                try {
+                  return $props.replyText;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "";
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
+              })()
+            }}
+          />
         </div>
       </div>
     </div>
