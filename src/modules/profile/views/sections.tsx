@@ -158,7 +158,7 @@ export const sections = (data: any) => {
         };
 
         const rateDetails = {
-          satisfaction: fragmentComponents.reviewCard ? feedbacks.details?.satisfaction : feedbacks.details?.satisfaction_percent,
+          satisfaction: feedbacks.details?.satisfaction_percent,
           count: feedbacks.details.count_of_feedbacks,
           ...(feedbacks.details?.is_new_rate_calculations && {
             satisfactionHint:

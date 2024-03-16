@@ -61,7 +61,7 @@
   top: auto;
   min-width: 500px;
   max-height: 100%;
-  overflow: visible;
+  overflow: auto;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }

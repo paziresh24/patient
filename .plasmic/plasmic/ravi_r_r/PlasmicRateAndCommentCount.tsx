@@ -272,7 +272,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
-                        return event.stopPropagation();
+                        return e.stopPropagation();
                       }
                     };
                     return (({ customFunction }) => {
