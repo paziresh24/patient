@@ -26,11 +26,6 @@
           "checksum": "ce48a9445a7a344c02090d9940947f46"
         },
         {
-          "assetId": "oBJtsp5RgVpcN6KCrDTuQT",
-          "type": "projectCss",
-          "checksum": "c1c4e2808e07c97cfeb13d9cc075734c"
-        },
-        {
           "type": "icon",
           "assetId": "rDjUqSUK3eUM",
           "checksum": "a2a89126e9d4f94588ec08b80e2c8776"
@@ -124,6 +119,11 @@
           "type": "image",
           "assetId": "ijbf5URccsnE",
           "checksum": "871858b983feb6fdf32268fce7608bc6"
+        },
+        {
+          "assetId": "oBJtsp5RgVpcN6KCrDTuQT",
+          "type": "projectCss",
+          "checksum": "c1c4e2808e07c97cfeb13d9cc075734c"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -134,11 +134,6 @@
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
-        {
-          "assetId": "sqPBLwEBBKHA2WDuGb17eV",
-          "type": "projectCss",
-          "checksum": "e1ec850476829c38b0f9b6d4f7ac446a"
-        },
         {
           "type": "renderModule",
           "assetId": "5nirPCGmCnRD",
@@ -158,6 +153,11 @@
           "type": "icon",
           "assetId": "MbDRsJU0e3bw",
           "checksum": "92672aa6935120ebaac11939d8d127bb"
+        },
+        {
+          "assetId": "sqPBLwEBBKHA2WDuGb17eV",
+          "type": "projectCss",
+          "checksum": "e1ec850476829c38b0f9b6d4f7ac446a"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -190,11 +190,6 @@
           "type": "globalVariant",
           "assetId": "QmLtHiTXdNxv",
           "checksum": "f5a354b0d77bf94780630337f9a43aa2"
-        },
-        {
-          "assetId": "h9Dbk9ygddw7UVEq1NNhKi",
-          "type": "projectCss",
-          "checksum": "0c207c6365e0eafc190f6dd42a0362e4"
         },
         {
           "type": "renderModule",
@@ -285,13 +280,18 @@
           "type": "icon",
           "assetId": "_Qaeb-4Y8N07",
           "checksum": "986d20e143c950555b56927eace6c778"
+        },
+        {
+          "assetId": "h9Dbk9ygddw7UVEq1NNhKi",
+          "type": "projectCss",
+          "checksum": "0c207c6365e0eafc190f6dd42a0362e4"
         }
       ],
       "codegenVersion": "0.0.1"
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
-      "version": "8.0.0",
+      "version": "8.0.1",
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "5.4.2",
         "oBJtsp5RgVpcN6KCrDTuQT": "1.1.0",
@@ -305,11 +305,6 @@
           "type": "globalVariant",
           "assetId": "VbwzWy57oXtE",
           "checksum": "1565649a661665013a3a285d1dd857ee"
-        },
-        {
-          "assetId": "qQzsBf58SqzNJX45iggq96",
-          "type": "projectCss",
-          "checksum": "ec71970ebf4b00587b7faa2f086ff876"
         },
         {
           "assetId": "qQzsBf58SqzNJX45iggq96",
@@ -339,12 +334,12 @@
         {
           "type": "renderModule",
           "assetId": "Bx6gxTOoja9k",
-          "checksum": "25032861f244ad3f57331319aee72989"
+          "checksum": "2471387e1452f7d3ad3668e586829a4a"
         },
         {
           "type": "cssRules",
           "assetId": "Bx6gxTOoja9k",
-          "checksum": "25032861f244ad3f57331319aee72989"
+          "checksum": "2471387e1452f7d3ad3668e586829a4a"
         },
         {
           "type": "renderModule",
@@ -485,6 +480,11 @@
           "type": "icon",
           "assetId": "SNOnlPCvguG2",
           "checksum": "a28cb7edb8bff308638a1dd326f7da81"
+        },
+        {
+          "assetId": "qQzsBf58SqzNJX45iggq96",
+          "type": "projectCss",
+          "checksum": "ec71970ebf4b00587b7faa2f086ff876"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -505,11 +505,6 @@
           "type": "globalVariant",
           "assetId": "bPFvDr6pcYm4",
           "checksum": "c0ae5dbf8d6b09eca0d8c6c6c7eb8d98"
-        },
-        {
-          "assetId": "qtvEm4Gd8oQHZTsSZUTVzk",
-          "type": "projectCss",
-          "checksum": "b1803152724c8cbf827789ea03cca9fb"
         },
         {
           "type": "renderModule",
@@ -535,6 +530,11 @@
           "type": "icon",
           "assetId": "Dp3atYu8GMFe",
           "checksum": "9867dbf7bbe5966fb7852117ed070f52"
+        },
+        {
+          "assetId": "qtvEm4Gd8oQHZTsSZUTVzk",
+          "type": "projectCss",
+          "checksum": "b1803152724c8cbf827789ea03cca9fb"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -554,11 +554,6 @@
           "type": "globalVariant",
           "assetId": "qBGVzTFm0g_b",
           "checksum": "d912f765fa75e5a08ad04afa05615712"
-        },
-        {
-          "assetId": "sMdpLWyxbzDCruwMRffW2m",
-          "type": "projectCss",
-          "checksum": "4a30f368f96834002d9ae86101ed1128"
         },
         {
           "assetId": "sMdpLWyxbzDCruwMRffW2m",
@@ -624,6 +619,11 @@
           "type": "icon",
           "assetId": "Cfw-VAdl-_5E",
           "checksum": "dfa5243fc55bd5644e56d900f75eb34b"
+        },
+        {
+          "assetId": "sMdpLWyxbzDCruwMRffW2m",
+          "type": "projectCss",
+          "checksum": "4a30f368f96834002d9ae86101ed1128"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -699,7 +699,7 @@
         "h9Dbk9ygddw7UVEq1NNhKi": "5.4.2",
         "oBJtsp5RgVpcN6KCrDTuQT": "1.1.0",
         "qtvEm4Gd8oQHZTsSZUTVzk": "6.0.1",
-        "qQzsBf58SqzNJX45iggq96": "8.0.0"
+        "qQzsBf58SqzNJX45iggq96": "8.0.1"
       },
       "lang": "ts",
       "fileLocks": [
@@ -707,11 +707,6 @@
           "type": "globalVariant",
           "assetId": "ce5BTtZuA7fm",
           "checksum": "83e1440c1c37d4af8f37598e6ed602b0"
-        },
-        {
-          "assetId": "iDYgiKJB9Yi7CUB81stQBK",
-          "type": "projectCss",
-          "checksum": "f659602878294d4efc8fc5a5ce8827de"
         },
         {
           "assetId": "iDYgiKJB9Yi7CUB81stQBK",
@@ -1142,6 +1137,11 @@
           "type": "image",
           "assetId": "NPptS-oeiydD",
           "checksum": "36043a50397189bb141b4a1eef5c3347"
+        },
+        {
+          "assetId": "iDYgiKJB9Yi7CUB81stQBK",
+          "type": "projectCss",
+          "checksum": "f659602878294d4efc8fc5a5ce8827de"
         }
       ],
       "codegenVersion": "0.0.1"
