@@ -399,7 +399,7 @@ function PlasmicReviewList__RenderFunc(props: {
                       args: [
                         (() => {
                           try {
-                            return event;
+                            return $state.searchInput.value;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -431,30 +431,6 @@ function PlasmicReviewList__RenderFunc(props: {
           }
           value={generateStateValueProp($state, ["searchInput", "value"]) ?? ""}
         />
-
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__zJu53
-          )}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $state.searchInput.value;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </div>
       </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__juWhk)} />
 

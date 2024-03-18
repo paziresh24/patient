@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PlasmicCanvasHost, registerFunction, registerGlobalContext } from '@plasmicapp/react-web/lib/host';
 import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
-import { DesignSystemGlobalContext } from '@/common/fragment/designSystemGlobalContext';
+import { Fragment } from '@/common/fragment/designSystemGlobalContext';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -29,7 +29,12 @@ registerFunction(plasmicSplunkEvent, {
 registerGlobalContext(AuthGlobalContext, {
   name: 'AuthGlobalContext',
   displayName: 'Paziresh24 Auth',
-  props: { previewToken: 'string' },
+  props: {
+    previewToken: {
+      type: 'string',
+      editOnly: true,
+    },
+  },
   providesData: true,
   globalActions: {
     login: { parameters: [] },
@@ -38,7 +43,7 @@ registerGlobalContext(AuthGlobalContext, {
   importPath: '@/common/fragment/authGlobalContext',
 });
 
-registerGlobalContext(DesignSystemGlobalContext, {
+registerGlobalContext(Fragment, {
   name: 'Fragment',
   props: {},
   providesData: true,

@@ -405,9 +405,9 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         title={
           isOnlineVisitTurn
             ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست  حذف نوبت و استرداد وجه'} را انتخاب کنید`
-            : notRefundable 
-              ? 'عدم امکان لغو نوبت'
-              : 'آیا از لغو نوبت اطمینان دارید؟'
+            : notRefundable
+            ? 'عدم امکان لغو نوبت'
+            : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
       >
@@ -434,16 +434,16 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           )}
           <div className="flex space-s-2">
             {(!notRefundable || centerType == CenterType.consult) && (
-            <Button
-              theme="error"
-              block
-              onClick={removeBookAction}
-              loading={removeBookApi.isLoading || easyDeleteAppointments.isLoading}
-              data-testid="modal__remove-turn-button"
-              disabled={isOnlineVisitTurn && !reasonDeleteTurn}
-            >
-              {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
-            </Button>
+              <Button
+                theme="error"
+                block
+                onClick={removeBookAction}
+                loading={removeBookApi.isLoading || easyDeleteAppointments.isLoading}
+                data-testid="modal__remove-turn-button"
+                disabled={isOnlineVisitTurn && !reasonDeleteTurn}
+              >
+                {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
+              </Button>
             )}
             <Button
               theme="error"
