@@ -27,6 +27,7 @@ export interface ThemeConfig {
   showRateAndReviews: boolean;
   showSupport: boolean;
   showContribute: boolean;
+  oauth: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -61,6 +62,7 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
     showRateAndReviews: true,
     showSupport: true,
     showContribute: true,
+    oauth: false,
   },
   setCustomize: (query: any) => {
     if (!query) return;
