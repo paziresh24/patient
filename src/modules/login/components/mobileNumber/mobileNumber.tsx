@@ -32,6 +32,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
   const customize = useCustomize(state => state.customize);
+  const [oauthLoading, setOauthLoading] = useState(false);
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     if (!phoneNumberValidator(mobileNumberValue)) {
@@ -86,9 +87,13 @@ export const MobileNumber = (props: MobileNumberProps) => {
         <>
           <Divider />
           <Button
+            loading={oauthLoading}
             icon={<img src={ITOLogo.src} className="h-6 w-7" />}
             variant="secondary"
-            onClick={() => location.assign('https://auth.paziresh24.com/oauth/login?redirect_url=' + encodeURI(window.location.href))}
+            onClick={() => {
+              setOauthLoading(true);
+              location.assign('https://auth.paziresh24.com/oauth/login?redirect_url=' + encodeURI(window.location.href));
+            }}
           >
             ورود از طریق دولت من
           </Button>
