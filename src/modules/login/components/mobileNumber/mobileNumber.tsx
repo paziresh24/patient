@@ -16,6 +16,7 @@ import LoginTitleBar from '../titleBar';
 import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
 const { publicRuntimeConfig } = config();
+import ITOLogo from '../../assets/ITOLogo.png';
 interface MobileNumberProps {
   title?: string;
   description?: string;
@@ -85,10 +86,11 @@ export const MobileNumber = (props: MobileNumberProps) => {
         <>
           <Divider />
           <Button
+            icon={<img src={ITOLogo.src} className="h-6 w-7" />}
             variant="secondary"
             onClick={() => location.assign('https://auth.paziresh24.com/oauth/login?redirect_url=' + encodeURI(window.location.href))}
           >
-            ورود با شبکه دولت هوشمند
+            ورود از طریق دولت من
           </Button>
         </>
       )}
