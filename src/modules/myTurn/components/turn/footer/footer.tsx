@@ -405,7 +405,9 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         title={
           isOnlineVisitTurn
             ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست  حذف نوبت و استرداد وجه'} را انتخاب کنید`
-            : 'آیا از لغو نوبت اطمینان دارید؟'
+            : notRefundable 
+              ? 'عدم امکان لغو نوبت'
+              : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
       >
