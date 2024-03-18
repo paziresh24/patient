@@ -24,6 +24,7 @@ export const LoginModal = () => {
             state: false,
           });
           handleClose();
+          loginModalState?.onClose?.();
         }
       }}
       noHeader

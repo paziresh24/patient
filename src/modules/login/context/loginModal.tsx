@@ -7,6 +7,7 @@ interface State {
   title?: string;
   description?: string;
   closable?: boolean;
+  onClose?: () => void;
   postLogin?: (userInfo: UserInfo) => void;
 }
 
@@ -32,6 +33,9 @@ const LoginModalProvider = ({ children }: any) => {
     title: undefined,
     description: undefined,
     closable: true,
+    onClose: () => {
+      return;
+    },
   });
 
   const handleOpenLoginModal = (state: State) => {

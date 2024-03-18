@@ -13,6 +13,8 @@ import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
+import Divider from '@/common/components/atom/divider';
+import useCustomize from '@/common/hooks/useCustomize';
 const { publicRuntimeConfig } = config();
 interface MobileNumberProps {
   title?: string;
@@ -28,7 +30,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const register = useRegister();
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
-
+  const customize = useCustomize(state => state.customize);
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     if (!phoneNumberValidator(mobileNumberValue)) {
@@ -79,6 +81,17 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
+      {customize.oauth && (
+        <>
+          <Divider />
+          <Button
+            variant="secondary"
+            onClick={() => location.assign('https://auth.paziresh24.com/oauth/login?redirect_url=' + encodeURI(window.location.href))}
+          >
+            ورود با شبکه دولت هوشمند
+          </Button>
+        </>
+      )}
 
       <Text align="center" fontWeight="medium" className="leading-5 text-[0.7rem] md:text-xs">
         <Trans
