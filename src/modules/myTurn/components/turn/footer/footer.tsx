@@ -426,11 +426,12 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             <Alert severity="warning" className="flex items-center gap-2 p-2 mb-4">
               <WarningIcon className="w-8" />
               <Text fontSize="sm">
-                زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و وجه پرداختی شما عودت داده نخواهد شد.
+                زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و امکان لغو نوبت وجود ندارد.
               </Text>
             </Alert>
           )}
           <div className="flex space-s-2">
+            {(!notRefundable || centerType == CenterType.consult) && (
             <Button
               theme="error"
               block
@@ -441,6 +442,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             >
               {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
             </Button>
+            )}
             <Button
               theme="error"
               variant="secondary"
