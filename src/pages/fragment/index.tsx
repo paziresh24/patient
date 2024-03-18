@@ -4,6 +4,10 @@ import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
 import { Fragment } from '@/common/fragment/designSystemGlobalContext';
 
+export default function PlasmicHost() {
+  return <PlasmicCanvasHost />;
+}
+
 registerFunction(plasmicSplunkEvent, {
   name: 'splunkEvent',
   isDefaultExport: true,
@@ -83,7 +87,3 @@ registerGlobalContext(Fragment, {
   },
   importPath: '@/common/fragment/designSystemGlobalContext',
 });
-
-export default function PlasmicHost() {
-  return <PlasmicCanvasHost />;
-}

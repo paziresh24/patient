@@ -170,7 +170,7 @@ function PlasmicFilter__RenderFunc(props: {
         path: "select2.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "created_at"
+        initFunc: ({ $props, $state, $queries, $ctx }) => "default_order"
       }
     ],
     [$props, $ctx, $refs]

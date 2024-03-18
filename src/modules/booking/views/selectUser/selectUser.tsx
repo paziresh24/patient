@@ -13,6 +13,7 @@ import orderBy from 'lodash/orderBy';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import UserCard from '../../components/userCard';
+import { useRouter } from 'next/router';
 
 interface SelectUserProps {
   onSelect: (user: any) => void;
@@ -31,6 +32,7 @@ export const SelectUser = (props: SelectUserProps) => {
   const addSubUser = useAddSubuser();
   const { handleOpen: handleOpenAddUserModal, handleClose: handleCloseAddUserModal, modalProps: addUserModalProps } = useModal();
   const [userSelected, setUserSelected] = useState(userInfo.id);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLogin && !isUserPending) {
@@ -38,7 +40,10 @@ export const SelectUser = (props: SelectUserProps) => {
         () =>
           handleOpenLoginModal({
             state: true,
-            closable: false,
+            onClose() {
+              router.back();
+              router.back();
+            },
           }),
         0,
       );

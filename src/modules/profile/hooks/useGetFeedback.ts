@@ -3,7 +3,6 @@ import omit from 'lodash/omit';
 import { useCallback, useEffect, useState } from 'react';
 import { FeedbackParams, useGetFeedbacks } from '../../../common/apis/services/rate/getFeedbacks';
 import { useFeedbackDataStore } from '../store/feedbackData';
-import { omitBy } from 'lodash';
 
 export const useGetFeedbackData = (filterItem: FeedbackParams) => {
   const setFeedbackInfo = useFeedbackDataStore(state => state.setData);
@@ -11,7 +10,6 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
   const [page, setPage] = useState<number>(1);
   const [filterParams, setFilterParams] = useState<FeedbackParams>({
     ...filterItem,
-    ...(page > 1 && { page }),
   });
   const getFeedbacks = useGetFeedbacks(
     {
@@ -32,7 +30,7 @@ export const useGetFeedbackData = (filterItem: FeedbackParams) => {
     debounce((text: string) => {
       setPage(1);
       setFilterParams(prev => {
-        if (text.trim()) return { ...prev, search: text.trim(), page: 1 };
+        if (text.trim()) return { ...prev, search: text.trim() };
         return omit(prev, 'search');
       });
     }, 250),
