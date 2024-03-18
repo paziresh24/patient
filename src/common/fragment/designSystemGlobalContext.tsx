@@ -4,7 +4,7 @@ import toast, { ToastPosition } from 'react-hot-toast';
 
 interface DesignSystemGlobalContextProps {}
 
-export const DesignSystemGlobalContext = ({ children }: React.PropsWithChildren<DesignSystemGlobalContextProps>) => {
+export const Fragment = ({ children }: React.PropsWithChildren<DesignSystemGlobalContextProps>) => {
   const actions = useMemo(
     () => ({
       showToast: (type: 'success' | 'error', message: string, placement: ToastPosition = 'top-right', duration?: number) => {

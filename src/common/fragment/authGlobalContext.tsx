@@ -20,7 +20,7 @@ export const AuthGlobalContext = ({ children, previewToken }: React.PropsWithChi
 
   useEffect(() => {
     setUser(userInfo);
-  }, [userInfo]);
+  }, [userInfo.isLogin, userInfo.isPending, userInfo.info]);
 
   const actions = useMemo(
     () => ({
