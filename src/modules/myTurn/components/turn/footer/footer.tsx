@@ -431,7 +431,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             </Alert>
           )}
           <div className="flex space-s-2">
-            {!notRefundable || centerType == CenterType.consult && (
+            {(!notRefundable || centerType == CenterType.consult) && (
             <Button
               theme="error"
               block
