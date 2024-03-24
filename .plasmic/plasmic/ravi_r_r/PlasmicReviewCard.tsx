@@ -208,6 +208,8 @@ function PlasmicReviewCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const currentUser = useCurrentUser?.() || {};
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
@@ -240,7 +242,29 @@ function PlasmicReviewCard__RenderFunc(props: {
         path: "isLike",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return (() => {
+                if (typeof window === "undefined") return false;
+                return window.localStorage.getItem("likedComments")
+                  ? JSON.parse(localStorage.getItem("likedComments")).some(
+                      item =>
+                        item.id === $props.feedbackId &&
+                        item.user_id === $ctx.auth.info.id
+                    )
+                  : false;
+              })();
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })()
       },
       {
         path: "dialog2.open",
@@ -303,6 +327,33 @@ function PlasmicReviewCard__RenderFunc(props: {
               as={"div"}
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__vwR23)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return navigator.share({
+                            url:
+                              window.location.href +
+                              `#comment-${$props.feedbackId}`
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }}
             >
               <div
                 className={classNames(
@@ -924,11 +975,63 @@ function PlasmicReviewCard__RenderFunc(props: {
             ) {
               $steps["runCode"] = await $steps["runCode"];
             }
+
+            $steps["runCode2"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        if ($state.isLike) {
+                          const likedComment = {
+                            user_id: $ctx.auth.info.id,
+                            id: $props.feedbackId
+                          };
+                          const likedCommentsList =
+                            JSON.parse(localStorage.getItem("likedComments")) ||
+                            [];
+                          likedCommentsList.push(likedComment);
+                          localStorage.setItem(
+                            "likedComments",
+                            JSON.stringify(likedCommentsList)
+                          );
+                        }
+                        if (!$state.isLike) {
+                          const likedCommentsList =
+                            JSON.parse(localStorage.getItem("likedComments")) ||
+                            [];
+                          const index = likedCommentsList.findIndex(
+                            comment =>
+                              comment.id === $props.feedbackId &&
+                              comment.user_id === $ctx.auth.info.id
+                          );
+                          if (index !== -1) {
+                            likedCommentsList.splice(index, 1);
+                            return localStorage.setItem(
+                              "likedComments",
+                              JSON.stringify(likedCommentsList)
+                            );
+                          }
+                        }
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode2"] != null &&
+              typeof $steps["runCode2"] === "object" &&
+              typeof $steps["runCode2"].then === "function"
+            ) {
+              $steps["runCode2"] = await $steps["runCode2"];
+            }
           }}
         >
           {(() => {
             try {
-              return $props.like != 0;
+              return +$props.like !== 0 || $state.isLike;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -1360,6 +1463,59 @@ function PlasmicReviewCard__RenderFunc(props: {
               typeof $steps["runCode"].then === "function"
             ) {
               $steps["runCode"] = await $steps["runCode"];
+            }
+
+            $steps["invokeGlobalAction"] = true
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      undefined,
+                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f.",
+                      undefined,
+                      5000
+                    ]
+                  };
+                  return $globalActions["Fragment.showToast"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["invokeGlobalAction"] != null &&
+              typeof $steps["invokeGlobalAction"] === "object" &&
+              typeof $steps["invokeGlobalAction"].then === "function"
+            ) {
+              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+            }
+
+            $steps["updateMultilineTextInputValue"] = true
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["multilineTextInput", "value"]
+                    },
+                    operation: 1
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, undefined);
+                    return undefined;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateMultilineTextInputValue"] != null &&
+              typeof $steps["updateMultilineTextInputValue"] === "object" &&
+              typeof $steps["updateMultilineTextInputValue"].then === "function"
+            ) {
+              $steps["updateMultilineTextInputValue"] = await $steps[
+                "updateMultilineTextInputValue"
+              ];
             }
           }}
         >
