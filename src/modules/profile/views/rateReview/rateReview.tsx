@@ -144,7 +144,6 @@ export const RateReview = (props: RateReviewProps) => {
   const addReview = useAddReview();
   const editComment = useEditComment();
   const editFeedback = useEditFeedback();
-  const isShowPremiumFeatures = useShowPremiumFeatures();
   const options = useFeatureValue('rate-review.options', { card: ['REACTION', 'REPORT'], dropdown: ['SHARE'] });
   const specialDoctor = useFeatureValue<any>('profile:feedback_api', { slug: [] });
   const listOfDoctorForLoginInDiscourse = useFeatureValue<any>('profile:discourse-sso-login', { slugs: [] });
@@ -665,14 +664,6 @@ export const RateReview = (props: RateReviewProps) => {
             name="ReviewList"
             props={{
               ...profileData,
-              user: {
-                data: userInfo,
-                isLogin: isLogin,
-                loginModalTrigger: () =>
-                  handleOpenLoginModal({
-                    state: true,
-                  }),
-              },
               dontShow: !!message,
               reviewResponse: feedbacksData,
               nextPageTrigger: () => showMore(),

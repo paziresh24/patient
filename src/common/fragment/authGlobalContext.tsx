@@ -15,7 +15,7 @@ export const AuthGlobalContext = ({ children, previewToken }: React.PropsWithChi
   const { handleOpenLoginModal } = useLoginModalContext();
 
   useEffect(() => {
-    localStorage.setItem('fragment::previewToken', previewToken ?? '');
+    if (previewToken) localStorage.setItem('fragment::previewToken', previewToken ?? '');
   }, [previewToken]);
 
   useEffect(() => {
