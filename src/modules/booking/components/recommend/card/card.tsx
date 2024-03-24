@@ -50,6 +50,7 @@ export const RecommendCard = (props: RecommendCardProps) => {
               displayName: doctor.displayName,
               avatar: doctor.image,
               url: doctor.url,
+              slug: doctor.url.split("/")[2],
               expertise: doctor.displayExpertise,
               isVerify: !doctor.isBulk,
               rate: {

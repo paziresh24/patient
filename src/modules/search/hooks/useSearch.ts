@@ -52,6 +52,7 @@ export type Result = {
   title: string;
   type: 'doctor' | 'center';
   url: string;
+  slug?: string;
   view: string;
   price: string;
   server_id: number;

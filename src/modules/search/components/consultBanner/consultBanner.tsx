@@ -205,6 +205,7 @@ export const ConsultBanner = () => {
               <SearchCard
                 avatarSize="lg"
                 baseInfo={{
+                  slug: substituteDoctor.slug, 
                   displayName: substituteDoctor.title,
                   expertise: substituteDoctor.display_expertise,
                   experience: substituteDoctor.experience,

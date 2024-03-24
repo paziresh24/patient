@@ -109,6 +109,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               key={doctor.id}
               type="doctor"
               baseInfo={{
+                slug: doctor.slug,
                 displayName: doctor.title,
                 avatar: doctor.image,
                 url: doctor.url,
