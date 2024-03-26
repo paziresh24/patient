@@ -64,7 +64,6 @@ import * as pp from "@plasmicapp/react-web";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_r_r_css from "../ravi_r_r/plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicSelect__Overlay.module.css"; // plasmic-import: 6zIng2EW46bS/css
 
@@ -173,7 +172,6 @@ function PlasmicSelect__Overlay__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_r_r_css.plasmic_tokens,
         sty.root
       )}
     >

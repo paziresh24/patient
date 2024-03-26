@@ -28,6 +28,7 @@
   max-width: 100%;
   object-fit: cover;
   position: relative;
+  line-height: 2;
 }
 .freeBox__a8AOx {
   display: flex;
@@ -94,14 +95,84 @@
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
 }
-.text__cuUPa {
-  font-size: var(--token-6NbVMeD6zQwn);
-}
 .svg__ycTkd {
   position: relative;
   object-fit: cover;
   max-width: 100%;
   height: 1em;
+}
+.text__cuUPa {
+  font-size: var(--token-6NbVMeD6zQwn);
+}
+.freeBox__khS3Q {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  cursor: pointer;
+}
+.freeBox__khS3Q > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__khS3Q > :global(.__wab_flex-container) > *,
+.freeBox__khS3Q > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__khS3Q > :global(.__wab_flex-container) > picture > img,
+.freeBox__khS3Q
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.svg__wv0Ks {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  height: 1em;
+}
+.text__zIiqt {
+  font-size: var(--token-6NbVMeD6zQwn);
+}
+.freeBox__mbG8E {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  cursor: pointer;
+}
+.freeBox__mbG8E > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__mbG8E > :global(.__wab_flex-container) > *,
+.freeBox__mbG8E > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__mbG8E > :global(.__wab_flex-container) > picture > img,
+.freeBox__mbG8E
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.svg__vz01V {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  height: 1em;
+}
+.text___9Dwyh {
+  font-size: var(--token-6NbVMeD6zQwn);
 }
 .نامتتارخ {
   display: flex;
