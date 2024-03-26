@@ -6,8 +6,8 @@
 
 import * as React from "react";
 import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
-import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: qyJQby9Pzcoc/codeComponent
-import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: 3GeFj3s3tzRm/codeComponent
+import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: M65oXRA032VP/codeComponent
+import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: uqFwzM_jGhaf/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;

@@ -75,6 +75,8 @@ import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZ
 
 import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
 import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
+import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: moTm-5qth65g/icon
+import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: OcnxMK5rW620/icon
 import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvguG2/icon
@@ -355,6 +357,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                 }
               }}
             >
+              <ShareIcon
+                className={classNames(projectcss.all, sty.svg__ycTkd)}
+                role={"img"}
+              />
+
               <div
                 className={classNames(
                   projectcss.all,
@@ -366,10 +373,100 @@ function PlasmicReviewCard__RenderFunc(props: {
                   "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
                 }
               </div>
-              <ShareIcon
-                className={classNames(projectcss.all, sty.svg__ycTkd)}
+            </Stack__>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__khS3Q)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return navigator.share({
+                            url:
+                              window.location.href +
+                              `#comment-${$props.feedbackId}`
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }}
+            >
+              <Icon3Icon
+                className={classNames(projectcss.all, sty.svg__wv0Ks)}
                 role={"img"}
               />
+
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__zIiqt
+                )}
+              >
+                {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+              </div>
+            </Stack__>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__mbG8E)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return navigator.share({
+                            url:
+                              window.location.href +
+                              `#comment-${$props.feedbackId}`
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }}
+            >
+              <Icon4Icon
+                className={classNames(projectcss.all, sty.svg__vz01V)}
+                role={"img"}
+              />
+
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___9Dwyh
+                )}
+              >
+                {"\u062d\u0630\u0641"}
+              </div>
             </Stack__>
           </div>
         }

@@ -70,7 +70,6 @@ import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_r_r_css from "../ravi_r_r/plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicDialog.module.css"; // plasmic-import: 5NUpgw2K0nJD/css
 
@@ -198,7 +197,6 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_r_r_css.plasmic_tokens,
         sty.dialog,
         { [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger") }
       )}
@@ -217,8 +215,7 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_r_r_css.plasmic_tokens
+        plasmic_fragment_design_system_css.plasmic_tokens
       )}
       triggerSlot={
         (hasVariant($state, "noTrigger", "noTrigger") ? false : true)
@@ -253,8 +250,7 @@ function PlasmicDialog__RenderFunc(props: {
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens,
-          plasmic_ravi_r_r_css.plasmic_tokens
+          plasmic_fragment_design_system_css.plasmic_tokens
         )}
       >
         <Stack__
