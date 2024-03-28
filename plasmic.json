@@ -175,6 +175,11 @@
           "id": "BamIPHX72k5k",
           "name": "RepliesIcon",
           "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Replies.tsx"
+        },
+        {
+          "id": "zb1oqVXdrxPK",
+          "name": "XIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__X.tsx"
         }
       ],
       "images": [
@@ -201,8 +206,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
@@ -458,8 +462,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -904,8 +907,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -1514,7 +1516,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {

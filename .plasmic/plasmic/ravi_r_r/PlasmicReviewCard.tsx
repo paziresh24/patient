@@ -60,12 +60,13 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { Popover } from "@plasmicpkgs/radix-ui";
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
-import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
-import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -76,6 +77,8 @@ import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZ
 import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
 import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
 import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: moTm-5qth65g/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: OcnxMK5rW620/icon
 import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
@@ -85,8 +88,6 @@ import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasm
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import HeartIcon from "../fragment_icons/icons/PlasmicIcon__Heart"; // plasmic-import: WTtCf_1I-uMv/icon
 import BoldheartIcon from "../fragment_icons/icons/PlasmicIcon__Boldheart"; // plasmic-import: eZfYsLpdWQA_/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -136,6 +137,9 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
 export type PlasmicReviewCard__OverridesType = {
   اردنماشنظر?: Flex__<"div">;
   سهنقطه?: Flex__<typeof Popover>;
+  dialog3?: Flex__<typeof Dialog>;
+  edditTextBox?: Flex__<"textarea">;
+  dialog4?: Flex__<typeof Dialog>;
   نامتتارخ?: Flex__<"div">;
   userAvatar?: Flex__<typeof Avatar>;
   chip?: Flex__<typeof Chip>;
@@ -145,7 +149,6 @@ export type PlasmicReviewCard__OverridesType = {
   لارورت?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
-  button?: Flex__<typeof Button>;
   رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
@@ -285,6 +288,36 @@ function PlasmicReviewCard__RenderFunc(props: {
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "dialog3.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "edditTextBox.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ``
+      },
+      {
+        path: "dialog4.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "editLoadingButton",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "deleteLoadingButton",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -374,100 +407,818 @@ function PlasmicReviewCard__RenderFunc(props: {
                 }
               </div>
             </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__khS3Q)}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return navigator.share({
-                            url:
-                              window.location.href +
-                              `#comment-${$props.feedbackId}`
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
+            {(() => {
+              try {
+                return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
+              } catch (e) {
                 if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["runCode"] = await $steps["runCode"];
+                  return true;
                 }
-              }}
-            >
-              <Icon3Icon
-                className={classNames(projectcss.all, sty.svg__wv0Ks)}
-                role={"img"}
-              />
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__khS3Q)}
+                onClick={async event => {
+                  const $steps = {};
 
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__zIiqt
-                )}
+                  $steps["runCode"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return fetch(
+                              "https://apigw.paziresh24.com/v1/feedbacks" +
+                                $props.feedbackId,
+                              {
+                                headers: {
+                                  Accept: "application/json, text/plain, */*",
+                                  "Content-Type": "application/json",
+                                  "Sec-Fetch-Dest": "empty",
+                                  "Sec-Fetch-Mode": "cors",
+                                  "Sec-Fetch-Site": "same-site"
+                                },
+                                method: "PATCH"
+                              }
+                            );
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
+                  }
+                }}
               >
-                {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-              </div>
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__mbG8E)}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return navigator.share({
-                            url:
-                              window.location.href +
-                              `#comment-${$props.feedbackId}`
-                          });
+                <Dialog
+                  data-plasmic-name={"dialog3"}
+                  data-plasmic-override={overrides.dialog3}
+                  body={
+                    <React.Fragment>
+                      <textarea
+                        data-plasmic-name={"edditTextBox"}
+                        data-plasmic-override={overrides.edditTextBox}
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.textarea,
+                          sty.edditTextBox
+                        )}
+                        onChange={e => {
+                          generateStateOnChangeProp($state, [
+                            "edditTextBox",
+                            "value"
+                          ])(e.target.value);
+                        }}
+                        placeholder={``}
+                        ref={ref => {
+                          $refs["edditTextBox"] = ref;
+                        }}
+                        value={
+                          generateStateValueProp($state, [
+                            "edditTextBox",
+                            "value"
+                          ]) ?? ""
                         }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-              }}
-            >
-              <Icon4Icon
-                className={classNames(projectcss.all, sty.svg__vz01V)}
-                role={"img"}
-              />
+                      />
 
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text___9Dwyh
-                )}
+                      <Button
+                        children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.button__nsoe4
+                        )}
+                        endIcon={
+                          <ChevronLeftIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__mTUf0
+                            )}
+                            role={"img"}
+                          />
+                        }
+                        loading={(() => {
+                          try {
+                            return $state.editLoadingButton;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["loading"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["editLoadingButton"]
+                                  },
+                                  operation: 0,
+                                  value: true
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["loading"] != null &&
+                            typeof $steps["loading"] === "object" &&
+                            typeof $steps["loading"].then === "function"
+                          ) {
+                            $steps["loading"] = await $steps["loading"];
+                          }
+
+                          $steps["request"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return fetch(
+                                      "https://apigw.paziresh24.com/v1/feedbacks/" +
+                                        $props.feedbackId,
+                                      {
+                                        headers: {
+                                          "Content-Type": "application/json"
+                                        },
+                                        method: "PATCH",
+                                        body: JSON.stringify({
+                                          description: $state.edditTextBox.value
+                                        }),
+                                        credentials: "include"
+                                      }
+                                    );
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["request"] != null &&
+                            typeof $steps["request"] === "object" &&
+                            typeof $steps["request"].then === "function"
+                          ) {
+                            $steps["request"] = await $steps["request"];
+                          }
+
+                          $steps["offLoading"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["editLoadingButton"]
+                                  },
+                                  operation: 0,
+                                  value: false
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["offLoading"] != null &&
+                            typeof $steps["offLoading"] === "object" &&
+                            typeof $steps["offLoading"].then === "function"
+                          ) {
+                            $steps["offLoading"] = await $steps["offLoading"];
+                          }
+
+                          $steps["toast"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    undefined,
+                                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                    "top-right",
+                                    4999
+                                  ]
+                                };
+                                return $globalActions[
+                                  "Fragment.showToast"
+                                ]?.apply(null, [...actionArgs.args]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["toast"] != null &&
+                            typeof $steps["toast"] === "object" &&
+                            typeof $steps["toast"].then === "function"
+                          ) {
+                            $steps["toast"] = await $steps["toast"];
+                          }
+
+                          $steps["close"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["dialog3", "open"]
+                                  },
+                                  operation: 4
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  const oldValue = $stateGet(
+                                    objRoot,
+                                    variablePath
+                                  );
+                                  $stateSet(objRoot, variablePath, !oldValue);
+                                  return !oldValue;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["close"] != null &&
+                            typeof $steps["close"] === "object" &&
+                            typeof $steps["close"].then === "function"
+                          ) {
+                            $steps["close"] = await $steps["close"];
+                          }
+                        }}
+                        startIcon={
+                          <ChevronRightIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__p4Ytw
+                            )}
+                            role={"img"}
+                          />
+                        }
+                      />
+                    </React.Fragment>
+                  }
+                  className={classNames("__wab_instance", sty.dialog3)}
+                  onOpenChange={generateStateOnChangeProp($state, [
+                    "dialog3",
+                    "open"
+                  ])}
+                  open={generateStateValueProp($state, ["dialog3", "open"])}
+                  title={
+                    "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
+                  }
+                  trigger={
+                    (() => {
+                      try {
+                        return true;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <Stack__
+                        as={"div"}
+                        hasGap={true}
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__gt7U
+                        )}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["updateReportText2Value2"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["edditTextBox", "value"]
+                                  },
+                                  operation: 1
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, undefined);
+                                  return undefined;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["updateReportText2Value2"] != null &&
+                            typeof $steps["updateReportText2Value2"] ===
+                              "object" &&
+                            typeof $steps["updateReportText2Value2"].then ===
+                              "function"
+                          ) {
+                            $steps["updateReportText2Value2"] = await $steps[
+                              "updateReportText2Value2"
+                            ];
+                          }
+
+                          $steps["updateReportText2Value"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["edditTextBox", "value"]
+                                  },
+                                  operation: 0,
+                                  value: $props.commentText
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["updateReportText2Value"] != null &&
+                            typeof $steps["updateReportText2Value"] ===
+                              "object" &&
+                            typeof $steps["updateReportText2Value"].then ===
+                              "function"
+                          ) {
+                            $steps["updateReportText2Value"] = await $steps[
+                              "updateReportText2Value"
+                            ];
+                          }
+                        }}
+                      >
+                        <Icon3Icon
+                          className={classNames(
+                            projectcss.all,
+                            sty.svg___8ZJpu
+                          )}
+                          role={"img"}
+                        />
+
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__ttly5
+                          )}
+                        >
+                          {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                        </div>
+                      </Stack__>
+                    ) : null
+                  }
+                />
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__lNuZw)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runCode"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return fetch(
+                              "https://apigw.paziresh24.com/v1/feedbacks" +
+                                $props.feedbackId,
+                              {
+                                headers: {
+                                  Accept: "application/json, text/plain, */*",
+                                  "Content-Type": "application/json",
+                                  "Sec-Fetch-Dest": "empty",
+                                  "Sec-Fetch-Mode": "cors",
+                                  "Sec-Fetch-Site": "same-site"
+                                },
+                                method: "PATCH"
+                              }
+                            );
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
+                  }
+                }}
               >
-                {"\u062d\u0630\u0641"}
-              </div>
-            </Stack__>
+                <Dialog
+                  data-plasmic-name={"dialog4"}
+                  data-plasmic-override={overrides.dialog4}
+                  body={
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__uRzBu)}
+                    >
+                      <Button
+                        children2={
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__rfy6D
+                            )}
+                          >
+                            {"\u062d\u0630\u0641"}
+                          </div>
+                        }
+                        className={classNames(
+                          "__wab_instance",
+                          sty.button__fD6
+                        )}
+                        color={"red"}
+                        endIcon={
+                          <ChevronLeftIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__oBkZj
+                            )}
+                            role={"img"}
+                          />
+                        }
+                        loading={(() => {
+                          try {
+                            return $state.deleteLoadingButton;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["loading"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["deleteLoadingButton"]
+                                  },
+                                  operation: 0,
+                                  value: true
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["loading"] != null &&
+                            typeof $steps["loading"] === "object" &&
+                            typeof $steps["loading"].then === "function"
+                          ) {
+                            $steps["loading"] = await $steps["loading"];
+                          }
+
+                          $steps["request"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return fetch(
+                                      "https://apigw.paziresh24.com/v1/feedbacks/" +
+                                        $props.feedbackId,
+                                      {
+                                        method: "DELETE",
+                                        credentials: "include"
+                                      }
+                                    );
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["request"] != null &&
+                            typeof $steps["request"] === "object" &&
+                            typeof $steps["request"].then === "function"
+                          ) {
+                            $steps["request"] = await $steps["request"];
+                          }
+
+                          $steps["updateDeleteLoadingButton"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["deleteLoadingButton"]
+                                  },
+                                  operation: 4
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  const oldValue = $stateGet(
+                                    objRoot,
+                                    variablePath
+                                  );
+                                  $stateSet(objRoot, variablePath, !oldValue);
+                                  return !oldValue;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["updateDeleteLoadingButton"] != null &&
+                            typeof $steps["updateDeleteLoadingButton"] ===
+                              "object" &&
+                            typeof $steps["updateDeleteLoadingButton"].then ===
+                              "function"
+                          ) {
+                            $steps["updateDeleteLoadingButton"] = await $steps[
+                              "updateDeleteLoadingButton"
+                            ];
+                          }
+
+                          $steps["toast"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    undefined,
+                                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
+                                    "top-right",
+                                    5000
+                                  ]
+                                };
+                                return $globalActions[
+                                  "Fragment.showToast"
+                                ]?.apply(null, [...actionArgs.args]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["toast"] != null &&
+                            typeof $steps["toast"] === "object" &&
+                            typeof $steps["toast"].then === "function"
+                          ) {
+                            $steps["toast"] = await $steps["toast"];
+                          }
+
+                          $steps["close"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["dialog4", "open"]
+                                  },
+                                  operation: 4
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  const oldValue = $stateGet(
+                                    objRoot,
+                                    variablePath
+                                  );
+                                  $stateSet(objRoot, variablePath, !oldValue);
+                                  return !oldValue;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["close"] != null &&
+                            typeof $steps["close"] === "object" &&
+                            typeof $steps["close"].then === "function"
+                          ) {
+                            $steps["close"] = await $steps["close"];
+                          }
+                        }}
+                        startIcon={
+                          <ChevronRightIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__ezf8
+                            )}
+                            role={"img"}
+                          />
+                        }
+                      />
+
+                      <Button
+                        children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.button__rEncW
+                        )}
+                        color={"red"}
+                        endIcon={
+                          <ChevronLeftIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__re2O6
+                            )}
+                            role={"img"}
+                          />
+                        }
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["close"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["dialog4", "open"]
+                                  },
+                                  operation: 4
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  const oldValue = $stateGet(
+                                    objRoot,
+                                    variablePath
+                                  );
+                                  $stateSet(objRoot, variablePath, !oldValue);
+                                  return !oldValue;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["close"] != null &&
+                            typeof $steps["close"] === "object" &&
+                            typeof $steps["close"].then === "function"
+                          ) {
+                            $steps["close"] = await $steps["close"];
+                          }
+                        }}
+                        outline={true}
+                        startIcon={
+                          <ChevronRightIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__chO6C
+                            )}
+                            role={"img"}
+                          />
+                        }
+                      />
+                    </Stack__>
+                  }
+                  className={classNames("__wab_instance", sty.dialog4)}
+                  onOpenChange={generateStateOnChangeProp($state, [
+                    "dialog4",
+                    "open"
+                  ])}
+                  open={generateStateValueProp($state, ["dialog4", "open"])}
+                  title={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text___3Re7R
+                      )}
+                    >
+                      {
+                        "\u0622\u06cc\u0627 \u0627\u0632 \u062d\u0630\u0641 \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0647\u0633\u062a\u06cc\u062f\u061f"
+                      }
+                    </div>
+                  }
+                  trigger={
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__hRt2)}
+                    >
+                      <Icon4Icon
+                        className={classNames(projectcss.all, sty.svg__lcvor)}
+                        role={"img"}
+                      />
+
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__ur5Y3
+                        )}
+                      >
+                        {"\u062d\u0630\u0641"}
+                      </div>
+                    </Stack__>
+                  }
+                />
+              </Stack__>
+            ) : null}
           </div>
         }
         side={"bottom"}
@@ -1013,7 +1764,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["updateIsLike"] = true
+            $steps["updateIsLike"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     variable: {
@@ -1042,7 +1793,7 @@ function PlasmicReviewCard__RenderFunc(props: {
               $steps["updateIsLike"] = await $steps["updateIsLike"];
             }
 
-            $steps["runCode"] = true
+            $steps["runCode"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
@@ -1073,7 +1824,7 @@ function PlasmicReviewCard__RenderFunc(props: {
               $steps["runCode"] = await $steps["runCode"];
             }
 
-            $steps["runCode2"] = true
+            $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
@@ -1118,11 +1869,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["runCode2"] != null &&
-              typeof $steps["runCode2"] === "object" &&
-              typeof $steps["runCode2"].then === "function"
+              $steps["saveInLocalStoreg"] != null &&
+              typeof $steps["saveInLocalStoreg"] === "object" &&
+              typeof $steps["saveInLocalStoreg"].then === "function"
             ) {
-              $steps["runCode2"] = await $steps["runCode2"];
+              $steps["saveInLocalStoreg"] = await $steps["saveInLocalStoreg"];
+            }
+
+            $steps["ifLogin"] =
+              $ctx.auth.isLogin == false
+                ? (() => {
+                    const actionArgs = { args: [] };
+                    return $globalActions["AuthGlobalContext.login"]?.apply(
+                      null,
+                      [...actionArgs.args]
+                    );
+                  })()
+                : undefined;
+            if (
+              $steps["ifLogin"] != null &&
+              typeof $steps["ifLogin"] === "object" &&
+              typeof $steps["ifLogin"].then === "function"
+            ) {
+              $steps["ifLogin"] = await $steps["ifLogin"];
             }
           }}
         >
@@ -1241,12 +2010,10 @@ function PlasmicReviewCard__RenderFunc(props: {
               />
 
               <Button
-                data-plasmic-name={"button"}
-                data-plasmic-override={overrides.button}
                 children2={
                   "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
                 }
-                className={classNames("__wab_instance", sty.button)}
+                className={classNames("__wab_instance", sty.button__iuHVx)}
                 endIcon={
                   <ChevronLeftIcon
                     className={classNames(projectcss.all, sty.svg__epBv)}
@@ -1269,7 +2036,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["runCode3"] = true
+                  $steps["if10Caracter"] = $ctx.auth.isLogin
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
@@ -1286,15 +2053,15 @@ function PlasmicReviewCard__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["runCode3"] != null &&
-                    typeof $steps["runCode3"] === "object" &&
-                    typeof $steps["runCode3"].then === "function"
+                    $steps["if10Caracter"] != null &&
+                    typeof $steps["if10Caracter"] === "object" &&
+                    typeof $steps["if10Caracter"].then === "function"
                   ) {
-                    $steps["runCode3"] = await $steps["runCode3"];
+                    $steps["if10Caracter"] = await $steps["if10Caracter"];
                   }
 
-                  $steps["runCode2"] =
-                    $state.reportText.value.length >= 10
+                  $steps["loading"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -1321,15 +2088,15 @@ function PlasmicReviewCard__RenderFunc(props: {
                         })()
                       : undefined;
                   if (
-                    $steps["runCode2"] != null &&
-                    typeof $steps["runCode2"] === "object" &&
-                    typeof $steps["runCode2"].then === "function"
+                    $steps["loading"] != null &&
+                    typeof $steps["loading"] === "object" &&
+                    typeof $steps["loading"].then === "function"
                   ) {
-                    $steps["runCode2"] = await $steps["runCode2"];
+                    $steps["loading"] = await $steps["loading"];
                   }
 
-                  $steps["runCode"] =
-                    $state.reportText.value.length >= 10
+                  $steps["request"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
@@ -1355,15 +2122,15 @@ function PlasmicReviewCard__RenderFunc(props: {
                         })()
                       : undefined;
                   if (
-                    $steps["runCode"] != null &&
-                    typeof $steps["runCode"] === "object" &&
-                    typeof $steps["runCode"].then === "function"
+                    $steps["request"] != null &&
+                    typeof $steps["request"] === "object" &&
+                    typeof $steps["request"].then === "function"
                   ) {
-                    $steps["runCode"] = await $steps["runCode"];
+                    $steps["request"] = await $steps["request"];
                   }
 
-                  $steps["updateDialogOpen"] =
-                    $state.reportText.value.length >= 10
+                  $steps["closeDialog"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -1390,17 +2157,15 @@ function PlasmicReviewCard__RenderFunc(props: {
                         })()
                       : undefined;
                   if (
-                    $steps["updateDialogOpen"] != null &&
-                    typeof $steps["updateDialogOpen"] === "object" &&
-                    typeof $steps["updateDialogOpen"].then === "function"
+                    $steps["closeDialog"] != null &&
+                    typeof $steps["closeDialog"] === "object" &&
+                    typeof $steps["closeDialog"].then === "function"
                   ) {
-                    $steps["updateDialogOpen"] = await $steps[
-                      "updateDialogOpen"
-                    ];
+                    $steps["closeDialog"] = await $steps["closeDialog"];
                   }
 
-                  $steps["updateReportLoadinButton"] =
-                    $state.reportText.value.length >= 10
+                  $steps["offLoading"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
                           const actionArgs = {
                             variable: {
@@ -1427,14 +2192,53 @@ function PlasmicReviewCard__RenderFunc(props: {
                         })()
                       : undefined;
                   if (
-                    $steps["updateReportLoadinButton"] != null &&
-                    typeof $steps["updateReportLoadinButton"] === "object" &&
-                    typeof $steps["updateReportLoadinButton"].then ===
-                      "function"
+                    $steps["offLoading"] != null &&
+                    typeof $steps["offLoading"] === "object" &&
+                    typeof $steps["offLoading"].then === "function"
                   ) {
-                    $steps["updateReportLoadinButton"] = await $steps[
-                      "updateReportLoadinButton"
-                    ];
+                    $steps["offLoading"] = await $steps["offLoading"];
+                  }
+
+                  $steps["toast"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                              undefined,
+                              4989
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                  if (
+                    $steps["toast"] != null &&
+                    typeof $steps["toast"] === "object" &&
+                    typeof $steps["toast"].then === "function"
+                  ) {
+                    $steps["toast"] = await $steps["toast"];
+                  }
+
+                  $steps["login"] =
+                    $ctx.auth.isLogin == false
+                      ? (() => {
+                          const actionArgs = { args: [] };
+                          return $globalActions[
+                            "AuthGlobalContext.login"
+                          ]?.apply(null, [...actionArgs.args]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["login"] != null &&
+                    typeof $steps["login"] === "object" &&
+                    typeof $steps["login"].then === "function"
+                  ) {
+                    $steps["login"] = await $steps["login"];
                   }
                 }}
                 startIcon={
@@ -1528,7 +2332,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["runCode"] = true
+            $steps["request"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
@@ -1555,14 +2359,14 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
+              $steps["request"] != null &&
+              typeof $steps["request"] === "object" &&
+              typeof $steps["request"].then === "function"
             ) {
-              $steps["runCode"] = await $steps["runCode"];
+              $steps["request"] = await $steps["request"];
             }
 
-            $steps["invokeGlobalAction"] = true
+            $steps["toast"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     args: [
@@ -1578,14 +2382,14 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["invokeGlobalAction"] != null &&
-              typeof $steps["invokeGlobalAction"] === "object" &&
-              typeof $steps["invokeGlobalAction"].then === "function"
+              $steps["toast"] != null &&
+              typeof $steps["toast"] === "object" &&
+              typeof $steps["toast"].then === "function"
             ) {
-              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+              $steps["toast"] = await $steps["toast"];
             }
 
-            $steps["updateMultilineTextInputValue"] = true
+            $steps["multiline"] = $ctx.auth.isLogin
               ? (() => {
                   const actionArgs = {
                     variable: {
@@ -1606,13 +2410,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["updateMultilineTextInputValue"] != null &&
-              typeof $steps["updateMultilineTextInputValue"] === "object" &&
-              typeof $steps["updateMultilineTextInputValue"].then === "function"
+              $steps["multiline"] != null &&
+              typeof $steps["multiline"] === "object" &&
+              typeof $steps["multiline"].then === "function"
             ) {
-              $steps["updateMultilineTextInputValue"] = await $steps[
-                "updateMultilineTextInputValue"
-              ];
+              $steps["multiline"] = await $steps["multiline"];
+            }
+
+            $steps["invokeGlobalAction"] =
+              $ctx.auth.isLogin == false
+                ? (() => {
+                    const actionArgs = { args: [] };
+                    return $globalActions["AuthGlobalContext.login"]?.apply(
+                      null,
+                      [...actionArgs.args]
+                    );
+                  })()
+                : undefined;
+            if (
+              $steps["invokeGlobalAction"] != null &&
+              typeof $steps["invokeGlobalAction"] === "object" &&
+              typeof $steps["invokeGlobalAction"].then === "function"
+            ) {
+              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
             }
           }}
         >
@@ -1683,6 +2503,9 @@ const PlasmicDescendants = {
   اردنماشنظر: [
     "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
     "\u0633\u0647\u0646\u0642\u0637\u0647",
+    "dialog3",
+    "edditTextBox",
+    "dialog4",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar",
     "chip",
@@ -1692,12 +2515,19 @@ const PlasmicDescendants = {
     "\u0644\u0627\u0631\u0648\u0631\u062a",
     "dialog",
     "reportText",
-    "button",
     "\u0631\u0644\u0627",
     "replyText",
     "multilineTextInput"
   ],
-  سهنقطه: ["\u0633\u0647\u0646\u0642\u0637\u0647"],
+  سهنقطه: [
+    "\u0633\u0647\u0646\u0642\u0637\u0647",
+    "dialog3",
+    "edditTextBox",
+    "dialog4"
+  ],
+  dialog3: ["dialog3", "edditTextBox"],
+  edditTextBox: ["edditTextBox"],
+  dialog4: ["dialog4"],
   نامتتارخ: [
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar",
@@ -1711,15 +2541,9 @@ const PlasmicDescendants = {
     "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
   ],
   نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
-  لارورت: [
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
-    "dialog",
-    "reportText",
-    "button"
-  ],
-  dialog: ["dialog", "reportText", "button"],
+  لارورت: ["\u0644\u0627\u0631\u0648\u0631\u062a", "dialog", "reportText"],
+  dialog: ["dialog", "reportText"],
   reportText: ["reportText"],
-  button: ["button"],
   رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"]
@@ -1730,6 +2554,9 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   اردنماشنظر: "div";
   سهنقطه: typeof Popover;
+  dialog3: typeof Dialog;
+  edditTextBox: "textarea";
+  dialog4: typeof Dialog;
   نامتتارخ: "div";
   userAvatar: typeof Avatar;
   chip: typeof Chip;
@@ -1739,7 +2566,6 @@ type NodeDefaultElementType = {
   لارورت: "div";
   dialog: typeof Dialog;
   reportText: "textarea";
-  button: typeof Button;
   رلا: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
@@ -1810,6 +2636,9 @@ export const PlasmicReviewCard = Object.assign(
   {
     // Helper components rendering sub-elements
     سهنقطه: makeNodeComponent("\u0633\u0647\u0646\u0642\u0637\u0647"),
+    dialog3: makeNodeComponent("dialog3"),
+    edditTextBox: makeNodeComponent("edditTextBox"),
+    dialog4: makeNodeComponent("dialog4"),
     نامتتارخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),
@@ -1823,7 +2652,6 @@ export const PlasmicReviewCard = Object.assign(
     لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
-    button: makeNodeComponent("button"),
     رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),

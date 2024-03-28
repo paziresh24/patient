@@ -74,6 +74,7 @@ import sty from "./PlasmicDialog.module.css"; // plasmic-import: FJiI2-N1is_F/cs
 
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import XIcon from "../fragment_icons/icons/PlasmicIcon__X"; // plasmic-import: zb1oqVXdrxPK/icon
 
 createPlasmicElementProxy;
 
@@ -110,6 +111,7 @@ export type PlasmicDialog__OverridesType = {
   dialogTitle?: Flex__<typeof DialogTitle>;
   h5?: Flex__<"h5">;
   dialogClose?: Flex__<typeof DialogClose>;
+  svg?: Flex__<"svg">;
 };
 
 export interface DefaultDialogProps {
@@ -308,18 +310,33 @@ function PlasmicDialog__RenderFunc(props: {
           data-plasmic-name={"dialogClose"}
           data-plasmic-override={overrides.dialogClose}
           className={classNames("__wab_instance", sty.dialogClose)}
-        />
+        >
+          <XIcon
+            data-plasmic-name={"svg"}
+            data-plasmic-override={overrides.svg}
+            className={classNames(projectcss.all, sty.svg)}
+            role={"img"}
+          />
+        </DialogClose>
       </DialogContent>
     </Dialog>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  dialog: ["dialog", "dialogContent", "dialogTitle", "h5", "dialogClose"],
-  dialogContent: ["dialogContent", "dialogTitle", "h5", "dialogClose"],
+  dialog: [
+    "dialog",
+    "dialogContent",
+    "dialogTitle",
+    "h5",
+    "dialogClose",
+    "svg"
+  ],
+  dialogContent: ["dialogContent", "dialogTitle", "h5", "dialogClose", "svg"],
   dialogTitle: ["dialogTitle", "h5"],
   h5: ["h5"],
-  dialogClose: ["dialogClose"]
+  dialogClose: ["dialogClose", "svg"],
+  svg: ["svg"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -330,6 +347,7 @@ type NodeDefaultElementType = {
   dialogTitle: typeof DialogTitle;
   h5: "h5";
   dialogClose: typeof DialogClose;
+  svg: "svg";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -396,6 +414,7 @@ export const PlasmicDialog = Object.assign(
     dialogTitle: makeNodeComponent("dialogTitle"),
     h5: makeNodeComponent("h5"),
     dialogClose: makeNodeComponent("dialogClose"),
+    svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicDialog
     internalVariantProps: PlasmicDialog__VariantProps,

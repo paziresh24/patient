@@ -65,6 +65,8 @@
   --plasmic-token-7: var(--token-m74yTzJEHMEw);
   --token-UIMkdd_bvvx_: 1.5rem;
   --plasmic-token-6: var(--token-UIMkdd_bvvx_);
+  --token-kpM4b4mG4f2d: #16a34a;
+  --plasmic-token-green-600: var(--token-kpM4b4mG4f2d);
 }
 
 .plasmic_tokens {
