@@ -424,42 +424,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                 as={"div"}
                 hasGap={true}
                 className={classNames(projectcss.all, sty.freeBox__khS3Q)}
-                onClick={async event => {
-                  const $steps = {};
-
-                  $steps["runCode"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return fetch(
-                              "https://apigw.paziresh24.com/v1/feedbacks" +
-                                $props.feedbackId,
-                              {
-                                headers: {
-                                  Accept: "application/json, text/plain, */*",
-                                  "Content-Type": "application/json",
-                                  "Sec-Fetch-Dest": "empty",
-                                  "Sec-Fetch-Mode": "cors",
-                                  "Sec-Fetch-Site": "same-site"
-                                },
-                                method: "PATCH"
-                              }
-                            );
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runCode"] != null &&
-                    typeof $steps["runCode"] === "object" &&
-                    typeof $steps["runCode"].then === "function"
-                  ) {
-                    $steps["runCode"] = await $steps["runCode"];
-                  }
-                }}
               >
                 <Dialog
                   data-plasmic-name={"dialog3"}
@@ -563,7 +527,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   customFunction: async () => {
                                     return fetch(
                                       "https://apigw.paziresh24.com/v1/feedbacks/" +
-                                        $props.feedbackId,
+                                        $props.feedbackId +
+                                        "/",
                                       {
                                         headers: {
                                           "Content-Type": "application/json"
@@ -726,84 +691,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                           projectcss.all,
                           sty.freeBox__gt7U
                         )}
-                        onClick={async event => {
-                          const $steps = {};
-
-                          $steps["updateReportText2Value2"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["edditTextBox", "value"]
-                                  },
-                                  operation: 1
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  $stateSet(objRoot, variablePath, undefined);
-                                  return undefined;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["updateReportText2Value2"] != null &&
-                            typeof $steps["updateReportText2Value2"] ===
-                              "object" &&
-                            typeof $steps["updateReportText2Value2"].then ===
-                              "function"
-                          ) {
-                            $steps["updateReportText2Value2"] = await $steps[
-                              "updateReportText2Value2"
-                            ];
-                          }
-
-                          $steps["updateReportText2Value"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["edditTextBox", "value"]
-                                  },
-                                  operation: 0,
-                                  value: $props.commentText
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["updateReportText2Value"] != null &&
-                            typeof $steps["updateReportText2Value"] ===
-                              "object" &&
-                            typeof $steps["updateReportText2Value"].then ===
-                              "function"
-                          ) {
-                            $steps["updateReportText2Value"] = await $steps[
-                              "updateReportText2Value"
-                            ];
-                          }
-                        }}
                       >
                         <Icon3Icon
                           className={classNames(
@@ -845,42 +732,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                 as={"div"}
                 hasGap={true}
                 className={classNames(projectcss.all, sty.freeBox__lNuZw)}
-                onClick={async event => {
-                  const $steps = {};
-
-                  $steps["runCode"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return fetch(
-                              "https://apigw.paziresh24.com/v1/feedbacks" +
-                                $props.feedbackId,
-                              {
-                                headers: {
-                                  Accept: "application/json, text/plain, */*",
-                                  "Content-Type": "application/json",
-                                  "Sec-Fetch-Dest": "empty",
-                                  "Sec-Fetch-Mode": "cors",
-                                  "Sec-Fetch-Site": "same-site"
-                                },
-                                method: "PATCH"
-                              }
-                            );
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runCode"] != null &&
-                    typeof $steps["runCode"] === "object" &&
-                    typeof $steps["runCode"].then === "function"
-                  ) {
-                    $steps["runCode"] = await $steps["runCode"];
-                  }
-                }}
               >
                 <Dialog
                   data-plasmic-name={"dialog4"}
@@ -973,7 +824,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   customFunction: async () => {
                                     return fetch(
                                       "https://apigw.paziresh24.com/v1/feedbacks/" +
-                                        $props.feedbackId,
+                                        $props.feedbackId +
+                                        "/",
                                       {
                                         method: "DELETE",
                                         credentials: "include"
