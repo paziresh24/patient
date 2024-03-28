@@ -76,6 +76,8 @@ import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWC
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
+import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
+
 createPlasmicElementProxy;
 
 export type PlasmicReviewList__VariantMembers = {};
@@ -134,7 +136,9 @@ export interface DefaultReviewListProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  splunkEvent: __fn_splunkEvent
+};
 
 function useNextRouter() {
   try {
@@ -316,6 +320,33 @@ function PlasmicReviewList__RenderFunc(props: {
                   typeof $steps["runOnFilter"].then === "function"
                 ) {
                   $steps["runOnFilter"] = await $steps["runOnFilter"];
+                }
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              filter: $state.filterInput.value
+                            },
+                            type: "selected_filter",
+                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
                 }
               }).apply(null, eventArgs);
             }}
@@ -775,6 +806,12 @@ function PlasmicReviewList__RenderFunc(props: {
               </div>
             }
             className={classNames("__wab_instance", sty.button)}
+            endIcon={
+              <ChevronLeftIcon
+                className={classNames(projectcss.all, sty.svg__xJg3B)}
+                role={"img"}
+              />
+            }
             link={undefined}
             loading={(() => {
               try {
@@ -857,6 +894,12 @@ function PlasmicReviewList__RenderFunc(props: {
               }
             }}
             outline={true}
+            startIcon={
+              <ChevronRightIcon
+                className={classNames(projectcss.all, sty.svg__vo0Bm)}
+                role={"img"}
+              />
+            }
           />
         </div>
       ) : null}

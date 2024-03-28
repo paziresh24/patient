@@ -281,6 +281,16 @@
       }
     },
     {
+      "name": "green-600",
+      "type": "color",
+      "value": "#16A34A",
+      "category": "color",
+      "meta": {
+        "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+        "id": "kpM4b4mG4f2d"
+      }
+    },
+    {
       "name": "large",
       "type": "fontsize",
       "value": "1.125rem",

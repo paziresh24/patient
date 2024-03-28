@@ -157,6 +157,12 @@ function PlasmicSetNweReview__RenderFunc(props: {
         data-plasmic-override={overrides.button}
         children2={"\u062b\u0628\u062a \u0646\u0638\u0631"}
         className={classNames("__wab_instance", sty.button)}
+        endIcon={
+          <ChevronLeftIcon
+            className={classNames(projectcss.all, sty.svg__jUhf0)}
+            role={"img"}
+          />
+        }
         onClick={async event => {
           const $steps = {};
 
@@ -181,6 +187,12 @@ function PlasmicSetNweReview__RenderFunc(props: {
           }
         }}
         outline={true}
+        startIcon={
+          <ChevronRightIcon
+            className={classNames(projectcss.all, sty.svg___3HAuJ)}
+            role={"img"}
+          />
+        }
       />
     </div>
   ) as React.ReactElement | null;

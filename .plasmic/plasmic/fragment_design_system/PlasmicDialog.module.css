@@ -154,3 +154,9 @@
   left: 16px;
   border-radius: 999px;
 }
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  cursor: pointer;
+  height: 1em;
+}
