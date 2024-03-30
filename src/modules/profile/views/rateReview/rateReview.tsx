@@ -321,6 +321,13 @@ export const RateReview = (props: RateReviewProps) => {
 
   const changeFilterSelect = (e: any) => {
     setRateFilter(e);
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'feedback',
+      type: 'selected_filter',
+      event: {
+        filter: e?.value,
+      },
+    });
     rateFilterType(e?.value);
   };
 

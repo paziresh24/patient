@@ -9,13 +9,12 @@ import { CENTERS } from '@/common/types/centers';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import getConfig from 'next/config';
 import { useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import useDiscount from '../../hooks/factor/useDiscount';
 import useInvoice from '../../hooks/factor/useInvoice';
 import Factor from './factor';
-const { publicRuntimeConfig } = getConfig();
+import { splunkInstance } from '@/common/services/splunk';
 
 interface FactorWrapperProps {
   bookId: string;
@@ -62,6 +61,15 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         ...(discountToken && { discount_token: discountToken }),
       });
       if (data.status) {
+        splunkInstance('booking').sendEvent({
+          group: 'FinancialTransactions',
+          type: 'PaymentButtonClicked',
+          event: {
+            book_id: bookId,
+            center_id: centerId,
+            user_id: userInfo.id,
+          },
+        });
         location.assign(data.url);
         return;
       }
