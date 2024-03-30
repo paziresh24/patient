@@ -1893,7 +1893,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                   const $steps = {};
 
                   $steps["if10Caracter"] =
-                    $ctx.auth.isLogin && $props.commentText.length >= 10
+                    $ctx.auth.isLogin && $props.commentText.length <= 10
                       ? (() => {
                           const actionArgs = {
                             args: [
