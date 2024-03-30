@@ -407,24 +407,26 @@ function PlasmicReviewCard__RenderFunc(props: {
                 }
               </div>
             </Stack__>
-            {(() => {
-              try {
-                return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__khS3Q)}
+            >
+              {(() => {
+                try {
+                  return (
+                    $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__khS3Q)}
-              >
+              })() ? (
                 <Dialog
                   data-plasmic-name={"dialog3"}
                   data-plasmic-override={overrides.dialog3}
@@ -535,7 +537,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                                         },
                                         method: "PATCH",
                                         body: JSON.stringify({
-                                          description: $state.edditTextBox.value
+                                          description:
+                                            $state.edditTextBox.value,
+                                          like: $props.recommended
                                         }),
                                         credentials: "include"
                                       }
@@ -713,8 +717,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                     ) : null
                   }
                 />
-              </Stack__>
-            ) : null}
+              ) : null}
+            </Stack__>
             {(() => {
               try {
                 return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
@@ -1888,22 +1892,23 @@ function PlasmicReviewCard__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["if10Caracter"] = $ctx.auth.isLogin
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return (() => {
-                              if ($state.reportText.value.length < 10) {
-                                return alert("متن باید بیشتر از 10 حرف باشد");
-                              }
-                            })();
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
+                  $steps["if10Caracter"] =
+                    $ctx.auth.isLogin && $props.commentText.length >= 10
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              "error",
+                              "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                              undefined,
+                              5000
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
                   if (
                     $steps["if10Caracter"] != null &&
                     typeof $steps["if10Caracter"] === "object" &&
