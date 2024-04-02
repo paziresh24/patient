@@ -804,6 +804,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                 $props.searchResultResponse.search.total) &&
             $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
               "statusType"
+            ) &&
+            /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
+              window.location.href
             )
           );
         } catch (e) {
