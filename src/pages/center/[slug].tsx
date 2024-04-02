@@ -430,11 +430,16 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       };
     }
 
-    if (redirect) {
+    if (redirect?.statusCode || result?.redirect?.statusCode) {
+      if (redirect?.statusCode == 404 || result?.redirect?.statusCode == 404) {
+        return {
+          notFound: true,
+        };
+      }
       return {
         redirect: {
-          statusCode: redirect.statusCode,
-          destination: encodeURI(redirect.route),
+          statusCode: redirect?.statusCode ?? result?.redirect?.statusCode,
+          destination: encodeURI(redirect?.route ?? result?.redirect?.route),
         },
       };
     }
@@ -468,7 +473,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
   } catch (error) {
     console.dir(error);
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404)
+      if (error.response?.status == 404)
         return {
           notFound: true,
         };
