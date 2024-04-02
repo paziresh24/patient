@@ -1,10 +1,8 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useStat } from '@/common/apis/services/search/stat';
-import Button from '@/common/components/atom/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
-import ErrorIcon from '@/common/components/icons/error';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -59,7 +57,6 @@ const Search = ({ host }: any) => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
-  const useFragmentProductCard = useFeatureIsOn('search:use-fragment-card-product');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -178,16 +175,6 @@ const Search = ({ host }: any) => {
         </div>
         <div className="!mb-16">
           <SearchSeoBox />
-          {!useFragmentProductCard && (
-            <Button
-              onClick={() => (window.location.href = 'https://support.paziresh24.com/ticketing/?action=new')}
-              variant="text"
-              className="!my-5 gap-2 self-end"
-              icon={<ErrorIcon className="w-5" />}
-            >
-              گزارش مشکل در جستجو
-            </Button>
-          )}
         </div>
       </div>
       <UnknownCity />
