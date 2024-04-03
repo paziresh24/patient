@@ -92,7 +92,10 @@ export const MobileNumber = (props: MobileNumberProps) => {
             variant="secondary"
             onClick={() => {
               setOauthLoading(true);
-              location.assign('https://auth.paziresh24.com/oauth/login?redirect_url=' + encodeURI(window.location.href));
+              location.assign(
+                'https://auth.paziresh24.com/oauth/login?redirect_url=' +
+                  encodeURI(`${window.location.origin}/login?redirect_url=${window.location.href}`),
+              );
             }}
           >
             ورود از طریق دولت من
