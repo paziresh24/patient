@@ -89,6 +89,8 @@ import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasm
 import HeartIcon from "../fragment_icons/icons/PlasmicIcon__Heart"; // plasmic-import: WTtCf_1I-uMv/icon
 import BoldheartIcon from "../fragment_icons/icons/PlasmicIcon__Boldheart"; // plasmic-import: eZfYsLpdWQA_/icon
 
+import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
+
 createPlasmicElementProxy;
 
 export type PlasmicReviewCard__VariantMembers = {};
@@ -174,7 +176,9 @@ export interface DefaultReviewCardProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  splunkEvent: __fn_splunkEvent
+};
 
 function useNextRouter() {
   try {
@@ -387,6 +391,34 @@ function PlasmicReviewCard__RenderFunc(props: {
                   typeof $steps["runCode"].then === "function"
                 ) {
                   $steps["runCode"] = await $steps["runCode"];
+                }
+
+                $steps["splunk"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              doctor_id,
+                              comment_id
+                            },
+                            type: "share_comment",
+                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["splunk"] != null &&
+                  typeof $steps["splunk"] === "object" &&
+                  typeof $steps["splunk"].then === "function"
+                ) {
+                  $steps["splunk"] = await $steps["splunk"];
                 }
               }}
             >
@@ -652,6 +684,36 @@ function PlasmicReviewCard__RenderFunc(props: {
                           ) {
                             $steps["close"] = await $steps["close"];
                           }
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return $$.splunkEvent({
+                                      group: "feedback",
+                                      data: {
+                                        doctor_id,
+                                        comment_id,
+                                        edit_text: $state.edditTextBox.value
+                                      },
+                                      type: "edit_comment",
+                                      token:
+                                        "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
                         }}
                         startIcon={
                           <ChevronRightIcon
@@ -675,46 +737,26 @@ function PlasmicReviewCard__RenderFunc(props: {
                     "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
                   }
                   trigger={
-                    (() => {
-                      try {
-                        return true;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return true;
-                        }
-                        throw e;
-                      }
-                    })() ? (
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__gt7U)}
+                    >
+                      <Icon3Icon
+                        className={classNames(projectcss.all, sty.svg___8ZJpu)}
+                        role={"img"}
+                      />
+
+                      <div
                         className={classNames(
                           projectcss.all,
-                          sty.freeBox__gt7U
+                          projectcss.__wab_text,
+                          sty.text__ttly5
                         )}
                       >
-                        <Icon3Icon
-                          className={classNames(
-                            projectcss.all,
-                            sty.svg___8ZJpu
-                          )}
-                          role={"img"}
-                        />
-
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__ttly5
-                          )}
-                        >
-                          {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                        </div>
-                      </Stack__>
-                    ) : null
+                        {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                      </div>
+                    </Stack__>
                   }
                 />
               ) : null}
@@ -949,6 +991,35 @@ function PlasmicReviewCard__RenderFunc(props: {
                             typeof $steps["close"].then === "function"
                           ) {
                             $steps["close"] = await $steps["close"];
+                          }
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return $$.splunkEvent({
+                                      group: "feedback",
+                                      data: {
+                                        doctor_id,
+                                        comment_id
+                                      },
+                                      type: "delete_comment",
+                                      token:
+                                        "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
                           }
                         }}
                         startIcon={
@@ -1749,6 +1820,35 @@ function PlasmicReviewCard__RenderFunc(props: {
             ) {
               $steps["ifLogin"] = await $steps["ifLogin"];
             }
+
+            $steps["splunk"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id,
+                          comment_id,
+                          doc_center
+                        },
+                        type: "like_comment",
+                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["splunk"] != null &&
+              typeof $steps["splunk"] === "object" &&
+              typeof $steps["splunk"].then === "function"
+            ) {
+              $steps["splunk"] = await $steps["splunk"];
+            }
           }}
         >
           {(() => {
@@ -2096,6 +2196,36 @@ function PlasmicReviewCard__RenderFunc(props: {
                     typeof $steps["login"].then === "function"
                   ) {
                     $steps["login"] = await $steps["login"];
+                  }
+
+                  $steps["splunk"] =
+                    $state.reportText.value.length >= 10 && $ctx.auth.isLogin
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                group: "feedback",
+                                data: {
+                                  doctor_id,
+                                  comment_id,
+                                  report_text: $state.reportText.value
+                                },
+                                type: "report_comment",
+                                token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["splunk"] != null &&
+                    typeof $steps["splunk"] === "object" &&
+                    typeof $steps["splunk"].then === "function"
+                  ) {
+                    $steps["splunk"] = await $steps["splunk"];
                   }
                 }}
                 startIcon={

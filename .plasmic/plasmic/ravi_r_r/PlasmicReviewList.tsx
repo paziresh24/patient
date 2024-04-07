@@ -422,6 +422,35 @@ function PlasmicReviewList__RenderFunc(props: {
                 ) {
                   $steps["runOnSort"] = await $steps["runOnSort"];
                 }
+
+                $steps["splunk"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              doctor_id,
+                              comment_id,
+                              sort: $state.sortInput.value
+                            },
+                            type: "sort_comment",
+                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["splunk"] != null &&
+                  typeof $steps["splunk"] === "object" &&
+                  typeof $steps["splunk"].then === "function"
+                ) {
+                  $steps["splunk"] = await $steps["splunk"];
+                }
               }).apply(null, eventArgs);
             }}
             options={(() => {
@@ -488,6 +517,35 @@ function PlasmicReviewList__RenderFunc(props: {
                 typeof $steps["runOnSearch"].then === "function"
               ) {
                 $steps["runOnSearch"] = await $steps["runOnSearch"];
+              }
+
+              $steps["splunk"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return $$.splunkEvent({
+                          group: "feedback",
+                          data: {
+                            doctor_id,
+                            comment_id,
+                            search_text: $state.searchInput.value
+                          },
+                          type: "search_in_comment",
+                          token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                        });
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["splunk"] != null &&
+                typeof $steps["splunk"] === "object" &&
+                typeof $steps["splunk"].then === "function"
+              ) {
+                $steps["splunk"] = await $steps["splunk"];
               }
             }).apply(null, eventArgs);
           }}
