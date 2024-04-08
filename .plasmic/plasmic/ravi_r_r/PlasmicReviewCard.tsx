@@ -400,8 +400,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                           return $$.splunkEvent({
                             group: "feedback",
                             data: {
-                              doctor_id,
-                              comment_id
+                              doctor_id: $props.doctorId,
+                              comment_id: $props.feedbackId
                             },
                             type: "share_comment",
                             token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
@@ -692,8 +692,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                                     return $$.splunkEvent({
                                       group: "feedback",
                                       data: {
-                                        doctor_id,
-                                        comment_id,
+                                        doctor_id: $props.doctorId,
+                                        comment_id: $props.feedbackId,
                                         edit_text: $state.edditTextBox.value
                                       },
                                       type: "edit_comment",
@@ -1000,8 +1000,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                                     return $$.splunkEvent({
                                       group: "feedback",
                                       data: {
-                                        doctor_id,
-                                        comment_id
+                                        doctor_id: $props.doctorId,
+                                        comment_id: $props.feedbackId
                                       },
                                       type: "delete_comment",
                                       token:
@@ -1828,9 +1828,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                       return $$.splunkEvent({
                         group: "feedback",
                         data: {
-                          doctor_id,
-                          comment_id,
-                          doc_center
+                          comment_id: $props.feedbackId,
+                          doc_center: $props.docCenter
                         },
                         type: "like_comment",
                         token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
@@ -2206,8 +2205,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                               return $$.splunkEvent({
                                 group: "feedback",
                                 data: {
-                                  doctor_id,
-                                  comment_id,
+                                  doctor_id: $props.doctorId,
+                                  comment_id: $props.feedbackId,
                                   report_text: $state.reportText.value
                                 },
                                 type: "report_comment",
@@ -2420,6 +2419,35 @@ function PlasmicReviewCard__RenderFunc(props: {
               typeof $steps["invokeGlobalAction"].then === "function"
             ) {
               $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+            }
+
+            $steps["splunk"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorId,
+                          comment_id: $props.feedbackId,
+                          reply_text: $state.replyText.value
+                        },
+                        type: "reply_comment",
+                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["splunk"] != null &&
+              typeof $steps["splunk"] === "object" &&
+              typeof $steps["splunk"].then === "function"
+            ) {
+              $steps["splunk"] = await $steps["splunk"];
             }
           }}
         >
