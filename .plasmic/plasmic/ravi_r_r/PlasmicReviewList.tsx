@@ -430,8 +430,8 @@ function PlasmicReviewList__RenderFunc(props: {
                           return $$.splunkEvent({
                             group: "feedback",
                             data: {
-                              doctor_id,
-                              comment_id,
+                              doctor_id: $props.doctorid,
+                              comment_id: $props.feedbackid,
                               sort: $state.sortInput.value
                             },
                             type: "sort_comment",
@@ -526,8 +526,8 @@ function PlasmicReviewList__RenderFunc(props: {
                         return $$.splunkEvent({
                           group: "feedback",
                           data: {
-                            doctor_id,
-                            comment_id,
+                            doctor_id: $props.doctorid,
+                            comment_id: $props.feedbackid,
                             search_text: $state.searchInput.value
                           },
                           type: "search_in_comment",
@@ -949,6 +949,34 @@ function PlasmicReviewList__RenderFunc(props: {
                 $steps["runNextPageTrigger"] = await $steps[
                   "runNextPageTrigger"
                 ];
+              }
+
+              $steps["splunk"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return $$.splunkEvent({
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorid,
+                            page: $state.page
+                          },
+                          type: "show_more_button",
+                          token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                        });
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["splunk"] != null &&
+                typeof $steps["splunk"] === "object" &&
+                typeof $steps["splunk"].then === "function"
+              ) {
+                $steps["splunk"] = await $steps["splunk"];
               }
             }}
             outline={true}
