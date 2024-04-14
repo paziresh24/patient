@@ -833,14 +833,18 @@ function PlasmicSearchResults__RenderFunc(props: {
                 const actionArgs = {
                   customFunction: async () => {
                     return (() => {
-                      clarity(
-                        "set",
-                        "fragment_component_load",
-                        "search results"
-                      );
-                      return console.log(
-                        "try to set clarity tag fragment_component_load to search results"
-                      );
+                      try {
+                        clarity(
+                          "set",
+                          "fragment_component_load",
+                          "search results"
+                        );
+                        return console.log(
+                          "try to set clarity tag fragment_component_load to search results"
+                        );
+                      } catch (error) {
+                        return console.error(error);
+                      }
                     })();
                   }
                 };
