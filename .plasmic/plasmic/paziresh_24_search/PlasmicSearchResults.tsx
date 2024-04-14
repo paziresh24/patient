@@ -106,6 +106,7 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchResults__OverridesType = {
   root?: Flex__<"div">;
+  showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
   resultCardsVerticalStack?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
@@ -168,6 +169,24 @@ function PlasmicSearchResults__RenderFunc(props: {
 
   const currentUser = useCurrentUser?.() || {};
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "visibilityOfShowMySearchPerformance",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <Stack__
       as={"div"}
@@ -186,6 +205,55 @@ function PlasmicSearchResults__RenderFunc(props: {
         sty.root
       )}
     >
+      {(() => {
+        try {
+          return $state.visibilityOfShowMySearchPerformance;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <PlasmicLink__
+          data-plasmic-name={"showMySearchPerformance"}
+          data-plasmic-override={overrides.showMySearchPerformance}
+          className={classNames(
+            projectcss.all,
+            projectcss.a,
+            projectcss.__wab_text,
+            sty.showMySearchPerformance
+          )}
+          component={Link}
+          href={(() => {
+            try {
+              return `https://survey.porsline.ir/s/Lg6WdWV?url=${encodeURIComponent(
+                window.location.href
+              )}&tid=${document.cookie.replace(
+                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              )}`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return "https://survey.porsline.ir/s/Lg6WdWV?tid=xxxx&url=xxxx";
+              }
+              throw e;
+            }
+          })()}
+          platform={"nextjs"}
+          target={"_blank"}
+        >
+          {
+            "\u0645\u0634\u0627\u0647\u062f\u0647 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627 \u062f\u0631 \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u067e\u0630\u06cc\u0631\u063424"
+          }
+        </PlasmicLink__>
+      ) : null}
       {(() => {
         try {
           return $props.searchResultResponse.search.result.length !== 0;
@@ -791,6 +859,49 @@ function PlasmicSearchResults__RenderFunc(props: {
               "sendClarityCustomTagsEventRunCode"
             ];
           }
+
+          $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      return fetch(
+                        "https://api.paziresh24.com/V1/doctor/profile",
+                        { credentials: "include" }
+                      )
+                        .then(response => response.json())
+                        .then(data => {
+                          console.log(data);
+                          if (data.data.id) {
+                            $state.visibilityOfShowMySearchPerformance = true;
+                            console.log(
+                              "Visibility of Show My Search Performance:",
+                              $state.visibilityOfShowMySearchPerformance
+                            );
+                          }
+                        });
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] !=
+              null &&
+            typeof $steps[
+              "visibleShowMySearchPerformanceVisibilityByFetchUrl"
+            ] === "object" &&
+            typeof $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"]
+              .then === "function"
+          ) {
+            $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] =
+              await $steps[
+                "visibleShowMySearchPerformanceVisibilityByFetchUrl"
+              ];
+          }
         }}
       />
 
@@ -997,6 +1108,7 @@ function PlasmicSearchResults__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "showMySearchPerformance",
     "resultCardsVerticalStack",
     "productCard",
     "paginationMoreButton",
@@ -1005,6 +1117,7 @@ const PlasmicDescendants = {
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks"
   ],
+  showMySearchPerformance: ["showMySearchPerformance"],
   resultCardsVerticalStack: ["resultCardsVerticalStack", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
@@ -1018,6 +1131,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  showMySearchPerformance: "a";
   resultCardsVerticalStack: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
@@ -1087,6 +1201,7 @@ export const PlasmicSearchResults = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    showMySearchPerformance: makeNodeComponent("showMySearchPerformance"),
     resultCardsVerticalStack: makeNodeComponent("resultCardsVerticalStack"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
