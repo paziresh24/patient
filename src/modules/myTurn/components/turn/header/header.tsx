@@ -116,9 +116,8 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           expertise={doctorInfo.expertise}
         />
       </Link>
-      {shouldShowTagStatus && centerId === 'easybook' && status === BookStatus.deleted && <TagStatus status={status} />}
-      {shouldShowTagStatus && centerId !== 'easybook' && <TagStatus status={status} className="mx-5" />}
-      {paymentStatus !== PaymentStatus.paying && centerId !== 'easybook' && (
+      {shouldShowTagStatus && <TagStatus status={status} className="mx-5" />}
+      {paymentStatus !== PaymentStatus.paying && (
         <DropDown
           element={
             <div
