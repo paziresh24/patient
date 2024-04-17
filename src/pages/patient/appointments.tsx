@@ -33,7 +33,7 @@ import { GetServerSidePropsContext } from 'next';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 
-type BookType = 'book' | 'book_request' | 'online_visit';
+type BookType = 'book' | 'book_request';
 
 export const Appointments = () => {
   const { query, ...router } = useRouter();
@@ -57,8 +57,6 @@ export const Appointments = () => {
     },
     { enabled: false },
   );
-
-  const getEasyBookVisitOnline = useEasyAppointmentsList({ user_phone: user.cell! });
 
   const [ref, inView] = useInView({
     threshold: 0,
@@ -86,46 +84,9 @@ export const Appointments = () => {
   }, [inView]);
 
   useEffect(() => {
-    if (type !== 'online_visit') refetchBook();
+    refetchBook();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, type, university]);
-
-  useEffect(() => {
-    if (getEasyBookVisitOnline.isSuccess && type === 'online_visit') {
-      setIsLoading(false);
-      if (getEasyBookVisitOnline.data?.data?.appointments?.length > 0) {
-        addBooks(
-          getEasyBookVisitOnline.data?.data?.appointments.map((item: any) => ({
-            book_id: item.book_id,
-            doctor_info: {
-              name: item.provider_name,
-              family: item.provider_family,
-              display_expertise: item.provider_specialty,
-              book_id: item.id,
-              slug: item.provider_slug,
-            },
-            center: {
-              id: 'easybook',
-            },
-            patient_info: {
-              name: user.name,
-              family: user.family,
-            },
-            book_time_string: moment(item.session_time).locale('fa').format('YYYY/MM/DD HH:mm'),
-            from: moment(item.session_time).unix(),
-            ref_id: item.refid,
-            book_status: BookStatus.notVisited,
-            payment_status: PaymentStatus.paid,
-            selected_online_visit_channel: {
-              type: item.contactpoint_name,
-              channel: item.contactpoint_name,
-              channel_link: item.contactpoint_link,
-            },
-          })),
-        );
-      }
-    }
-  }, [getEasyBookVisitOnline.status, type]);
 
   useEffect(() => {
     if (getBooks.isSuccess) {
@@ -194,11 +155,6 @@ export const Appointments = () => {
         <div className="sticky top-0 z-10 justify-center w-full bg-white border-b border-solid lg:flex md:shadow-none border-slate-200">
           <Tabs value={type} onChange={value => handleChangeType(value as BookType)} className="container mx-auto">
             <Tab value="book" label={t('tunrsTabName')} className="w-full lg:w-auto" />
-            {getEasyBookVisitOnline.data?.data?.appointments?.length > 0 ? (
-              <Tab value="online_visit" label={t('visitOnlineTabName')} className="w-full lg:w-auto" />
-            ) : (
-              <></>
-            )}
             <Tab value="book_request" label={t('requestsTabName')} className="w-full lg:w-auto" />
           </Tabs>
         </div>
@@ -221,11 +177,7 @@ export const Appointments = () => {
               paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={
-                turn.center?.center_type === 1
-                  ? CenterType.clinic
-                  : turn.center?.id === '5532' || turn.center?.id === 'easybook'
-                  ? CenterType.consult
-                  : CenterType.hospital
+                turn.center?.center_type === 1 ? CenterType.clinic : turn.center?.id === '5532' ? CenterType.consult : CenterType.hospital
               }
               centerInfo={{
                 centerId: turn.center?.id,
@@ -277,7 +229,7 @@ export const Appointments = () => {
               }}
             />
           ))}
-        {!isLoading && type !== 'online_visit' && getBooks.data?.status !== 204 && (
+        {!isLoading && getBooks.data?.status !== 204 && (
           <div ref={ref} className="flex justify-center w-full py-8">
             <Loading />
           </div>

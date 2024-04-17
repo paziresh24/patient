@@ -136,10 +136,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    if (centerId === 'easybook') {
-      router.push(`/booking/easybook/${slug}`);
-      return;
-    }
     router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`);
   };
 
@@ -156,40 +152,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   );
 
   const removeBookAction = () => {
-    if (centerId === 'easybook') {
-      easyDeleteAppointments.mutate(
-        {
-          id,
-        },
-        {
-          onSuccess: data => {
-            removeBook({ bookId: id });
-            handleCloseRemoveTurnModal();
-            if (isOnlineVisitTurn) {
-              splunkInstance('doctor-profile').sendEvent({
-                group: 'my-turn',
-                type: 'delete-turn-reason',
-                event: {
-                  terminal_id: getCookie('terminal_id'),
-                  doctorName,
-                  expertise,
-                  nationalCode,
-                  trackingCode,
-                  patientName,
-                  phoneNumber,
-                  reason: reasonDeleteTurn,
-                  isVisited: status === BookStatus.visited,
-                },
-              });
-            }
-          },
-          onError: (error: any) => {
-            toast.error(error.response.data.message);
-          },
-        },
-      );
-      return;
-    }
     return removeBookApi.mutateAsync(
       {
         center_id: centerId,
