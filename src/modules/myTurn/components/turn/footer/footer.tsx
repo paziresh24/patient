@@ -14,7 +14,6 @@ import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
 import Select from '@/modules/booking/components/select/select';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
-import { useEasyDeleteAppointments } from '@/modules/bookingV3/apis/easyapp-delete-appointments';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
@@ -97,7 +96,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
-  const easyDeleteAppointments = useEasyDeleteAppointments();
   const { removeBook, moveBook } = useBookStore();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
@@ -400,7 +398,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                 theme="error"
                 block
                 onClick={removeBookAction}
-                loading={removeBookApi.isLoading || easyDeleteAppointments.isLoading}
+                loading={removeBookApi.isLoading}
                 data-testid="modal__remove-turn-button"
                 disabled={isOnlineVisitTurn && !reasonDeleteTurn}
               >
