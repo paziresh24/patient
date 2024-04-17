@@ -17,7 +17,6 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import { splunkInstance } from '@/common/services/splunk';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
-import { useEasyAppointmentsList } from '@/modules/bookingV3/apis/easyapp-appointments-list';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Turn from '@/modules/myTurn/components/turn';
