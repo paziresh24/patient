@@ -2,6 +2,8 @@ import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
 import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
+import { growthbook } from 'src/pages/_app';
+import { getCookie } from 'cookies-next';
 
 interface Params {
   center_id: string;
@@ -18,12 +20,19 @@ interface Params {
 
 export const bookRequest = (params: Params) => {
   setTerminal();
-
+  const endpoints = growthbook.getFeatureValue<Record<string, string>>('booking:api-endpoints', {});
   return clinicClient.post(
-    '/api/bookRequest',
+    endpoints?.create_new_request_booking ?? '/api/bookRequest',
     formData({
       ...params,
     }),
+    {
+      headers: {
+        center_id: params.center_id,
+        server_id: params.server_id,
+        terminal_id: getCookie('terminal_id'),
+      },
+    },
   );
 };
 
