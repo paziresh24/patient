@@ -95,6 +95,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         center: {
           id: CENTERS.CONSULT,
           server_id: '1',
+          user_center_id: userCenterId,
         },
       },
       {
@@ -170,11 +171,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
           </Text>
           <div className="flex flex-col space-y-3">
             <Text fontSize="sm" className="px-5 leading-6">
-            پزشکان آنلاین{' '}
-              <Text fontWeight="bold">
-                {expertise?.name} 
-              </Text>{' '}
-              منتخب بیماران
+              پزشکان آنلاین <Text fontWeight="bold">{expertise?.name}</Text> منتخب بیماران
             </Text>
             <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
           </div>
