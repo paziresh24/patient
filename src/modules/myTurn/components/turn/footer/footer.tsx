@@ -281,6 +281,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     });
   };
 
+  const localPaymentCenters = useFeatureValue<any>('local_payment_centers', []);
   return (
     <>
       {shouldShowMessengerButton && (
@@ -310,7 +311,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         )}
       </div>
 
-      {paymentStatus === PaymentStatus.paying && (
+
+      {paymentStatus === PaymentStatus.paying && !(centerId in localPaymentCenters) && (
         <Button variant="primary" block={true} onClick={redirectToFactor}>
           نهایی کردن نوبت
         </Button>
