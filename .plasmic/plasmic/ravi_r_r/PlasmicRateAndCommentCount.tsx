@@ -200,6 +200,15 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
             })()}
           </React.Fragment>
         </div>
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__zdFUz
+          )}
+        >
+          {"\u0627\u0632 5"}
+        </div>
         <Popover
           data-plasmic-name={"popoverCore"}
           data-plasmic-override={overrides.popoverCore}
