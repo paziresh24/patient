@@ -65,6 +65,16 @@
   padding-top: 5px;
   border-radius: 6px;
 }
+.text__zdFUz {
+  position: relative;
+  height: auto;
+  max-width: 100%;
+  color: var(--token-It8BufY6ejOY);
+  font-size: var(--token-VrIY9r5RDQZ_);
+  width: 100%;
+  padding-top: 6px;
+  min-width: 0;
+}
 .popoverCore:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
