@@ -312,7 +312,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       </div>
 
 
-      {paymentStatus === PaymentStatus.paying && !(centerId in localPaymentCenters) && (
+      {paymentStatus === PaymentStatus.paying && !localPaymentCenters.includes(centerId) && (
         <Button variant="primary" block={true} onClick={redirectToFactor}>
           نهایی کردن نوبت
         </Button>
