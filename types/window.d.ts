@@ -8,6 +8,7 @@ interface Window {
   };
   doctor: any;
   paziresh24: any;
+  user: any;
 }
 
 declare const window: Window;

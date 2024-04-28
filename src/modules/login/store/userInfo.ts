@@ -55,6 +55,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         user_id: info.id,
         is_doctor: info.provider?.job_title === 'doctor',
       });
+      window.user = info;
       return {
         info: {
           ...info,

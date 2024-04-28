@@ -2,6 +2,7 @@ import { clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
 import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
+import { growthbook } from 'src/pages/_app';
 
 interface Params {
   book_id: string;
@@ -9,9 +10,10 @@ interface Params {
 
 export const consultPayment = (params: Params) => {
   setTerminal();
+  const endpoints = growthbook.getFeatureValue<Record<string, string>>('booking:api-endpoints', {});
 
   return clinicClient.post(
-    '/consult-payment',
+    endpoints.consult_payment ?? '/consult-payment',
     formData({
       ...params,
     }),
