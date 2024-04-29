@@ -9,6 +9,7 @@ export interface Params {
 export const internalLinks = async (params: Params) => {
   const { data } = await contentClient.get(`/internal-links`, {
     params,
+    timeout: 2000,
   });
   return data;
 };
