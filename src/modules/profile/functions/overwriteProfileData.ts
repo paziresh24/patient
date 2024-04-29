@@ -94,13 +94,12 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         average_quality_of_treatment: source.feedbacks?.details?.quality_of_treatment,
         ...overwriteData.feedbacks?.averageRates,
       },
-      count_of_feedbacks: overwriteData.feedbacks?.countOfFeedbacks ?? source.feedbacks?.details?.number_of_feedbacks,
-      satisfaction_percent: overwriteData.feedbacks?.satisfactionPercent ?? source.feedbacks?.details?.satisfaction,
+      count_of_feedbacks: overwriteData.feedbacks?.countOfFeedbacks ?? null,
+      satisfaction_percent: overwriteData.feedbacks?.satisfactionPercent ?? null,
       satisfaction: overwriteData.feedbacks?.satisfactionPercent
-        ? (overwriteData.feedbacks?.satisfactionPercent / 20).toFixed(1)
-        : source.feedbacks?.details?.avg_star,
+        ? ((overwriteData.feedbacks?.satisfactionPercent ?? 0) / 20).toFixed(1)
+        : null,
       like: source.feedbacks?.details?.like,
-      is_new_rate_calculations: !!overwriteData.feedbacks?.satisfactionPercent,
     },
   };
 

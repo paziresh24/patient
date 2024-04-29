@@ -711,6 +711,13 @@
   text-align: justify;
   min-width: 0;
 }
+.httpRestApiFetcher__dvNua:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+  min-width: 0;
+}
 .dialog2:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
   position: relative;
@@ -790,6 +797,7 @@
 .replyCard__sQuYr:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
+  margin-bottom: var(--token-_c276Gs_1FIE);
 }
 .لارورت {
   display: flex;
@@ -985,6 +993,13 @@
   font-weight: 600;
   color: var(--token-JDvyxAtm9ONK);
   cursor: pointer;
+}
+.httpRestApiFetcher__y2Mff:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+  min-width: 0;
 }
 .replyCard__ardMi:global(.__wab_instance) {
   max-width: 100%;

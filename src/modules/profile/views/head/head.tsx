@@ -129,14 +129,6 @@ export const Head = (props: HeadProps) => {
               name="RateAndCommentCount"
               props={{
                 ...profileData,
-                user: {
-                  data: userInfo,
-                  isLogin: isLogin,
-                  loginModalTrigger: () =>
-                    handleOpenLoginModal({
-                      state: true,
-                    }),
-                },
                 rateCount: rateCount,
                 rate: satisfaction,
               }}

@@ -225,7 +225,12 @@ const DoctorProfile = ({
               customize.showRateAndReviews &&
               !dontShowRateAndReviewMessage &&
               (fragmentComponents.reviewCard
-                ? profileData.feedbacks?.details?.satisfaction
+                ? (
+                    ((+profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                      (+profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                      (+profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                    3
+                  ).toFixed(1)
                 : profileData.feedbacks?.details?.satisfaction_percent)
             }
             rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
