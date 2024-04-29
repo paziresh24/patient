@@ -16,7 +16,6 @@ import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
 import { getRateDetailsData } from './getRateDetailsData';
-import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { getWaitingTimeStatistics } from './getWaitingTimeStatistics';
