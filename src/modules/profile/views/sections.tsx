@@ -7,6 +7,7 @@ import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactN
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
+import { FragmentRateReview } from './rateReview/fragmentRateReview';
 
 const { publicRuntimeConfig } = config();
 
@@ -160,10 +161,8 @@ export const sections = (data: any) => {
         const rateDetails = {
           satisfaction: fragmentComponents.reviewCard ? feedbacks.details?.satisfaction : feedbacks.details?.satisfaction_percent,
           count: feedbacks.details.count_of_feedbacks,
-          ...(feedbacks.details?.is_new_rate_calculations && {
-            satisfactionHint:
-              'درصد رضایت، حاصل میانگین سه پارامتر <b>"برخورد"، "توضیح" و "مهارت و تخصص"</b> پزشک می باشد که همگی توسط بیماران اعلام گردیده اند.',
-          }),
+          satisfactionHint:
+            'درصد رضایت، حاصل میانگین سه پارامتر <b>"برخورد"، "توضیح" و "مهارت و تخصص"</b> پزشک می باشد که همگی توسط بیماران اعلام گردیده اند.',
           information: [
             {
               id: 1,
@@ -196,7 +195,7 @@ export const sections = (data: any) => {
           profileData,
         };
       },
-      children: (props: any) => <RateReview {...props} />,
+      children: (props: any) => (fragmentComponents.reviewCard ? <FragmentRateReview {...props} /> : <RateReview {...props} />),
     },
     // Seo Box
     {

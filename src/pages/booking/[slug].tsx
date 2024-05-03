@@ -5,7 +5,6 @@ import Text from '@/common/components/atom/text/text';
 import Transition from '@/common/components/atom/transition/transition';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
@@ -29,15 +28,7 @@ const Booking = () => {
   const setProfileData = useProfileDataStore(state => state.setData);
   const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
   const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
-  const easybookDoctorList = useFeatureValue('booking:easy-book|doctor-list', { ids: [] });
-  const shouldUseEasybook = newApiFeatureFlaggingCondition(easybookDoctorList.ids, router.query?.userId as string);
   const { display_name, isLoading: profileNameLoading } = useProfile({ slug: router.query?.slug as string });
-
-  useEffect(() => {
-    if (shouldUseEasybook && router.query.centerId === CENTERS.CONSULT) {
-      router.replace(`/booking/easybook/${router.query?.slug as string}`);
-    }
-  }, [shouldUseEasybook, router.query.centerId]);
 
   const { data: membershipData, isLoading: membershipLoading } = useMembership(
     { provider_id: router.query.providerId as string },

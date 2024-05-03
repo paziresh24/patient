@@ -16,11 +16,11 @@ import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getProviderData } from './getProviderData';
 import { getRateDetailsData } from './getRateDetailsData';
-import { getReviewsData } from './getReviewsData';
 import { getSpecialitiesData } from './getSpecialities';
 import { getUserData } from './getUserData';
 import { getWaitingTimeStatistics } from './getWaitingTimeStatistics';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
+import { getReviews } from '@/common/apis/services/reviews/getReviews';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
   const center = centers.find((center: any) => center.city && center.id !== '5532');
@@ -254,6 +254,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
             if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
+                ...profileData.feedbacks,
                 waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
               };
             }
@@ -273,6 +274,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
               if (averageWaitingTimeData.status === 'fulfilled') {
                 profileData.feedbacks = {
+                  ...profileData.feedbacks,
                   waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
                 };
               }
@@ -293,47 +295,22 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
             }
           }
-          if (shouldUseFeedback) {
-            const parallelRequests = [
-              await getReviewsData({
-                external_id: `doctor_${fullProfileData.id}_1`,
-              }),
-            ];
-            const [reviewData] = await Promise.allSettled(parallelRequests);
-
-            if (reviewData.status === 'fulfilled') {
-              profileData.feedbacks.reviews =
-                Object.values(reviewData.value)?.map?.((feedback: any) => ({
-                  description: feedback?.cooked ?? '',
-                  id: feedback?.id,
-                  doctor_id: fullProfileData?.id ?? '',
-                  server_id: fullProfileData?.server_id ?? '',
-                  user_id: feedback?.user_id,
-                  recommended: 0,
-                  created_at: feedback?.created_at,
-                  update_at: feedback?.updated_at,
-                  feedback_symptomes: [],
-                  user_name: feedback?.name,
-                  user_image: null,
-                  like: 0,
-                })) ?? [];
-            }
-          }
         }
       } catch (error) {
         console.error(error);
       }
     }
 
-    if (shouldUseNewRateCalculations) {
-      const { averageRates, countOfFeedbacks, satisfactionPercent } = await getRateDetailsData({ slug: slugFormmated });
-      profileData.feedbacks = {
-        ...profileData.feedbacks,
-        averageRates,
-        countOfFeedbacks,
-        satisfactionPercent,
-      };
-    }
+    const rateDetails = await getRateDetailsData({
+      slug: slugFormmated,
+      version: shouldUsePlasmicReviewCard ? 2 : 1,
+    });
+    profileData.feedbacks = {
+      ...profileData.feedbacks,
+      averageRates: rateDetails?.averageRates,
+      countOfFeedbacks: rateDetails?.countOfFeedbacks,
+      satisfactionPercent: rateDetails?.satisfactionPercent,
+    };
 
     const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
       overwriteProfileData(profileData, fullProfileData);
@@ -347,7 +324,24 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let dontShowRateAndReviewMessage = '';
     try {
       let feedbackData;
-      if (!shouldUseFeedback) {
+
+      if (shouldUsePlasmicReviewCard) {
+        feedbackData = await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Feedbacks,
+            {
+              slug: slugFormmated,
+              sort: 'created_at',
+            },
+          ],
+          () =>
+            getReviews({
+              slug: slugFormmated,
+              sort: 'created_at',
+            }),
+        );
+      }
+      if (!shouldUsePlasmicReviewCard) {
         feedbackData = await queryClient.fetchQuery(
           [
             ServerStateKeysEnum.Feedbacks,
@@ -365,8 +359,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }),
         );
       }
-
-      feedbacks.feedbacks = shouldUseFeedback ? profileData.feedbacks.reviews : feedbackData?.result ?? [];
+      feedbacks.feedbacks = shouldUsePlasmicReviewCard ? feedbackData ?? {} : feedbackData?.result ?? [];
       dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
     } catch (error) {
       console.error(error);

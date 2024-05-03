@@ -2,13 +2,38 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '../../serverStateKeysEnum';
 
-interface ReviewParams {
-  external_id: string;
+export interface ReviewParams {
+  slug: string;
+  sort: 'created_at' | 'count_like';
+  search?: string;
+  user_id?: string;
+  not_recommended?: boolean;
+  visited?: boolean;
+  center_id?: string;
+  offset?: number;
 }
 
 export const getReviews = async (params: ReviewParams) => {
-  return await apiGatewayClient.get(`/ravi/t/external_id/${params.external_id}.json`);
+  const { data } = await apiGatewayClient.get(`/ravi/v1/feedbacks`, {
+    params: {
+      where: [
+        `(doctor_slug,eq,${params.slug})`,
+        `(reply_to_feedback_id,is,null)`,
+        params.search && `(description,like,${params.search})`,
+        params.user_id && `(user_id,eq,${params.user_id})`,
+        params.not_recommended && `(recommended,eq,0)`,
+        params.visited && `(visit_status,eq,visited)`,
+        params.center_id && `(center_id,eq,${params.center_id})`,
+      ]
+        .filter(Boolean)
+        .join('~and'),
+      limit: 10,
+      offset: params?.offset ?? 0,
+      sort: `-${params.sort}`,
+    },
+  });
+  return data;
 };
 
 export const useGetReview = (params: ReviewParams, options?: any) =>
-  useQuery([ServerStateKeysEnum.Reviews, params], () => getReviews(params), options);
+  useQuery([ServerStateKeysEnum.Feedbacks, params], () => getReviews(params), options);

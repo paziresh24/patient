@@ -19,54 +19,56 @@ export const DoctorTags = (props: DoctorTagsProps) => {
 
   return (
     <div className="flex flex-col w-full p-4 space-y-4 bg-white/50">
-      <div className="flex flex-col w-full space-y-3">
-        <div className="flex flex-col space-y-1">
-          <Text fontWeight="bold">خلاصه نظرات کاربران</Text>
-          <div className="flex items-center space-s-1 opacity-75">
-            <SparkleIcon className="w-5 md:w-4 md:h-4 h-5 text-purple-600" />
-            <Text fontSize="sm">خلاصه نظرات کاربران توسط هوش مصنوعی تولید گردیده است.</Text>
+      {!getDoctorTags.isError && (
+        <div className="flex flex-col w-full space-y-3">
+          <div className="flex flex-col space-y-1">
+            <Text fontWeight="bold">خلاصه نظرات کاربران</Text>
+            <div className="flex items-center space-s-1 opacity-75">
+              <SparkleIcon className="w-5 md:w-4 md:h-4 h-5 text-purple-600" />
+              <Text fontSize="sm">خلاصه نظرات کاربران توسط هوش مصنوعی تولید گردیده است.</Text>
+            </div>
+          </div>
+          <div className="flex flex-col w-full space-y-3 md:flex-row md:space-y-0 md:space-s-3">
+            <div className="flex flex-col w-full p-4 space-y-3 bg-white border rounded-lg shadow-lg shadow-slate-400/20 border-slate-100">
+              <div className="flex items-center space-s-1">
+                <SmileIcon className="text-green-500" />
+                <Text fontSize="sm" fontWeight="medium">
+                  صفات برجسته پزشک از دیدگاه بیماران
+                </Text>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
+                {getDoctorTags.data?.data?.positive_tags?.map?.((tag: string) => (
+                  <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={tag}>
+                    <Text className="line-clamp-1">{tag}</Text>
+                  </Chips>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col w-full p-4 space-y-3 bg-white border border-red-100 rounded-lg shadow-lg shadow-slate-400/20">
+              <div className="flex items-center space-s-1">
+                <FrownIcon className="text-red-500" />
+                <Text fontSize="sm" fontWeight="medium">
+                  موارد قابل توجه از دیدگاه بیماران
+                </Text>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
+                {getDoctorTags.data?.data?.negative_tags?.map?.((tag: string) => (
+                  <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={tag}>
+                    <Text className="line-clamp-1">{tag}</Text>
+                  </Chips>
+                ))}
+              </div>
+              {getDoctorTags.isSuccess && getDoctorTags.data?.data?.negative_tags?.length === 0 && (
+                <Text fontSize="sm" className="self-center text-slate-400" fontWeight="medium">
+                  چیزی برای نمایش وجود ندارد.
+                </Text>
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col w-full space-y-3 md:flex-row md:space-y-0 md:space-s-3">
-          <div className="flex flex-col w-full p-4 space-y-3 bg-white border rounded-lg shadow-lg shadow-slate-400/20 border-slate-100">
-            <div className="flex items-center space-s-1">
-              <SmileIcon className="text-green-500" />
-              <Text fontSize="sm" fontWeight="medium">
-                صفات برجسته پزشک از دیدگاه بیماران
-              </Text>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
-              {getDoctorTags.data?.data?.positive_tags?.map?.((tag: string) => (
-                <Chips className="py-1 border !whitespace-normal text-emerald-500 border-emerald-500/20 bg-emerald-300/5" key={tag}>
-                  <Text className="line-clamp-1">{tag}</Text>
-                </Chips>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col w-full p-4 space-y-3 bg-white border border-red-100 rounded-lg shadow-lg shadow-slate-400/20">
-            <div className="flex items-center space-s-1">
-              <FrownIcon className="text-red-500" />
-              <Text fontSize="sm" fontWeight="medium">
-                موارد قابل توجه از دیدگاه بیماران
-              </Text>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {getDoctorTags.isLoading && range(0, 5).map(i => <Skeleton key={i} rounded="full" w="100%" h="1.6rem" />)}
-              {getDoctorTags.data?.data?.negative_tags?.map?.((tag: string) => (
-                <Chips className="py-1 !whitespace-normal text-red-500 border border-red-500/20 bg-red-300/5" key={tag}>
-                  <Text className="line-clamp-1">{tag}</Text>
-                </Chips>
-              ))}
-            </div>
-            {getDoctorTags.isSuccess && getDoctorTags.data?.data?.negative_tags?.length === 0 && (
-              <Text fontSize="sm" className="self-center text-slate-400" fontWeight="medium">
-                چیزی برای نمایش وجود ندارد.
-              </Text>
-            )}
-          </div>
-        </div>
-      </div>
+      )}
       {symptomes?.length > 0 && (
         <div className="flex flex-col w-full space-y-3">
           <div className="flex flex-col space-y-1">

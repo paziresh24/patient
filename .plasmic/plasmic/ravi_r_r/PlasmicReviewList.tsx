@@ -96,6 +96,7 @@ export type PlasmicReviewList__ArgsType = {
   information?: any;
   seo?: any;
   expertises?: any;
+  pageInfo?: any;
 };
 type ArgPropType = keyof PlasmicReviewList__ArgsType;
 export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
@@ -108,7 +109,8 @@ export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
   "onSort",
   "information",
   "seo",
-  "expertises"
+  "expertises",
+  "pageInfo"
 );
 
 export type PlasmicReviewList__OverridesType = {
@@ -133,6 +135,7 @@ export interface DefaultReviewListProps {
   information?: any;
   seo?: any;
   expertises?: any;
+  pageInfo?: any;
   className?: string;
 }
 
@@ -180,12 +183,6 @@ function PlasmicReviewList__RenderFunc(props: {
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
-      {
-        path: "page",
-        type: "private",
-        variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 1
-      },
       {
         path: "searchInput.value",
         type: "private",
@@ -357,8 +354,8 @@ function PlasmicReviewList__RenderFunc(props: {
                   ...($ctx.auth.isLogin
                     ? [{ value: "my_feedbacks", label: "نظرات من" }]
                     : []),
-                  { value: "recommended", label: "نظرات منفی" },
-                  { value: "has_nobat", label: "بیماران دارای نوبت" },
+                  { value: "not_recommended", label: "نظرات منفی" },
+                  { value: "visited", label: "بیماران دارای نوبت" },
                   ...$props.centers.map(center => ({
                     value: center.id,
                     label: center.name
@@ -454,19 +451,15 @@ function PlasmicReviewList__RenderFunc(props: {
             }}
             options={(() => {
               const __composite = [
-                { value: null, label: null },
                 { label: null, value: null },
                 { label: null, value: null }
               ];
-              __composite["0"]["value"] = "default_order";
               __composite["0"]["label"] =
-                "\u0645\u0631\u062a\u0628\u0637 \u062a\u0631\u06cc\u0646";
-              __composite["1"]["label"] =
                 "\u062c\u062f\u06cc\u062f \u062a\u0631\u06cc\u0646";
-              __composite["1"]["value"] = "created_at";
-              __composite["2"]["label"] =
+              __composite["0"]["value"] = "created_at";
+              __composite["1"]["label"] =
                 "\u0645\u062d\u0628\u0648\u0628 \u062a\u0631\u06cc\u0646";
-              __composite["2"]["value"] = "like";
+              __composite["1"]["value"] = "count_like";
               return __composite;
             })()}
             value={generateStateValueProp($state, ["sortInput", "value"])}
@@ -624,9 +617,9 @@ function PlasmicReviewList__RenderFunc(props: {
                   throw e;
                 }
               })()}
-              doctorId={(() => {
+              doctorSlug={(() => {
                 try {
-                  return currentItem.doctor_id;
+                  return currentItem.doctor_slug;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -652,7 +645,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               feedbackId={(() => {
                 try {
-                  return currentItem.id;
+                  return currentItem.clinic_feedback_id;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -665,7 +658,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               like={(() => {
                 try {
-                  return currentItem.like;
+                  return currentItem.count_like;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -691,7 +684,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               recommended={(() => {
                 try {
-                  return currentItem.recommended === "1" ? true : false;
+                  return currentItem.recommended;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -702,22 +695,9 @@ function PlasmicReviewList__RenderFunc(props: {
                   throw e;
                 }
               })()}
-              replies={(() => {
+              replyToFeedbackId={(() => {
                 try {
-                  return currentItem.reply;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              serverId={(() => {
-                try {
-                  return currentItem.server_id;
+                  return currentItem.Id;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -730,7 +710,98 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               setTime={(() => {
                 try {
-                  return currentItem.formatted_date;
+                  return (() => {
+                    const createdDate = new Date(currentItem.created_at);
+                    const currentDate = new Date();
+                    const timeDiff = Math.abs(currentDate - createdDate);
+                    const daysDiff = Math.ceil(
+                      timeDiff / (1000 * 60 * 60 * 24)
+                    );
+
+                    if (daysDiff < 7) {
+                      const numbers = [
+                        "صفر",
+                        "یک",
+                        "دو",
+                        "سه",
+                        "چهار",
+                        "پنج",
+                        "شش",
+                        "هفت",
+                        "هشت",
+                        "نه"
+                      ];
+                      return `${numbers[daysDiff]} روز پیش`;
+                    } else if (daysDiff < 30) {
+                      const weeksDiff = Math.floor(daysDiff / 7);
+                      const numbers = [
+                        "صفر",
+                        "یک",
+                        "دو",
+                        "سه",
+                        "چهار",
+                        "پنج",
+                        "شش",
+                        "هفت",
+                        "هشت",
+                        "نه"
+                      ];
+                      return `${numbers[weeksDiff]} هفته پیش`;
+                    } else {
+                      const monthsDiff = Math.floor(daysDiff / 30);
+                      const numbers = [
+                        "صفر",
+                        "یک",
+                        "دو",
+                        "سه",
+                        "چهار",
+                        "پنج",
+                        "شش",
+                        "هفت",
+                        "هشت",
+                        "نه"
+                      ];
+                      const tens = [
+                        "ده",
+                        "بیست",
+                        "سی",
+                        "چهل",
+                        "پنجاه",
+                        "شصت",
+                        "هفتاد",
+                        "هشتاد",
+                        "نود"
+                      ];
+                      const units = [
+                        "صد",
+                        "دویست",
+                        "سیصد",
+                        "چهارصد",
+                        "پانصد",
+                        "ششصد",
+                        "هفتصد",
+                        "هشتصد",
+                        "نهصد"
+                      ];
+                      const numToPersian = num => {
+                        if (num < 10) return numbers[num];
+                        if (num < 20) return `ده ${numbers[num - 10]}`;
+                        if (num < 100) {
+                          const unit = Math.floor(num / 10);
+                          const remainder = num % 10;
+                          return `${tens[unit - 1]} ${numbers[remainder]}`;
+                        }
+                        if (num < 1000) {
+                          const hundred = Math.floor(num / 100);
+                          const remainder = num % 100;
+                          return `${units[hundred - 1]} ${numToPersian(
+                            remainder
+                          )}`;
+                        }
+                      };
+                      return `${numToPersian(monthsDiff)} ماه پیش`;
+                    }
+                  })();
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -756,7 +827,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               userName={(() => {
                 try {
-                  return currentItem.user_name;
+                  return currentItem.user_display_name || "کاربر بی نام";
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -782,7 +853,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               visitedTag={(() => {
                 try {
-                  return currentItem.is_visited;
+                  return currentItem.visit_status === "visited";
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -830,10 +901,7 @@ function PlasmicReviewList__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return (
-            $props.paginationLoadingStatus ||
-            $state.page * 10 === $props.reviewResponse.length
-          );
+          return $props.paginationLoadingStatus || !$props.pageInfo.isLastPage;
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -885,35 +953,6 @@ function PlasmicReviewList__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
-              $steps["updatePage"] = true
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["page"]
-                      },
-                      operation: 2
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      const oldValue = $stateGet(objRoot, variablePath);
-                      $stateSet(objRoot, variablePath, oldValue + 1);
-                      return oldValue + 1;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updatePage"] != null &&
-                typeof $steps["updatePage"] === "object" &&
-                typeof $steps["updatePage"].then === "function"
-              ) {
-                $steps["updatePage"] = await $steps["updatePage"];
-              }
-
               $steps["runNextPageTrigger"] = true
                 ? (() => {
                     const actionArgs = {
@@ -921,7 +960,7 @@ function PlasmicReviewList__RenderFunc(props: {
                       args: [
                         (() => {
                           try {
-                            return $state.page;
+                            return $props.pageInfo.page + 1;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -957,7 +996,7 @@ function PlasmicReviewList__RenderFunc(props: {
                           group: "feedback",
                           data: {
                             doctor_id: $props.information.id,
-                            page: $state.page
+                            page: $props.pageInfo.page + 1
                           },
                           type: "show_more_button",
                           token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"

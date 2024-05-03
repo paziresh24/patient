@@ -60,13 +60,13 @@
 }
 .avatar:global(.__wab_instance) {
   max-width: 80px;
-  position: relative;
-  left: auto;
-  top: auto;
   width: 80px;
   height: 80px;
   max-height: 80px;
   min-width: 80px;
+  left: auto;
+  top: auto;
+  position: relative;
   flex-shrink: 0;
 }
 .freeBox__uwhEa {
@@ -180,6 +180,21 @@
   height: auto;
   max-width: 100%;
   font-size: var(--token-tM2Vh4zTir7U);
+}
+.httpRestApiFetcher:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+  min-width: 0;
+  display: none;
+}
+.classifyText {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
 }
 .freeBox__rdT8C {
   display: flex;

@@ -19,6 +19,7 @@ export const useBooking = () => {
       center: {
         id: string;
         server_id: string;
+        user_center_id: string;
       };
       timeId: string;
       selectedSymptoms?: string[];
@@ -37,6 +38,7 @@ export const useBooking = () => {
       request_code: timeId,
       center_id: center.id,
       server_id: center.server_id,
+      user_center_id: center.user_center_id,
       is_webview: isWebView || isApplication ? 1 : 0,
       first_name: user.name,
       last_name: user.family,

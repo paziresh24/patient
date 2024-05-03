@@ -75,7 +75,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
 
   return (
     <>
-      {searchData.isLoading && <Skeleton w="100%" h="5rem" className="md:rounded-md" />}
+      {searchData.isLoading && !customize.partnerKey && <Skeleton w="100%" h="5rem" className="md:rounded-md" />}
       {substituteDoctor?.url && !customize.partnerKey && (
         <Card className="space-y-3 !rounded-none md:!rounded-lg">
           <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
@@ -86,7 +86,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
           </Button>
         </Card>
       )}
-      {!searchData.isLoading && (!substituteDoctor?.url || customize.partnerKey) && (
+      {(!searchData.isLoading || customize.partnerKey) && !substituteDoctor?.url && (
         <Card className="space-y-3 !rounded-none md:!rounded-lg">
           <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
             <ErrorIcon className="w-5 h-5" />
@@ -104,11 +104,11 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
           </div>
         )}
         {searchData.isSuccess && substituteDoctor?.url && (
-          <div className="flex flex-col space-y-2 mb-2">
+          <div className="flex flex-col mb-2 space-y-2">
             <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
               <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
             </Alert>
-            <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
+            <Alert severity="success" className="p-3 text-sm font-medium text-green-700">
               بدون خروج از منزل، آنلاین ویزیت شوید.
             </Alert>
             <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>

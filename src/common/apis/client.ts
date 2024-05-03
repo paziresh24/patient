@@ -46,6 +46,10 @@ export const workflowClient = axios.create({
 
 clinicClient.interceptors.request.use(
   config => {
+    if (typeof window !== 'undefined') {
+      if (window.user?.id) (config as any).headers['user_id'] = window.user?.id;
+      (config as any).headers['terminal_id'] = getCookie('terminal_id');
+    }
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
@@ -95,6 +99,10 @@ apiGatewayClient.interceptors.request.use(
 
 paziresh24AppClient.interceptors.request.use(
   config => {
+    if (typeof window !== 'undefined') {
+      if (window.user?.id) (config as any).headers['user_id'] = window.user?.id;
+      (config as any).headers['terminal_id'] = getCookie('terminal_id');
+    }
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }

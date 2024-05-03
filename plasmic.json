@@ -868,6 +868,11 @@
           "id": "OcnxMK5rW620",
           "name": "Icon4Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon4.tsx"
+        },
+        {
+          "id": "nlR9y6ohoS5X",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon5.tsx"
         }
       ],
       "images": [],

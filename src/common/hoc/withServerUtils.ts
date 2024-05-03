@@ -1,6 +1,7 @@
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getServerSideGrowthBookContext } from '../helper/getServerSideGrowthBookContext';
+import { splunkInstance } from '../services/splunk';
 
 export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: GetServerSidePropsContext) => {
   const host = ctx.req.headers?.host;

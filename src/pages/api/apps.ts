@@ -15,15 +15,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ];
     }
     const defaultDoctorAppsManifests = await Promise.allSettled(defaultDoctorApps);
-    let installedApp: any[] = [];
-    try {
-      const installedAppsRes = await axios.get(`https://bazaar.paziresh24.com/api/v1/installations?user_id=${req.query.user_id}`);
-      installedApp = [...installedAppsRes.data.map((item: any) => ({ ...item.manifest, installation_id: item.id }))];
-    } catch (error) {
-      console.error('ERROR: /api/apps >>>>', error);
-    }
+    // let installedApp: any[] = [];
+    // try {
+    //   const installedAppsRes = await axios.get(`https://bazaar.paziresh24.com/api/v1/installations?user_id=${req.query.user_id}`);
+    //   installedApp = [...installedAppsRes.data.map((item: any) => ({ ...item.manifest, installation_id: item.id }))];
+    // } catch (error) {
+    //   console.error('ERROR: /api/apps >>>>', error);
+    // }
     const appsArray = [
-      ...installedApp.map(item => ({ ...item, pin: true, manifest: '' })),
+      // ...installedApp.map(item => ({ ...item, pin: true, manifest: '' })),
       ...defaultDoctorAppsManifests
         .reverse()
         .filter(item => item.status === 'fulfilled')

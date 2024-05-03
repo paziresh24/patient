@@ -66,6 +66,7 @@ import useBooking from '../hooks/booking';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
+import { AxiosError } from 'axios';
 
 interface BookingStepsProps {
   slug: string;
@@ -116,7 +117,11 @@ const BookingSteps = (props: BookingStepsProps) => {
   const membershipsData = membershipResponse?.data?.memberships?.find?.(
     (membership: any) => membership?.center_id === defaultStep?.payload?.centerId,
   );
-  const { data: servicesResponose, isLoading: servicesLoading } = useServices(
+  const {
+    data: servicesResponose,
+    isLoading: servicesLoading,
+    error: servicesError,
+  } = useServices(
     {
       membership_id: membershipsData?.id,
     },
@@ -169,6 +174,18 @@ const BookingSteps = (props: BookingStepsProps) => {
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
 
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+
+  useEffect(() => {
+    if (servicesError && !servicesLoading) {
+      setFirstFreeTimeErrorText((servicesError as AxiosError<any, any>).response?.data?.message);
+      sendGaEvent({
+        action: 'load-errormodal',
+        category: `${center.city}`,
+        label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
+      });
+      handleOpenRecommendModal();
+    }
+  }, [servicesError, servicesLoading]);
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -436,7 +453,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             )
           }
           data={{
-            loading: isLoading || !center || !service || providerLoading || membershipLoading || servicesLoading,
+            loading: isLoading || !center || !serviceData?.id || providerLoading || membershipLoading || servicesLoading,
             serviceId: serviceData?.id,
             membershipId: membershipsData?.id,
             userId,
@@ -617,11 +634,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           {!customize?.partnerKey && (
             <div className="flex flex-col space-y-3">
               <Text fontSize="sm" className="leading-6">
-                <Text fontWeight="bold">
-                پزشکان آنلاین{' '}
-                  {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}
-                </Text>{' '}
-                منتخب بیماران
+                <Text fontWeight="bold">پزشکان آنلاین {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}</Text> منتخب بیماران
               </Text>
               {profile && (
                 <Recommend
