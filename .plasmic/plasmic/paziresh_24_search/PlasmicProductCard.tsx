@@ -61,6 +61,7 @@ import {
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
@@ -127,6 +128,8 @@ export type PlasmicProductCard__OverridesType = {
   avatar?: Flex__<typeof Avatar>;
   cardTitle?: Flex__<"h2">;
   cardSubtitle?: Flex__<"span">;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  classifyText?: Flex__<"div">;
   cardAddressRow?: Flex__<"span">;
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
@@ -634,6 +637,61 @@ function PlasmicProductCard__RenderFunc(props: {
           ) : null}
         </Stack__>
       </Stack__>
+      <DataFetcher
+        data-plasmic-name={"httpRestApiFetcher"}
+        data-plasmic-override={overrides.httpRestApiFetcher}
+        className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+        dataName={"classification-response-fetchedData"}
+        errorDisplay={
+          <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
+        }
+        errorName={"fetchError"}
+        headers={{
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }}
+        loadingDisplay={
+          <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
+        }
+        method={"GET"}
+        noLayout={false}
+        previewErrorDisplay={true}
+        previewSpinner={true}
+        url={
+          "https://mock.apidog.com/m1/368933-0-default/classifications/\u06a9\u0627\u0631\u0634\u0646\u0627\u0633-\u0627\u0631\u0634\u062f-\u062d\u0633\u06cc\u0646-\u0645\u06cc\u0631\u0632\u0627\u06cc\u06cc--1"
+        }
+      >
+        <DataCtxReader__>
+          {$ctx => (
+            <div
+              data-plasmic-name={"classifyText"}
+              data-plasmic-override={overrides.classifyText}
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.classifyText
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $ctx["classification-response-fetchedData"]
+                      .classifications[0].name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
+          )}
+        </DataCtxReader__>
+      </DataFetcher>
       {(() => {
         try {
           return $props.address;
@@ -1178,6 +1236,8 @@ const PlasmicDescendants = {
     "avatar",
     "cardTitle",
     "cardSubtitle",
+    "httpRestApiFetcher",
+    "classifyText",
     "cardAddressRow",
     "cardPrice",
     "dialog",
@@ -1188,6 +1248,8 @@ const PlasmicDescendants = {
   avatar: ["avatar"],
   cardTitle: ["cardTitle"],
   cardSubtitle: ["cardSubtitle"],
+  httpRestApiFetcher: ["httpRestApiFetcher", "classifyText"],
+  classifyText: ["classifyText"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip", "text"],
@@ -1203,6 +1265,8 @@ type NodeDefaultElementType = {
   avatar: typeof Avatar;
   cardTitle: "h2";
   cardSubtitle: "span";
+  httpRestApiFetcher: typeof DataFetcher;
+  classifyText: "div";
   cardAddressRow: "span";
   cardPrice: "span";
   dialog: typeof Dialog;
@@ -1274,6 +1338,8 @@ export const PlasmicProductCard = Object.assign(
     avatar: makeNodeComponent("avatar"),
     cardTitle: makeNodeComponent("cardTitle"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    classifyText: makeNodeComponent("classifyText"),
     cardAddressRow: makeNodeComponent("cardAddressRow"),
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
