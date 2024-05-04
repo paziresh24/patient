@@ -92,6 +92,7 @@ export type PlasmicSearchResults__ArgsType = {
   location?: any;
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
+  showMyPerformanceMetricsBox?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -101,7 +102,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "paginationLoadingStatus",
   "location",
   "searchFooterSecondaryTasksObject",
-  "searchFooterQuerySuggestionResponseObject"
+  "searchFooterQuerySuggestionResponseObject",
+  "showMyPerformanceMetricsBox"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -124,6 +126,7 @@ export interface DefaultSearchResultsProps {
   location?: any;
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
+  showMyPerformanceMetricsBox?: any;
   className?: string;
 }
 
@@ -207,7 +210,10 @@ function PlasmicSearchResults__RenderFunc(props: {
     >
       {(() => {
         try {
-          return $state.visibilityOfShowMySearchPerformance;
+          return (
+            $state.visibilityOfShowMySearchPerformance &&
+            $props.showMyPerformanceMetricsBox.enable
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -230,12 +236,7 @@ function PlasmicSearchResults__RenderFunc(props: {
           component={Link}
           href={(() => {
             try {
-              return `https://survey.porsline.ir/s/Lg6WdWV?url=${encodeURIComponent(
-                window.location.href
-              )}&tid=${document.cookie.replace(
-                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              )}`;
+              return $props.showMyPerformanceMetricsBox.destination;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -249,9 +250,21 @@ function PlasmicSearchResults__RenderFunc(props: {
           platform={"nextjs"}
           target={"_blank"}
         >
-          {
-            "\u0645\u0634\u0627\u0647\u062f\u0647 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627 \u062f\u0631 \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u067e\u0630\u06cc\u0631\u063424"
-          }
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.showMyPerformanceMetricsBox.link_title;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "\u0645\u0634\u0627\u0647\u062f\u0647 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627 \u062f\u0631 \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u067e\u0630\u06cc\u0631\u063424";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
         </PlasmicLink__>
       ) : null}
       {(() => {
