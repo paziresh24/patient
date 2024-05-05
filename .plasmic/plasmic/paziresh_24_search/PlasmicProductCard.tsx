@@ -199,6 +199,13 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "dialog[].open",
         type: "private",
         variableType: "boolean"
+      },
+      {
+        path: "unnamedGroupOfVariants2",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          $props.unnamedGroupOfVariants2
       }
     ],
     [$props, $ctx, $refs]
