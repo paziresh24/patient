@@ -7,23 +7,17 @@ import getConfig from 'next/config';
 import app from './config';
 const { publicRuntimeConfig } = getConfig();
 
-const getOrRegisterServiceWorker = () => {
+export const getOrRegisterServiceWorker = () => {
   if ('serviceWorker' in navigator) {
-    return window.navigator.serviceWorker.getRegistration('/firebase-cloud-messaging-push-scope').then((serviceWorker: any) => {
-      if (serviceWorker) {
-        return serviceWorker;
-      }
-      return window.navigator.serviceWorker
-        .register('/firebase-messaging-sw.js')
-        .then((serviceWorker: any) => {
-          console.log('success registering SW');
-        })
-        .catch(err => {
-          console.log('registering failed', err);
-        });
-    });
+    return window.navigator.serviceWorker
+      .register('/firebase-messaging-sw.js')
+      .then((serviceWorker: any) => {
+        console.log('success registering SW');
+      })
+      .catch(err => {
+        console.log('registering failed', err);
+      });
   }
-  throw new Error('The browser doesn`t support service worker.');
 };
 
 const firebaseCloudMessaging = {
