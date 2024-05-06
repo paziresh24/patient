@@ -17,6 +17,7 @@ import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
 const { publicRuntimeConfig } = config();
 import ITOLogo from '../../assets/ITOLogo.png';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 interface MobileNumberProps {
   title?: string;
   description?: string;
@@ -33,6 +34,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const [isFieldError, setIsFieldError] = useState(false);
   const customize = useCustomize(state => state.customize);
   const [oauthLoading, setOauthLoading] = useState(false);
+  const enableOauthLogin = useFeatureIsOn('aaa:enable-oauth-login');
+
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     if (!phoneNumberValidator(mobileNumberValue)) {
@@ -83,7 +86,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
-      {customize.oauth && (
+      {(customize.oauth || enableOauthLogin) && (
         <>
           <Divider />
           <Button
