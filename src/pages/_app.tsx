@@ -21,7 +21,7 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
-import { getOrRegisterServiceWorker } from '@/firebase/fcm';
+import { registerServiceWorker } from '@/firebase/fcm';
 const { publicRuntimeConfig } = getConfig();
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
@@ -64,7 +64,7 @@ function MyApp(props: AppProps) {
   const { asPath } = useRouter();
 
   useEffect(() => {
-    getOrRegisterServiceWorker();
+    registerServiceWorker();
     if (isEnabledGrowthbook) {
       growthbook.loadFeatures({ autoRefresh: true, skipCache: router.query.skipFlagsCache === 'true' });
       growthbook.setAttributes({
