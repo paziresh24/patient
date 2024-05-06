@@ -14,7 +14,7 @@ import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
 import getConfig from 'next/config';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
-import { NextRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
 import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
@@ -60,6 +60,7 @@ function MyApp(props: AppProps) {
   const { Component, pageProps, router } = props;
   useNetworkStatus();
   const isApplication = useApplication();
+  const { asPath } = useRouter();
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
@@ -74,6 +75,14 @@ function MyApp(props: AppProps) {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
   }, []);
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      url: asPath,
+      origin: location.origin,
+    });
+  }, [asPath]);
 
   useEffect(() => {
     useCustomize.getState().setCustomize(pageProps.themeConfing);

@@ -58,6 +58,7 @@ localSelf.addEventListener('notificationclick', async function (event) {
 });
 
 localSelf.addEventListener('push', event => {
+  console.log('push-event', event);
   let response = event.data && event.data.text();
   let title = JSON.parse(response).notification.title;
   let body = JSON.parse(response).notification.body;
@@ -76,21 +77,25 @@ localSelf.addEventListener('push', event => {
   }
   let messageId = JSON.parse(response).fcmMessageId;
 
-  fetch(`https://p24splk.paziresh24.com/services/collector`, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Splunk f4fd4b50-fe90-48f3-a1ab-5a5070140318',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sourcetype: '_json',
-      event: {
-        event_group: 'notification',
-        event_type: 'received',
-        message_id: messageId,
+  try {
+    fetch(`https://p24splk.paziresh24.com/services/collector`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Splunk f4fd4b50-fe90-48f3-a1ab-5a5070140318',
+        'Content-Type': 'application/json',
       },
-    }),
-  });
+      body: JSON.stringify({
+        sourcetype: '_json',
+        event: {
+          event_group: 'notification',
+          event_type: 'received',
+          message_id: messageId,
+        },
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   const notificationOptions = {
     body: body,
@@ -104,6 +109,8 @@ localSelf.addEventListener('push', event => {
       messageId: messageId,
     },
   };
+
+  console.log('push-options', notificationOptions);
 
   event.waitUntil(localSelf.registration.showNotification(title, notificationOptions));
 });
