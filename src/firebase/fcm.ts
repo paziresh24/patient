@@ -9,18 +9,16 @@ const { publicRuntimeConfig } = getConfig();
 
 export const registerServiceWorker = () => {
   if ('serviceWorker' in navigator) {
-    return window.navigator.serviceWorker
-      .register('/firebase-messaging-sw.js')
-      .then((serviceWorker: any) => {
-        console.log('success registering SW');
-      })
-      .catch(err => {
-        console.log('registering failed', err);
-      });
+    try {
+      window.navigator.serviceWorker.getRegistration('/firebase-cloud-messaging-push-scope');
+      window.navigator.serviceWorker.register(`/firebase-messaging-sw.js?version=${Math.random()}`);
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
-const getOrRegisterServiceWorker = () => {
+export const getOrRegisterServiceWorker = () => {
   if ('serviceWorker' in navigator) {
     return window.navigator.serviceWorker.getRegistration('/firebase-cloud-messaging-push-scope').then((serviceWorker: any) => {
       if (serviceWorker) {
