@@ -365,7 +365,7 @@ export const withUserMenu = [
 export const withDoctorMenu = [
   {
     title: 'ورود / ثبت نام پزشکان ',
-    link: `${publicRuntimeConfig.DOCTOR_APP_BASE_URL}/auth?utm_source=home&utm_medium=click&utm_campaign=login-register-auth`,
+    link: `https://www.paziresh24.com/home/intermediate-registration-form/?header`,
   },
 ];
 
