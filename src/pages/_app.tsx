@@ -21,6 +21,9 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
+import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import RaviGlobalContextsProvider from '../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
+
 import { registerServiceWorker } from '@/firebase/fcm';
 const { publicRuntimeConfig } = getConfig();
 
@@ -30,17 +33,6 @@ export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
-  trackingCallback: (experiment: any, result: any) => {
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'growth-book',
-      type: 'growth-book-event',
-      event: {
-        experiment,
-        result,
-        terminal_id: getCookie('terminal_id'),
-      },
-    });
-  },
 });
 
 function updateGrowthBookURL() {
@@ -81,8 +73,8 @@ function MyApp(props: AppProps) {
   useEffect(() => {
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
-      url: asPath,
-      origin: location.origin,
+      url: location.href,
+      host: location.host,
     });
   }, [asPath]);
 
@@ -98,18 +90,22 @@ function MyApp(props: AppProps) {
       <GrowthBookProvider growthbook={growthbook}>
         <Provider pageProps={pageProps}>
           <GlobalContextsProvider>
-            <PlasmicRootProvider disableLoadingBoundary>
-              <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-              <Head>
-                <meta
-                  name="viewport"
-                  content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
-                    isApplication ? '1.0' : '5.0'
-                  }`}
-                />
-              </Head>
-              <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-            </PlasmicRootProvider>
+            <SearchGlobalContextsProvider>
+              <RaviGlobalContextsProvider>
+                <PlasmicRootProvider disableLoadingBoundary>
+                  <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+                  <Head>
+                    <meta
+                      name="viewport"
+                      content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
+                        isApplication ? '1.0' : '5.0'
+                      }`}
+                    />
+                  </Head>
+                  <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+                </PlasmicRootProvider>
+              </RaviGlobalContextsProvider>
+            </SearchGlobalContextsProvider>
           </GlobalContextsProvider>
         </Provider>
       </GrowthBookProvider>

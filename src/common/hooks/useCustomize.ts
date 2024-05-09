@@ -28,6 +28,8 @@ export interface ThemeConfig {
   showSupport: boolean;
   showContribute: boolean;
   oauth: boolean;
+  showFirstFreeTimeSearchResult?: boolean;
+  showAvailableTimeSearchResult?: boolean;
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -63,6 +65,8 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
     showSupport: true,
     showContribute: true,
     oauth: false,
+    showFirstFreeTimeSearchResult: true,
+    showAvailableTimeSearchResult: true,
   },
   setCustomize: (query: any) => {
     if (!query) return;

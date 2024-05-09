@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
@@ -45,6 +46,10 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
+  const customTheme = useFeatureValue('them-config', {
+    'search_result:show_first_free_time': true,
+    'search_result:show_available_time': true,
+  });
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
     splunkInstance('center-profile').sendEvent({
@@ -123,13 +128,15 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                 viewCount: doctor.view,
               }}
               details={{
-                badges: doctor.badges,
+                badges: doctor.badges.filter((item: any) =>
+                  !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
+                ),
               }}
               actions={doctor.actions
                 .filter((action: any) => action.title !== 'ویزیت آنلاین')
                 ?.map((action: any) => ({
                   text: action.title,
-                  description: action.top_title,
+                  description: customTheme['search_result:show_available_time'] ? action.top_title : '',
                   outline: action.outline,
                   action: () => {
                     router.push(action.url);
