@@ -46,7 +46,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
-  const customTheme = useFeatureValue('them-config', {
+  const customTheme = useFeatureValue('theme-config', {
     'search_result:show_first_free_time': true,
     'search_result:show_available_time': true,
   });
