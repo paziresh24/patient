@@ -3,6 +3,7 @@ import { PlasmicCanvasHost, registerFunction, registerGlobalContext } from '@pla
 import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
 import { Fragment } from '@/common/fragment/designSystemGlobalContext';
+import { GrowthbookGlobalContext } from '@/common/fragment/growthbookGlobalContext';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -86,4 +87,49 @@ registerGlobalContext(Fragment, {
     },
   },
   importPath: '@/common/fragment/designSystemGlobalContext',
+});
+
+registerGlobalContext(GrowthbookGlobalContext, {
+  name: 'GrowthbookGlobalContext',
+  displayName: 'GrowthBook',
+  props: {
+    apiHost: {
+      type: 'string',
+      displayName: 'Api Host',
+      defaultValueHint: 'https://cdn.growthbook.io',
+    },
+    clientKey: {
+      type: 'string',
+      displayName: 'Client Key',
+      defaultValueHint: 'sdk-XXX',
+    },
+    previewAttributes: {
+      type: 'object',
+      editOnly: true,
+      displayName: 'Preview Attributes',
+      description: 'Simulate how your rules will apply to users.',
+    },
+  },
+  globalActions: {
+    setAttributes: {
+      displayName: 'Set Attributes',
+      parameters: [
+        {
+          name: 'attributes',
+          type: 'object',
+        },
+      ],
+    },
+    setAttributeOverrides: {
+      displayName: 'Set Attribute Overrides',
+      parameters: [
+        {
+          name: 'attributes',
+          type: 'object',
+        },
+      ],
+    },
+  },
+  providesData: true,
+  importPath: '@/common/fragment/growthbookGlobalContext',
 });
