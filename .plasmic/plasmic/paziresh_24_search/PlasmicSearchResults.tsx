@@ -114,6 +114,7 @@ export type PlasmicSearchResults__OverridesType = {
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
   sideEffect?: Flex__<typeof SideEffect>;
+  setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
 };
@@ -169,6 +170,8 @@ function PlasmicSearchResults__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const currentUser = useCurrentUser?.() || {};
 
@@ -310,7 +313,28 @@ function PlasmicSearchResults__RenderFunc(props: {
                 data-plasmic-override={overrides.productCard}
                 actionButtons={(() => {
                   try {
-                    return currentItem.actions;
+                    return (() => {
+                      if (
+                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_first_free_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.actions;
+                      }
+                      if (
+                        !$ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_first_free_time"
+                        ]
+                      ) {
+                        currentItem.actions = currentItem.actions.map(
+                          action => ({
+                            ...action,
+                            top_title: ""
+                          })
+                        );
+                      }
+                      return currentItem.actions;
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -387,7 +411,22 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 badges={(() => {
                   try {
-                    return currentItem.badges;
+                    return (() => {
+                      if (
+                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_available_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.badges;
+                      }
+                      return $ctx.Growthbook?.features?.["theme-config"]?.[
+                        "search_result:show_available_time"
+                      ]
+                        ? currentItem.badges
+                        : currentItem.badges.filter(
+                            badge => !badge.title.includes("فعال شدن نوبت")
+                          );
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -463,44 +502,39 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (() => {
-                              return fetch(
-                                "https://www.paziresh24.com/api/sv2ctr",
-                                {
-                                  headers: {
-                                    accept: "application/json, text/plain, */*",
-                                    "accept-language": "fa",
-                                    "content-type": "application/json",
-                                    "sec-fetch-dest": "empty",
-                                    "sec-fetch-mode": "cors",
-                                    "sec-fetch-site": "same-origin"
-                                  },
-                                  body: JSON.stringify({
-                                    terminal_id: document.cookie
-                                      .split("; ")
-                                      .find(row =>
-                                        row.startsWith("terminal_id")
-                                      )
-                                      ? document.cookie
-                                          .split("; ")
-                                          .find(row =>
-                                            row.startsWith("terminal_id")
-                                          )
-                                          .split("=")[1]
-                                      : "sample-empty-terminal-id-cookie",
-                                    id: currentItem._id,
-                                    position: currentItem.position,
-                                    query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id,
-                                    server_id: currentItem.server_id,
-                                    type: currentItem.type
-                                  }),
-                                  method: "POST",
-                                  credentials: "include"
-                                }
-                              );
-                            })();
+                            return fetch(
+                              "https://www.paziresh24.com/api/sv2ctr",
+                              {
+                                headers: {
+                                  accept: "application/json, text/plain, */*",
+                                  "accept-language": "fa",
+                                  "content-type": "application/json",
+                                  "sec-fetch-dest": "empty",
+                                  "sec-fetch-mode": "cors",
+                                  "sec-fetch-site": "same-origin"
+                                },
+                                body: JSON.stringify({
+                                  terminal_id: document.cookie
+                                    .split("; ")
+                                    .find(row => row.startsWith("terminal_id"))
+                                    ? document.cookie
+                                        .split("; ")
+                                        .find(row =>
+                                          row.startsWith("terminal_id")
+                                        )
+                                        .split("=")[1]
+                                    : "sample-empty-terminal-id-cookie",
+                                  id: currentItem._id,
+                                  position: currentItem.position,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id,
+                                  server_id: currentItem.server_id,
+                                  type: currentItem.type
+                                }),
+                                method: "POST",
+                                credentials: "include"
+                              }
+                            );
                           }
                         };
                         return (({ customFunction }) => {
@@ -881,23 +915,21 @@ function PlasmicSearchResults__RenderFunc(props: {
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return (() => {
-                      return fetch(
-                        "https://api.paziresh24.com/V1/doctor/profile",
-                        { credentials: "include" }
-                      )
-                        .then(response => response.json())
-                        .then(data => {
-                          console.log(data);
-                          if (data.data.id) {
-                            $state.visibilityOfShowMySearchPerformance = true;
-                            console.log(
-                              "Visibility of Show My Search Performance:",
-                              $state.visibilityOfShowMySearchPerformance
-                            );
-                          }
-                        });
-                    })();
+                    return fetch(
+                      "https://api.paziresh24.com/V1/doctor/profile",
+                      { credentials: "include" }
+                    )
+                      .then(response => response.json())
+                      .then(data => {
+                        console.log(data);
+                        if (data.data.id) {
+                          $state.visibilityOfShowMySearchPerformance = true;
+                          console.log(
+                            "Visibility of Show My Search Performance:",
+                            $state.visibilityOfShowMySearchPerformance
+                          );
+                        }
+                      });
                   }
                 };
                 return (({ customFunction }) => {
@@ -918,6 +950,64 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps[
                 "visibleShowMySearchPerformanceVisibilityByFetchUrl"
               ];
+          }
+        }}
+      />
+
+      <SideEffect
+        data-plasmic-name={"setGrowthbookAttributes"}
+        data-plasmic-override={overrides.setGrowthbookAttributes}
+        className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setGrowthbookAttributes"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          url: window.location.href
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttributes"] != null &&
+            typeof $steps["setGrowthbookAttributes"] === "object" &&
+            typeof $steps["setGrowthbookAttributes"].then === "function"
+          ) {
+            $steps["setGrowthbookAttributes"] = await $steps[
+              "setGrowthbookAttributes"
+            ];
           }
         }}
       />
@@ -1131,6 +1221,7 @@ const PlasmicDescendants = {
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
     "sideEffect",
+    "setGrowthbookAttributes",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks"
   ],
@@ -1140,6 +1231,7 @@ const PlasmicDescendants = {
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
   sideEffect: ["sideEffect"],
+  setGrowthbookAttributes: ["setGrowthbookAttributes"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
 } as const;
@@ -1154,6 +1246,7 @@ type NodeDefaultElementType = {
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
   sideEffect: typeof SideEffect;
+  setGrowthbookAttributes: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
 };
@@ -1226,6 +1319,7 @@ export const PlasmicSearchResults = Object.assign(
       "noResultsBlockVerticalStack"
     ),
     sideEffect: makeNodeComponent("sideEffect"),
+    setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
 

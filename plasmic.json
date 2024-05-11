@@ -75,7 +75,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -179,6 +180,16 @@
           "id": "zb1oqVXdrxPK",
           "name": "XIcon",
           "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__X.tsx"
+        },
+        {
+          "id": "oob3UzcKBsd_",
+          "name": "WhatsappIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Whatsapp.tsx"
+        },
+        {
+          "id": "qxWwW7vbw7na",
+          "name": "EitaaIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Eitaa.tsx"
         }
       ],
       "images": [
@@ -296,7 +307,8 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -318,7 +330,8 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -589,6 +602,12 @@
           "name": "Fragment",
           "displayName": "Fragment",
           "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "p_3q3KAjUnHO",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
         }
       ],
       "customFunctions": [
@@ -627,7 +646,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",

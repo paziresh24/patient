@@ -16,7 +16,7 @@
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -129,6 +129,16 @@
           "assetId": "oBJtsp5RgVpcN6KCrDTuQT",
           "type": "projectCss",
           "checksum": "c1c4e2808e07c97cfeb13d9cc075734c"
+        },
+        {
+          "type": "icon",
+          "assetId": "oob3UzcKBsd_",
+          "checksum": "48b18a7d0f3c7534678907f308ebd125"
+        },
+        {
+          "type": "icon",
+          "assetId": "qxWwW7vbw7na",
+          "checksum": "5020e76547cd1c8acc6eee036b77141c"
         }
       ],
       "codegenVersion": "0.0.1"
@@ -183,10 +193,10 @@
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
-      "version": "5.6.0",
+      "version": "5.6.1",
       "dependencies": {
         "sqPBLwEBBKHA2WDuGb17eV": "0.10.0",
-        "oBJtsp5RgVpcN6KCrDTuQT": "1.2.0",
+        "oBJtsp5RgVpcN6KCrDTuQT": "1.3.0",
         "caTPwKxj5ZrD9LQ7DMdK4Z": "3.34.0"
       },
       "lang": "ts",
@@ -298,8 +308,8 @@
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
       "version": "latest",
       "dependencies": {
-        "h9Dbk9ygddw7UVEq1NNhKi": "5.4.2",
-        "oBJtsp5RgVpcN6KCrDTuQT": "1.1.0",
+        "h9Dbk9ygddw7UVEq1NNhKi": "5.6.1",
+        "oBJtsp5RgVpcN6KCrDTuQT": "1.3.0",
         "sqPBLwEBBKHA2WDuGb17eV": "0.10.0",
         "caTPwKxj5ZrD9LQ7DMdK4Z": "3.34.0",
         "58GpZjZCWTaJ8AUhpCwt2K": "3.23.0",
@@ -314,7 +324,7 @@
         },
         {
           "assetId": "sMdpLWyxbzDCruwMRffW2m",
-          "checksum": "44f28e9d84f925a5d308221990edce4a",
+          "checksum": "28d5dbf2a966c4125e9610f3987adc69",
           "type": "globalContexts"
         },
         {
@@ -340,12 +350,12 @@
         {
           "type": "renderModule",
           "assetId": "XhSI4pxMLR3L",
-          "checksum": "90f7f2e8d2b6ed530137610696c7a6a8"
+          "checksum": "677931c762fe4a2c7e37df64be7203bd"
         },
         {
           "type": "cssRules",
           "assetId": "XhSI4pxMLR3L",
-          "checksum": "90f7f2e8d2b6ed530137610696c7a6a8"
+          "checksum": "677931c762fe4a2c7e37df64be7203bd"
         },
         {
           "type": "renderModule",

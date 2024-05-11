@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { GrowthBook } from '@growthbook/growthbook-react';
 
@@ -18,9 +18,41 @@ export const GrowthbookGlobalContext = ({
   const [isReady, setIsReady] = useState(false);
   const [attr, setAttr] = useState({});
 
-  useLayoutEffect(() => {
-    setGrowthbook(setupGrowthbook());
+  useEffect(() => {
+    if (apiHost && clientKey) {
+      setGrowthbook(
+        new GrowthBook({
+          apiHost,
+          clientKey,
+          enabled: true,
+          subscribeToChanges: true,
+        }),
+      );
+    }
   }, [apiHost, clientKey]);
+
+  useEffect(() => {
+    growthbook?.refreshFeatures?.();
+    growthbook?.loadFeatures?.({ autoRefresh: true });
+  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
+
+  useEffect(() => {
+    setIsReady(growthbook?.ready);
+
+    growthbook?.subscribe?.((sb: any) => {
+      if (growthbook?.ready) {
+        setIsReady(growthbook?.ready);
+      }
+    });
+  }, [growthbook?.ready]);
+
+  useEffect(() => {
+    if (isReady) {
+      growthbook.setAttributes({
+        ...previewAttributes,
+      });
+    }
+  }, [previewAttributes, isReady]);
 
   const actions = useMemo(
     () => ({
@@ -63,40 +95,6 @@ export const GrowthbookGlobalContext = ({
       }, {});
     }
   }, [previewAttributes, apiHost, clientKey, isReady, attr, growthbook?.ready, growthbook?.getAttributes?.()]);
-
-  const setupGrowthbook = () => {
-    if (apiHost && clientKey) {
-      return new GrowthBook({
-        apiHost,
-        clientKey,
-        enabled: true,
-        subscribeToChanges: true,
-      });
-    }
-  };
-
-  useEffect(() => {
-    setIsReady(growthbook?.ready);
-
-    growthbook?.subscribe?.((sb: any) => {
-      if (growthbook?.ready) {
-        setIsReady(growthbook?.ready);
-      }
-    });
-  }, [growthbook?.ready]);
-
-  useEffect(() => {
-    if (isReady) {
-      growthbook.setAttributes({
-        ...previewAttributes,
-      });
-    }
-  }, [previewAttributes, isReady]);
-
-  useEffect(() => {
-    growthbook?.refreshFeatures?.();
-    growthbook?.loadFeatures?.({ autoRefresh: true });
-  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
 
   return (
     <GlobalActionsProvider contextName="GrowthbookGlobalContext" actions={actions}>
