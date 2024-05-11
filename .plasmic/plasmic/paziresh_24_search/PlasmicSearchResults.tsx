@@ -170,6 +170,8 @@ function PlasmicSearchResults__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const currentUser = useCurrentUser?.() || {};
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
@@ -310,7 +312,28 @@ function PlasmicSearchResults__RenderFunc(props: {
                 data-plasmic-override={overrides.productCard}
                 actionButtons={(() => {
                   try {
-                    return currentItem.actions;
+                    return (() => {
+                      if (
+                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                          "search_result:show_first_free_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.actions;
+                      }
+                      if (
+                        !$ctx.Growthbook["theme-config"][
+                          "search_result:show_first_free_time"
+                        ]
+                      ) {
+                        currentItem.actions = currentItem.actions.map(
+                          action => ({
+                            ...action,
+                            top_title: ""
+                          })
+                        );
+                      }
+                      return currentItem.actions;
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -387,7 +410,22 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 badges={(() => {
                   try {
-                    return currentItem.badges;
+                    return (() => {
+                      if (
+                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                          "search_result:show_available_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.badges;
+                      }
+                      return $ctx.Growthbook?.["theme-config"]?.[
+                        "search_result:show_available_time"
+                      ]
+                        ? currentItem.badges
+                        : currentItem.badges.filter(
+                            badge => !badge.title.includes("فعال شدن نوبت")
+                          );
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -463,44 +501,39 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (() => {
-                              return fetch(
-                                "https://www.paziresh24.com/api/sv2ctr",
-                                {
-                                  headers: {
-                                    accept: "application/json, text/plain, */*",
-                                    "accept-language": "fa",
-                                    "content-type": "application/json",
-                                    "sec-fetch-dest": "empty",
-                                    "sec-fetch-mode": "cors",
-                                    "sec-fetch-site": "same-origin"
-                                  },
-                                  body: JSON.stringify({
-                                    terminal_id: document.cookie
-                                      .split("; ")
-                                      .find(row =>
-                                        row.startsWith("terminal_id")
-                                      )
-                                      ? document.cookie
-                                          .split("; ")
-                                          .find(row =>
-                                            row.startsWith("terminal_id")
-                                          )
-                                          .split("=")[1]
-                                      : "sample-empty-terminal-id-cookie",
-                                    id: currentItem._id,
-                                    position: currentItem.position,
-                                    query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id,
-                                    server_id: currentItem.server_id,
-                                    type: currentItem.type
-                                  }),
-                                  method: "POST",
-                                  credentials: "include"
-                                }
-                              );
-                            })();
+                            return fetch(
+                              "https://www.paziresh24.com/api/sv2ctr",
+                              {
+                                headers: {
+                                  accept: "application/json, text/plain, */*",
+                                  "accept-language": "fa",
+                                  "content-type": "application/json",
+                                  "sec-fetch-dest": "empty",
+                                  "sec-fetch-mode": "cors",
+                                  "sec-fetch-site": "same-origin"
+                                },
+                                body: JSON.stringify({
+                                  terminal_id: document.cookie
+                                    .split("; ")
+                                    .find(row => row.startsWith("terminal_id"))
+                                    ? document.cookie
+                                        .split("; ")
+                                        .find(row =>
+                                          row.startsWith("terminal_id")
+                                        )
+                                        .split("=")[1]
+                                    : "sample-empty-terminal-id-cookie",
+                                  id: currentItem._id,
+                                  position: currentItem.position,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id,
+                                  server_id: currentItem.server_id,
+                                  type: currentItem.type
+                                }),
+                                method: "POST",
+                                credentials: "include"
+                              }
+                            );
                           }
                         };
                         return (({ customFunction }) => {
@@ -841,6 +874,42 @@ function PlasmicSearchResults__RenderFunc(props: {
         onMount={async () => {
           const $steps = {};
 
+          $steps["setGrowthbookAttributes"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          url: window.location.href
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttributes"] != null &&
+            typeof $steps["setGrowthbookAttributes"] === "object" &&
+            typeof $steps["setGrowthbookAttributes"].then === "function"
+          ) {
+            $steps["setGrowthbookAttributes"] = await $steps[
+              "setGrowthbookAttributes"
+            ];
+          }
+
           $steps["sendClarityCustomTagsEventRunCode"] = true
             ? (() => {
                 const actionArgs = {
@@ -881,23 +950,21 @@ function PlasmicSearchResults__RenderFunc(props: {
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return (() => {
-                      return fetch(
-                        "https://api.paziresh24.com/V1/doctor/profile",
-                        { credentials: "include" }
-                      )
-                        .then(response => response.json())
-                        .then(data => {
-                          console.log(data);
-                          if (data.data.id) {
-                            $state.visibilityOfShowMySearchPerformance = true;
-                            console.log(
-                              "Visibility of Show My Search Performance:",
-                              $state.visibilityOfShowMySearchPerformance
-                            );
-                          }
-                        });
-                    })();
+                    return fetch(
+                      "https://api.paziresh24.com/V1/doctor/profile",
+                      { credentials: "include" }
+                    )
+                      .then(response => response.json())
+                      .then(data => {
+                        console.log(data);
+                        if (data.data.id) {
+                          $state.visibilityOfShowMySearchPerformance = true;
+                          console.log(
+                            "Visibility of Show My Search Performance:",
+                            $state.visibilityOfShowMySearchPerformance
+                          );
+                        }
+                      });
                   }
                 };
                 return (({ customFunction }) => {
