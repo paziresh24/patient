@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { GrowthBook } from '@growthbook/growthbook-react';
 
@@ -18,18 +18,62 @@ export const GrowthbookGlobalContext = ({
   const [isReady, setIsReady] = useState(false);
   const [attr, setAttr] = useState({});
 
-  useEffect(() => {
-    if (apiHost && clientKey) {
-      setGrowthbook(
-        new GrowthBook({
-          apiHost,
-          clientKey,
-          enabled: true,
-          subscribeToChanges: true,
-        }),
-      );
-    }
+  useLayoutEffect(() => {
+    setGrowthbook(setupGrowthbook());
   }, [apiHost, clientKey]);
+
+  const actions = useMemo(
+    () => ({
+      setAttributes: (attributes: Record<string, any>) => {
+        setTimeout(() => {
+          growthbook.setAttributes({
+            ...attributes,
+            ...previewAttributes,
+          });
+
+          setAttr(attributes);
+        }, 500);
+      },
+      setAttributeOverrides: (attributes: Record<string, any>) => {
+        setTimeout(() => {
+          growthbook.setAttributes({
+            ...growthbook.getAttributes(),
+            ...attributes,
+            ...previewAttributes,
+          });
+
+          setAttr(attributes);
+        }, 500);
+      },
+    }),
+    [isReady, growthbook?.isReady],
+  );
+
+  const features = useMemo(() => {
+    if (isReady) {
+      const getFeaturesFromGrowthbook = Object.keys(growthbook.getFeatures()).map(item => ({
+        name: item,
+        type: typeof growthbook.getFeatures()[item].defaultValue === 'boolean' ? 'boolean' : 'value',
+      }));
+      return getFeaturesFromGrowthbook.reduce((previous, current) => {
+        return {
+          ...previous,
+          [current.name]: current.type === 'value' ? growthbook.getFeatureValue(current.name, undefined) : growthbook.isOn(current.name),
+        };
+      }, {});
+    }
+  }, [previewAttributes, apiHost, clientKey, isReady, attr, growthbook?.ready, growthbook?.getAttributes?.()]);
+
+  const setupGrowthbook = () => {
+    if (apiHost && clientKey) {
+      return new GrowthBook({
+        apiHost,
+        clientKey,
+        enabled: true,
+        subscribeToChanges: true,
+      });
+    }
+  };
 
   useEffect(() => {
     setIsReady(growthbook?.ready);
@@ -54,45 +98,9 @@ export const GrowthbookGlobalContext = ({
     growthbook?.loadFeatures?.({ autoRefresh: true });
   }, [previewAttributes, apiHost, clientKey, isReady, attr]);
 
-  const features = useMemo(() => {
-    if (isReady) {
-      const getFeaturesFromGrowthbook = Object.keys(growthbook.getFeatures()).map(item => ({
-        name: item,
-        type: typeof growthbook.getFeatures()[item].defaultValue === 'boolean' ? 'boolean' : 'value',
-      }));
-      return getFeaturesFromGrowthbook.reduce((previous, current) => {
-        return {
-          ...previous,
-          [current.name]: current.type === 'value' ? growthbook.getFeatureValue(current.name, undefined) : growthbook.isOn(current.name),
-        };
-      }, {});
-    }
-  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
-
-  const actions = useMemo(
-    () => ({
-      setAttributes: (attributes: Record<string, any>) => {
-        growthbook.setAttributes({
-          ...attributes,
-          ...previewAttributes,
-        });
-        setAttr(attributes);
-      },
-      setAttributeOverrides: (attributes: Record<string, any>) => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          ...attributes,
-          ...previewAttributes,
-        });
-        setAttr(attributes);
-      },
-    }),
-    [isReady, growthbook?.setAttributes],
-  );
-
   return (
     <GlobalActionsProvider contextName="GrowthbookGlobalContext" actions={actions}>
-      <DataProvider name="Growthbook" data={features}>
+      <DataProvider name="Growthbook" data={{ features, isReady, attributes: growthbook?.getAttributes() ?? {} }}>
         {children}
       </DataProvider>
     </GlobalActionsProvider>
