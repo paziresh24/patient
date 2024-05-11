@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { GrowthBook } from '@growthbook/growthbook-react';
 
@@ -15,38 +15,49 @@ export const GrowthbookGlobalContext = ({
   clientKey,
 }: React.PropsWithChildren<GrowthbookGlobalContextProps>) => {
   const [growthbook, setGrowthbook] = useState<any>();
+  const [isReady, setIsReady] = useState(false);
   const [attr, setAttr] = useState({});
 
-  useEffect(() => {
-    console.log(apiHost, clientKey);
-
-    if (apiHost && clientKey) {
-      setGrowthbook(
-        new GrowthBook({
-          apiHost,
-          clientKey,
-          enabled: true,
-        }),
-      );
-    }
+  useLayoutEffect(() => {
+    setGrowthbook(setupGrowthbook());
   }, [apiHost, clientKey]);
 
+  const setupGrowthbook = () => {
+    if (apiHost && clientKey) {
+      return new GrowthBook({
+        apiHost,
+        clientKey,
+        enabled: true,
+        subscribeToChanges: true,
+      });
+    }
+  };
+
   useEffect(() => {
-    growthbook?.loadFeatures?.({ autoRefresh: true });
-    if (growthbook?.ready) {
+    setIsReady(growthbook?.ready);
+
+    growthbook?.subscribe?.((sb: any) => {
+      if (growthbook?.ready) {
+        setIsReady(growthbook?.ready);
+      }
+    });
+  }, [growthbook?.ready]);
+
+  useEffect(() => {
+    if (isReady) {
       growthbook.setAttributes({
         ...previewAttributes,
       });
     }
-  }, [previewAttributes, growthbook?.ready]);
+  }, [previewAttributes, isReady]);
 
   useEffect(() => {
     growthbook?.refreshFeatures?.();
-    growthbook?.loadFeatures?.();
-  }, [apiHost, clientKey]);
+    growthbook?.loadFeatures?.({ autoRefresh: true });
+  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
 
   const features = useMemo(() => {
-    if (growthbook?.ready) {
+    if (isReady) {
       const getFeaturesFromGrowthbook = Object.keys(growthbook.getFeatures()).map(item => ({
         name: item,
         type: typeof growthbook.getFeatures()[item].defaultValue === 'boolean' ? 'boolean' : 'value',
@@ -58,7 +69,7 @@ export const GrowthbookGlobalContext = ({
         };
       }, {});
     }
-  }, [previewAttributes, apiHost, clientKey, growthbook?.ready, attr]);
+  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
 
   const actions = useMemo(
     () => ({
@@ -78,12 +89,12 @@ export const GrowthbookGlobalContext = ({
         setAttr(attributes);
       },
     }),
-    [growthbook?.ready, growthbook?.setAttributes],
+    [isReady, growthbook, growthbook?.setAttributes],
   );
 
   return (
     <GlobalActionsProvider contextName="GrowthbookGlobalContext" actions={actions}>
-      <DataProvider name="Growthbook" data={features}>
+      <DataProvider name="Growthbook" data={{ features, isReady, attributes: growthbook?.getAttributes() ?? {} }}>
         {children}
       </DataProvider>
     </GlobalActionsProvider>
