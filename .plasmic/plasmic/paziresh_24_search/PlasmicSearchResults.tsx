@@ -114,6 +114,7 @@ export type PlasmicSearchResults__OverridesType = {
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
   sideEffect?: Flex__<typeof SideEffect>;
+  setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
 };
@@ -314,14 +315,14 @@ function PlasmicSearchResults__RenderFunc(props: {
                   try {
                     return (() => {
                       if (
-                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
                           "search_result:show_first_free_time"
                         ] === "undefined"
                       ) {
                         return currentItem.actions;
                       }
                       if (
-                        !$ctx.Growthbook["theme-config"][
+                        !$ctx.Growthbook?.features?.["theme-config"]?.[
                           "search_result:show_first_free_time"
                         ]
                       ) {
@@ -412,13 +413,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                   try {
                     return (() => {
                       if (
-                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
                           "search_result:show_available_time"
                         ] === "undefined"
                       ) {
                         return currentItem.badges;
                       }
-                      return $ctx.Growthbook?.["theme-config"]?.[
+                      return $ctx.Growthbook?.features?.["theme-config"]?.[
                         "search_result:show_available_time"
                       ]
                         ? currentItem.badges
@@ -874,42 +875,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         onMount={async () => {
           const $steps = {};
 
-          $steps["setGrowthbookAttributes"] = true
-            ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          url: window.location.href
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return $globalActions[
-                  "GrowthbookGlobalContext.setAttributes"
-                ]?.apply(null, [...actionArgs.args]);
-              })()
-            : undefined;
-          if (
-            $steps["setGrowthbookAttributes"] != null &&
-            typeof $steps["setGrowthbookAttributes"] === "object" &&
-            typeof $steps["setGrowthbookAttributes"].then === "function"
-          ) {
-            $steps["setGrowthbookAttributes"] = await $steps[
-              "setGrowthbookAttributes"
-            ];
-          }
-
           $steps["sendClarityCustomTagsEventRunCode"] = true
             ? (() => {
                 const actionArgs = {
@@ -985,6 +950,64 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps[
                 "visibleShowMySearchPerformanceVisibilityByFetchUrl"
               ];
+          }
+        }}
+      />
+
+      <SideEffect
+        data-plasmic-name={"setGrowthbookAttributes"}
+        data-plasmic-override={overrides.setGrowthbookAttributes}
+        className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setGrowthbookAttributes"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          url: window.location.href
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttributes"] != null &&
+            typeof $steps["setGrowthbookAttributes"] === "object" &&
+            typeof $steps["setGrowthbookAttributes"].then === "function"
+          ) {
+            $steps["setGrowthbookAttributes"] = await $steps[
+              "setGrowthbookAttributes"
+            ];
           }
         }}
       />
@@ -1198,6 +1221,7 @@ const PlasmicDescendants = {
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
     "sideEffect",
+    "setGrowthbookAttributes",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks"
   ],
@@ -1207,6 +1231,7 @@ const PlasmicDescendants = {
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
   sideEffect: ["sideEffect"],
+  setGrowthbookAttributes: ["setGrowthbookAttributes"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
 } as const;
@@ -1221,6 +1246,7 @@ type NodeDefaultElementType = {
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
   sideEffect: typeof SideEffect;
+  setGrowthbookAttributes: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
 };
@@ -1293,6 +1319,7 @@ export const PlasmicSearchResults = Object.assign(
       "noResultsBlockVerticalStack"
     ),
     sideEffect: makeNodeComponent("sideEffect"),
+    setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
 
