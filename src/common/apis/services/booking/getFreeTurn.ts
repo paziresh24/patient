@@ -4,7 +4,6 @@ import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
 import { growthbook } from 'src/pages/_app';
-import axios from 'axios';
 
 interface Params {
   center_id: string;
@@ -16,7 +15,7 @@ interface Params {
 export const getFreeTurn = (params: Params) => {
   setTerminal();
   const endpoints = growthbook.getFeatureValue<Record<string, string>>('booking:api-endpoints', {});
-  return axios.post(
+  return clinicClient.post(
     endpoints?.first_time_available ?? '/api/getFreeTurn',
     formData({
       ...params,
