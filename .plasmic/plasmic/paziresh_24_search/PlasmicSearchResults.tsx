@@ -314,6 +314,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                   try {
                     return (() => {
                       if (
+                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                          "search_result:show_first_free_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.actions;
+                      }
+                      if (
                         !$ctx.Growthbook["theme-config"][
                           "search_result:show_first_free_time"
                         ]
@@ -404,7 +411,14 @@ function PlasmicSearchResults__RenderFunc(props: {
                 badges={(() => {
                   try {
                     return (() => {
-                      return $ctx.Growthbook["theme-config"][
+                      if (
+                        typeof $ctx.Growthbook?.["theme-config"]?.[
+                          "search_result:show_available_time"
+                        ] === "undefined"
+                      ) {
+                        return currentItem.badges;
+                      }
+                      return $ctx.Growthbook?.["theme-config"]?.[
                         "search_result:show_available_time"
                       ]
                         ? currentItem.badges
