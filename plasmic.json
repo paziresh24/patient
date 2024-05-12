@@ -618,7 +618,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -842,6 +843,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "5Lu5manJiJCz",
+          "name": "RateDetail",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicRateDetail.tsx",
+          "importSpec": {
+            "modulePath": "RateDetail.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicRateDetail.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -919,6 +933,12 @@
           "name": "Fragment",
           "displayName": "Fragment",
           "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "lWTHKw5gCzCj",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
         }
       ],
       "customFunctions": [
@@ -929,8 +949,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",

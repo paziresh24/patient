@@ -59,11 +59,13 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import RateDetail from "../../RateDetail"; // plasmic-import: 5Lu5manJiJCz/component
 import SetNweReview from "../../SetNweReview"; // plasmic-import: ZewL2B_Ktxrj/component
 import Select from "../../Select"; // plasmic-import: zIWWWwAA3-2B/component
 import TextInput from "../../TextInput"; // plasmic-import: iKLtt-X_YZoa/component
 import ReviewCard from "../../ReviewCard"; // plasmic-import: hjUuvN6lhrZV/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -115,6 +117,7 @@ export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReviewList__OverridesType = {
   root?: Flex__<"div">;
+  rateDetail?: Flex__<typeof RateDetail>;
   setNweReview?: Flex__<typeof SetNweReview>;
   filterInput?: Flex__<typeof Select>;
   sortInput?: Flex__<typeof Select>;
@@ -122,6 +125,7 @@ export type PlasmicReviewList__OverridesType = {
   cardLine?: Flex__<"div">;
   reviewCard?: Flex__<typeof ReviewCard>;
   button?: Flex__<typeof Button>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultReviewListProps {
@@ -179,6 +183,8 @@ function PlasmicReviewList__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const currentUser = useCurrentUser?.() || {};
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
@@ -227,6 +233,58 @@ function PlasmicReviewList__RenderFunc(props: {
         sty.root
       )}
     >
+      {(() => {
+        try {
+          return (
+            $ctx.Growthbook.features["show-centers-rate-for-doctor"] &&
+            $props.seo.slug === $ctx.auth?.info?.provider?.slug
+          );
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <div className={classNames(projectcss.all, sty.freeBox__xkVkB)}>
+          <RateDetail
+            data-plasmic-name={"rateDetail"}
+            data-plasmic-override={overrides.rateDetail}
+            centers={(() => {
+              try {
+                return $props.centers;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            className={classNames("__wab_instance", sty.rateDetail)}
+            slug={(() => {
+              try {
+                return $props.seo.slug;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          />
+
+          <div className={classNames(projectcss.all, sty.freeBox__zqtUq)} />
+        </div>
+      ) : null}
       <SetNweReview
         data-plasmic-name={"setNweReview"}
         data-plasmic-override={overrides.setNweReview}
@@ -350,12 +408,26 @@ function PlasmicReviewList__RenderFunc(props: {
             options={(() => {
               try {
                 return [
-                  { value: "all", label: "همه نظرات" },
+                  {
+                    value: "all",
+                    label: "همه نظرات"
+                  },
                   ...($ctx.auth.isLogin
-                    ? [{ value: "my_feedbacks", label: "نظرات من" }]
+                    ? [
+                        {
+                          value: "my_feedbacks",
+                          label: "نظرات من"
+                        }
+                      ]
                     : []),
-                  { value: "not_recommended", label: "نظرات منفی" },
-                  { value: "visited", label: "بیماران دارای نوبت" },
+                  {
+                    value: "not_recommended",
+                    label: "نظرات منفی"
+                  },
+                  {
+                    value: "visited",
+                    label: "بیماران دارای نوبت"
+                  },
                   ...$props.centers.map(center => ({
                     value: center.id,
                     label: center.name
@@ -1026,6 +1098,61 @@ function PlasmicReviewList__RenderFunc(props: {
           />
         </div>
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["invokeGlobalAction"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          slug: $props.seo.slug
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -1033,27 +1160,32 @@ function PlasmicReviewList__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "rateDetail",
     "setNweReview",
     "filterInput",
     "sortInput",
     "searchInput",
     "cardLine",
     "reviewCard",
-    "button"
+    "button",
+    "sideEffect"
   ],
+  rateDetail: ["rateDetail"],
   setNweReview: ["setNweReview"],
   filterInput: ["filterInput"],
   sortInput: ["sortInput"],
   searchInput: ["searchInput"],
   cardLine: ["cardLine", "reviewCard"],
   reviewCard: ["reviewCard"],
-  button: ["button"]
+  button: ["button"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  rateDetail: typeof RateDetail;
   setNweReview: typeof SetNweReview;
   filterInput: typeof Select;
   sortInput: typeof Select;
@@ -1061,6 +1193,7 @@ type NodeDefaultElementType = {
   cardLine: "div";
   reviewCard: typeof ReviewCard;
   button: typeof Button;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1123,6 +1256,7 @@ export const PlasmicReviewList = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    rateDetail: makeNodeComponent("rateDetail"),
     setNweReview: makeNodeComponent("setNweReview"),
     filterInput: makeNodeComponent("filterInput"),
     sortInput: makeNodeComponent("sortInput"),
@@ -1130,6 +1264,7 @@ export const PlasmicReviewList = Object.assign(
     cardLine: makeNodeComponent("cardLine"),
     reviewCard: makeNodeComponent("reviewCard"),
     button: makeNodeComponent("button"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicReviewList
     internalVariantProps: PlasmicReviewList__VariantProps,
