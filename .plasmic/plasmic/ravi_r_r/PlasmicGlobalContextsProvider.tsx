@@ -8,22 +8,30 @@ import * as React from "react";
 import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
 import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: Xco54Kekq-Th/codeComponent
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: I9xFO0-CXlvU/codeComponent
+import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: lWTHKw5gCzCj/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
+  >;
+  growthbookGlobalContextProps?: Partial<
+    Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
 }
 
 export default function GlobalContextsProvider(
   props: GlobalContextsProviderProps
 ) {
-  const { children, authGlobalContextProps, fragmentProps } = props;
+  const {
+    children,
+    authGlobalContextProps,
+    fragmentProps,
+    growthbookGlobalContextProps
+  } = props;
 
   return (
     <AuthGlobalContext
@@ -34,7 +42,31 @@ export default function GlobalContextsProvider(
           : undefined
       }
     >
-      <Fragment {...fragmentProps}>{children}</Fragment>
+      <Fragment {...fragmentProps}>
+        <GrowthbookGlobalContext
+          {...growthbookGlobalContextProps}
+          apiHost={
+            growthbookGlobalContextProps &&
+            "apiHost" in growthbookGlobalContextProps
+              ? growthbookGlobalContextProps.apiHost!
+              : "https://growthbook-api.paziresh24.com"
+          }
+          clientKey={
+            growthbookGlobalContextProps &&
+            "clientKey" in growthbookGlobalContextProps
+              ? growthbookGlobalContextProps.clientKey!
+              : "sdk-St1dBftdp07geqtD"
+          }
+          previewAttributes={
+            growthbookGlobalContextProps &&
+            "previewAttributes" in growthbookGlobalContextProps
+              ? growthbookGlobalContextProps.previewAttributes!
+              : undefined
+          }
+        >
+          {children}
+        </GrowthbookGlobalContext>
+      </Fragment>
     </AuthGlobalContext>
   );
 }

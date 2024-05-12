@@ -9,6 +9,34 @@
   background: #ffffff;
   min-width: 0;
 }
+.freeBox__xkVkB {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.rateDetail:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.freeBox__zqtUq {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 1px;
+  max-width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  min-width: 0;
+  flex-shrink: 0;
+}
 .setNweReview:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
@@ -237,4 +265,9 @@
   object-fit: cover;
   width: auto;
   height: 1em;
+}
+.sideEffect:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
 }
