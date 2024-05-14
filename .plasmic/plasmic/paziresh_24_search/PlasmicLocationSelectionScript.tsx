@@ -59,9 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
@@ -96,7 +96,6 @@ export const PlasmicLocationSelectionScript__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicLocationSelectionScript__OverridesType = {
   root?: Flex__<"div">;
-  jsFuncScripts?: Flex__<typeof Embed>;
   dialog?: Flex__<typeof Dialog>;
   text?: Flex__<"div">;
   freeBox?: Flex__<"div">;
@@ -195,15 +194,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         sty.root
       )}
     >
-      <Embed
-        data-plasmic-name={"jsFuncScripts"}
-        data-plasmic-override={overrides.jsFuncScripts}
-        className={classNames("__wab_instance", sty.jsFuncScripts)}
-        code={
-          "<script>\r\n// Define a reusable module for geolocation-based functionalities\r\nconst geoLocationUtils = {\r\n  // Checks the user's geolocation permission access\r\n  checkGeolocationAccess: function() {\r\n    return new Promise((resolve, reject) => {\r\n      // Check if the Geolocation API is supported\r\n      if (!navigator.geolocation) {\r\n        reject('Geolocation is not supported by your browser.');\r\n      } else if (!navigator.permissions) {\r\n        // Permissions API is not supported\r\n        reject('Permissions API is not supported by your browser.');\r\n      } else {\r\n        // Query for geolocation permission status\r\n        navigator.permissions.query({ name: 'geolocation' }).then(function(permissionStatus) {\r\n          resolve(permissionStatus.state);\r\n        }).catch(function(err) {\r\n          reject(err);\r\n        });\r\n      }\r\n    });\r\n  },\r\n\r\n  // Sets latitude and longitude parameters to the current URL\r\n  setLatLonToURL: function() {\r\n    navigator.geolocation.getCurrentPosition(function(position) {\r\n      // Construct the new URL with lat and lon parameters\r\n      const currentUrl = new URL(window.location.href);\r\n      const searchParams = currentUrl.searchParams;\r\n\r\n      // Update lat and lon parameters with the current position\r\n      searchParams.set('lat', position.coords.latitude);\r\n      searchParams.set('lon', position.coords.longitude);\r\n\r\n      // Navigate to the new URL\r\n      window.location.href = currentUrl.toString();\r\n    }, function(error) {\r\n      console.error(\"Error occurred: \", error.message);\r\n    }, {\r\n      maximumAge: 60000,\r\n      timeout: 5000,\r\n      enableHighAccuracy: true\r\n    });\r\n  }\r\n};\r\n\r\n// Usage examples\r\n// Check geolocation permission access\r\n// geoLocationUtils.checkGeolocationAccess().then(status => console.log(\"Permission status:\", status)).catch(err => console.error(err));\r\n\r\n// Set latitude and longitude to URL\r\n// Note: This function directly updates the URL and may cause the page to reload.\r\n// It's recommended to check the permission status before calling this function.\r\n// geoLocationUtils.setLatLonToURL();\r\n</script>\r\n"
-        }
-      />
-
       <Dialog
         data-plasmic-name={"dialog"}
         data-plasmic-override={overrides.dialog}
@@ -286,6 +276,62 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                         const actionArgs = {
                           customFunction: async () => {
                             return (() => {
+                              const geoLocationUtils = {
+                                checkGeolocationAccess: function () {
+                                  return new Promise((resolve, reject) => {
+                                    if (!navigator.geolocation) {
+                                      reject(
+                                        "Geolocation is not supported by your browser."
+                                      );
+                                    } else if (!navigator.permissions) {
+                                      reject(
+                                        "Permissions API is not supported by your browser."
+                                      );
+                                    } else {
+                                      navigator.permissions
+                                        .query({ name: "geolocation" })
+                                        .then(function (permissionStatus) {
+                                          resolve(permissionStatus.state);
+                                        })
+                                        .catch(function (err) {
+                                          reject(err);
+                                        });
+                                    }
+                                  });
+                                },
+                                setLatLonToURL: function () {
+                                  navigator.geolocation.getCurrentPosition(
+                                    function (position) {
+                                      const currentUrl = new URL(
+                                        window.location.href
+                                      );
+                                      const searchParams =
+                                        currentUrl.searchParams;
+                                      searchParams.set(
+                                        "lat",
+                                        position.coords.latitude
+                                      );
+                                      searchParams.set(
+                                        "lon",
+                                        position.coords.longitude
+                                      );
+                                      window.location.href =
+                                        currentUrl.toString();
+                                    },
+                                    function (error) {
+                                      console.error(
+                                        "Error occurred: ",
+                                        error.message
+                                      );
+                                    },
+                                    {
+                                      maximumAge: 60000,
+                                      timeout: 5000,
+                                      enableHighAccuracy: true
+                                    }
+                                  );
+                                }
+                              };
                               return geoLocationUtils
                                 .checkGeolocationAccess()
                                 .then(status => {
@@ -651,14 +697,16 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        clarity(
-                          "set",
-                          "fragment_component_load",
-                          "location selection script component loaded"
-                        );
-                        return console.log(
-                          "try to set clarity tag fragment_component_load to location selection script component loaded"
-                        );
+                        if ("clarity" in window) {
+                          clarity(
+                            "set",
+                            "fragment_component_load",
+                            "location selection script component loaded"
+                          );
+                          return console.log(
+                            "try to set clarity tag fragment_component_load to location selection script component loaded"
+                          );
+                        }
                       })();
                     }
                   };
@@ -687,7 +735,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "jsFuncScripts",
     "dialog",
     "text",
     "freeBox",
@@ -696,7 +743,6 @@ const PlasmicDescendants = {
     "locationSelectionScriptEmbed",
     "sideEffect"
   ],
-  jsFuncScripts: ["jsFuncScripts"],
   dialog: ["dialog", "text", "freeBox", "useMyLocation", "button"],
   text: ["text"],
   freeBox: ["freeBox", "useMyLocation", "button"],
@@ -710,7 +756,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  jsFuncScripts: typeof Embed;
   dialog: typeof Dialog;
   text: "div";
   freeBox: "div";
@@ -780,7 +825,6 @@ export const PlasmicLocationSelectionScript = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    jsFuncScripts: makeNodeComponent("jsFuncScripts"),
     dialog: makeNodeComponent("dialog"),
     text: makeNodeComponent("text"),
     freeBox: makeNodeComponent("freeBox"),
