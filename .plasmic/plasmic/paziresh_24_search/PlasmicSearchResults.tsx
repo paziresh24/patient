@@ -895,7 +895,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     (() => {
                       try {
                         return {
-                          url: "https://nobat.umsha.ac.ir/center/%DA%A9%D9%84%DB%8C%D9%86%DB%8C%DA%A9-%D8%AA%D8%AE%D8%B5%D8%B5%DB%8C-%D8%A7%D9%85%DB%8C%D8%AF/"
+                          url: window.location.href
                         };
                       } catch (e) {
                         if (
