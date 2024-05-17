@@ -182,12 +182,12 @@
   > img {
   margin-top: var(--token-fhaz6q6bl-fW);
 }
-.sideEffect:global(.__wab_instance) {
+.setGrowthbookAttributes:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;
 }
-.setGrowthbookAttributes:global(.__wab_instance) {
+.sideEffect:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;

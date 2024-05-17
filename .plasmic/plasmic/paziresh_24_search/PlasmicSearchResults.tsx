@@ -113,8 +113,8 @@ export type PlasmicSearchResults__OverridesType = {
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
-  sideEffect?: Flex__<typeof SideEffect>;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
+  sideEffect?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
 };
@@ -869,6 +869,64 @@ function PlasmicSearchResults__RenderFunc(props: {
         </Stack__>
       ) : null}
       <SideEffect
+        data-plasmic-name={"setGrowthbookAttributes"}
+        data-plasmic-override={overrides.setGrowthbookAttributes}
+        className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setGrowthbookAttributes"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          url: window.location.href
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttributes"] != null &&
+            typeof $steps["setGrowthbookAttributes"] === "object" &&
+            typeof $steps["setGrowthbookAttributes"].then === "function"
+          ) {
+            $steps["setGrowthbookAttributes"] = await $steps[
+              "setGrowthbookAttributes"
+            ];
+          }
+        }}
+      />
+
+      <SideEffect
         data-plasmic-name={"sideEffect"}
         data-plasmic-override={overrides.sideEffect}
         className={classNames("__wab_instance", sty.sideEffect)}
@@ -950,64 +1008,6 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps[
                 "visibleShowMySearchPerformanceVisibilityByFetchUrl"
               ];
-          }
-        }}
-      />
-
-      <SideEffect
-        data-plasmic-name={"setGrowthbookAttributes"}
-        data-plasmic-override={overrides.setGrowthbookAttributes}
-        className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
-        deps={(() => {
-          try {
-            return [$ctx.Growthbook.isReady];
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        onMount={async () => {
-          const $steps = {};
-
-          $steps["setGrowthbookAttributes"] = $ctx.Growthbook.isReady
-            ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          url: window.location.href
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return $globalActions[
-                  "GrowthbookGlobalContext.setAttributes"
-                ]?.apply(null, [...actionArgs.args]);
-              })()
-            : undefined;
-          if (
-            $steps["setGrowthbookAttributes"] != null &&
-            typeof $steps["setGrowthbookAttributes"] === "object" &&
-            typeof $steps["setGrowthbookAttributes"].then === "function"
-          ) {
-            $steps["setGrowthbookAttributes"] = await $steps[
-              "setGrowthbookAttributes"
-            ];
           }
         }}
       />
@@ -1220,8 +1220,8 @@ const PlasmicDescendants = {
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
-    "sideEffect",
     "setGrowthbookAttributes",
+    "sideEffect",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks"
   ],
@@ -1230,8 +1230,8 @@ const PlasmicDescendants = {
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
-  sideEffect: ["sideEffect"],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
+  sideEffect: ["sideEffect"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
 } as const;
@@ -1245,8 +1245,8 @@ type NodeDefaultElementType = {
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
-  sideEffect: typeof SideEffect;
   setGrowthbookAttributes: typeof SideEffect;
+  sideEffect: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
 };
@@ -1318,8 +1318,8 @@ export const PlasmicSearchResults = Object.assign(
     noResultsBlockVerticalStack: makeNodeComponent(
       "noResultsBlockVerticalStack"
     ),
-    sideEffect: makeNodeComponent("sideEffect"),
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
+    sideEffect: makeNodeComponent("sideEffect"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
 
