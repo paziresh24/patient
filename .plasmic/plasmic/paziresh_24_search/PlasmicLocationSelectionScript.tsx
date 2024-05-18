@@ -625,14 +625,52 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                                 result.state
                               );
                               if (result.state === "granted") {
-                                callback(true);
+                                navigator.geolocation.getCurrentPosition(
+                                  function (position) {
+                                    const queryParams = new URLSearchParams(
+                                      window.location.search
+                                    );
+                                    if (
+                                      !queryParams.has("lat") &&
+                                      !queryParams.has("lon")
+                                    ) {
+                                      queryParams.set(
+                                        "lat",
+                                        position.coords.latitude
+                                      );
+                                      queryParams.set(
+                                        "lon",
+                                        position.coords.longitude
+                                      );
+                                      const newUrl = `${
+                                        window.location.pathname
+                                      }?${queryParams.toString()}`;
+                                      console.log(
+                                        `[checkGeolocationPermission] URL with coordinates: ${newUrl}`
+                                      );
+                                      callback(true, newUrl);
+                                    } else {
+                                      console.log(
+                                        "[checkGeolocationPermission] Coordinates already present in URL, no changes made."
+                                      );
+                                      callback(true);
+                                    }
+                                  },
+                                  function (error) {
+                                    console.log(
+                                      `[checkGeolocationPermission] Error obtaining geolocation: ${error.message}`
+                                    );
+                                    callback(false);
+                                  }
+                                );
                               } else {
                                 callback(false);
                               }
                             })
-                            .catch(function () {
+                            .catch(function (error) {
                               console.log(
-                                "[checkGeolocationPermission] Error checking geolocation permission."
+                                "[checkGeolocationPermission] Error checking geolocation permission:",
+                                error
                               );
                               callback(false);
                             });
@@ -649,7 +687,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                               "[checkConditionsAndOpenDialog] Cookie is not 'denied', checking geolocation permission..."
                             );
                             checkGeolocationPermission(function (
-                              hasPermissionOrSupported
+                              hasPermissionOrSupported,
+                              url
                             ) {
                               console.log(
                                 `[checkGeolocationPermission Callback] hasPermissionOrSupported:`,
@@ -660,9 +699,15 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                                   "[checkConditionsAndOpenDialog] Permission not granted or not supported, opening dialog..."
                                 );
                                 $state.dialog.open = true;
+                              } else if (url) {
+                                console.log(
+                                  "[checkConditionsAndOpenDialog] Permission granted, URL with lat and lon:",
+                                  url
+                                );
+                                window.location.href = url;
                               } else {
                                 console.log(
-                                  "[checkConditionsAndOpenDialog] Permission granted, not opening dialog."
+                                  "[checkConditionsAndOpenDialog] No update to URL required."
                                 );
                               }
                             });
