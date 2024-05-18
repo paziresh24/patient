@@ -52,6 +52,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
+import useFcmToken from '@/firebase/useFcmToken';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -109,6 +110,7 @@ const Receipt = () => {
     currentTime: serverTime?.data?.data?.data.timestamp,
     timestamp: bookDetailsData.book_time,
   });
+  const { register: registerFCM } = useFcmToken();
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const {
     display_name,
@@ -155,7 +157,7 @@ const Receipt = () => {
           Notification.requestPermission().then(() => {
             handleCloseNotificationGrantAccses();
           });
-          firebaseCloudMessaging.init(user?.id ?? '');
+          registerFCM();
         }, 8000);
       }
     }

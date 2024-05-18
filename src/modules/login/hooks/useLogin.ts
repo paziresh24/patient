@@ -12,6 +12,7 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
+import useFcmToken from '@/firebase/useFcmToken';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
@@ -22,6 +23,7 @@ export const useLogin = () => {
   const getProvider = useProviders();
   const university = useCustomize(state => state.customize?.partnerKey);
   const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
+  const { register: registerFCM } = useFcmToken();
 
   const handleLogin = async ({ username, password }: { username: string; password: string }) => {
     try {
@@ -52,7 +54,7 @@ export const useLogin = () => {
         const shouldUseWebPushNotification = newApiFeatureFlaggingCondition(webPushNotificationUserList.ids, userData?.id);
 
         if (isPWA() || shouldUseWebPushNotification) {
-          firebaseCloudMessaging.init(userData?.id ?? '');
+          registerFCM();
         }
 
         return Promise.resolve({ image: imageData?.result?.image, provider: providerData, ...userData });

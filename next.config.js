@@ -10,6 +10,7 @@ const withPWA = require('next-pwa')({
   disable: !isProduction,
   dest: 'public',
   register: true,
+  scope: '/app',
   runtimeCaching,
 });
 
