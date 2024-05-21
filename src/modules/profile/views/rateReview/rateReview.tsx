@@ -83,7 +83,6 @@ export const RateReview = (props: RateReviewProps) => {
   const { isLoading, rateSearch, rateSortFilter, rateFilterType, showMore, showMoreButtonLoading, message } = useGetFeedbackData({
     doctor_id: doctor.id,
     server_id: serverId,
-    order_by: 'created_at',
   });
   const toggleLike = useFeedbackDataStore(state => state.toggleLike);
   const { rateSplunkEvent } = useProfileSplunkEvent();
@@ -95,8 +94,8 @@ export const RateReview = (props: RateReviewProps) => {
     value: 'all',
   });
   const [rateSort, setRateSort] = useState<{ label: string; value: 'default_order' | 'like' | 'created_at' }>({
-    label: 'جدیدترین نظر',
-    value: 'created_at',
+    label: 'مرتبط‌ترین نظر',
+    value: 'default_order',
   });
   const { isLogin, userInfo } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
