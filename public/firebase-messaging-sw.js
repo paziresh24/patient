@@ -29,22 +29,22 @@ const isUrl = url => {
 };
 
 localSelf.addEventListener('notificationclick', async function (event) {
-  fetch(`https://p24splk.paziresh24.com/services/collector`, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Splunk f4fd4b50-fe90-48f3-a1ab-5a5070140318',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sourcetype: '_json',
-      event: {
-        event_group: 'notification',
-        event_type: 'click',
-        message_id: event.notification.data.messageId,
-        distention: event.action ? event.action : event.notification.data.url,
+  try {
+    fetch(`https://apigw.paziresh24.com/v1/notification/log`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    }),
-  });
+      body: JSON.stringify({
+        action: 'click',
+        message_id: event.notification.data.messageId,
+        user_id: event.notification.data.userId,
+        distention: event.action ? event.action : event.notification.data.url,
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   event.notification.close();
 
@@ -78,19 +78,15 @@ localSelf.addEventListener('push', event => {
   let messageId = JSON.parse(response).fcmMessageId;
 
   try {
-    fetch(`https://p24splk.paziresh24.com/services/collector`, {
+    fetch(`https://apigw.paziresh24.com/v1/notification/log`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Splunk f4fd4b50-fe90-48f3-a1ab-5a5070140318',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        sourcetype: '_json',
-        event: {
-          event_group: 'notification',
-          event_type: 'received',
-          message_id: messageId,
-        },
+        action: 'received',
+        message_id: messageId,
+        user_id: JSON.parse(response).data.user_id,
       }),
     });
   } catch (error) {
@@ -107,6 +103,7 @@ localSelf.addEventListener('push', event => {
     data: {
       url: url ? url : 'https://www.paziresh24.com/apphome',
       messageId: messageId,
+      userId: JSON.parse(response).data.user_id,
     },
   };
 
