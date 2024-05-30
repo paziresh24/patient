@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicButton,
   DefaultButtonProps
-} from "./plasmic/paziresh_24/PlasmicButton";
+} from "./plasmic/ravi_r_r/PlasmicButton";
 
 import {
   ButtonRef,
