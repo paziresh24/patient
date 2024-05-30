@@ -62,9 +62,9 @@ import {
 import { Popover } from "@plasmicpkgs/radix-ui";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
 import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
@@ -102,6 +102,7 @@ export const PlasmicReviewCard__VariantProps = new Array<VariantPropType>();
 export type PlasmicReviewCard__ArgsType = {
   userName?: string;
   visitedTag?: boolean;
+  userProfile?: string;
   setTime?: string;
   docCenter?: string;
   recommended?: boolean;
@@ -119,6 +120,7 @@ type ArgPropType = keyof PlasmicReviewCard__ArgsType;
 export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
   "userName",
   "visitedTag",
+  "userProfile",
   "setTime",
   "docCenter",
   "recommended",
@@ -140,7 +142,6 @@ export type PlasmicReviewCard__OverridesType = {
   edditTextBox?: Flex__<"textarea">;
   dialog4?: Flex__<typeof Dialog>;
   نامتتارخ?: Flex__<"div">;
-  userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
   chip?: Flex__<typeof Chip>;
   متننظر?: Flex__<"div">;
@@ -157,6 +158,7 @@ export type PlasmicReviewCard__OverridesType = {
 export interface DefaultReviewCardProps {
   userName?: string;
   visitedTag?: boolean;
+  userProfile?: string;
   setTime?: string;
   docCenter?: string;
   recommended?: boolean;
@@ -435,348 +437,328 @@ function PlasmicReviewCard__RenderFunc(props: {
                 }
               </div>
             </Stack__>
-            {(() => {
-              try {
-                return true;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__khS3Q)}
-              >
-                {(() => {
-                  try {
-                    return (
-                      $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__khS3Q)}
+            >
+              {(() => {
+                try {
+                  return (
+                    $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
                   }
-                })() ? (
-                  <Dialog
-                    data-plasmic-name={"dialog3"}
-                    data-plasmic-override={overrides.dialog3}
-                    body={
-                      <React.Fragment>
-                        <textarea
-                          data-plasmic-name={"edditTextBox"}
-                          data-plasmic-override={overrides.edditTextBox}
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.textarea,
-                            sty.edditTextBox
-                          )}
-                          onChange={e => {
-                            generateStateOnChangeProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ])(e.target.value);
-                          }}
-                          placeholder={``}
-                          ref={ref => {
-                            $refs["edditTextBox"] = ref;
-                          }}
-                          value={
-                            generateStateValueProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ]) ?? ""
-                          }
-                        />
-
-                        <Button
-                          children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                          className={classNames(
-                            "__wab_instance",
-                            sty.button__nsoe4
-                          )}
-                          endIcon={
-                            <ChevronLeftIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg__mTUf0
-                              )}
-                              role={"img"}
-                            />
-                          }
-                          loading={(() => {
-                            try {
-                              return $state.editLoadingButton;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["loading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: true
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["loading"] != null &&
-                              typeof $steps["loading"] === "object" &&
-                              typeof $steps["loading"].then === "function"
-                            ) {
-                              $steps["loading"] = await $steps["loading"];
-                            }
-
-                            $steps["request"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return fetch(
-                                        "https://apigw.paziresh24.com/v1/feedbacks/" +
-                                          $props.feedbackId +
-                                          "/",
-                                        {
-                                          headers: {
-                                            "Content-Type": "application/json"
-                                          },
-                                          method: "PATCH",
-                                          body: JSON.stringify({
-                                            description:
-                                              $state.edditTextBox.value,
-                                            like: $props.recommended
-                                          }),
-                                          credentials: "include"
-                                        }
-                                      );
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["request"] != null &&
-                              typeof $steps["request"] === "object" &&
-                              typeof $steps["request"].then === "function"
-                            ) {
-                              $steps["request"] = await $steps["request"];
-                            }
-
-                            $steps["offLoading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: false
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["offLoading"] != null &&
-                              typeof $steps["offLoading"] === "object" &&
-                              typeof $steps["offLoading"].then === "function"
-                            ) {
-                              $steps["offLoading"] = await $steps["offLoading"];
-                            }
-
-                            $steps["toast"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    args: [
-                                      undefined,
-                                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                      "top-right",
-                                      4999
-                                    ]
-                                  };
-                                  return $globalActions[
-                                    "Fragment.showToast"
-                                  ]?.apply(null, [...actionArgs.args]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["toast"] != null &&
-                              typeof $steps["toast"] === "object" &&
-                              typeof $steps["toast"].then === "function"
-                            ) {
-                              $steps["toast"] = await $steps["toast"];
-                            }
-
-                            $steps["close"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["dialog3", "open"]
-                                    },
-                                    operation: 4
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    const oldValue = $stateGet(
-                                      objRoot,
-                                      variablePath
-                                    );
-                                    $stateSet(objRoot, variablePath, !oldValue);
-                                    return !oldValue;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["close"] != null &&
-                              typeof $steps["close"] === "object" &&
-                              typeof $steps["close"].then === "function"
-                            ) {
-                              $steps["close"] = await $steps["close"];
-                            }
-
-                            $steps["splunk"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId,
-                                          edit_text: $state.edditTextBox.value
-                                        },
-                                        type: "edit_comment",
-                                        token:
-                                          "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["splunk"] != null &&
-                              typeof $steps["splunk"] === "object" &&
-                              typeof $steps["splunk"].then === "function"
-                            ) {
-                              $steps["splunk"] = await $steps["splunk"];
-                            }
-                          }}
-                          startIcon={
-                            <ChevronRightIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg__p4Ytw
-                              )}
-                              role={"img"}
-                            />
-                          }
-                        />
-                      </React.Fragment>
-                    }
-                    className={classNames("__wab_instance", sty.dialog3)}
-                    onOpenChange={generateStateOnChangeProp($state, [
-                      "dialog3",
-                      "open"
-                    ])}
-                    open={generateStateValueProp($state, ["dialog3", "open"])}
-                    title={
-                      "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
-                    }
-                    trigger={
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
+                  throw e;
+                }
+              })() ? (
+                <Dialog
+                  data-plasmic-name={"dialog3"}
+                  data-plasmic-override={overrides.dialog3}
+                  body={
+                    <React.Fragment>
+                      <textarea
+                        data-plasmic-name={"edditTextBox"}
+                        data-plasmic-override={overrides.edditTextBox}
                         className={classNames(
                           projectcss.all,
-                          sty.freeBox__gt7U
+                          projectcss.textarea,
+                          sty.edditTextBox
+                        )}
+                        onChange={e => {
+                          generateStateOnChangeProp($state, [
+                            "edditTextBox",
+                            "value"
+                          ])(e.target.value);
+                        }}
+                        placeholder={``}
+                        ref={ref => {
+                          $refs["edditTextBox"] = ref;
+                        }}
+                        value={
+                          generateStateValueProp($state, [
+                            "edditTextBox",
+                            "value"
+                          ]) ?? ""
+                        }
+                      />
+
+                      <Button
+                        children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.button__nsoe4
+                        )}
+                        endIcon={
+                          <ChevronLeftIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__mTUf0
+                            )}
+                            role={"img"}
+                          />
+                        }
+                        loading={(() => {
+                          try {
+                            return $state.editLoadingButton;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["loading"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["editLoadingButton"]
+                                  },
+                                  operation: 0,
+                                  value: true
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["loading"] != null &&
+                            typeof $steps["loading"] === "object" &&
+                            typeof $steps["loading"].then === "function"
+                          ) {
+                            $steps["loading"] = await $steps["loading"];
+                          }
+
+                          $steps["request"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return fetch(
+                                      "https://apigw.paziresh24.com/v1/feedbacks/" +
+                                        $props.feedbackId +
+                                        "/",
+                                      {
+                                        headers: {
+                                          "Content-Type": "application/json"
+                                        },
+                                        method: "PATCH",
+                                        body: JSON.stringify({
+                                          description:
+                                            $state.edditTextBox.value,
+                                          like: $props.recommended
+                                        }),
+                                        credentials: "include"
+                                      }
+                                    );
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["request"] != null &&
+                            typeof $steps["request"] === "object" &&
+                            typeof $steps["request"].then === "function"
+                          ) {
+                            $steps["request"] = await $steps["request"];
+                          }
+
+                          $steps["offLoading"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["editLoadingButton"]
+                                  },
+                                  operation: 0,
+                                  value: false
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["offLoading"] != null &&
+                            typeof $steps["offLoading"] === "object" &&
+                            typeof $steps["offLoading"].then === "function"
+                          ) {
+                            $steps["offLoading"] = await $steps["offLoading"];
+                          }
+
+                          $steps["toast"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    undefined,
+                                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                    "top-right",
+                                    4999
+                                  ]
+                                };
+                                return $globalActions[
+                                  "Fragment.showToast"
+                                ]?.apply(null, [...actionArgs.args]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["toast"] != null &&
+                            typeof $steps["toast"] === "object" &&
+                            typeof $steps["toast"].then === "function"
+                          ) {
+                            $steps["toast"] = await $steps["toast"];
+                          }
+
+                          $steps["close"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["dialog3", "open"]
+                                  },
+                                  operation: 4
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  const oldValue = $stateGet(
+                                    objRoot,
+                                    variablePath
+                                  );
+                                  $stateSet(objRoot, variablePath, !oldValue);
+                                  return !oldValue;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["close"] != null &&
+                            typeof $steps["close"] === "object" &&
+                            typeof $steps["close"].then === "function"
+                          ) {
+                            $steps["close"] = await $steps["close"];
+                          }
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return $$.splunkEvent({
+                                      group: "feedback",
+                                      data: {
+                                        doctor_id: $props.doctorId,
+                                        comment_id: $props.feedbackId,
+                                        edit_text: $state.edditTextBox.value
+                                      },
+                                      type: "edit_comment",
+                                      token:
+                                        "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+                        }}
+                        startIcon={
+                          <ChevronRightIcon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg__p4Ytw
+                            )}
+                            role={"img"}
+                          />
+                        }
+                      />
+                    </React.Fragment>
+                  }
+                  className={classNames("__wab_instance", sty.dialog3)}
+                  onOpenChange={generateStateOnChangeProp($state, [
+                    "dialog3",
+                    "open"
+                  ])}
+                  open={generateStateValueProp($state, ["dialog3", "open"])}
+                  title={
+                    "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
+                  }
+                  trigger={
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__gt7U)}
+                    >
+                      <Icon3Icon
+                        className={classNames(projectcss.all, sty.svg___8ZJpu)}
+                        role={"img"}
+                      />
+
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__ttly5
                         )}
                       >
-                        <Icon3Icon
-                          className={classNames(
-                            projectcss.all,
-                            sty.svg___8ZJpu
-                          )}
-                          role={"img"}
-                        />
-
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__ttly5
-                          )}
-                        >
-                          {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                        </div>
-                      </Stack__>
-                    }
-                  />
-                ) : null}
-              </Stack__>
-            ) : null}
+                        {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                      </div>
+                    </Stack__>
+                  }
+                />
+              ) : null}
+            </Stack__>
             {(() => {
               try {
                 return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
@@ -1231,51 +1213,13 @@ function PlasmicReviewCard__RenderFunc(props: {
             }
           }}
         >
-          <DataFetcher
-            className={classNames(
-              "__wab_instance",
-              sty.httpRestApiFetcher__eXJp
-            )}
-            dataName={"fetchedData"}
-            errorDisplay={
-              <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
-            }
-            errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
-            loadingDisplay={
-              <DataCtxReader__>
-                {$ctx => (
-                  <Avatar
-                    data-plasmic-name={"userAvatar2"}
-                    data-plasmic-override={overrides.userAvatar2}
-                    className={classNames("__wab_instance", sty.userAvatar2)}
-                    name={(() => {
-                      try {
-                        return $props.userName;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    src={``}
-                  />
-                )}
-              </DataCtxReader__>
-            }
-            method={"GET"}
-            noLayout={false}
-            previewSpinner={true}
-            url={(() => {
+          <Avatar
+            data-plasmic-name={"userAvatar"}
+            data-plasmic-override={overrides.userAvatar}
+            className={classNames("__wab_instance", sty.userAvatar)}
+            name={(() => {
               try {
-                return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
+                return $props.userName;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -1286,43 +1230,20 @@ function PlasmicReviewCard__RenderFunc(props: {
                 throw e;
               }
             })()}
-          >
-            <DataCtxReader__>
-              {$ctx => (
-                <Avatar
-                  data-plasmic-name={"userAvatar"}
-                  data-plasmic-override={overrides.userAvatar}
-                  className={classNames("__wab_instance", sty.userAvatar)}
-                  name={(() => {
-                    try {
-                      return $props.userName;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  src={(() => {
-                    try {
-                      return $ctx.fetchedData.data.image_url;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-              )}
-            </DataCtxReader__>
-          </DataFetcher>
+            src={(() => {
+              try {
+                return $props.userProfile;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          />
         </div>
         <Stack__
           as={"div"}
@@ -1800,273 +1721,257 @@ function PlasmicReviewCard__RenderFunc(props: {
         hasGap={true}
         className={classNames(projectcss.all, sty.لارورت)}
       >
-        {(() => {
-          try {
-            return true;
-          } catch (e) {
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__qhLa0)}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["updateIsLike"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["isLike"]
+                    },
+                    operation: 4
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    const oldValue = $stateGet(objRoot, variablePath);
+                    $stateSet(objRoot, variablePath, !oldValue);
+                    return !oldValue;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
             if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
+              $steps["updateIsLike"] != null &&
+              typeof $steps["updateIsLike"] === "object" &&
+              typeof $steps["updateIsLike"].then === "function"
             ) {
-              return true;
+              $steps["updateIsLike"] = await $steps["updateIsLike"];
             }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__qhLa0)}
-            onClick={async event => {
-              const $steps = {};
 
-              $steps["updateIsLike"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["isLike"]
-                      },
-                      operation: 4
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+            $steps["runCode"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        const formData = new FormData();
+                        formData.append("feedback_id", $props.feedbackId);
+                        return fetch(
+                          "https://www.paziresh24.com/api/likeOrDislikeFeedback/",
+                          {
+                            method: "POST",
+                            body: formData,
+                            credentials: "include"
+                          }
+                        );
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
 
-                      const oldValue = $stateGet(objRoot, variablePath);
-                      $stateSet(objRoot, variablePath, !oldValue);
-                      return !oldValue;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateIsLike"] != null &&
-                typeof $steps["updateIsLike"] === "object" &&
-                typeof $steps["updateIsLike"].then === "function"
-              ) {
-                $steps["updateIsLike"] = await $steps["updateIsLike"];
-              }
-
-              $steps["runCode"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return (() => {
-                          const formData = new FormData();
-                          formData.append("feedback_id", $props.feedbackId);
-                          return fetch(
-                            "https://www.paziresh24.com/api/likeOrDislikeFeedback/",
-                            {
-                              method: "POST",
-                              body: formData,
-                              credentials: "include"
-                            }
+            $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        if ($state.isLike) {
+                          const likedComment = {
+                            user_id: $ctx.auth.info.id,
+                            id: $props.feedbackId
+                          };
+                          const likedCommentsList =
+                            JSON.parse(localStorage.getItem("likedComments")) ||
+                            [];
+                          likedCommentsList.push(likedComment);
+                          localStorage.setItem(
+                            "likedComments",
+                            JSON.stringify(likedCommentsList)
                           );
-                        })();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runCode"] != null &&
-                typeof $steps["runCode"] === "object" &&
-                typeof $steps["runCode"].then === "function"
-              ) {
-                $steps["runCode"] = await $steps["runCode"];
-              }
-
-              $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return (() => {
-                          if ($state.isLike) {
-                            const likedComment = {
-                              user_id: $ctx.auth.info.id,
-                              id: $props.feedbackId
-                            };
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            likedCommentsList.push(likedComment);
-                            localStorage.setItem(
+                        }
+                        if (!$state.isLike) {
+                          const likedCommentsList =
+                            JSON.parse(localStorage.getItem("likedComments")) ||
+                            [];
+                          const index = likedCommentsList.findIndex(
+                            comment =>
+                              comment.id === $props.feedbackId &&
+                              comment.user_id === $ctx.auth.info.id
+                          );
+                          if (index !== -1) {
+                            likedCommentsList.splice(index, 1);
+                            return localStorage.setItem(
                               "likedComments",
                               JSON.stringify(likedCommentsList)
                             );
                           }
-                          if (!$state.isLike) {
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            const index = likedCommentsList.findIndex(
-                              comment =>
-                                comment.id === $props.feedbackId &&
-                                comment.user_id === $ctx.auth.info.id
-                            );
-                            if (index !== -1) {
-                              likedCommentsList.splice(index, 1);
-                              return localStorage.setItem(
-                                "likedComments",
-                                JSON.stringify(likedCommentsList)
-                              );
-                            }
-                          }
-                        })();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["saveInLocalStoreg"] != null &&
-                typeof $steps["saveInLocalStoreg"] === "object" &&
-                typeof $steps["saveInLocalStoreg"].then === "function"
-              ) {
-                $steps["saveInLocalStoreg"] = await $steps["saveInLocalStoreg"];
-              }
-
-              $steps["ifLogin"] =
-                $ctx.auth.isLogin == false
-                  ? (() => {
-                      const actionArgs = { args: [] };
-                      return $globalActions["AuthGlobalContext.login"]?.apply(
-                        null,
-                        [...actionArgs.args]
-                      );
-                    })()
-                  : undefined;
-              if (
-                $steps["ifLogin"] != null &&
-                typeof $steps["ifLogin"] === "object" &&
-                typeof $steps["ifLogin"].then === "function"
-              ) {
-                $steps["ifLogin"] = await $steps["ifLogin"];
-              }
-
-              $steps["splunk"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            comment_id: $props.feedbackId,
-                            doc_center: $props.docCenter
-                          },
-                          type: "like_comment",
-                          token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["splunk"] != null &&
-                typeof $steps["splunk"] === "object" &&
-                typeof $steps["splunk"].then === "function"
-              ) {
-                $steps["splunk"] = await $steps["splunk"];
-              }
-            }}
-          >
-            {(() => {
-              try {
-                return +$props.like !== 0 || $state.isLike;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__zTaJf
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $state.isLike
-                        ? Number($props.like) + 1
-                        : $props.like;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "2";
-                      }
-                      throw e;
+                        }
+                      })();
                     }
-                  })()}
-                </React.Fragment>
-              </div>
-            ) : null}
-            {(() => {
-              try {
-                return !$state.isLike;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["saveInLocalStoreg"] != null &&
+              typeof $steps["saveInLocalStoreg"] === "object" &&
+              typeof $steps["saveInLocalStoreg"].then === "function"
+            ) {
+              $steps["saveInLocalStoreg"] = await $steps["saveInLocalStoreg"];
+            }
+
+            $steps["ifLogin"] =
+              $ctx.auth.isLogin == false
+                ? (() => {
+                    const actionArgs = { args: [] };
+                    return $globalActions["AuthGlobalContext.login"]?.apply(
+                      null,
+                      [...actionArgs.args]
+                    );
+                  })()
+                : undefined;
+            if (
+              $steps["ifLogin"] != null &&
+              typeof $steps["ifLogin"] === "object" &&
+              typeof $steps["ifLogin"].then === "function"
+            ) {
+              $steps["ifLogin"] = await $steps["ifLogin"];
+            }
+
+            $steps["splunk"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          comment_id: $props.feedbackId,
+                          doc_center: $props.docCenter
+                        },
+                        type: "like_comment",
+                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["splunk"] != null &&
+              typeof $steps["splunk"] === "object" &&
+              typeof $steps["splunk"].then === "function"
+            ) {
+              $steps["splunk"] = await $steps["splunk"];
+            }
+          }}
+        >
+          {(() => {
+            try {
+              return +$props.like !== 0 || $state.isLike;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
               }
-            })() ? (
-              <HeartIcon
-                className={classNames(projectcss.all, sty.svg__lsG2C)}
-                role={"img"}
-              />
-            ) : null}
-            {(() => {
-              try {
-                return $state.isLike == true;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <BoldheartIcon
-                className={classNames(projectcss.all, sty.svg__sdFgJ)}
-                role={"img"}
-              />
-            ) : null}
+              throw e;
+            }
+          })() ? (
             <div
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text__dw8Rz
+                sty.text__zTaJf
               )}
             >
-              {"\u067e\u0633\u0646\u062f\u06cc\u062f\u0646"}
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $state.isLike
+                      ? Number($props.like) + 1
+                      : $props.like;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "2";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
             </div>
-          </Stack__>
-        ) : null}
+          ) : null}
+          {(() => {
+            try {
+              return !$state.isLike;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <HeartIcon
+              className={classNames(projectcss.all, sty.svg__lsG2C)}
+              role={"img"}
+            />
+          ) : null}
+          {(() => {
+            try {
+              return $state.isLike == true;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <BoldheartIcon
+              className={classNames(projectcss.all, sty.svg__sdFgJ)}
+              role={"img"}
+            />
+          ) : null}
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__dw8Rz
+            )}
+          >
+            {"\u067e\u0633\u0646\u062f\u06cc\u062f\u0646"}
+          </div>
+        </Stack__>
         <Dialog
           data-plasmic-name={"dialog"}
           data-plasmic-override={overrides.dialog}
@@ -2675,7 +2580,6 @@ const PlasmicDescendants = {
     "edditTextBox",
     "dialog4",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
-    "userAvatar2",
     "userAvatar",
     "chip",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
@@ -2699,11 +2603,9 @@ const PlasmicDescendants = {
   dialog4: ["dialog4"],
   نامتتارخ: [
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
-    "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"],
   chip: ["chip"],
   متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
@@ -2729,7 +2631,6 @@ type NodeDefaultElementType = {
   edditTextBox: "textarea";
   dialog4: typeof Dialog;
   نامتتارخ: "div";
-  userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
   chip: typeof Chip;
   متننظر: "div";
@@ -2814,7 +2715,6 @@ export const PlasmicReviewCard = Object.assign(
     نامتتارخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),
-    userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
     chip: makeNodeComponent("chip"),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
