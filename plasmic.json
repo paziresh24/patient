@@ -75,7 +75,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -306,7 +307,8 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -328,7 +330,8 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -615,7 +618,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -643,7 +647,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -827,19 +832,6 @@
           "componentType": "component"
         },
         {
-          "id": "WD65zwC-xphy",
-          "name": "TestReviewCard",
-          "type": "managed",
-          "projectId": "qQzsBf58SqzNJX45iggq96",
-          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.tsx",
-          "importSpec": {
-            "modulePath": "TestReviewCard.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_r_r/PlasmicTestReviewCard.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "5Lu5manJiJCz",
           "name": "RateDetail",
           "type": "managed",
@@ -898,6 +890,31 @@
           "id": "nlR9y6ohoS5X",
           "name": "Icon5Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "akGRTYC0thH7",
+          "name": "ChevronRightIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronRight.tsx"
+        },
+        {
+          "id": "-yGK2JldWT9H",
+          "name": "Icon6Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon6.tsx"
+        },
+        {
+          "id": "3S9ovymdKllD",
+          "name": "Icon7Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon7.tsx"
+        },
+        {
+          "id": "pKTKEaidghzh",
+          "name": "Icon8Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon8.tsx"
+        },
+        {
+          "id": "w3lyhfOz3zQI",
+          "name": "Icon9Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon9.tsx"
         }
       ],
       "images": [],
@@ -944,8 +961,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
