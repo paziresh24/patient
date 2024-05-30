@@ -205,7 +205,7 @@ function PlasmicReviewList__RenderFunc(props: {
         path: "sortInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "created_at"
+        initFunc: ({ $props, $state, $queries, $ctx }) => "default_order"
       }
     ],
     [$props, $ctx, $refs]
@@ -523,15 +523,19 @@ function PlasmicReviewList__RenderFunc(props: {
             }}
             options={(() => {
               const __composite = [
+                { value: null, label: null },
                 { label: null, value: null },
                 { label: null, value: null }
               ];
+              __composite["0"]["value"] = "default_order";
               __composite["0"]["label"] =
-                "\u062c\u062f\u06cc\u062f \u062a\u0631\u06cc\u0646";
-              __composite["0"]["value"] = "created_at";
+                "\u0645\u0631\u062a\u0628\u0637 \u062a\u0631\u06cc\u0646";
               __composite["1"]["label"] =
                 "\u0645\u062d\u0628\u0648\u0628 \u062a\u0631\u06cc\u0646";
               __composite["1"]["value"] = "count_like";
+              __composite["2"]["label"] =
+                "\u062c\u062f\u06cc\u062f \u062a\u0631\u06cc\u0646";
+              __composite["2"]["value"] = "created_at";
               return __composite;
             })()}
             value={generateStateValueProp($state, ["sortInput", "value"])}
@@ -790,39 +794,23 @@ function PlasmicReviewList__RenderFunc(props: {
                       timeDiff / (1000 * 60 * 60 * 24)
                     );
 
-                    if (daysDiff < 7) {
-                      const numbers = [
-                        "صفر",
-                        "یک",
-                        "دو",
-                        "سه",
-                        "چهار",
-                        "پنج",
-                        "شش",
-                        "هفت",
-                        "هشت",
-                        "نه"
-                      ];
-                      return `${numbers[daysDiff]} روز پیش`;
-                    } else if (daysDiff < 30) {
-                      const weeksDiff = Math.floor(daysDiff / 7);
-                      const numbers = [
-                        "صفر",
-                        "یک",
-                        "دو",
-                        "سه",
-                        "چهار",
-                        "پنج",
-                        "شش",
-                        "هفت",
-                        "هشت",
-                        "نه"
-                      ];
-                      return `${numbers[weeksDiff]} هفته پیش`;
-                    } else {
-                      const monthsDiff = Math.floor(daysDiff / 30);
-                      const numbers = [
-                        "صفر",
+                    const numbers = [
+                      "صفر",
+                      "یک",
+                      "دو",
+                      "سه",
+                      "چهار",
+                      "پنج",
+                      "شش",
+                      "هفت",
+                      "هشت",
+                      "نه",
+                      "ده"
+                    ];
+
+                    const numToPersian = num => {
+                      const units = [
+                        "",
                         "یک",
                         "دو",
                         "سه",
@@ -834,6 +822,7 @@ function PlasmicReviewList__RenderFunc(props: {
                         "نه"
                       ];
                       const tens = [
+                        "",
                         "ده",
                         "بیست",
                         "سی",
@@ -844,34 +833,51 @@ function PlasmicReviewList__RenderFunc(props: {
                         "هشتاد",
                         "نود"
                       ];
-                      const units = [
-                        "صد",
-                        "دویست",
-                        "سیصد",
-                        "چهارصد",
-                        "پانصد",
-                        "ششصد",
-                        "هفتصد",
-                        "هشتصد",
-                        "نهصد"
-                      ];
-                      const numToPersian = num => {
-                        if (num < 10) return numbers[num];
-                        if (num < 20) return `ده ${numbers[num - 10]}`;
-                        if (num < 100) {
-                          const unit = Math.floor(num / 10);
-                          const remainder = num % 10;
-                          return `${tens[unit - 1]} ${numbers[remainder]}`;
-                        }
-                        if (num < 1000) {
-                          const hundred = Math.floor(num / 100);
-                          const remainder = num % 100;
-                          return `${units[hundred - 1]} ${numToPersian(
-                            remainder
-                          )}`;
-                        }
-                      };
+                      if (num < 10) return units[num];
+                      if (num < 20) return `ده${units[num - 10]}`;
+                      if (num < 100) {
+                        const ten = Math.floor(num / 10);
+                        const unit = num % 10;
+                        return `${tens[ten]}${
+                          unit > 0 ? ` و ${units[unit]}` : ""
+                        }`;
+                      }
+                      if (num < 1000) {
+                        const hundred = Math.floor(num / 100);
+                        const remainder = num % 100;
+                        return `${units[hundred]}صد${
+                          remainder > 0 ? ` و ${numToPersian(remainder)}` : ""
+                        }`;
+                      }
+                    };
+
+                    if (daysDiff === 0) {
+                      return "امروز";
+                    } else if (daysDiff === 1) {
+                      return "دیروز";
+                    } else if (daysDiff < 7) {
+                      return `${numbers[daysDiff]} روز پیش`;
+                    } else if (daysDiff < 30) {
+                      const weeksDiff = Math.floor(daysDiff / 7);
+                      if (weeksDiff === 1) {
+                        return "یک هفته پیش";
+                      }
+                      return `${numbers[weeksDiff]} هفته پیش`;
+                    } else if (daysDiff < 365) {
+                      const monthsDiff = Math.floor(daysDiff / 30);
+                      if (monthsDiff === 1) {
+                        return "یک ماه پیش";
+                      }
                       return `${numToPersian(monthsDiff)} ماه پیش`;
+                    } else {
+                      const yearsDiff = Math.floor(daysDiff / 365);
+                      if (yearsDiff === 1) {
+                        return "یک سال پیش";
+                      } else if (yearsDiff === 2) {
+                        return "دو سال پیش";
+                      } else {
+                        return `${numToPersian(yearsDiff)} سال پیش`;
+                      }
                     }
                   })();
                 } catch (e) {
@@ -900,19 +906,6 @@ function PlasmicReviewList__RenderFunc(props: {
               userName={(() => {
                 try {
                   return currentItem.user_display_name || "کاربر بی نام";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              userProfile={(() => {
-                try {
-                  return currentItem.user_image;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
