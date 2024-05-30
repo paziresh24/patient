@@ -331,13 +331,13 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             ServerStateKeysEnum.Feedbacks,
             {
               slug: slugFormmated,
-              sort: 'created_at',
+              sort: 'default_order',
             },
           ],
           () =>
             getReviews({
               slug: slugFormmated,
-              sort: 'created_at',
+              sort: 'default_order',
             }),
         );
       }

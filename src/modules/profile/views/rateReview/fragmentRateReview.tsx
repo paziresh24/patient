@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
 
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
-  const [sort, setSort] = useState<'created_at' | 'count_like'>('created_at');
+  const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
   const userInfo = useUserInfoStore(state => state.info);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterParams, setFilterParams] = useState({});
@@ -70,7 +70,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     setSearchTerm(value);
   }, []);
 
-  const onSort = useCallback((value: 'created_at' | 'count_like') => {
+  const onSort = useCallback((value: 'created_at' | 'count_like' | 'default_order') => {
     setPage(1);
     setSort(value);
   }, []);
