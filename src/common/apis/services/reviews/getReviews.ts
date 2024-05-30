@@ -4,7 +4,7 @@ import { ServerStateKeysEnum } from '../../serverStateKeysEnum';
 
 export interface ReviewParams {
   slug: string;
-  sort: 'created_at' | 'count_like';
+  sort: 'default_order' | 'created_at' | 'count_like';
   search?: string;
   user_id?: string;
   not_recommended?: boolean;
