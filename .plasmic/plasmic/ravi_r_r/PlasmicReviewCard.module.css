@@ -365,6 +365,28 @@
   max-width: 100%;
   cursor: pointer;
 }
+.httpRestApiFetcher__eXJp:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+  min-width: 0;
+}
+.userAvatar2:global(.__wab_instance) {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 55px;
+  height: 55px;
+  align-self: auto;
+  z-index: 1;
+  right: auto;
+  transition-property: all, all;
+  transition-duration: 1s, 1s;
+  transform: translateX(0px) translateY(0px) translateZ(0px);
+  -webkit-transition-property: all, all;
+  -webkit-transition-duration: 1s, 1s;
+}
 .userAvatar:global(.__wab_instance) {
   position: relative;
   left: auto;
@@ -377,7 +399,6 @@
   transition-property: all, all;
   transition-duration: 1s, 1s;
   transform: translateX(0px) translateY(0px) translateZ(0px);
-  flex-shrink: 0;
   -webkit-transition-property: all, all;
   -webkit-transition-duration: 1s, 1s;
 }
