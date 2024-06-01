@@ -8,6 +8,7 @@ export const useDiscount = ({ bookId }: { bookId: string }) => {
     totalPrice?: string;
     discount?: string;
     discountToken?: string;
+    tax?: string;
     isValidDiscount?: boolean;
     discountErrorMessage?: string;
   }>({});
@@ -22,6 +23,7 @@ export const useDiscount = ({ bookId }: { bookId: string }) => {
         ...prev,
         totalPrice: data.result?.payable_cost,
         discount: data.result?.discount_price,
+        tax: data.result?.vat,
         discountToken: data.result?.token,
         isValidDiscount: true,
       }));

@@ -13,6 +13,7 @@ type Response = {
     payable_cost: string;
     discount_price: string;
     token: string;
+    vat: string;
   };
   status: number;
   message: string;
