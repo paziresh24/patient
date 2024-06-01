@@ -31,6 +31,7 @@ export const getReviews = async (params: ReviewParams) => {
       offset: params?.offset ?? 0,
       sort: `-${params.sort}`,
     },
+    timeout: 3000,
   });
   return data;
 };

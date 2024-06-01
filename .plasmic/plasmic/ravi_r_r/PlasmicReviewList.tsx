@@ -244,7 +244,7 @@ function PlasmicReviewList__RenderFunc(props: {
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
@@ -695,7 +695,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               doctorSlug={(() => {
                 try {
-                  return currentItem.doctor_slug;
+                  return window.encodeURI(currentItem.doctor_slug);
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
