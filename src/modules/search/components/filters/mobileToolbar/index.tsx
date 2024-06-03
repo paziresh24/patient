@@ -35,7 +35,16 @@ export const MobileToolbar = () => {
   }, [orderItems]);
 
   const handleRemoveAllFilters = () => {
-    changeRoute({ previousQueries: false });
+    const { changeRoute } = useSearchRouting();
+    
+    changeRoute({
+      params: {
+        city: searchCity?.en_slug,
+        category: null,  // Ensure category is cleared
+      },
+      query: null,  // Clear other query parameters
+      overWrite: true,
+    });
     handleCloseFiltersModal();
   };
 
