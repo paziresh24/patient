@@ -33,23 +33,21 @@ export const useSearchRouting = () => {
     ]
       .filter(item => item)
       .join('/');
-
-    router[replace ? 'replace' : 'push'](
-      {
-        pathname: `/s/${formattedSlug}`,
-        query: omitBy(
-          {
-            ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
-            ...query,
-          },
-          value => {
-            if (!value) return true;
-          },
-        ),
-      },
-      undefined,
-      { shallow: true, scroll },
-    );
+  
+      router[replace ? 'replace' : 'push'](
+        {
+          pathname: `/s/${formattedSlug}`,
+          query: omitBy(
+            {
+              ...(!overWrite && previousQueries && { ...omit(queries, !pageParam ? 'page' : '') }),
+              ...query,
+            },
+            value => !value,
+          ),
+        },
+        undefined,
+        { shallow: true, scroll },
+        );
   };
 
   return { changeRoute };
