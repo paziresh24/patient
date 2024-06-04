@@ -263,7 +263,9 @@ function PlasmicProductCard__RenderFunc(props: {
             component={Link}
             href={(() => {
               try {
-                return $props.url?.destination;
+                return $props.url?.destination.startsWith("/center/https")
+                  ? $props.url?.destination.slice(8, -1)
+                  : $props.url?.destination;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -410,7 +412,9 @@ function PlasmicProductCard__RenderFunc(props: {
               component={Link}
               href={(() => {
                 try {
-                  return $props.url?.destination;
+                  return $props.url?.destination.startsWith("/center/https")
+                    ? $props.url?.destination.slice(8, -1)
+                    : $props.url?.destination;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -1092,7 +1096,9 @@ function PlasmicProductCard__RenderFunc(props: {
                   }
                   link={(() => {
                     try {
-                      return actionButton.url;
+                      return actionButton.url.startsWith("/center/https")
+                        ? actionButton.url.slice(8, -1)
+                        : actionButton.url;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
