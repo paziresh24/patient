@@ -86,7 +86,7 @@ export const FilterChip = (props: FilterProps) => {
 };
 
 export const MobileRowFilter = () => {
-  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory, filters: filterItems } = useSearch();
+  const { total, isLoading, isLanding, orderItems, searchCity, selectedCategory, selectedSubCategory, filters: filterItems } = useSearch();
   const city = useSearchStore(state => state.city);
   const { handleOpen: handleOpenFiltersModal, handleClose: handleCloseFiltersModal, modalProps: filtersModalProps } = useModal();
   const { handleOpen: handleOpenSortsModal, handleClose: handleCloseSortsModal, modalProps: sortsModalProps } = useModal();
@@ -111,7 +111,7 @@ export const MobileRowFilter = () => {
   }, []);
 
   const handleRemoveAllFilters = () => {
-    changeRoute({ previousQueries: false });
+    changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true });
     handleCloseFiltersModal();
   };
 
