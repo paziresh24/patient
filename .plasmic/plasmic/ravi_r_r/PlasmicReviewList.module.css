@@ -40,6 +40,7 @@
 .setNweReview:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
+  display: none;
 }
 .freeBox___3DZjG {
   display: flex;
