@@ -16,7 +16,7 @@ import MobileCategories from '../mobileCategories';
 import { freeturnItems } from '../sort';
 
 export const MobileToolbar = () => {
-  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory } = useSearch();
+  const { total, isLoading, isLanding, orderItems, selectedCategory, selectedSubCategory, searchCity } = useSearch();
   const city = useSearchStore(state => state.city);
   const { handleOpen: handleOpenFiltersModal, handleClose: handleCloseFiltersModal, modalProps: filtersModalProps } = useModal();
   const { handleOpen: handleOpenSortsModal, handleClose: handleCloseSortsModal, modalProps: sortsModalProps } = useModal();
@@ -35,7 +35,7 @@ export const MobileToolbar = () => {
   }, [orderItems]);
 
   const handleRemoveAllFilters = () => {
-    changeRoute({ previousQueries: false });
+    changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true });
     handleCloseFiltersModal();
   };
 
