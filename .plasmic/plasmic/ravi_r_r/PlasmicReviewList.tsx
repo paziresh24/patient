@@ -725,7 +725,7 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               feedbackId={(() => {
                 try {
-                  return currentItem.clinic_feedback_id;
+                  return currentItem.Id;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -764,7 +764,9 @@ function PlasmicReviewList__RenderFunc(props: {
               })()}
               recommended={(() => {
                 try {
-                  return currentItem.recommended;
+                  return currentItem.recommend_range
+                    ? currentItem.recommend_range >= 3
+                    : currentItem.recommended;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
