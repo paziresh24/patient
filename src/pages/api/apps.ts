@@ -1,9 +1,18 @@
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import { GrowthBook } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ message: 'Method Not Allowed' });
   const isDoctor = req.query.is_doctor === 'true';
+
+  const growthbookContext = getServerSideGrowthBookContext(req as NextApiRequest);
+  const growthbook = new GrowthBook(growthbookContext);
+  growthbook.setAttributes({ user_id: req.query.user_id });
+  await growthbook.loadFeatures({ timeout: 1000 });
+
+  const drappConfig = growthbook.getFeatureValue('hamdast::drapp', []);
 
   try {
     let defaultDoctorApps: any = [];
@@ -27,7 +36,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ...defaultDoctorAppsManifests
         .reverse()
         .filter(item => item.status === 'fulfilled')
-        .map(item => item.status === 'fulfilled' && { ...item.value?.data, pin: false, manifest: item.value?.config?.url }),
+        .map(
+          item =>
+            item.status === 'fulfilled' && {
+              ...item.value?.data,
+              pin: false,
+              manifest: item.value?.config?.url,
+              ...(item.value?.data?.key === 'drapp' ? { navigation_items: [...drappConfig] } : undefined),
+            },
+        ),
     ];
 
     let merged = appsArray.reduce((accumulator, item) => {
