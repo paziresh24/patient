@@ -1853,18 +1853,14 @@ function PlasmicReviewCard__RenderFunc(props: {
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
-                        return (() => {
-                          const formData = new FormData();
-                          formData.append("feedback_id", $props.feedbackId);
-                          return fetch(
-                            "https://www.paziresh24.com/api/likeOrDislikeFeedback/",
-                            {
-                              method: "POST",
-                              body: formData,
-                              credentials: "include"
-                            }
-                          );
-                        })();
+                        return fetch(
+                          "https://apigw.paziresh24.com/ravi/v1/feedbacks/like-dislike?id=" +
+                            $props.feedbackId,
+                          {
+                            method: "POST",
+                            credentials: "include"
+                          }
+                        );
                       }
                     };
                     return (({ customFunction }) => {
@@ -2189,7 +2185,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                           const actionArgs = {
                             customFunction: async () => {
                               return fetch(
-                                "https://apigw.paziresh24.com/v1/feedbacks/report",
+                                "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
+                                  $props.feedbackId,
                                 {
                                   headers: {
                                     "content-type": "application/json"
@@ -2461,7 +2458,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         formData.append("server_id", $props.serverId);
                         formData.append("description", $state.replyText.value);
                         return fetch(
-                          "https://www.paziresh24.com/api/replyFeedback/",
+                          "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                            $props.feedbackId,
                           {
                             method: "POST",
                             body: formData,
