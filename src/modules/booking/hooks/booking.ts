@@ -53,6 +53,7 @@ export const useBooking = () => {
       ...(user.insurance_id && { insurance_id: user.insurance_id }),
       ...(user.insurance_number && { insurance_number: user.insurance_number }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
+      ...(user.country_code_id && { cell_country_prefix: user.country_code_id }),
     });
 
     if (data.status === ClinicStatus.SUCCESS && onSuccess) return onSuccess(data);
