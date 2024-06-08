@@ -22,6 +22,7 @@ interface Params {
   symptomes?: string;
   center_id: string;
   user_center_id: string;
+  cell_country_prefix?: string;
 }
 
 export const book = ({ user_center_id, ...params }: Params) => {
