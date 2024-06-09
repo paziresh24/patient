@@ -32,9 +32,10 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { customize } = useCustomize();
 
   const shouldShowLocation = centerType !== CenterType.consult;
-  const shouldShowRate =
-    ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
-    feedbackUrl;
+  // const shouldShowRate =
+  //   ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
+  //   feedbackUrl;
+  const shouldShowRate = false;
 
   const handleClickCard = () => {
     if (paymentStatus !== PaymentStatus.paying) {
@@ -48,7 +49,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
       <TurnDetails items={detailsData} onClick={handleClickCard} />
 
       {shouldShowLocation && <Location address={location.address} lat={location.lat} lng={location.lng} />}
-      {shouldShowRate && customize.showRateAndReviews && <Rate link={feedbackUrl} />}
+      {shouldShowRate && customize.showRateAndReviews && <Rate link={feedbackUrl ?? ''} />}
     </>
   );
 };
