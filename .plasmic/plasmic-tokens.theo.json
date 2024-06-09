@@ -181,6 +181,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token 2",
+      "type": "color",
+      "value": "#F3FB03",
+      "category": "color",
+      "meta": {
+        "projectId": "qQzsBf58SqzNJX45iggq96",
+        "id": "REI58znBN2-8"
+      }
+    },
+    {
       "name": "X Large",
       "type": "fontsize",
       "value": "1.25rem",

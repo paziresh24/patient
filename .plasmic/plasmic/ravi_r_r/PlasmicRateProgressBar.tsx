@@ -79,12 +79,14 @@ export type PlasmicRateProgressBar__ArgsType = {
   averageQualityOfTreatment?: number;
   averageDoctorEncounter?: number;
   averageExplanationOfIssue?: number;
+  hideRates?: boolean;
 };
 type ArgPropType = keyof PlasmicRateProgressBar__ArgsType;
 export const PlasmicRateProgressBar__ArgProps = new Array<ArgPropType>(
   "averageQualityOfTreatment",
   "averageDoctorEncounter",
-  "averageExplanationOfIssue"
+  "averageExplanationOfIssue",
+  "hideRates"
 );
 
 export type PlasmicRateProgressBar__OverridesType = {
@@ -95,6 +97,7 @@ export interface DefaultRateProgressBarProps {
   averageQualityOfTreatment?: number;
   averageDoctorEncounter?: number;
   averageExplanationOfIssue?: number;
+  hideRates?: boolean;
   className?: string;
 }
 
@@ -115,7 +118,16 @@ function PlasmicRateProgressBar__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          hideRates: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -127,86 +139,98 @@ function PlasmicRateProgressBar__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   return (
-    <Stack__
-      as={"div"}
-      data-plasmic-name={"root"}
-      data-plasmic-override={overrides.root}
-      data-plasmic-root={true}
-      data-plasmic-for-node={forNode}
-      hasGap={true}
-      className={classNames(
-        projectcss.all,
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.root
-      )}
-    >
-      <ProgressBar
-        className={classNames("__wab_instance", sty.progressBar__jite)}
-        label={
-          "\u0628\u0631\u062e\u0648\u0631\u062f \u0645\u0646\u0627\u0633\u0628 \u067e\u0632\u0634\u06a9"
+    (() => {
+      try {
+        return !$props.hideRates;
+      } catch (e) {
+        if (
+          e instanceof TypeError ||
+          e?.plasmicType === "PlasmicUndefinedDataError"
+        ) {
+          return true;
         }
-        value={(() => {
-          try {
-            return $props.averageDoctorEncounter;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
+        throw e;
+      }
+    })() ? (
+      <Stack__
+        as={"div"}
+        data-plasmic-name={"root"}
+        data-plasmic-override={overrides.root}
+        data-plasmic-root={true}
+        data-plasmic-for-node={forNode}
+        hasGap={true}
+        className={classNames(
+          projectcss.all,
+          projectcss.root_reset,
+          projectcss.plasmic_default_styles,
+          projectcss.plasmic_mixins,
+          projectcss.plasmic_tokens,
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          sty.root
+        )}
+      >
+        <ProgressBar
+          className={classNames("__wab_instance", sty.progressBar__jite)}
+          label={
+            "\u0628\u0631\u062e\u0648\u0631\u062f \u0645\u0646\u0627\u0633\u0628 \u067e\u0632\u0634\u06a9"
           }
-        })()}
-      />
+          value={(() => {
+            try {
+              return $props.averageDoctorEncounter;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
 
-      <ProgressBar
-        className={classNames("__wab_instance", sty.progressBar___773M9)}
-        label={
-          "\u062a\u0648\u0636\u06cc\u062d \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0647\u0646\u06af\u0627\u0645 \u0648\u06cc\u0632\u06cc\u062a"
-        }
-        value={(() => {
-          try {
-            return $props.averageExplanationOfIssue;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
+        <ProgressBar
+          className={classNames("__wab_instance", sty.progressBar___773M9)}
+          label={
+            "\u062a\u0648\u0636\u06cc\u062d \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0647\u0646\u06af\u0627\u0645 \u0648\u06cc\u0632\u06cc\u062a"
           }
-        })()}
-      />
+          value={(() => {
+            try {
+              return $props.averageExplanationOfIssue;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
 
-      <ProgressBar
-        className={classNames("__wab_instance", sty.progressBar__mWfkY)}
-        label={
-          "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635 \u067e\u0632\u0634\u06a9"
-        }
-        value={(() => {
-          try {
-            return $props.averageQualityOfTreatment;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
+        <ProgressBar
+          className={classNames("__wab_instance", sty.progressBar__mWfkY)}
+          label={
+            "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635 \u067e\u0632\u0634\u06a9"
           }
-        })()}
-      />
-    </Stack__>
+          value={(() => {
+            try {
+              return $props.averageQualityOfTreatment;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
+      </Stack__>
+    ) : null
   ) as React.ReactElement | null;
 }
 

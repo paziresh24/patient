@@ -843,6 +843,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicRateDetail.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "ZW4MU00teZ-c",
+          "name": "Alert",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicAlert.tsx",
+          "importSpec": {
+            "modulePath": "Alert.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicAlert.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -915,6 +928,16 @@
           "id": "w3lyhfOz3zQI",
           "name": "Icon9Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon9.tsx"
+        },
+        {
+          "id": "BjoKtmI-dw2Y",
+          "name": "Icon10Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon10.tsx"
+        },
+        {
+          "id": "2W2cvQbPPcOu",
+          "name": "Icon11Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon11.tsx"
         }
       ],
       "images": [],

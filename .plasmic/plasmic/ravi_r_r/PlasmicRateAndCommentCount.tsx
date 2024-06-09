@@ -81,11 +81,13 @@ export const PlasmicRateAndCommentCount__VariantProps =
 export type PlasmicRateAndCommentCount__ArgsType = {
   rateCount?: string;
   rate?: number;
+  hideRates?: boolean;
 };
 type ArgPropType = keyof PlasmicRateAndCommentCount__ArgsType;
 export const PlasmicRateAndCommentCount__ArgProps = new Array<ArgPropType>(
   "rateCount",
-  "rate"
+  "rate",
+  "hideRates"
 );
 
 export type PlasmicRateAndCommentCount__OverridesType = {
@@ -96,6 +98,7 @@ export type PlasmicRateAndCommentCount__OverridesType = {
 export interface DefaultRateAndCommentCountProps {
   rateCount?: string;
   rate?: number;
+  hideRates?: boolean;
   className?: string;
 }
 
@@ -116,7 +119,16 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          hideRates: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -127,8 +139,6 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
-
-  const currentUser = useCurrentUser?.() || {};
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -149,186 +159,200 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
-      data-plasmic-name={"root"}
-      data-plasmic-override={overrides.root}
-      data-plasmic-root={true}
-      data-plasmic-for-node={forNode}
-      hasGap={true}
-      className={classNames(
-        projectcss.all,
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.root
-      )}
-      dir={"rtl"}
-    >
+    (() => {
+      try {
+        return !$props.hideRates;
+      } catch (e) {
+        if (
+          e instanceof TypeError ||
+          e?.plasmicType === "PlasmicUndefinedDataError"
+        ) {
+          return true;
+        }
+        throw e;
+      }
+    })() ? (
       <Stack__
         as={"div"}
+        data-plasmic-name={"root"}
+        data-plasmic-override={overrides.root}
+        data-plasmic-root={true}
+        data-plasmic-for-node={forNode}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__aawEq)}
+        className={classNames(
+          projectcss.all,
+          projectcss.root_reset,
+          projectcss.plasmic_default_styles,
+          projectcss.plasmic_mixins,
+          projectcss.plasmic_tokens,
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          sty.root
+        )}
+        dir={"rtl"}
       >
-        <Icon2Icon
-          className={classNames(projectcss.all, sty.svg__yhwpm)}
-          role={"img"}
-        />
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__aawEq)}
+        >
+          <Icon2Icon
+            className={classNames(projectcss.all, sty.svg__yhwpm)}
+            role={"img"}
+          />
 
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__eMUo
+            )}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.rate;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "%80 ";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </div>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__pYuZ
+            )}
+          >
+            {"\u0627\u0632 \u06f5"}
+          </div>
+        </Stack__>
         <div
           className={classNames(
             projectcss.all,
             projectcss.__wab_text,
-            sty.text__eMUo
+            sty.text__ePvxi
           )}
         >
           <React.Fragment>
             {(() => {
               try {
-                return $props.rate;
+                return `رضایت (${$props.rateCount} نظر)`;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return "%80 ";
+                  return "\u0631\u0636\u0627\u06cc\u062a (1737 \u0646\u0638\u0631)";
                 }
                 throw e;
               }
             })()}
           </React.Fragment>
         </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__pYuZ
+        <Popover
+          data-plasmic-name={"popoverCore"}
+          data-plasmic-override={overrides.popoverCore}
+          className={classNames("__wab_instance", sty.popoverCore)}
+          onOpenChange={generateStateOnChangeProp($state, [
+            "popoverCore",
+            "open"
+          ])}
+          open={generateStateValueProp($state, ["popoverCore", "open"])}
+          overlay={
+            <div className={classNames(projectcss.all, sty.freeBox__grWqQ)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__qOs7Z
+                )}
+              >
+                <React.Fragment>
+                  <React.Fragment>
+                    {
+                      '\u062f\u0631\u0635\u062f \u0631\u0636\u0627\u06cc\u062a\u060c \u062d\u0627\u0635\u0644 \u0645\u06cc\u0627\u0646\u06af\u06cc\u0646 \u0633\u0647 \u067e\u0627\u0631\u0627\u0645\u062a\u0631 "'
+                    }
+                  </React.Fragment>
+                  <span
+                    className={"plasmic_default__all plasmic_default__span"}
+                    style={{ fontWeight: 700 }}
+                  >
+                    {"\u0628\u0631\u062e\u0648\u0631\u062f"}
+                  </span>
+                  <React.Fragment>{'"\u060c "'}</React.Fragment>
+                  <span
+                    className={"plasmic_default__all plasmic_default__span"}
+                    style={{ fontWeight: 700 }}
+                  >
+                    {"\u062a\u0648\u0636\u06cc\u062d"}
+                  </span>
+                  <React.Fragment>{'" \u0648 "'}</React.Fragment>
+                  <span
+                    className={"plasmic_default__all plasmic_default__span"}
+                    style={{ fontWeight: 700 }}
+                  >
+                    {
+                      "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635"
+                    }
+                  </span>
+                  <React.Fragment>
+                    {
+                      '" \u067e\u0632\u0634\u06a9 \u0645\u06cc \u0628\u0627\u0634\u062f \u06a9\u0647 \u0647\u0645\u06af\u06cc \u062a\u0648\u0633\u0637 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0627\u0639\u0644\u0627\u0645 \u06af\u0631\u062f\u06cc\u062f\u0647 \u0627\u0646\u062f.'
+                    }
+                  </React.Fragment>
+                </React.Fragment>
+              </div>
+            </div>
+          }
+          themeResetClass={classNames(
+            projectcss.root_reset,
+            projectcss.plasmic_default_styles,
+            projectcss.plasmic_mixins,
+            projectcss.plasmic_tokens,
+            plasmic_fragment_design_system_css.plasmic_tokens
           )}
         >
-          {"\u0627\u0632 \u06f5"}
-        </div>
-      </Stack__>
-      <div
-        className={classNames(
-          projectcss.all,
-          projectcss.__wab_text,
-          sty.text__ePvxi
-        )}
-      >
-        <React.Fragment>
-          {(() => {
-            try {
-              return `رضایت (${$props.rateCount} نظر)`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "\u0631\u0636\u0627\u06cc\u062a (1737 \u0646\u0638\u0631)";
-              }
-              throw e;
-            }
-          })()}
-        </React.Fragment>
-      </div>
-      <Popover
-        data-plasmic-name={"popoverCore"}
-        data-plasmic-override={overrides.popoverCore}
-        className={classNames("__wab_instance", sty.popoverCore)}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "popoverCore",
-          "open"
-        ])}
-        open={generateStateValueProp($state, ["popoverCore", "open"])}
-        overlay={
-          <div className={classNames(projectcss.all, sty.freeBox__grWqQ)}>
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__qOs7Z
-              )}
-            >
-              <React.Fragment>
-                <React.Fragment>
-                  {
-                    '\u062f\u0631\u0635\u062f \u0631\u0636\u0627\u06cc\u062a\u060c \u062d\u0627\u0635\u0644 \u0645\u06cc\u0627\u0646\u06af\u06cc\u0646 \u0633\u0647 \u067e\u0627\u0631\u0627\u0645\u062a\u0631 "'
-                  }
-                </React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {"\u0628\u0631\u062e\u0648\u0631\u062f"}
-                </span>
-                <React.Fragment>{'"\u060c "'}</React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {"\u062a\u0648\u0636\u06cc\u062d"}
-                </span>
-                <React.Fragment>{'" \u0648 "'}</React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {
-                    "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635"
-                  }
-                </span>
-                <React.Fragment>
-                  {
-                    '" \u067e\u0632\u0634\u06a9 \u0645\u06cc \u0628\u0627\u0634\u062f \u06a9\u0647 \u0647\u0645\u06af\u06cc \u062a\u0648\u0633\u0637 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0627\u0639\u0644\u0627\u0645 \u06af\u0631\u062f\u06cc\u062f\u0647 \u0627\u0646\u062f.'
-                  }
-                </React.Fragment>
-              </React.Fragment>
-            </div>
-          </div>
-        }
-        themeResetClass={classNames(
-          projectcss.root_reset,
-          projectcss.plasmic_default_styles,
-          projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
-        )}
-      >
-        <div
-          className={classNames(projectcss.all, sty.freeBox__ref8W)}
-          onClick={async event => {
-            const $steps = {};
+          <div
+            className={classNames(projectcss.all, sty.freeBox__ref8W)}
+            onClick={async event => {
+              const $steps = {};
 
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return event.stopPropagation();
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
-            ) {
-              $steps["runCode"] = await $steps["runCode"];
-            }
-          }}
-        >
-          <Icon5Icon
-            className={classNames(projectcss.all, sty.svg___6Itud)}
-            role={"img"}
-          />
-        </div>
-      </Popover>
-    </Stack__>
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return event.stopPropagation();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }}
+          >
+            <Icon5Icon
+              className={classNames(projectcss.all, sty.svg___6Itud)}
+              role={"img"}
+            />
+          </div>
+        </Popover>
+      </Stack__>
+    ) : null
   ) as React.ReactElement | null;
 }
 
