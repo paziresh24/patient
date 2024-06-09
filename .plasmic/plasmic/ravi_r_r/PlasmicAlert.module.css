@@ -1,0 +1,105 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.freeBox__gnFWs {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  flex-direction: row;
+  min-width: 0;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e7e7e7;
+}
+.freeBox__gnFWs > :global(.__wab_flex-container) {
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-direction: row;
+  min-width: 0;
+  margin-left: calc(0px - 12px);
+  width: calc(100% + 12px);
+}
+.freeBox__gnFWs > :global(.__wab_flex-container) > *,
+.freeBox__gnFWs > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__gnFWs > :global(.__wab_flex-container) > picture > img,
+.freeBox__gnFWs
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 12px;
+}
+.freeBox___79Yd {
+  display: flex;
+  position: relative;
+  align-self: flex-start;
+}
+.freeBoxnoIcon___79YdhOwcP {
+  display: none;
+}
+.svg__xgoqA {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  height: 24px;
+  align-self: auto;
+}
+.freeBox__qf95 {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0px;
+}
+.freeBox__qf95 > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - 8px);
+  height: calc(100% + 8px);
+}
+.freeBox__qf95 > :global(.__wab_flex-container) > *,
+.freeBox__qf95 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__qf95 > :global(.__wab_flex-container) > picture > img,
+.freeBox__qf95
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 8px;
+}
+.h6 {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+}
+.h6noHeader {
+  display: none;
+}
+.freeBox__m14Sq {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+}
+.freeBoxnoBody__m14Sq3NCSe {
+  display: none;
+}

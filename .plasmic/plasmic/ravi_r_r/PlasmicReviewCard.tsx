@@ -114,6 +114,7 @@ export type PlasmicReviewCard__ArgsType = {
   qualityOfTreatment?: string;
   doctorSlug?: string;
   replyToFeedbackId?: number;
+  recommendRange?: string;
 };
 type ArgPropType = keyof PlasmicReviewCard__ArgsType;
 export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
@@ -130,7 +131,8 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
   "doctorEncounter",
   "qualityOfTreatment",
   "doctorSlug",
-  "replyToFeedbackId"
+  "replyToFeedbackId",
+  "recommendRange"
 );
 
 export type PlasmicReviewCard__OverridesType = {
@@ -169,6 +171,7 @@ export interface DefaultReviewCardProps {
   qualityOfTreatment?: string;
   doctorSlug?: string;
   replyToFeedbackId?: number;
+  recommendRange?: string;
   className?: string;
 }
 
@@ -214,8 +217,6 @@ function PlasmicReviewCard__RenderFunc(props: {
   const $refs = refsRef.current;
 
   const $globalActions = useGlobalActions?.();
-
-  const currentUser = useCurrentUser?.() || {};
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -569,9 +570,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   const actionArgs = {
                                     customFunction: async () => {
                                       return fetch(
-                                        "https://apigw.paziresh24.com/v1/feedbacks/" +
-                                          $props.feedbackId +
-                                          "/",
+                                        "https://apigw.paziresh24.com/ravi/v1/feedbacks?id=" +
+                                          $props.feedbackId,
                                         {
                                           headers: {
                                             "Content-Type": "application/json"
@@ -580,7 +580,14 @@ function PlasmicReviewCard__RenderFunc(props: {
                                           body: JSON.stringify({
                                             description:
                                               $state.edditTextBox.value,
-                                            like: $props.recommended
+                                            recommend_range:
+                                              $props.recommendRange,
+                                            quality_of_treatment:
+                                              $props.qualityOfTreatment,
+                                            doctor_encounter:
+                                              $props.doctorEncounter,
+                                            explanation_of_issue:
+                                              $props.explanationOfIssue
                                           }),
                                           credentials: "include"
                                         }
