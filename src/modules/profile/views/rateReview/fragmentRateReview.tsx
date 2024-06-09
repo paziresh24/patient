@@ -89,6 +89,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
               3
             ).toFixed(1),
             rateCount: profileData.feedbacks.details?.count_of_feedbacks,
+            hideRates: profileData.feedbacks?.details?.hide_rates,
           }}
         />
         <Fragment
@@ -98,6 +99,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
             averageQualityOfTreatment: profileData.feedbacks.details.average_rates.average_quality_of_treatment,
             averageDoctorEncounter: profileData.feedbacks.details.average_rates.average_doctor_encounter,
             averageExplanationOfIssue: profileData.feedbacks.details.average_rates.average_explanation_of_issue,
+            hideRates: profileData.feedbacks?.details?.hide_rates,
           }}
         />
       </div>
@@ -122,6 +124,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
           onSearch,
           onFilter,
           onSort,
+          hideRates: profileData.feedbacks?.details?.hide_rates,
         }}
       />
     </div>

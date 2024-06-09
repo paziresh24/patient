@@ -29,6 +29,7 @@ export type OverwriteProfileData = {
     averageRates?: any;
     countOfFeedbacks?: number;
     satisfactionPercent?: number;
+    hideRates?: boolean;
   };
 };
 
@@ -94,6 +95,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         average_quality_of_treatment: source.feedbacks?.details?.quality_of_treatment,
         ...overwriteData.feedbacks?.averageRates,
       },
+      hide_rates: overwriteData?.feedbacks?.hideRates,
       count_of_feedbacks: overwriteData.feedbacks?.countOfFeedbacks ?? null,
       satisfaction_percent: overwriteData.feedbacks?.satisfactionPercent ?? null,
       satisfaction: overwriteData.feedbacks?.satisfactionPercent

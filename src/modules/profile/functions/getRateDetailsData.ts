@@ -39,6 +39,7 @@ export const getRateDetailsData = async ({ slug, version }: GetRateDetailsData) 
         average_doctor_encounter: reteData?.doctor_encounter?.toFixed(1) ?? null,
         average_explanation_of_issue: reteData?.explanation_of_issue?.toFixed(1) ?? null,
       },
+      hide_rates: Boolean(reteData?.hide_rates) ?? false,
       countOfFeedbacks: reteData?.count_rates ?? null,
     };
   }

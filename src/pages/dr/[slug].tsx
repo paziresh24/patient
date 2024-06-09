@@ -233,6 +233,7 @@ const DoctorProfile = ({
                   ).toFixed(1)
                 : profileData.feedbacks?.details?.satisfaction_percent)
             }
+            hideRates={profileData.feedbacks?.details?.hide_rates}
             rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
             editable={editable}
             servicesEditAction={() => handleViewAs('services')}
@@ -406,15 +407,16 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        ...(feedbacks.details.satisfaction && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'bestRating': 5,
-            'worstRating': 0,
-            'ratingCount': feedbacks.details.count_of_feedbacks,
-            'ratingValue': feedbacks.details.satisfaction,
-          },
-        }),
+        ...(feedbacks.details.satisfaction &&
+          !feedbacks?.details?.hide_rates && {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              'bestRating': 5,
+              'worstRating': 0,
+              'ratingCount': feedbacks.details.count_of_feedbacks,
+              'ratingValue': feedbacks.details.satisfaction,
+            },
+          }),
       },
       {
         '@context': 'http://www.schema.org',
