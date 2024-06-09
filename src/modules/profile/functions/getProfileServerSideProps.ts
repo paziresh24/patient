@@ -309,6 +309,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       ...profileData.feedbacks,
       averageRates: rateDetails?.averageRates,
       countOfFeedbacks: rateDetails?.countOfFeedbacks,
+      hideRates: rateDetails?.hide_rates,
       satisfactionPercent: rateDetails?.satisfactionPercent,
     };
 
@@ -325,7 +326,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     try {
       let feedbackData;
 
-      if (shouldUsePlasmicReviewCard) {
+      if (shouldUsePlasmicReviewCard && !rateDetails?.hide_rates) {
         feedbackData = await queryClient.fetchQuery(
           [
             ServerStateKeysEnum.Feedbacks,
@@ -358,7 +359,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         );
       }
       feedbacks.feedbacks = shouldUsePlasmicReviewCard ? feedbackData ?? {} : feedbackData?.result ?? [];
-      dontShowRateAndReviewMessage = feedbackData?.status === 'ERROR' && feedbackData?.message;
+      dontShowRateAndReviewMessage = (feedbackData?.status === 'ERROR' && feedbackData?.message) || rateDetails?.hide_rates;
     } catch (error) {
       console.error(error);
     }

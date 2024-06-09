@@ -34,6 +34,7 @@ interface HeadProps {
   children?: ReactNode;
   shouldUseFragmentReviewCard?: boolean;
   profileData?: any;
+  hideRates?: boolean;
 }
 
 export const Head = (props: HeadProps) => {
@@ -49,6 +50,7 @@ export const Head = (props: HeadProps) => {
     className,
     satisfaction,
     rateCount,
+    hideRates,
     editable,
     infoEditAction,
     servicesEditAction,
@@ -131,6 +133,7 @@ export const Head = (props: HeadProps) => {
                 ...profileData,
                 rateCount: rateCount,
                 rate: satisfaction,
+                hideRates: hideRates,
               }}
             />
           )}
