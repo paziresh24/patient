@@ -32,10 +32,9 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { customize } = useCustomize();
 
   const shouldShowLocation = centerType !== CenterType.consult;
-  // const shouldShowRate =
-  //   ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
-  //   feedbackUrl;
-  const shouldShowRate = false;
+  const shouldShowRate =
+    ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
+    feedbackUrl;
 
   const handleClickCard = () => {
     if (paymentStatus !== PaymentStatus.paying) {
