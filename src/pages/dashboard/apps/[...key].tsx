@@ -3,6 +3,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { LoadingApps } from '@/modules/dashboard/components/loading';
@@ -10,12 +11,13 @@ import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useMemo, useRef, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = () => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
+  const sessionStartTime = useRef<any>(null);
   const appsData = useApps(
     { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
     { enabled: !!user.id },
@@ -32,6 +34,40 @@ export const Dashboard = () => {
 
   const selctedMenu = useMemo(() => app?.navigation_items.find((item: any) => item.key === menuKey), [app, isReady, menuKey, appKey]);
   const appName = selctedMenu?.label ?? app?.name ?? 'داشبورد';
+
+  useEffect(() => {
+    sessionStartTime.current = Date.now();
+    splunkInstance('dashboard').sendEvent({
+      group: 'hamdast-insight',
+      type: 'active-users',
+      event: {
+        data: {
+          user_id: user.id,
+          job_title: user.provider?.job_title ?? 'normal',
+          menu_key: menuKey,
+          app_key: appKey,
+        },
+      },
+    });
+
+    return () => {
+      const sessionEndTime = Date.now();
+      const sessionDuration = sessionEndTime - sessionStartTime.current;
+      splunkInstance('dashboard').sendEvent({
+        group: 'hamdast-insight',
+        type: 'session-duration',
+        event: {
+          data: {
+            user_id: user.id,
+            job_title: user.provider?.job_title ?? 'normal',
+            menu_key: menuKey,
+            app_key: appKey,
+            duration: sessionDuration,
+          },
+        },
+      });
+    };
+  }, [keys]);
 
   return (
     <div className="flex flex-col w-full">
