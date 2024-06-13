@@ -1179,6 +1179,106 @@
         }
       ],
       "codegenVersion": "0.0.1"
+    },
+    {
+      "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+      "version": "latest",
+      "dependencies": {
+        "h9Dbk9ygddw7UVEq1NNhKi": "5.6.1",
+        "oBJtsp5RgVpcN6KCrDTuQT": "1.3.0",
+        "sqPBLwEBBKHA2WDuGb17eV": "0.12.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.36.0",
+        "YUiM7yqBWAqsh8KSnrdj7": "0.29.0"
+      },
+      "lang": "ts",
+      "fileLocks": [
+        {
+          "type": "globalVariant",
+          "assetId": "jZPjwIwnCd3Y",
+          "checksum": "ff04eabed1a7e9e2ce77d93b4a5ce617"
+        },
+        {
+          "assetId": "8NbkXymcLwvMUC2yXeRrWk",
+          "type": "projectCss",
+          "checksum": "4cbdb34990f7b29d5c70a2d5b20efafc"
+        },
+        {
+          "assetId": "8NbkXymcLwvMUC2yXeRrWk",
+          "checksum": "2acb0797a4c4edb57c38b13f5341b733",
+          "type": "globalContexts"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "Mt_WMP6AHSGv",
+          "checksum": "d926b068ed4cc451e4dc1bd2bbb43138"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "Mt_WMP6AHSGv",
+          "checksum": "d926b068ed4cc451e4dc1bd2bbb43138"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "D_54gPqAw9rb",
+          "checksum": "ea2e91e04f61b9c70524b2b190859d34"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "D_54gPqAw9rb",
+          "checksum": "ea2e91e04f61b9c70524b2b190859d34"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "pkgzZV40hspV",
+          "checksum": "1e5be5e9f400970303d808c445e865cf"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "pkgzZV40hspV",
+          "checksum": "1e5be5e9f400970303d808c445e865cf"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "sSC8KTy3a6Hh",
+          "checksum": "978579d91a0858c049f54df27acf002b"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "sSC8KTy3a6Hh",
+          "checksum": "978579d91a0858c049f54df27acf002b"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "gxOpEdvuX5N8",
+          "checksum": "04458ada857fd341d5eeaa775267d6fe"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "gxOpEdvuX5N8",
+          "checksum": "04458ada857fd341d5eeaa775267d6fe"
+        },
+        {
+          "type": "icon",
+          "assetId": "CXp1JfQK09UO",
+          "checksum": "92e045d07f7130744c0b8b24e79b49e7"
+        },
+        {
+          "type": "icon",
+          "assetId": "QYS_su5_pZze",
+          "checksum": "a598c0001295dc4390068843c2ee4c3d"
+        },
+        {
+          "type": "icon",
+          "assetId": "k7tMx89aoOxw",
+          "checksum": "090aad972872ff9f7264669f635e3060"
+        },
+        {
+          "type": "icon",
+          "assetId": "sqblx79q-SiX",
+          "checksum": "b3657d8ff6c97f00e790e7f640deca56"
+        }
+      ],
+      "codegenVersion": "0.0.1"
     }
   ],
   "cliVersion": "0.1.327"
