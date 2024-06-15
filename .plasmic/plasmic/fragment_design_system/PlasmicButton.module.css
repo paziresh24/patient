@@ -10,7 +10,7 @@
   -webkit-transition-property: background;
   -webkit-transition-duration: 0.1s;
   border-radius: 6px;
-  padding: 12px 20px;
+  padding: 11px 20px;
   border-width: 0px;
 }
 .root > :global(.__wab_flex-container) {
@@ -38,7 +38,7 @@
 }
 .rootoutline {
   background: none;
-  border: 1px solid var(--token-JDvyxAtm9ONK);
+  border: 1px solid #3861fb66;
 }
 .rootshape_rounded {
   padding-left: 20px;

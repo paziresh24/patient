@@ -54,15 +54,16 @@
 .dialogContent:global(.__wab_instance) {
   box-shadow: 0px 4px 16px 0px #00000033;
   background: rgb(255, 255, 255);
-  max-width: 500px;
+  max-width: 600px;
   object-fit: cover;
   position: relative;
   left: auto;
   top: auto;
-  min-width: 500px;
+  min-width: 600px;
   max-height: 100%;
-  overflow: visible;
+  overflow: auto;
   border-radius: 8px;
+  padding: var(--token-Fv8-L_kN-2Ma);
   border: 1px solid #e2e8f0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
@@ -79,7 +80,6 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: var(--token-W6cMLA0AZVBO);
 }
 .freeBox__nMxG > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -131,11 +131,8 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  padding-left: var(--token-Fv8-L_kN-2Ma);
-  padding-right: var(--token-Fv8-L_kN-2Ma);
-  padding-bottom: var(--token-Fv8-L_kN-2Ma);
-  overflow: auto;
   max-height: 100%;
+  margin-top: var(--token-vMUQwr5Jto1d);
   min-width: 0;
 }
 .text___3SYz9 {
