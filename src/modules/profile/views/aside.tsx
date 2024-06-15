@@ -123,6 +123,7 @@ export const aside = (data: any) => {
             .filter((center: any) => center.id !== CENTERS.CONSULT)
             .map((center: any) => ({
               id: center.id,
+              userCenterId: center.user_center_id,
               address: center.address,
               city: center.city,
               slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,

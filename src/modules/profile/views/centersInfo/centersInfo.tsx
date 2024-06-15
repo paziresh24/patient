@@ -3,8 +3,10 @@ import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
+import { Fragment } from '@/common/fragment';
 import classNames from '@/common/utils/classNames';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import isEmpty from 'lodash/isEmpty';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -14,6 +16,7 @@ const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 interface CentersInfoProps {
   centers: {
     id: string;
+    userCenterId: string;
     name?: string;
     phoneNumbers: string | string[];
     address: string;
@@ -32,6 +35,7 @@ interface CentersInfoProps {
 
 export const CentersInfo = memo((props: CentersInfoProps) => {
   const { centers, className, onEventPhoneNumber, onEventAddress } = props;
+  const showSchedules = useFeatureIsOn('booking:schedules-section');
 
   const DescriptionWrapper = ({ children, length }: { children: ReactNode; length: number }) => {
     if (length >= 140) {
@@ -79,48 +83,60 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
               </div>
             </DescriptionWrapper>
           )}
-          {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
-            <div className="flex flex-col space-y-2">
-              {typeof center.phoneNumbers === 'string' && (
-                <Button
-                  variant="secondary"
-                  icon={<PhoneIcon width={20} height={20} />}
-                  onClick={() => {
-                    onEventPhoneNumber?.(center.id);
-                    location.href = `tel:${center.phoneNumbers}`;
-                  }}
-                >
-                  {center.phoneNumbers}
-                </Button>
-              )}
-              {Array.isArray(center.phoneNumbers) &&
-                center.phoneNumbers.map(phoneNumber => (
+          <div className="flex flex-col space-y-2">
+            {showSchedules && (
+              <Fragment
+                name="Schedules"
+                props={{
+                  centerId: center.id,
+                  userCenterId: center.userCenterId,
+                  centerName: center.name,
+                }}
+              />
+            )}
+            {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
+              <>
+                {typeof center.phoneNumbers === 'string' && (
                   <Button
-                    key={phoneNumber}
                     variant="secondary"
                     icon={<PhoneIcon width={20} height={20} />}
                     onClick={() => {
                       onEventPhoneNumber?.(center.id);
-                      location.href = `tel:${phoneNumber}`;
+                      location.href = `tel:${center.phoneNumbers}`;
                     }}
                   >
-                    {phoneNumber}
+                    {center.phoneNumbers}
                   </Button>
-                ))}
-              {center.location.lat && (
-                <Button
-                  variant="secondary"
-                  icon={<LocationIcon width={20} height={20} />}
-                  onClick={() => {
-                    onEventAddress?.(center.id);
-                    openGoogleMap(center.location);
-                  }}
-                >
-                  مشاهده در نقشه و مسیریابی
-                </Button>
-              )}
-            </div>
-          )}
+                )}
+                {Array.isArray(center.phoneNumbers) &&
+                  center.phoneNumbers.map(phoneNumber => (
+                    <Button
+                      key={phoneNumber}
+                      variant="secondary"
+                      icon={<PhoneIcon width={20} height={20} />}
+                      onClick={() => {
+                        onEventPhoneNumber?.(center.id);
+                        location.href = `tel:${phoneNumber}`;
+                      }}
+                    >
+                      {phoneNumber}
+                    </Button>
+                  ))}
+                {center.location.lat && (
+                  <Button
+                    variant="secondary"
+                    icon={<LocationIcon width={20} height={20} />}
+                    onClick={() => {
+                      onEventAddress?.(center.id);
+                      openGoogleMap(center.location);
+                    }}
+                  >
+                    مشاهده در نقشه و مسیریابی
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       ))}
     </div>
