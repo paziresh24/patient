@@ -16,7 +16,7 @@ const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 interface CentersInfoProps {
   centers: {
     id: string;
-    userCenterId: string;
+    userCenterId?: string;
     name?: string;
     phoneNumbers: string | string[];
     address: string;
@@ -84,7 +84,7 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
             </DescriptionWrapper>
           )}
           <div className="flex flex-col space-y-2">
-            {showSchedules && (
+            {showSchedules && center?.userCenterId && (
               <Fragment
                 name="Schedules"
                 props={{
