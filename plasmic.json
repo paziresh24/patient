@@ -473,7 +473,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -571,9 +572,25 @@
           "id": "Cfw-VAdl-_5E",
           "name": "IconIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon.tsx"
+        },
+        {
+          "id": "I0wBVQs9owLc",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "kMzUGonk3GSO",
+          "name": "Frame",
+          "filePath": "plasmic/paziresh_24_search/images/frame.svg"
+        },
+        {
+          "id": "fz0uj9IWMr22",
+          "name": "Frame 2",
+          "filePath": "plasmic/paziresh_24_search/images/frame2.svg"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "plasmic/paziresh_24_search/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
@@ -617,8 +634,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1006,7 +1022,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -1688,7 +1705,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {

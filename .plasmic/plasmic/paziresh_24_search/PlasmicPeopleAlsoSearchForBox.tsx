@@ -236,8 +236,6 @@ function PlasmicPeopleAlsoSearchForBox__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   return (
     <Stack__
       as={"div"}
