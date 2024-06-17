@@ -173,8 +173,6 @@ function PlasmicSearchResults__RenderFunc(props: {
 
   const $globalActions = useGlobalActions?.();
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -311,6 +309,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               <ProductCard
                 data-plasmic-name={"productCard"}
                 data-plasmic-override={overrides.productCard}
+                _5StarRatingMode={"_5StarA"}
                 actionButtons={(() => {
                   try {
                     return (() => {
