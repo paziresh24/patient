@@ -8,3 +8,690 @@
   align-items: center;
   min-width: 0;
 }
+.figmaPaste {
+  display: block;
+  position: relative;
+  width: 1163px;
+  height: 280px;
+  flex-shrink: 0;
+}
+.rectangle {
+  background: rgba(225, 231, 239, 1);
+  width: 360px;
+  height: 1px;
+  display: block;
+  position: absolute;
+  left: 802px;
+  top: 138px;
+}
+.rectangle2 {
+  background: rgba(225, 231, 239, 1);
+  width: 360px;
+  height: 1px;
+  display: block;
+  position: absolute;
+  left: 802px;
+  top: 203px;
+}
+.rectangle3 {
+  width: 360px;
+  height: 64px;
+  display: block;
+  position: absolute;
+  left: 802px;
+  top: 139px;
+}
+.rectangle4 {
+  background: rgba(199, 213, 225, 0.25);
+  box-shadow: inset 0px 0px 0px 1px rgba(55, 96, 250, 1);
+  width: 80px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 1065px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle5 {
+  width: 54px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1078px;
+  top: 163px;
+}
+.frame {
+  width: 16px;
+  height: 16px;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  left: 1116px;
+  top: 163px;
+}
+.rectangle6 {
+  width: 34px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1078px;
+  top: 163px;
+}
+.rectangle7 {
+  width: 34px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1078px;
+  top: 163px;
+}
+.rectangle8 {
+  background: rgba(199, 213, 225, 0.25);
+  box-shadow: inset 0px 0px 0px 1px rgba(55, 96, 250, 1);
+  width: 56px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 1001px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle9 {
+  width: 30px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1014px;
+  top: 163px;
+}
+.rectangle10 {
+  width: 30px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1014px;
+  top: 163px;
+}
+.rectangle11 {
+  width: 30px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 1014px;
+  top: 163px;
+}
+.rectangle12 {
+  background: rgba(199, 213, 225, 0.25);
+  box-shadow: inset 0px 0px 0px 1px rgba(55, 96, 250, 1);
+  width: 113px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 880px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle13 {
+  width: 87px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 893px;
+  top: 163px;
+}
+.rectangle14 {
+  width: 87px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 893px;
+  top: 163px;
+}
+.rectangle15 {
+  width: 87px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 893px;
+  top: 163px;
+}
+.rectangle16 {
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 893px;
+  top: 163px;
+}
+.img__tGOd5 {
+  position: absolute;
+  object-fit: cover;
+  max-width: 100%;
+  width: 16px;
+  height: 16px;
+  display: block !important;
+  overflow: hidden;
+  left: 893px;
+  top: 163px;
+}
+.img__tGOd5 > picture > img {
+  object-fit: cover;
+}
+.rectangle17 {
+  background: rgba(199, 213, 225, 0.25);
+  box-shadow: inset 0px 0px 0px 1px rgba(55, 96, 250, 1);
+  width: 82px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 790px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle18 {
+  width: 56px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 803px;
+  top: 163px;
+}
+.rectangle19 {
+  width: 56px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 803px;
+  top: 163px;
+}
+.rectangle20 {
+  width: 56px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 803px;
+  top: 163px;
+}
+.rectangle21 {
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 803px;
+  top: 163px;
+}
+.img__y50B {
+  position: absolute;
+  object-fit: cover;
+  max-width: 100%;
+  width: 16px;
+  height: 16px;
+  display: block !important;
+  overflow: hidden;
+  left: 803px;
+  top: 163px;
+}
+.img__y50B > picture > img {
+  object-fit: cover;
+}
+.rectangle22 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 101px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 681px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle23 {
+  width: 75px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 694px;
+  top: 163px;
+}
+.frame2 {
+  width: 16px;
+  height: 16px;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  left: 753px;
+  top: 163px;
+}
+.rectangle24 {
+  width: 55px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 694px;
+  top: 163px;
+}
+.rectangle25 {
+  width: 55px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 694px;
+  top: 163px;
+}
+.rectangle26 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 76px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 597px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle27 {
+  width: 50px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 610px;
+  top: 163px;
+}
+.rectangle28 {
+  width: 50px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 610px;
+  top: 163px;
+}
+.rectangle29 {
+  width: 50px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 610px;
+  top: 163px;
+}
+.rectangle30 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 64px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 525px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle31 {
+  width: 38px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 538px;
+  top: 163px;
+}
+.rectangle32 {
+  width: 38px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 538px;
+  top: 163px;
+}
+.rectangle33 {
+  width: 38px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 538px;
+  top: 163px;
+}
+.rectangle34 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 95px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 422px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle35 {
+  width: 69px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 435px;
+  top: 163px;
+}
+.rectangle36 {
+  width: 69px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 435px;
+  top: 163px;
+}
+.rectangle37 {
+  width: 69px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 435px;
+  top: 163px;
+}
+.rectangle38 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 80px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 334px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle39 {
+  width: 54px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 347px;
+  top: 163px;
+}
+.rectangle40 {
+  width: 54px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 347px;
+  top: 163px;
+}
+.rectangle41 {
+  width: 54px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 347px;
+  top: 163px;
+}
+.rectangle42 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 89px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 236px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle43 {
+  width: 63px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 249px;
+  top: 163px;
+}
+.rectangle44 {
+  width: 63px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 249px;
+  top: 163px;
+}
+.rectangle45 {
+  width: 63px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 249px;
+  top: 163px;
+}
+.rectangle46 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 98px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 130px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle47 {
+  width: 72px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 143px;
+  top: 163px;
+}
+.rectangle48 {
+  width: 72px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 143px;
+  top: 163px;
+}
+.rectangle49 {
+  width: 72px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 143px;
+  top: 163px;
+}
+.rectangle50 {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 0px 0px 1px rgba(225, 231, 239, 1);
+  width: 122px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 156px;
+  border-radius: 24px;
+}
+.rectangle51 {
+  width: 96px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 13px;
+  top: 163px;
+}
+.rectangle52 {
+  width: 96px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 13px;
+  top: 163px;
+}
+.rectangle53 {
+  width: 96px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  left: 13px;
+  top: 163px;
+}
+.rectangle54 {
+  width: 25px;
+  height: 25px;
+  display: block;
+  position: absolute;
+  left: 1097px;
+  top: 255px;
+}
+.rectangle55 {
+  width: 1px;
+  height: 1px;
+  display: block;
+  position: absolute;
+  left: 1162px;
+  top: 0px;
+}
+.text__ppkT {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(55, 96, 250, 1);
+  width: 34px;
+  position: absolute;
+  left: 1078px;
+  top: 162px;
+}
+.text__tGhJc {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(55, 96, 250, 1);
+  width: 30px;
+  position: absolute;
+  left: 1014px;
+  top: 162px;
+}
+.text__zHpG {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(55, 96, 250, 1);
+  width: 67px;
+  position: absolute;
+  left: 913px;
+  top: 162px;
+}
+.text__uEgBn {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(55, 96, 250, 1);
+  width: 36px;
+  position: absolute;
+  left: 823px;
+  top: 162px;
+}
+.text__gM8Ho {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 55px;
+  position: absolute;
+  left: 694px;
+  top: 162px;
+}
+.text__yB4Af {
+  display: block;
+  font-size: 11px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 50px;
+  position: absolute;
+  left: 610px;
+  top: 162px;
+}
+.text__gpHxc {
+  display: block;
+  font-size: 11px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 38px;
+  position: absolute;
+  left: 538px;
+  top: 162px;
+}
+.text__cKq6E {
+  display: block;
+  font-size: 11px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 69px;
+  position: absolute;
+  left: 435px;
+  top: 162px;
+}
+.text__cr5Me {
+  display: block;
+  font-size: 11px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 54px;
+  position: absolute;
+  left: 347px;
+  top: 162px;
+}
+.text__ps5Dt {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 63px;
+  position: absolute;
+  left: 249px;
+  top: 162px;
+}
+.text__h3J3 {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 72px;
+  position: absolute;
+  left: 143px;
+  top: 162px;
+}
+.text__hB9AW {
+  display: block;
+  font-size: 12px;
+  font-family: "IRANSansXV";
+  font-weight: 400;
+  letter-spacing: 0em;
+  line-height: 16px;
+  color: rgba(70, 84, 104, 1);
+  width: 96px;
+  position: absolute;
+  left: 13px;
+  top: 162px;
+}

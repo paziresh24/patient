@@ -72,6 +72,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCru
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
+import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: I0wBVQs9owLc/icon
 import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
 import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
 import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
@@ -83,10 +84,16 @@ import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; 
 
 createPlasmicElementProxy;
 
-export type PlasmicProductCard__VariantMembers = {};
-export type PlasmicProductCard__VariantsArgs = {};
+export type PlasmicProductCard__VariantMembers = {
+  _5StarRatingMode: "_5StarA";
+};
+export type PlasmicProductCard__VariantsArgs = {
+  _5StarRatingMode?: SingleChoiceArg<"_5StarA">;
+};
 type VariantPropType = keyof PlasmicProductCard__VariantsArgs;
-export const PlasmicProductCard__VariantProps = new Array<VariantPropType>();
+export const PlasmicProductCard__VariantProps = new Array<VariantPropType>(
+  "_5StarRatingMode"
+);
 
 export type PlasmicProductCard__ArgsType = {
   badges?: any;
@@ -150,6 +157,7 @@ export interface DefaultProductCardProps {
   url?: any;
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
+  _5StarRatingMode?: SingleChoiceArg<"_5StarA">;
   className?: string;
 }
 
@@ -191,8 +199,6 @@ function PlasmicProductCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -201,11 +207,11 @@ function PlasmicProductCard__RenderFunc(props: {
         variableType: "boolean"
       },
       {
-        path: "unnamedGroupOfVariants2",
+        path: "_5StarRatingMode",
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
-          $props.unnamedGroupOfVariants2
+          $props._5StarRatingMode
       }
     ],
     [$props, $ctx, $refs]
@@ -232,7 +238,14 @@ function PlasmicProductCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        {
+          [sty.root_5StarRatingMode__5StarA]: hasVariant(
+            $state,
+            "_5StarRatingMode",
+            "_5StarA"
+          )
+        }
       )}
       dir={"rtl"}
     >
@@ -579,10 +592,27 @@ function PlasmicProductCard__RenderFunc(props: {
             <Stack__
               as={"div"}
               hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__zf7Bm)}
+              className={classNames(projectcss.all, sty.freeBox__zf7Bm, {
+                [sty.freeBox_5StarRatingMode__5StarA__zf7BmfZd0]: hasVariant(
+                  $state,
+                  "_5StarRatingMode",
+                  "_5StarA"
+                )
+              })}
             >
-              <ThumbUpIcon
-                className={classNames(projectcss.all, sty.svg___4KelP)}
+              <PlasmicIcon__
+                PlasmicIconType={
+                  hasVariant($state, "_5StarRatingMode", "_5StarA")
+                    ? Icon2Icon
+                    : ThumbUpIcon
+                }
+                className={classNames(projectcss.all, sty.svg___4KelP, {
+                  [sty.svg_5StarRatingMode__5StarA___4KelPfZd0]: hasVariant(
+                    $state,
+                    "_5StarRatingMode",
+                    "_5StarA"
+                  )
+                })}
                 role={"img"}
               />
 
@@ -591,31 +621,67 @@ function PlasmicProductCard__RenderFunc(props: {
                   projectcss.all,
                   projectcss.span,
                   projectcss.__wab_text,
-                  sty.span__zMlGi
+                  sty.span__zMlGi,
+                  {
+                    [sty.span_5StarRatingMode__5StarA__zMlGifZd0]: hasVariant(
+                      $state,
+                      "_5StarRatingMode",
+                      "_5StarA"
+                    )
+                  }
                 )}
               >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return "٪" + $props.satisfactionPercent;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "100%";
+                {hasVariant($state, "_5StarRatingMode", "_5StarA") ? (
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.satisfactionPercent % 20 === 0
+                          ? $props.satisfactionPercent / 20
+                          : ($props.satisfactionPercent / 20)
+                              .toFixed(1)
+                              .replace(".0", "");
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return " ";
+                        }
+                        throw e;
                       }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
+                    })()}
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return "\u066A" + $props.satisfactionPercent;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "100%";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                )}
               </span>
               <span
                 className={classNames(
                   projectcss.all,
                   projectcss.span,
                   projectcss.__wab_text,
-                  sty.span__qbAn4
+                  sty.span__qbAn4,
+                  {
+                    [sty.span_5StarRatingMode__5StarA__qbAn4FZd0]: hasVariant(
+                      $state,
+                      "_5StarRatingMode",
+                      "_5StarA"
+                    )
+                  }
                 )}
               >
                 <React.Fragment>
