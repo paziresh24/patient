@@ -634,7 +634,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -953,6 +954,16 @@
           "id": "2W2cvQbPPcOu",
           "name": "Icon11Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon11.tsx"
+        },
+        {
+          "id": "2hqiHxPcJd62",
+          "name": "Icon12Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon12.tsx"
+        },
+        {
+          "id": "nQIWSFtz7b-J",
+          "name": "Icon13Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon13.tsx"
         }
       ],
       "images": [],
@@ -999,8 +1010,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",

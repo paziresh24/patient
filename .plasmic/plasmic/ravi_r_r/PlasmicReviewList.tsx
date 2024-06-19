@@ -337,8 +337,6 @@ function PlasmicReviewList__RenderFunc(props: {
             className={classNames("__wab_instance", sty.setNweReview)}
           />
 
-          <div className={classNames(projectcss.all, sty.freeBox___3DZjG)} />
-
           <Stack__
             as={"div"}
             hasGap={true}
@@ -780,6 +778,19 @@ function PlasmicReviewList__RenderFunc(props: {
                         e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
                         return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  raviExpFroDrakam={(() => {
+                    try {
+                      return $ctx.Growthbook.features["ravi-exp-fro-drakam"];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
                       }
                       throw e;
                     }
