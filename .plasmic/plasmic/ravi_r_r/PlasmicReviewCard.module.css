@@ -968,6 +968,11 @@
   margin-bottom: 4px;
   flex-shrink: 0;
 }
+.svgraviExpFroDrakam__lsG2CQl6C7 {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
 .svg__sdFgJ {
   position: relative;
   object-fit: cover;
@@ -979,6 +984,8 @@
 }
 .svgraviExpFroDrakam__sdFgJQl6C7 {
   color: var(--token-kpM4b4mG4f2d);
+  width: 16px;
+  flex-shrink: 0;
 }
 .text__dw8Rz {
   width: auto;
