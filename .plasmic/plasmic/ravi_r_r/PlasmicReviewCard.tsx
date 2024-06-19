@@ -81,23 +81,30 @@ import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: moTm-5qth
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: OcnxMK5rW620/icon
-import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
+import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvguG2/icon
 import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // plasmic-import: jHvDymIOvRnf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import HeartIcon from "../fragment_icons/icons/PlasmicIcon__Heart"; // plasmic-import: WTtCf_1I-uMv/icon
 import BoldheartIcon from "../fragment_icons/icons/PlasmicIcon__Boldheart"; // plasmic-import: eZfYsLpdWQA_/icon
+import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
 createPlasmicElementProxy;
 
-export type PlasmicReviewCard__VariantMembers = {};
-export type PlasmicReviewCard__VariantsArgs = {};
+export type PlasmicReviewCard__VariantMembers = {
+  raviExpFroDrakam: "raviExpFroDrakam";
+};
+export type PlasmicReviewCard__VariantsArgs = {
+  raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
+};
 type VariantPropType = keyof PlasmicReviewCard__VariantsArgs;
-export const PlasmicReviewCard__VariantProps = new Array<VariantPropType>();
+export const PlasmicReviewCard__VariantProps = new Array<VariantPropType>(
+  "raviExpFroDrakam"
+);
 
 export type PlasmicReviewCard__ArgsType = {
   userName?: string;
@@ -141,6 +148,8 @@ export type PlasmicReviewCard__OverridesType = {
   dialog3?: Flex__<typeof Dialog>;
   edditTextBox?: Flex__<"textarea">;
   dialog4?: Flex__<typeof Dialog>;
+  dialog5?: Flex__<typeof Dialog>;
+  reportText2?: Flex__<"textarea">;
   نامتتارخ?: Flex__<"div">;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
@@ -172,6 +181,7 @@ export interface DefaultReviewCardProps {
   doctorSlug?: string;
   replyToFeedbackId?: number;
   recommendRange?: string;
+  raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
   className?: string;
 }
 
@@ -319,6 +329,25 @@ function PlasmicReviewCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "dialog5.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "reportText2.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ``
+      },
+      {
+        path: "raviExpFroDrakam",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          $props.raviExpFroDrakam
       }
     ],
     [$props, $ctx, $refs]
@@ -347,14 +376,27 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.اردنماشنظر
+        sty.اردنماشنظر,
+        {
+          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
+            $state,
+            "raviExpFroDrakam",
+            "raviExpFroDrakam"
+          )
+        }
       )}
       dir={"rtl"}
     >
       <Popover
         data-plasmic-name={"\u0633\u0647\u0646\u0642\u0637\u0647"}
         data-plasmic-override={overrides.سهنقطه}
-        className={classNames("__wab_instance", sty.سهنقطه)}
+        className={classNames("__wab_instance", sty.سهنقطه, {
+          [sty.سهنقطهraviExpFroDrakam]: hasVariant(
+            $state,
+            "raviExpFroDrakam",
+            "raviExpFroDrakam"
+          )
+        })}
         onOpenChange={generateStateOnChangeProp($state, ["سهنقطه", "open"])}
         open={generateStateValueProp($state, ["سهنقطه", "open"])}
         overlay={
@@ -362,7 +404,13 @@ function PlasmicReviewCard__RenderFunc(props: {
             <Stack__
               as={"div"}
               hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__vwR23)}
+              className={classNames(projectcss.all, sty.freeBox__vwR23, {
+                [sty.freeBoxraviExpFroDrakam__vwR23Ql6C7]: hasVariant(
+                  $state,
+                  "raviExpFroDrakam",
+                  "raviExpFroDrakam"
+                )
+              })}
               onClick={async event => {
                 const $steps = {};
 
@@ -1169,6 +1217,353 @@ function PlasmicReviewCard__RenderFunc(props: {
                 />
               </Stack__>
             ) : null}
+            <Dialog
+              data-plasmic-name={"dialog5"}
+              data-plasmic-override={overrides.dialog5}
+              body={
+                <React.Fragment>
+                  <textarea
+                    data-plasmic-name={"reportText2"}
+                    data-plasmic-override={overrides.reportText2}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.textarea,
+                      sty.reportText2
+                    )}
+                    onChange={e => {
+                      generateStateOnChangeProp($state, [
+                        "reportText2",
+                        "value"
+                      ])(e.target.value);
+                    }}
+                    placeholder={
+                      "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
+                    }
+                    ref={ref => {
+                      $refs["reportText2"] = ref;
+                    }}
+                    value={
+                      generateStateValueProp($state, [
+                        "reportText2",
+                        "value"
+                      ]) ?? ""
+                    }
+                  />
+
+                  <Button
+                    children2={
+                      "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
+                    }
+                    className={classNames("__wab_instance", sty.button__xJzIt)}
+                    endIcon={
+                      <ChevronLeftIcon
+                        className={classNames(projectcss.all, sty.svg___3Y0Ja)}
+                        role={"img"}
+                      />
+                    }
+                    loading={(() => {
+                      try {
+                        return $state.reportLoadinButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["if10Caracter"] =
+                        $ctx.auth.isLogin && $props.commentText.length <= 10
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  "error",
+                                  "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                                  undefined,
+                                  5000
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["if10Caracter"] != null &&
+                        typeof $steps["if10Caracter"] === "object" &&
+                        typeof $steps["if10Caracter"].then === "function"
+                      ) {
+                        $steps["if10Caracter"] = await $steps["if10Caracter"];
+                      }
+
+                      $steps["loading"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["reportLoadinButton"]
+                                },
+                                operation: 0,
+                                value: true
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["loading"] != null &&
+                        typeof $steps["loading"] === "object" &&
+                        typeof $steps["loading"].then === "function"
+                      ) {
+                        $steps["loading"] = await $steps["loading"];
+                      }
+
+                      $steps["request"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return fetch(
+                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
+                                      $props.feedbackId,
+                                    {
+                                      headers: {
+                                        "content-type": "application/json"
+                                      },
+                                      body: JSON.stringify({
+                                        feedback_id: $props.feedbackId,
+                                        report_text: $state.reportText2.value
+                                      }),
+                                      method: "POST",
+                                      credentials: "include"
+                                    }
+                                  );
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["request"] != null &&
+                        typeof $steps["request"] === "object" &&
+                        typeof $steps["request"].then === "function"
+                      ) {
+                        $steps["request"] = await $steps["request"];
+                      }
+
+                      $steps["closeDialog"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog5", "open"]
+                                },
+                                operation: 0,
+                                value: false
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["closeDialog"] != null &&
+                        typeof $steps["closeDialog"] === "object" &&
+                        typeof $steps["closeDialog"].then === "function"
+                      ) {
+                        $steps["closeDialog"] = await $steps["closeDialog"];
+                      }
+
+                      $steps["offLoading"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["reportLoadinButton"]
+                                },
+                                operation: 0,
+                                value: false
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["offLoading"] != null &&
+                        typeof $steps["offLoading"] === "object" &&
+                        typeof $steps["offLoading"].then === "function"
+                      ) {
+                        $steps["offLoading"] = await $steps["offLoading"];
+                      }
+
+                      $steps["toast"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  undefined,
+                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                  undefined,
+                                  4989
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["toast"] != null &&
+                        typeof $steps["toast"] === "object" &&
+                        typeof $steps["toast"].then === "function"
+                      ) {
+                        $steps["toast"] = await $steps["toast"];
+                      }
+
+                      $steps["login"] =
+                        $ctx.auth.isLogin == false
+                          ? (() => {
+                              const actionArgs = { args: [] };
+                              return $globalActions[
+                                "AuthGlobalContext.login"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["login"] != null &&
+                        typeof $steps["login"] === "object" &&
+                        typeof $steps["login"].then === "function"
+                      ) {
+                        $steps["login"] = await $steps["login"];
+                      }
+
+                      $steps["splunk"] =
+                        $state.reportText2.value.length >= 10 &&
+                        $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return $$.splunkEvent({
+                                    group: "feedback",
+                                    data: {
+                                      doctor_id: $props.doctorId,
+                                      comment_id: $props.feedbackId,
+                                      report_text: $state.reportText2.value
+                                    },
+                                    type: "report_comment",
+                                    token:
+                                      "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                  });
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["splunk"] != null &&
+                        typeof $steps["splunk"] === "object" &&
+                        typeof $steps["splunk"].then === "function"
+                      ) {
+                        $steps["splunk"] = await $steps["splunk"];
+                      }
+                    }}
+                    startIcon={
+                      <ChevronRightIcon
+                        className={classNames(projectcss.all, sty.svg__kLFdy)}
+                        role={"img"}
+                      />
+                    }
+                  />
+                </React.Fragment>
+              }
+              className={classNames("__wab_instance", sty.dialog5, {
+                [sty.dialog5raviExpFroDrakam]: hasVariant(
+                  $state,
+                  "raviExpFroDrakam",
+                  "raviExpFroDrakam"
+                )
+              })}
+              onOpenChange={generateStateOnChangeProp($state, [
+                "dialog5",
+                "open"
+              ])}
+              open={generateStateValueProp($state, ["dialog5", "open"])}
+              title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
+              trigger={
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__ikKmq)}
+                >
+                  <InfoIcon
+                    className={classNames(projectcss.all, sty.svg__kBx)}
+                    role={"img"}
+                  />
+
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__mUuQt
+                    )}
+                  >
+                    {"\u06af\u0632\u0627\u0631\u0634"}
+                  </div>
+                </Stack__>
+              }
+            />
           </div>
         }
         side={"bottom"}
@@ -1502,45 +1897,73 @@ function PlasmicReviewCard__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox___53H3H)}
         >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__cAdEv)}
-          >
-            <Icon2Icon
-              className={classNames(projectcss.all, sty.svg__cvunB)}
-              role={"img"}
-            />
-
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__rnD7L
-              )}
+          {(() => {
+            try {
+              return (
+                (
+                  (+$props.qualityOfTreatment +
+                    +$props.doctorEncounter +
+                    +$props.explanationOfIssue) /
+                  3
+                ).toFixed(1) !== "0.0"
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__cAdEv)}
             >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return (
-                      (+$props.qualityOfTreatment +
-                        +$props.doctorEncounter +
-                        +$props.explanationOfIssue) /
-                      3
-                    ).toFixed(1);
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "%80 ";
-                    }
-                    throw e;
+              <Icon2Icon
+                className={classNames(projectcss.all, sty.svg__cvunB)}
+                role={"img"}
+              />
+
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__rnD7L,
+                  {
+                    [sty.textraviExpFroDrakam__rnD7LQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
                   }
-                })()}
-              </React.Fragment>
-            </div>
-          </Stack__>
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return (
+                        (+$props.qualityOfTreatment +
+                          +$props.doctorEncounter +
+                          +$props.explanationOfIssue) /
+                        3
+                      ).toFixed(1);
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "%80 ";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            </Stack__>
+          ) : null}
           {(() => {
             try {
               return !$props.recommended;
@@ -2036,8 +2459,19 @@ function PlasmicReviewCard__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <HeartIcon
-                className={classNames(projectcss.all, sty.svg__lsG2C)}
+              <PlasmicIcon__
+                PlasmicIconType={
+                  hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                    ? ThumbUpIcon
+                    : HeartIcon
+                }
+                className={classNames(projectcss.all, sty.svg__lsG2C, {
+                  [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                })}
                 role={"img"}
               />
             ) : null}
@@ -2054,8 +2488,19 @@ function PlasmicReviewCard__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <BoldheartIcon
-                className={classNames(projectcss.all, sty.svg__sdFgJ)}
+              <PlasmicIcon__
+                PlasmicIconType={
+                  hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                    ? ThumbUpIcon
+                    : BoldheartIcon
+                }
+                className={classNames(projectcss.all, sty.svg__sdFgJ, {
+                  [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                })}
                 role={"img"}
               />
             ) : null}
@@ -2063,10 +2508,19 @@ function PlasmicReviewCard__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text__dw8Rz
+                sty.text__dw8Rz,
+                {
+                  [sty.textraviExpFroDrakam__dw8RzQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                }
               )}
             >
-              {"\u067e\u0633\u0646\u062f\u06cc\u062f\u0646"}
+              {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
+                : "\u067e\u0633\u0646\u062f\u06cc\u062f\u0646"}
             </div>
           </Stack__>
         ) : null}
@@ -2372,7 +2826,13 @@ function PlasmicReviewCard__RenderFunc(props: {
               />
             </React.Fragment>
           }
-          className={classNames("__wab_instance", sty.dialog)}
+          className={classNames("__wab_instance", sty.dialog, {
+            [sty.dialograviExpFroDrakam]: hasVariant(
+              $state,
+              "raviExpFroDrakam",
+              "raviExpFroDrakam"
+            )
+          })}
           onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
           open={generateStateValueProp($state, ["dialog", "open"])}
           title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
@@ -2399,6 +2859,87 @@ function PlasmicReviewCard__RenderFunc(props: {
             </Stack__>
           }
         />
+
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__iAvTv, {
+            [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
+              $state,
+              "raviExpFroDrakam",
+              "raviExpFroDrakam"
+            )
+          })}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return navigator.share({
+                        url:
+                          window.location.href + `#comment-${$props.feedbackId}`
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+
+            $steps["splunk"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorId,
+                          comment_id: $props.feedbackId
+                        },
+                        type: "share_comment",
+                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["splunk"] != null &&
+              typeof $steps["splunk"] === "object" &&
+              typeof $steps["splunk"].then === "function"
+            ) {
+              $steps["splunk"] = await $steps["splunk"];
+            }
+          }}
+        >
+          <Icon13Icon
+            className={classNames(projectcss.all, sty.svg__buJg)}
+            role={"img"}
+          />
+
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__v5Zas
+            )}
+          >
+            {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
+          </div>
+        </Stack__>
       </Stack__>
       <div
         data-plasmic-name={"\u0631\u0644\u0627"}
@@ -2679,6 +3220,8 @@ const PlasmicDescendants = {
     "dialog3",
     "edditTextBox",
     "dialog4",
+    "dialog5",
+    "reportText2",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
     "userAvatar",
@@ -2697,11 +3240,15 @@ const PlasmicDescendants = {
     "\u0633\u0647\u0646\u0642\u0637\u0647",
     "dialog3",
     "edditTextBox",
-    "dialog4"
+    "dialog4",
+    "dialog5",
+    "reportText2"
   ],
   dialog3: ["dialog3", "edditTextBox"],
   edditTextBox: ["edditTextBox"],
   dialog4: ["dialog4"],
+  dialog5: ["dialog5", "reportText2"],
+  reportText2: ["reportText2"],
   نامتتارخ: [
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
@@ -2733,6 +3280,8 @@ type NodeDefaultElementType = {
   dialog3: typeof Dialog;
   edditTextBox: "textarea";
   dialog4: typeof Dialog;
+  dialog5: typeof Dialog;
+  reportText2: "textarea";
   نامتتارخ: "div";
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
@@ -2816,6 +3365,8 @@ export const PlasmicReviewCard = Object.assign(
     dialog3: makeNodeComponent("dialog3"),
     edditTextBox: makeNodeComponent("edditTextBox"),
     dialog4: makeNodeComponent("dialog4"),
+    dialog5: makeNodeComponent("dialog5"),
+    reportText2: makeNodeComponent("reportText2"),
     نامتتارخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),

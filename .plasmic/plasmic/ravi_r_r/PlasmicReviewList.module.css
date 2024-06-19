@@ -54,19 +54,6 @@
   position: relative;
   display: none;
 }
-.freeBox___3DZjG {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  height: 1px;
-  max-width: 100%;
-  background: var(--token-Y3HOiwZmAcAF);
-  min-width: 0;
-  flex-shrink: 0;
-}
 .freeBox___6RwG3 {
   display: flex;
   position: relative;
@@ -306,7 +293,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  background: #faeb2226;
+  background: #fac52226;
   min-width: 0;
   border-radius: var(--token-vMUQwr5Jto1d);
   padding: 8px;
