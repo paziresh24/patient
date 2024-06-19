@@ -2039,7 +2039,14 @@ function PlasmicReviewCard__RenderFunc(props: {
           className={classNames(
             projectcss.all,
             projectcss.__wab_text,
-            sty.text__le3Kw
+            sty.text__le3Kw,
+            {
+              [sty.textraviExpFroDrakam__le3KwQl6C7]: hasVariant(
+                $state,
+                "raviExpFroDrakam",
+                "raviExpFroDrakam"
+              )
+            }
           )}
         >
           <div
