@@ -848,7 +848,13 @@ function PlasmicReviewCard__RenderFunc(props: {
               <Stack__
                 as={"div"}
                 hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__lNuZw)}
+                className={classNames(projectcss.all, sty.freeBox__lNuZw, {
+                  [sty.freeBoxraviExpFroDrakam__lNuZwQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                })}
               >
                 <Dialog
                   data-plasmic-name={"dialog4"}
@@ -1545,7 +1551,13 @@ function PlasmicReviewCard__RenderFunc(props: {
                 <Stack__
                   as={"div"}
                   hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__ikKmq)}
+                  className={classNames(projectcss.all, sty.freeBox__ikKmq, {
+                    [sty.freeBoxraviExpFroDrakam__ikKmqQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  })}
                 >
                   <InfoIcon
                     className={classNames(projectcss.all, sty.svg__kBx)}
