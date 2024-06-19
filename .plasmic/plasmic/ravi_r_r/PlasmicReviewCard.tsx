@@ -2564,7 +2564,13 @@ function PlasmicReviewCard__RenderFunc(props: {
                 children2={
                   "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
                 }
-                className={classNames("__wab_instance", sty.button__iuHVx)}
+                className={classNames("__wab_instance", sty.button__iuHVx, {
+                  [sty.buttonraviExpFroDrakam__iuHVxQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                })}
                 endIcon={
                   <ChevronLeftIcon
                     className={classNames(projectcss.all, sty.svg__epBv)}
@@ -2847,7 +2853,13 @@ function PlasmicReviewCard__RenderFunc(props: {
             <Stack__
               as={"div"}
               hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___0EXmx)}
+              className={classNames(projectcss.all, sty.freeBox___0EXmx, {
+                [sty.freeBoxraviExpFroDrakam___0EXmxQl6C7]: hasVariant(
+                  $state,
+                  "raviExpFroDrakam",
+                  "raviExpFroDrakam"
+                )
+              })}
             >
               <InfoIcon
                 className={classNames(projectcss.all, sty.svg__phmAr)}
