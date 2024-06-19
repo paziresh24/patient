@@ -848,7 +848,13 @@ function PlasmicReviewCard__RenderFunc(props: {
               <Stack__
                 as={"div"}
                 hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__lNuZw)}
+                className={classNames(projectcss.all, sty.freeBox__lNuZw, {
+                  [sty.freeBoxraviExpFroDrakam__lNuZwQl6C7]: hasVariant(
+                    $state,
+                    "raviExpFroDrakam",
+                    "raviExpFroDrakam"
+                  )
+                })}
               >
                 <Dialog
                   data-plasmic-name={"dialog4"}
@@ -1545,7 +1551,13 @@ function PlasmicReviewCard__RenderFunc(props: {
                 <Stack__
                   as={"div"}
                   hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__ikKmq)}
+                  className={classNames(projectcss.all, sty.freeBox__ikKmq, {
+                    [sty.freeBoxraviExpFroDrakam__ikKmqQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  })}
                 >
                   <InfoIcon
                     className={classNames(projectcss.all, sty.svg__kBx)}
@@ -2991,7 +3003,13 @@ function PlasmicReviewCard__RenderFunc(props: {
           data-plasmic-name={"multilineTextInput"}
           data-plasmic-override={overrides.multilineTextInput}
           autoSize={true}
-          className={classNames("__wab_instance", sty.multilineTextInput)}
+          className={classNames("__wab_instance", sty.multilineTextInput, {
+            [sty.multilineTextInputraviExpFroDrakam]: hasVariant(
+              $state,
+              "raviExpFroDrakam",
+              "raviExpFroDrakam"
+            )
+          })}
           onValueChange={generateStateOnChangeProp($state, [
             "multilineTextInput",
             "value"
@@ -3009,7 +3027,14 @@ function PlasmicReviewCard__RenderFunc(props: {
           className={classNames(
             projectcss.all,
             projectcss.__wab_text,
-            sty.text__eTi4F
+            sty.text__eTi4F,
+            {
+              [sty.textraviExpFroDrakam__eTi4FQl6C7]: hasVariant(
+                $state,
+                "raviExpFroDrakam",
+                "raviExpFroDrakam"
+              )
+            }
           )}
           onClick={async event => {
             const $steps = {};
@@ -3021,9 +3046,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                       return (() => {
                         const formData = new FormData();
                         formData.append("feedback_id", $props.feedbackId);
-                        formData.append("doctor_id", $props.doctorId);
-                        formData.append("server_id", $props.serverId);
-                        formData.append("description", $state.replyText.value);
+                        formData.append(
+                          "description",
+                          $state.multilineTextInput.value
+                        );
                         return fetch(
                           "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
                             $props.feedbackId,
@@ -3127,7 +3153,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                         data: {
                           doctor_id: $props.doctorId,
                           comment_id: $props.feedbackId,
-                          reply_text: $state.replyText.value
+                          reply_text: $state.multilineTextInput.value
                         },
                         type: "reply_comment",
                         token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
