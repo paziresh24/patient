@@ -959,9 +959,7 @@ function PlasmicReviewList__RenderFunc(props: {
                   })()}
                   userName={(() => {
                     try {
-                      return currentItem.user_display_name
-                        ? currentItem.user_display_name.split(" ")[0]
-                        : "کاربر بدون نام";
+                      return currentItem.user_display_name || "کاربر بی نام";
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
