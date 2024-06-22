@@ -70,13 +70,13 @@
   border: 1px solid #e2e8f0;
 }
 .freeBox__vwR23 {
-  display: flex;
   position: relative;
   flex-direction: row;
   width: auto;
   height: auto;
   max-width: 100%;
   cursor: pointer;
+  display: none;
 }
 .freeBox__vwR23 > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -349,19 +349,15 @@
 .dialog5:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
   position: relative;
-  display: none;
-}
-.dialog5raviExpFroDrakam:global(.__wab_instance):global(.__wab_instance) {
-  display: flex;
 }
 .freeBox__ikKmq {
+  display: flex;
   position: relative;
   flex-direction: row;
   width: auto;
   height: auto;
   max-width: 100%;
   cursor: pointer;
-  display: none;
 }
 .freeBox__ikKmq > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -379,9 +375,6 @@
   > picture
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
-}
-.freeBoxraviExpFroDrakam__ikKmqQl6C7 {
-  display: flex;
 }
 .svg__kBx {
   position: relative;
@@ -980,8 +973,8 @@
   position: relative;
   object-fit: cover;
   max-width: 100%;
-  color: var(--token-1jTXKEDkeRHC);
-  width: 20px;
+  color: var(--token-kpM4b4mG4f2d);
+  width: 16px;
   height: 20px;
   flex-shrink: 0;
 }
@@ -1000,18 +993,19 @@
 .dialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
   position: relative;
+  display: none;
 }
 .dialograviExpFroDrakam:global(.__wab_instance):global(.__wab_instance) {
   display: none;
 }
 .freeBox___0EXmx {
-  display: flex;
   position: relative;
   flex-direction: row;
   width: auto;
   height: auto;
   max-width: 100%;
   cursor: pointer;
+  display: none;
 }
 .freeBox___0EXmx > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -1076,13 +1070,13 @@
   height: 1em;
 }
 .freeBox__iAvTv {
+  display: flex;
   position: relative;
   flex-direction: row;
   width: auto;
   height: auto;
   max-width: 100%;
   cursor: pointer;
-  display: none;
 }
 .freeBox__iAvTv > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -1100,9 +1094,6 @@
   > picture
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
-}
-.freeBoxraviExpFroDrakam__iAvTvQl6C7 {
-  display: flex;
 }
 .svg__buJg {
   position: relative;

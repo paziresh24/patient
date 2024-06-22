@@ -87,8 +87,6 @@ import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvg
 import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // plasmic-import: jHvDymIOvRnf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
-import HeartIcon from "../fragment_icons/icons/PlasmicIcon__Heart"; // plasmic-import: WTtCf_1I-uMv/icon
-import BoldheartIcon from "../fragment_icons/icons/PlasmicIcon__Boldheart"; // plasmic-import: eZfYsLpdWQA_/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
@@ -2482,7 +2480,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 PlasmicIconType={
                   hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
                     ? ThumbUpIcon
-                    : HeartIcon
+                    : ThumbUpIcon
                 }
                 className={classNames(projectcss.all, sty.svg__lsG2C, {
                   [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
@@ -2511,7 +2509,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 PlasmicIconType={
                   hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
                     ? ThumbUpIcon
-                    : BoldheartIcon
+                    : ThumbUpIcon
                 }
                 className={classNames(projectcss.all, sty.svg__sdFgJ, {
                   [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
@@ -2539,7 +2537,7 @@ function PlasmicReviewCard__RenderFunc(props: {
             >
               {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
                 ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
-                : "\u067e\u0633\u0646\u062f\u06cc\u062f\u0646"}
+                : "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
             </div>
           </Stack__>
         ) : null}
