@@ -71,8 +71,6 @@ import sty from "./PlasmicSummery.module.css"; // plasmic-import: JoYR24nI9z66/c
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
-import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
-
 createPlasmicElementProxy;
 
 export type PlasmicSummery__VariantMembers = {};
@@ -98,9 +96,7 @@ export interface DefaultSummeryProps {
   className?: string;
 }
 
-const $$ = {
-  splunkEvent: __fn_splunkEvent
-};
+const $$ = {};
 
 function useNextRouter() {
   try {
@@ -256,34 +252,6 @@ function PlasmicSummery__RenderFunc(props: {
                 typeof $steps["runOnClickSummery"].then === "function"
               ) {
                 $steps["runOnClickSummery"] = await $steps["runOnClickSummery"];
-              }
-
-              $steps["splunk"] = true
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.information.id,
-                            summery: $state.summery.value
-                          },
-                          type: "selecy_summery",
-                          token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["splunk"] != null &&
-                typeof $steps["splunk"] === "object" &&
-                typeof $steps["splunk"].then === "function"
-              ) {
-                $steps["splunk"] = await $steps["splunk"];
               }
             }}
             outline={true}

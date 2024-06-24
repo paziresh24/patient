@@ -309,6 +309,34 @@ function PlasmicReviewList__RenderFunc(props: {
                     "updateSearchInputValue"
                   ];
                 }
+
+                $steps["sendEvent"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              doctor_id: $props.information.id,
+                              summery: ummery
+                            },
+                            type: "selecy_summery",
+                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendEvent"] != null &&
+                  typeof $steps["sendEvent"] === "object" &&
+                  typeof $steps["sendEvent"].then === "function"
+                ) {
+                  $steps["sendEvent"] = await $steps["sendEvent"];
+                }
               }}
             />
           ) : null}
