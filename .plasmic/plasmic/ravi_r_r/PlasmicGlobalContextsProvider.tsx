@@ -16,12 +16,15 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
+
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
+
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
+
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
