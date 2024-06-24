@@ -310,6 +310,41 @@ function PlasmicReviewList__RenderFunc(props: {
                   ];
                 }
 
+                $steps["updateSearchInputValue2"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onSearch"],
+                        args: [
+                          (() => {
+                            try {
+                              return summery;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateSearchInputValue2"] != null &&
+                  typeof $steps["updateSearchInputValue2"] === "object" &&
+                  typeof $steps["updateSearchInputValue2"].then === "function"
+                ) {
+                  $steps["updateSearchInputValue2"] = await $steps[
+                    "updateSearchInputValue2"
+                  ];
+                }
+
                 $steps["sendEvent"] = true
                   ? (() => {
                       const actionArgs = {
@@ -318,7 +353,7 @@ function PlasmicReviewList__RenderFunc(props: {
                             group: "feedback",
                             data: {
                               doctor_id: $props.information.id,
-                              summery: ummery
+                              summery: summery
                             },
                             type: "selecy_summery",
                             token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
@@ -340,6 +375,8 @@ function PlasmicReviewList__RenderFunc(props: {
               }}
             />
           ) : null}
+          <div className={classNames(projectcss.all, sty.freeBox__onbte)} />
+
           {(() => {
             try {
               return (
