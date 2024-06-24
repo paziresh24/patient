@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Summery from "../../Summery"; // plasmic-import: JoYR24nI9z66/component
 import RateDetail from "../../RateDetail"; // plasmic-import: 5Lu5manJiJCz/component
 import SetNweReview from "../../SetNweReview"; // plasmic-import: ZewL2B_Ktxrj/component
 import Select from "../../Select"; // plasmic-import: zIWWWwAA3-2B/component
@@ -70,6 +71,7 @@ import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList.module.css"; // plasmic-import: Bx6gxTOoja9k/css
 
@@ -120,6 +122,7 @@ export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReviewList__OverridesType = {
   root?: Flex__<"div">;
+  summery?: Flex__<typeof Summery>;
   rateDetail?: Flex__<typeof RateDetail>;
   setNweReview?: Flex__<typeof SetNweReview>;
   filterInput?: Flex__<typeof Select>;
@@ -233,6 +236,7 @@ function PlasmicReviewList__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -250,6 +254,64 @@ function PlasmicReviewList__RenderFunc(props: {
         }
       })() ? (
         <div className={classNames(projectcss.all, sty.freeBox___0QvL)}>
+          {(() => {
+            try {
+              return $ctx.Growthbook.features["ravi-exp-fro-drakam"];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <Summery
+              data-plasmic-name={"summery"}
+              data-plasmic-override={overrides.summery}
+              className={classNames("__wab_instance", sty.summery)}
+              onClickSummery={async summery => {
+                const $steps = {};
+
+                $steps["updateSearchInputValue"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["searchInput", "value"]
+                        },
+                        operation: 0,
+                        value: summery
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateSearchInputValue"] != null &&
+                  typeof $steps["updateSearchInputValue"] === "object" &&
+                  typeof $steps["updateSearchInputValue"].then === "function"
+                ) {
+                  $steps["updateSearchInputValue"] = await $steps[
+                    "updateSearchInputValue"
+                  ];
+                }
+              }}
+            />
+          ) : null}
           {(() => {
             try {
               return (
@@ -676,7 +738,10 @@ function PlasmicReviewList__RenderFunc(props: {
                   className={classNames("__wab_instance", sty.reviewCard)}
                   commentText={(() => {
                     try {
-                      return currentItem.description;
+                      return currentItem.description.replace(
+                        new RegExp($state.searchInput.value, "g"),
+                        `<mark style="background-color: yellow;">$&</mark>`
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1249,6 +1314,7 @@ function PlasmicReviewList__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "summery",
     "rateDetail",
     "setNweReview",
     "filterInput",
@@ -1259,6 +1325,7 @@ const PlasmicDescendants = {
     "button",
     "sideEffect"
   ],
+  summery: ["summery"],
   rateDetail: ["rateDetail"],
   setNweReview: ["setNweReview"],
   filterInput: ["filterInput"],
@@ -1274,6 +1341,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  summery: typeof Summery;
   rateDetail: typeof RateDetail;
   setNweReview: typeof SetNweReview;
   filterInput: typeof Select;
@@ -1345,6 +1413,7 @@ export const PlasmicReviewList = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    summery: makeNodeComponent("summery"),
     rateDetail: makeNodeComponent("rateDetail"),
     setNweReview: makeNodeComponent("setNweReview"),
     filterInput: makeNodeComponent("filterInput"),
