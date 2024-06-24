@@ -72,6 +72,7 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZV/css
 
@@ -87,7 +88,7 @@ import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvg
 import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // plasmic-import: jHvDymIOvRnf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
-import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
+import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
@@ -374,6 +375,7 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.اردنماشنظر,
         {
           [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
@@ -1583,7 +1585,8 @@ function PlasmicReviewCard__RenderFunc(props: {
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          plasmic_antd_5_hostless_css.plasmic_tokens
         )}
       >
         <div className={classNames(projectcss.all, sty.freeBox__a8AOx)}>
@@ -2954,7 +2957,7 @@ function PlasmicReviewCard__RenderFunc(props: {
             }
           }}
         >
-          <Icon13Icon
+          <Icon14Icon
             className={classNames(projectcss.all, sty.svg__buJg)}
             role={"img"}
           />
