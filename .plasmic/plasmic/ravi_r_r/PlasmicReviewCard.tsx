@@ -944,12 +944,13 @@ function PlasmicReviewCard__RenderFunc(props: {
                                 const actionArgs = {
                                   customFunction: async () => {
                                     return fetch(
-                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/" +
-                                        $props.feedbackId +
-                                        "/",
+                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/",
                                       {
                                         method: "DELETE",
-                                        credentials: "include"
+                                        credentials: "include",
+                                        body: JSON.stringify({
+                                          Id: $props.feedbackId
+                                        })
                                       }
                                     );
                                   }
