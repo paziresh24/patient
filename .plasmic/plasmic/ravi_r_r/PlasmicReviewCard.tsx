@@ -944,7 +944,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                 const actionArgs = {
                                   customFunction: async () => {
                                     return fetch(
-                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete" +
+                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/" +
                                         $props.feedbackId +
                                         "/",
                                       {
