@@ -401,8 +401,21 @@ function PlasmicReviewList__RenderFunc(props: {
               }}
             />
           ) : null}
-          <div className={classNames(projectcss.all, sty.freeBox__onbte)} />
-
+          {(() => {
+            try {
+              return $ctx.Growthbook.features["ravi-exp-fro-drakam"];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__onbte)} />
+          ) : null}
           {(() => {
             try {
               return (
