@@ -848,7 +848,28 @@ function PlasmicReviewList__RenderFunc(props: {
                     className={classNames("__wab_instance", sty.reviewCard)}
                     commentText={(() => {
                       try {
-                        return currentItem.description;
+                        return (() => {
+                          function escapeHtml(unsafe) {
+                            return unsafe
+                              .replace(/&/g, "&amp;")
+                              .replace(/</g, "&lt;")
+                              .replace(/>/g, "&gt;")
+                              .replace(/"/g, "&quot;")
+                              .replace(/'/g, "&#039;");
+                          }
+                          const searchInput = escapeHtml(
+                            $state.searchInput.value
+                          );
+                          const description = escapeHtml(
+                            currentItem.description
+                          );
+                          const searchRegExp = new RegExp(searchInput, "g");
+                          const highlightedDescription = description.replace(
+                            searchRegExp,
+                            '<mark style="background-color: yellow;">$&</mark>'
+                          );
+                          return highlightedDescription;
+                        })();
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
