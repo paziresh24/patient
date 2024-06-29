@@ -35,18 +35,18 @@ export type OverwriteProfileData = {
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
   const information = {
-    id: source.id,
-    server_id: source.server_id,
+    id: source?.id ?? null,
+    server_id: source?.server_id ?? null,
     display_name: source.display_name,
     name: source.name,
     family: source.family,
     biography: source.biography,
     employee_id: source.medical_code,
-    experience: source.experience,
-    gender: source.gender,
-    image: source.image,
-    city_en_slug: source.city_en_slug,
-    should_recommend_other_doctors: source.should_recommend_other_doctors,
+    experience: source?.experience ?? null,
+    gender: source?.gender ?? null,
+    image: source?.image ?? null,
+    city_en_slug: source?.city_en_slug ?? null,
+    should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...overwriteData.provider,
   };
 
@@ -58,10 +58,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const expertises = {
     group_expertises: isEmpty(group_expertises)
-      ? source.group_expertises
+      ? source?.group_expertises ?? []
       : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
     expertises: isEmpty(overwriteData.provider.expertises)
-      ? source.expertises.map((item: any) => ({
+      ? source.expertises?.map?.((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
             aliasTitle: item.alias_title,
             degree: item.degree?.name,
@@ -71,7 +71,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           degree_id: item.degree.id,
           degree_name: item?.degree?.name ?? '',
           expertise_name: item.expertise?.name,
-        }))
+        })) ?? []
       : overwriteData.provider.expertises.map((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
             aliasTitle: item?.alias,
@@ -101,29 +101,29 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
       satisfaction: overwriteData.feedbacks?.satisfactionPercent
         ? ((overwriteData.feedbacks?.satisfactionPercent ?? 0) / 20).toFixed(1)
         : null,
-      like: source.feedbacks?.details?.like,
+      like: source.feedbacks?.details?.like ?? null,
     },
   };
 
   const media = {
-    aparat: source.aparat_video_code,
+    aparat: source?.aparat_video_code ?? null,
     gallery: source.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
   };
 
-  const symptomes = source.symptomes;
+  const symptomes = source?.symptomes ?? [];
 
   const history = {
-    insert_at_age: source.insert_at_age,
-    count_of_consult_books: source.followConsultBoosk,
-    count_of_page_view: source.number_of_visits,
+    insert_at_age: source?.insert_at_age ?? null,
+    count_of_consult_books: source?.followConsultBoosk ?? null,
+    count_of_page_view: source?.number_of_visits ?? null,
     ...overwriteData.history,
   };
 
-  const similarLinks = source.similar_links;
+  const similarLinks = source?.similar_links ?? null;
 
   const onlineVisit = {
-    enabled: source.consult_active_booking,
-    channels: source.online_visit_channel_types,
+    enabled: source?.consult_active_booking ?? null,
+    channels: source?.online_visit_channel_types ?? null,
   };
 
   const waitingTimeInfo = flatten(

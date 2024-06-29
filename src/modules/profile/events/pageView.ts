@@ -73,7 +73,7 @@ export const pageViewEvent = async ({
         can_booking: centers?.some((center: any) => center.services.some((service: any) => service?.can_booking === 1)),
         hours_of_work: centers?.some((center: any) => center.services.some((service: any) => !!service?.hours_of_work)),
         centers_types_booking_presented: centers?.map((center: any) => center.center_type_name),
-        top_expertise_and_alias: expertises.group_expertises[0].name,
+        top_expertise_and_alias: expertises?.group_expertises?.[0]?.name,
         user_agent: navigator.userAgent,
         page_view: history.number_of_visits,
         doctor_name: information?.display_name,
