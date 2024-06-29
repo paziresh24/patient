@@ -616,7 +616,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   const actionArgs = {
                                     customFunction: async () => {
                                       return fetch(
-                                        "https://apigw.paziresh24.com/ravi/v1/feedbacks?id=" +
+                                        "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
                                           $props.feedbackId,
                                         {
                                           headers: {
