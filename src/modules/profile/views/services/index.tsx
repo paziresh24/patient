@@ -80,7 +80,7 @@ export const Services = ({
   return (
     <>
       <div ref={servicesRef} className="flex flex-col space-y-3">
-        {id === '540' && (
+        {slug === 'دکتر-پروفسور-نور-بالا' && (
           <External
             title="ویزیت آنلاین (غیر فعال)"
             buttonText="ورود به سایت دکتر پروفسور محمد تقی نوربالا"

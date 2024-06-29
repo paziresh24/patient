@@ -25,7 +25,7 @@ import { getReviews } from '@/common/apis/services/reviews/getReviews';
 const getSearchLinks = ({ centers, group_expertises }: any) => {
   const center = centers.find((center: any) => center.city && center.id !== '5532');
   const gexp = group_expertises[0];
-  return ['/s/', ...(center?.city ? [`/s/${center.city_en_slug}/`, `/s/${center.city_en_slug}/${gexp.en_slug}/`] : [])];
+  return ['/s/', ...(center?.city ? [`/s/${center?.city_en_slug}/`, `/s/${center?.city_en_slug}/${gexp?.en_slug}/`] : [])];
 };
 
 const createBreadcrumb = (
@@ -100,6 +100,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUsePageView: boolean = false;
     let shouldUseNewRateCalculations: boolean = false;
     let shouldUsePlasmicReviewCard: boolean = false;
+    let getOnlyHasuraProfileData: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -171,6 +172,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         );
       // Plasmic Reviews Card
       shouldUsePlasmicReviewCard = growthbook.isOn('plasmic:review-card|slugs');
+      getOnlyHasuraProfileData = growthbook.isOn('get-only-hasura-profile-data');
     } catch (error) {
       console.error(error);
     }
@@ -187,7 +189,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       },
     };
 
-    if (shouldUseProvider) {
+    if (shouldUseProvider || getOnlyHasuraProfileData) {
       try {
         const parallelRequests = [await getProviderData({ slug: slugFormmated })];
 
@@ -208,15 +210,15 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }),
           };
           profileData.history = {
-            ...(shouldUseCreatedAt && {
+            ...((shouldUseCreatedAt || getOnlyHasuraProfileData) && {
               insert_at_age: formatDurationInMonths(providerData.value?.created_at),
             }),
-            ...(shouldUsePageView && {
+            ...((shouldUsePageView || getOnlyHasuraProfileData) && {
               count_of_page_view: providerData.value?.page_view,
             }),
           };
 
-          if (shouldUseExpertice) {
+          if (shouldUseExpertice || getOnlyHasuraProfileData) {
             const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
             const [specialitiesData] = await Promise.allSettled(parallelRequests);
 
@@ -228,7 +230,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }
           }
 
-          if (shouldUseUser) {
+          if (shouldUseUser || getOnlyHasuraProfileData) {
             const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
             const [userData] = await Promise.allSettled(parallelRequests);
 
@@ -295,6 +297,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
             }
           }
+        } else {
+          if (getOnlyHasuraProfileData) {
+            return {
+              notFound: true,
+            };
+          }
         }
       } catch (error) {
         console.error(error);
@@ -314,9 +322,18 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     };
 
     const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
-      overwriteProfileData(profileData, fullProfileData);
+      overwriteProfileData(
+        profileData,
+        getOnlyHasuraProfileData
+          ? {
+              online_visit_channel_types: fullProfileData.online_visit_channel_types,
+              consult_active_booking: fullProfileData.consult_active_booking,
+              centers: fullProfileData.centers,
+            }
+          : fullProfileData,
+      );
 
-    const links = getSearchLinks({ centers, group_expertises: expertises.group_expertises });
+    const links = getSearchLinks({ centers, group_expertises: expertises?.group_expertises ?? [] });
 
     const internalLinksData = await internalLinks({
       links,
@@ -366,7 +383,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
     const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
 
-    const title = `${information.prefix} ${information.display_name}، ${expertises.expertises[0].alias_title} ${
+    const title = `${information.prefix} ${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
       doctorCity ? `${doctorCity}،` : ''
     } نوبت دهی آنلاین و شماره تلفن`;
     const description = `نوبت دهی اینترنتی ${information.prefix} ${information.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
@@ -387,7 +404,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         similarLinks,
         waitingTimeInfo,
         dontShowRateAndReviewMessage,
-        shouldUseIncrementPageView: shouldUsePageView,
+        shouldUseIncrementPageView: shouldUsePageView || getOnlyHasuraProfileData,
         isBulk:
           centers.every((center: any) => center.status === 2) ||
           centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
