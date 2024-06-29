@@ -848,10 +848,7 @@ function PlasmicReviewList__RenderFunc(props: {
                     className={classNames("__wab_instance", sty.reviewCard)}
                     commentText={(() => {
                       try {
-                        return currentItem.description.replace(
-                          new RegExp($state.searchInput.value, "g"),
-                          `<mark style="background-color: yellow;">$&</mark>`
-                        );
+                        return currentItem.description;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
