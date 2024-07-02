@@ -948,6 +948,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                                       {
                                         method: "DELETE",
                                         credentials: "include",
+                                        headers: {
+                                          "Content-Type": "application/json"
+                                        },
                                         body: JSON.stringify({
                                           Id: $props.feedbackId
                                         })
