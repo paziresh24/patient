@@ -731,39 +731,6 @@ function PlasmicServices__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["sendEvent"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return window.paziresh24
-                        ?.logger("doctor-profile")
-                        .sendEvent({
-                          group: "doctor profile",
-                          type: "doctor profile press online visit book button",
-                          event: {
-                            page_url: window.location.pathname,
-                            referrer: window.document.referrer,
-                            group_expertises:
-                              $props.expertises.group_expertises[0]?.name ??
-                              "سایر",
-                            doctor_name: $props.information.display_name
-                          }
-                        });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["sendEvent"] != null &&
-              typeof $steps["sendEvent"] === "object" &&
-              typeof $steps["sendEvent"].then === "function"
-            ) {
-              $steps["sendEvent"] = await $steps["sendEvent"];
-            }
-
             $steps["goToPage"] = true
               ? (() => {
                   const actionArgs = {
@@ -801,6 +768,45 @@ function PlasmicServices__RenderFunc(props: {
               typeof $steps["goToPage"].then === "function"
             ) {
               $steps["goToPage"] = await $steps["goToPage"];
+            }
+
+            $steps["sendEvent"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        try {
+                          return window.paziresh24
+                            ?.logger("doctor-profile")
+                            .sendEvent({
+                              group: "doctor profile",
+                              type: "doctor profile press online visit book button",
+                              event: {
+                                page_url: window.location.pathname,
+                                referrer: window.document.referrer,
+                                group_expertises:
+                                  $props.expertises.group_expertises[0]?.name ??
+                                  "سایر",
+                                doctor_name: $props.information.display_name
+                              }
+                            });
+                        } catch (error) {
+                          return console.log(error);
+                        }
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["sendEvent"] != null &&
+              typeof $steps["sendEvent"] === "object" &&
+              typeof $steps["sendEvent"].then === "function"
+            ) {
+              $steps["sendEvent"] = await $steps["sendEvent"];
             }
           }}
           showEndIcon={
