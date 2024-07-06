@@ -3,13 +3,15 @@ import suggestionEvents from '../functions/suggestionEvents';
 import { useSearchStore } from '../store/search';
 import { Item } from '../types/suggestion';
 import { useRecentSearch } from './useRecentSearch';
+import useLockScroll from '@/common/hooks/useLockScroll';
 
 export const useSuggestionItem = () => {
   const router = useRouter();
   const { setUserSearchValue, city, userSearchValue } = useSearchStore();
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { addRecentSearch } = useRecentSearch();
-
+  const { openScroll } = useLockScroll();
+  
   const handleItemEvent = (item: Item, index: number) => {
     suggestionEvents.itemClick({
       cityName: city.name,
@@ -29,6 +31,7 @@ export const useSuggestionItem = () => {
     } else {
       router.push(item.url ?? '/s', undefined, { ...(item.url?.startsWith('/s') && { shallow: true }), scroll: true });
       setIsOpenSuggestion(false);
+      openScroll()
       setTimeout(() => setUserSearchValue(''), 0);
     }
   };
