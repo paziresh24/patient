@@ -263,7 +263,7 @@ function PlasmicSchedules__RenderFunc(props: {
                   $props.centerId
                 }&user_center_id=${$props.userCenterId}&type=${
                   typeof window != "undefined" &&
-                  window.location.host.includes(".paziresh24.com1")
+                  window.location.host.includes(".paziresh24.com")
                     ? "7"
                     : "1"
                 }`;
