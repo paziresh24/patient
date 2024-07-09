@@ -78,12 +78,14 @@ export type PlasmicReplyCard__ArgsType = {
   userName?: string;
   userProfile?: string;
   replyText?: string;
+  userId?: number;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
   "userName",
   "userProfile",
-  "replyText"
+  "replyText",
+  "userId"
 );
 
 export type PlasmicReplyCard__OverridesType = {
@@ -96,6 +98,7 @@ export interface DefaultReplyCardProps {
   userName?: string;
   userProfile?: string;
   replyText?: string;
+  userId?: number;
   className?: string;
 }
 

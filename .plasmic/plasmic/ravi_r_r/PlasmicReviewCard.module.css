@@ -538,6 +538,19 @@
   max-width: 100%;
   font-weight: 700;
   font-size: var(--token-6NbVMeD6zQwn);
+  display: none;
+}
+.ناماربر:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+}
+.text___21RLp {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-weight: 700;
+  font-size: var(--token-6NbVMeD6zQwn);
 }
 .chip:global(.__wab_instance) {
   position: relative;
@@ -1143,7 +1156,7 @@
   color: var(--token-JDvyxAtm9ONK);
   cursor: pointer;
 }
-.httpRestApiFetcher__y2Mff:global(.__wab_instance) {
+.رفتنرلا:global(.__wab_instance) {
   width: 100%;
   max-width: 100%;
   object-fit: cover;

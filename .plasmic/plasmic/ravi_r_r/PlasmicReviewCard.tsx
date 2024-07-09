@@ -151,6 +151,7 @@ export type PlasmicReviewCard__OverridesType = {
   نامتتارخ?: Flex__<"div">;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
+  ناماربر?: Flex__<typeof DataFetcher>;
   chip?: Flex__<typeof Chip>;
   متننظر?: Flex__<"div">;
   dialog2?: Flex__<typeof Dialog>;
@@ -161,6 +162,7 @@ export type PlasmicReviewCard__OverridesType = {
   رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
+  رفتنرلا?: Flex__<typeof DataFetcher>;
 };
 
 export interface DefaultReviewCardProps {
@@ -1773,6 +1775,64 @@ function PlasmicReviewCard__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
+            <DataFetcher
+              data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
+              data-plasmic-override={overrides.ناماربر}
+              className={classNames("__wab_instance", sty.ناماربر)}
+              dataName={"fetchedData"}
+              errorDisplay={null}
+              errorName={"fetchError"}
+              headers={{
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              }}
+              loadingDisplay={null}
+              method={"GET"}
+              noLayout={false}
+              url={(() => {
+                try {
+                  return `https://apigw.paziresh24.com/v1/users/${$props.userId}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            >
+              <DataCtxReader__>
+                {$ctx => (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___21RLp
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (
+                            $ctx.fetchedData.users[0]?.name || "کاربر بدون نام"
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                )}
+              </DataCtxReader__>
+            </DataFetcher>
             {(() => {
               try {
                 return $props.visitedTag;
@@ -3180,7 +3240,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         </div>
       </div>
       <DataFetcher
-        className={classNames("__wab_instance", sty.httpRestApiFetcher__y2Mff)}
+        data-plasmic-name={"\u0631\u0641\u062a\u0646\u0631\u0644\u0627"}
+        data-plasmic-override={overrides.رفتنرلا}
+        className={classNames("__wab_instance", sty.رفتنرلا)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -3272,6 +3334,7 @@ const PlasmicDescendants = {
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
     "userAvatar",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "chip",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
     "dialog2",
@@ -3281,7 +3344,8 @@ const PlasmicDescendants = {
     "reportText",
     "\u0631\u0644\u0627",
     "replyText",
-    "multilineTextInput"
+    "multilineTextInput",
+    "\u0631\u0641\u062a\u0646\u0631\u0644\u0627"
   ],
   سهنقطه: [
     "\u0633\u0647\u0646\u0642\u0637\u0647",
@@ -3300,10 +3364,12 @@ const PlasmicDescendants = {
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
     "userAvatar",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "chip"
   ],
   userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"],
+  ناماربر: ["\u0646\u0627\u0645\u0627\u0631\u0628\u0631"],
   chip: ["chip"],
   متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
   dialog2: [
@@ -3316,7 +3382,8 @@ const PlasmicDescendants = {
   reportText: ["reportText"],
   رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
   replyText: ["replyText"],
-  multilineTextInput: ["multilineTextInput"]
+  multilineTextInput: ["multilineTextInput"],
+  رفتنرلا: ["\u0631\u0641\u062a\u0646\u0631\u0644\u0627"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -3332,6 +3399,7 @@ type NodeDefaultElementType = {
   نامتتارخ: "div";
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
+  ناماربر: typeof DataFetcher;
   chip: typeof Chip;
   متننظر: "div";
   dialog2: typeof Dialog;
@@ -3342,6 +3410,7 @@ type NodeDefaultElementType = {
   رلا: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
+  رفتنرلا: typeof DataFetcher;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -3419,6 +3488,7 @@ export const PlasmicReviewCard = Object.assign(
     ),
     userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
+    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
     chip: makeNodeComponent("chip"),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
     dialog2: makeNodeComponent("dialog2"),
@@ -3431,6 +3501,7 @@ export const PlasmicReviewCard = Object.assign(
     رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
+    رفتنرلا: makeNodeComponent("\u0631\u0641\u062a\u0646\u0631\u0644\u0627"),
 
     // Metadata about props expected for PlasmicReviewCard
     internalVariantProps: PlasmicReviewCard__VariantProps,
