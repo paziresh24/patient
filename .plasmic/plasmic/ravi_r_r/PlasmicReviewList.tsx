@@ -801,7 +801,7 @@ function PlasmicReviewList__RenderFunc(props: {
                 }).apply(null, eventArgs);
               }}
               placeholder={
-                "\u062c\u0633\u062a\u062c\u0648\u06cc \u0646\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u06cc \u0648... \u062f\u0631 \u0646\u0638\u0631\u0627\u062a"
+                "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0646\u0638\u0631\u0627\u062a \u0628\u06cc\u0645\u0627\u0631\u0627\u0646"
               }
               value={
                 generateStateValueProp($state, ["searchInput", "value"]) ?? ""
