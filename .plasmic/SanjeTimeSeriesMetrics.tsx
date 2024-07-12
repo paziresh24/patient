@@ -2,9 +2,9 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import {
-  PlasmicRtlProvider,
-  DefaultRtlProviderProps
-} from "./plasmic/fragment_design_system/PlasmicRtlProvider";
+  PlasmicSanjeTimeSeriesMetrics,
+  DefaultSanjeTimeSeriesMetricsProps
+} from "./plasmic/paziresh_24_search/PlasmicSanjeTimeSeriesMetrics";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
@@ -14,32 +14,36 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // If you don't want to expose certain variants or slots as a prop, you can use
 // Omit to hide them:
 //
-// interface RtlProviderProps extends Omit<DefaultRtlProviderProps, "hideProps1"|"hideProp2"> {
+// interface SanjeTimeSeriesMetricsProps extends Omit<DefaultSanjeTimeSeriesMetricsProps, "hideProps1"|"hideProp2"> {
 //   // etc.
 // }
 //
-// You can also stop extending from DefaultRtlProviderProps altogether and have
+// You can also stop extending from DefaultSanjeTimeSeriesMetricsProps altogether and have
 // total control over the props for your component.
-export interface RtlProviderProps extends DefaultRtlProviderProps {}
+export interface SanjeTimeSeriesMetricsProps
+  extends DefaultSanjeTimeSeriesMetricsProps {}
 
-function RtlProvider_(props: RtlProviderProps, ref: HTMLElementRefOf<"div">) {
-  // Use PlasmicRtlProvider to render this component as it was
+function SanjeTimeSeriesMetrics_(
+  props: SanjeTimeSeriesMetricsProps,
+  ref: HTMLElementRefOf<"div">
+) {
+  // Use PlasmicSanjeTimeSeriesMetrics to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
   // can also install whatever React hooks you need here to manage state or
   // fetch data.
   //
-  // Props you can pass into PlasmicRtlProvider are:
+  // Props you can pass into PlasmicSanjeTimeSeriesMetrics are:
   // 1. Variants you want to activate,
   // 2. Contents for slots you want to fill,
   // 3. Overrides for any named node in the component to attach behavior and data,
   // 4. Props to set on the root node.
   //
-  // By default, we are just piping all RtlProviderProps here, but feel free
+  // By default, we are just piping all SanjeTimeSeriesMetricsProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicRtlProvider root={{ ref }} {...props} />;
+  return <PlasmicSanjeTimeSeriesMetrics root={{ ref }} {...props} />;
 }
 
-const RtlProvider = React.forwardRef(RtlProvider_);
-export default RtlProvider;
+const SanjeTimeSeriesMetrics = React.forwardRef(SanjeTimeSeriesMetrics_);
+export default SanjeTimeSeriesMetrics;
