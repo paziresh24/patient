@@ -102,6 +102,7 @@ export type PlasmicLocationSelectionScript__OverridesType = {
   text?: Flex__<"div">;
   freeBox?: Flex__<"div">;
   useMyLocation?: Flex__<typeof Button>;
+  button?: Flex__<typeof Button>;
   locationSelectionScriptEmbed?: Flex__<typeof Embed>;
   sideEffect?: Flex__<typeof SideEffect>;
 };
@@ -461,8 +462,10 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
               />
 
               <Button
+                data-plasmic-name={"button"}
+                data-plasmic-override={overrides.button}
                 children2={"\u0641\u0639\u0644\u0627 \u0646\u0647"}
-                className={classNames("__wab_instance", sty.button__rvyjl)}
+                className={classNames("__wab_instance", sty.button)}
                 endIcon={
                   <ChevronLeftIcon
                     className={classNames(projectcss.all, sty.svg__prdvl)}
@@ -772,7 +775,6 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           }}
         />
       ) : null}
-      <Button className={classNames("__wab_instance", sty.button__gdW)} />
     </div>
   ) as React.ReactElement | null;
 }
@@ -784,13 +786,15 @@ const PlasmicDescendants = {
     "text",
     "freeBox",
     "useMyLocation",
+    "button",
     "locationSelectionScriptEmbed",
     "sideEffect"
   ],
-  dialog: ["dialog", "text", "freeBox", "useMyLocation"],
+  dialog: ["dialog", "text", "freeBox", "useMyLocation", "button"],
   text: ["text"],
-  freeBox: ["freeBox", "useMyLocation"],
+  freeBox: ["freeBox", "useMyLocation", "button"],
   useMyLocation: ["useMyLocation"],
+  button: ["button"],
   locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"],
   sideEffect: ["sideEffect"]
 } as const;
@@ -803,6 +807,7 @@ type NodeDefaultElementType = {
   text: "div";
   freeBox: "div";
   useMyLocation: typeof Button;
+  button: typeof Button;
   locationSelectionScriptEmbed: typeof Embed;
   sideEffect: typeof SideEffect;
 };
@@ -871,6 +876,7 @@ export const PlasmicLocationSelectionScript = Object.assign(
     text: makeNodeComponent("text"),
     freeBox: makeNodeComponent("freeBox"),
     useMyLocation: makeNodeComponent("useMyLocation"),
+    button: makeNodeComponent("button"),
     locationSelectionScriptEmbed: makeNodeComponent(
       "locationSelectionScriptEmbed"
     ),

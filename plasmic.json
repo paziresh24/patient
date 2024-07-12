@@ -460,7 +460,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -2198,7 +2199,8 @@
           }
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "kS7YGZfVr6mU43XDQjXELc",
@@ -2220,7 +2222,8 @@
           "componentImportPath": "@plasmicpkgs/react-chartjs-2"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {
