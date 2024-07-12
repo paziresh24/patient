@@ -68,6 +68,8 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicLocationSelectionScript.module.css"; // plasmic-import: 5bzKtjF_q24p/css
 
@@ -100,7 +102,6 @@ export type PlasmicLocationSelectionScript__OverridesType = {
   text?: Flex__<"div">;
   freeBox?: Flex__<"div">;
   useMyLocation?: Flex__<typeof Button>;
-  button?: Flex__<typeof Button>;
   locationSelectionScriptEmbed?: Flex__<typeof Embed>;
   sideEffect?: Flex__<typeof SideEffect>;
 };
@@ -189,6 +190,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -458,10 +461,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
               />
 
               <Button
-                data-plasmic-name={"button"}
-                data-plasmic-override={overrides.button}
                 children2={"\u0641\u0639\u0644\u0627 \u0646\u0647"}
-                className={classNames("__wab_instance", sty.button)}
+                className={classNames("__wab_instance", sty.button__rvyjl)}
                 endIcon={
                   <ChevronLeftIcon
                     className={classNames(projectcss.all, sty.svg__prdvl)}
@@ -771,6 +772,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           }}
         />
       ) : null}
+      <Button className={classNames("__wab_instance", sty.button__gdW)} />
     </div>
   ) as React.ReactElement | null;
 }
@@ -782,15 +784,13 @@ const PlasmicDescendants = {
     "text",
     "freeBox",
     "useMyLocation",
-    "button",
     "locationSelectionScriptEmbed",
     "sideEffect"
   ],
-  dialog: ["dialog", "text", "freeBox", "useMyLocation", "button"],
+  dialog: ["dialog", "text", "freeBox", "useMyLocation"],
   text: ["text"],
-  freeBox: ["freeBox", "useMyLocation", "button"],
+  freeBox: ["freeBox", "useMyLocation"],
   useMyLocation: ["useMyLocation"],
-  button: ["button"],
   locationSelectionScriptEmbed: ["locationSelectionScriptEmbed"],
   sideEffect: ["sideEffect"]
 } as const;
@@ -803,7 +803,6 @@ type NodeDefaultElementType = {
   text: "div";
   freeBox: "div";
   useMyLocation: typeof Button;
-  button: typeof Button;
   locationSelectionScriptEmbed: typeof Embed;
   sideEffect: typeof SideEffect;
 };
@@ -872,7 +871,6 @@ export const PlasmicLocationSelectionScript = Object.assign(
     text: makeNodeComponent("text"),
     freeBox: makeNodeComponent("freeBox"),
     useMyLocation: makeNodeComponent("useMyLocation"),
-    button: makeNodeComponent("button"),
     locationSelectionScriptEmbed: makeNodeComponent(
       "locationSelectionScriptEmbed"
     ),

@@ -68,10 +68,12 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
-import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
+import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: 3UgV7ahdtn5G/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: I0wBVQs9owLc/icon
 import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
 import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
@@ -85,14 +87,14 @@ import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; 
 createPlasmicElementProxy;
 
 export type PlasmicProductCard__VariantMembers = {
-  _5StarRatingMode: "_5StarA";
+  _5StarRatingMode3: "_5StarA";
 };
 export type PlasmicProductCard__VariantsArgs = {
-  _5StarRatingMode?: SingleChoiceArg<"_5StarA">;
+  _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
 };
 type VariantPropType = keyof PlasmicProductCard__VariantsArgs;
 export const PlasmicProductCard__VariantProps = new Array<VariantPropType>(
-  "_5StarRatingMode"
+  "_5StarRatingMode3"
 );
 
 export type PlasmicProductCard__ArgsType = {
@@ -157,7 +159,7 @@ export interface DefaultProductCardProps {
   url?: any;
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
-  _5StarRatingMode?: SingleChoiceArg<"_5StarA">;
+  _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   className?: string;
 }
 
@@ -207,11 +209,11 @@ function PlasmicProductCard__RenderFunc(props: {
         variableType: "boolean"
       },
       {
-        path: "_5StarRatingMode",
+        path: "_5StarRatingMode3",
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
-          $props._5StarRatingMode
+          $props._5StarRatingMode3
       }
     ],
     [$props, $ctx, $refs]
@@ -238,11 +240,13 @@ function PlasmicProductCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root,
         {
-          [sty.root_5StarRatingMode__5StarA]: hasVariant(
+          [sty.root_5StarRatingMode3__5StarA]: hasVariant(
             $state,
-            "_5StarRatingMode",
+            "_5StarRatingMode3",
             "_5StarA"
           )
         }
@@ -555,7 +559,14 @@ function PlasmicProductCard__RenderFunc(props: {
                   projectcss.all,
                   projectcss.span,
                   projectcss.__wab_text,
-                  sty.cardSubtitle
+                  sty.cardSubtitle,
+                  {
+                    [sty.cardSubtitle_5StarRatingMode3__5StarA]: hasVariant(
+                      $state,
+                      "_5StarRatingMode3",
+                      "_5StarA"
+                    )
+                  }
                 )}
               >
                 <React.Fragment>
@@ -593,23 +604,23 @@ function PlasmicProductCard__RenderFunc(props: {
               as={"div"}
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__zf7Bm, {
-                [sty.freeBox_5StarRatingMode__5StarA__zf7BmfZd0]: hasVariant(
+                [sty.freeBox_5StarRatingMode3__5StarA__zf7BmfZd0]: hasVariant(
                   $state,
-                  "_5StarRatingMode",
+                  "_5StarRatingMode3",
                   "_5StarA"
                 )
               })}
             >
               <PlasmicIcon__
                 PlasmicIconType={
-                  hasVariant($state, "_5StarRatingMode", "_5StarA")
+                  hasVariant($state, "_5StarRatingMode3", "_5StarA")
                     ? Icon2Icon
-                    : ThumbUpIcon
+                    : Icon4Icon
                 }
                 className={classNames(projectcss.all, sty.svg___4KelP, {
-                  [sty.svg_5StarRatingMode__5StarA___4KelPfZd0]: hasVariant(
+                  [sty.svg_5StarRatingMode3__5StarA___4KelPfZd0]: hasVariant(
                     $state,
-                    "_5StarRatingMode",
+                    "_5StarRatingMode3",
                     "_5StarA"
                   )
                 })}
@@ -623,15 +634,15 @@ function PlasmicProductCard__RenderFunc(props: {
                   projectcss.__wab_text,
                   sty.span__zMlGi,
                   {
-                    [sty.span_5StarRatingMode__5StarA__zMlGifZd0]: hasVariant(
+                    [sty.span_5StarRatingMode3__5StarA__zMlGifZd0]: hasVariant(
                       $state,
-                      "_5StarRatingMode",
+                      "_5StarRatingMode3",
                       "_5StarA"
                     )
                   }
                 )}
               >
-                {hasVariant($state, "_5StarRatingMode", "_5StarA") ? (
+                {hasVariant($state, "_5StarRatingMode3", "_5StarA") ? (
                   <React.Fragment>
                     {(() => {
                       try {
@@ -655,13 +666,17 @@ function PlasmicProductCard__RenderFunc(props: {
                   <React.Fragment>
                     {(() => {
                       try {
-                        return "\u066A" + $props.satisfactionPercent;
+                        return $props.satisfactionPercent % 20 === 0
+                          ? $props.satisfactionPercent / 20
+                          : ($props.satisfactionPercent / 20)
+                              .toFixed(1)
+                              .replace(".0", "");
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
-                          return "100%";
+                          return " ";
                         }
                         throw e;
                       }
@@ -676,9 +691,9 @@ function PlasmicProductCard__RenderFunc(props: {
                   projectcss.__wab_text,
                   sty.span__qbAn4,
                   {
-                    [sty.span_5StarRatingMode__5StarA__qbAn4FZd0]: hasVariant(
+                    [sty.span_5StarRatingMode3__5StarA__qbAn4FZd0]: hasVariant(
                       $state,
-                      "_5StarRatingMode",
+                      "_5StarRatingMode3",
                       "_5StarA"
                     )
                   }
@@ -737,24 +752,34 @@ function PlasmicProductCard__RenderFunc(props: {
                 projectcss.all,
                 projectcss.span,
                 projectcss.__wab_text,
-                sty.cardAddressRow
+                sty.cardAddressRow,
+                {
+                  [sty.cardAddressRow_5StarRatingMode3__5StarA]: hasVariant(
+                    $state,
+                    "_5StarRatingMode3",
+                    "_5StarA"
+                  )
+                }
               )}
             >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.address;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
+              <div
+                className={projectcss.__wab_expr_html_text}
+                dangerouslySetInnerHTML={{
+                  __html: (() => {
+                    try {
+                      return $props.address;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
+                      }
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
+                  })()
+                }}
+              />
             </span>
           </LineClamp>
         </Stack__>
