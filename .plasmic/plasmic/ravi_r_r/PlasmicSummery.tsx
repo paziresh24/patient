@@ -215,6 +215,12 @@ function PlasmicSummery__RenderFunc(props: {
             }
             className={classNames("__wab_instance", sty.button)}
             color={"sand"}
+            endIcon={
+              <ChevronLeftIcon
+                className={classNames(projectcss.all, sty.svg__yHugK)}
+                role={"img"}
+              />
+            }
             key={currentIndex}
             onClick={async event => {
               const $steps = {};
@@ -255,6 +261,12 @@ function PlasmicSummery__RenderFunc(props: {
             outline={true}
             shape={"rounded"}
             size={"compact"}
+            startIcon={
+              <ChevronRightIcon
+                className={classNames(projectcss.all, sty.svg__k0Nm)}
+                role={"img"}
+              />
+            }
           />
         );
       })}

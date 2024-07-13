@@ -2171,137 +2171,137 @@ function PlasmicReviewCard__RenderFunc(props: {
         })()}
       >
         <DataCtxReader__>
-          {$ctx => (
-            <Dialog
-              data-plasmic-name={"dialog2"}
-              data-plasmic-override={overrides.dialog2}
-              body={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__x126B)}
-                >
-                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return $ctx.fetchedData.list;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <ReplyCard
-                        className={classNames(
-                          "__wab_instance",
-                          sty.replyCard__sQuYr
-                        )}
-                        key={currentIndex}
-                        replyText={(() => {
-                          try {
-                            return currentItem.description;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        userName={(() => {
-                          try {
-                            return (
-                              currentItem.user_display_name || "کاربر بدون نام"
-                            );
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        userProfile={(() => {
-                          try {
-                            return currentItem.user_image;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                      />
-                    );
-                  })}
-                </Stack__>
+          {$ctx =>
+            (() => {
+              try {
+                return $ctx.fetchedData.list.length > 1;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
               }
-              className={classNames("__wab_instance", sty.dialog2)}
-              onOpenChange={generateStateOnChangeProp($state, [
-                "dialog2",
-                "open"
-              ])}
-              open={generateStateValueProp($state, ["dialog2", "open"])}
-              title={"\u067e\u0627\u0633\u062e \u0647\u0627 "}
-              trigger={
-                (() => {
-                  try {
-                    return $ctx.fetchedData.list.length > 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
+            })() ? (
+              <Dialog
+                data-plasmic-name={"dialog2"}
+                data-plasmic-override={overrides.dialog2}
+                body={
                   <Stack__
                     as={"div"}
-                    data-plasmic-name={
-                      "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
-                    }
-                    data-plasmic-override={overrides.نظربشتراز1}
                     hasGap={true}
-                    className={classNames(projectcss.all, sty.نظربشتراز1)}
+                    className={classNames(projectcss.all, sty.freeBox__x126B)}
                   >
-                    <RepliesIcon
-                      className={classNames(projectcss.all, sty.svg___34YvM)}
-                      role={"img"}
-                    />
-
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__fw275
-                      )}
-                    >
-                      {
-                        "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
-                      }
-                    </div>
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return $ctx.fetchedData.list;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
+                        <ReplyCard
+                          className={classNames(
+                            "__wab_instance",
+                            sty.replyCard__sQuYr
+                          )}
+                          key={currentIndex}
+                          replyText={(() => {
+                            try {
+                              return currentItem.description;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          userId={(() => {
+                            try {
+                              return currentItem.user_id;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                        />
+                      );
+                    })}
                   </Stack__>
-                ) : null
-              }
-            />
-          )}
+                }
+                className={classNames("__wab_instance", sty.dialog2)}
+                onOpenChange={generateStateOnChangeProp($state, [
+                  "dialog2",
+                  "open"
+                ])}
+                open={generateStateValueProp($state, ["dialog2", "open"])}
+                title={"\u067e\u0627\u0633\u062e \u0647\u0627 "}
+                trigger={
+                  (() => {
+                    try {
+                      return $ctx.fetchedData.list.length > 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Stack__
+                      as={"div"}
+                      data-plasmic-name={
+                        "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
+                      }
+                      data-plasmic-override={overrides.نظربشتراز1}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.نظربشتراز1)}
+                    >
+                      <RepliesIcon
+                        className={classNames(projectcss.all, sty.svg___34YvM)}
+                        role={"img"}
+                      />
+
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__fw275
+                        )}
+                      >
+                        {
+                          "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
+                        }
+                      </div>
+                    </Stack__>
+                  ) : null
+                }
+              />
+            ) : null
+          }
         </DataCtxReader__>
       </DataFetcher>
       <Stack__
@@ -3297,12 +3297,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                userName={(() => {
+                userId={(() => {
                   try {
-                    return (
-                      $ctx.fetchedData.list[0].user_display_name ||
-                      "کاربر بدون نام"
-                    );
+                    return $ctx.fetchedData.list[0].user_id;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
