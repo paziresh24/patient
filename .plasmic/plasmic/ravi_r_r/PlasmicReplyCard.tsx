@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -75,28 +76,25 @@ type VariantPropType = keyof PlasmicReplyCard__VariantsArgs;
 export const PlasmicReplyCard__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicReplyCard__ArgsType = {
-  userName?: string;
-  userProfile?: string;
   replyText?: string;
   userId?: number;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
-  "userName",
-  "userProfile",
   "replyText",
   "userId"
 );
 
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
+  ناماربر?: Flex__<typeof DataFetcher>;
   نامتتارخ?: Flex__<"div">;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
 };
 
 export interface DefaultReplyCardProps {
-  userName?: string;
-  userProfile?: string;
   replyText?: string;
   userId?: number;
   className?: string;
@@ -148,79 +146,203 @@ function PlasmicReplyCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <div
-        data-plasmic-name={"\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"}
-        data-plasmic-override={overrides.نامتتارخ}
-        className={classNames(projectcss.all, sty.نامتتارخ)}
+      <DataFetcher
+        data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
+        data-plasmic-override={overrides.ناماربر}
+        className={classNames("__wab_instance", sty.ناماربر)}
+        dataName={"fetchedData"}
+        errorDisplay={null}
+        errorName={"fetchError"}
+        headers={{
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }}
+        loadingDisplay={null}
+        method={"GET"}
+        noLayout={false}
+        url={(() => {
+          try {
+            return `https://apigw.paziresh24.com/v1/users/${$props.userId}`;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
       >
-        <Avatar
-          data-plasmic-name={"userAvatar"}
-          data-plasmic-override={overrides.userAvatar}
-          className={classNames("__wab_instance", sty.userAvatar)}
-          name={(() => {
-            try {
-              return $props.userName;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          src={(() => {
-            try {
-              return $props.userProfile;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        />
-
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__dbIvm)}
-        >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__rie2S)}
-          >
+        <DataCtxReader__>
+          {$ctx => (
             <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__kgt4O
-              )}
+              data-plasmic-name={
+                "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+              }
+              data-plasmic-override={overrides.نامتتارخ}
+              className={classNames(projectcss.all, sty.نامتتارخ)}
             >
-              <React.Fragment>
-                {(() => {
+              <DataFetcher
+                data-plasmic-name={"httpRestApiFetcher"}
+                data-plasmic-override={overrides.httpRestApiFetcher}
+                className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+                dataName={"avatarfetchedData"}
+                errorDisplay={
+                  <DataCtxReader__>
+                    {$ctx => "Error fetching data"}
+                  </DataCtxReader__>
+                }
+                errorName={"fetchError"}
+                headers={{
+                  "Content-Type": "application/json",
+                  Accept: "application/json"
+                }}
+                loadingDisplay={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <Avatar
+                        data-plasmic-name={"userAvatar2"}
+                        data-plasmic-override={overrides.userAvatar2}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.userAvatar2
+                        )}
+                        name={(() => {
+                          try {
+                            return $ctx.fetchedData.users[0].name;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        src={``}
+                      />
+                    )}
+                  </DataCtxReader__>
+                }
+                method={"GET"}
+                noLayout={false}
+                previewSpinner={false}
+                url={(() => {
                   try {
-                    return $props.userName;
+                    return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                      return undefined;
                     }
                     throw e;
                   }
                 })()}
-              </React.Fragment>
+              >
+                <DataCtxReader__>
+                  {$ctx => (
+                    <Avatar
+                      data-plasmic-name={"userAvatar"}
+                      data-plasmic-override={overrides.userAvatar}
+                      className={classNames("__wab_instance", sty.userAvatar)}
+                      name={(() => {
+                        try {
+                          return $ctx.fetchedData.users[0].name;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      src={(() => {
+                        try {
+                          return $ctx.avatarfetchedData.data.image_url;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  )}
+                </DataCtxReader__>
+              </DataFetcher>
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__dbIvm)}
+              >
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__rie2S)}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__kgt4O
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $props.userName;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___8TwVb
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (
+                            $ctx.fetchedData.users[0].name || "کاربر بدون نام"
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                </Stack__>
+              </Stack__>
             </div>
-          </Stack__>
-        </Stack__>
-      </div>
+          )}
+        </DataCtxReader__>
+      </DataFetcher>
       <div className={classNames(projectcss.all, sty.freeBox__pxmoa)}>
         <div
           className={classNames(
@@ -256,10 +378,27 @@ function PlasmicReplyCard__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+    "httpRestApiFetcher",
+    "userAvatar2",
     "userAvatar"
   ],
-  نامتتارخ: ["\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e", "userAvatar"],
+  ناماربر: [
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+    "httpRestApiFetcher",
+    "userAvatar2",
+    "userAvatar"
+  ],
+  نامتتارخ: [
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+    "httpRestApiFetcher",
+    "userAvatar2",
+    "userAvatar"
+  ],
+  httpRestApiFetcher: ["httpRestApiFetcher", "userAvatar2", "userAvatar"],
+  userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -267,7 +406,10 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  ناماربر: typeof DataFetcher;
   نامتتارخ: "div";
+  httpRestApiFetcher: typeof DataFetcher;
+  userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
 };
 
@@ -331,9 +473,12 @@ export const PlasmicReplyCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
     نامتتارخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
 
     // Metadata about props expected for PlasmicReplyCard

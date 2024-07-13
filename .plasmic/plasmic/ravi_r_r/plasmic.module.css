@@ -8,7 +8,6 @@
 }
 
 .plasmic_default_styles {
-  --mixin-aIBG0l1RZ9PA-qQzsB_font-family: "IRANSansXV";
   --mixin-aIBG0l1RZ9PA-qQzsB_font-size: var(--token-tM2Vh4zTir7U);
   --mixin-aIBG0l1RZ9PA-qQzsB_font-weight: 400;
   --mixin-aIBG0l1RZ9PA-qQzsB_font-style: normal;
@@ -440,7 +439,6 @@
   white-space: normal;
 }
 :where(.root_reset) {
-  font-family: var(--mixin-aIBG0l1RZ9PA-qQzsB_font-family);
   font-size: var(--mixin-aIBG0l1RZ9PA-qQzsB_font-size);
   font-weight: var(--mixin-aIBG0l1RZ9PA-qQzsB_font-weight);
   font-style: var(--mixin-aIBG0l1RZ9PA-qQzsB_font-style);
