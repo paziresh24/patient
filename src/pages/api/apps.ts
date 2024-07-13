@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               ...item.value?.data,
               pin: false,
               manifest: item.value?.config?.url,
-              ...(item.value?.data?.key === 'drapp' ? { navigation_items: [...drappConfig] } : undefined),
+              ...(item.value?.data?.key === 'drapp' ? { id: 'suu4wxzcleelp4v', navigation_items: [...drappConfig] } : undefined),
             },
         ),
     ];

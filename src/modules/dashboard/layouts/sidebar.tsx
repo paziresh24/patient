@@ -32,10 +32,7 @@ export type App = {
 export const SideBar = ({ children, className, fullWidth }: { children: ReactNode; className?: string; fullWidth?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
   const logout = useUserInfoStore(state => state.logout);
-  const appsData = useApps(
-    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
-    { enabled: !!user.id },
-  );
+  const appsData = useApps();
   const isUserPending = useUserInfoStore(state => state.pending);
   const { asPath, ...router } = useRouter();
   const shouldShowBazaarMenu = useFeatureIsOn('dashboard:bazaar-menu|enable');
@@ -220,17 +217,20 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     .filter((app: any) => !app.pin)
                     .map((app: any) => (
                       <MenuItem
-                        key={app.name}
-                        name={app.name}
+                        key={app.key}
+                        name={app.display_name.fa}
                         icon={app.icon}
                         pattern={app.key}
                         link={`/dashboard/apps/${app.key}/${
-                          app.navigation_items.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
+                          app.fragments
+                            .find((item: any) => item.type === 'menu')
+                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
                         }/`}
-                        subMenu={app.navigation_items
-                          .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))
+                        subMenu={app.fragments
+                          .find((item: any) => item.type === 'menu')
+                          ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
                           .map((item: any) => ({
-                            name: item.label,
+                            name: item.name?.fa,
                             link: `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
                         onEvent={label =>
@@ -242,20 +242,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         }
                       />
                     ))}
-                {shouldShowBazaarMenu && (
-                  <MenuItem
-                    name="بازارچه"
-                    icon={<ShopIcon />}
-                    pattern={'/dashboard/bazaar/'}
-                    link={'/dashboard/bazaar/apps/'}
-                    onEvent={label =>
-                      appClickEvent({
-                        app_key: 'bazaar',
-                        menu_name: 'بازارچه',
-                      })
-                    }
-                  />
-                )}
+
                 {((appsData.isSuccess && (apps.some((app: any) => !app.pin) || shouldShowBazaarMenu)) ||
                   (user.provider?.job_title === 'doctor' || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
                 {defaultMenuData.map(menu => (
@@ -283,33 +270,6 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     ))}
                   </div>
                 )}
-                {appsData.isSuccess &&
-                  apps
-                    .filter((app: any) => app.pin)
-                    .map((app: any) => (
-                      <MenuItem
-                        key={app.name}
-                        name={app.name}
-                        icon={app.icon}
-                        pattern={app.key}
-                        link={`/dashboard/apps/${app.key}/${
-                          app.navigation_items.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
-                        }/`}
-                        subMenu={app.navigation_items
-                          .filter((item: any, _: number, items: any[]) => (items.length === 1 ? item.rel !== 'home' : true))
-                          .map((item: any) => ({
-                            name: item.label,
-                            link: `/dashboard/apps/${app.key}/${item.key}/`,
-                          }))}
-                        onEvent={label =>
-                          appClickEvent({
-                            app_key: app.key,
-                            menu_name: label,
-                            app_manifest: app.manifest,
-                          })
-                        }
-                      />
-                    ))}
               </div>
               <div onClick={logout}>
                 <MenuItem name="خروج" icon={<LogoutIcon />} />
