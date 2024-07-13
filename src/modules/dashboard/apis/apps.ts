@@ -1,14 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-interface Params {
-  user_id: string;
-  phone_number?: string;
-  is_doctor: boolean;
-}
-
-export const apps = (params: Params) => {
-  return axios.get('/patient/api/apps/', { params });
+export const apps = () => {
+  return axios.get('https://hamdast.paziresh24.com/api/v1/installations/', { withCredentials: true });
 };
 
-export const useApps = (params: Params, option?: Record<string, any>) => useQuery(['app', params], () => apps(params), { ...option });
+export const useApps = (option?: Record<string, any>) => useQuery(['app'], apps, { ...option });

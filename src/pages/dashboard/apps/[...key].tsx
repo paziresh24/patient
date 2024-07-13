@@ -11,17 +11,14 @@ import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = () => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
   const sessionStartTime = useRef<any>(null);
-  const appsData = useApps(
-    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
-    { enabled: !!user.id },
-  );
+  const appsData = useApps();
   const {
     query: { key: keys },
     isReady,
@@ -32,8 +29,11 @@ export const Dashboard = () => {
 
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
-  const selctedMenu = useMemo(() => app?.navigation_items.find((item: any) => item.key === menuKey), [app, isReady, menuKey, appKey]);
-  const appName = selctedMenu?.label ?? app?.name ?? 'داشبورد';
+  const selctedMenu = useMemo(
+    () => app?.fragments.find((item: any) => item.type === 'menu')?.options.find((item: any) => item.key === menuKey),
+    [app, isReady, menuKey, appKey],
+  );
+  const appName = selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
 
   useEffect(() => {
     sessionStartTime.current = Date.now();
@@ -72,19 +72,21 @@ export const Dashboard = () => {
   return (
     <div className="flex flex-col w-full">
       <Seo title={appName} noIndex />
-      {appsData.isSuccess && selctedMenu?.url && <AppBar title={appName} className="hidden pwa:!flex" />}
+      {appsData.isSuccess && selctedMenu?.embed_src && <AppBar title={appName} className="hidden pwa:!flex" />}
       <div
         key={selctedMenu?.key}
         className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative"
       >
         {(!appsData.isSuccess || isAppLoading) && <LoadingApps />}
-        {appsData.isSuccess && selctedMenu?.url && (
+        {appsData.isSuccess && selctedMenu?.embed_src && (
           <iframe
             ref={iframeRef}
             key={selctedMenu?.key}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`${selctedMenu?.url}?embedded=1&user_id=${user.id}`}
+            src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&src=${encodeURIComponent(
+              selctedMenu?.embed_src,
+            )}`}
           />
         )}
       </div>

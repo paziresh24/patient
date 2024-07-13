@@ -6,21 +6,19 @@ import useResponsive from '@/common/hooks/useResponsive';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import flatten from 'lodash/flatten';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';
 export const Dashboard = () => {
-  const { isMobile, isDesktop } = useResponsive();
-  const user = useUserInfoStore(state => state.info);
-  const apps = useApps(
-    { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
-    { enabled: !!user.id },
-  );
+  const { isDesktop } = useResponsive();
+  const apps = useApps();
   const router = useRouter();
 
   useEffect(() => {
+    if (apps.isError && isDesktop) {
+      router.push('/dashboard/profile');
+    }
     if (apps.isSuccess && isDesktop) {
       if (apps.data.data.length === 0) {
         router.push('/dashboard/profile');
@@ -28,11 +26,12 @@ export const Dashboard = () => {
       }
       router.push(
         `/dashboard/apps/${(flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.key}/${
-          (flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.navigation_items?.[0]?.key
+          (flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.fragments.find((item: any) => item.type === 'menu')
+            ?.options?.[0]?.key
         }/`,
       );
     }
-  }, [apps.isSuccess, isDesktop]);
+  }, [apps.status, isDesktop]);
 
   return (
     <>
