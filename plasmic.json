@@ -547,19 +547,6 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicPeopleAlsoSearchForBox.module.css",
           "scheme": "blackbox",
           "componentType": "component"
-        },
-        {
-          "id": "6BFYBWwqm50Z",
-          "name": "SanjeTimeSeriesMetrics",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSanjeTimeSeriesMetrics.tsx",
-          "importSpec": {
-            "modulePath": "SanjeTimeSeriesMetrics.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSanjeTimeSeriesMetrics.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
         }
       ],
       "icons": [
@@ -587,6 +574,16 @@
           "id": "3UgV7ahdtn5G",
           "name": "Icon4Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon4.tsx"
+        },
+        {
+          "id": "tkxrJJPajidE",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "0FBISMQsRLkp",
+          "name": "Icon6Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon6.tsx"
         }
       ],
       "images": [
@@ -644,8 +641,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1038,7 +1034,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
