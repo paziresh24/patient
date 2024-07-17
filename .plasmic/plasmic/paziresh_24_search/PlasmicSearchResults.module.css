@@ -41,6 +41,7 @@
   margin-right: 0px;
   background: none;
   width: 100%;
+  min-height: var(--token-BCWljTOyDNmw);
   min-width: 0;
   border-radius: var(--token-fhaz6q6bl-fW);
   border: 1px solid var(--token-zGjeYJZOhQzx);
