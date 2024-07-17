@@ -42,6 +42,8 @@
   background: none;
   width: 100%;
   min-width: 0;
+  border-radius: var(--token-fhaz6q6bl-fW);
+  border: 1px solid var(--token-zGjeYJZOhQzx);
 }
 .topSuggestedCardVerticalStack > :global(.__wab_flex-container) {
   flex-direction: column;
