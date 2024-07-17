@@ -194,5 +194,6 @@ export const useSearch = () => {
     searchCity,
     isConsult,
     search,
+    responseData: searchRequest?.data ?? {},
   };
 };
