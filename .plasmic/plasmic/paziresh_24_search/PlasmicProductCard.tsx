@@ -293,6 +293,29 @@ function PlasmicProductCard__RenderFunc(props: {
             </React.Fragment>
           </div>
         ) : null}
+        {(() => {
+          try {
+            return $props.topBadge[0].title !== undefined;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return false;
+            }
+            throw e;
+          }
+        })() ? (
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__hUA
+            )}
+          >
+            {"    "}
+          </div>
+        ) : null}
       </Stack__>
       <Stack__
         as={"div"}
