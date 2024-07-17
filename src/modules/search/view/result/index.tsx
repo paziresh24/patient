@@ -12,7 +12,7 @@ export const Result = () => {
     query: { params, ...query },
   } = useRouter();
 
-  const { result, isLanding, isLoading, selectedFilters, search } = useSearch();
+  const { result, isLanding, isLoading, search, responseData } = useSearch();
   const { changeRoute } = useSearchRouting();
   const city = useSearchStore(state => state.city);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -39,11 +39,11 @@ export const Result = () => {
           name="SearchResults"
           props={{
             searchResultResponse: {
+              ...responseData,
               search: {
                 ...search,
                 result,
               },
-              selectedFilters,
             },
             nextPageTrigger: handleNextPage,
             imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,

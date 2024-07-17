@@ -57,6 +57,7 @@ const Search = ({ host }: any) => {
   const { changeRoute } = useSearchRouting();
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
+  const showConsultBanner = useFeatureIsOn('search:consult-banner');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -169,7 +170,7 @@ const Search = ({ host }: any) => {
                 )}
               </div>
             )}
-            {customize.showConsultServices && <ConsultBanner />}
+            {customize.showConsultServices && showConsultBanner && <ConsultBanner />}
             <Result />
           </div>
         </div>
