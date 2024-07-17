@@ -334,6 +334,7 @@ function PlasmicSearchResults__RenderFunc(props: {
             }
             method={"GET"}
             noLayout={false}
+            previewSpinner={true}
             url={(() => {
               try {
                 return `https://apigw.paziresh24.com/seapi/v1/search/ir/${
