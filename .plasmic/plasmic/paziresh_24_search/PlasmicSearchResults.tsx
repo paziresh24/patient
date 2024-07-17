@@ -283,7 +283,18 @@ function PlasmicSearchResults__RenderFunc(props: {
               ?.outline === true &&
             ($props.searchResultResponse.search.result[0]?.actions[1]
               ?.outline === true ||
-              !$props.searchResultResponse.search.result[0]?.actions[1])
+              !$props.searchResultResponse.search.result[0]?.actions[1]) &&
+            (!$props.searchResultResponse.selected_filters.text ||
+              !$props.searchResultResponse.selected_filters.hasOwnProperty(
+                "text"
+              )) &&
+            (!$props.searchResultResponse.selected_filters.turn_type ||
+              $props.searchResultResponse.selected_filters.turn_type !==
+                "consult") &&
+            $props.searchResultResponse.search.total > 0 &&
+            !$props.searchResultResponse.selected_filters.result_type &&
+            (!$props.searchResultResponse.search.pagination.page ||
+              $props.searchResultResponse.search.pagination.page === 1)
           );
         } catch (e) {
           if (
