@@ -68,8 +68,6 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
@@ -112,6 +110,7 @@ export type PlasmicProductCard__ArgsType = {
   url?: any;
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
+  topBadge?: any;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -128,7 +127,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "avatarRingColor",
   "url",
   "avatarAltText",
-  "eventTrigger"
+  "eventTrigger",
+  "topBadge"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -140,7 +140,6 @@ export type PlasmicProductCard__OverridesType = {
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
   badgesChip?: Flex__<typeof Chip>;
-  text?: Flex__<"div">;
   button?: Flex__<typeof Button>;
 };
 
@@ -159,6 +158,7 @@ export interface DefaultProductCardProps {
   url?: any;
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
+  topBadge?: any;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   className?: string;
 }
@@ -240,8 +240,6 @@ function PlasmicProductCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root,
         {
           [sty.root_5StarRatingMode3__5StarA]: hasVariant(
@@ -253,6 +251,72 @@ function PlasmicProductCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
+      <Stack__
+        as={"div"}
+        hasGap={true}
+        className={classNames(projectcss.all, sty.freeBox__bcNgL)}
+      >
+        {(() => {
+          try {
+            return $props.topBadge[0].title !== undefined;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return false;
+            }
+            throw e;
+          }
+        })() ? (
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__hKulC
+            )}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.topBadge[0].title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return " ";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </div>
+        ) : null}
+        {(() => {
+          try {
+            return $props.topBadge[0].title !== undefined;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return false;
+            }
+            throw e;
+          }
+        })() ? (
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__hUA
+            )}
+          >
+            {"    "}
+          </div>
+        ) : null}
+      </Stack__>
       <Stack__
         as={"div"}
         hasGap={true}
@@ -762,24 +826,21 @@ function PlasmicProductCard__RenderFunc(props: {
                 }
               )}
             >
-              <div
-                className={projectcss.__wab_expr_html_text}
-                dangerouslySetInnerHTML={{
-                  __html: (() => {
-                    try {
-                      return $props.address;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
-                      }
-                      throw e;
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.address;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
                     }
-                  })()
-                }}
-              />
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
             </span>
           </LineClamp>
         </Stack__>
@@ -833,6 +894,15 @@ function PlasmicProductCard__RenderFunc(props: {
               })()}
             </React.Fragment>
           </span>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___57MCk
+            )}
+          >
+            {"    "}
+          </div>
         </Stack__>
       ) : null}
       {(() => {
@@ -874,12 +944,10 @@ function PlasmicProductCard__RenderFunc(props: {
               const child$Props = {
                 body: (
                   <div
-                    data-plasmic-name={"text"}
-                    data-plasmic-override={overrides.text}
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text
+                      sty.text__aNeb4
                     )}
                   >
                     <React.Fragment>
@@ -1279,7 +1347,6 @@ const PlasmicDescendants = {
     "cardPrice",
     "dialog",
     "badgesChip",
-    "text",
     "button"
   ],
   avatar: ["avatar"],
@@ -1287,9 +1354,8 @@ const PlasmicDescendants = {
   cardSubtitle: ["cardSubtitle"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
-  dialog: ["dialog", "badgesChip", "text"],
+  dialog: ["dialog", "badgesChip"],
   badgesChip: ["badgesChip"],
-  text: ["text"],
   button: ["button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -1304,7 +1370,6 @@ type NodeDefaultElementType = {
   cardPrice: "span";
   dialog: typeof Dialog;
   badgesChip: typeof Chip;
-  text: "div";
   button: typeof Button;
 };
 
@@ -1375,7 +1440,6 @@ export const PlasmicProductCard = Object.assign(
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
     badgesChip: makeNodeComponent("badgesChip"),
-    text: makeNodeComponent("text"),
     button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicProductCard

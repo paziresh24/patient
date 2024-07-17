@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
@@ -69,8 +70,6 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
@@ -95,6 +94,7 @@ export type PlasmicSearchResults__ArgsType = {
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
+  topSuggestedCardFeature?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -105,13 +105,17 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "location",
   "searchFooterSecondaryTasksObject",
   "searchFooterQuerySuggestionResponseObject",
-  "showMyPerformanceMetricsBox"
+  "showMyPerformanceMetricsBox",
+  "topSuggestedCardFeature"
 );
 
 export type PlasmicSearchResults__OverridesType = {
   root?: Flex__<"div">;
   showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
-  resultCardsVerticalStack?: Flex__<"div">;
+  topSuggestedCardVerticalStack?: Flex__<"div">;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  topSuggestedCard?: Flex__<typeof ProductCard>;
+  resultCardsVerticalStack2?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
@@ -130,6 +134,7 @@ export interface DefaultSearchResultsProps {
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
+  topSuggestedCardFeature?: any;
   className?: string;
 }
 
@@ -208,8 +213,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -274,6 +277,413 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
+          return (
+            $props.topSuggestedCardFeature.enable &&
+            $props.searchResultResponse.search.result[0]?.actions[0]
+              ?.outline === true &&
+            ($props.searchResultResponse.search.result[0]?.actions[1]
+              ?.outline === true ||
+              !$props.searchResultResponse.search.result[0]?.actions[1])
+          );
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          data-plasmic-name={"topSuggestedCardVerticalStack"}
+          data-plasmic-override={overrides.topSuggestedCardVerticalStack}
+          hasGap={true}
+          className={classNames(
+            projectcss.all,
+            sty.topSuggestedCardVerticalStack
+          )}
+        >
+          <DataFetcher
+            data-plasmic-name={"httpRestApiFetcher"}
+            data-plasmic-override={overrides.httpRestApiFetcher}
+            className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+            dataName={"fetchedData"}
+            errorDisplay={
+              <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
+            }
+            errorName={"fetchError"}
+            headers={{
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            }}
+            loadingDisplay={
+              <DataCtxReader__>
+                {$ctx =>
+                  "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
+                }
+              </DataCtxReader__>
+            }
+            method={"GET"}
+            noLayout={false}
+            previewErrorDisplay={false}
+            previewSpinner={false}
+            url={(() => {
+              try {
+                return `https://apigw.paziresh24.com/seapi/v1/search/ir/${
+                  $props.searchResultResponse.selected_filters.sub_category ||
+                  $props.searchResultResponse.selected_filters.category
+                }?turn_type=consult`;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          >
+            <DataCtxReader__>
+              {$ctx => (
+                <ProductCard
+                  data-plasmic-name={"topSuggestedCard"}
+                  data-plasmic-override={overrides.topSuggestedCard}
+                  actionButtons={(() => {
+                    try {
+                      return (() => {
+                        if (
+                          typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_first_free_time"
+                          ] === "undefined"
+                        ) {
+                          return $ctx.fetchedData.search.result[0].actions;
+                        }
+                        if (
+                          !$ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_first_free_time"
+                          ]
+                        ) {
+                          $ctx.fetchedData.search.result[0].actions =
+                            $ctx.fetchedData.search.result[0].actions.map(
+                              action => ({
+                                ...action,
+                                top_title: ""
+                              })
+                            );
+                        }
+                        return $ctx.fetchedData.search.result[0].actions;
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  address={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0].display_address;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarAltText={(() => {
+                    try {
+                      return `${
+                        $ctx.fetchedData.search.result[0].prefix
+                          ? $ctx.fetchedData.search.result[0].prefix + " "
+                          : ""
+                      }${
+                        $ctx.fetchedData.search.result[0].title
+                          ? $ctx.fetchedData.search.result[0].title + " "
+                          : ""
+                      }${
+                        $ctx.fetchedData.search.result[0].display_expertise
+                          ? $ctx.fetchedData.search.result[0].display_expertise
+                          : ""
+                      }`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarRingColor={(() => {
+                    try {
+                      return !$ctx.fetchedData.search.result[0].is_bulk &&
+                        $ctx.fetchedData.search.result[0].is_bulk !== undefined
+                        ? "blue"
+                        : undefined;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarSrc={`${$props.imageSrcPrefix}${$ctx.fetchedData.search.result[0].image}`}
+                  avatarVerifiedTick={(() => {
+                    try {
+                      return (
+                        !$ctx.fetchedData.search.result[0].is_bulk &&
+                        $ctx.fetchedData.search.result[0].is_bulk !== undefined
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  badges={(() => {
+                    try {
+                      return (() => {
+                        if (
+                          typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_available_time"
+                          ] === "undefined"
+                        ) {
+                          return $ctx.fetchedData.search.result[0].badges;
+                        }
+                        return $ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_available_time"
+                        ]
+                          ? $ctx.fetchedData.search.result[0].badges
+                          : $ctx.fetchedData.search.result[0].badges.filter(
+                              badge => !badge.title.includes("فعال شدن نوبت")
+                            );
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  className={classNames("__wab_instance", sty.topSuggestedCard)}
+                  eventTrigger={async (elementName, elementContent) => {
+                    const $steps = {};
+
+                    $steps["runCodeSplunkEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                                group: "search_metrics",
+                                type: "search_top_suggested_card_click",
+                                data: {
+                                  card_data: {
+                                    action:
+                                      $ctx.fetchedData.search.result[0].actions?.map?.(
+                                        item =>
+                                          JSON.stringify({
+                                            outline: item.outline,
+                                            title: item.title,
+                                            top_title: item.top_title.replace(
+                                              /(<([^>]+)>)/gi,
+                                              ""
+                                            )
+                                          })
+                                      ),
+                                    _id: $ctx.fetchedData.search.result[0]._id,
+                                    position:
+                                      $ctx.fetchedData.search.result[0]
+                                        .position,
+                                    server_id:
+                                      $ctx.fetchedData.search.result[0]
+                                        .server_id,
+                                    title:
+                                      $ctx.fetchedData.search.result[0].title,
+                                    type: $ctx.fetchedData.search.result[0]
+                                      .type,
+                                    url: $ctx.fetchedData.search.result[0].url,
+                                    rates_count:
+                                      $ctx.fetchedData.search.result[0]
+                                        .rates_count,
+                                    satisfaction:
+                                      $ctx.fetchedData.search.result[0]
+                                        .satisfaction
+                                  },
+                                  filters:
+                                    $props.searchResultResponse
+                                      .selected_filters,
+                                  result_count:
+                                    $props.searchResultResponse.lent,
+                                  location: $props.location.city_name,
+                                  city_id: $props.location.city_id,
+                                  lat: $props.location.lat,
+                                  lon: $props.location.lon,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id
+                                }
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCodeSplunkEvent"] != null &&
+                      typeof $steps["runCodeSplunkEvent"] === "object" &&
+                      typeof $steps["runCodeSplunkEvent"].then === "function"
+                    ) {
+                      $steps["runCodeSplunkEvent"] = await $steps[
+                        "runCodeSplunkEvent"
+                      ];
+                    }
+                  }}
+                  price={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0].price;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  rateCount={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0].rates_count;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  satisfactionPercent={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0].satisfaction;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  subTitle={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0]
+                        .display_expertise;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  title={(() => {
+                    try {
+                      return $ctx.fetchedData.search.result[0].title;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  topBadge={(() => {
+                    try {
+                      return [
+                        {
+                          title: $props.topSuggestedCardFeature.badge_lable,
+                          description: "",
+                          type: "success"
+                        }
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [
+                          { title: "", description: "", type: "success" }
+                        ];
+                      }
+                      throw e;
+                    }
+                  })()}
+                  url={(() => {
+                    try {
+                      return {
+                        destination: $ctx.fetchedData.search.result[0].url,
+                        title: `${
+                          $ctx.fetchedData.search.result[0].prefix
+                            ? $ctx.fetchedData.search.result[0].prefix + " "
+                            : ""
+                        }${
+                          $ctx.fetchedData.search.result[0].title
+                            ? $ctx.fetchedData.search.result[0].title + " "
+                            : ""
+                        }${
+                          $ctx.fetchedData.search.result[0].display_expertise
+                            ? $ctx.fetchedData.search.result[0]
+                                .display_expertise
+                            : ""
+                        }`
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              )}
+            </DataCtxReader__>
+          </DataFetcher>
+        </Stack__>
+      ) : null}
+      {(() => {
+        try {
           return $props.searchResultResponse.search.result.length !== 0;
         } catch (e) {
           if (
@@ -287,10 +697,10 @@ function PlasmicSearchResults__RenderFunc(props: {
       })() ? (
         <Stack__
           as={"div"}
-          data-plasmic-name={"resultCardsVerticalStack"}
-          data-plasmic-override={overrides.resultCardsVerticalStack}
+          data-plasmic-name={"resultCardsVerticalStack2"}
+          data-plasmic-override={overrides.resultCardsVerticalStack2}
           hasGap={true}
-          className={classNames(projectcss.all, sty.resultCardsVerticalStack)}
+          className={classNames(projectcss.all, sty.resultCardsVerticalStack2)}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
@@ -1011,6 +1421,46 @@ function PlasmicSearchResults__RenderFunc(props: {
                 "visibleShowMySearchPerformanceVisibilityByFetchUrl"
               ];
           }
+
+          $steps["topSuggestedCardViewSplunkEvent"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return setTimeout(() => {
+                      if (document.querySelector(".top-suggested-card")) {
+                        $$.splunkEvent({
+                          token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                          group: "search_metrics",
+                          type: "search_top_suggested_card_view",
+                          data: {
+                            filters:
+                              $props.searchResultResponse.selected_filters,
+                            result_count: $props.searchResultResponse.length,
+                            location: $props.location.city_name,
+                            city_id: $props.location.city_id,
+                            lat: $props.location.lat,
+                            lon: $props.location.lon,
+                            query: "..."
+                          }
+                        });
+                      }
+                    }, 2000);
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["topSuggestedCardViewSplunkEvent"] != null &&
+            typeof $steps["topSuggestedCardViewSplunkEvent"] === "object" &&
+            typeof $steps["topSuggestedCardViewSplunkEvent"].then === "function"
+          ) {
+            $steps["topSuggestedCardViewSplunkEvent"] = await $steps[
+              "topSuggestedCardViewSplunkEvent"
+            ];
+          }
         }}
       />
 
@@ -1218,7 +1668,10 @@ const PlasmicDescendants = {
   root: [
     "root",
     "showMySearchPerformance",
-    "resultCardsVerticalStack",
+    "topSuggestedCardVerticalStack",
+    "httpRestApiFetcher",
+    "topSuggestedCard",
+    "resultCardsVerticalStack2",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
@@ -1228,7 +1681,14 @@ const PlasmicDescendants = {
     "searchFooterSecondaryTasks"
   ],
   showMySearchPerformance: ["showMySearchPerformance"],
-  resultCardsVerticalStack: ["resultCardsVerticalStack", "productCard"],
+  topSuggestedCardVerticalStack: [
+    "topSuggestedCardVerticalStack",
+    "httpRestApiFetcher",
+    "topSuggestedCard"
+  ],
+  httpRestApiFetcher: ["httpRestApiFetcher", "topSuggestedCard"],
+  topSuggestedCard: ["topSuggestedCard"],
+  resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
@@ -1243,7 +1703,10 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   showMySearchPerformance: "a";
-  resultCardsVerticalStack: "div";
+  topSuggestedCardVerticalStack: "div";
+  httpRestApiFetcher: typeof DataFetcher;
+  topSuggestedCard: typeof ProductCard;
+  resultCardsVerticalStack2: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
@@ -1314,7 +1777,12 @@ export const PlasmicSearchResults = Object.assign(
   {
     // Helper components rendering sub-elements
     showMySearchPerformance: makeNodeComponent("showMySearchPerformance"),
-    resultCardsVerticalStack: makeNodeComponent("resultCardsVerticalStack"),
+    topSuggestedCardVerticalStack: makeNodeComponent(
+      "topSuggestedCardVerticalStack"
+    ),
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    topSuggestedCard: makeNodeComponent("topSuggestedCard"),
+    resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
     noResultsBlockVerticalStack: makeNodeComponent(
