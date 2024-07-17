@@ -894,6 +894,15 @@ function PlasmicProductCard__RenderFunc(props: {
               })()}
             </React.Fragment>
           </span>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___57MCk
+            )}
+          >
+            {"    "}
+          </div>
         </Stack__>
       ) : null}
       {(() => {

@@ -94,6 +94,7 @@ export type PlasmicSearchResults__ArgsType = {
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
+  topSuggestedCardFeature?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -104,7 +105,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "location",
   "searchFooterSecondaryTasksObject",
   "searchFooterQuerySuggestionResponseObject",
-  "showMyPerformanceMetricsBox"
+  "showMyPerformanceMetricsBox",
+  "topSuggestedCardFeature"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -132,6 +134,7 @@ export interface DefaultSearchResultsProps {
   searchFooterSecondaryTasksObject?: any;
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
+  topSuggestedCardFeature?: any;
   className?: string;
 }
 
@@ -275,6 +278,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       {(() => {
         try {
           return (
+            $props.topSuggestedCardFeature.enable &&
             $props.searchResultResponse.search.result[0]?.actions[0]
               ?.outline === true &&
             ($props.searchResultResponse.search.result[0]?.actions[1]
@@ -622,15 +626,27 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
-                  topBadge={[
-                    {
-                      title:
-                        "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u062c\u0627\u06cc\u06af\u0632\u06cc\u0646 \u067e\u0630\u06cc\u0631\u063424",
-                      description:
-                        "\u0628\u06cc\u0634 \u0627\u0632 96 \u062f\u0631\u0635\u062f \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u0627\u0632 \u0646\u062d\u0648\u0647 \u0628\u0631\u062e\u0648\u0631\u062f \u0632\u0647\u0631\u0627 \u062f\u0648\u0633\u062a\u06cc \u0631\u0636\u0627\u06cc\u062a \u062f\u0627\u0634\u062a\u0647 \u0627\u0646\u062f.",
-                      type: "success"
+                  topBadge={(() => {
+                    try {
+                      return [
+                        {
+                          title: $props.topSuggestedCardFeature.badge_lable,
+                          description: "",
+                          type: "success"
+                        }
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [
+                          { title: "", description: "", type: "success" }
+                        ];
+                      }
+                      throw e;
                     }
-                  ]}
+                  })()}
                   url={(() => {
                     try {
                       return {

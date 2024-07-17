@@ -75,7 +75,7 @@
   align-self: center;
   padding-left: 11px;
   padding-right: 6px;
-  transform: translateX(20px) translateY(0px) translateZ(0px) skewX(-43deg)
+  transform: translateX(20px) translateY(0px) translateZ(0px) skewX(43deg)
     skewY(0deg);
   z-index: 4;
   border-radius: var(--token-fhaz6q6bl-fW);
