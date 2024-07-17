@@ -323,6 +323,7 @@ function PlasmicSearchResults__RenderFunc(props: {
             }
             method={"GET"}
             noLayout={false}
+            previewErrorDisplay={false}
             previewSpinner={false}
             url={(() => {
               try {
