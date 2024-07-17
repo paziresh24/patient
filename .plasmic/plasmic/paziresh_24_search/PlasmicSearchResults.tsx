@@ -281,13 +281,16 @@ function PlasmicSearchResults__RenderFunc(props: {
               ?.outline === true ||
               !$props.searchResultResponse.search.result[0]?.actions[1]) &&
             $props.searchResultResponse.search.total > 0 &&
-            !window.location.href.includes("center") &&
-            !window.location.href.includes("page") &&
-            !window.location.href.includes("/q-") &&
-            !window.location.href.includes("text=") &&
-            !window.location.href.includes("turn_type=consult") &&
-            (window.location.hostname.endsWith("plasmic.app") ||
-              window.location.hostname.endsWith("paziresh24.com"))
+            (!$props.searchResultResponse.selected_filters.text ||
+              !$props.searchResultResponse.selected_filters.hasOwnProperty(
+                "text"
+              )) &&
+            !$props.searchResultResponse.selected_filters.result_type &&
+            (!$props.searchResultResponse.selected_filters.turn_type ||
+              $props.searchResultResponse.selected_filters.turn_type !==
+                "consult") &&
+            (!$props.searchResultResponse.search.pagination.page ||
+              $props.searchResultResponse.search.pagination.page === 1)
           );
         } catch (e) {
           if (
@@ -323,7 +326,11 @@ function PlasmicSearchResults__RenderFunc(props: {
               Accept: "application/json"
             }}
             loadingDisplay={
-              <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
+              <DataCtxReader__>
+                {$ctx =>
+                  "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
+                }
+              </DataCtxReader__>
             }
             method={"GET"}
             noLayout={false}
