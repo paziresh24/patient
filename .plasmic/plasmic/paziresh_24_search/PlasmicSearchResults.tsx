@@ -115,6 +115,7 @@ export type PlasmicSearchResults__OverridesType = {
   topSuggestedCardVerticalStack?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
+  sendSplunkEvent?: Flex__<typeof DataFetcher>;
   resultCardsVerticalStack2?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
@@ -369,338 +370,79 @@ function PlasmicSearchResults__RenderFunc(props: {
             })()}
           >
             <DataCtxReader__>
-              {$ctx =>
-                (() => {
-                  try {
-                    return (
-                      $ctx.fetchedData.search.result[0]?.title?.length >= 3
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <ProductCard
-                    data-plasmic-name={"topSuggestedCard"}
-                    data-plasmic-override={overrides.topSuggestedCard}
-                    actionButtons={(() => {
-                      try {
-                        return (() => {
-                          if (
-                            typeof $ctx.Growthbook?.features?.[
-                              "theme-config"
-                            ]?.["search_result:show_first_free_time"] ===
-                            "undefined"
-                          ) {
-                            return $ctx.fetchedData.search.result[0].actions;
-                          }
-                          if (
-                            !$ctx.Growthbook?.features?.["theme-config"]?.[
-                              "search_result:show_first_free_time"
-                            ]
-                          ) {
-                            $ctx.fetchedData.search.result[0].actions =
-                              $ctx.fetchedData.search.result[0].actions.map(
-                                action => ({
-                                  ...action,
-                                  top_title: ""
-                                })
-                              );
-                          }
-                          return $ctx.fetchedData.search.result[0].actions;
-                        })();
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    address={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0]
-                          ?.display_address;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    avatarAltText={(() => {
-                      try {
-                        return `${
-                          $ctx.fetchedData.search.result[0].prefix
-                            ? $ctx.fetchedData.search.result[0].prefix + " "
-                            : ""
-                        }${
-                          $ctx.fetchedData.search.result[0].title
-                            ? $ctx.fetchedData.search.result[0].title + " "
-                            : ""
-                        }${
-                          $ctx.fetchedData.search.result[0].display_expertise
-                            ? $ctx.fetchedData.search.result[0]
-                                .display_expertise
-                            : ""
-                        }`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    avatarRingColor={(() => {
-                      try {
-                        return !$ctx.fetchedData.search.result[0].is_bulk &&
-                          $ctx.fetchedData.search.result[0].is_bulk !==
-                            undefined
-                          ? "blue"
-                          : undefined;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    avatarSrc={`${$props.imageSrcPrefix}${$ctx.fetchedData.search.result[0]?.image}`}
-                    avatarVerifiedTick={(() => {
-                      try {
-                        return (
-                          !$ctx.fetchedData.search.result[0].is_bulk &&
-                          $ctx.fetchedData.search.result[0].is_bulk !==
-                            undefined
-                        );
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return false;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    badges={(() => {
-                      try {
-                        return (() => {
-                          if (
-                            typeof $ctx.Growthbook?.features?.[
-                              "theme-config"
-                            ]?.["search_result:show_available_time"] ===
-                            "undefined"
-                          ) {
-                            return $ctx.fetchedData.search.result[0].badges;
-                          }
-                          return $ctx.Growthbook?.features?.["theme-config"]?.[
-                            "search_result:show_available_time"
-                          ]
-                            ? $ctx.fetchedData.search.result[0].badges
-                            : $ctx.fetchedData.search.result[0].badges.filter(
-                                badge => !badge.title.includes("فعال شدن نوبت")
-                              );
-                        })();
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.topSuggestedCard
-                    )}
-                    eventTrigger={async (elementName, elementContent) => {
-                      const $steps = {};
-
-                      $steps["runCodeSplunkEvent"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return $$.splunkEvent({
-                                  token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                                  group: "search_metrics",
-                                  type: "search_top_suggested_card_click",
-                                  data: {
-                                    card_data: {
-                                      action:
-                                        $ctx.fetchedData.search.result[0].actions?.map?.(
-                                          item =>
-                                            JSON.stringify({
-                                              outline: item.outline,
-                                              title: item.title,
-                                              top_title: item.top_title.replace(
-                                                /(<([^>]+)>)/gi,
-                                                ""
-                                              )
-                                            })
-                                        ),
-                                      _id: $ctx.fetchedData.search.result[0]
-                                        ._id,
-                                      position:
-                                        $ctx.fetchedData.search.result[0]
-                                          .position,
-                                      server_id:
-                                        $ctx.fetchedData.search.result[0]
-                                          .server_id,
-                                      title:
-                                        $ctx.fetchedData.search.result[0].title,
-                                      type: $ctx.fetchedData.search.result[0]
-                                        .type,
-                                      url: $ctx.fetchedData.search.result[0]
-                                        .url,
-                                      rates_count:
-                                        $ctx.fetchedData.search.result[0]
-                                          .rates_count,
-                                      satisfaction:
-                                        $ctx.fetchedData.search.result[0]
-                                          .satisfaction
-                                    },
-                                    filters:
-                                      $props.searchResultResponse
-                                        .selected_filters,
-                                    result_count:
-                                      $props.searchResultResponse.lent,
-                                    location: $props.location.city_name,
-                                    city_id: $props.location.city_id,
-                                    lat: $props.location.lat,
-                                    lon: $props.location.lon,
-                                    query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id
-                                  }
-                                });
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
+              {$ctx => (
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return (
+                        $ctx.fetchedData.search.result[0]?.title?.length >= 3
+                      );
+                    } catch (e) {
                       if (
-                        $steps["runCodeSplunkEvent"] != null &&
-                        typeof $steps["runCodeSplunkEvent"] === "object" &&
-                        typeof $steps["runCodeSplunkEvent"].then === "function"
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        $steps["runCodeSplunkEvent"] = await $steps[
-                          "runCodeSplunkEvent"
-                        ];
+                        return true;
                       }
-                    }}
-                    price={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0]?.price;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    rateCount={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0].rates_count;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    satisfactionPercent={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0].satisfaction;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    subTitle={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0]
-                          ?.display_expertise;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    title={(() => {
-                      try {
-                        return $ctx.fetchedData.search.result[0]?.title;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    topBadge={(() => {
-                      try {
-                        return [
-                          {
-                            title: $props.topSuggestedCardFeature.badge_lable,
-                            description: "",
-                            type: "success"
+                      throw e;
+                    }
+                  })() ? (
+                    <ProductCard
+                      data-plasmic-name={"topSuggestedCard"}
+                      data-plasmic-override={overrides.topSuggestedCard}
+                      actionButtons={(() => {
+                        try {
+                          return (() => {
+                            if (
+                              typeof $ctx.Growthbook?.features?.[
+                                "theme-config"
+                              ]?.["search_result:show_first_free_time"] ===
+                              "undefined"
+                            ) {
+                              return $ctx.fetchedData.search.result[0].actions;
+                            }
+                            if (
+                              !$ctx.Growthbook?.features?.["theme-config"]?.[
+                                "search_result:show_first_free_time"
+                              ]
+                            ) {
+                              $ctx.fetchedData.search.result[0].actions =
+                                $ctx.fetchedData.search.result[0].actions.map(
+                                  action => ({
+                                    ...action,
+                                    top_title: ""
+                                  })
+                                );
+                            }
+                            return $ctx.fetchedData.search.result[0].actions;
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
                           }
-                        ];
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [
-                            { title: "", description: "", type: "success" }
-                          ];
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()}
-                    url={(() => {
-                      try {
-                        return {
-                          destination: $ctx.fetchedData.search.result[0].url,
-                          title: `${
+                      })()}
+                      address={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0]
+                            ?.display_address;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      avatarAltText={(() => {
+                        try {
+                          return `${
                             $ctx.fetchedData.search.result[0].prefix
                               ? $ctx.fetchedData.search.result[0].prefix + " "
                               : ""
@@ -713,21 +455,361 @@ function PlasmicSearchResults__RenderFunc(props: {
                               ? $ctx.fetchedData.search.result[0]
                                   .display_expertise
                               : ""
-                          }`
+                          }`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      avatarRingColor={(() => {
+                        try {
+                          return !$ctx.fetchedData.search.result[0].is_bulk &&
+                            $ctx.fetchedData.search.result[0].is_bulk !==
+                              undefined
+                            ? "blue"
+                            : undefined;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      avatarSrc={`${$props.imageSrcPrefix}${$ctx.fetchedData.search.result[0]?.image}`}
+                      avatarVerifiedTick={(() => {
+                        try {
+                          return (
+                            !$ctx.fetchedData.search.result[0].is_bulk &&
+                            $ctx.fetchedData.search.result[0].is_bulk !==
+                              undefined
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      badges={(() => {
+                        try {
+                          return (() => {
+                            if (
+                              typeof $ctx.Growthbook?.features?.[
+                                "theme-config"
+                              ]?.["search_result:show_available_time"] ===
+                              "undefined"
+                            ) {
+                              return $ctx.fetchedData.search.result[0].badges;
+                            }
+                            return $ctx.Growthbook?.features?.[
+                              "theme-config"
+                            ]?.["search_result:show_available_time"]
+                              ? $ctx.fetchedData.search.result[0].badges
+                              : $ctx.fetchedData.search.result[0].badges.filter(
+                                  badge =>
+                                    !badge.title.includes("فعال شدن نوبت")
+                                );
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.topSuggestedCard
+                      )}
+                      eventTrigger={async (elementName, elementContent) => {
+                        const $steps = {};
+
+                        $steps["runCodeSplunkEvent"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return $$.splunkEvent({
+                                    token:
+                                      "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                                    group: "search_metrics",
+                                    type: "search_top_suggested_card_click",
+                                    data: {
+                                      card_data: {
+                                        action:
+                                          $ctx.fetchedData.search.result[0].actions?.map?.(
+                                            item =>
+                                              JSON.stringify({
+                                                outline: item.outline,
+                                                title: item.title,
+                                                top_title:
+                                                  item.top_title.replace(
+                                                    /(<([^>]+)>)/gi,
+                                                    ""
+                                                  )
+                                              })
+                                          ),
+                                        _id: $ctx.fetchedData.search.result[0]
+                                          ._id,
+                                        position:
+                                          $ctx.fetchedData.search.result[0]
+                                            .position,
+                                        server_id:
+                                          $ctx.fetchedData.search.result[0]
+                                            .server_id,
+                                        title:
+                                          $ctx.fetchedData.search.result[0]
+                                            .title,
+                                        type: $ctx.fetchedData.search.result[0]
+                                          .type,
+                                        url: $ctx.fetchedData.search.result[0]
+                                          .url,
+                                        rates_count:
+                                          $ctx.fetchedData.search.result[0]
+                                            .rates_count,
+                                        satisfaction:
+                                          $ctx.fetchedData.search.result[0]
+                                            .satisfaction
+                                      },
+                                      filters:
+                                        $props.searchResultResponse
+                                          .selected_filters,
+                                      result_count:
+                                        $props.searchResultResponse.lent,
+                                      location: $props.location.city_name,
+                                      city_id: $props.location.city_id,
+                                      lat: $props.location.lat,
+                                      lon: $props.location.lon,
+                                      query_id:
+                                        $props.searchResultResponse.search
+                                          .query_id
+                                    }
+                                  });
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runCodeSplunkEvent"] != null &&
+                          typeof $steps["runCodeSplunkEvent"] === "object" &&
+                          typeof $steps["runCodeSplunkEvent"].then ===
+                            "function"
+                        ) {
+                          $steps["runCodeSplunkEvent"] = await $steps[
+                            "runCodeSplunkEvent"
+                          ];
+                        }
+                      }}
+                      price={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0]?.price;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      rateCount={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0].rates_count;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      satisfactionPercent={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0].satisfaction;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      subTitle={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0]
+                            ?.display_expertise;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      title={(() => {
+                        try {
+                          return $ctx.fetchedData.search.result[0]?.title;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      topBadge={(() => {
+                        try {
+                          return [
+                            {
+                              title: $props.topSuggestedCardFeature.badge_lable,
+                              description: "",
+                              type: "success"
+                            }
+                          ];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [
+                              { title: "", description: "", type: "success" }
+                            ];
+                          }
+                          throw e;
+                        }
+                      })()}
+                      url={(() => {
+                        try {
+                          return {
+                            destination: $ctx.fetchedData.search.result[0].url,
+                            title: `${
+                              $ctx.fetchedData.search.result[0].prefix
+                                ? $ctx.fetchedData.search.result[0].prefix + " "
+                                : ""
+                            }${
+                              $ctx.fetchedData.search.result[0].title
+                                ? $ctx.fetchedData.search.result[0].title + " "
+                                : ""
+                            }${
+                              $ctx.fetchedData.search.result[0]
+                                .display_expertise
+                                ? $ctx.fetchedData.search.result[0]
+                                    .display_expertise
+                                : ""
+                            }`
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  ) : null}
+                  <DataFetcher
+                    data-plasmic-name={"sendSplunkEvent"}
+                    data-plasmic-override={overrides.sendSplunkEvent}
+                    body={(() => {
+                      try {
+                        return {
+                          sourcetype: "_json",
+                          event: {
+                            event_group: "search_metrics",
+                            event_type: "search_top_suggested_card_view",
+                            random: Math.floor(Math.random() * 110),
+                            url: {
+                              href: window.location.href,
+                              query: window.location.search,
+                              pathname: window.location.pathname,
+                              host: window.location.host
+                            },
+                            userAgent:
+                              typeof navigator !== "undefined" &&
+                              navigator.userAgent
+                                ? navigator.userAgent
+                                : "Unknown",
+                            terminal_id: (() => {
+                              try {
+                                const cookie = document.cookie
+                                  .split("; ")
+                                  .find(row => row.startsWith("terminal_id="));
+                                if (cookie) {
+                                  return cookie.split("=")[1];
+                                } else {
+                                  return "terminal_id not found";
+                                }
+                              } catch (e) {
+                                return `error: ${e.message}`;
+                              }
+                            })(),
+                            currenturl: window.location.href
+                          }
                         };
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
-                          return undefined;
+                          return {};
                         }
                         throw e;
                       }
                     })()}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.sendSplunkEvent
+                    )}
+                    dataName={"fetchedData"}
+                    errorDisplay={
+                      <DataCtxReader__>
+                        {$ctx => "Error fetching data"}
+                      </DataCtxReader__>
+                    }
+                    errorName={"fetchError"}
+                    headers={{
+                      "Content-Type": "application/json",
+                      Accept: "application/json",
+                      authorization:
+                        "Splunk 7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd"
+                    }}
+                    loadingDisplay={
+                      <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
+                    }
+                    method={"POST"}
+                    noLayout={false}
+                    url={"https://p24splk.paziresh24.com/services/collector"}
                   />
-                ) : null
-              }
+                </React.Fragment>
+              )}
             </DataCtxReader__>
           </DataFetcher>
         </Stack__>
@@ -1290,6 +1372,64 @@ function PlasmicSearchResults__RenderFunc(props: {
                               sty.li__tpsj
                             )}
                           >
+                            <React.Fragment>
+                              <React.Fragment>{"\u0628\u0627 "}</React.Fragment>
+                              {
+                                <PlasmicLink__
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.a,
+                                    projectcss.__wab_text,
+                                    projectcss.plasmic_default__inline,
+                                    sty.link__mRzso
+                                  )}
+                                  component={Link}
+                                  href={
+                                    "https://www.paziresh24.com/consult?refafname=from-search-notfound-page"
+                                  }
+                                  platform={"nextjs"}
+                                >
+                                  {
+                                    "\u062f\u06a9\u062a\u0631\u0647\u0627\u06cc \u0622\u0646\u0644\u0627\u06cc\u0646 \u067e\u0630\u06cc\u0631\u063424"
+                                  }
+                                </PlasmicLink__>
+                              }
+                              <React.Fragment>
+                                {
+                                  "\u060c \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646 \u06af\u0641\u062a\u06af\u0648 \u06a9\u0646\u06cc\u062f. ("
+                                }
+                              </React.Fragment>
+                              {
+                                <PlasmicLink__
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.a,
+                                    projectcss.__wab_text,
+                                    projectcss.plasmic_default__inline,
+                                    sty.link__nWaWv
+                                  )}
+                                  component={Link}
+                                  href={
+                                    "https://www.paziresh24.com/consult?refafname=from-search-notfound-page"
+                                  }
+                                  platform={"nextjs"}
+                                >
+                                  {
+                                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u062f\u0633\u062a\u0647\u200c\u0647\u0627"
+                                  }
+                                </PlasmicLink__>
+                              }
+                              <React.Fragment>{")"}</React.Fragment>
+                            </React.Fragment>
+                          </li>
+                          <li
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.li,
+                              projectcss.__wab_text,
+                              sty.li___2SIgg
+                            )}
+                          >
                             {
                               "\u0627\u0632 \u062c\u0633\u062a\u062c\u0648\u06cc \u067e\u06cc\u0634\u0631\u0641\u062a\u0647 \u0628\u0631\u0627\u06cc \u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc \u0648 \u0641\u06cc\u0644\u062a\u0631 \u0628\u0647\u062a\u0631\u06cc\u0646 \u062f\u0631\u0645\u0627\u0646\u06af\u0631 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u06a9\u0646\u06cc\u062f."
                             }
@@ -1435,21 +1575,31 @@ function PlasmicSearchResults__RenderFunc(props: {
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return fetch(
-                      "https://api.paziresh24.com/V1/doctor/profile",
-                      { credentials: "include" }
-                    )
-                      .then(response => response.json())
-                      .then(data => {
-                        console.log(data);
-                        if (data.data.id) {
-                          $state.visibilityOfShowMySearchPerformance = true;
-                          console.log(
-                            "Visibility of Show My Search Performance:",
-                            $state.visibilityOfShowMySearchPerformance
-                          );
-                        }
-                      });
+                    return (() => {
+                      return fetch(
+                        "https://api.paziresh24.com/V1/doctor/profile",
+                        { credentials: "include" }
+                      )
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                          }
+                          return response.json();
+                        })
+                        .then(data => {
+                          console.log(data);
+                          if (data.data.id) {
+                            $state.visibilityOfShowMySearchPerformance = true;
+                            console.log(
+                              "Visibility of Show My Search Performance:",
+                              $state.visibilityOfShowMySearchPerformance
+                            );
+                          }
+                        })
+                        .catch(error => {
+                          console.error("Fetch error:", error);
+                        });
+                    })();
                   }
                 };
                 return (({ customFunction }) => {
@@ -1721,6 +1871,7 @@ const PlasmicDescendants = {
     "topSuggestedCardVerticalStack",
     "httpRestApiFetcher",
     "topSuggestedCard",
+    "sendSplunkEvent",
     "resultCardsVerticalStack2",
     "productCard",
     "paginationMoreButton",
@@ -1734,10 +1885,16 @@ const PlasmicDescendants = {
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
     "httpRestApiFetcher",
-    "topSuggestedCard"
+    "topSuggestedCard",
+    "sendSplunkEvent"
   ],
-  httpRestApiFetcher: ["httpRestApiFetcher", "topSuggestedCard"],
+  httpRestApiFetcher: [
+    "httpRestApiFetcher",
+    "topSuggestedCard",
+    "sendSplunkEvent"
+  ],
   topSuggestedCard: ["topSuggestedCard"],
+  sendSplunkEvent: ["sendSplunkEvent"],
   resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
@@ -1756,6 +1913,7 @@ type NodeDefaultElementType = {
   topSuggestedCardVerticalStack: "div";
   httpRestApiFetcher: typeof DataFetcher;
   topSuggestedCard: typeof ProductCard;
+  sendSplunkEvent: typeof DataFetcher;
   resultCardsVerticalStack2: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
@@ -1832,6 +1990,7 @@ export const PlasmicSearchResults = Object.assign(
     ),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
+    sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),

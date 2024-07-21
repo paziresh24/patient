@@ -584,6 +584,11 @@
           "id": "0FBISMQsRLkp",
           "name": "Icon6Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon6.tsx"
+        },
+        {
+          "id": "TnnJDmwgAOL7",
+          "name": "Icon7Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon7.tsx"
         }
       ],
       "images": [
