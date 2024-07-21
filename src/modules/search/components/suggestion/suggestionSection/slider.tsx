@@ -8,6 +8,8 @@ import LikeIcon from '@/common/components/icons/like';
 import { useSatisfactionPercent } from '@/common/apis/services/rate/satisfactionPercent';
 import { useCountOfFeedbacks } from '@/common/apis/services/rate/countOfFeedbacks';
 import Skeleton from '@/common/components/atom/skeleton';
+import { useRate } from '@/common/apis/services/reviews/rate';
+import { StarIcon } from '@/modules/search/constants/suggestion/categoryIcons/icons/star';
 const { publicRuntimeConfig } = getConfig();
 
 interface SliderSectionProps {
@@ -24,12 +26,7 @@ export const SliderCard = (props: SliderCardProps) => {
   const { handleItemClick } = useSuggestionItem();
   const slug = item.url?.split('/')?.[2];
 
-  const {
-    data: satisfactionPercent,
-    isLoading: satisfactionLoading,
-    isError: isSatisfactionError,
-  } = useSatisfactionPercent({ slug: slug as string });
-  const { data: countOfFeedbacks, isLoading: feedbacksLoading, isError: isFeedbackError } = useCountOfFeedbacks({ slug: slug as string });
+  const { data: rateData, isLoading: rateLoading, isError: isRateError } = useRate({ slug: slug as string });
 
   return (
     <div>
@@ -58,15 +55,20 @@ export const SliderCard = (props: SliderCardProps) => {
           <Text fontSize="xs" className="line-clamp-1">
             {item.sub_title}
           </Text>
-          {satisfactionLoading || feedbacksLoading ? (
+          {rateLoading ? (
             <Skeleton w="7rem" h="1.25rem" rounded="md" />
-          ) : isSatisfactionError || isFeedbackError ? null : (
+          ) : isRateError ? null : (
             <div className="flex items-center space-s-1">
-              <LikeIcon width={20} height={20} className="text-primary" />
+              <StarIcon className="text-primary mb-1" width={20} height={20} />
               <Text fontWeight="medium" fontSize="sm" className="text-primary">
-                {satisfactionPercent?.result?.toFixed()}٪
+                {(
+                  ((+rateData?.list?.[0]?.quality_of_treatment ?? 0) +
+                    (+rateData?.list?.[0]?.doctor_encounter ?? 0) +
+                    (+rateData?.list?.[0]?.explanation_of_issue ?? 0)) /
+                  3
+                ).toFixed(1)}
               </Text>
-              <Text fontSize="sm">({countOfFeedbacks?.result} نظر)</Text>
+              <Text fontSize="sm">({rateData?.list?.[0]?.count_rates} نظر)</Text>
             </div>
           )}
         </div>
