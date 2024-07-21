@@ -71,7 +71,7 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
-import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: 3UgV7ahdtn5G/icon
+import Icon7Icon from "./icons/PlasmicIcon__Icon7"; // plasmic-import: TnnJDmwgAOL7/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: I0wBVQs9owLc/icon
 import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
 import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
@@ -679,7 +679,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 PlasmicIconType={
                   hasVariant($state, "_5StarRatingMode3", "_5StarA")
                     ? Icon2Icon
-                    : Icon4Icon
+                    : Icon7Icon
                 }
                 className={classNames(projectcss.all, sty.svg___4KelP, {
                   [sty.svg_5StarRatingMode3__5StarA___4KelPfZd0]: hasVariant(

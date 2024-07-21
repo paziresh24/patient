@@ -83,6 +83,13 @@
   position: relative;
   min-width: 0;
 }
+.sendSplunkEvent:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  height: 0px;
+  min-width: 0;
+}
 .resultCardsVerticalStack2 {
   display: flex;
   position: relative;
