@@ -9,7 +9,6 @@ import CentersInfo from './centersInfo';
 import Services from './services';
 import pick from 'lodash/pick';
 
-const BulkService = dynamic(() => import('./services/bulk'));
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
 export const aside = (data: any) => {
@@ -46,16 +45,9 @@ export const aside = (data: any) => {
   ]);
 
   return [
-    // Bulk
     {
       id: 'book-me',
-      isShow: isBulk,
-      children: () => <BulkService displayName={information.display_name} expertises={expertises} />,
-    },
-    // Services
-    {
-      id: 'book-me',
-      isShow: !isBulk,
+      isShow: true,
       function: () => {
         return {
           id: information.id,
@@ -66,6 +58,7 @@ export const aside = (data: any) => {
           waitingTimeInfo,
           slug: seo.slug,
           profileData,
+          isBulk,
         };
       },
       children: (props: any) => <Services {...props} />,

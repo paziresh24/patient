@@ -20,7 +20,7 @@ export const categoryIcons = {
   'search-icon': SearchIcon,
   'most_common': MostCommonIcon,
   'illness': IllnessIcon,
-  'star-icon': StarIcon,
+  'star-icon': StarIcon as any,
   'smile-icon': SmileIcon,
   'clock-icon': ClockIcon,
   'shield-icon': ShieldIcon,
