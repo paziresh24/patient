@@ -7,12 +7,14 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
+import BulkService from './bulk';
+import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
+import { growthbook } from 'src/pages/_app';
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -33,6 +35,7 @@ export const Services = ({
   onlineVisit,
   waitingTimeInfo,
   profileData,
+  isBulk,
 }: {
   id: string;
   expertises: any;
@@ -42,11 +45,18 @@ export const Services = ({
   onlineVisit: any;
   waitingTimeInfo: any;
   profileData: any;
+  isBulk: boolean;
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
+  const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
+
+  const alabilityStatus = useAvailabilityStatus(
+    { user_id: doctor.user_id, center_id: centers.map(center => center.id) },
+    { enabled: !!useAvailabilityStatusApi },
+  );
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
 
@@ -77,6 +87,14 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
+  if (!growthbook.ready || (useAvailabilityStatusApi ? alabilityStatus.isLoading : false)) {
+    return <Skeleton w="full" h="10rem" rounded="lg" />;
+  }
+
+  if (!useAvailabilityStatusApi ? alabilityStatus.data?.data?.has_available_booking : isBulk) {
+    return <BulkService displayName={doctor.display_name} expertises={expertises} />;
+  }
+
   return (
     <>
       <div ref={servicesRef} className="flex flex-col space-y-3">
@@ -96,7 +114,14 @@ export const Services = ({
             ))}
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
-            centers={centers.filter((center: any) => center.id !== CENTERS.CONSULT)}
+            centers={centers
+              .filter((center: any) => center.id !== CENTERS.CONSULT)
+              .map(center => ({
+                ...center,
+                ...(useAvailabilityStatusApi && {
+                  is_active: alabilityStatus.data?.data?.availability.some((c: any) => c.center_id === center.id),
+                }),
+              }))}
             waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id !== CENTERS.CONSULT)?.waiting_time_title}
             onBook={({ centerId, serviceId }) =>
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
