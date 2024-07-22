@@ -61,8 +61,8 @@ import {
 
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
-import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
 import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
@@ -115,13 +115,11 @@ export type PlasmicSearchResults__OverridesType = {
   topSuggestedCardVerticalStack?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
-  sendSplunkEvent?: Flex__<typeof DataFetcher>;
   resultCardsVerticalStack2?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
-  sideEffect?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
 };
@@ -735,78 +733,214 @@ function PlasmicSearchResults__RenderFunc(props: {
                       })()}
                     />
                   ) : null}
-                  <DataFetcher
-                    data-plasmic-name={"sendSplunkEvent"}
-                    data-plasmic-override={overrides.sendSplunkEvent}
-                    body={(() => {
-                      try {
-                        return {
-                          sourcetype: "_json",
-                          event: {
-                            event_group: "search_metrics",
-                            event_type: "search_top_suggested_card_view",
-                            random: Math.floor(Math.random() * 110),
-                            url: {
-                              href: window.location.href,
-                              query: window.location.search,
-                              pathname: window.location.pathname,
-                              host: window.location.host
-                            },
-                            userAgent:
-                              typeof navigator !== "undefined" &&
-                              navigator.userAgent
-                                ? navigator.userAgent
-                                : "Unknown",
-                            terminal_id: (() => {
-                              try {
-                                const cookie = document.cookie
-                                  .split("; ")
-                                  .find(row => row.startsWith("terminal_id="));
-                                if (cookie) {
-                                  return cookie.split("=")[1];
-                                } else {
-                                  return "terminal_id not found";
-                                }
-                              } catch (e) {
-                                return `error: ${e.message}`;
-                              }
-                            })(),
-                            currenturl: window.location.href
-                          }
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return {};
-                        }
-                        throw e;
-                      }
-                    })()}
+                  <SideEffect
                     className={classNames(
                       "__wab_instance",
-                      sty.sendSplunkEvent
+                      sty.sideEffect__hY4TD
                     )}
-                    dataName={"fetchedData"}
-                    errorDisplay={
-                      <DataCtxReader__>
-                        {$ctx => "Error fetching data"}
-                      </DataCtxReader__>
-                    }
-                    errorName={"fetchError"}
-                    headers={{
-                      "Content-Type": "application/json",
-                      Accept: "application/json",
-                      authorization:
-                        "Splunk 7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd"
+                    onMount={async () => {
+                      const $steps = {};
+
+                      $steps["hideTopSuggestIfTheCardTitleIsSameAsFirstItem"] =
+                        true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return ($props.topSuggestedCardFeature.enable =
+                                    $ctx.fetchedData.search.result[0].title ===
+                                    $props.searchResultResponse.search.result[0]
+                                      .title
+                                      ? false
+                                      : true);
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps[
+                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
+                        ] != null &&
+                        typeof $steps[
+                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
+                        ] === "object" &&
+                        typeof $steps[
+                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
+                        ].then === "function"
+                      ) {
+                        $steps[
+                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
+                        ] = await $steps[
+                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
+                        ];
+                      }
+
+                      $steps["runCode"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return (() => {
+                                  if (
+                                    $props.searchResultResponse.search.result
+                                      .length > 2
+                                  ) {
+                                    return $props.searchResultResponse.search.result.splice(
+                                      3,
+                                      0,
+                                      $ctx.fetchedData.search.result[1]
+                                    );
+                                  }
+                                })();
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runCode"] != null &&
+                        typeof $steps["runCode"] === "object" &&
+                        typeof $steps["runCode"].then === "function"
+                      ) {
+                        $steps["runCode"] = await $steps["runCode"];
+                      }
+
+                      $steps["putTopsuggestRibbonObjectToResultObjects"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return (() => {
+                                  if (
+                                    $props.searchResultResponse.search.result[3]
+                                  ) {
+                                    return ($props.searchResultResponse.search.result[3].topSuggestedCardFeature =
+                                      $props.topSuggestedCardFeature);
+                                  }
+                                })();
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["putTopsuggestRibbonObjectToResultObjects"] !=
+                          null &&
+                        typeof $steps[
+                          "putTopsuggestRibbonObjectToResultObjects"
+                        ] === "object" &&
+                        typeof $steps[
+                          "putTopsuggestRibbonObjectToResultObjects"
+                        ].then === "function"
+                      ) {
+                        $steps["putTopsuggestRibbonObjectToResultObjects"] =
+                          await $steps[
+                            "putTopsuggestRibbonObjectToResultObjects"
+                          ];
+                      }
+
+                      $steps["invokeGlobalAction"] = false
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u06a9\u0627\u0631\u062f \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062a\u0632\u0631\u06cc\u0642 \u0634\u062f",
+                                undefined,
+                                25000
+                              ]
+                            };
+                            return $globalActions["Fragment.showToast"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction"] != null &&
+                        typeof $steps["invokeGlobalAction"] === "object" &&
+                        typeof $steps["invokeGlobalAction"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction"] = await $steps[
+                          "invokeGlobalAction"
+                        ];
+                      }
+
+                      $steps["sendSplunkTopCardView"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return $$.splunkEvent({
+                                  token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                                  group: "search_metrics",
+                                  type: "search_top_suggested_card_view2",
+                                  data: {
+                                    card_data: {
+                                      action:
+                                        $ctx.fetchedData.search.result[0].actions?.map?.(
+                                          item =>
+                                            JSON.stringify({
+                                              outline: item.outline,
+                                              title: item.title,
+                                              top_title: item.top_title.replace(
+                                                /(<([^>]+)>)/gi,
+                                                ""
+                                              )
+                                            })
+                                        ),
+                                      _id: $ctx.fetchedData.search.result[0]
+                                        ._id,
+                                      server_id:
+                                        $ctx.fetchedData.search.result[0]
+                                          .server_id,
+                                      title:
+                                        $ctx.fetchedData.search.result[0].title,
+                                      type: $ctx.fetchedData.search.result[0]
+                                        .type,
+                                      url: $ctx.fetchedData.search.result[0]
+                                        .url,
+                                      rates_count:
+                                        $ctx.fetchedData.search.result[0]
+                                          .rates_count,
+                                      satisfaction:
+                                        $ctx.fetchedData.search.result[0]
+                                          .satisfaction
+                                    },
+                                    filters:
+                                      $props.searchResultResponse
+                                        .selected_filters,
+                                    result_count:
+                                      $props.searchResultResponse.lent,
+                                    location: $props.location.city_name,
+                                    city_id: $props.location.city_id,
+                                    lat: $props.location.lat,
+                                    lon: $props.location.lon,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id
+                                  }
+                                });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["sendSplunkTopCardView"] != null &&
+                        typeof $steps["sendSplunkTopCardView"] === "object" &&
+                        typeof $steps["sendSplunkTopCardView"].then ===
+                          "function"
+                      ) {
+                        $steps["sendSplunkTopCardView"] = await $steps[
+                          "sendSplunkTopCardView"
+                        ];
+                      }
                     }}
-                    loadingDisplay={
-                      <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
-                    }
-                    method={"POST"}
-                    noLayout={false}
-                    url={"https://p24splk.paziresh24.com/services/collector"}
                   />
                 </React.Fragment>
               )}
@@ -1152,6 +1286,27 @@ function PlasmicSearchResults__RenderFunc(props: {
                 title={(() => {
                   try {
                     return currentItem.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                topBadge={(() => {
+                  try {
+                    return [
+                      {
+                        title: currentItem.topSuggestedCardFeature.badge_lable
+                          ? currentItem.topSuggestedCardFeature.badge_lable
+                          : null,
+                        description: "",
+                        type: "success"
+                      }
+                    ];
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1529,9 +1684,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       />
 
       <SideEffect
-        data-plasmic-name={"sideEffect"}
-        data-plasmic-override={overrides.sideEffect}
-        className={classNames("__wab_instance", sty.sideEffect)}
+        className={classNames("__wab_instance", sty.sideEffect__pyDki)}
         onMount={async () => {
           const $steps = {};
 
@@ -1871,13 +2024,11 @@ const PlasmicDescendants = {
     "topSuggestedCardVerticalStack",
     "httpRestApiFetcher",
     "topSuggestedCard",
-    "sendSplunkEvent",
     "resultCardsVerticalStack2",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
     "setGrowthbookAttributes",
-    "sideEffect",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks"
   ],
@@ -1885,22 +2036,15 @@ const PlasmicDescendants = {
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
     "httpRestApiFetcher",
-    "topSuggestedCard",
-    "sendSplunkEvent"
+    "topSuggestedCard"
   ],
-  httpRestApiFetcher: [
-    "httpRestApiFetcher",
-    "topSuggestedCard",
-    "sendSplunkEvent"
-  ],
+  httpRestApiFetcher: ["httpRestApiFetcher", "topSuggestedCard"],
   topSuggestedCard: ["topSuggestedCard"],
-  sendSplunkEvent: ["sendSplunkEvent"],
   resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
-  sideEffect: ["sideEffect"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
 } as const;
@@ -1913,13 +2057,11 @@ type NodeDefaultElementType = {
   topSuggestedCardVerticalStack: "div";
   httpRestApiFetcher: typeof DataFetcher;
   topSuggestedCard: typeof ProductCard;
-  sendSplunkEvent: typeof DataFetcher;
   resultCardsVerticalStack2: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
   setGrowthbookAttributes: typeof SideEffect;
-  sideEffect: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
 };
@@ -1990,7 +2132,6 @@ export const PlasmicSearchResults = Object.assign(
     ),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
-    sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
@@ -1998,7 +2139,6 @@ export const PlasmicSearchResults = Object.assign(
       "noResultsBlockVerticalStack"
     ),
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
-    sideEffect: makeNodeComponent("sideEffect"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
 
