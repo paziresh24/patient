@@ -1,11 +1,13 @@
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
 import { useConsultInvoice } from '@/common/apis/services/factor/consultInvoice';
 import { CENTERS } from '@/common/types/centers';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 
 export const useInvoice = ({ bookId, centerId }: { bookId: string; centerId: string }) => {
   const getBookDetails = useGetBookDetails();
+  const isLogin = useUserInfoStore(state => state.isLogin);
   const getConsultInvoice = useConsultInvoice();
   const [invoiceDetails, setInvoiceDetails] = useState<{
     totalPrice?: string;
@@ -14,7 +16,7 @@ export const useInvoice = ({ bookId, centerId }: { bookId: string; centerId: str
   }>({});
 
   useEffect(() => {
-    if (bookId) {
+    if (bookId && isLogin) {
       const requests = [
         getBookDetails.mutateAsync({
           book_id: bookId.toString(),
@@ -42,7 +44,7 @@ export const useInvoice = ({ bookId, centerId }: { bookId: string; centerId: str
         });
       });
     }
-  }, [bookId, centerId]);
+  }, [bookId, centerId, isLogin]);
 
   return { ...invoiceDetails, isLoading: getBookDetails.isLoading || getConsultInvoice.isLoading };
 };

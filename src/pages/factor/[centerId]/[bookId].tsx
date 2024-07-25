@@ -11,6 +11,8 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
+import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useFeatureValue } from '@growthbook/growthbook-react';
@@ -26,17 +28,23 @@ const Factor = () => {
   const {
     query: { bookId, centerId },
   } = useRouter();
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const userPending = useUserInfoStore(state => state.pending);
+  const { handleOpenLoginModal } = useLoginModalContext();
   const getBookDetails = useGetBookDetails();
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const { display_name, isLoading: profileNameLoading } = useProfile({ slug: getBookDetails.data?.data?.result?.[0]?.doctor_slug });
 
   useEffect(() => {
-    if (bookId)
+    if (!isLogin && !userPending) {
+      handleOpenLoginModal({ state: true });
+    }
+    if (bookId && isLogin && !userPending)
       getBookDetails.mutate({
         book_id: bookId.toString(),
         type: 'factor',
       });
-  }, [bookId]);
+  }, [bookId, isLogin, userPending]);
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
   const doctorName = display_name ?? bookDetailsData?.doctor_display_name ?? '';
