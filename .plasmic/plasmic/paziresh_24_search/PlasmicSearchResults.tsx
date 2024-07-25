@@ -811,13 +811,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                         ];
                       }
 
-                      $steps["putTopsuggestRibbonObjectToResultObjects"] = false
+                      $steps["putTopsuggestRibbonObjectToResultObjects"] = true
                         ? (() => {
                             const actionArgs = {
                               customFunction: async () => {
                                 return (() => {
                                   if (
-                                    $props.searchResultResponse.search.result[3]
+                                    $props.searchResultResponse.search.result
+                                      .length > 2 &&
+                                    $ctx.fetchedData.search.result[1]
                                   ) {
                                     return ($props.searchResultResponse.search.result[3].topSuggestedCardFeature =
                                       $props.topSuggestedCardFeature);
@@ -872,7 +874,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                         ];
                       }
 
-                      $steps["sendSplunkTopCardView"] = false
+                      $steps["sendSplunkTopCardView"] = true
                         ? (() => {
                             const actionArgs = {
                               customFunction: async () => {
