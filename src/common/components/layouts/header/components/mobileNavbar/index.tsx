@@ -53,6 +53,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     },
     {
       id: 6,
+      title: 'مراکز درمانی',
       sub_menu: medicalCenterMenu,
     },
     {
