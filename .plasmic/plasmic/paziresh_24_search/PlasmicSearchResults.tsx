@@ -777,14 +777,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                         ];
                       }
 
-                      $steps["runCode"] = true
+                      $steps["injectNewCardItem"] = true
                         ? (() => {
                             const actionArgs = {
                               customFunction: async () => {
                                 return (() => {
                                   if (
                                     $props.searchResultResponse.search.result
-                                      .length > 2
+                                      .length > 2 &&
+                                    $ctx.fetchedData.search.result[1]
                                   ) {
                                     return $props.searchResultResponse.search.result.splice(
                                       3,
@@ -801,11 +802,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                           })()
                         : undefined;
                       if (
-                        $steps["runCode"] != null &&
-                        typeof $steps["runCode"] === "object" &&
-                        typeof $steps["runCode"].then === "function"
+                        $steps["injectNewCardItem"] != null &&
+                        typeof $steps["injectNewCardItem"] === "object" &&
+                        typeof $steps["injectNewCardItem"].then === "function"
                       ) {
-                        $steps["runCode"] = await $steps["runCode"];
+                        $steps["injectNewCardItem"] = await $steps[
+                          "injectNewCardItem"
+                        ];
                       }
 
                       $steps["putTopsuggestRibbonObjectToResultObjects"] = true
@@ -814,7 +817,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                               customFunction: async () => {
                                 return (() => {
                                   if (
-                                    $props.searchResultResponse.search.result[3]
+                                    $props.searchResultResponse.search.result
+                                      .length > 2 &&
+                                    $ctx.fetchedData.search.result[1]
                                   ) {
                                     return ($props.searchResultResponse.search.result[3].topSuggestedCardFeature =
                                       $props.topSuggestedCardFeature);
@@ -876,7 +881,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                                 return $$.splunkEvent({
                                   token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
                                   group: "search_metrics",
-                                  type: "search_top_suggested_card_view2",
+                                  type: "search_top_suggested_card_view",
                                   data: {
                                     card_data: {
                                       action:
