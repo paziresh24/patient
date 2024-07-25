@@ -121,7 +121,7 @@ const Header = (props: HeaderProps) => {
                 </li>
                 <SubMenu title={t('header.titles.forPatients')} menuItem={withUserMenu} />
                 <SubMenu menuItem={withDoctorMenu} />
-                <SubMenu menuItem={medicalCenterMenu} />
+                <SubMenu title={t('header.titles.medicalCenters')} menuItem={medicalCenterMenu} />
                 <SubMenu title={t('header.titles.developers')} menuItem={developersMenu} />
               </ul>
             </nav>

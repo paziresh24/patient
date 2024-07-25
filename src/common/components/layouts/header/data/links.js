@@ -374,6 +374,10 @@ export const medicalCenterMenu = [
     title: 'ثبت نام مراکز درمانی',
     link: `https://survey.porsline.ir/s/7GFKVQz`,
   },
+  {
+    title: 'تعرفه مراکز درمانی',
+    link: `https://pricing.paziresh24.com`,
+  },
 ];
 
 export const developersMenu = [
