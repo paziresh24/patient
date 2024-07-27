@@ -126,7 +126,11 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     channels: source?.online_visit_channel_types ?? null,
   };
 
-  const waitingTimeInfo = overwriteData?.feedbacks?.waiting_time_info_online_visit?.filter((items: any) => !!items?.waiting_time_title);
+  const waitingTimeInfo = flatten(
+    [overwriteData?.feedbacks?.waiting_time_info_online_visit, source.waiting_time_info].filter(
+      (items: any) => !!items?.waiting_time_title,
+    ),
+  );
 
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };
