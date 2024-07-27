@@ -372,7 +372,7 @@ export const withDoctorMenu = [
 export const medicalCenterMenu = [
   {
     title: 'ثبت نام مراکز درمانی',
-    link: `https://survey.porsline.ir/s/7GFKVQz`,
+    link: `https://survey.porsline.ir/s/YCEGAgx`,
   },
   {
     title: 'تعرفه مراکز درمانی',
