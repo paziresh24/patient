@@ -244,44 +244,20 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               };
             }
           }
-          if (shouldUseAverageWaitingTime) {
-            const parallelRequests = [
-              await getAverageWaitingTime({
-                slug: slugFormmated,
-                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                end_date: moment().format('YYYY-MM-DD'),
-              }),
-            ];
-            const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
+          const parallelRequests = [
+            await getAverageWaitingTime({
+              slug: slugFormmated,
+            }),
+          ];
+          const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
 
-            if (averageWaitingTimeData.status === 'fulfilled') {
-              profileData.feedbacks = {
-                ...profileData.feedbacks,
-                waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
-              };
-            }
-            if (
-              isEmpty(
-                profileData.feedbacks?.waiting_time_info_online_visit?.find?.((item: any) => item?.center_id === '5532')
-                  ?.waiting_time_title,
-              )
-            ) {
-              const parallelRequests = [
-                await getAverageWaitingTime({
-                  slug: slugFormmated,
-                  limit: '30',
-                }),
-              ];
-              const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
-
-              if (averageWaitingTimeData.status === 'fulfilled') {
-                profileData.feedbacks = {
-                  ...profileData.feedbacks,
-                  waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
-                };
-              }
-            }
+          if (averageWaitingTimeData.status === 'fulfilled') {
+            profileData.feedbacks = {
+              ...profileData.feedbacks,
+              waiting_time_info_online_visit: averageWaitingTimeData?.value?.result,
+            };
           }
+
           // waiting statistics
           if (shouldUseWaitingTimeStatistics) {
             const parallelRequests = [
