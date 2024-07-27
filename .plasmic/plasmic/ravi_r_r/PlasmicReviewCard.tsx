@@ -2971,8 +2971,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return navigator.share({
-                        url:
-                          window.location.href + `#comment-${$props.feedbackId}`
+                        url: `https://ir-ravi-n8n.darkube.app/webhook/share-comment?link=https%3A%2F%2Fwww.paziresh24.com%2Fdr%2F${$props.doctorSlug}%2F%23comment-${$props.feedbackId}`
                       });
                     }
                   };
