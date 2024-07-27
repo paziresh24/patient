@@ -2963,75 +2963,113 @@ function PlasmicReviewCard__RenderFunc(props: {
               "raviExpFroDrakam"
             )
           })}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return navigator.share({
-                        url:
-                          window.location.href + `#comment-${$props.feedbackId}`
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
-            ) {
-              $steps["runCode"] = await $steps["runCode"];
-            }
-
-            $steps["splunk"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return $$.splunkEvent({
-                        group: "feedback",
-                        data: {
-                          doctor_id: $props.doctorId,
-                          comment_id: $props.feedbackId
-                        },
-                        type: "share_comment",
-                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["splunk"] != null &&
-              typeof $steps["splunk"] === "object" &&
-              typeof $steps["splunk"].then === "function"
-            ) {
-              $steps["splunk"] = await $steps["splunk"];
-            }
-          }}
         >
-          <Icon14Icon
-            className={classNames(projectcss.all, sty.svg__buJg)}
-            role={"img"}
-          />
-
-          <div
+          <DataFetcher
             className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__v5Zas
+              "__wab_instance",
+              sty.httpRestApiFetcher__rg0Is
             )}
+            dataName={"fetchedData"}
+            errorDisplay={null}
+            errorName={"fetchError"}
+            headers={{
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            }}
+            loadingDisplay={null}
+            method={"GET"}
+            noLayout={false}
+            url={(() => {
+              try {
+                return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?link=https%3A%2F%2Fwww.paziresh24.com%2Fdr%2F${$props.doctorSlug}%2F%23comment-${$props.feedbackId}`;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
           >
-            {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
-          </div>
+            <DataCtxReader__>
+              {$ctx => (
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__jzzua)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runCode"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return navigator.share({
+                                url: $ctx.fetchedData.text,
+                                text: "سلام این کامنت رو ببین لینک:"
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
+                    }
+
+                    $steps["splunk"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                group: "feedback",
+                                data: {
+                                  doctor_id: $props.doctorId,
+                                  comment_id: $props.feedbackId
+                                },
+                                type: "share_comment",
+                                token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["splunk"] != null &&
+                      typeof $steps["splunk"] === "object" &&
+                      typeof $steps["splunk"].then === "function"
+                    ) {
+                      $steps["splunk"] = await $steps["splunk"];
+                    }
+                  }}
+                >
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg__buJg)}
+                    role={"img"}
+                  />
+
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__v5Zas
+                    )}
+                  >
+                    {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
+                  </div>
+                </div>
+              )}
+            </DataCtxReader__>
+          </DataFetcher>
         </Stack__>
       </Stack__>
       <div
