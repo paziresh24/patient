@@ -88,7 +88,6 @@ import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // p
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
-import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
@@ -160,7 +159,6 @@ export type PlasmicReviewCard__OverridesType = {
   لارورت?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
-  اشتراذاشتن?: Flex__<typeof DataFetcher>;
   رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
@@ -2965,6 +2963,60 @@ function PlasmicReviewCard__RenderFunc(props: {
               "raviExpFroDrakam"
             )
           })}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return navigator.share({
+                        url:
+                          window.location.href + `#comment-${$props.feedbackId}`
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+
+            $steps["runCode2"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorId,
+                          comment_id: $props.feedbackId
+                        },
+                        type: "share_comment",
+                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode2"] != null &&
+              typeof $steps["runCode2"] === "object" &&
+              typeof $steps["runCode2"].then === "function"
+            ) {
+              $steps["runCode2"] = await $steps["runCode2"];
+            }
+          }}
         >
           <Icon14Icon
             className={classNames(projectcss.all, sty.svg__buJg)}
@@ -2980,85 +3032,6 @@ function PlasmicReviewCard__RenderFunc(props: {
           >
             {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
           </div>
-          <DataFetcher
-            data-plasmic-name={
-              "\u0627\u0634\u062a\u0631\u0627\u0630\u0627\u0634\u062a\u0646"
-            }
-            data-plasmic-override={overrides.اشتراذاشتن}
-            className={classNames("__wab_instance", sty.اشتراذاشتن)}
-            dataName={"fetchedData"}
-            errorDisplay={null}
-            errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
-            loadingDisplay={null}
-            method={"GET"}
-            noLayout={false}
-            url={(() => {
-              try {
-                return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?link=https%3A%2F%2Fwww.paziresh24.com%2Fdr%2F${$props.doctorSlug}%2F%23comment-${$props.feedbackId}`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          >
-            <DataCtxReader__>
-              {$ctx => (
-                <div
-                  className={classNames(projectcss.all, sty.freeBox__s2W08)}
-                  onClick={async event => {
-                    const $steps = {};
-
-                    $steps["runCode"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return navigator.share({
-                                url: $ctx.fetchedData.url,
-                                text: ":سلام این کامنت رو داخل پذیرش24 ببین. لینک:"
-                              });
-                            }
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runCode"] != null &&
-                      typeof $steps["runCode"] === "object" &&
-                      typeof $steps["runCode"].then === "function"
-                    ) {
-                      $steps["runCode"] = await $steps["runCode"];
-                    }
-                  }}
-                >
-                  <Icon13Icon
-                    className={classNames(projectcss.all, sty.svg__cb5Y)}
-                    role={"img"}
-                  />
-
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__kZ9L
-                    )}
-                  >
-                    {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646"}
-                  </div>
-                </div>
-              )}
-            </DataCtxReader__>
-          </DataFetcher>
         </Stack__>
       </Stack__>
       <div
@@ -3366,7 +3339,6 @@ const PlasmicDescendants = {
     "\u0644\u0627\u0631\u0648\u0631\u062a",
     "dialog",
     "reportText",
-    "\u0627\u0634\u062a\u0631\u0627\u0630\u0627\u0634\u062a\u0646",
     "\u0631\u0644\u0627",
     "replyText",
     "multilineTextInput",
@@ -3402,15 +3374,9 @@ const PlasmicDescendants = {
     "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
   ],
   نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
-  لارورت: [
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
-    "dialog",
-    "reportText",
-    "\u0627\u0634\u062a\u0631\u0627\u0630\u0627\u0634\u062a\u0646"
-  ],
+  لارورت: ["\u0644\u0627\u0631\u0648\u0631\u062a", "dialog", "reportText"],
   dialog: ["dialog", "reportText"],
   reportText: ["reportText"],
-  اشتراذاشتن: ["\u0627\u0634\u062a\u0631\u0627\u0630\u0627\u0634\u062a\u0646"],
   رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"],
@@ -3438,7 +3404,6 @@ type NodeDefaultElementType = {
   لارورت: "div";
   dialog: typeof Dialog;
   reportText: "textarea";
-  اشتراذاشتن: typeof DataFetcher;
   رلا: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
@@ -3530,9 +3495,6 @@ export const PlasmicReviewCard = Object.assign(
     لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
-    اشتراذاشتن: makeNodeComponent(
-      "\u0627\u0634\u062a\u0631\u0627\u0630\u0627\u0634\u062a\u0646"
-    ),
     رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
