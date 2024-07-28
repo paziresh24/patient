@@ -51,6 +51,7 @@ export const Services = ({
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
+
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
 
   const alabilityStatus = useAvailabilityStatus(
@@ -91,7 +92,7 @@ export const Services = ({
     return <Skeleton w="full" h="10rem" rounded="lg" />;
   }
 
-  if (!useAvailabilityStatusApi ? alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
     return <BulkService displayName={doctor.display_name} expertises={expertises} />;
   }
 
@@ -118,11 +119,11 @@ export const Services = ({
               .filter((center: any) => center.id !== CENTERS.CONSULT)
               .map(center => ({
                 ...center,
+                waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
                 ...(useAvailabilityStatusApi && {
                   is_active: alabilityStatus.data?.data?.availability.some((c: any) => c.center_id === center.id),
                 }),
               }))}
-            waitingTime={waitingTimeInfo?.find?.((center: any) => center?.center_id !== CENTERS.CONSULT)?.waiting_time_title}
             onBook={({ centerId, serviceId }) =>
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
             }

@@ -14,6 +14,7 @@ import { memo, useState } from 'react';
 import Notification from '../../components/notification/notification';
 import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
+import orderBy from 'lodash/orderBy';
 const SelectService = dynamic(() => import('@/modules/booking/views/selectService'));
 const SelectCenter = dynamic(() => import('@/modules/booking/views/selectCenter'));
 
@@ -137,6 +138,8 @@ export const Presence = memo((props: PresenceProps) => {
     );
   }
 
+  const mainCenterWaitingTime = orderBy(centers, ['isDisable', o => !o.isAvailable])[0]?.waiting_time_info;
+
   return (
     <div>
       <ServiceCard
@@ -156,9 +159,11 @@ export const Presence = memo((props: PresenceProps) => {
           title: 'نوبت اینترنتی و مراجعه حضوری',
         }}
         body={{
-          description: ['امکان دریافت زودترین نوبت', waitingTime && `میانگین زمان انتظار تا ویزیت: <strong>${waitingTime}</strong>`].filter(
-            Boolean,
-          ),
+          description: [
+            'امکان دریافت زودترین نوبت',
+            mainCenterWaitingTime?.waiting_time_title &&
+              `میانگین زمان انتظار تا ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
+          ].filter(Boolean),
         }}
         footer={{
           actions: [
