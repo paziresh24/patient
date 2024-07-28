@@ -1,10 +1,10 @@
 import { averageWaitingTime } from '@/common/apis/services/reviews/averageWaitingTime';
 import * as Sentry from '@sentry/nextjs';
 
-type GetAverageWaitingTimeParams = { slug: string; start_date?: string; end_date?: string; limit?: string };
+type GetAverageWaitingTimeParams = { slug: string };
 
-export const getAverageWaitingTime = async ({ slug, end_date, start_date, limit }: GetAverageWaitingTimeParams) => {
-  const { data: response } = await averageWaitingTime({ slug, end_date, start_date, limit });
+export const getAverageWaitingTime = async ({ slug }: GetAverageWaitingTimeParams) => {
+  const { data: response } = await averageWaitingTime({ slug });
 
   if (!response) {
     Sentry.captureMessage(`get average waiting time: slug:${slug}`);

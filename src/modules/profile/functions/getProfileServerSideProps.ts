@@ -147,8 +147,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
 
       // AverageWaitingTime Api
-      const averageWaitingTimeApiDoctorList = growthbook.getFeatureValue('profile:average-waiting-time-api|doctor-list', { slugs: [''] });
-      shouldUseAverageWaitingTime = newApiFeatureFlaggingCondition(averageWaitingTimeApiDoctorList.slugs, slugFormmated);
+      const shouldUseAverageWaitingTime = growthbook.isOn('average-waiting-time-api');
 
       // WaitingTimeStatistics Api
       const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-details', {
@@ -244,12 +243,11 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               };
             }
           }
+
           if (shouldUseAverageWaitingTime) {
             const parallelRequests = [
               await getAverageWaitingTime({
                 slug: slugFormmated,
-                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                end_date: moment().format('YYYY-MM-DD'),
               }),
             ];
             const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
@@ -257,31 +255,11 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
                 ...profileData.feedbacks,
-                waiting_time_info_online_visit: averageWaitingTimeData?.value?.result?.find?.((item: any) => item?.center_id === '5532'),
+                waiting_time_info: averageWaitingTimeData?.value?.result,
               };
             }
-            if (
-              isEmpty(
-                profileData.feedbacks?.waiting_time_info_online_visit?.find?.((item: any) => item?.center_id === '5532')
-                  ?.waiting_time_title,
-              )
-            ) {
-              const parallelRequests = [
-                await getAverageWaitingTime({
-                  slug: slugFormmated,
-                  limit: '30',
-                }),
-              ];
-              const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
-
-              if (averageWaitingTimeData.status === 'fulfilled') {
-                profileData.feedbacks = {
-                  ...profileData.feedbacks,
-                  waiting_time_info_online_visit: averageWaitingTimeData?.value?.result.find?.((item: any) => item?.center_id === '5532'),
-                };
-              }
-            }
           }
+
           // waiting statistics
           if (shouldUseWaitingTimeStatistics) {
             const parallelRequests = [

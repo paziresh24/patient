@@ -372,7 +372,7 @@ export const withDoctorMenu = [
 export const medicalCenterMenu = [
   {
     title: 'ثبت نام مراکز درمانی',
-    link: `https://survey.porsline.ir/s/7GFKVQz`,
+    link: `https://survey.porsline.ir/s/YCEGAgx`,
   },
   {
     title: 'تعرفه مراکز درمانی',
@@ -388,10 +388,6 @@ export const developersMenu = [
   {
     title: 'مستندات بازارچه',
     link: 'https://developers.paziresh24.com/apps',
-  },
-  {
-    title: 'جامعه توسعه دهندگان',
-    link: 'https://community.paziresh24.com/',
   },
   {
     title: 'گیت هاب پذیرش24',

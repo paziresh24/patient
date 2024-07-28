@@ -9,4 +9,5 @@ export type Center = {
   type: 'office' | 'hospital' | 'consult';
   phoneNumbers?: string[];
   services: any[];
+  waitingTimeInfo: any;
 };

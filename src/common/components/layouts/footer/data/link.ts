@@ -48,10 +48,6 @@ export const footerPaziresh24 = {
       link: '/home/contact-us/',
     },
     {
-      title: 'جامعه توسعه دهندگان پذیرش24',
-      link: 'https://community.paziresh24.com/',
-    },
-    {
       title: 'مستندات API',
       link: 'https://developers.paziresh24.com/',
     },

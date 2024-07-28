@@ -15,7 +15,7 @@ interface CenterCardProps extends Center {
 
 export const CenterCard = (props: CenterCardProps) => {
   const { onClick, ...center } = props;
-  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true } = center;
+  const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true, waitingTimeInfo } = center;
 
   return (
     <>
@@ -60,13 +60,20 @@ export const CenterCard = (props: CenterCardProps) => {
             </Text>
           )}
         </div>
-        {freeturn && !isDisable && isAvailable && (
+        {(!!freeturn || !!waitingTimeInfo?.waiting_time_title) && !isDisable && isAvailable && (
           <>
-            <Divider />
-            <div className="flex justify-between w-full p-4">
-              <Text className="text-black/">{type === 'consult' ? 'زمان پاسخگویی' : 'اولین نوبت خالی'}:</Text>
-              <Text className="block text-slate-500">{freeturn}</Text>
-            </div>
+            <Divider className="mb-4" />
+            {freeturn && (
+              <div className="flex justify-between w-full px-4 mb-2">
+                <Text className="text-black/">{type === 'consult' ? 'زمان پاسخگویی' : 'اولین نوبت خالی'}:</Text>
+                <Text className="block text-slate-500">{freeturn}</Text>
+              </div>
+            )}
+            {!!waitingTimeInfo?.waiting_time_title && (
+              <Text fontSize="sm" className="block w-full px-4 pb-4 text-slate-600">
+                میانگین زمان انتظار تا ویزیت: <strong>{waitingTimeInfo?.waiting_time_title}</strong>
+              </Text>
+            )}
           </>
         )}
         {!isAvailable && availableTime && (
