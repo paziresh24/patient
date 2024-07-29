@@ -95,6 +95,7 @@ export type PlasmicSearchResults__ArgsType = {
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
   topSuggestedCardFeature?: any;
+  onlineVisitButtonsCustomDestination?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -106,7 +107,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "searchFooterSecondaryTasksObject",
   "searchFooterQuerySuggestionResponseObject",
   "showMyPerformanceMetricsBox",
-  "topSuggestedCardFeature"
+  "topSuggestedCardFeature",
+  "onlineVisitButtonsCustomDestination"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -134,6 +136,7 @@ export interface DefaultSearchResultsProps {
   searchFooterQuerySuggestionResponseObject?: any;
   showMyPerformanceMetricsBox?: any;
   topSuggestedCardFeature?: any;
+  onlineVisitButtonsCustomDestination?: any;
   className?: string;
 }
 
@@ -394,23 +397,34 @@ function PlasmicSearchResults__RenderFunc(props: {
                             if (
                               typeof $ctx.Growthbook?.features?.[
                                 "theme-config"
-                              ]?.["search_result:show_first_free_time"] ===
+                              ]?.["search_result:show_first_free_time"] !==
                               "undefined"
                             ) {
-                              return $ctx.fetchedData.search.result[0].actions;
-                            }
-                            if (
-                              !$ctx.Growthbook?.features?.["theme-config"]?.[
-                                "search_result:show_first_free_time"
-                              ]
-                            ) {
-                              $ctx.fetchedData.search.result[0].actions =
-                                $ctx.fetchedData.search.result[0].actions.map(
-                                  action => ({
-                                    ...action,
-                                    top_title: ""
-                                  })
-                                );
+                              if (
+                                !$ctx.Growthbook?.features?.["theme-config"]?.[
+                                  "search_result:show_first_free_time"
+                                ]
+                              ) {
+                                $ctx.fetchedData.search.result[0].actions =
+                                  $ctx.fetchedData.search.result[0].actions.map(
+                                    action => ({
+                                      ...action,
+                                      top_title: ""
+                                    })
+                                  );
+                              }
+                              if (
+                                $ctx.fetchedData.search.result[0].actions[0]
+                                  ?.title === "ویزیت آنلاین" &&
+                                $props.onlineVisitButtonsCustomDestination
+                                  ?.enable
+                              ) {
+                                $ctx.fetchedData.search.result[0].actions[0].url =
+                                  $props.onlineVisitButtonsCustomDestination.url_template.replace(
+                                    "dr-slug-variable",
+                                    $ctx.fetchedData.search.result[0].slug
+                                  );
+                              }
                             }
                             return $ctx.fetchedData.search.result[0].actions;
                           })();
@@ -560,6 +574,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                                                   )
                                               })
                                           ),
+                                        online_visit_buttons_custom_destination:
+                                          $props.onlineVisitButtonsCustomDestination &&
+                                          $props
+                                            .onlineVisitButtonsCustomDestination
+                                            .enable
+                                            ? $props
+                                                .onlineVisitButtonsCustomDestination
+                                                .url_template
+                                            : undefined,
                                         _id: $ctx.fetchedData.search.result[0]
                                           ._id,
                                         position:
@@ -1000,21 +1023,30 @@ function PlasmicSearchResults__RenderFunc(props: {
                       if (
                         typeof $ctx.Growthbook?.features?.["theme-config"]?.[
                           "search_result:show_first_free_time"
-                        ] === "undefined"
+                        ] !== "undefined"
                       ) {
-                        return currentItem.actions;
-                      }
-                      if (
-                        !$ctx.Growthbook?.features?.["theme-config"]?.[
-                          "search_result:show_first_free_time"
-                        ]
-                      ) {
-                        currentItem.actions = currentItem.actions.map(
-                          action => ({
-                            ...action,
-                            top_title: ""
-                          })
-                        );
+                        if (
+                          !$ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_first_free_time"
+                          ]
+                        ) {
+                          currentItem.actions = currentItem.actions.map(
+                            action => ({
+                              ...action,
+                              top_title: ""
+                            })
+                          );
+                        }
+                        if (
+                          currentItem.actions[0]?.title === "ویزیت آنلاین" &&
+                          $props.onlineVisitButtonsCustomDestination?.enable
+                        ) {
+                          currentItem.actions[0].url =
+                            $props.onlineVisitButtonsCustomDestination.url_template.replace(
+                              "dr-slug-variable",
+                              currentItem.slug
+                            );
+                        }
                       }
                       return currentItem.actions;
                     })();
@@ -1144,6 +1176,14 @@ function PlasmicSearchResults__RenderFunc(props: {
                                       )
                                     })
                                   ),
+                                  online_visit_buttons_custom_destination:
+                                    $props.onlineVisitButtonsCustomDestination &&
+                                    $props.onlineVisitButtonsCustomDestination
+                                      .enable
+                                      ? $props
+                                          .onlineVisitButtonsCustomDestination
+                                          .url_template
+                                      : undefined,
                                   _id: currentItem._id,
                                   position: currentItem.position,
                                   server_id: currentItem.server_id,
