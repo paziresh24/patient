@@ -67,6 +67,8 @@ import TextInput from "../../TextInput"; // plasmic-import: iKLtt-X_YZoa/compone
 import ReviewCard from "../../ReviewCard"; // plasmic-import: hjUuvN6lhrZV/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -79,6 +81,7 @@ import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWC
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon11Icon from "./icons/PlasmicIcon__Icon11"; // plasmic-import: 2W2cvQbPPcOu/icon
+import Icon17Icon from "../fragment_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
@@ -129,9 +132,9 @@ export type PlasmicReviewList__OverridesType = {
   searchInput?: Flex__<typeof TextInput>;
   commentsContainer?: Flex__<"div">;
   cardLine?: Flex__<"div">;
-  reviewCard?: Flex__<typeof ReviewCard>;
   button?: Flex__<typeof Button>;
-  sideEffect?: Flex__<typeof SideEffect>;
+  sharedCommentDialog?: Flex__<typeof Dialog>;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
 };
 
 export interface DefaultReviewListProps {
@@ -212,6 +215,12 @@ function PlasmicReviewList__RenderFunc(props: {
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => "default_order"
+      },
+      {
+        path: "sharedCommentDialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -843,9 +852,10 @@ function PlasmicReviewList__RenderFunc(props: {
                   key={currentIndex}
                 >
                   <ReviewCard
-                    data-plasmic-name={"reviewCard"}
-                    data-plasmic-override={overrides.reviewCard}
-                    className={classNames("__wab_instance", sty.reviewCard)}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.reviewCard___1LxxJ
+                    )}
                     commentText={(() => {
                       try {
                         return currentItem.description;
@@ -1323,9 +1333,7 @@ function PlasmicReviewList__RenderFunc(props: {
             </div>
           ) : null}
           <SideEffect
-            data-plasmic-name={"sideEffect"}
-            data-plasmic-override={overrides.sideEffect}
-            className={classNames("__wab_instance", sty.sideEffect)}
+            className={classNames("__wab_instance", sty.sideEffect__n207U)}
             deps={(() => {
               try {
                 return [$ctx.Growthbook.isReady];
@@ -1415,6 +1423,427 @@ function PlasmicReviewList__RenderFunc(props: {
           </div>
         </div>
       ) : null}
+      <SideEffect
+        className={classNames("__wab_instance", sty.sideEffect__loPr)}
+        deps={(() => {
+          try {
+            return [$ctx.query.comment];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["updateSharedCommentDialogOpen"] =
+            $ctx.query.comment !== undefined
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["sharedCommentDialog", "open"]
+                    },
+                    operation: 0,
+                    value: true
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["updateSharedCommentDialogOpen"] != null &&
+            typeof $steps["updateSharedCommentDialogOpen"] === "object" &&
+            typeof $steps["updateSharedCommentDialogOpen"].then === "function"
+          ) {
+            $steps["updateSharedCommentDialogOpen"] = await $steps[
+              "updateSharedCommentDialogOpen"
+            ];
+          }
+        }}
+      />
+
+      <Dialog
+        data-plasmic-name={"sharedCommentDialog"}
+        data-plasmic-override={overrides.sharedCommentDialog}
+        body={
+          <DataFetcher
+            data-plasmic-name={"httpRestApiFetcher"}
+            data-plasmic-override={overrides.httpRestApiFetcher}
+            className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+            dataName={"fetchedData"}
+            errorDisplay={
+              <DataCtxReader__>
+                {$ctx => (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__vzQ0
+                    )}
+                  >
+                    {
+                      "\u0646\u0638\u0631\u06cc \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f."
+                    }
+                  </div>
+                )}
+              </DataCtxReader__>
+            }
+            errorName={"fetchError"}
+            headers={{
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            }}
+            loadingDisplay={
+              <DataCtxReader__>
+                {$ctx => (
+                  <Icon17Icon
+                    className={classNames(
+                      projectcss.all,
+                      sty.svg__hNSd,
+                      "loader"
+                    )}
+                    role={"img"}
+                  />
+                )}
+              </DataCtxReader__>
+            }
+            method={"GET"}
+            noLayout={false}
+            previewSpinner={false}
+            url={(() => {
+              try {
+                return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(Id,eq,${$ctx.query?.comment})&limit=1&shuffle=0&offset=0`;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          >
+            <DataCtxReader__>
+              {$ctx => (
+                <ReviewCard
+                  className={classNames(
+                    "__wab_instance",
+                    sty.reviewCard__gyhZl
+                  )}
+                  commentText={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].description;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  docCenter={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].center_name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  doctorEncounter={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].doctor_encounter;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  doctorSlug={(() => {
+                    try {
+                      return $props.seo.slug;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  explanationOfIssue={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].explanation_of_issue;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  feedbackId={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].Id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  like={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].count_like;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  qualityOfTreatment={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].quality_of_treatment;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  recommendRange={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].recommend_range;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  recommended={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].recommend_range
+                        ? $ctx.fetchedData.list[0].recommend_range >= 3
+                        : $ctx.fetchedData.list[0].recommended;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  replyToFeedbackId={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].Id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  setTime={(() => {
+                    try {
+                      return (() => {
+                        const createdDate = new Date(
+                          $ctx.fetchedData.list[0].created_at
+                        );
+                        const currentDate = new Date();
+                        const timeDiff = Math.abs(currentDate - createdDate);
+                        const daysDiff = Math.ceil(
+                          timeDiff / (1000 * 60 * 60 * 24)
+                        );
+
+                        const numbers = [
+                          "صفر",
+                          "یک",
+                          "دو",
+                          "سه",
+                          "چهار",
+                          "پنج",
+                          "شش",
+                          "هفت",
+                          "هشت",
+                          "نه",
+                          "ده"
+                        ];
+
+                        const numToPersian = num => {
+                          const units = [
+                            "",
+                            "یک",
+                            "دو",
+                            "سه",
+                            "چهار",
+                            "پنج",
+                            "شش",
+                            "هفت",
+                            "هشت",
+                            "نه"
+                          ];
+                          const tens = [
+                            "",
+                            "ده",
+                            "بیست",
+                            "سی",
+                            "چهل",
+                            "پنجاه",
+                            "شصت",
+                            "هفتاد",
+                            "هشتاد",
+                            "نود"
+                          ];
+                          if (num < 10) return units[num];
+                          if (num < 20) return `ده${units[num - 10]}`;
+                          if (num < 100) {
+                            const ten = Math.floor(num / 10);
+                            const unit = num % 10;
+                            return `${tens[ten]}${
+                              unit > 0 ? ` و ${units[unit]}` : ""
+                            }`;
+                          }
+                          if (num < 1000) {
+                            const hundred = Math.floor(num / 100);
+                            const remainder = num % 100;
+                            return `${units[hundred]}صد${
+                              remainder > 0
+                                ? ` و ${numToPersian(remainder)}`
+                                : ""
+                            }`;
+                          }
+                        };
+
+                        if (daysDiff === 0) {
+                          return "امروز";
+                        } else if (daysDiff === 1) {
+                          return "دیروز";
+                        } else if (daysDiff < 7) {
+                          return `${numbers[daysDiff]} روز پیش`;
+                        } else if (daysDiff < 30) {
+                          const weeksDiff = Math.floor(daysDiff / 7);
+                          if (weeksDiff === 1) {
+                            return "یک هفته پیش";
+                          }
+                          return `${numbers[weeksDiff]} هفته پیش`;
+                        } else if (daysDiff < 365) {
+                          const monthsDiff = Math.floor(daysDiff / 30);
+                          if (monthsDiff === 1) {
+                            return "یک ماه پیش";
+                          }
+                          return `${numToPersian(monthsDiff)} ماه پیش`;
+                        } else {
+                          const yearsDiff = Math.floor(daysDiff / 365);
+                          if (yearsDiff === 1) {
+                            return "یک سال پیش";
+                          } else if (yearsDiff === 2) {
+                            return "دو سال پیش";
+                          } else {
+                            return `${numToPersian(yearsDiff)} سال پیش`;
+                          }
+                        }
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  userId={(() => {
+                    try {
+                      return $ctx.fetchedData.list[0].user_id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  userName={``}
+                  visitedTag={(() => {
+                    try {
+                      return (
+                        $ctx.fetchedData.list[0].visit_status === "visited"
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              )}
+            </DataCtxReader__>
+          </DataFetcher>
+        }
+        className={classNames("__wab_instance", sty.sharedCommentDialog)}
+        noTrigger={true}
+        onOpenChange={generateStateOnChangeProp($state, [
+          "sharedCommentDialog",
+          "open"
+        ])}
+        open={generateStateValueProp($state, ["sharedCommentDialog", "open"])}
+        title={
+          "\u0646\u0638\u0631 \u0628\u0647 \u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0634\u062a\u0647 \u0634\u062f\u0647 \u0628\u0627 \u0634\u0645\u0627:"
+        }
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -1430,9 +1859,9 @@ const PlasmicDescendants = {
     "searchInput",
     "commentsContainer",
     "cardLine",
-    "reviewCard",
     "button",
-    "sideEffect"
+    "sharedCommentDialog",
+    "httpRestApiFetcher"
   ],
   summery: ["summery"],
   rateDetail: ["rateDetail"],
@@ -1440,11 +1869,11 @@ const PlasmicDescendants = {
   filterInput: ["filterInput"],
   sortInput: ["sortInput"],
   searchInput: ["searchInput"],
-  commentsContainer: ["commentsContainer", "cardLine", "reviewCard"],
-  cardLine: ["cardLine", "reviewCard"],
-  reviewCard: ["reviewCard"],
+  commentsContainer: ["commentsContainer", "cardLine"],
+  cardLine: ["cardLine"],
   button: ["button"],
-  sideEffect: ["sideEffect"]
+  sharedCommentDialog: ["sharedCommentDialog", "httpRestApiFetcher"],
+  httpRestApiFetcher: ["httpRestApiFetcher"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1459,9 +1888,9 @@ type NodeDefaultElementType = {
   searchInput: typeof TextInput;
   commentsContainer: "div";
   cardLine: "div";
-  reviewCard: typeof ReviewCard;
   button: typeof Button;
-  sideEffect: typeof SideEffect;
+  sharedCommentDialog: typeof Dialog;
+  httpRestApiFetcher: typeof DataFetcher;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1532,9 +1961,9 @@ export const PlasmicReviewList = Object.assign(
     searchInput: makeNodeComponent("searchInput"),
     commentsContainer: makeNodeComponent("commentsContainer"),
     cardLine: makeNodeComponent("cardLine"),
-    reviewCard: makeNodeComponent("reviewCard"),
     button: makeNodeComponent("button"),
-    sideEffect: makeNodeComponent("sideEffect"),
+    sharedCommentDialog: makeNodeComponent("sharedCommentDialog"),
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
 
     // Metadata about props expected for PlasmicReviewList
     internalVariantProps: PlasmicReviewList__VariantProps,

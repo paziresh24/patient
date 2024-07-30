@@ -7,6 +7,7 @@
   justify-content: flex-start;
   align-items: center;
   background: #ffffff;
+  padding-top: 0px;
   min-width: 0;
 }
 .freeBox___0QvL {
@@ -210,7 +211,7 @@
   > img {
   margin-top: var(--token-Fv8-L_kN-2Ma);
 }
-.reviewCard:global(.__wab_instance) {
+.reviewCard___1LxxJ:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
 }
@@ -296,7 +297,7 @@
   width: auto;
   height: 1em;
 }
-.sideEffect:global(.__wab_instance) {
+.sideEffect__n207U:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;
@@ -344,4 +345,49 @@
   max-width: 100%;
   padding-right: 17px;
   min-width: 0;
+}
+.sideEffect__loPr:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.sharedCommentDialog:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.text__mQq0 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.svg__hIpR {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__eRGng {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.httpRestApiFetcher:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  min-width: 0;
+}
+.svg__hNSd {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+.text__vzQ0 {
+  text-align: center;
+}
+.reviewCard__gyhZl:global(.__wab_instance) {
+  max-width: 100%;
 }
