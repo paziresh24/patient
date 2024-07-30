@@ -7,15 +7,17 @@ export default function plasmicSplunkEvent({
   group,
   type,
   data,
+  api_host,
 }: {
   token: string;
   group: string;
   type: string;
   data: Record<string, any>;
+  api_host?: string;
 }) {
   splunk
     .create({
-      baseUrl: 'https://p24splk.paziresh24.com',
+      baseUrl: api_host ? api_host : 'https://p24splk.paziresh24.com',
       token: token,
       constant: {
         url: {
