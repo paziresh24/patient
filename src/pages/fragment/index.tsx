@@ -19,11 +19,13 @@ registerFunction(plasmicSplunkEvent, {
     group,
     type,
     data,
+    api_host
   }: {
     token: string;
     group: string;
     type: string;
     data: Record<string, any>;
+    api_host?: string;
   }):void`,
 });
 
