@@ -75,7 +75,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
     <div ref={ref} className="block w-full text-sm z-infinity md:hidden">
       <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
         <div className="flex flex-row items-center gap-2">
-          {customize.showSideBar && (
+          {(customize.showSideBar || !!customize.menuNavigation?.length) && (
             <div className="flex items-center justify-center w-8 h-8" onClick={() => setOpen(true)}>
               <HumbuggerMenu />
             </div>
@@ -104,7 +104,22 @@ const MobileNavbar = (props: MobileNavbarProps) => {
           {showSearchSuggestionButton && <ButtonSuggestion />}
           {customize.showUserProfile && <UserProfile />}
         </div>
-        <Sidebar menus={sidebarMenu} closeSidebar={() => setOpen(false)} isOpen={open} />
+        <Sidebar
+          menus={
+            customize.menuNavigation?.length
+              ? customize.menuNavigation?.map((menu, index) => ({
+                  id: index,
+                  title: menu.label,
+                  sub_menu:
+                    menu.type == 'sub_menu'
+                      ? menu.items?.map(item => ({ title: item.label, link: item.link, newTab: item.newTab })) ?? []
+                      : [{ title: menu.label, link: menu.link, newTab: menu.newTab }],
+                }))
+              : sidebarMenu
+          }
+          closeSidebar={() => setOpen(false)}
+          isOpen={open}
+        />
       </div>
     </div>
   );

@@ -56,7 +56,7 @@ const Header = (props: HeaderProps) => {
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
       <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden pwa:hidden text-slate-700 md:px-4 md:h-20 border-slate-100">
-        <div className="container relative items-center justify-between hidden w-full h-full mx-auto md:flex">
+        <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
               <Link href="/" shallow prefetch={false}>
@@ -74,6 +74,25 @@ const Header = (props: HeaderProps) => {
               />
             </div>
           )}
+
+          {!!customize.menuNavigation?.length && (
+            <nav>
+              <ul className="flex justify-center space-s-2">
+                {customize.menuNavigation?.map(menu => (
+                  <SubMenu
+                    key={menu.label}
+                    title={menu.label}
+                    menuItem={
+                      menu.type == 'sub_menu'
+                        ? menu.items?.map(item => ({ title: item.label, link: item.link, newTab: item.newTab })) ?? []
+                        : [{ title: menu.label, link: menu.link, newTab: menu.newTab }]
+                    }
+                  />
+                ))}
+              </ul>
+            </nav>
+          )}
+
           {customize.showSideBar && (
             <nav>
               <ul className="flex justify-center space-s-2">

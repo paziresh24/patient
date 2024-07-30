@@ -5,11 +5,14 @@ import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
+
 interface Item {
   title: React.ReactNode;
   link?: string;
   icon?: React.ReactNode;
+  newTab?: boolean;
 }
+
 interface SubMenuProps {
   title?: React.ReactNode;
   className?: '';
@@ -28,7 +31,12 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
     const fristItem = menuItem[0];
     return (
       <li className="relative flex items-center">
-        <Link prefetch={false} href={fristItem.link ?? '#'} className="flex items-center text-center ">
+        <Link
+          prefetch={false}
+          href={fristItem.link ?? '#'}
+          className="flex items-center text-center"
+          target={fristItem.newTab ? '_blank' : '_parent'}
+        >
           {fristItem.icon && fristItem.icon}
           <Text fontSize="sm" className="p-3" fontWeight="medium">
             {fristItem.title}
@@ -55,7 +63,12 @@ const SubMenu = ({ title, menuItem, hasIcon = true, className }: SubMenuProps) =
         {menuItem.map((item, index) => {
           return (
             <li key={index}>
-              <Link prefetch={false} href={item.link ?? '#'} className="flex items-center px-3 py-3 text-sm cursor-pointer space-s-2">
+              <Link
+                prefetch={false}
+                target={item.newTab ? '_blank' : '_self'}
+                href={item.link ?? '#'}
+                className="flex items-center px-3 py-3 text-sm cursor-pointer space-s-2"
+              >
                 {item.icon && item.icon}
                 <Text>{item.title}</Text>
               </Link>

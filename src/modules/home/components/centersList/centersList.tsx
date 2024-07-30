@@ -24,11 +24,11 @@ export const CentersList = () => {
   if (centers.length === 0) return null;
 
   return (
-    <div className="flex flex-col space-y-3 lg:w-[50rem] pb-10">
+    <div className="flex flex-col space-y-3 w-full lg:!w-[50rem] pb-10">
       <Text fontSize="sm" fontWeight="bold">
         لیست مراکز
       </Text>
-      <Opener openButtonText="بیشتر" height={200} closeButtonText="کمتر" className="p-4 border rounded-lg  border-slate-100">
+      <Opener openButtonText="بیشتر" height={200} closeButtonText="کمتر" className="p-4 border rounded-lg bg-white border-slate-100">
         <div className="flex flex-col space-y-2">
           {centers.map((item: any) => (
             <Link href={item.url} shallow scroll key={item.id}>
