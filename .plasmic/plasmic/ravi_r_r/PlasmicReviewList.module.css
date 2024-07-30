@@ -372,6 +372,20 @@
   width: auto;
   height: 1em;
 }
+.freeBox__d66Un {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-height: 30rem;
+  overflow: auto;
+  min-width: 0;
+  padding: var(--token-Fv8-L_kN-2Ma);
+}
 .httpRestApiFetcher:global(.__wab_instance) {
   width: 100%;
   max-width: 100%;
