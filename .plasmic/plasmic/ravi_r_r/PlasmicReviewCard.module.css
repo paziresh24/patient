@@ -1082,6 +1082,9 @@
   width: auto;
   height: 1em;
 }
+.dialog6:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
 .freeBox__iAvTv {
   display: flex;
   position: relative;
@@ -1116,6 +1119,197 @@
 }
 .text__v5Zas {
   font-size: var(--token-6NbVMeD6zQwn);
+}
+.httpRestApiFetcher__ituI3:global(.__wab_instance) {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  min-width: 0;
+}
+.freeBox__o41Sk {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__o41Sk > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
+  height: calc(100% + var(--token-vMUQwr5Jto1d));
+}
+.freeBox__o41Sk > :global(.__wab_flex-container) > *,
+.freeBox__o41Sk > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__o41Sk > :global(.__wab_flex-container) > picture > img,
+.freeBox__o41Sk
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-vMUQwr5Jto1d);
+}
+.text__tjC {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  padding-top: 0px;
+  min-width: 0;
+}
+.سوشالها {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.توئتر:global(.__wab_instance) {
+  max-width: 100%;
+  margin: var(--token-_c276Gs_1FIE);
+}
+.svg__kxK3 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__dcuHo {
+  object-fit: cover;
+  max-width: 100%;
+  margin-top: 3px;
+  margin-left: var(--token-fhaz6q6bl-fW);
+  width: var(--token-Fv8-L_kN-2Ma);
+  height: 1em;
+}
+.text__j9D5J {
+  padding-top: 0px;
+}
+.svg__kjIpa {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.تلرام:global(.__wab_instance) {
+  max-width: 100%;
+  margin: var(--token-_c276Gs_1FIE);
+}
+.svg__oe2Ly {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__oYc9Q {
+  object-fit: cover;
+  max-width: 100%;
+  margin-top: 3px;
+  margin-left: var(--token-fhaz6q6bl-fW);
+  width: var(--token-Fv8-L_kN-2Ma);
+  height: 1em;
+}
+.svg__mjsK {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.واتسا:global(.__wab_instance) {
+  max-width: 100%;
+  transition-property: all;
+  transition-duration: 1s;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 1s;
+  margin: var(--token-_c276Gs_1FIE);
+}
+.svg__wd330 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__jcPhF {
+  object-fit: cover;
+  max-width: 100%;
+  margin-top: 3px;
+  margin-left: var(--token-fhaz6q6bl-fW);
+  width: var(--token-Fv8-L_kN-2Ma);
+  height: 1em;
+}
+.svg___6Q8Hl {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.freeBox__kjRpj {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  height: 0.5px;
+  max-width: 100%;
+  width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  min-width: 0;
+  flex-shrink: 0;
+}
+.ردن {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.text__vjYtk {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  align-self: center;
+  min-width: 0;
+}
+.لن:global(.__wab_instance) {
+  max-width: 100%;
+  width: auto;
+}
+.svg__n7Tf8 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__wewyW {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  width: var(--token-Fv8-L_kN-2Ma);
+  height: var(--token-Fv8-L_kN-2Ma);
+  margin-left: 7px;
+  margin-top: 2px;
+}
+.text__rmbH3 {
+  padding-top: 0px;
+}
+.svg___2CHwO {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
 }
 .رلا {
   display: flex;
