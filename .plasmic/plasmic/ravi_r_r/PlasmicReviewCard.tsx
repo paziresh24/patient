@@ -88,7 +88,8 @@ import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // p
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
-import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
+import Icon17Icon from "../fragment_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
+import Icon17Icon2 from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: 9Q_oq9_FnEFj/icon
 import Icon15Icon from "./icons/PlasmicIcon__Icon15"; // plasmic-import: ucmv7JmAEMSo/icon
@@ -1400,6 +1401,26 @@ function PlasmicReviewCard__RenderFunc(props: {
                         $steps["request"] = await $steps["request"];
                       }
 
+                      $steps["sendToN8N"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return undefined;
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["sendToN8N"] != null &&
+                        typeof $steps["sendToN8N"] === "object" &&
+                        typeof $steps["sendToN8N"].then === "function"
+                      ) {
+                        $steps["sendToN8N"] = await $steps["sendToN8N"];
+                      }
+
                       $steps["closeDialog"] =
                         $state.reportText2.value.length >= 10 &&
                         $ctx.auth.isLogin
@@ -2673,9 +2694,23 @@ function PlasmicReviewCard__RenderFunc(props: {
                   "Content-Type": "application/json",
                   Accept: "application/json"
                 }}
-                loadingDisplay={null}
+                loadingDisplay={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <Icon17Icon
+                        className={classNames(
+                          projectcss.all,
+                          sty.svg__bbdhD,
+                          "loader"
+                        )}
+                        role={"img"}
+                      />
+                    )}
+                  </DataCtxReader__>
+                }
                 method={"GET"}
                 noLayout={false}
+                previewSpinner={false}
                 url={(() => {
                   try {
                     return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?slug=${$props.doctorSlug}&id=${$props.feedbackId}`;
@@ -2720,7 +2755,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                           data-plasmic-override={overrides.توئتر}
                           children2={
                             <React.Fragment>
-                              <Icon17Icon
+                              <Icon17Icon2
                                 className={classNames(
                                   projectcss.all,
                                   sty.svg__dcuHo
