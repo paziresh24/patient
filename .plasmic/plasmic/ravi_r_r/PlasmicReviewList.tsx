@@ -1441,28 +1441,30 @@ function PlasmicReviewList__RenderFunc(props: {
         onMount={async () => {
           const $steps = {};
 
-          $steps["updateSharedCommentDialogOpen"] =
-            $ctx.query.comment !== undefined
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["sharedCommentDialog", "open"]
-                    },
-                    operation: 0,
-                    value: true
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+          $steps["updateSharedCommentDialogOpen"] = (() => {
+            const urlParams = new URLSearchParams(location.search);
+            return urlParams.has("comment");
+          })()
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["sharedCommentDialog", "open"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
           if (
             $steps["updateSharedCommentDialogOpen"] != null &&
             typeof $steps["updateSharedCommentDialogOpen"] === "object" &&
@@ -1525,7 +1527,13 @@ function PlasmicReviewList__RenderFunc(props: {
             previewSpinner={false}
             url={(() => {
               try {
-                return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(Id,eq,${$ctx.query?.comment})&limit=1&shuffle=0&offset=0`;
+                return (() => {
+                  if (typeof window === "undefined") return "";
+                  const urlParams = new URLSearchParams(location.search);
+                  return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(Id,eq,${urlParams.get(
+                    "comment"
+                  )})&limit=1&shuffle=0&offset=0`;
+                })();
               } catch (e) {
                 if (
                   e instanceof TypeError ||
