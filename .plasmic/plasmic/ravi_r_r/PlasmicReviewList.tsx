@@ -1425,19 +1425,6 @@ function PlasmicReviewList__RenderFunc(props: {
       ) : null}
       <SideEffect
         className={classNames("__wab_instance", sty.sideEffect__loPr)}
-        deps={(() => {
-          try {
-            return [$ctx.query.comment];
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
         onMount={async () => {
           const $steps = {};
 
