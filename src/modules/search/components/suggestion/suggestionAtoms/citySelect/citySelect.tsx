@@ -7,6 +7,7 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import DirectionIcon from '@/common/components/icons/direction';
 import LocationIcon from '@/common/components/icons/location';
 import SearchIcon from '@/common/components/icons/search';
+import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -29,6 +30,7 @@ export const CitySelect = (props: CitySelectProps) => {
   const { city, onChange } = props;
   const { handleOpen, handleClose, modalProps } = useModal();
 
+  const customize = useCustomize(state => state.customize);
   const geoLocation = useSearchStore(state => state.geoLocation);
   const containerRef = useRef<HTMLDivElement>(null);
   const getCitiesAndProvince = useGetBaseInfo({ table: ['city', 'province'] });
@@ -48,11 +50,18 @@ export const CitySelect = (props: CitySelectProps) => {
 
   useEffect(() => {
     if (getCitiesAndProvince.isSuccess) {
-      provincesData.current = getCitiesAndProvince.data.data.result.province;
-      citiesData.current = getCitiesAndProvince.data.data.result.city;
+      provincesData.current = customize.provinceId
+        ? getCitiesAndProvince.data.data.result.province?.filter((item: any) => item.id === customize.provinceId)
+        : getCitiesAndProvince.data.data.result.province;
+      citiesData.current = customize.provinceId
+        ? getCitiesAndProvince.data.data.result.city?.filter((item: any) => item.province_id === customize.provinceId)
+        : getCitiesAndProvince.data.data.result.city;
       setFiltredLocation(provincesData.current.map(item => ({ ...item, isProvince: true })));
+      if (customize.provinceId) {
+        handleClickProvince(customize.provinceId);
+      }
     }
-  }, [getCitiesAndProvince.status, modalProps.isOpen]);
+  }, [getCitiesAndProvince.status, modalProps.isOpen, customize.provinceId]);
 
   const scrollTop = () => {
     if (containerRef.current) containerRef.current.scrollTop = 0;
@@ -145,7 +154,7 @@ export const CitySelect = (props: CitySelectProps) => {
           </div>
 
           <div ref={containerRef} className="flex flex-col h-full pb-32 overflow-auto no-scroll">
-            {!userSearchInput && stepSelect === 'cities' && (
+            {!userSearchInput && stepSelect === 'cities' && !customize.provinceId && (
               <div
                 className="sticky top-0 z-10 flex items-center p-3 font-medium bg-white border-b border-solid cursor-pointer border-slate-100 hover:bg-slate-50 space-s-2 "
                 onClick={handleBackToProvince}

@@ -6,6 +6,7 @@ export interface ThemeConfig {
   showFooter: boolean;
   showSideBar: boolean;
   headerBrandLogoType: HeaderBrandLogoType;
+  backgroundImage?: string;
   showUserProfile: boolean;
   showBrandLogoInHomePage: boolean;
   showPromoteApp: boolean;
@@ -13,6 +14,7 @@ export interface ThemeConfig {
   showPartnerLogoInPrimaryPlace: boolean;
   partnerTitle: string;
   partnerSubTitle: string;
+  provinceId?: string;
   showSelectCityInSuggestion: boolean;
   showSeoBoxs: boolean;
   footerType: FooterType;
@@ -30,6 +32,18 @@ export interface ThemeConfig {
   oauth: boolean;
   showFirstFreeTimeSearchResult?: boolean;
   showAvailableTimeSearchResult?: boolean;
+  certificates?: {
+    provider: 'enamad';
+    id: string;
+    code: string;
+  }[];
+  menuNavigation?: {
+    label: string;
+    type: 'sub_menu' | 'main_menu';
+    link?: string;
+    newTab?: boolean;
+    items?: { label: string; link: string; newTab?: boolean }[];
+  }[];
 }
 
 type Layout = 'default' | 'no-sidebar' | 'basic';
@@ -67,6 +81,7 @@ const useCustomize = create<{ customize: Partial<ThemeConfig>; setCustomize: (qu
     oauth: false,
     showFirstFreeTimeSearchResult: true,
     showAvailableTimeSearchResult: true,
+    menuNavigation: [],
   },
   setCustomize: (query: any) => {
     if (!query) return;

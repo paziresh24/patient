@@ -20,6 +20,8 @@ const Promote = dynamic(() => import('@/modules/home/components/promote'));
 const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'), {
   loading: () => <div className="h-[68px] md:h-6" />,
 });
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
 const Home = () => {
   const { isMobile } = useResponsive();
@@ -36,9 +38,27 @@ const Home = () => {
   return (
     <>
       <Fragment name="LocationSelectionScript" />
+      {customize.backgroundImage && (
+        <div
+          className="h-screen fixed top-0 w-full -z-10"
+          style={
+            customize.backgroundImage
+              ? {
+                  backgroundImage: `linear-gradient(rgb(255 255 255 / 70%), #ffffff 90%), url(${
+                    publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + customize.backgroundImage
+                  })`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }
+              : undefined
+          }
+        ></div>
+      )}
       <main
-        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] bg-white flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
+        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
           'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
+          'bg-white': !customize.backgroundImage,
         })}
       >
         {!customize.partnerTitle && <Logo as="h1" className="text-2xl md:text-3xl" width={55} />}

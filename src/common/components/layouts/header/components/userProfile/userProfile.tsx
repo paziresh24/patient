@@ -153,7 +153,7 @@ export const UserProfile = () => {
                   </div>
                 )}
               </div>
-              <Text className="hidden sm:block" fontWeight="bold">
+              <Text className="hidden lg:block" fontWeight="bold">
                 {userInfo?.name ?? ''} {userInfo?.family ?? ''}
               </Text>
               <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="hidden md:block" />
