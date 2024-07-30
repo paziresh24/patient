@@ -61,12 +61,16 @@ import {
 
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
+import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReplyCard.module.css"; // plasmic-import: qY29Y1sogsUa/css
+
+import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
+import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 
 createPlasmicElementProxy;
 
@@ -78,11 +82,13 @@ export const PlasmicReplyCard__VariantProps = new Array<VariantPropType>();
 export type PlasmicReplyCard__ArgsType = {
   replyText?: string;
   userId?: number;
+  isDoctor?: boolean;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
   "replyText",
-  "userId"
+  "userId",
+  "isDoctor"
 );
 
 export type PlasmicReplyCard__OverridesType = {
@@ -92,11 +98,13 @@ export type PlasmicReplyCard__OverridesType = {
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
+  chip?: Flex__<typeof Chip>;
 };
 
 export interface DefaultReplyCardProps {
   replyText?: string;
   userId?: number;
+  isDoctor?: boolean;
   className?: string;
 }
 
@@ -117,7 +125,16 @@ function PlasmicReplyCard__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {
+          isDoctor: false
+        },
+        props.args
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -293,38 +310,17 @@ function PlasmicReplyCard__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__kgt4O
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $props.userName;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
                       sty.text___8TwVb
                     )}
                   >
                     <React.Fragment>
                       {(() => {
                         try {
-                          return (
-                            $ctx.fetchedData.users[0].name || "کاربر بدون نام"
-                          );
+                          return $props.isDoctor
+                            ? `${$ctx.fetchedData.users[0].name} ${$ctx.fetchedData.users[0].family}`
+                            : $ctx.fetchedData.users[0].name
+                            ? $ctx.fetchedData.users[0].name
+                            : "کاربر بدون نام";
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -337,6 +333,29 @@ function PlasmicReplyCard__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   </div>
+                  {(() => {
+                    try {
+                      return $props.isDoctor;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Chip
+                      data-plasmic-name={"chip"}
+                      data-plasmic-override={overrides.chip}
+                      className={classNames("__wab_instance", sty.chip)}
+                      color={"green"}
+                      content={"\u067e\u0632\u0634\u06a9"}
+                      rounded={true}
+                      size={"small"}
+                    />
+                  ) : null}
                 </Stack__>
               </Stack__>
             </div>
@@ -382,24 +401,28 @@ const PlasmicDescendants = {
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
-    "userAvatar"
+    "userAvatar",
+    "chip"
   ],
   ناماربر: [
     "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
-    "userAvatar"
+    "userAvatar",
+    "chip"
   ],
   نامتتارخ: [
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
-    "userAvatar"
+    "userAvatar",
+    "chip"
   ],
   httpRestApiFetcher: ["httpRestApiFetcher", "userAvatar2", "userAvatar"],
   userAvatar2: ["userAvatar2"],
-  userAvatar: ["userAvatar"]
+  userAvatar: ["userAvatar"],
+  chip: ["chip"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -411,6 +434,7 @@ type NodeDefaultElementType = {
   httpRestApiFetcher: typeof DataFetcher;
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
+  chip: typeof Chip;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -480,6 +504,7 @@ export const PlasmicReplyCard = Object.assign(
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
+    chip: makeNodeComponent("chip"),
 
     // Metadata about props expected for PlasmicReplyCard
     internalVariantProps: PlasmicReplyCard__VariantProps,

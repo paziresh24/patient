@@ -125,6 +125,7 @@ export type PlasmicReviewCard__ArgsType = {
   doctorSlug?: string;
   replyToFeedbackId?: number;
   recommendRange?: string;
+  doctorUserId?: string;
 };
 type ArgPropType = keyof PlasmicReviewCard__ArgsType;
 export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
@@ -142,7 +143,8 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
   "qualityOfTreatment",
   "doctorSlug",
   "replyToFeedbackId",
-  "recommendRange"
+  "recommendRange",
+  "doctorUserId"
 );
 
 export type PlasmicReviewCard__OverridesType = {
@@ -193,6 +195,7 @@ export interface DefaultReviewCardProps {
   doctorSlug?: string;
   replyToFeedbackId?: number;
   recommendRange?: string;
+  doctorUserId?: string;
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
   className?: string;
 }
@@ -2256,6 +2259,19 @@ function PlasmicReviewCard__RenderFunc(props: {
                             "__wab_instance",
                             sty.replyCard__sQuYr
                           )}
+                          isDoctor={(() => {
+                            try {
+                              return currentItem.user_id == $props.doctorUserId;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return false;
+                              }
+                              throw e;
+                            }
+                          })()}
                           key={currentIndex}
                           replyText={(() => {
                             try {
@@ -3737,6 +3753,21 @@ function PlasmicReviewCard__RenderFunc(props: {
             })() ? (
               <ReplyCard
                 className={classNames("__wab_instance", sty.replyCard__ardMi)}
+                isDoctor={(() => {
+                  try {
+                    return (
+                      $ctx.fetchedData.list[0].user_id == $props.doctorUserId
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
                 replyText={(() => {
                   try {
                     return $ctx.fetchedData.list[0].description;
