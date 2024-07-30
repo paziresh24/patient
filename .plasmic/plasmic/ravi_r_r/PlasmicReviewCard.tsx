@@ -88,6 +88,10 @@ import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // p
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
+import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
+import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
+import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: 9Q_oq9_FnEFj/icon
+import Icon15Icon from "./icons/PlasmicIcon__Icon15"; // plasmic-import: ucmv7JmAEMSo/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
 
@@ -159,6 +163,13 @@ export type PlasmicReviewCard__OverridesType = {
   لارورت?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
+  dialog6?: Flex__<typeof Dialog>;
+  سوشالها?: Flex__<"div">;
+  توئتر?: Flex__<typeof Button>;
+  تلرام?: Flex__<typeof Button>;
+  واتسا?: Flex__<typeof Button>;
+  ردن?: Flex__<"div">;
+  لن?: Flex__<typeof Button>;
   رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
@@ -348,6 +359,12 @@ function PlasmicReviewCard__RenderFunc(props: {
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           $props.raviExpFroDrakam
+      },
+      {
+        path: "dialog6.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -2953,86 +2970,359 @@ function PlasmicReviewCard__RenderFunc(props: {
           }
         />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__iAvTv, {
-            [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
-              $state,
-              "raviExpFroDrakam",
-              "raviExpFroDrakam"
-            )
-          })}
-          onClick={async event => {
-            const $steps = {};
+        <Dialog
+          data-plasmic-name={"dialog6"}
+          data-plasmic-override={overrides.dialog6}
+          body={
+            <DataFetcher
+              className={classNames(
+                "__wab_instance",
+                sty.httpRestApiFetcher__ituI3
+              )}
+              dataName={"fetchedData"}
+              errorDisplay={
+                <DataCtxReader__>
+                  {$ctx => "Error fetching data"}
+                </DataCtxReader__>
+              }
+              errorName={"fetchError"}
+              headers={{
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              }}
+              loadingDisplay={
+                <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
+              }
+              method={"GET"}
+              noLayout={false}
+              url={(() => {
+                try {
+                  return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?slug=${$props.doctorSlug}&id=${$props.feedbackId}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            >
+              <DataCtxReader__>
+                {$ctx => (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__o41Sk)}
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__tjC
+                      )}
+                    >
+                      {
+                        "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0631\u0627 \u0628\u0627 \u062f\u06cc\u06af\u0631\u0627\u0646 \u0628\u0647 \u0627\u0634\u062a\u0631\u0627\u06a9 \u0628\u06af\u0630\u0627\u0631\u06cc\u062f."
+                      }
+                    </div>
+                    <div
+                      data-plasmic-name={
+                        "\u0633\u0648\u0634\u0627\u0644\u0647\u0627"
+                      }
+                      data-plasmic-override={overrides.سوشالها}
+                      className={classNames(projectcss.all, sty.سوشالها)}
+                    >
+                      <Button
+                        data-plasmic-name={"\u062a\u0648\u0626\u062a\u0631"}
+                        data-plasmic-override={overrides.توئتر}
+                        children2={
+                          <React.Fragment>
+                            <Icon17Icon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg__dcuHo
+                              )}
+                              role={"img"}
+                            />
 
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return navigator.share({
-                        url:
-                          window.location.href + `#comment-${$props.feedbackId}`
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
-            ) {
-              $steps["runCode"] = await $steps["runCode"];
-            }
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__j9D5J
+                              )}
+                            >
+                              {"\u062a\u0648\u06cc\u06cc\u062a\u0631"}
+                            </div>
+                          </React.Fragment>
+                        }
+                        className={classNames("__wab_instance", sty.توئتر)}
+                        color={"blue"}
+                        link={(() => {
+                          try {
+                            return `https://twitter.com/intent/tweet/?url=${$ctx.fetchedData.url}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+                        }}
+                      />
 
-            $steps["runCode2"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return $$.splunkEvent({
-                        group: "feedback",
-                        data: {
-                          doctor_id: $props.doctorId,
-                          comment_id: $props.feedbackId
-                        },
-                        type: "share_comment",
-                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode2"] != null &&
-              typeof $steps["runCode2"] === "object" &&
-              typeof $steps["runCode2"].then === "function"
-            ) {
-              $steps["runCode2"] = await $steps["runCode2"];
-            }
-          }}
-        >
-          <Icon14Icon
-            className={classNames(projectcss.all, sty.svg__buJg)}
-            role={"img"}
-          />
+                      <Button
+                        data-plasmic-name={"\u062a\u0644\u0631\u0627\u0645"}
+                        data-plasmic-override={overrides.تلرام}
+                        children2={
+                          <React.Fragment>
+                            <Icon13Icon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg__oYc9Q
+                              )}
+                              role={"img"}
+                            />
 
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__v5Zas
-            )}
-          >
-            {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
-          </div>
-        </Stack__>
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__u1Y8
+                              )}
+                            >
+                              {"\u062a\u0644\u06af\u0631\u0627\u0645"}
+                            </div>
+                          </React.Fragment>
+                        }
+                        className={classNames("__wab_instance", sty.تلرام)}
+                        link={(() => {
+                          try {
+                            return `https://telegram.me/share/url?url=${$ctx.fetchedData.url}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+                        }}
+                      />
+
+                      <Button
+                        data-plasmic-name={"\u0648\u0627\u062a\u0633\u0627"}
+                        data-plasmic-override={overrides.واتسا}
+                        children2={
+                          <React.Fragment>
+                            <Icon16Icon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg__jcPhF
+                              )}
+                              role={"img"}
+                            />
+
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__gcPkG
+                              )}
+                            >
+                              {"\u0648\u0627\u062a\u0633\u0627\u067e"}
+                            </div>
+                          </React.Fragment>
+                        }
+                        className={classNames("__wab_instance", sty.واتسا)}
+                        color={"green"}
+                        link={(() => {
+                          try {
+                            return `https://wa.me/?text=${$ctx.fetchedData.url}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onClick={async event => {
+                          const $steps = {};
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__kjRpj)}
+                    />
+
+                    <div
+                      data-plasmic-name={"\u0631\u062f\u0646"}
+                      data-plasmic-override={overrides.ردن}
+                      className={classNames(projectcss.all, sty.ردن)}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__vjYtk
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $ctx.fetchedData.url;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
+                      <Button
+                        data-plasmic-name={"\u0644\u0646"}
+                        data-plasmic-override={overrides.لن}
+                        children2={
+                          <React.Fragment>
+                            <Icon15Icon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg__wewyW
+                              )}
+                              role={"img"}
+                            />
+
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__rmbH3
+                              )}
+                            >
+                              {"\u06a9\u067e\u06cc \u0644\u06cc\u0646\u06a9"}
+                            </div>
+                          </React.Fragment>
+                        }
+                        className={classNames("__wab_instance", sty.لن)}
+                        color={"softBlue"}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["runCode"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return navigator.share({
+                                      url: $ctx.fetchedData.url,
+                                      text: "این نظر رو داحل پذیری24 ببین \uD83D\uDC47"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runCode"] != null &&
+                            typeof $steps["runCode"] === "object" &&
+                            typeof $steps["runCode"].then === "function"
+                          ) {
+                            $steps["runCode"] = await $steps["runCode"];
+                          }
+
+                          $steps["runCode2"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return $$.splunkEvent({
+                                      group: "feedback",
+                                      data: {
+                                        doctor_id: $props.doctorId,
+                                        comment_id: $props.feedbackId
+                                      },
+                                      type: "share_comment",
+                                      token:
+                                        "1668355b-c055-487f-8cb3-4274801d368c",
+                                      api_host:
+                                        "https://splunk-ravi-hec.paziresh24.com"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runCode2"] != null &&
+                            typeof $steps["runCode2"] === "object" &&
+                            typeof $steps["runCode2"].then === "function"
+                          ) {
+                            $steps["runCode2"] = await $steps["runCode2"];
+                          }
+                        }}
+                        outline={true}
+                      />
+                    </div>
+                  </Stack__>
+                )}
+              </DataCtxReader__>
+            </DataFetcher>
+          }
+          className={classNames("__wab_instance", sty.dialog6)}
+          onOpenChange={generateStateOnChangeProp($state, ["dialog6", "open"])}
+          open={generateStateValueProp($state, ["dialog6", "open"])}
+          title={
+            "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
+          }
+          trigger={
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__iAvTv, {
+                [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
+                  $state,
+                  "raviExpFroDrakam",
+                  "raviExpFroDrakam"
+                )
+              })}
+            >
+              <Icon14Icon
+                className={classNames(projectcss.all, sty.svg__buJg)}
+                role={"img"}
+              />
+
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__v5Zas
+                )}
+              >
+                {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
+              </div>
+            </Stack__>
+          }
+        />
       </Stack__>
       <div
         data-plasmic-name={"\u0631\u0644\u0627"}
@@ -3339,6 +3629,13 @@ const PlasmicDescendants = {
     "\u0644\u0627\u0631\u0648\u0631\u062a",
     "dialog",
     "reportText",
+    "dialog6",
+    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646",
     "\u0631\u0644\u0627",
     "replyText",
     "multilineTextInput",
@@ -3374,9 +3671,40 @@ const PlasmicDescendants = {
     "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
   ],
   نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
-  لارورت: ["\u0644\u0627\u0631\u0648\u0631\u062a", "dialog", "reportText"],
+  لارورت: [
+    "\u0644\u0627\u0631\u0648\u0631\u062a",
+    "dialog",
+    "reportText",
+    "dialog6",
+    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646"
+  ],
   dialog: ["dialog", "reportText"],
   reportText: ["reportText"],
+  dialog6: [
+    "dialog6",
+    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646"
+  ],
+  سوشالها: [
+    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627"
+  ],
+  توئتر: ["\u062a\u0648\u0626\u062a\u0631"],
+  تلرام: ["\u062a\u0644\u0631\u0627\u0645"],
+  واتسا: ["\u0648\u0627\u062a\u0633\u0627"],
+  ردن: ["\u0631\u062f\u0646", "\u0644\u0646"],
+  لن: ["\u0644\u0646"],
   رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"],
@@ -3404,6 +3732,13 @@ type NodeDefaultElementType = {
   لارورت: "div";
   dialog: typeof Dialog;
   reportText: "textarea";
+  dialog6: typeof Dialog;
+  سوشالها: "div";
+  توئتر: typeof Button;
+  تلرام: typeof Button;
+  واتسا: typeof Button;
+  ردن: "div";
+  لن: typeof Button;
   رلا: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
@@ -3495,6 +3830,13 @@ export const PlasmicReviewCard = Object.assign(
     لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
+    dialog6: makeNodeComponent("dialog6"),
+    سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
+    توئتر: makeNodeComponent("\u062a\u0648\u0626\u062a\u0631"),
+    تلرام: makeNodeComponent("\u062a\u0644\u0631\u0627\u0645"),
+    واتسا: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627"),
+    ردن: makeNodeComponent("\u0631\u062f\u0646"),
+    لن: makeNodeComponent("\u0644\u0646"),
     رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
