@@ -381,8 +381,8 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  min-height: 30rem;
   overflow: auto;
+  max-height: 30rem;
   min-width: 0;
   padding: var(--token-Fv8-L_kN-2Ma);
 }

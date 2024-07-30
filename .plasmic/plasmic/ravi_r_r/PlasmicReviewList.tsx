@@ -1605,6 +1605,19 @@ function PlasmicReviewList__RenderFunc(props: {
                         throw e;
                       }
                     })()}
+                    doctorUserId={(() => {
+                      try {
+                        return $props.information.user_id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
                     explanationOfIssue={(() => {
                       try {
                         return $ctx.fetchedData.list[0].explanation_of_issue;
