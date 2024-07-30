@@ -2980,19 +2980,13 @@ function PlasmicReviewCard__RenderFunc(props: {
                 sty.httpRestApiFetcher__ituI3
               )}
               dataName={"fetchedData"}
-              errorDisplay={
-                <DataCtxReader__>
-                  {$ctx => "Error fetching data"}
-                </DataCtxReader__>
-              }
+              errorDisplay={null}
               errorName={"fetchError"}
               headers={{
                 "Content-Type": "application/json",
                 Accept: "application/json"
               }}
-              loadingDisplay={
-                <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
-              }
+              loadingDisplay={null}
               method={"GET"}
               noLayout={false}
               url={(() => {
@@ -3162,6 +3156,43 @@ function PlasmicReviewCard__RenderFunc(props: {
                         })()}
                         onClick={async event => {
                           const $steps = {};
+
+                          $steps["updateStateسهنقطهOpen"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["سهنقطه", "open"]
+                                  },
+                                  operation: 0
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["updateStateسهنقطهOpen"] != null &&
+                            typeof $steps["updateStateسهنقطهOpen"] ===
+                              "object" &&
+                            typeof $steps["updateStateسهنقطهOpen"].then ===
+                              "function"
+                          ) {
+                            $steps["updateStateسهنقطهOpen"] = await $steps[
+                              "updateStateسهنقطهOpen"
+                            ];
+                          }
                         }}
                       />
                     </div>
@@ -3232,7 +3263,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   customFunction: async () => {
                                     return navigator.share({
                                       url: $ctx.fetchedData.url,
-                                      text: "این نظر رو داحل پذیری24 ببین \uD83D\uDC47"
+                                      text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
                                     });
                                   }
                                 };
