@@ -147,7 +147,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       shouldUseFeedback = newApiFeatureFlaggingCondition(feedbackApiDoctorList.slug, slugFormmated);
 
       // AverageWaitingTime Api
-      const shouldUseAverageWaitingTime = growthbook.isOn('average-waiting-time-api');
+      shouldUseAverageWaitingTime = growthbook.isOn('average-waiting-time-api');
 
       // WaitingTimeStatistics Api
       const WaitingTimeStatisticsApiDoctorList = growthbook.getFeatureValue('profile:waiting-time-statistics-api|doctor-details', {
