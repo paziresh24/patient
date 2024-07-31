@@ -200,15 +200,6 @@ export const PatinetProfile = () => {
                     پزشک یا منشی هستید؟
                   </Text>
                 </Link>
-                <Link
-                  href="https://survey.porsline.ir/s/7GFKVQz"
-                  className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
-                >
-                  <CenterIcon />
-                  <Text fontWeight="medium" fontSize="sm">
-                    ثبت نام مراکز درمانی
-                  </Text>
-                </Link>
               </>
             )}
             {!!getRatingAppLink && (
