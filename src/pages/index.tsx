@@ -44,7 +44,7 @@ const Home = () => {
           style={
             customize.backgroundImage
               ? {
-                  backgroundImage: `linear-gradient(rgb(255 255 255 / 70%), #ffffff 90%), url(${
+                  backgroundImage: `linear-gradient(#05242dbf, #ffffff 90%), url(${
                     publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + customize.backgroundImage
                   })`,
                   backgroundRepeat: 'no-repeat',
@@ -63,7 +63,7 @@ const Home = () => {
       >
         {!customize.partnerTitle && <Logo as="h1" className="text-2xl md:text-3xl" width={55} />}
         {customize.partnerTitle && (
-          <Text fontWeight="bold" className="text-primary md:text-lg">
+          <Text fontWeight="black" className={classNames('text-primary md:text-lg', { 'text-white': customize.backgroundImage })}>
             {customize.partnerTitle}
           </Text>
         )}

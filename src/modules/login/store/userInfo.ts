@@ -10,7 +10,7 @@ interface UseUserInfoStore {
     presence: number;
   };
   pending: boolean;
-  setUserInfo: (info: any) => void;
+  setUserInfo: (info: UserInfo) => void;
   removeInfo: () => void;
   setPending: (state: boolean) => void;
   setTurnsCount: (turnsCount: { presence: number }) => void;
@@ -23,7 +23,7 @@ export type UserInfo = {
   id?: string;
   username?: string;
   national_code?: string;
-  is_foreigner?: boolean;
+  is_foreigner?: any;
   gender?: 'male' | 'female';
   city_id?: string;
   province_id?: string;
@@ -59,7 +59,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       return {
         info: {
           ...info,
-          cell: `0${info.cell}`,
+          cell: info.cell?.startsWith('0') ? info.cell : `0${info.cell}`,
           is_foreigner: info.is_foreigner == '1',
         },
         isLogin: true,

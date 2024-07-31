@@ -33,6 +33,8 @@ export const SubuserList = () => {
       family: data.family,
       name: data.name,
       national_code: data.national_code,
+      is_foreigner: data.is_foreigner ? '1' : '0',
+      is_foreigner_web: data.is_foreigner,
       ...(data.gender && { gender: data.gender?.value }),
     });
     if (res.data.status === ClinicStatus.SUCCESS) {
