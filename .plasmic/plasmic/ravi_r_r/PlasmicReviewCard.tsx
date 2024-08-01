@@ -1404,43 +1404,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                         $steps["request"] = await $steps["request"];
                       }
 
-                      $steps["sendToN8N"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://ir-ravi-n8n.darkube.app/webhook/report-detail?id= " +
-                                      $props.feedbackId,
-                                    {
-                                      headers: {
-                                        "content-type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value,
-                                        feedback_text: $state.comment_text.value
-                                      }),
-                                      method: "GET",
-                                      credentials: "include"
-                                    }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["sendToN8N"] != null &&
-                        typeof $steps["sendToN8N"] === "object" &&
-                        typeof $steps["sendToN8N"].then === "function"
-                      ) {
-                        $steps["sendToN8N"] = await $steps["sendToN8N"];
-                      }
-
                       $steps["closeDialog"] =
                         $state.reportText2.value.length >= 10 &&
                         $ctx.auth.isLogin
