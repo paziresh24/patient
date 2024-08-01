@@ -1408,7 +1408,22 @@ function PlasmicReviewCard__RenderFunc(props: {
                         ? (() => {
                             const actionArgs = {
                               customFunction: async () => {
-                                return undefined;
+                                return fetch(
+                                  "https://ir-ravi-n8n.darkube.app/webhook/report-detail?id= " +
+                                    $props.feedbackId,
+                                  {
+                                    headers: {
+                                      "content-type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                      feedback_id: $props.feedbackId,
+                                      report_text: $state.reportText2.value,
+                                      feedback_text: $state.comment_text.value
+                                    }),
+                                    method: "GET",
+                                    credentials: "include"
+                                  }
+                                );
                               }
                             };
                             return (({ customFunction }) => {
