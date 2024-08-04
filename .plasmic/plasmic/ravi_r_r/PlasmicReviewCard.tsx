@@ -1411,7 +1411,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               const actionArgs = {
                                 customFunction: async () => {
                                   return fetch(
-                                    "https://ir-ravi-n8n.darkube.app/webhook/report-detail?id= " +
+                                    "https://apigw.paziresh24.com/ravi/v1/report-webhook?id= " +
                                       $props.feedbackId,
                                     {
                                       headers: {
