@@ -391,7 +391,8 @@ function PlasmicReviewList__RenderFunc(props: {
                               summery: summery
                             },
                             type: "select_summery",
-                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                            token: "1668355b-c055-487f-8cb3-4274801d368c",
+                            api_host: "https://splunk-ravi-hec.paziresh24.com"
                           });
                         }
                       };
@@ -579,7 +580,9 @@ function PlasmicReviewList__RenderFunc(props: {
                                   filter: $state.filterInput.value
                                 },
                                 type: "selected_filter",
-                                token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                token: "1668355b-c055-487f-8cb3-4274801d368c",
+                                api_host:
+                                  "https://splunk-ravi-hec.paziresh24.com"
                               });
                             }
                           };
@@ -696,7 +699,9 @@ function PlasmicReviewList__RenderFunc(props: {
                                   sort: $state.sortInput.value
                                 },
                                 type: "sort_comment",
-                                token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                token: "1668355b-c055-487f-8cb3-4274801d368c",
+                                api_host:
+                                  "https://splunk-ravi-hec.paziresh24.com"
                               });
                             }
                           };
@@ -791,7 +796,8 @@ function PlasmicReviewList__RenderFunc(props: {
                                 search_text: $state.searchInput.value
                               },
                               type: "search_in_comment",
-                              token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                              token: "1668355b-c055-487f-8cb3-4274801d368c",
+                              api_host: "https://splunk-ravi-hec.paziresh24.com"
                             });
                           }
                         };

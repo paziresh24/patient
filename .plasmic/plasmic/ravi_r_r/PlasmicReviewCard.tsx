@@ -1404,6 +1404,40 @@ function PlasmicReviewCard__RenderFunc(props: {
                         $steps["request"] = await $steps["request"];
                       }
 
+                      $steps["n8N"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return fetch(
+                                  "https://ir-ravi-n8n.darkube.app/webhook/report-detail?id= " +
+                                    $props.feedbackId,
+                                  {
+                                    headers: {
+                                      "content-type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                      feedback_id: $props.feedbackId,
+                                      report_text: $state.reportText2.value
+                                    }),
+                                    method: "GET",
+                                    credentials: "include"
+                                  }
+                                );
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["n8N"] != null &&
+                        typeof $steps["n8N"] === "object" &&
+                        typeof $steps["n8N"].then === "function"
+                      ) {
+                        $steps["n8N"] = await $steps["n8N"];
+                      }
+
                       $steps["closeDialog"] =
                         $state.reportText2.value.length >= 10 &&
                         $ctx.auth.isLogin
@@ -1533,7 +1567,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                                     },
                                     type: "report_comment",
                                     token:
-                                      "1668355b-c055-487f-8cb3-4274801d368c"
+                                      "1668355b-c055-487f-8cb3-4274801d368c",
+                                    api_host:
+                                      "https://splunk-ravi-hec.paziresh24.com"
                                   });
                                 }
                               };
@@ -2504,7 +2540,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                             doc_center: $props.docCenter
                           },
                           type: "like_comment",
-                          token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                          token: "1668355b-c055-487f-8cb3-4274801d368c",
+                          api_host: "https://splunk-ravi-hec.paziresh24.com"
                         });
                       }
                     };
@@ -3667,7 +3704,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                           reply_text: $state.multilineTextInput.value
                         },
                         type: "reply_comment",
-                        token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                        token: "1668355b-c055-487f-8cb3-4274801d368c",
+                        api_host: "https://splunk-ravi-hec.paziresh24.com"
                       });
                     }
                   };
