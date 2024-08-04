@@ -1419,7 +1419,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                                       },
                                       body: JSON.stringify({
                                         feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value
+                                        report_text: $state.reportText2.value,
+                                        comment_text: $props.commentText,
+                                        doctor_slug: $props.doctorSlug
                                       }),
                                       method: "POST",
                                       credentials: "include"
