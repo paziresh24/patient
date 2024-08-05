@@ -10,7 +10,7 @@ interface AppointmentsCountParams {
 }
 
 export const appointmentsCount = async (params: AppointmentsCountParams) => {
-  return apiGatewayClient.get(`/v1/appointments/count`, { params });
+  return apiGatewayClient.get(`/v1/appointments/count`, { params, timeout: 2000 });
 };
 
 export const useAppointmentsCount = (params: AppointmentsCountParams) =>

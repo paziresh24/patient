@@ -9,7 +9,7 @@ export interface Params {
 }
 
 export const getProfileData = async ({ slug, ...params }: Params) => {
-  const { data } = await paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`, { params });
+  const { data } = await paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`, { params, timeout: 2000 });
   return data;
 };
 

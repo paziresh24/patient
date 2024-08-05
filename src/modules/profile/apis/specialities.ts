@@ -6,7 +6,7 @@ interface SpecialitiesParams {
 }
 
 export const specialities = async (params: SpecialitiesParams) => {
-  return await apiGatewayClient.get(`/v1/providers-specialities`, { params });
+  return await apiGatewayClient.get(`/v1/providers-specialities`, { params, timeout: 2000 });
 };
 
 export const useSpecialities = () => useMutation(specialities);
