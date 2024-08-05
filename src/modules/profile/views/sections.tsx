@@ -202,8 +202,8 @@ export const sections = (data: any) => {
       isShow: customize.showSeoBoxs,
       function: () => {
         const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
-        const isOnlineVisitCenter = center.id === CENTERS.CONSULT;
-        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name} ${expertises?.expertises?.[0]?.expertise_name}`;
+        const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
+        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
         const about = `<p>${information.prefix} ${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${
           center?.city ?? '(ثبت نشده)'
         } است. مطب ${information.prefix} ${information.display_name} در ${
@@ -226,7 +226,7 @@ export const sections = (data: any) => {
           information.display_name
         }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
         ${
-          center.freeturn_text
+          center?.freeturn_text
             ? `<p>زودترین زمان رزرو نوبت از مطب ${information.prefix} ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
             : ''
         }
@@ -238,13 +238,13 @@ export const sections = (data: any) => {
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
         <li>آدرس مطب ${information.prefix} ${information.display_name}: ${
-          isOnlineVisitCenter || (!center.address && !center.city) ? 'ثبت نشده' : `${center.city}، ${center?.address}`
+          isOnlineVisitCenter || (!center?.address && !center?.city) ? 'ثبت نشده' : `${center?.city}، ${center?.address}`
         }</li>
         <li>تلفن مطب ${information.prefix} ${information.display_name}: <span class="inline-block">${
           isOnlineVisitCenter || !center?.display_number_array[0] ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
         }</span></li>
         <li>تخصص ${information.prefix} ${information.display_name}: ${
-          expertises.expertises?.map?.((item: any) => item.alias_title)?.join('/ ') ?? expertises.expertises[0]?.name
+          expertises?.expertises?.map?.((item: any) => item?.alias_title)?.join('/ ') ?? expertises?.expertises?.[0]?.name
         }</li>
         </ui>
         `;

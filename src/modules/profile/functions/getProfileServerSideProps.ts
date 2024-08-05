@@ -23,7 +23,7 @@ import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileDa
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 
 const getSearchLinks = ({ centers, group_expertises }: any) => {
-  const center = centers.find((center: any) => center.city && center.id !== '5532');
+  const center = centers?.find?.((center: any) => center.city && center.id !== '5532');
   const gexp = group_expertises[0];
   return ['/s/', ...(center?.city ? [`/s/${center?.city_en_slug}/`, `/s/${center?.city_en_slug}/${gexp?.en_slug}/`] : [])];
 };
@@ -80,14 +80,20 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
   try {
     const queryClient = new QueryClient();
-    const { redirect, fullProfileData } = await getProfile({ slug: slugFormmated, university });
-    if (redirect) {
-      return {
-        redirect: {
-          statusCode: redirect.statusCode,
-          destination: encodeURI(redirect.route),
-        },
-      };
+    let fullProfileData;
+    try {
+      const { redirect, fullProfileData: data } = await getProfile({ slug: slugFormmated, university });
+      fullProfileData = data;
+      if (redirect) {
+        return {
+          redirect: {
+            statusCode: redirect.statusCode,
+            destination: encodeURI(redirect.route),
+          },
+        };
+      }
+    } catch (error) {
+      console.error('full-profile-error', error);
     }
 
     let shouldUseProvider: boolean = false;
@@ -113,7 +119,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const providersApiDoctorCitiesList = growthbook.getFeatureValue('profile:providers-api|cities', { cities: [''] });
       shouldUseProvider =
         newApiFeatureFlaggingCondition(providersApiDoctorList.slugs, slugFormmated) ||
-        fullProfileData.centers.some(
+        fullProfileData?.centers?.some(
           (center: any) => center.center_type === 1 && providersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         providersApiDoctorCitiesList.cities?.includes('*');
@@ -123,7 +129,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const usersApiDoctorCitiesList = growthbook.getFeatureValue('profile:users-api|cities', { cities: [''] });
       shouldUseUser =
         newApiFeatureFlaggingCondition(usersApiDoctorList.slugs, slugFormmated) ||
-        fullProfileData.centers.some(
+        fullProfileData?.centers?.some(
           (center: any) => center.center_type === 1 && usersApiDoctorCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         usersApiDoctorCitiesList.cities?.includes('*');
@@ -133,7 +139,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const experticeApiCitiesList = growthbook.getFeatureValue('profile:expertises-api|cities', { cities: [''] });
       shouldUseExpertice =
         newApiFeatureFlaggingCondition(experticeApiDoctorList.slugs, slugFormmated) ||
-        fullProfileData.centers.some(
+        fullProfileData?.centers?.some(
           (center: any) => center.center_type === 1 && experticeApiCitiesList.cities?.includes(center.city_en_slug),
         ) ||
         experticeApiCitiesList.cities?.includes('*');
@@ -166,7 +172,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       });
       shouldUseNewRateCalculations =
         newApiFeatureFlaggingCondition(newRateCalculationsDoctorList.slugs, slugFormmated) ||
-        fullProfileData.group_expertises.some((group: any) =>
+        fullProfileData?.group_expertises?.some((group: any) =>
           newApiFeatureFlaggingCondition(newRateCalculationsDoctorExpertisesList.expertises, group.id),
         );
       // Plasmic Reviews Card
@@ -176,14 +182,13 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.error(error);
     }
 
-    const { id, server_id } = fullProfileData;
     let profileData: OverwriteProfileData = {
       history: {},
       feedbacks: {},
       provider: {
-        display_name: fullProfileData.display_name ?? '',
-        biography: fullProfileData.biography ?? '',
-        employee_id: fullProfileData.medical_code ?? '',
+        display_name: fullProfileData?.display_name ?? '',
+        biography: fullProfileData?.biography ?? '',
+        employee_id: fullProfileData?.medical_code ?? '',
         prefix: 'دکتر',
       },
     };
@@ -304,9 +309,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         profileData,
         getOnlyHasuraProfileData
           ? {
-              online_visit_channel_types: fullProfileData.online_visit_channel_types,
-              consult_active_booking: fullProfileData.consult_active_booking,
-              centers: fullProfileData.centers,
+              online_visit_channel_types: fullProfileData?.online_visit_channel_types,
+              consult_active_booking: fullProfileData?.consult_active_booking,
+              centers: fullProfileData?.centers,
             }
           : fullProfileData,
       );
@@ -321,7 +326,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     try {
       let feedbackData;
 
-      if (shouldUsePlasmicReviewCard && !rateDetails?.hide_rates) {
+      if (!rateDetails?.hide_rates) {
         feedbackData = await queryClient.fetchQuery(
           [
             ServerStateKeysEnum.Feedbacks,
@@ -337,29 +342,12 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             }),
         );
       }
-      if (!shouldUsePlasmicReviewCard) {
-        feedbackData = await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.Feedbacks,
-            {
-              doctor_id: id,
-              server_id: server_id,
-            },
-          ],
-          () =>
-            getFeedbacks({
-              doctor_id: id,
-              server_id: server_id,
-            }),
-        );
-      }
-      feedbacks.feedbacks = shouldUsePlasmicReviewCard ? feedbackData ?? {} : feedbackData?.result ?? [];
-      dontShowRateAndReviewMessage = (feedbackData?.status === 'ERROR' && feedbackData?.message) || rateDetails?.hide_rates;
+      feedbacks.feedbacks = feedbackData ?? {};
     } catch (error) {
       console.error(error);
     }
 
-    const doctorCity = centers?.find((center: any) => center.id !== '5532')?.city;
+    const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
 
     const title = `${information.prefix} ${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
       doctorCity ? `${doctorCity}،` : ''
@@ -371,7 +359,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         title: university ? information?.display_name : title,
         description: university ? '' : description,
         information,
-        centers: centers.filter((center: any) => (isVisitOnlineCenterType ? center.id === CENTERS.CONSULT : true)),
+        centers: centers?.filter?.((center: any) => (isVisitOnlineCenterType ? center.id === CENTERS.CONSULT : true)) ?? [],
         expertises,
         feedbacks,
         dehydratedState: dehydrate(queryClient),
@@ -381,16 +369,17 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         onlineVisit,
         similarLinks,
         waitingTimeInfo,
-        dontShowRateAndReviewMessage,
         shouldUseIncrementPageView: shouldUsePageView || getOnlyHasuraProfileData,
-        isBulk:
-          centers.every((center: any) => center.status === 2) ||
-          centers.every((center: any) => center.services.every((service: any) => !service.hours_of_work)),
+        isBulk: !!(
+          centers?.every?.((center: any) => center.status === 2) ||
+          centers?.every?.((center: any) => center.services.every((service: any) => !service.hours_of_work))
+        ),
         breadcrumbs: createBreadcrumb(internalLinksData, information?.display_name, pageSlug),
         slug: slugFormmated,
         fragmentComponents: {
           reviewCard: shouldUsePlasmicReviewCard,
         },
+        getOnlyHasuraProfileData,
       },
     };
   } catch (error) {

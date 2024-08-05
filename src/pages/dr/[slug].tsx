@@ -57,6 +57,7 @@ const DoctorProfile = ({
   dontShowRateAndReviewMessage,
   shouldUseIncrementPageView,
   fragmentComponents,
+  getOnlyHasuraProfileData,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -214,7 +215,11 @@ const DoctorProfile = ({
           <Head
             pageViewCount={profileData.history?.count_of_page_view}
             displayName={profileData.information.display_name}
-            image={publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image}
+            image={
+              getOnlyHasuraProfileData
+                ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
+                : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
+            }
             imageAlt={`${information.prefix} ${information.display_name}`}
             title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
             subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
