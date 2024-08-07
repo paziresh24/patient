@@ -1571,7 +1571,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                     },
                                     type: "report_comment",
                                     token:
-                                      "1668355b-c055-487f-8cb3-4274801d368c",
+                                      "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                                     api_host:
                                       "https://splunk-ravi-hec.paziresh24.com"
                                   });
@@ -2544,7 +2544,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                             doc_center: $props.docCenter
                           },
                           type: "like_comment",
-                          token: "1668355b-c055-487f-8cb3-4274801d368c",
+                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                           api_host: "https://splunk-ravi-hec.paziresh24.com"
                         });
                       }
@@ -2696,7 +2696,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                           comment_id: $props.feedbackId
                         },
                         type: "share_comment",
-                        token: "1668355b-c055-487f-8cb3-4274801d368c",
+                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                         api_host: "https://splunk-ravi-hec.paziresh24.com"
                       });
                     }
@@ -3708,7 +3708,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                           reply_text: $state.multilineTextInput.value
                         },
                         type: "reply_comment",
-                        token: "1668355b-c055-487f-8cb3-4274801d368c",
+                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                         api_host: "https://splunk-ravi-hec.paziresh24.com"
                       });
                     }
