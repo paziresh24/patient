@@ -391,7 +391,7 @@ function PlasmicReviewList__RenderFunc(props: {
                               summery: summery
                             },
                             type: "select_summery",
-                            token: "1668355b-c055-487f-8cb3-4274801d368c",
+                            token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                             api_host: "https://splunk-ravi-hec.paziresh24.com"
                           });
                         }
@@ -580,7 +580,7 @@ function PlasmicReviewList__RenderFunc(props: {
                                   filter: $state.filterInput.value
                                 },
                                 type: "selected_filter",
-                                token: "1668355b-c055-487f-8cb3-4274801d368c",
+                                token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                                 api_host:
                                   "https://splunk-ravi-hec.paziresh24.com"
                               });
@@ -699,7 +699,7 @@ function PlasmicReviewList__RenderFunc(props: {
                                   sort: $state.sortInput.value
                                 },
                                 type: "sort_comment",
-                                token: "1668355b-c055-487f-8cb3-4274801d368c",
+                                token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                                 api_host:
                                   "https://splunk-ravi-hec.paziresh24.com"
                               });
@@ -796,7 +796,7 @@ function PlasmicReviewList__RenderFunc(props: {
                                 search_text: $state.searchInput.value
                               },
                               type: "search_in_comment",
-                              token: "1668355b-c055-487f-8cb3-4274801d368c",
+                              token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
                               api_host: "https://splunk-ravi-hec.paziresh24.com"
                             });
                           }
