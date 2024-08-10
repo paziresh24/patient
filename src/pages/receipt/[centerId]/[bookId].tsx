@@ -28,7 +28,6 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isPWA } from '@/common/utils/isPwa';
-import { firebaseCloudMessaging } from '@/firebase/fcm';
 import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
@@ -139,29 +138,6 @@ const Receipt = () => {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
-
-  const notificationGrantAccsesModalInterval = useRef<any>(null);
-  useEffect(() => {
-    if ('Notification' in window) {
-      if (
-        !userPednding &&
-        isLogin &&
-        Notification?.permission !== 'denied' &&
-        Notification?.permission !== 'granted' &&
-        notificationGrantAccsesModalText
-      ) {
-        notificationGrantAccsesModalInterval.current = setTimeout(async () => {
-          handleOpenNotificationGrantAccses();
-          Notification.requestPermission().then(() => {
-            handleCloseNotificationGrantAccses();
-          });
-          firebaseCloudMessaging.init(user?.id ?? '');
-        }, 8000);
-      }
-    }
-
-    return () => clearTimeout(notificationGrantAccsesModalInterval.current);
-  }, [userPednding, isLogin]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
