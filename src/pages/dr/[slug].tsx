@@ -412,21 +412,20 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           'addressRegion': center?.province,
           'streetAddress': center?.address,
         },
-        ...(feedbacks.details.satisfaction &&
-          !feedbacks?.details?.hide_rates && {
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              'bestRating': 5,
-              'worstRating': 0,
-              'ratingCount': feedbacks.details.count_of_feedbacks,
-              'ratingValue': (
-                ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                  (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                  (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                3
-              ).toFixed(1),
-            },
-          }),
+        ...(!feedbacks?.details?.hide_rates && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            'bestRating': 5,
+            'worstRating': 0,
+            'ratingCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+            'ratingValue': +(
+              ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+              3
+            ).toFixed(1),
+          },
+        }),
       },
       {
         '@context': 'http://www.schema.org',
