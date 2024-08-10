@@ -9,6 +9,7 @@ interface Window {
   doctor: any;
   paziresh24: any;
   user: any;
+  najvaUserSubscribed: any;
 }
 
 declare const window: Window;

@@ -51,6 +51,8 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
+import Script from 'next/script';
+import axios from 'axios';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -309,8 +311,37 @@ const Receipt = () => {
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
+  useEffect(() => {
+    if (isLogin) {
+      window.najvaUserSubscribed = function (najva_user_token: string) {
+        axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers', {
+          user_id: user.id,
+          subscriber_token: najva_user_token,
+        });
+      };
+    }
+  }, [isLogin]);
+
   return (
     <>
+      {isLogin && (
+        <Script id="najva-script" strategy="beforeInteractive">{`(function(){
+        var now = new Date();
+        var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
+            "0" + now.getHours();
+        var head = document.getElementsByTagName("head")[0];
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://van.najva.com/static/cdn/css/local-messaging.css" + "?v=" + version;
+        head.appendChild(link);
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.async = true;
+        script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
+        head.appendChild(script);
+        })()`}</Script>
+      )}
+
       <Seo title="رسید نوبت" noIndex />
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">

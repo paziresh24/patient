@@ -21,21 +21,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <meta name="google" content="notranslate" />
-        <Script id="najva-script" strategy="beforeInteractive">{`(function(){
-           var now = new Date();
-           var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
-               "0" + now.getHours();
-           var head = document.getElementsByTagName("head")[0];
-           var link = document.createElement("link");
-           link.rel = "stylesheet";
-           link.href = "https://van.najva.com/static/cdn/css/local-messaging.css" + "?v=" + version;
-           head.appendChild(link);
-           var script = document.createElement("script");
-           script.type = "text/javascript";
-           script.async = true;
-           script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
-           head.appendChild(script);
-           })()`}</Script>
       </Head>
       <body
         className={classNames('bg-slate-100 antialiased  pwa:select-none', {
