@@ -70,6 +70,7 @@
   .dialogContent:global(.__wab_instance) {
     width: 100%;
     min-width: 100%;
+    max-width: auto;
     border-radius: 15px 15px 0px 0px;
   }
 }

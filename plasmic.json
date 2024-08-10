@@ -460,8 +460,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -895,6 +894,19 @@
             "modulePath": "Summery.tsx"
           },
           "cssFilePath": "plasmic/ravi_r_r/PlasmicSummery.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "ZU8LNETTLz6R",
+          "name": "NoReview",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicNoReview.tsx",
+          "importSpec": {
+            "modulePath": "NoReview.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicNoReview.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }

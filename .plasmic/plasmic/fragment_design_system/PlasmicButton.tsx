@@ -93,7 +93,8 @@ export type PlasmicButton__VariantMembers = {
     | "softSand"
     | "clear"
     | "link"
-    | "text";
+    | "text"
+    | "orange";
   loading: "loading";
   space: "space";
 };
@@ -119,6 +120,7 @@ export type PlasmicButton__VariantsArgs = {
     | "clear"
     | "link"
     | "text"
+    | "orange"
   >;
   loading?: SingleBooleanChoiceArg<"loading">;
   space?: SingleBooleanChoiceArg<"space">;
@@ -184,6 +186,7 @@ export interface DefaultButtonProps extends pp.BaseButtonProps {
     | "clear"
     | "link"
     | "text"
+    | "orange"
   >;
   loading?: SingleBooleanChoiceArg<"loading">;
   space?: SingleBooleanChoiceArg<"space">;
@@ -336,6 +339,7 @@ function PlasmicButton__RenderFunc(props: {
           [sty.rootcolor_link_size_minimal]:
             hasVariant($state, "color", "link") &&
             hasVariant($state, "size", "minimal"),
+          [sty.rootcolor_orange]: hasVariant($state, "color", "orange"),
           [sty.rootcolor_red]: hasVariant($state, "color", "red"),
           [sty.rootcolor_red_outline]:
             hasVariant($state, "outline", "outline") &&

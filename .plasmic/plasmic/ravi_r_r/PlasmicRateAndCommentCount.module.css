@@ -19,6 +19,34 @@
 .root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
   margin-left: var(--token-fhaz6q6bl-fW);
 }
+.noReview:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__evZN {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox__evZN > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__evZN > :global(.__wab_flex-container) > *,
+.freeBox__evZN > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__evZN > :global(.__wab_flex-container) > picture > img,
+.freeBox__evZN
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
 .freeBox__aawEq {
   display: flex;
   position: relative;
