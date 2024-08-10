@@ -314,7 +314,7 @@ const Receipt = () => {
   useEffect(() => {
     if (isLogin) {
       window.najvaUserSubscribed = function (najva_user_token: string) {
-        axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers', {
+        axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers/', {
           user_id: user.id,
           subscriber_token: najva_user_token,
         });
