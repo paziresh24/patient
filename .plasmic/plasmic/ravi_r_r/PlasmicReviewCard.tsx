@@ -90,6 +90,7 @@ import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasm
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
 import Icon17Icon from "../fragment_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
 import Icon17Icon2 from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
+import EitaaIcon from "../fragment_icons/icons/PlasmicIcon__Eitaa"; // plasmic-import: qxWwW7vbw7na/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: 9Q_oq9_FnEFj/icon
 import Icon15Icon from "./icons/PlasmicIcon__Icon15"; // plasmic-import: ucmv7JmAEMSo/icon
@@ -167,6 +168,7 @@ export type PlasmicReviewCard__OverridesType = {
   dialog6?: Flex__<typeof Dialog>;
   سوشالها?: Flex__<"div">;
   توئتر?: Flex__<typeof Button>;
+  اتا?: Flex__<typeof Button>;
   تلرام?: Flex__<typeof Button>;
   واتسا?: Flex__<typeof Button>;
   ردن?: Flex__<"div">;
@@ -2863,6 +2865,81 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
+                          data-plasmic-name={"\u0627\u062a\u0627"}
+                          data-plasmic-override={overrides.اتا}
+                          children2={
+                            <React.Fragment>
+                              <EitaaIcon
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.svg___8OaBn
+                                )}
+                                role={"img"}
+                              />
+
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  projectcss.__wab_text,
+                                  sty.text__mNgXb
+                                )}
+                              >
+                                {"\u0627\u06cc\u062a\u0627"}
+                              </div>
+                            </React.Fragment>
+                          }
+                          className={classNames("__wab_instance", sty.اتا)}
+                          color={"orange"}
+                          link={(() => {
+                            try {
+                              return `https://eitaa.com/share/url?url=${$ctx.fetchedData.url}`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          onClick={async event => {
+                            const $steps = {};
+
+                            $steps["runCode"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-tweeter",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["runCode"] != null &&
+                              typeof $steps["runCode"] === "object" &&
+                              typeof $steps["runCode"].then === "function"
+                            ) {
+                              $steps["runCode"] = await $steps["runCode"];
+                            }
+                          }}
+                        />
+
+                        <Button
                           data-plasmic-name={"\u062a\u0644\u0631\u0627\u0645"}
                           data-plasmic-override={overrides.تلرام}
                           children2={
@@ -3846,6 +3923,7 @@ const PlasmicDescendants = {
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
     "\u062a\u0644\u0631\u0627\u0645",
     "\u0648\u0627\u062a\u0633\u0627",
     "\u0631\u062f\u0646",
@@ -3892,6 +3970,7 @@ const PlasmicDescendants = {
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
     "\u062a\u0644\u0631\u0627\u0645",
     "\u0648\u0627\u062a\u0633\u0627",
     "\u0631\u062f\u0646",
@@ -3903,6 +3982,7 @@ const PlasmicDescendants = {
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
     "\u062a\u0644\u0631\u0627\u0645",
     "\u0648\u0627\u062a\u0633\u0627",
     "\u0631\u062f\u0646",
@@ -3911,10 +3991,12 @@ const PlasmicDescendants = {
   سوشالها: [
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
     "\u062a\u0644\u0631\u0627\u0645",
     "\u0648\u0627\u062a\u0633\u0627"
   ],
   توئتر: ["\u062a\u0648\u0626\u062a\u0631"],
+  اتا: ["\u0627\u062a\u0627"],
   تلرام: ["\u062a\u0644\u0631\u0627\u0645"],
   واتسا: ["\u0648\u0627\u062a\u0633\u0627"],
   ردن: ["\u0631\u062f\u0646", "\u0644\u0646"],
@@ -3949,6 +4031,7 @@ type NodeDefaultElementType = {
   dialog6: typeof Dialog;
   سوشالها: "div";
   توئتر: typeof Button;
+  اتا: typeof Button;
   تلرام: typeof Button;
   واتسا: typeof Button;
   ردن: "div";
@@ -4047,6 +4130,7 @@ export const PlasmicReviewCard = Object.assign(
     dialog6: makeNodeComponent("dialog6"),
     سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
     توئتر: makeNodeComponent("\u062a\u0648\u0626\u062a\u0631"),
+    اتا: makeNodeComponent("\u0627\u062a\u0627"),
     تلرام: makeNodeComponent("\u062a\u0644\u0631\u0627\u0645"),
     واتسا: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627"),
     ردن: makeNodeComponent("\u0631\u062f\u0646"),

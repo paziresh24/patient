@@ -2231,6 +2231,26 @@
       }
     },
     {
+      "name": "Unnamed Style Token 3",
+      "type": "color",
+      "value": "#22C55E",
+      "category": "color",
+      "meta": {
+        "projectId": "qQzsBf58SqzNJX45iggq96",
+        "id": "Mmnz0y3wovI8"
+      }
+    },
+    {
+      "name": "Unnamed Style Token 4",
+      "type": "color",
+      "value": "#E0FFEC",
+      "category": "color",
+      "meta": {
+        "projectId": "qQzsBf58SqzNJX45iggq96",
+        "id": "wrnGBuDxfQLW"
+      }
+    },
+    {
       "name": "X Large",
       "type": "fontsize",
       "value": "1.25rem",

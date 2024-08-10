@@ -103,6 +103,9 @@
 .rootcolor_text {
   background: none;
 }
+.rootcolor_orange {
+  background: #f37f00;
+}
 .rootspace {
   padding-left: 10px;
 }
