@@ -325,7 +325,7 @@ const Receipt = () => {
   return (
     <>
       {isLogin && (
-        <Script id="najva-script" strategy="beforeInteractive">{`(function(){
+        <Script id="najva-script">{`(function(){
         var now = new Date();
         var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
             "0" + now.getHours();
