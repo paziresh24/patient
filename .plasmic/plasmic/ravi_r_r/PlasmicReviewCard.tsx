@@ -2916,7 +2916,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                           doctor_id: $props.doctorId,
                                           comment_id: $props.feedbackId
                                         },
-                                        type: "share_comment-tweeter",
+                                        type: "share_comment-eeta",
                                         token:
                                           "1668355b-c055-487f-8cb3-4274801d368c",
                                         api_host:
