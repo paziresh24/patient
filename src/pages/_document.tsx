@@ -1,6 +1,7 @@
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
+import Script from 'next/script';
 
 const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;

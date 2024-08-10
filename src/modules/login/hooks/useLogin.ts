@@ -6,7 +6,6 @@ import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFla
 import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { isPWA } from '@/common/utils/isPwa';
-import { firebaseCloudMessaging } from '@/firebase/fcm';
 import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
@@ -50,10 +49,6 @@ export const useLogin = () => {
         });
 
         const shouldUseWebPushNotification = newApiFeatureFlaggingCondition(webPushNotificationUserList.ids, userData?.id);
-
-        if (isPWA() || shouldUseWebPushNotification) {
-          firebaseCloudMessaging.init(userData?.id ?? '');
-        }
 
         return Promise.resolve({ image: imageData?.result?.image, provider: providerData, ...userData });
       }
