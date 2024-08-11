@@ -78,13 +78,13 @@ export const Dashboard = () => {
         className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative"
       >
         {(!appsData.isSuccess || isAppLoading) && <LoadingApps />}
-        {appsData.isSuccess && selctedMenu?.embed_src && (
+        {appsData.isSuccess && user?.id && selctedMenu?.embed_src && (
           <iframe
             ref={iframeRef}
             key={selctedMenu?.key}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&src=${encodeURIComponent(
+            src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&user_id=${user.id}&src=${encodeURIComponent(
               selctedMenu?.embed_src,
             )}`}
           />
