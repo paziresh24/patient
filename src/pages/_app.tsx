@@ -23,6 +23,9 @@ import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import RaviGlobalContextsProvider from '../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import axios from 'axios';
+import Script from 'next/script';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -53,6 +56,8 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
   const isApplication = useApplication();
   const { asPath } = useRouter();
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const user = useUserInfoStore(state => state.info);
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
@@ -81,6 +86,17 @@ function MyApp(props: AppProps) {
     useServerQuery.getState().setQueries(pageProps.query);
   }, [pageProps.query, pageProps.themeConfing]);
 
+  useEffect(() => {
+    if (isLogin && isApplication) {
+      window.najvaUserSubscribed = function (najva_user_token: string) {
+        axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers/', {
+          user_id: user.id,
+          subscriber_token: najva_user_token,
+        });
+      };
+    }
+  }, [isLogin, isApplication]);
+
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
@@ -92,6 +108,23 @@ function MyApp(props: AppProps) {
               <RaviGlobalContextsProvider>
                 <PlasmicRootProvider disableLoadingBoundary>
                   <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+                  {isLogin && isApplication && (
+                    <Script id="najva-script">{`(function(){
+        var now = new Date();
+        var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
+            "0" + now.getHours();
+        var head = document.getElementsByTagName("head")[0];
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://van.najva.com/static/cdn/css/local-messaging.css" + "?v=" + version;
+        head.appendChild(link);
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.async = true;
+        script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
+        head.appendChild(script);
+        })()`}</Script>
+                  )}
                   <Head>
                     <meta
                       name="viewport"
