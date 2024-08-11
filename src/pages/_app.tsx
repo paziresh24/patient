@@ -87,7 +87,7 @@ function MyApp(props: AppProps) {
   }, [pageProps.query, pageProps.themeConfing]);
 
   useEffect(() => {
-    if (isLogin && isApplication) {
+    if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {
       window.najvaUserSubscribed = function (najva_user_token: string) {
         axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers/', {
           user_id: user.id,
@@ -108,7 +108,7 @@ function MyApp(props: AppProps) {
               <RaviGlobalContextsProvider>
                 <PlasmicRootProvider disableLoadingBoundary>
                   <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-                  {isLogin && isApplication && (
+                  {isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted')) && (
                     <Script id="najva-script">{`(function(){
         var now = new Date();
         var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
