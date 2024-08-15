@@ -213,18 +213,22 @@ export const sections = (data: any) => {
         }</span> تماس بگیرید.</p>
         <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information.prefix} ${
           information.display_name
-        }، ${doctorExpertise ?? 'سایر'}  بازدید کرده‌اند؛ همچنین ${
-          +(
-            ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          )?.toFixed(1) * 20
-        }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند و ${
-          feedbacks?.details?.like ?? 0
-        } نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${information.prefix} ${
-          information.display_name
-        }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>
+        }، ${doctorExpertise ?? 'سایر'}  بازدید کرده‌اند؛ ${
+          !feedbacks?.details?.hide_rates
+            ? `همچنین ${
+                +(
+                  ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                    (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                    (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                  3
+                )?.toFixed(1) * 20
+              }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند و ${
+                feedbacks?.details?.like ?? 0
+              } نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${information.prefix} ${
+                information.display_name
+              }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
+            : ''
+        }
         ${
           center?.freeturn_text
             ? `<p>زودترین زمان رزرو نوبت از مطب ${information.prefix} ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`

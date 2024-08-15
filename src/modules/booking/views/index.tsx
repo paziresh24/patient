@@ -297,14 +297,22 @@ const BookingSteps = (props: BookingStepsProps) => {
           handleChangeStep('SELECT_TIME');
         },
         onError(data) {
-          toast.error(
-            `${data.message} \n ${Object.entries(data?.details)
-              .map(item => `${item[0]}: ${item[1]}`)
-              .join('\n')}`,
-            {
+          if (Object.values(data?.details ?? {})?.length > 0) {
+            toast.error(
+              `${data.message} \n ${Object.entries(data?.details)
+                .map(item => `${item[0]}: ${item[1]}`)
+                .join('\n')}`,
+              {
+                duration: 10000,
+              },
+            );
+          }
+          if (Object.values(data?.details ?? {})?.length == 0) {
+            toast.error(data.message, {
               duration: 10000,
-            },
-          );
+            });
+          }
+
           sendGaEvent({
             action: 'P24DrsPage',
             category: 'BookError',
