@@ -574,6 +574,20 @@
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "text-input"
+        },
+        {
+          "id": "GQOCScvj145-",
+          "name": "NewPage",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
+          "importSpec": {
+            "modulePath": "../src/pages/s/samplepage2781.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/s/samplepage2781"
         }
       ],
       "icons": [
