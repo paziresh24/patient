@@ -574,20 +574,6 @@
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "text-input"
-        },
-        {
-          "id": "GQOCScvj145-",
-          "name": "NewPage",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
-          "importSpec": {
-            "modulePath": "../pages/new-page.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/new-page"
         }
       ],
       "icons": [
@@ -2344,7 +2330,7 @@
   },
   "wrapPagesWithGlobalContexts": true,
   "nextjsConfig": {
-    "pagesDir": "../pages"
+    "pagesDir": "../src/pages"
   },
   "cliVersion": "0.1.327",
   "packageManager": "npm",
