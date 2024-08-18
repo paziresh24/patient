@@ -351,7 +351,7 @@ function PlasmicReplyCard__RenderFunc(props: {
                       data-plasmic-override={overrides.chip}
                       className={classNames("__wab_instance", sty.chip)}
                       color={"green"}
-                      content={"\u067e\u0632\u0634\u06a9"}
+                      content={"\u062f\u0631\u0645\u0627\u0646\u06af\u0631"}
                       rounded={true}
                       size={"small"}
                     />
