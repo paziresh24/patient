@@ -547,6 +547,47 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicPeopleAlsoSearchForBox.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "SctdwrC6-ku4",
+          "name": "SearchPage",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage.tsx",
+          "importSpec": {
+            "modulePath": "SearchPage.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "6w9lKEd-r02I",
+          "name": "TextInput",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicTextInput.tsx",
+          "importSpec": {
+            "modulePath": "TextInput.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicTextInput.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "text-input"
+        },
+        {
+          "id": "GQOCScvj145-",
+          "name": "NewPage",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
+          "importSpec": {
+            "modulePath": "../pages/new-page.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/new-page"
         }
       ],
       "icons": [
@@ -589,6 +630,11 @@
           "id": "TnnJDmwgAOL7",
           "name": "Icon7Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon7.tsx"
+        },
+        {
+          "id": "QrVR5pllCw55",
+          "name": "SearchsvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Searchsvg.tsx"
         }
       ],
       "images": [
@@ -646,8 +692,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1068,7 +1113,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
