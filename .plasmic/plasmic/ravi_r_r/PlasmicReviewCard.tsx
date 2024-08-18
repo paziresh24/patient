@@ -3773,6 +3773,39 @@ function PlasmicReviewCard__RenderFunc(props: {
               $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
             }
 
+            $steps["sendToN8N"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return fetch(
+                        "https://apigw.paziresh24.com/ravi/v1/reply-webhook?id=" +
+                          $props.feedbackId,
+                        {
+                          headers: { "content-type": "application/json" },
+                          body: JSON.stringify({
+                            doctor_id: $props.doctorId,
+                            comment_id: $props.feedbackId,
+                            reply_text: $state.multilineTextInput.value
+                          }),
+                          method: "POST",
+                          credentials: "include"
+                        }
+                      );
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["sendToN8N"] != null &&
+              typeof $steps["sendToN8N"] === "object" &&
+              typeof $steps["sendToN8N"].then === "function"
+            ) {
+              $steps["sendToN8N"] = await $steps["sendToN8N"];
+            }
+
             $steps["splunk"] = true
               ? (() => {
                   const actionArgs = {
