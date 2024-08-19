@@ -8,7 +8,7 @@ import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndCo
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
@@ -75,6 +75,7 @@ import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
+import { growthbook } from 'src/pages/_app';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -184,6 +185,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   });
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+  const useNewFactorPage = useFeatureIsOn('use-new-factor-page');
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -219,6 +221,19 @@ const BookingSteps = (props: BookingStepsProps) => {
     };
     profile && fetchSymptomsAutoComplete();
   }, [symptomSearchText, profile]);
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+      });
+    };
+  }, [slug]);
 
   const handleBookAction = async (user: any) => {
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
@@ -276,7 +291,12 @@ const BookingSteps = (props: BookingStepsProps) => {
               },
             });
           if (data.payment.reqiure_payment === '1') {
-            if (center.server_id === 1) return router.replace(`/factor/${center.id}/${data.book_info.id}`);
+            if (center.server_id === 1) {
+              if (useNewFactorPage) {
+                return router.replace(`/_/booking/factor/${center.id}/${data.book_info.id}`);
+              }
+              return router.replace(`/factor/${center.id}/${data.book_info.id}`);
+            }
             if (isApplication) return window.open(`${data?.payment?.redirect_url}`);
             location.replace(`${data?.payment?.redirect_url}`);
             return;
