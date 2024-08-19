@@ -214,7 +214,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
               <div className="flex flex-col space-y-2">
                 {appsData.isSuccess &&
                   apps
-                    .filter((app: any) => !app.pin && app?.fragments?.some((item: any) => item.type === 'menu'))
+                    .filter((app: any) => !app.pin && app?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0))
                     .map((app: any) => (
                       <MenuItem
                         key={app.key}
