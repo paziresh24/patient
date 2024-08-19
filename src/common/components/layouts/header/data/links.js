@@ -376,7 +376,7 @@ export const medicalCenterMenu = [
   },
   {
     title: 'تعرفه مراکز درمانی',
-    link: `https://pricing.paziresh24.com`,
+    link: `/_/pricing/calculator/`,
   },
 ];
 

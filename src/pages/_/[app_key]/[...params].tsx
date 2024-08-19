@@ -1,5 +1,6 @@
 import Loading from '@/common/components/atom/loading';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
@@ -9,7 +10,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
@@ -49,8 +50,10 @@ const Page = ({ page, app }: any) => {
   const userPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
 
-  const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
-  const embedSrc = page?.embed_src ? constructUrlWithQuery(replaceParameters, queries) : null;
+  const embedSrc = useMemo(() => {
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    return page?.embed_src ? constructUrlWithQuery(replaceParameters, queries) : null;
+  }, [page, params, queries]);
 
   const showIframe = page?.is_protected_route ? !!user.id : true;
 
@@ -78,20 +81,19 @@ const Page = ({ page, app }: any) => {
       showFooter={page?.layout?.show_footer ?? false}
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
     >
+      <Seo title={page.name?.fa} noIndex />
       <div className="w-full flex-grow flex flex-col">
-        {(!embedSrc || !showIframe || isAppLoading) && (
+        {(!showIframe || isAppLoading) && (
           <div className="w-full justify-center flex items-center h-full flex-grow">
             <Loading />
           </div>
         )}
-        {embedSrc && showIframe && (
+        {showIframe && (
           <iframe
             ref={iframeRef}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user?.id}&src=${encodeURIComponent(
-              embedSrc,
-            )}`}
+            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&src=${encodeURIComponent(embedSrc!)}`}
           />
         )}
       </div>
@@ -99,8 +101,8 @@ const Page = ({ page, app }: any) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
+export const getServerSideProps: GetServerSideProps = withServerUtils(
+  async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
     const { app_key, params, ...query } = context.query;
 
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
@@ -112,7 +114,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         page,
       },
     };
-  }),
+  },
 );
 
 export default Page;
