@@ -312,6 +312,11 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               online_visit_channel_types: fullProfileData?.online_visit_channel_types,
               consult_active_booking: fullProfileData?.consult_active_booking,
               centers: fullProfileData?.centers,
+              followConsultBoosk: fullProfileData?.followConsultBoosk,
+              similar_links: fullProfileData?.similar_links,
+              server_id: fullProfileData?.server_id,
+              should_recommend_other_doctors: fullProfileData?.should_recommend_other_doctors,
+              city_en_slug: fullProfileData?.city_en_slug,
             }
           : fullProfileData,
       );
