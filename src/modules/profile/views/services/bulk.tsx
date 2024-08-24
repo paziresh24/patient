@@ -24,7 +24,7 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
   const customize = useCustomize(state => state.customize);
   const searchData = useSearch(
     {
-      route: decodeURIComponent(`ir/${expertises.group_expertises[0].en_slug}`),
+      route: decodeURIComponent(`ir/${expertises?.group_expertises?.[0]?.en_slug}`),
       query: {
         turn_type: 'consult',
       },
