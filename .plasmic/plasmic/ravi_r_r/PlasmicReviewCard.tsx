@@ -59,13 +59,13 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { Popover } from "@plasmicpkgs/radix-ui";
-import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
+import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
@@ -75,21 +75,17 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZV/css
 
-import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
-import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
-import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: moTm-5qth65g/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
-import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: OcnxMK5rW620/icon
-import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
+import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvguG2/icon
 import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // plasmic-import: jHvDymIOvRnf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
 import Icon17Icon from "../fragment_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import Icon17Icon2 from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import EitaaIcon from "../fragment_icons/icons/PlasmicIcon__Eitaa"; // plasmic-import: qxWwW7vbw7na/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: 9Q_oq9_FnEFj/icon
@@ -149,36 +145,32 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
 );
 
 export type PlasmicReviewCard__OverridesType = {
-  اردنماشنظر?: Flex__<"div">;
-  سهنقطه?: Flex__<typeof Popover>;
-  dialog3?: Flex__<typeof Dialog>;
-  edditTextBox?: Flex__<"textarea">;
-  dialog4?: Flex__<typeof Dialog>;
-  dialog5?: Flex__<typeof Dialog>;
-  reportText2?: Flex__<"textarea">;
-  نامتتارخ?: Flex__<"div">;
+  کاردنمایشنظر?: Flex__<"div">;
+  نامتگتاریخ?: Flex__<"div">;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
-  ناماربر?: Flex__<typeof DataFetcher>;
+  نامکاربر?: Flex__<typeof DataFetcher>;
   chip?: Flex__<typeof Chip>;
+  editAndReport?: Flex__<typeof EditAndReport>;
   متننظر?: Flex__<"div">;
   dialog2?: Flex__<typeof Dialog>;
-  نظربشتراز1?: Flex__<"div">;
-  لارورت?: Flex__<"div">;
+  نظربیشتراز1?: Flex__<"div">;
+  لایکریپورت?: Flex__<"div">;
   dialog6?: Flex__<typeof Dialog>;
   سوشالها?: Flex__<"div">;
-  توئتر?: Flex__<typeof Button>;
-  اتا?: Flex__<typeof Button>;
-  تلرام?: Flex__<typeof Button>;
-  واتسا?: Flex__<typeof Button>;
-  ردن?: Flex__<"div">;
-  لن?: Flex__<typeof Button>;
+  توئیتر?: Flex__<typeof Button>;
+  ایتا?: Flex__<typeof Button>;
+  تلگرام?: Flex__<typeof Button>;
+  واتساپ?: Flex__<typeof Button>;
+  کپیکردن?: Flex__<"div">;
+  کپیلینک?: Flex__<typeof Button>;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
-  رلا?: Flex__<"div">;
+  button?: Flex__<typeof Button>;
+  ریپلای?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
-  رفتنرلا?: Flex__<typeof DataFetcher>;
+  گرفتنریپلای?: Flex__<typeof DataFetcher>;
 };
 
 export interface DefaultReviewCardProps {
@@ -248,12 +240,6 @@ function PlasmicReviewCard__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "سهنقطه.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
         path: "replyText.value",
         type: "private",
         variableType: "text",
@@ -318,24 +304,6 @@ function PlasmicReviewCard__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => ""
       },
       {
-        path: "dialog3.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "edditTextBox.value",
-        type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ``
-      },
-      {
-        path: "dialog4.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
         path: "editLoadingButton",
         type: "private",
         variableType: "boolean",
@@ -346,18 +314,6 @@ function PlasmicReviewCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
-        path: "dialog5.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "reportText2.value",
-        type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ``
       },
       {
         path: "raviExpFroDrakam",
@@ -386,9 +342,9 @@ function PlasmicReviewCard__RenderFunc(props: {
     <Stack__
       as={"div"}
       data-plasmic-name={
-        "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+        "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
       }
-      data-plasmic-override={overrides.اردنماشنظر}
+      data-plasmic-override={overrides.کاردنمایشنظر}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       hasGap={true}
@@ -399,9 +355,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.اردنماشنظر,
+        sty.کاردنمایشنظر,
         {
-          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
+          [sty.کاردنمایشنظرraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
@@ -410,1262 +366,12 @@ function PlasmicReviewCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <Popover
-        data-plasmic-name={"\u0633\u0647\u0646\u0642\u0637\u0647"}
-        data-plasmic-override={overrides.سهنقطه}
-        className={classNames("__wab_instance", sty.سهنقطه, {
-          [sty.سهنقطهraviExpFroDrakam]: hasVariant(
-            $state,
-            "raviExpFroDrakam",
-            "raviExpFroDrakam"
-          )
-        })}
-        onOpenChange={generateStateOnChangeProp($state, ["سهنقطه", "open"])}
-        open={generateStateValueProp($state, ["سهنقطه", "open"])}
-        overlay={
-          <div className={classNames(projectcss.all, sty.freeBox__mf64S)}>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__vwR23, {
-                [sty.freeBoxraviExpFroDrakam__vwR23Ql6C7]: hasVariant(
-                  $state,
-                  "raviExpFroDrakam",
-                  "raviExpFroDrakam"
-                )
-              })}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return navigator.share({
-                            url:
-                              window.location.href +
-                              `#comment-${$props.feedbackId}`
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-
-                $steps["splunk"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return $$.splunkEvent({
-                            group: "feedback",
-                            data: {
-                              doctor_id: $props.doctorId,
-                              comment_id: $props.feedbackId
-                            },
-                            type: "share_comment",
-                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["splunk"] != null &&
-                  typeof $steps["splunk"] === "object" &&
-                  typeof $steps["splunk"].then === "function"
-                ) {
-                  $steps["splunk"] = await $steps["splunk"];
-                }
-              }}
-            >
-              <ShareIcon
-                className={classNames(projectcss.all, sty.svg__ycTkd)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__cuUPa
-                )}
-              >
-                {
-                  "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
-                }
-              </div>
-            </Stack__>
-            {(() => {
-              try {
-                return true;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__khS3Q)}
-              >
-                {(() => {
-                  try {
-                    return (
-                      $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Dialog
-                    data-plasmic-name={"dialog3"}
-                    data-plasmic-override={overrides.dialog3}
-                    body={
-                      <React.Fragment>
-                        <textarea
-                          data-plasmic-name={"edditTextBox"}
-                          data-plasmic-override={overrides.edditTextBox}
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.textarea,
-                            sty.edditTextBox
-                          )}
-                          onChange={e => {
-                            generateStateOnChangeProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ])(e.target.value);
-                          }}
-                          placeholder={``}
-                          ref={ref => {
-                            $refs["edditTextBox"] = ref;
-                          }}
-                          value={
-                            generateStateValueProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ]) ?? ""
-                          }
-                        />
-
-                        <Button
-                          children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                          className={classNames(
-                            "__wab_instance",
-                            sty.button__nsoe4
-                          )}
-                          endIcon={
-                            <ChevronLeftIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg__mTUf0
-                              )}
-                              role={"img"}
-                            />
-                          }
-                          loading={(() => {
-                            try {
-                              return $state.editLoadingButton;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["loading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: true
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["loading"] != null &&
-                              typeof $steps["loading"] === "object" &&
-                              typeof $steps["loading"].then === "function"
-                            ) {
-                              $steps["loading"] = await $steps["loading"];
-                            }
-
-                            $steps["request"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return fetch(
-                                        "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
-                                          $props.feedbackId,
-                                        {
-                                          headers: {
-                                            "Content-Type": "application/json"
-                                          },
-                                          method: "PATCH",
-                                          body: JSON.stringify({
-                                            description:
-                                              $state.edditTextBox.value,
-                                            recommend_range:
-                                              $props.recommendRange,
-                                            quality_of_treatment:
-                                              $props.qualityOfTreatment,
-                                            doctor_encounter:
-                                              $props.doctorEncounter,
-                                            explanation_of_issue:
-                                              $props.explanationOfIssue
-                                          }),
-                                          credentials: "include"
-                                        }
-                                      );
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["request"] != null &&
-                              typeof $steps["request"] === "object" &&
-                              typeof $steps["request"].then === "function"
-                            ) {
-                              $steps["request"] = await $steps["request"];
-                            }
-
-                            $steps["offLoading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: false
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["offLoading"] != null &&
-                              typeof $steps["offLoading"] === "object" &&
-                              typeof $steps["offLoading"].then === "function"
-                            ) {
-                              $steps["offLoading"] = await $steps["offLoading"];
-                            }
-
-                            $steps["toast"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    args: [
-                                      undefined,
-                                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                      "top-right",
-                                      4999
-                                    ]
-                                  };
-                                  return $globalActions[
-                                    "Fragment.showToast"
-                                  ]?.apply(null, [...actionArgs.args]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["toast"] != null &&
-                              typeof $steps["toast"] === "object" &&
-                              typeof $steps["toast"].then === "function"
-                            ) {
-                              $steps["toast"] = await $steps["toast"];
-                            }
-
-                            $steps["close"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["dialog3", "open"]
-                                    },
-                                    operation: 4
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    const oldValue = $stateGet(
-                                      objRoot,
-                                      variablePath
-                                    );
-                                    $stateSet(objRoot, variablePath, !oldValue);
-                                    return !oldValue;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["close"] != null &&
-                              typeof $steps["close"] === "object" &&
-                              typeof $steps["close"].then === "function"
-                            ) {
-                              $steps["close"] = await $steps["close"];
-                            }
-
-                            $steps["splunk"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId,
-                                          edit_text: $state.edditTextBox.value
-                                        },
-                                        type: "edit_comment",
-                                        token:
-                                          "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["splunk"] != null &&
-                              typeof $steps["splunk"] === "object" &&
-                              typeof $steps["splunk"].then === "function"
-                            ) {
-                              $steps["splunk"] = await $steps["splunk"];
-                            }
-                          }}
-                          startIcon={
-                            <ChevronRightIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg__p4Ytw
-                              )}
-                              role={"img"}
-                            />
-                          }
-                        />
-                      </React.Fragment>
-                    }
-                    className={classNames("__wab_instance", sty.dialog3)}
-                    onOpenChange={generateStateOnChangeProp($state, [
-                      "dialog3",
-                      "open"
-                    ])}
-                    open={generateStateValueProp($state, ["dialog3", "open"])}
-                    title={
-                      "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
-                    }
-                    trigger={
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__gt7U
-                        )}
-                      >
-                        <Icon3Icon
-                          className={classNames(
-                            projectcss.all,
-                            sty.svg___8ZJpu
-                          )}
-                          role={"img"}
-                        />
-
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__ttly5
-                          )}
-                        >
-                          {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                        </div>
-                      </Stack__>
-                    }
-                  />
-                ) : null}
-              </Stack__>
-            ) : null}
-            {(() => {
-              try {
-                return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__lNuZw, {
-                  [sty.freeBoxraviExpFroDrakam__lNuZwQl6C7]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                })}
-              >
-                <Dialog
-                  data-plasmic-name={"dialog4"}
-                  data-plasmic-override={overrides.dialog4}
-                  body={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__uRzBu)}
-                    >
-                      <Button
-                        children2={
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__rfy6D
-                            )}
-                          >
-                            {"\u062d\u0630\u0641"}
-                          </div>
-                        }
-                        className={classNames(
-                          "__wab_instance",
-                          sty.button__fD6
-                        )}
-                        color={"red"}
-                        endIcon={
-                          <ChevronLeftIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__oBkZj
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        loading={(() => {
-                          try {
-                            return $state.deleteLoadingButton;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return [];
-                            }
-                            throw e;
-                          }
-                        })()}
-                        onClick={async event => {
-                          const $steps = {};
-
-                          $steps["loading"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["deleteLoadingButton"]
-                                  },
-                                  operation: 0,
-                                  value: true
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["loading"] != null &&
-                            typeof $steps["loading"] === "object" &&
-                            typeof $steps["loading"].then === "function"
-                          ) {
-                            $steps["loading"] = await $steps["loading"];
-                          }
-
-                          $steps["request"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return fetch(
-                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/",
-                                      {
-                                        method: "DELETE",
-                                        credentials: "include",
-                                        headers: {
-                                          "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify({
-                                          Id: $props.feedbackId
-                                        })
-                                      }
-                                    );
-                                  }
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["request"] != null &&
-                            typeof $steps["request"] === "object" &&
-                            typeof $steps["request"].then === "function"
-                          ) {
-                            $steps["request"] = await $steps["request"];
-                          }
-
-                          $steps["updateDeleteLoadingButton"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["deleteLoadingButton"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
-                                  );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["updateDeleteLoadingButton"] != null &&
-                            typeof $steps["updateDeleteLoadingButton"] ===
-                              "object" &&
-                            typeof $steps["updateDeleteLoadingButton"].then ===
-                              "function"
-                          ) {
-                            $steps["updateDeleteLoadingButton"] = await $steps[
-                              "updateDeleteLoadingButton"
-                            ];
-                          }
-
-                          $steps["toast"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  args: [
-                                    undefined,
-                                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
-                                    "top-right",
-                                    5000
-                                  ]
-                                };
-                                return $globalActions[
-                                  "Fragment.showToast"
-                                ]?.apply(null, [...actionArgs.args]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["toast"] != null &&
-                            typeof $steps["toast"] === "object" &&
-                            typeof $steps["toast"].then === "function"
-                          ) {
-                            $steps["toast"] = await $steps["toast"];
-                          }
-
-                          $steps["close"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["dialog4", "open"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
-                                  );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["close"] != null &&
-                            typeof $steps["close"] === "object" &&
-                            typeof $steps["close"].then === "function"
-                          ) {
-                            $steps["close"] = await $steps["close"];
-                          }
-
-                          $steps["splunk"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return $$.splunkEvent({
-                                      group: "feedback",
-                                      data: {
-                                        doctor_id: $props.doctorId,
-                                        comment_id: $props.feedbackId
-                                      },
-                                      type: "delete_comment",
-                                      token:
-                                        "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                    });
-                                  }
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["splunk"] != null &&
-                            typeof $steps["splunk"] === "object" &&
-                            typeof $steps["splunk"].then === "function"
-                          ) {
-                            $steps["splunk"] = await $steps["splunk"];
-                          }
-                        }}
-                        startIcon={
-                          <ChevronRightIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__ezf8
-                            )}
-                            role={"img"}
-                          />
-                        }
-                      />
-
-                      <Button
-                        children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
-                        className={classNames(
-                          "__wab_instance",
-                          sty.button__rEncW
-                        )}
-                        color={"red"}
-                        endIcon={
-                          <ChevronLeftIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__re2O6
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        onClick={async event => {
-                          const $steps = {};
-
-                          $steps["close"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["dialog4", "open"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
-                                  );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["close"] != null &&
-                            typeof $steps["close"] === "object" &&
-                            typeof $steps["close"].then === "function"
-                          ) {
-                            $steps["close"] = await $steps["close"];
-                          }
-                        }}
-                        outline={true}
-                        startIcon={
-                          <ChevronRightIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__chO6C
-                            )}
-                            role={"img"}
-                          />
-                        }
-                      />
-                    </Stack__>
-                  }
-                  className={classNames("__wab_instance", sty.dialog4)}
-                  onOpenChange={generateStateOnChangeProp($state, [
-                    "dialog4",
-                    "open"
-                  ])}
-                  open={generateStateValueProp($state, ["dialog4", "open"])}
-                  title={
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text___3Re7R
-                      )}
-                    >
-                      {
-                        "\u0622\u06cc\u0627 \u0627\u0632 \u062d\u0630\u0641 \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0647\u0633\u062a\u06cc\u062f\u061f"
-                      }
-                    </div>
-                  }
-                  trigger={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__hRt2)}
-                    >
-                      <Icon4Icon
-                        className={classNames(projectcss.all, sty.svg__lcvor)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__ur5Y3
-                        )}
-                      >
-                        {"\u062d\u0630\u0641"}
-                      </div>
-                    </Stack__>
-                  }
-                />
-              </Stack__>
-            ) : null}
-            <Dialog
-              data-plasmic-name={"dialog5"}
-              data-plasmic-override={overrides.dialog5}
-              body={
-                <React.Fragment>
-                  <textarea
-                    data-plasmic-name={"reportText2"}
-                    data-plasmic-override={overrides.reportText2}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.textarea,
-                      sty.reportText2
-                    )}
-                    onChange={e => {
-                      generateStateOnChangeProp($state, [
-                        "reportText2",
-                        "value"
-                      ])(e.target.value);
-                    }}
-                    placeholder={
-                      "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
-                    }
-                    ref={ref => {
-                      $refs["reportText2"] = ref;
-                    }}
-                    value={
-                      generateStateValueProp($state, [
-                        "reportText2",
-                        "value"
-                      ]) ?? ""
-                    }
-                  />
-
-                  <Button
-                    children2={
-                      "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
-                    }
-                    className={classNames("__wab_instance", sty.button__xJzIt)}
-                    endIcon={
-                      <ChevronLeftIcon
-                        className={classNames(projectcss.all, sty.svg___3Y0Ja)}
-                        role={"img"}
-                      />
-                    }
-                    loading={(() => {
-                      try {
-                        return $state.reportLoadinButton;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["if10Caracter"] =
-                        $ctx.auth.isLogin && $props.commentText.length <= 10
-                          ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "error",
-                                  "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
-                                  undefined,
-                                  5000
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["if10Caracter"] != null &&
-                        typeof $steps["if10Caracter"] === "object" &&
-                        typeof $steps["if10Caracter"].then === "function"
-                      ) {
-                        $steps["if10Caracter"] = await $steps["if10Caracter"];
-                      }
-
-                      $steps["loading"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["reportLoadinButton"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
-
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["loading"] != null &&
-                        typeof $steps["loading"] === "object" &&
-                        typeof $steps["loading"].then === "function"
-                      ) {
-                        $steps["loading"] = await $steps["loading"];
-                      }
-
-                      $steps["request"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
-                                      $props.feedbackId,
-                                    {
-                                      headers: {
-                                        "content-type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value
-                                      }),
-                                      method: "POST",
-                                      credentials: "include"
-                                    }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["request"] != null &&
-                        typeof $steps["request"] === "object" &&
-                        typeof $steps["request"].then === "function"
-                      ) {
-                        $steps["request"] = await $steps["request"];
-                      }
-
-                      $steps["n8N"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://apigw.paziresh24.com/ravi/v1/report-webhook?id= " +
-                                      $props.feedbackId,
-                                    {
-                                      headers: {
-                                        "content-type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value,
-                                        comment_text: $props.commentText,
-                                        doctor_slug: $props.doctorSlug
-                                      }),
-                                      method: "POST",
-                                      credentials: "include"
-                                    }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["n8N"] != null &&
-                        typeof $steps["n8N"] === "object" &&
-                        typeof $steps["n8N"].then === "function"
-                      ) {
-                        $steps["n8N"] = await $steps["n8N"];
-                      }
-
-                      $steps["closeDialog"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog5", "open"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
-
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["closeDialog"] != null &&
-                        typeof $steps["closeDialog"] === "object" &&
-                        typeof $steps["closeDialog"].then === "function"
-                      ) {
-                        $steps["closeDialog"] = await $steps["closeDialog"];
-                      }
-
-                      $steps["offLoading"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["reportLoadinButton"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
-
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["offLoading"] != null &&
-                        typeof $steps["offLoading"] === "object" &&
-                        typeof $steps["offLoading"].then === "function"
-                      ) {
-                        $steps["offLoading"] = await $steps["offLoading"];
-                      }
-
-                      $steps["toast"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  undefined,
-                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                  undefined,
-                                  4989
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["toast"] != null &&
-                        typeof $steps["toast"] === "object" &&
-                        typeof $steps["toast"].then === "function"
-                      ) {
-                        $steps["toast"] = await $steps["toast"];
-                      }
-
-                      $steps["login"] =
-                        $ctx.auth.isLogin == false
-                          ? (() => {
-                              const actionArgs = { args: [] };
-                              return $globalActions[
-                                "AuthGlobalContext.login"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["login"] != null &&
-                        typeof $steps["login"] === "object" &&
-                        typeof $steps["login"].then === "function"
-                      ) {
-                        $steps["login"] = await $steps["login"];
-                      }
-
-                      $steps["splunk"] =
-                        $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return $$.splunkEvent({
-                                    group: "feedback",
-                                    data: {
-                                      doctor_id: $props.doctorId,
-                                      comment_id: $props.feedbackId,
-                                      report_text: $state.reportText2.value
-                                    },
-                                    type: "report_comment",
-                                    token:
-                                      "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                                    api_host:
-                                      "https://splunk-ravi-hec.paziresh24.com"
-                                  });
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["splunk"] != null &&
-                        typeof $steps["splunk"] === "object" &&
-                        typeof $steps["splunk"].then === "function"
-                      ) {
-                        $steps["splunk"] = await $steps["splunk"];
-                      }
-                    }}
-                    startIcon={
-                      <ChevronRightIcon
-                        className={classNames(projectcss.all, sty.svg__kLFdy)}
-                        role={"img"}
-                      />
-                    }
-                  />
-                </React.Fragment>
-              }
-              className={classNames("__wab_instance", sty.dialog5, {
-                [sty.dialog5raviExpFroDrakam]: hasVariant(
-                  $state,
-                  "raviExpFroDrakam",
-                  "raviExpFroDrakam"
-                )
-              })}
-              onOpenChange={generateStateOnChangeProp($state, [
-                "dialog5",
-                "open"
-              ])}
-              open={generateStateValueProp($state, ["dialog5", "open"])}
-              title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
-              trigger={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__ikKmq, {
-                    [sty.freeBoxraviExpFroDrakam__ikKmqQl6C7]: hasVariant(
-                      $state,
-                      "raviExpFroDrakam",
-                      "raviExpFroDrakam"
-                    )
-                  })}
-                >
-                  <InfoIcon
-                    className={classNames(projectcss.all, sty.svg__kBx)}
-                    role={"img"}
-                  />
-
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__mUuQt
-                    )}
-                  >
-                    {"\u06af\u0632\u0627\u0631\u0634"}
-                  </div>
-                </Stack__>
-              }
-            />
-          </div>
-        }
-        side={"bottom"}
-        slideIn={true}
-        themeResetClass={classNames(
-          projectcss.root_reset,
-          projectcss.plasmic_default_styles,
-          projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
-        )}
-      >
-        <div className={classNames(projectcss.all, sty.freeBox__a8AOx)}>
-          <MenuIcon
-            className={classNames(projectcss.all, sty.svg__ahbGw)}
-            role={"img"}
-          />
-        </div>
-      </Popover>
       <div
-        data-plasmic-name={"\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"}
-        data-plasmic-override={overrides.نامتتارخ}
-        className={classNames(projectcss.all, sty.نامتتارخ)}
+        data-plasmic-name={
+          "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+        }
+        data-plasmic-override={overrides.نامتگتاریخ}
+        className={classNames(projectcss.all, sty.نامتگتاریخ)}
       >
         <div
           className={classNames(projectcss.all, sty.freeBox__n7A1U)}
@@ -1839,9 +545,11 @@ function PlasmicReviewCard__RenderFunc(props: {
               </React.Fragment>
             </div>
             <DataFetcher
-              data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
-              data-plasmic-override={overrides.ناماربر}
-              className={classNames("__wab_instance", sty.ناماربر)}
+              data-plasmic-name={
+                "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
+              }
+              data-plasmic-override={overrides.نامکاربر}
+              className={classNames("__wab_instance", sty.نامکاربر)}
               dataName={"fetchedData"}
               errorDisplay={null}
               errorName={"fetchError"}
@@ -2021,6 +729,128 @@ function PlasmicReviewCard__RenderFunc(props: {
             ) : null}
           </Stack__>
         </Stack__>
+        <EditAndReport
+          data-plasmic-name={"editAndReport"}
+          data-plasmic-override={overrides.editAndReport}
+          className={classNames("__wab_instance", sty.editAndReport)}
+          commentText={(() => {
+            try {
+              return $props.commentText;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          doctorEncounter={(() => {
+            try {
+              return $props.doctorEncounter;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          doctorSlug={(() => {
+            try {
+              return $props.doctorSlug;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          doctorUserId={(() => {
+            try {
+              return $props.doctorUserId;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          explanationOfIssue={(() => {
+            try {
+              return $props.explanationOfIssue;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          feedbackId={(() => {
+            try {
+              return $props.feedbackId;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          qualityOfTreatment={(() => {
+            try {
+              return $props.qualityOfTreatment;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          recommendRange={(() => {
+            try {
+              return $props.recommendRange;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          userId={(() => {
+            try {
+              return $props.userId;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
       </div>
       <Stack__
         as={"div"}
@@ -2350,11 +1180,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                     <Stack__
                       as={"div"}
                       data-plasmic-name={
-                        "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
+                        "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
                       }
-                      data-plasmic-override={overrides.نظربشتراز1}
+                      data-plasmic-override={overrides.نظربیشتراز1}
                       hasGap={true}
-                      className={classNames(projectcss.all, sty.نظربشتراز1)}
+                      className={classNames(projectcss.all, sty.نظربیشتراز1)}
                     >
                       <RepliesIcon
                         className={classNames(projectcss.all, sty.svg___34YvM)}
@@ -2382,10 +1212,12 @@ function PlasmicReviewCard__RenderFunc(props: {
       </DataFetcher>
       <Stack__
         as={"div"}
-        data-plasmic-name={"\u0644\u0627\u0631\u0648\u0631\u062a"}
-        data-plasmic-override={overrides.لارورت}
+        data-plasmic-name={
+          "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
+        }
+        data-plasmic-override={overrides.لایکریپورت}
         hasGap={true}
-        className={classNames(projectcss.all, sty.لارورت)}
+        className={classNames(projectcss.all, sty.لایکریپورت)}
       >
         {(() => {
           try {
@@ -2790,8 +1622,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                         className={classNames(projectcss.all, sty.سوشالها)}
                       >
                         <Button
-                          data-plasmic-name={"\u062a\u0648\u0626\u062a\u0631"}
-                          data-plasmic-override={overrides.توئتر}
+                          data-plasmic-name={
+                            "\u062a\u0648\u0626\u06cc\u062a\u0631"
+                          }
+                          data-plasmic-override={overrides.توئیتر}
                           children2={
                             <React.Fragment>
                               <Icon17Icon2
@@ -2813,7 +1647,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.توئتر)}
+                          className={classNames("__wab_instance", sty.توئیتر)}
                           color={"blue"}
                           link={(() => {
                             try {
@@ -2865,8 +1699,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={"\u0627\u062a\u0627"}
-                          data-plasmic-override={overrides.اتا}
+                          data-plasmic-name={"\u0627\u06cc\u062a\u0627"}
+                          data-plasmic-override={overrides.ایتا}
                           children2={
                             <React.Fragment>
                               <EitaaIcon
@@ -2888,7 +1722,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.اتا)}
+                          className={classNames("__wab_instance", sty.ایتا)}
                           color={"orange"}
                           link={(() => {
                             try {
@@ -2940,8 +1774,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={"\u062a\u0644\u0631\u0627\u0645"}
-                          data-plasmic-override={overrides.تلرام}
+                          data-plasmic-name={
+                            "\u062a\u0644\u06af\u0631\u0627\u0645"
+                          }
+                          data-plasmic-override={overrides.تلگرام}
                           children2={
                             <React.Fragment>
                               <Icon13Icon
@@ -2963,7 +1799,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.تلرام)}
+                          className={classNames("__wab_instance", sty.تلگرام)}
                           link={(() => {
                             try {
                               return `https://telegram.me/share/url?url=${$ctx.fetchedData.url}`;
@@ -3014,8 +1850,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={"\u0648\u0627\u062a\u0633\u0627"}
-                          data-plasmic-override={overrides.واتسا}
+                          data-plasmic-name={
+                            "\u0648\u0627\u062a\u0633\u0627\u067e"
+                          }
+                          data-plasmic-override={overrides.واتساپ}
                           children2={
                             <React.Fragment>
                               <Icon16Icon
@@ -3037,7 +1875,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.واتسا)}
+                          className={classNames("__wab_instance", sty.واتساپ)}
                           color={"green"}
                           link={(() => {
                             try {
@@ -3096,9 +1934,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                       />
 
                       <div
-                        data-plasmic-name={"\u0631\u062f\u0646"}
-                        data-plasmic-override={overrides.ردن}
-                        className={classNames(projectcss.all, sty.ردن)}
+                        data-plasmic-name={
+                          "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"
+                        }
+                        data-plasmic-override={overrides.کپیکردن}
+                        className={classNames(projectcss.all, sty.کپیکردن)}
                       >
                         <div
                           className={classNames(
@@ -3124,8 +1964,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                           </React.Fragment>
                         </div>
                         <Button
-                          data-plasmic-name={"\u0644\u0646"}
-                          data-plasmic-override={overrides.لن}
+                          data-plasmic-name={
+                            "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+                          }
+                          data-plasmic-override={overrides.کپیلینک}
                           children2={
                             <React.Fragment>
                               <Icon15Icon
@@ -3147,7 +1989,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.لن)}
+                          className={classNames("__wab_instance", sty.کپیلینک)}
                           color={"softBlue"}
                           onClick={async event => {
                             const $steps = {};
@@ -3283,11 +2125,13 @@ function PlasmicReviewCard__RenderFunc(props: {
               />
 
               <Button
+                data-plasmic-name={"button"}
+                data-plasmic-override={overrides.button}
                 children2={
                   "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
                 }
-                className={classNames("__wab_instance", sty.button__iuHVx, {
-                  [sty.buttonraviExpFroDrakam__iuHVxQl6C7]: hasVariant(
+                className={classNames("__wab_instance", sty.button, {
+                  [sty.buttonraviExpFroDrakam]: hasVariant(
                     $state,
                     "raviExpFroDrakam",
                     "raviExpFroDrakam"
@@ -3602,9 +2446,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         />
       </Stack__>
       <div
-        data-plasmic-name={"\u0631\u0644\u0627"}
-        data-plasmic-override={overrides.رلا}
-        className={classNames(projectcss.all, sty.رلا)}
+        data-plasmic-name={"\u0631\u06cc\u067e\u0644\u0627\u06cc"}
+        data-plasmic-override={overrides.ریپلای}
+        className={classNames(projectcss.all, sty.ریپلای)}
       >
         <textarea
           data-plasmic-name={"replyText"}
@@ -3841,9 +2685,11 @@ function PlasmicReviewCard__RenderFunc(props: {
         </div>
       </div>
       <DataFetcher
-        data-plasmic-name={"\u0631\u0641\u062a\u0646\u0631\u0644\u0627"}
-        data-plasmic-override={overrides.رفتنرلا}
-        className={classNames("__wab_instance", sty.رفتنرلا)}
+        data-plasmic-name={
+          "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+        }
+        data-plasmic-override={overrides.گرفتنریپلای}
+        className={classNames("__wab_instance", sty.گرفتنریپلای)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -3885,6 +2731,19 @@ function PlasmicReviewCard__RenderFunc(props: {
             })() ? (
               <ReplyCard
                 className={classNames("__wab_instance", sty.replyCard__ardMi)}
+                id={(() => {
+                  try {
+                    return $ctx.fetchedData.list[0].Id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 isDoctor={(() => {
                   try {
                     return (
@@ -3936,145 +2795,139 @@ function PlasmicReviewCard__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  اردنماشنظر: [
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
-    "\u0633\u0647\u0646\u0642\u0637\u0647",
-    "dialog3",
-    "edditTextBox",
-    "dialog4",
-    "dialog5",
-    "reportText2",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  کاردنمایشنظر: [
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "userAvatar2",
     "userAvatar",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
     "chip",
+    "editAndReport",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
     "dialog2",
-    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321",
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
+    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646",
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9",
     "dialog",
     "reportText",
-    "\u0631\u0644\u0627",
+    "button",
+    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
     "replyText",
     "multilineTextInput",
-    "\u0631\u0641\u062a\u0646\u0631\u0644\u0627"
+    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
   ],
-  سهنقطه: [
-    "\u0633\u0647\u0646\u0642\u0637\u0647",
-    "dialog3",
-    "edditTextBox",
-    "dialog4",
-    "dialog5",
-    "reportText2"
-  ],
-  dialog3: ["dialog3", "edditTextBox"],
-  edditTextBox: ["edditTextBox"],
-  dialog4: ["dialog4"],
-  dialog5: ["dialog5", "reportText2"],
-  reportText2: ["reportText2"],
-  نامتتارخ: [
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  نامتگتاریخ: [
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "userAvatar2",
     "userAvatar",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "chip"
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "chip",
+    "editAndReport"
   ],
   userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"],
-  ناماربر: ["\u0646\u0627\u0645\u0627\u0631\u0628\u0631"],
+  نامکاربر: ["\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"],
   chip: ["chip"],
+  editAndReport: ["editAndReport"],
   متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
   dialog2: [
     "dialog2",
-    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
   ],
-  نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
-  لارورت: [
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
+  نظربیشتراز1: [
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+  ],
+  لایکریپورت: [
+    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646",
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9",
     "dialog",
-    "reportText"
+    "reportText",
+    "button"
   ],
   dialog6: [
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646"
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
   ],
   سوشالها: [
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627"
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e"
   ],
-  توئتر: ["\u062a\u0648\u0626\u062a\u0631"],
-  اتا: ["\u0627\u062a\u0627"],
-  تلرام: ["\u062a\u0644\u0631\u0627\u0645"],
-  واتسا: ["\u0648\u0627\u062a\u0633\u0627"],
-  ردن: ["\u0631\u062f\u0646", "\u0644\u0646"],
-  لن: ["\u0644\u0646"],
-  dialog: ["dialog", "reportText"],
+  توئیتر: ["\u062a\u0648\u0626\u06cc\u062a\u0631"],
+  ایتا: ["\u0627\u06cc\u062a\u0627"],
+  تلگرام: ["\u062a\u0644\u06af\u0631\u0627\u0645"],
+  واتساپ: ["\u0648\u0627\u062a\u0633\u0627\u067e"],
+  کپیکردن: [
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+  ],
+  کپیلینک: ["\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"],
+  dialog: ["dialog", "reportText", "button"],
   reportText: ["reportText"],
-  رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
+  button: ["button"],
+  ریپلای: [
+    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
+    "replyText",
+    "multilineTextInput"
+  ],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"],
-  رفتنرلا: ["\u0631\u0641\u062a\u0646\u0631\u0644\u0627"]
+  گرفتنریپلای: [
+    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+  ]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  اردنماشنظر: "div";
-  سهنقطه: typeof Popover;
-  dialog3: typeof Dialog;
-  edditTextBox: "textarea";
-  dialog4: typeof Dialog;
-  dialog5: typeof Dialog;
-  reportText2: "textarea";
-  نامتتارخ: "div";
+  کاردنمایشنظر: "div";
+  نامتگتاریخ: "div";
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
-  ناماربر: typeof DataFetcher;
+  نامکاربر: typeof DataFetcher;
   chip: typeof Chip;
+  editAndReport: typeof EditAndReport;
   متننظر: "div";
   dialog2: typeof Dialog;
-  نظربشتراز1: "div";
-  لارورت: "div";
+  نظربیشتراز1: "div";
+  لایکریپورت: "div";
   dialog6: typeof Dialog;
   سوشالها: "div";
-  توئتر: typeof Button;
-  اتا: typeof Button;
-  تلرام: typeof Button;
-  واتسا: typeof Button;
-  ردن: "div";
-  لن: typeof Button;
+  توئیتر: typeof Button;
+  ایتا: typeof Button;
+  تلگرام: typeof Button;
+  واتساپ: typeof Button;
+  کپیکردن: "div";
+  کپیلینک: typeof Button;
   dialog: typeof Dialog;
   reportText: "textarea";
-  رلا: "div";
+  button: typeof Button;
+  ریپلای: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
-  رفتنرلا: typeof DataFetcher;
+  گرفتنریپلای: typeof DataFetcher;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -4125,7 +2978,8 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
     });
   };
   if (
-    nodeName === "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+    nodeName ===
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
   ) {
     func.displayName = "PlasmicReviewCard";
   } else {
@@ -4137,43 +2991,45 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 export const PlasmicReviewCard = Object.assign(
   // Top-level PlasmicReviewCard renders the root element
   makeNodeComponent(
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
   ),
   {
     // Helper components rendering sub-elements
-    سهنقطه: makeNodeComponent("\u0633\u0647\u0646\u0642\u0637\u0647"),
-    dialog3: makeNodeComponent("dialog3"),
-    edditTextBox: makeNodeComponent("edditTextBox"),
-    dialog4: makeNodeComponent("dialog4"),
-    dialog5: makeNodeComponent("dialog5"),
-    reportText2: makeNodeComponent("reportText2"),
-    نامتتارخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+    نامتگتاریخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
     ),
     userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
-    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
+    نامکاربر: makeNodeComponent(
+      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
+    ),
     chip: makeNodeComponent("chip"),
+    editAndReport: makeNodeComponent("editAndReport"),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
     dialog2: makeNodeComponent("dialog2"),
-    نظربشتراز1: makeNodeComponent(
-      "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
+    نظربیشتراز1: makeNodeComponent(
+      "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
     ),
-    لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
+    لایکریپورت: makeNodeComponent(
+      "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
+    ),
     dialog6: makeNodeComponent("dialog6"),
     سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
-    توئتر: makeNodeComponent("\u062a\u0648\u0626\u062a\u0631"),
-    اتا: makeNodeComponent("\u0627\u062a\u0627"),
-    تلرام: makeNodeComponent("\u062a\u0644\u0631\u0627\u0645"),
-    واتسا: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627"),
-    ردن: makeNodeComponent("\u0631\u062f\u0646"),
-    لن: makeNodeComponent("\u0644\u0646"),
+    توئیتر: makeNodeComponent("\u062a\u0648\u0626\u06cc\u062a\u0631"),
+    ایتا: makeNodeComponent("\u0627\u06cc\u062a\u0627"),
+    تلگرام: makeNodeComponent("\u062a\u0644\u06af\u0631\u0627\u0645"),
+    واتساپ: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627\u067e"),
+    کپیکردن: makeNodeComponent("\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"),
+    کپیلینک: makeNodeComponent("\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
-    رلا: makeNodeComponent("\u0631\u0644\u0627"),
+    button: makeNodeComponent("button"),
+    ریپلای: makeNodeComponent("\u0631\u06cc\u067e\u0644\u0627\u06cc"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
-    رفتنرلا: makeNodeComponent("\u0631\u0641\u062a\u0646\u0631\u0644\u0627"),
+    گرفتنریپلای: makeNodeComponent(
+      "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+    ),
 
     // Metadata about props expected for PlasmicReviewCard
     internalVariantProps: PlasmicReviewCard__VariantProps,
