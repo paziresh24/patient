@@ -3,6 +3,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
+import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
@@ -13,7 +14,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useId, useMemo, useRef, useState } from 'react';
 
-export const Dashboard = () => {
+export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
@@ -23,6 +24,7 @@ export const Dashboard = () => {
     query: { key: keys },
     isReady,
   } = useRouter();
+  const { isMobile } = useResponsive();
 
   const appKey = (keys as string[])[0];
   const menuKey = (keys as string[])[1];
@@ -70,34 +72,30 @@ export const Dashboard = () => {
   }, [keys]);
 
   return (
-    <div className="flex flex-col w-full">
-      <Seo title={appName} noIndex />
-      {appsData.isSuccess && selctedMenu?.embed_src && <AppBar title={appName} className="hidden pwa:!flex" />}
-      <div
-        key={selctedMenu?.key}
-        className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative"
-      >
-        {(!appsData.isSuccess || isAppLoading) && <LoadingApps />}
-        {appsData.isSuccess && user?.id && selctedMenu?.embed_src && (
-          <iframe
-            ref={iframeRef}
+    <LayoutWithHeaderAndFooter {...props.config} shouldShowPromoteApp={false} showFooter={false} showHeader={!isMobile}>
+      <SideBar className="hidden md:flex">
+        <div className="flex flex-grow flex-col w-full">
+          <Seo title={appName} noIndex />
+          {appsData.isSuccess && selctedMenu?.embed_src && <AppBar title={appName} className="hidden pwa:!flex" />}
+          <div
             key={selctedMenu?.key}
-            onLoad={() => setIsAppLoading(false)}
-            className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&user_id=${user.id}&src=${encodeURIComponent(
-              selctedMenu?.embed_src,
-            )}`}
-          />
-        )}
-      </div>
-    </div>
-  );
-};
-
-Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <LayoutWithHeaderAndFooter {...page.props.config} shouldShowPromoteApp={false} showFooter={false}>
-      <SideBar className="hidden md:flex">{page}</SideBar>
+            className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative"
+          >
+            {(!appsData.isSuccess || isAppLoading) && <LoadingApps />}
+            {appsData.isSuccess && user?.id && selctedMenu?.embed_src && (
+              <iframe
+                ref={iframeRef}
+                key={selctedMenu?.key}
+                onLoad={() => setIsAppLoading(false)}
+                className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
+                src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&user_id=${
+                  user.id
+                }&src=${encodeURIComponent(selctedMenu?.embed_src)}`}
+              />
+            )}
+          </div>
+        </div>
+      </SideBar>
     </LayoutWithHeaderAndFooter>
   );
 };

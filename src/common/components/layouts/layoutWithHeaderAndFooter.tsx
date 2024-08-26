@@ -31,19 +31,22 @@ export const LayoutWithHeaderAndFooter = ({
   const isWebView = useWebView();
 
   return (
-    <div className={classNames('min-h-screen flex flex-col', { 'pb-16 md:pb-0': showBottomNavigation })}>
-      {customize.showHeader && !isWebView && showHeader && (
-        <Header
-          showSearchSuggestionButton={showSearchSuggestionButton}
-          shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand}
-          shouldShowPromoteApp={shouldShowPromoteApp}
-        />
-      )}
-      <div className="flex flex-col flex-grow">{children}</div>
-      {customize.showFooter &&
-        !isWebView &&
-        showFooter &&
-        (customize.footerType === 'compact' || compactFooter ? <CompactFooter /> : <Footer />)}
+    <div className={classNames('min-h-screen max-h-screen flex flex-col', { ' md:pb-0': showBottomNavigation })}>
+      <div className="flex flex-col flex-grow overflow-auto">
+        {customize.showHeader && !isWebView && showHeader && (
+          <Header
+            showSearchSuggestionButton={showSearchSuggestionButton}
+            shouldShowBrand={customize.showBrandLogoInHomePage || shouldShowBrand}
+            shouldShowPromoteApp={shouldShowPromoteApp}
+          />
+        )}
+        <div className="flex flex-col flex-grow">{children}</div>
+        {customize.showFooter &&
+          !isWebView &&
+          showFooter &&
+          (customize.footerType === 'compact' || compactFooter ? <CompactFooter /> : <Footer />)}
+      </div>
+
       {showBottomNavigation && !isWebView && <BottomNavigation />}
     </div>
   );

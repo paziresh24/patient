@@ -55,7 +55,7 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <header className="z-50 flex items-center h-16 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden pwa:hidden text-slate-700 md:px-4 md:h-20 border-slate-100">
+      <header className="z-50 flex items-center min-h-16 h-16 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden pwa:hidden text-slate-700 md:px-4 md:h-20 border-slate-100">
         <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
