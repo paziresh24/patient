@@ -910,13 +910,26 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicNoReview.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "48DkFQMlhcuA",
+          "name": "EditAndReport",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicEditAndReport.tsx",
+          "importSpec": {
+            "modulePath": "EditAndReport.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicEditAndReport.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
         {
           "id": "NWCYMTObqr7D",
-          "name": "ChecksvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Checksvg.tsx"
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__CheckSvg.tsx"
         },
         {
           "id": "xw5A3Vn5_KNc",
@@ -925,18 +938,18 @@
         },
         {
           "id": "W3TLlIDrGJdy",
-          "name": "SearchsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Searchsvg.tsx"
+          "name": "SearchSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__SearchSvg.tsx"
         },
         {
           "id": "NXg4jyTHB7Sj",
-          "name": "ChevronDownsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronDownsvg.tsx"
+          "name": "ChevronDownSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronDownSvg.tsx"
         },
         {
           "id": "YVM63_mcG0ZV",
-          "name": "ChevronUpsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpsvg.tsx"
+          "name": "ChevronUpSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpSvg.tsx"
         },
         {
           "id": "SNOnlPCvguG2",
@@ -1022,6 +1035,11 @@
           "id": "dwPoKnXC1x2G",
           "name": "Icon17Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon17.tsx"
+        },
+        {
+          "id": "QzsC7KWBHDeN",
+          "name": "Icon18Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon18.tsx"
         }
       ],
       "images": [],

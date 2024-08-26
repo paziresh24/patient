@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
@@ -83,18 +84,21 @@ export type PlasmicReplyCard__ArgsType = {
   replyText?: string;
   userId?: number;
   isDoctor?: boolean;
+  id?: string;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
   "replyText",
   "userId",
-  "isDoctor"
+  "isDoctor",
+  "id"
 );
 
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
-  ناماربر?: Flex__<typeof DataFetcher>;
-  نامتتارخ?: Flex__<"div">;
+  editAndReport?: Flex__<typeof EditAndReport>;
+  نامکاربر?: Flex__<typeof DataFetcher>;
+  نامتگتاریخ?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
@@ -105,6 +109,7 @@ export interface DefaultReplyCardProps {
   replyText?: string;
   userId?: number;
   isDoctor?: boolean;
+  id?: string;
   className?: string;
 }
 
@@ -163,10 +168,30 @@ function PlasmicReplyCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
+      <EditAndReport
+        data-plasmic-name={"editAndReport"}
+        data-plasmic-override={overrides.editAndReport}
+        className={classNames("__wab_instance", sty.editAndReport)}
+        feedbackId={(() => {
+          try {
+            return $props.id;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        isReply={true}
+      />
+
       <DataFetcher
-        data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
-        data-plasmic-override={overrides.ناماربر}
-        className={classNames("__wab_instance", sty.ناماربر)}
+        data-plasmic-name={"\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"}
+        data-plasmic-override={overrides.نامکاربر}
+        className={classNames("__wab_instance", sty.نامکاربر)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -195,10 +220,10 @@ function PlasmicReplyCard__RenderFunc(props: {
           {$ctx => (
             <div
               data-plasmic-name={
-                "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+                "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
               }
-              data-plasmic-override={overrides.نامتتارخ}
-              className={classNames(projectcss.all, sty.نامتتارخ)}
+              data-plasmic-override={overrides.نامتگتاریخ}
+              className={classNames(projectcss.all, sty.نامتگتاریخ)}
             >
               <DataFetcher
                 data-plasmic-name={"httpRestApiFetcher"}
@@ -397,23 +422,25 @@ function PlasmicReplyCard__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+    "editAndReport",
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  ناماربر: [
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  editAndReport: ["editAndReport"],
+  نامکاربر: [
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  نامتتارخ: [
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  نامتگتاریخ: [
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
@@ -429,8 +456,9 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  ناماربر: typeof DataFetcher;
-  نامتتارخ: "div";
+  editAndReport: typeof EditAndReport;
+  نامکاربر: typeof DataFetcher;
+  نامتگتاریخ: "div";
   httpRestApiFetcher: typeof DataFetcher;
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
@@ -497,9 +525,12 @@ export const PlasmicReplyCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
-    نامتتارخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+    editAndReport: makeNodeComponent("editAndReport"),
+    نامکاربر: makeNodeComponent(
+      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
+    ),
+    نامتگتاریخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
     ),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     userAvatar2: makeNodeComponent("userAvatar2"),

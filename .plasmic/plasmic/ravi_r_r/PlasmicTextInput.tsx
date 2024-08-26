@@ -67,8 +67,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicTextInput.module.css"; // plasmic-import: iKLtt-X_YZoa/css
 
-import SearchsvgIcon from "./icons/PlasmicIcon__Searchsvg"; // plasmic-import: W3TLlIDrGJdy/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWCYMTObqr7D/icon
+import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: W3TLlIDrGJdy/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: NWCYMTObqr7D/icon
 
 createPlasmicElementProxy;
 
@@ -99,8 +99,8 @@ export type PlasmicTextInput__ArgsType = {
   value?: string;
   name?: string;
   required?: boolean;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
+  arialabel?: string;
+  arialabelledby?: string;
   onChange?: (event: any) => void;
   type?:
     | "text"
@@ -113,6 +113,8 @@ export type PlasmicTextInput__ArgsType = {
     | "email"
     | "tel";
   autoFocus?: boolean;
+  arialabel?: string;
+  arialabelledby?: string;
 };
 type ArgPropType = keyof PlasmicTextInput__ArgsType;
 export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
@@ -122,11 +124,13 @@ export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
   "value",
   "name",
   "required",
-  "aria-label",
-  "aria-labelledby",
+  "arialabel",
+  "arialabelledby",
   "onChange",
   "type",
-  "autoFocus"
+  "autoFocus",
+  "arialabel",
+  "arialabelledby"
 );
 
 export type PlasmicTextInput__OverridesType = {
@@ -141,8 +145,8 @@ export interface DefaultTextInputProps extends pp.BaseTextInputProps {
   value?: string;
   name?: string;
   required?: boolean;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
+  arialabel?: string;
+  arialabelledby?: string;
   onChange?: (event: any) => void;
   type?:
     | "text"
@@ -155,6 +159,8 @@ export interface DefaultTextInputProps extends pp.BaseTextInputProps {
     | "email"
     | "tel";
   autoFocus?: boolean;
+  arialabel?: string;
+  arialabelledby?: string;
   color?: SingleChoiceArg<"dark">;
 }
 
@@ -306,7 +312,7 @@ function PlasmicTextInput__RenderFunc(props: {
       >
         {renderPlasmicSlot({
           defaultContents: (
-            <SearchsvgIcon
+            <SearchSvgIcon
               className={classNames(projectcss.all, sty.svg__zTzwx)}
               role={"img"}
             />
@@ -330,8 +336,8 @@ function PlasmicTextInput__RenderFunc(props: {
       <input
         data-plasmic-name={"input"}
         data-plasmic-override={overrides.input}
-        aria-label={args["aria-label"]}
-        aria-labelledby={args["aria-labelledby"]}
+        aria-label={args.arialabel}
+        aria-labelledby={args.arialabelledby}
         autoFocus={args.autoFocus}
         className={classNames(projectcss.all, projectcss.input, sty.input, {
           [sty.input___focusVisibleWithin]: triggers.focusVisibleWithin_root,
@@ -413,7 +419,7 @@ function PlasmicTextInput__RenderFunc(props: {
       >
         {renderPlasmicSlot({
           defaultContents: (
-            <ChecksvgIcon
+            <CheckSvgIcon
               className={classNames(projectcss.all, sty.svg__dHreb)}
               role={"img"}
             />
