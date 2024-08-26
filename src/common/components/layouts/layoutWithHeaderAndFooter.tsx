@@ -31,7 +31,7 @@ export const LayoutWithHeaderAndFooter = ({
   const isWebView = useWebView();
 
   return (
-    <div className={classNames('min-h-screen max-h-screen flex flex-col', { ' md:pb-0': showBottomNavigation })}>
+    <div className={classNames('min-h-[100dvh] h-full max-h-[100dvh] flex flex-col', { ' md:pb-0': showBottomNavigation })}>
       <div className="flex flex-col flex-grow overflow-auto">
         {customize.showHeader && !isWebView && showHeader && (
           <Header
