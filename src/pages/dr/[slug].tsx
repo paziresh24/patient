@@ -283,7 +283,7 @@ const DoctorProfile = ({
               </div>
             )}
           </Head>
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
+          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-40 !mt-0 bg-white">
             <ul className="flex justify-around">
               <li>
                 <a
