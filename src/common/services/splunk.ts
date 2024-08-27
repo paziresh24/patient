@@ -2,7 +2,7 @@ import { splunk } from '@paziresh24/splunk-event';
 import { getCookie } from 'cookies-next';
 import { isPWA } from '../utils/isPwa';
 
-type Index = 'doctor-profile' | 'search' | 'center-profile' | 'booking' | 'error' | 'dashboard' | 'cwv';
+type Index = 'doctor-profile' | 'rokhnama' | 'search' | 'center-profile' | 'booking' | 'error' | 'dashboard' | 'cwv';
 
 export const splunkInstance = (index: Index) => {
   switch (index) {
