@@ -19,17 +19,14 @@ export const Dashboard = () => {
     if (apps.isError && isDesktop) {
       router.push('/dashboard/profile');
     }
+    const firstApp = apps.data?.data?.[0];
+    const firstAppMenu = firstApp?.fragments?.find((item: any) => item.type === 'menu')?.options?.[0];
     if (apps.isSuccess && isDesktop) {
-      if (apps.data.data.length === 0) {
+      if (!firstAppMenu) {
         router.push('/dashboard/profile');
         return;
       }
-      router.push(
-        `/dashboard/apps/${(flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.key}/${
-          (flatten(apps.data.data.filter((item: any) => !item.pin))?.[0] as any)?.fragments.find((item: any) => item.type === 'menu')
-            ?.options?.[0]?.key
-        }/`,
-      );
+      router.push(`/dashboard/apps/${firstApp?.key}/${firstAppMenu?.key}/`);
     }
   }, [apps.status, isDesktop]);
 

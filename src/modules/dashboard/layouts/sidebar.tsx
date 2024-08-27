@@ -243,7 +243,8 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                       />
                     ))}
 
-                {((appsData.isSuccess && (apps.some((app: any) => !app.pin) || shouldShowBazaarMenu)) ||
+                {((appsData.isSuccess &&
+                  (apps[0]?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0) || shouldShowBazaarMenu)) ||
                   (user.provider?.job_title === 'doctor' || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
                 {defaultMenuData.map(menu => (
                   <MenuItem
