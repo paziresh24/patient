@@ -118,8 +118,8 @@ export const PlasmicEditAndReport__ArgProps = new Array<ArgPropType>(
 );
 
 export type PlasmicEditAndReport__OverridesType = {
-  اردنماشنظر?: Flex__<"div">;
-  سهنقطه?: Flex__<typeof Popover>;
+  editAndReportStack?: Flex__<"div">;
+  threeDots?: Flex__<typeof Popover>;
   dialog3?: Flex__<typeof Dialog>;
   edditTextBox?: Flex__<"textarea">;
   dialog4?: Flex__<typeof Dialog>;
@@ -187,7 +187,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "سهنقطه.open",
+        path: "threeDots.open",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
@@ -287,10 +287,8 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
   return (
     <div
-      data-plasmic-name={
-        "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
-      }
-      data-plasmic-override={overrides.اردنماشنظر}
+      data-plasmic-name={"editAndReportStack"}
+      data-plasmic-override={overrides.editAndReportStack}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       className={classNames(
@@ -300,9 +298,9 @@ function PlasmicEditAndReport__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.اردنماشنظر,
+        sty.editAndReportStack,
         {
-          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
+          [sty.editAndReportStackraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
@@ -312,18 +310,18 @@ function PlasmicEditAndReport__RenderFunc(props: {
       dir={"rtl"}
     >
       <Popover
-        data-plasmic-name={"\u0633\u0647\u0646\u0642\u0637\u0647"}
-        data-plasmic-override={overrides.سهنقطه}
+        data-plasmic-name={"threeDots"}
+        data-plasmic-override={overrides.threeDots}
         align={"center"}
-        className={classNames("__wab_instance", sty.سهنقطه, {
-          [sty.سهنقطهraviExpFroDrakam]: hasVariant(
+        className={classNames("__wab_instance", sty.threeDots, {
+          [sty.threeDotsraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
           )
         })}
-        onOpenChange={generateStateOnChangeProp($state, ["سهنقطه", "open"])}
-        open={generateStateValueProp($state, ["سهنقطه", "open"])}
+        onOpenChange={generateStateOnChangeProp($state, ["threeDots", "open"])}
+        open={generateStateValueProp($state, ["threeDots", "open"])}
         overlay={
           <div className={classNames(projectcss.all, sty.freeBox__uHoTc)}>
             {(() => {
@@ -1419,17 +1417,17 @@ function PlasmicEditAndReport__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  اردنماشنظر: [
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
-    "\u0633\u0647\u0646\u0642\u0637\u0647",
+  editAndReportStack: [
+    "editAndReportStack",
+    "threeDots",
     "dialog3",
     "edditTextBox",
     "dialog4",
     "dialog5",
     "reportText2"
   ],
-  سهنقطه: [
-    "\u0633\u0647\u0646\u0642\u0637\u0647",
+  threeDots: [
+    "threeDots",
     "dialog3",
     "edditTextBox",
     "dialog4",
@@ -1446,8 +1444,8 @@ type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  اردنماشنظر: "div";
-  سهنقطه: typeof Popover;
+  editAndReportStack: "div";
+  threeDots: typeof Popover;
   dialog3: typeof Dialog;
   edditTextBox: "textarea";
   dialog4: typeof Dialog;
@@ -1502,9 +1500,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
       forNode: nodeName
     });
   };
-  if (
-    nodeName === "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
-  ) {
+  if (nodeName === "editAndReportStack") {
     func.displayName = "PlasmicEditAndReport";
   } else {
     func.displayName = `PlasmicEditAndReport.${nodeName}`;
@@ -1514,12 +1510,10 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicEditAndReport = Object.assign(
   // Top-level PlasmicEditAndReport renders the root element
-  makeNodeComponent(
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
-  ),
+  makeNodeComponent("editAndReportStack"),
   {
     // Helper components rendering sub-elements
-    سهنقطه: makeNodeComponent("\u0633\u0647\u0646\u0642\u0637\u0647"),
+    threeDots: makeNodeComponent("threeDots"),
     dialog3: makeNodeComponent("dialog3"),
     edditTextBox: makeNodeComponent("edditTextBox"),
     dialog4: makeNodeComponent("dialog4"),
