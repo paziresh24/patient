@@ -62,7 +62,6 @@ import {
 import { Popover } from "@plasmicpkgs/radix-ui";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -71,7 +70,6 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX
 import sty from "./PlasmicEditAndReport.module.css"; // plasmic-import: 48DkFQMlhcuA/css
 
 import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
-import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
 import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: moTm-5qth65g/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
@@ -120,7 +118,7 @@ export const PlasmicEditAndReport__ArgProps = new Array<ArgPropType>(
 );
 
 export type PlasmicEditAndReport__OverridesType = {
-  کاردنمایشنظر?: Flex__<"div">;
+  اردنماشنظر?: Flex__<"div">;
   سهنقطه?: Flex__<typeof Popover>;
   dialog3?: Flex__<typeof Dialog>;
   edditTextBox?: Flex__<"textarea">;
@@ -290,9 +288,9 @@ function PlasmicEditAndReport__RenderFunc(props: {
   return (
     <div
       data-plasmic-name={
-        "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+        "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
       }
-      data-plasmic-override={overrides.کاردنمایشنظر}
+      data-plasmic-override={overrides.اردنماشنظر}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       className={classNames(
@@ -302,9 +300,9 @@ function PlasmicEditAndReport__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.کاردنمایشنظر,
+        sty.اردنماشنظر,
         {
-          [sty.کاردنمایشنظرraviExpFroDrakam]: hasVariant(
+          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
@@ -316,6 +314,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
       <Popover
         data-plasmic-name={"\u0633\u0647\u0646\u0642\u0637\u0647"}
         data-plasmic-override={overrides.سهنقطه}
+        align={"center"}
         className={classNames("__wab_instance", sty.سهنقطه, {
           [sty.سهنقطهraviExpFroDrakam]: hasVariant(
             $state,
@@ -327,426 +326,311 @@ function PlasmicEditAndReport__RenderFunc(props: {
         open={generateStateValueProp($state, ["سهنقطه", "open"])}
         overlay={
           <div className={classNames(projectcss.all, sty.freeBox__uHoTc)}>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___6K02M, {
-                [sty.freeBoxraviExpFroDrakam___6K02MAslZi]: hasVariant(
-                  $state,
-                  "raviExpFroDrakam",
-                  "raviExpFroDrakam"
-                )
-              })}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return navigator.share({
-                            url:
-                              window.location.href +
-                              `#comment-${$props.feedbackId}`
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-
-                $steps["splunk"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return $$.splunkEvent({
-                            group: "feedback",
-                            data: {
-                              doctor_id: $props.doctorId,
-                              comment_id: $props.feedbackId
-                            },
-                            type: "share_comment",
-                            token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["splunk"] != null &&
-                  typeof $steps["splunk"] === "object" &&
-                  typeof $steps["splunk"].then === "function"
-                ) {
-                  $steps["splunk"] = await $steps["splunk"];
-                }
-              }}
-            >
-              <ShareIcon
-                className={classNames(projectcss.all, sty.svg__psv0X)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__sgUhD
-                )}
-              >
-                {
-                  "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
-                }
-              </div>
-            </Stack__>
             {(() => {
               try {
-                return true;
+                return $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return true;
+                  return false;
                 }
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox___2LfFn)}
-              >
-                {(() => {
-                  try {
-                    return (
-                      $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Dialog
-                    data-plasmic-name={"dialog3"}
-                    data-plasmic-override={overrides.dialog3}
-                    body={
-                      <React.Fragment>
-                        <textarea
-                          data-plasmic-name={"edditTextBox"}
-                          data-plasmic-override={overrides.edditTextBox}
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.textarea,
-                            sty.edditTextBox
-                          )}
-                          onChange={e => {
-                            generateStateOnChangeProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ])(e.target.value);
-                          }}
-                          placeholder={``}
-                          ref={ref => {
-                            $refs["edditTextBox"] = ref;
-                          }}
-                          value={
-                            generateStateValueProp($state, [
-                              "edditTextBox",
-                              "value"
-                            ]) ?? ""
-                          }
-                        />
+              <Dialog
+                data-plasmic-name={"dialog3"}
+                data-plasmic-override={overrides.dialog3}
+                body={
+                  <React.Fragment>
+                    <textarea
+                      data-plasmic-name={"edditTextBox"}
+                      data-plasmic-override={overrides.edditTextBox}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.textarea,
+                        sty.edditTextBox
+                      )}
+                      onChange={e => {
+                        generateStateOnChangeProp($state, [
+                          "edditTextBox",
+                          "value"
+                        ])(e.target.value);
+                      }}
+                      placeholder={``}
+                      ref={ref => {
+                        $refs["edditTextBox"] = ref;
+                      }}
+                      value={
+                        generateStateValueProp($state, [
+                          "edditTextBox",
+                          "value"
+                        ]) ?? ""
+                      }
+                    />
 
-                        <Button
-                          children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                          className={classNames(
-                            "__wab_instance",
-                            sty.button__ba57N
-                          )}
-                          endIcon={
-                            <ChevronLeftIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg__q1H46
-                              )}
-                              role={"img"}
-                            />
-                          }
-                          loading={(() => {
-                            try {
-                              return $state.editLoadingButton;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["loading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: true
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["loading"] != null &&
-                              typeof $steps["loading"] === "object" &&
-                              typeof $steps["loading"].then === "function"
-                            ) {
-                              $steps["loading"] = await $steps["loading"];
-                            }
-
-                            $steps["request"] =
-                              $state.edditTextBox.value.length >= 10
-                                ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return fetch(
-                                          "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
-                                            $props.feedbackId,
-                                          {
-                                            headers: {
-                                              "Content-Type": "application/json"
-                                            },
-                                            method: "PATCH",
-                                            body: JSON.stringify({
-                                              description:
-                                                $state.edditTextBox.value
-                                            }),
-                                            credentials: "include"
-                                          }
-                                        );
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
-                            if (
-                              $steps["request"] != null &&
-                              typeof $steps["request"] === "object" &&
-                              typeof $steps["request"].then === "function"
-                            ) {
-                              $steps["request"] = await $steps["request"];
-                            }
-
-                            $steps["offLoading"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["editLoadingButton"]
-                                    },
-                                    operation: 0,
-                                    value: false
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["offLoading"] != null &&
-                              typeof $steps["offLoading"] === "object" &&
-                              typeof $steps["offLoading"].then === "function"
-                            ) {
-                              $steps["offLoading"] = await $steps["offLoading"];
-                            }
-
-                            $steps["toast"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    args: [
-                                      undefined,
-                                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                      "top-right",
-                                      4999
-                                    ]
-                                  };
-                                  return $globalActions[
-                                    "Fragment.showToast"
-                                  ]?.apply(null, [...actionArgs.args]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["toast"] != null &&
-                              typeof $steps["toast"] === "object" &&
-                              typeof $steps["toast"].then === "function"
-                            ) {
-                              $steps["toast"] = await $steps["toast"];
-                            }
-
-                            $steps["close"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["dialog3", "open"]
-                                    },
-                                    operation: 4
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
-
-                                    const oldValue = $stateGet(
-                                      objRoot,
-                                      variablePath
-                                    );
-                                    $stateSet(objRoot, variablePath, !oldValue);
-                                    return !oldValue;
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["close"] != null &&
-                              typeof $steps["close"] === "object" &&
-                              typeof $steps["close"].then === "function"
-                            ) {
-                              $steps["close"] = await $steps["close"];
-                            }
-
-                            $steps["splunk"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId,
-                                          edit_text: $state.edditTextBox.value
-                                        },
-                                        type: "edit_comment",
-                                        token:
-                                          "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["splunk"] != null &&
-                              typeof $steps["splunk"] === "object" &&
-                              typeof $steps["splunk"].then === "function"
-                            ) {
-                              $steps["splunk"] = await $steps["splunk"];
-                            }
-                          }}
-                          startIcon={
-                            <ChevronRightIcon
-                              className={classNames(
-                                projectcss.all,
-                                sty.svg___976R
-                              )}
-                              role={"img"}
-                            />
-                          }
-                        />
-                      </React.Fragment>
-                    }
-                    className={classNames("__wab_instance", sty.dialog3)}
-                    onOpenChange={generateStateOnChangeProp($state, [
-                      "dialog3",
-                      "open"
-                    ])}
-                    open={generateStateValueProp($state, ["dialog3", "open"])}
-                    title={
-                      "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
-                    }
-                    trigger={
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__dv97B
-                        )}
-                      >
-                        <Icon3Icon
-                          className={classNames(projectcss.all, sty.svg__eEYpx)}
+                    <Button
+                      children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__ba57N
+                      )}
+                      endIcon={
+                        <ChevronLeftIcon
+                          className={classNames(projectcss.all, sty.svg__q1H46)}
                           role={"img"}
                         />
+                      }
+                      loading={(() => {
+                        try {
+                          return $state.editLoadingButton;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()}
+                      onClick={async event => {
+                        const $steps = {};
 
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__duig4
-                          )}
-                        >
-                          {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-                        </div>
-                      </Stack__>
-                    }
-                  />
-                ) : null}
-              </Stack__>
+                        $steps["loading"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["editLoadingButton"]
+                                },
+                                operation: 0,
+                                value: true
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["loading"] != null &&
+                          typeof $steps["loading"] === "object" &&
+                          typeof $steps["loading"].then === "function"
+                        ) {
+                          $steps["loading"] = await $steps["loading"];
+                        }
+
+                        $steps["request"] =
+                          $state.edditTextBox.value.length >= 10
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return fetch(
+                                      "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
+                                        $props.feedbackId,
+                                      {
+                                        headers: {
+                                          "Content-Type": "application/json"
+                                        },
+                                        method: "PATCH",
+                                        body: JSON.stringify({
+                                          description: $state.edditTextBox.value
+                                        }),
+                                        credentials: "include"
+                                      }
+                                    );
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                        if (
+                          $steps["request"] != null &&
+                          typeof $steps["request"] === "object" &&
+                          typeof $steps["request"].then === "function"
+                        ) {
+                          $steps["request"] = await $steps["request"];
+                        }
+
+                        $steps["offLoading"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["editLoadingButton"]
+                                },
+                                operation: 0,
+                                value: false
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["offLoading"] != null &&
+                          typeof $steps["offLoading"] === "object" &&
+                          typeof $steps["offLoading"].then === "function"
+                        ) {
+                          $steps["offLoading"] = await $steps["offLoading"];
+                        }
+
+                        $steps["toast"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  undefined,
+                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                  "top-right",
+                                  4999
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["toast"] != null &&
+                          typeof $steps["toast"] === "object" &&
+                          typeof $steps["toast"].then === "function"
+                        ) {
+                          $steps["toast"] = await $steps["toast"];
+                        }
+
+                        $steps["close"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog3", "open"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["close"] != null &&
+                          typeof $steps["close"] === "object" &&
+                          typeof $steps["close"].then === "function"
+                        ) {
+                          $steps["close"] = await $steps["close"];
+                        }
+
+                        $steps["splunk"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return $$.splunkEvent({
+                                    group: "feedback",
+                                    data: {
+                                      doctor_id: $props.doctorUserId,
+                                      comment_id: $props.feedbackId,
+                                      edit_text: $state.edditTextBox.value
+                                    },
+                                    type: "edit_comment",
+                                    token:
+                                      "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                  });
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["splunk"] != null &&
+                          typeof $steps["splunk"] === "object" &&
+                          typeof $steps["splunk"].then === "function"
+                        ) {
+                          $steps["splunk"] = await $steps["splunk"];
+                        }
+                      }}
+                      startIcon={
+                        <ChevronRightIcon
+                          className={classNames(projectcss.all, sty.svg___976R)}
+                          role={"img"}
+                        />
+                      }
+                    />
+                  </React.Fragment>
+                }
+                className={classNames("__wab_instance", sty.dialog3)}
+                onOpenChange={generateStateOnChangeProp($state, [
+                  "dialog3",
+                  "open"
+                ])}
+                open={generateStateValueProp($state, ["dialog3", "open"])}
+                title={
+                  "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
+                }
+                trigger={
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__dv97B)}
+                  >
+                    <Icon3Icon
+                      className={classNames(projectcss.all, sty.svg__eEYpx)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__duig4
+                      )}
+                    >
+                      {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                    </div>
+                  </Stack__>
+                }
+              />
             ) : null}
             {(() => {
               try {
@@ -756,392 +640,368 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return true;
+                  return false;
                 }
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__ojBS, {
-                  [sty.freeBoxraviExpFroDrakam__ojBSAslZi]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                })}
-              >
-                <Dialog
-                  data-plasmic-name={"dialog4"}
-                  data-plasmic-override={overrides.dialog4}
-                  body={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__jYq71)}
-                    >
-                      <Button
-                        children2={
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__gDLeS
-                            )}
-                          >
-                            {"\u062d\u0630\u0641"}
-                          </div>
+              <Dialog
+                data-plasmic-name={"dialog4"}
+                data-plasmic-override={overrides.dialog4}
+                body={
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__jYq71)}
+                  >
+                    <Button
+                      children2={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__gDLeS
+                          )}
+                        >
+                          {"\u062d\u0630\u0641"}
+                        </div>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__eZc84
+                      )}
+                      color={"red"}
+                      endIcon={
+                        <ChevronLeftIcon
+                          className={classNames(projectcss.all, sty.svg__r90Lj)}
+                          role={"img"}
+                        />
+                      }
+                      loading={(() => {
+                        try {
+                          return $state.deleteLoadingButton;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
                         }
-                        className={classNames(
-                          "__wab_instance",
-                          sty.button__eZc84
-                        )}
-                        color={"red"}
-                        endIcon={
-                          <ChevronLeftIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__r90Lj
-                            )}
-                            role={"img"}
-                          />
+                      })()}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["loading"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["deleteLoadingButton"]
+                                },
+                                operation: 0,
+                                value: true
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["loading"] != null &&
+                          typeof $steps["loading"] === "object" &&
+                          typeof $steps["loading"].then === "function"
+                        ) {
+                          $steps["loading"] = await $steps["loading"];
                         }
-                        loading={(() => {
-                          try {
-                            return $state.deleteLoadingButton;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return [];
-                            }
-                            throw e;
-                          }
-                        })()}
-                        onClick={async event => {
-                          const $steps = {};
 
-                          $steps["loading"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["deleteLoadingButton"]
-                                  },
-                                  operation: 0,
-                                  value: true
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["loading"] != null &&
-                            typeof $steps["loading"] === "object" &&
-                            typeof $steps["loading"].then === "function"
-                          ) {
-                            $steps["loading"] = await $steps["loading"];
-                          }
-
-                          $steps["request"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return fetch(
-                                      "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/",
-                                      {
-                                        method: "DELETE",
-                                        credentials: "include",
-                                        headers: {
-                                          "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify({
-                                          Id: $props.feedbackId
-                                        })
-                                      }
-                                    );
-                                  }
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["request"] != null &&
-                            typeof $steps["request"] === "object" &&
-                            typeof $steps["request"].then === "function"
-                          ) {
-                            $steps["request"] = await $steps["request"];
-                          }
-
-                          $steps["updateDeleteLoadingButton"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["deleteLoadingButton"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
-                                  );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["updateDeleteLoadingButton"] != null &&
-                            typeof $steps["updateDeleteLoadingButton"] ===
-                              "object" &&
-                            typeof $steps["updateDeleteLoadingButton"].then ===
-                              "function"
-                          ) {
-                            $steps["updateDeleteLoadingButton"] = await $steps[
-                              "updateDeleteLoadingButton"
-                            ];
-                          }
-
-                          $steps["toast"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  args: [
-                                    undefined,
-                                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
-                                    "top-right",
-                                    5000
-                                  ]
-                                };
-                                return $globalActions[
-                                  "Fragment.showToast"
-                                ]?.apply(null, [...actionArgs.args]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["toast"] != null &&
-                            typeof $steps["toast"] === "object" &&
-                            typeof $steps["toast"].then === "function"
-                          ) {
-                            $steps["toast"] = await $steps["toast"];
-                          }
-
-                          $steps["close"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["dialog4", "open"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
-                                  );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["close"] != null &&
-                            typeof $steps["close"] === "object" &&
-                            typeof $steps["close"].then === "function"
-                          ) {
-                            $steps["close"] = await $steps["close"];
-                          }
-
-                          $steps["splunk"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return $$.splunkEvent({
-                                      group: "feedback",
-                                      data: {
-                                        doctor_id: $props.doctorId,
-                                        comment_id: $props.feedbackId
+                        $steps["request"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return fetch(
+                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/",
+                                    {
+                                      method: "DELETE",
+                                      credentials: "include",
+                                      headers: {
+                                        "Content-Type": "application/json"
                                       },
-                                      type: "delete_comment",
-                                      token:
-                                        "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                    });
-                                  }
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["splunk"] != null &&
-                            typeof $steps["splunk"] === "object" &&
-                            typeof $steps["splunk"].then === "function"
-                          ) {
-                            $steps["splunk"] = await $steps["splunk"];
-                          }
-                        }}
-                        startIcon={
-                          <ChevronRightIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__wCjw7
-                            )}
-                            role={"img"}
-                          />
-                        }
-                      />
-
-                      <Button
-                        children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
-                        className={classNames(
-                          "__wab_instance",
-                          sty.button__lSAmw
-                        )}
-                        color={"red"}
-                        endIcon={
-                          <ChevronLeftIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__nohY5
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        onClick={async event => {
-                          const $steps = {};
-
-                          $steps["close"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["dialog4", "open"]
-                                  },
-                                  operation: 4
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  const oldValue = $stateGet(
-                                    objRoot,
-                                    variablePath
+                                      body: JSON.stringify({
+                                        Id: $props.feedbackId
+                                      })
+                                    }
                                   );
-                                  $stateSet(objRoot, variablePath, !oldValue);
-                                  return !oldValue;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["close"] != null &&
-                            typeof $steps["close"] === "object" &&
-                            typeof $steps["close"].then === "function"
-                          ) {
-                            $steps["close"] = await $steps["close"];
-                          }
-                        }}
-                        outline={true}
-                        startIcon={
-                          <ChevronRightIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__rDkdp
-                            )}
-                            role={"img"}
-                          />
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["request"] != null &&
+                          typeof $steps["request"] === "object" &&
+                          typeof $steps["request"].then === "function"
+                        ) {
+                          $steps["request"] = await $steps["request"];
                         }
-                      />
-                    </Stack__>
-                  }
-                  className={classNames("__wab_instance", sty.dialog4)}
-                  onOpenChange={generateStateOnChangeProp($state, [
-                    "dialog4",
-                    "open"
-                  ])}
-                  open={generateStateValueProp($state, ["dialog4", "open"])}
-                  title={
+
+                        $steps["updateDeleteLoadingButton"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["deleteLoadingButton"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateDeleteLoadingButton"] != null &&
+                          typeof $steps["updateDeleteLoadingButton"] ===
+                            "object" &&
+                          typeof $steps["updateDeleteLoadingButton"].then ===
+                            "function"
+                        ) {
+                          $steps["updateDeleteLoadingButton"] = await $steps[
+                            "updateDeleteLoadingButton"
+                          ];
+                        }
+
+                        $steps["toast"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  undefined,
+                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
+                                  "top-right",
+                                  5000
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["toast"] != null &&
+                          typeof $steps["toast"] === "object" &&
+                          typeof $steps["toast"].then === "function"
+                        ) {
+                          $steps["toast"] = await $steps["toast"];
+                        }
+
+                        $steps["close"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog4", "open"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["close"] != null &&
+                          typeof $steps["close"] === "object" &&
+                          typeof $steps["close"].then === "function"
+                        ) {
+                          $steps["close"] = await $steps["close"];
+                        }
+
+                        $steps["splunk"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return $$.splunkEvent({
+                                    group: "feedback",
+                                    data: {
+                                      doctor_id: $props.doctorUserId,
+                                      comment_id: $props.feedbackId
+                                    },
+                                    type: "delete_comment",
+                                    token:
+                                      "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                  });
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["splunk"] != null &&
+                          typeof $steps["splunk"] === "object" &&
+                          typeof $steps["splunk"].then === "function"
+                        ) {
+                          $steps["splunk"] = await $steps["splunk"];
+                        }
+                      }}
+                      startIcon={
+                        <ChevronRightIcon
+                          className={classNames(projectcss.all, sty.svg__wCjw7)}
+                          role={"img"}
+                        />
+                      }
+                    />
+
+                    <Button
+                      children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__lSAmw
+                      )}
+                      color={"red"}
+                      endIcon={
+                        <ChevronLeftIcon
+                          className={classNames(projectcss.all, sty.svg__nohY5)}
+                          role={"img"}
+                        />
+                      }
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["close"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog4", "open"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["close"] != null &&
+                          typeof $steps["close"] === "object" &&
+                          typeof $steps["close"].then === "function"
+                        ) {
+                          $steps["close"] = await $steps["close"];
+                        }
+                      }}
+                      outline={true}
+                      startIcon={
+                        <ChevronRightIcon
+                          className={classNames(projectcss.all, sty.svg__rDkdp)}
+                          role={"img"}
+                        />
+                      }
+                    />
+                  </Stack__>
+                }
+                className={classNames("__wab_instance", sty.dialog4)}
+                onOpenChange={generateStateOnChangeProp($state, [
+                  "dialog4",
+                  "open"
+                ])}
+                open={generateStateValueProp($state, ["dialog4", "open"])}
+                title={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__t6Lu6
+                    )}
+                  >
+                    {
+                      "\u0622\u06cc\u0627 \u0627\u0632 \u062d\u0630\u0641 \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0647\u0633\u062a\u06cc\u062f\u061f"
+                    }
+                  </div>
+                }
+                trigger={
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__yHVaz)}
+                  >
+                    <Icon4Icon
+                      className={classNames(projectcss.all, sty.svg__ra3Wa)}
+                      role={"img"}
+                    />
+
                     <div
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__t6Lu6
+                        sty.text___9Bp8Q
                       )}
                     >
-                      {
-                        "\u0622\u06cc\u0627 \u0627\u0632 \u062d\u0630\u0641 \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0647\u0633\u062a\u06cc\u062f\u061f"
-                      }
+                      {"\u062d\u0630\u0641"}
                     </div>
-                  }
-                  trigger={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__yHVaz)}
-                    >
-                      <Icon4Icon
-                        className={classNames(projectcss.all, sty.svg__ra3Wa)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text___9Bp8Q
-                        )}
-                      >
-                        {"\u062d\u0630\u0641"}
-                      </div>
-                    </Stack__>
-                  }
-                />
-              </Stack__>
+                  </Stack__>
+                }
+              />
             ) : null}
             <Dialog
               data-plasmic-name={"dialog5"}
@@ -1203,28 +1063,20 @@ function PlasmicEditAndReport__RenderFunc(props: {
                     onClick={async event => {
                       const $steps = {};
 
-                      $steps["if10Caracter"] =
-                        $ctx.auth.isLogin && $props.commentText.length <= 10
-                          ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "error",
-                                  "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
-                                  undefined,
-                                  5000
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
+                      $steps["login"] = true
+                        ? (() => {
+                            const actionArgs = { args: [] };
+                            return $globalActions[
+                              "AuthGlobalContext.login"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
+                        : undefined;
                       if (
-                        $steps["if10Caracter"] != null &&
-                        typeof $steps["if10Caracter"] === "object" &&
-                        typeof $steps["if10Caracter"].then === "function"
+                        $steps["login"] != null &&
+                        typeof $steps["login"] === "object" &&
+                        typeof $steps["login"].then === "function"
                       ) {
-                        $steps["if10Caracter"] = await $steps["if10Caracter"];
+                        $steps["login"] = await $steps["login"];
                       }
 
                       $steps["loading"] =
@@ -1261,6 +1113,30 @@ function PlasmicEditAndReport__RenderFunc(props: {
                         typeof $steps["loading"].then === "function"
                       ) {
                         $steps["loading"] = await $steps["loading"];
+                      }
+
+                      $steps["if10Caracter"] =
+                        $ctx.auth.isLogin && $state.reportText2.value <= 10
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  "error",
+                                  "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                                  undefined,
+                                  5000
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["if10Caracter"] != null &&
+                        typeof $steps["if10Caracter"] === "object" &&
+                        typeof $steps["if10Caracter"].then === "function"
+                      ) {
+                        $steps["if10Caracter"] = await $steps["if10Caracter"];
                       }
 
                       $steps["request"] =
@@ -1434,23 +1310,6 @@ function PlasmicEditAndReport__RenderFunc(props: {
                         $steps["toast"] = await $steps["toast"];
                       }
 
-                      $steps["login"] =
-                        $ctx.auth.isLogin == false
-                          ? (() => {
-                              const actionArgs = { args: [] };
-                              return $globalActions[
-                                "AuthGlobalContext.login"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps["login"] != null &&
-                        typeof $steps["login"] === "object" &&
-                        typeof $steps["login"].then === "function"
-                      ) {
-                        $steps["login"] = await $steps["login"];
-                      }
-
                       $steps["splunk"] =
                         $state.reportText2.value.length >= 10 &&
                         $ctx.auth.isLogin
@@ -1460,7 +1319,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                                   return $$.splunkEvent({
                                     group: "feedback",
                                     data: {
-                                      doctor_id: $props.doctorId,
+                                      doctor_id: $props.doctorUserId,
                                       comment_id: $props.feedbackId,
                                       report_text: $state.reportText2.value
                                     },
@@ -1560,8 +1419,8 @@ function PlasmicEditAndReport__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  کاردنمایشنظر: [
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631",
+  اردنماشنظر: [
+    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
     "\u0633\u0647\u0646\u0642\u0637\u0647",
     "dialog3",
     "edditTextBox",
@@ -1587,7 +1446,7 @@ type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  کاردنمایشنظر: "div";
+  اردنماشنظر: "div";
   سهنقطه: typeof Popover;
   dialog3: typeof Dialog;
   edditTextBox: "textarea";
@@ -1644,8 +1503,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
     });
   };
   if (
-    nodeName ===
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+    nodeName === "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
   ) {
     func.displayName = "PlasmicEditAndReport";
   } else {
@@ -1657,7 +1515,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 export const PlasmicEditAndReport = Object.assign(
   // Top-level PlasmicEditAndReport renders the root element
   makeNodeComponent(
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
   ),
   {
     // Helper components rendering sub-elements

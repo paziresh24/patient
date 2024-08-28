@@ -14,14 +14,14 @@
 .editAndReport:global(.__wab_instance) {
   max-width: 100%;
 }
-.نامکاربر:global(.__wab_instance) {
+.ناماربر:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;
   width: 100%;
   min-width: 0;
 }
-.نامتگتاریخ {
+.نامتتارخ {
   display: flex;
   position: relative;
   flex-direction: row;
