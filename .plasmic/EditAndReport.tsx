@@ -41,7 +41,7 @@ function EditAndReport_(
   // By default, we are just piping all EditAndReportProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicEditAndReport کاردنمایشنظر={{ ref }} {...props} />;
+  return <PlasmicEditAndReport {...props} />;
 }
 
 const EditAndReport = React.forwardRef(EditAndReport_);
