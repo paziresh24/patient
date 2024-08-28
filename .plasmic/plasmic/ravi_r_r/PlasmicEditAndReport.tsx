@@ -1061,14 +1061,15 @@ function PlasmicEditAndReport__RenderFunc(props: {
                     onClick={async event => {
                       const $steps = {};
 
-                      $steps["login"] = true
-                        ? (() => {
-                            const actionArgs = { args: [] };
-                            return $globalActions[
-                              "AuthGlobalContext.login"
-                            ]?.apply(null, [...actionArgs.args]);
-                          })()
-                        : undefined;
+                      $steps["login"] =
+                        $ctx.auth.isLogin == false
+                          ? (() => {
+                              const actionArgs = { args: [] };
+                              return $globalActions[
+                                "AuthGlobalContext.login"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
                       if (
                         $steps["login"] != null &&
                         typeof $steps["login"] === "object" &&
