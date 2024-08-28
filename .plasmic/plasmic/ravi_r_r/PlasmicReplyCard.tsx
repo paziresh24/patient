@@ -85,20 +85,24 @@ export type PlasmicReplyCard__ArgsType = {
   userId?: number;
   isDoctor?: boolean;
   id?: string;
+  doctorUserId?: string;
+  doctorSlug?: string;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
   "replyText",
   "userId",
   "isDoctor",
-  "id"
+  "id",
+  "doctorUserId",
+  "doctorSlug"
 );
 
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
   editAndReport?: Flex__<typeof EditAndReport>;
-  نامکاربر?: Flex__<typeof DataFetcher>;
-  نامتگتاریخ?: Flex__<"div">;
+  ناماربر?: Flex__<typeof DataFetcher>;
+  نامتتارخ?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
@@ -110,6 +114,8 @@ export interface DefaultReplyCardProps {
   userId?: number;
   isDoctor?: boolean;
   id?: string;
+  doctorUserId?: string;
+  doctorSlug?: string;
   className?: string;
 }
 
@@ -172,6 +178,47 @@ function PlasmicReplyCard__RenderFunc(props: {
         data-plasmic-name={"editAndReport"}
         data-plasmic-override={overrides.editAndReport}
         className={classNames("__wab_instance", sty.editAndReport)}
+        commentText={(() => {
+          try {
+            return $props.replyText;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        doctorEncounter={"null"}
+        doctorSlug={(() => {
+          try {
+            return $props.doctorSlug;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        doctorUserId={(() => {
+          try {
+            return $props.doctorUserId;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        explanationOfIssue={"null"}
         feedbackId={(() => {
           try {
             return $props.id;
@@ -186,12 +233,26 @@ function PlasmicReplyCard__RenderFunc(props: {
           }
         })()}
         isReply={true}
+        qualityOfTreatment={"null"}
+        userId={(() => {
+          try {
+            return $props.userId;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
       />
 
       <DataFetcher
-        data-plasmic-name={"\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"}
-        data-plasmic-override={overrides.نامکاربر}
-        className={classNames("__wab_instance", sty.نامکاربر)}
+        data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
+        data-plasmic-override={overrides.ناماربر}
+        className={classNames("__wab_instance", sty.ناماربر)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -220,10 +281,10 @@ function PlasmicReplyCard__RenderFunc(props: {
           {$ctx => (
             <div
               data-plasmic-name={
-                "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+                "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
               }
-              data-plasmic-override={overrides.نامتگتاریخ}
-              className={classNames(projectcss.all, sty.نامتگتاریخ)}
+              data-plasmic-override={overrides.نامتتارخ}
+              className={classNames(projectcss.all, sty.نامتتارخ)}
             >
               <DataFetcher
                 data-plasmic-name={"httpRestApiFetcher"}
@@ -423,24 +484,24 @@ const PlasmicDescendants = {
   root: [
     "root",
     "editAndReport",
-    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
   editAndReport: ["editAndReport"],
-  نامکاربر: [
-    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+  ناماربر: [
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  نامتگتاریخ: [
-    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+  نامتتارخ: [
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
@@ -457,8 +518,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   editAndReport: typeof EditAndReport;
-  نامکاربر: typeof DataFetcher;
-  نامتگتاریخ: "div";
+  ناماربر: typeof DataFetcher;
+  نامتتارخ: "div";
   httpRestApiFetcher: typeof DataFetcher;
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
@@ -526,11 +587,9 @@ export const PlasmicReplyCard = Object.assign(
   {
     // Helper components rendering sub-elements
     editAndReport: makeNodeComponent("editAndReport"),
-    نامکاربر: makeNodeComponent(
-      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
-    ),
-    نامتگتاریخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
+    نامتتارخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     userAvatar2: makeNodeComponent("userAvatar2"),

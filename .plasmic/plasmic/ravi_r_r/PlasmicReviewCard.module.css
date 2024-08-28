@@ -1,4 +1,4 @@
-.کاردنمایشنظر {
+.اردنماشنظر {
   display: flex;
   position: relative;
   width: 100%;
@@ -6,7 +6,7 @@
   flex-direction: column;
   min-width: 0;
 }
-.کاردنمایشنظر > :global(.__wab_flex-container) {
+.اردنماشنظر > :global(.__wab_flex-container) {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -14,17 +14,17 @@
   margin-top: calc(0px - var(--token-W6cMLA0AZVBO));
   height: calc(100% + var(--token-W6cMLA0AZVBO));
 }
-.کاردنمایشنظر > :global(.__wab_flex-container) > *,
-.کاردنمایشنظر > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.کاردنمایشنظر > :global(.__wab_flex-container) > picture > img,
-.کاردنمایشنظر
+.اردنماشنظر > :global(.__wab_flex-container) > *,
+.اردنماشنظر > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.اردنماشنظر > :global(.__wab_flex-container) > picture > img,
+.اردنماشنظر
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
   > img {
   margin-top: var(--token-W6cMLA0AZVBO);
 }
-.نامتگتاریخ {
+.نامتتارخ {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -146,7 +146,7 @@
   font-size: var(--token-6NbVMeD6zQwn);
   display: none;
 }
-.نامکاربر:global(.__wab_instance) {
+.ناماربر:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;
@@ -228,6 +228,9 @@
 }
 .editAndReport:global(.__wab_instance) {
   max-width: 100%;
+  position: absolute;
+  left: 15px;
+  top: 19px;
 }
 .متننظر {
   display: flex;
@@ -440,7 +443,7 @@
   max-width: 100%;
   position: relative;
 }
-.نظربیشتراز1 {
+.نظربشتراز1 {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -450,7 +453,7 @@
   cursor: pointer;
   min-width: 0;
 }
-.نظربیشتراز1 > :global(.__wab_flex-container) {
+.نظربشتراز1 > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
@@ -458,10 +461,10 @@
   margin-left: calc(0px - var(--token-_c276Gs_1FIE));
   width: calc(100% + var(--token-_c276Gs_1FIE));
 }
-.نظربیشتراز1 > :global(.__wab_flex-container) > *,
-.نظربیشتراز1 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.نظربیشتراز1 > :global(.__wab_flex-container) > picture > img,
-.نظربیشتراز1
+.نظربشتراز1 > :global(.__wab_flex-container) > *,
+.نظربشتراز1 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.نظربشتراز1 > :global(.__wab_flex-container) > picture > img,
+.نظربشتراز1
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
@@ -517,7 +520,7 @@
   position: relative;
   margin-bottom: var(--token-_c276Gs_1FIE);
 }
-.لایکریپورت {
+.لارورت {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -526,7 +529,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.لایکریپورت > :global(.__wab_flex-container) {
+.لارورت > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
@@ -534,10 +537,10 @@
   margin-left: calc(0px - var(--token-Fv8-L_kN-2Ma));
   width: calc(100% + var(--token-Fv8-L_kN-2Ma));
 }
-.لایکریپورت > :global(.__wab_flex-container) > *,
-.لایکریپورت > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.لایکریپورت > :global(.__wab_flex-container) > picture > img,
-.لایکریپورت
+.لارورت > :global(.__wab_flex-container) > *,
+.لارورت > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.لارورت > :global(.__wab_flex-container) > picture > img,
+.لارورت
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
@@ -717,7 +720,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.توئیتر:global(.__wab_instance) {
+.توئتر:global(.__wab_instance) {
   max-width: 100%;
   margin: var(--token-_c276Gs_1FIE);
 }
@@ -744,7 +747,7 @@
   width: auto;
   height: 1em;
 }
-.ایتا:global(.__wab_instance) {
+.اتا:global(.__wab_instance) {
   margin: var(--token-_c276Gs_1FIE);
 }
 .svg__vLchg {
@@ -771,7 +774,7 @@
   width: auto;
   height: 1em;
 }
-.تلگرام:global(.__wab_instance) {
+.تلرام:global(.__wab_instance) {
   max-width: 100%;
   margin: var(--token-_c276Gs_1FIE);
 }
@@ -795,7 +798,7 @@
   width: auto;
   height: 1em;
 }
-.واتساپ:global(.__wab_instance) {
+.واتسا:global(.__wab_instance) {
   max-width: 100%;
   transition-property: all;
   transition-duration: 1s;
@@ -836,7 +839,7 @@
   min-width: 0;
   flex-shrink: 0;
 }
-.کپیکردن {
+.ردن {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -856,7 +859,7 @@
   align-self: center;
   min-width: 0;
 }
-.کپیلینک:global(.__wab_instance) {
+.لن:global(.__wab_instance) {
   max-width: 100%;
   width: auto;
 }
@@ -963,7 +966,7 @@
   width: auto;
   height: 1em;
 }
-.ریپلای {
+.رلا {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -1002,7 +1005,7 @@
   color: var(--token-JDvyxAtm9ONK);
   cursor: pointer;
 }
-.گرفتنریپلای:global(.__wab_instance) {
+.رفتنرلا:global(.__wab_instance) {
   width: 100%;
   max-width: 100%;
   object-fit: cover;

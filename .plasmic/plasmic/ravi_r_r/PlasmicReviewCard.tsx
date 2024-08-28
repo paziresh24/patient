@@ -145,32 +145,32 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
 );
 
 export type PlasmicReviewCard__OverridesType = {
-  کاردنمایشنظر?: Flex__<"div">;
-  نامتگتاریخ?: Flex__<"div">;
+  اردنماشنظر?: Flex__<"div">;
+  نامتتارخ?: Flex__<"div">;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
-  نامکاربر?: Flex__<typeof DataFetcher>;
+  ناماربر?: Flex__<typeof DataFetcher>;
   chip?: Flex__<typeof Chip>;
   editAndReport?: Flex__<typeof EditAndReport>;
   متننظر?: Flex__<"div">;
   dialog2?: Flex__<typeof Dialog>;
-  نظربیشتراز1?: Flex__<"div">;
-  لایکریپورت?: Flex__<"div">;
+  نظربشتراز1?: Flex__<"div">;
+  لارورت?: Flex__<"div">;
   dialog6?: Flex__<typeof Dialog>;
   سوشالها?: Flex__<"div">;
-  توئیتر?: Flex__<typeof Button>;
-  ایتا?: Flex__<typeof Button>;
-  تلگرام?: Flex__<typeof Button>;
-  واتساپ?: Flex__<typeof Button>;
-  کپیکردن?: Flex__<"div">;
-  کپیلینک?: Flex__<typeof Button>;
+  توئتر?: Flex__<typeof Button>;
+  اتا?: Flex__<typeof Button>;
+  تلرام?: Flex__<typeof Button>;
+  واتسا?: Flex__<typeof Button>;
+  ردن?: Flex__<"div">;
+  لن?: Flex__<typeof Button>;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
   button?: Flex__<typeof Button>;
-  ریپلای?: Flex__<"div">;
+  رلا?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
-  گرفتنریپلای?: Flex__<typeof DataFetcher>;
+  رفتنرلا?: Flex__<typeof DataFetcher>;
 };
 
 export interface DefaultReviewCardProps {
@@ -342,9 +342,9 @@ function PlasmicReviewCard__RenderFunc(props: {
     <Stack__
       as={"div"}
       data-plasmic-name={
-        "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+        "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
       }
-      data-plasmic-override={overrides.کاردنمایشنظر}
+      data-plasmic-override={overrides.اردنماشنظر}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       hasGap={true}
@@ -355,9 +355,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.کاردنمایشنظر,
+        sty.اردنماشنظر,
         {
-          [sty.کاردنمایشنظرraviExpFroDrakam]: hasVariant(
+          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
@@ -367,11 +367,9 @@ function PlasmicReviewCard__RenderFunc(props: {
       dir={"rtl"}
     >
       <div
-        data-plasmic-name={
-          "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
-        }
-        data-plasmic-override={overrides.نامتگتاریخ}
-        className={classNames(projectcss.all, sty.نامتگتاریخ)}
+        data-plasmic-name={"\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"}
+        data-plasmic-override={overrides.نامتتارخ}
+        className={classNames(projectcss.all, sty.نامتتارخ)}
       >
         <div
           className={classNames(projectcss.all, sty.freeBox__n7A1U)}
@@ -545,11 +543,9 @@ function PlasmicReviewCard__RenderFunc(props: {
               </React.Fragment>
             </div>
             <DataFetcher
-              data-plasmic-name={
-                "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
-              }
-              data-plasmic-override={overrides.نامکاربر}
-              className={classNames("__wab_instance", sty.نامکاربر)}
+              data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
+              data-plasmic-override={overrides.ناماربر}
+              className={classNames("__wab_instance", sty.ناماربر)}
               dataName={"fetchedData"}
               errorDisplay={null}
               errorName={"fetchError"}
@@ -1180,11 +1176,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                     <Stack__
                       as={"div"}
                       data-plasmic-name={
-                        "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+                        "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
                       }
-                      data-plasmic-override={overrides.نظربیشتراز1}
+                      data-plasmic-override={overrides.نظربشتراز1}
                       hasGap={true}
-                      className={classNames(projectcss.all, sty.نظربیشتراز1)}
+                      className={classNames(projectcss.all, sty.نظربشتراز1)}
                     >
                       <RepliesIcon
                         className={classNames(projectcss.all, sty.svg___34YvM)}
@@ -1212,12 +1208,10 @@ function PlasmicReviewCard__RenderFunc(props: {
       </DataFetcher>
       <Stack__
         as={"div"}
-        data-plasmic-name={
-          "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
-        }
-        data-plasmic-override={overrides.لایکریپورت}
+        data-plasmic-name={"\u0644\u0627\u0631\u0648\u0631\u062a"}
+        data-plasmic-override={overrides.لارورت}
         hasGap={true}
-        className={classNames(projectcss.all, sty.لایکریپورت)}
+        className={classNames(projectcss.all, sty.لارورت)}
       >
         {(() => {
           try {
@@ -1622,10 +1616,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         className={classNames(projectcss.all, sty.سوشالها)}
                       >
                         <Button
-                          data-plasmic-name={
-                            "\u062a\u0648\u0626\u06cc\u062a\u0631"
-                          }
-                          data-plasmic-override={overrides.توئیتر}
+                          data-plasmic-name={"\u062a\u0648\u0626\u062a\u0631"}
+                          data-plasmic-override={overrides.توئتر}
                           children2={
                             <React.Fragment>
                               <Icon17Icon2
@@ -1647,7 +1639,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.توئیتر)}
+                          className={classNames("__wab_instance", sty.توئتر)}
                           color={"blue"}
                           link={(() => {
                             try {
@@ -1699,8 +1691,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={"\u0627\u06cc\u062a\u0627"}
-                          data-plasmic-override={overrides.ایتا}
+                          data-plasmic-name={"\u0627\u062a\u0627"}
+                          data-plasmic-override={overrides.اتا}
                           children2={
                             <React.Fragment>
                               <EitaaIcon
@@ -1722,7 +1714,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.ایتا)}
+                          className={classNames("__wab_instance", sty.اتا)}
                           color={"orange"}
                           link={(() => {
                             try {
@@ -1774,10 +1766,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={
-                            "\u062a\u0644\u06af\u0631\u0627\u0645"
-                          }
-                          data-plasmic-override={overrides.تلگرام}
+                          data-plasmic-name={"\u062a\u0644\u0631\u0627\u0645"}
+                          data-plasmic-override={overrides.تلرام}
                           children2={
                             <React.Fragment>
                               <Icon13Icon
@@ -1799,7 +1789,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.تلگرام)}
+                          className={classNames("__wab_instance", sty.تلرام)}
                           link={(() => {
                             try {
                               return `https://telegram.me/share/url?url=${$ctx.fetchedData.url}`;
@@ -1850,10 +1840,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                         />
 
                         <Button
-                          data-plasmic-name={
-                            "\u0648\u0627\u062a\u0633\u0627\u067e"
-                          }
-                          data-plasmic-override={overrides.واتساپ}
+                          data-plasmic-name={"\u0648\u0627\u062a\u0633\u0627"}
+                          data-plasmic-override={overrides.واتسا}
                           children2={
                             <React.Fragment>
                               <Icon16Icon
@@ -1875,7 +1863,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.واتساپ)}
+                          className={classNames("__wab_instance", sty.واتسا)}
                           color={"green"}
                           link={(() => {
                             try {
@@ -1934,11 +1922,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                       />
 
                       <div
-                        data-plasmic-name={
-                          "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"
-                        }
-                        data-plasmic-override={overrides.کپیکردن}
-                        className={classNames(projectcss.all, sty.کپیکردن)}
+                        data-plasmic-name={"\u0631\u062f\u0646"}
+                        data-plasmic-override={overrides.ردن}
+                        className={classNames(projectcss.all, sty.ردن)}
                       >
                         <div
                           className={classNames(
@@ -1964,10 +1950,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                           </React.Fragment>
                         </div>
                         <Button
-                          data-plasmic-name={
-                            "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
-                          }
-                          data-plasmic-override={overrides.کپیلینک}
+                          data-plasmic-name={"\u0644\u0646"}
+                          data-plasmic-override={overrides.لن}
                           children2={
                             <React.Fragment>
                               <Icon15Icon
@@ -1989,7 +1973,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                               </div>
                             </React.Fragment>
                           }
-                          className={classNames("__wab_instance", sty.کپیلینک)}
+                          className={classNames("__wab_instance", sty.لن)}
                           color={"softBlue"}
                           onClick={async event => {
                             const $steps = {};
@@ -2446,9 +2430,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         />
       </Stack__>
       <div
-        data-plasmic-name={"\u0631\u06cc\u067e\u0644\u0627\u06cc"}
-        data-plasmic-override={overrides.ریپلای}
-        className={classNames(projectcss.all, sty.ریپلای)}
+        data-plasmic-name={"\u0631\u0644\u0627"}
+        data-plasmic-override={overrides.رلا}
+        className={classNames(projectcss.all, sty.رلا)}
       >
         <textarea
           data-plasmic-name={"replyText"}
@@ -2685,11 +2669,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         </div>
       </div>
       <DataFetcher
-        data-plasmic-name={
-          "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
-        }
-        data-plasmic-override={overrides.گرفتنریپلای}
-        className={classNames("__wab_instance", sty.گرفتنریپلای)}
+        data-plasmic-name={"\u0631\u0641\u062a\u0646\u0631\u0644\u0627"}
+        data-plasmic-override={overrides.رفتنرلا}
+        className={classNames("__wab_instance", sty.رفتنرلا)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -2731,6 +2713,32 @@ function PlasmicReviewCard__RenderFunc(props: {
             })() ? (
               <ReplyCard
                 className={classNames("__wab_instance", sty.replyCard__ardMi)}
+                doctorSlug={(() => {
+                  try {
+                    return $props.doctorSlug;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorUserId={(() => {
+                  try {
+                    return $props.doctorUserId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 id={(() => {
                   try {
                     return $ctx.fetchedData.list[0].Id;
@@ -2795,65 +2803,63 @@ function PlasmicReviewCard__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  کاردنمایشنظر: [
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631",
-    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+  اردنماشنظر: [
+    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
     "userAvatar",
-    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "chip",
     "editAndReport",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
     "dialog2",
-    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
-    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
+    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321",
+    "\u0644\u0627\u0631\u0648\u0631\u062a",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u06cc\u062a\u0631",
-    "\u0627\u06cc\u062a\u0627",
-    "\u062a\u0644\u06af\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627\u067e",
-    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
-    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646",
     "dialog",
     "reportText",
     "button",
-    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
+    "\u0631\u0644\u0627",
     "replyText",
     "multilineTextInput",
-    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+    "\u0631\u0641\u062a\u0646\u0631\u0644\u0627"
   ],
-  نامتگتاریخ: [
-    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+  نامتتارخ: [
+    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "userAvatar2",
     "userAvatar",
-    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "chip",
     "editAndReport"
   ],
   userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"],
-  نامکاربر: ["\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"],
+  ناماربر: ["\u0646\u0627\u0645\u0627\u0631\u0628\u0631"],
   chip: ["chip"],
   editAndReport: ["editAndReport"],
   متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
   dialog2: [
     "dialog2",
-    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
   ],
-  نظربیشتراز1: [
-    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
-  ],
-  لایکریپورت: [
-    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
+  نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
+  لارورت: [
+    "\u0644\u0627\u0631\u0648\u0631\u062a",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u06cc\u062a\u0631",
-    "\u0627\u06cc\u062a\u0627",
-    "\u062a\u0644\u06af\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627\u067e",
-    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
-    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9",
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646",
     "dialog",
     "reportText",
     "button"
@@ -2861,73 +2867,64 @@ const PlasmicDescendants = {
   dialog6: [
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u06cc\u062a\u0631",
-    "\u0627\u06cc\u062a\u0627",
-    "\u062a\u0644\u06af\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627\u067e",
-    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
-    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627",
+    "\u0631\u062f\u0646",
+    "\u0644\u0646"
   ],
   سوشالها: [
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u06cc\u062a\u0631",
-    "\u0627\u06cc\u062a\u0627",
-    "\u062a\u0644\u06af\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627\u067e"
+    "\u062a\u0648\u0626\u062a\u0631",
+    "\u0627\u062a\u0627",
+    "\u062a\u0644\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627"
   ],
-  توئیتر: ["\u062a\u0648\u0626\u06cc\u062a\u0631"],
-  ایتا: ["\u0627\u06cc\u062a\u0627"],
-  تلگرام: ["\u062a\u0644\u06af\u0631\u0627\u0645"],
-  واتساپ: ["\u0648\u0627\u062a\u0633\u0627\u067e"],
-  کپیکردن: [
-    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
-    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
-  ],
-  کپیلینک: ["\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"],
+  توئتر: ["\u062a\u0648\u0626\u062a\u0631"],
+  اتا: ["\u0627\u062a\u0627"],
+  تلرام: ["\u062a\u0644\u0631\u0627\u0645"],
+  واتسا: ["\u0648\u0627\u062a\u0633\u0627"],
+  ردن: ["\u0631\u062f\u0646", "\u0644\u0646"],
+  لن: ["\u0644\u0646"],
   dialog: ["dialog", "reportText", "button"],
   reportText: ["reportText"],
   button: ["button"],
-  ریپلای: [
-    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
-    "replyText",
-    "multilineTextInput"
-  ],
+  رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"],
-  گرفتنریپلای: [
-    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
-  ]
+  رفتنرلا: ["\u0631\u0641\u062a\u0646\u0631\u0644\u0627"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  کاردنمایشنظر: "div";
-  نامتگتاریخ: "div";
+  اردنماشنظر: "div";
+  نامتتارخ: "div";
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
-  نامکاربر: typeof DataFetcher;
+  ناماربر: typeof DataFetcher;
   chip: typeof Chip;
   editAndReport: typeof EditAndReport;
   متننظر: "div";
   dialog2: typeof Dialog;
-  نظربیشتراز1: "div";
-  لایکریپورت: "div";
+  نظربشتراز1: "div";
+  لارورت: "div";
   dialog6: typeof Dialog;
   سوشالها: "div";
-  توئیتر: typeof Button;
-  ایتا: typeof Button;
-  تلگرام: typeof Button;
-  واتساپ: typeof Button;
-  کپیکردن: "div";
-  کپیلینک: typeof Button;
+  توئتر: typeof Button;
+  اتا: typeof Button;
+  تلرام: typeof Button;
+  واتسا: typeof Button;
+  ردن: "div";
+  لن: typeof Button;
   dialog: typeof Dialog;
   reportText: "textarea";
   button: typeof Button;
-  ریپلای: "div";
+  رلا: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
-  گرفتنریپلای: typeof DataFetcher;
+  رفتنرلا: typeof DataFetcher;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2978,8 +2975,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
     });
   };
   if (
-    nodeName ===
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+    nodeName === "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
   ) {
     func.displayName = "PlasmicReviewCard";
   } else {
@@ -2991,45 +2987,39 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 export const PlasmicReviewCard = Object.assign(
   // Top-level PlasmicReviewCard renders the root element
   makeNodeComponent(
-    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
+    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
   ),
   {
     // Helper components rendering sub-elements
-    نامتگتاریخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+    نامتتارخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
     ),
     userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
-    نامکاربر: makeNodeComponent(
-      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
-    ),
+    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
     chip: makeNodeComponent("chip"),
     editAndReport: makeNodeComponent("editAndReport"),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
     dialog2: makeNodeComponent("dialog2"),
-    نظربیشتراز1: makeNodeComponent(
-      "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+    نظربشتراز1: makeNodeComponent(
+      "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
     ),
-    لایکریپورت: makeNodeComponent(
-      "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
-    ),
+    لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
     dialog6: makeNodeComponent("dialog6"),
     سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
-    توئیتر: makeNodeComponent("\u062a\u0648\u0626\u06cc\u062a\u0631"),
-    ایتا: makeNodeComponent("\u0627\u06cc\u062a\u0627"),
-    تلگرام: makeNodeComponent("\u062a\u0644\u06af\u0631\u0627\u0645"),
-    واتساپ: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627\u067e"),
-    کپیکردن: makeNodeComponent("\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"),
-    کپیلینک: makeNodeComponent("\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"),
+    توئتر: makeNodeComponent("\u062a\u0648\u0626\u062a\u0631"),
+    اتا: makeNodeComponent("\u0627\u062a\u0627"),
+    تلرام: makeNodeComponent("\u062a\u0644\u0631\u0627\u0645"),
+    واتسا: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627"),
+    ردن: makeNodeComponent("\u0631\u062f\u0646"),
+    لن: makeNodeComponent("\u0644\u0646"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
     button: makeNodeComponent("button"),
-    ریپلای: makeNodeComponent("\u0631\u06cc\u067e\u0644\u0627\u06cc"),
+    رلا: makeNodeComponent("\u0631\u0644\u0627"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
-    گرفتنریپلای: makeNodeComponent(
-      "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
-    ),
+    رفتنرلا: makeNodeComponent("\u0631\u0641\u062a\u0646\u0631\u0644\u0627"),
 
     // Metadata about props expected for PlasmicReviewCard
     internalVariantProps: PlasmicReviewCard__VariantProps,
