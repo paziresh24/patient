@@ -17,6 +17,7 @@ import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
 const { publicRuntimeConfig } = config();
 import ITOLogo from '../../assets/ITOLogo.png';
+import GoogleIcon from '../../assets/google.svg';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 interface MobileNumberProps {
   title?: string;
@@ -35,6 +36,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const customize = useCustomize(state => state.customize);
   const [oauthLoading, setOauthLoading] = useState(false);
   const enableOauthLogin = useFeatureIsOn('aaa:enable-oauth-login');
+  const university = useCustomize(state => state.customize?.partnerKey);
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -86,6 +88,25 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
+      {Intl.DateTimeFormat().resolvedOptions().timeZone !== 'Asia/Tehran' && !university && (
+        <>
+          <Divider />
+          <Button
+            loading={oauthLoading}
+            icon={<img src={GoogleIcon.src} className="h-6 w-7" />}
+            variant="secondary"
+            onClick={() => {
+              setOauthLoading(true);
+              location.assign(
+                'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=google&state=' +
+                  encodeURI(`${window.location.pathname}${window.location.search}`),
+              );
+            }}
+          >
+            ورود از طریق گوگل
+          </Button>
+        </>
+      )}
       {(customize.oauth || enableOauthLogin) && (
         <>
           <Divider />
