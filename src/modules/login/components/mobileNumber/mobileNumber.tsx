@@ -33,10 +33,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const register = useRegister();
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
-  const customize = useCustomize(state => state.customize);
   const [oauthLoading, setOauthLoading] = useState(false);
-  const enableOauthLogin = useFeatureIsOn('aaa:enable-oauth-login');
-  const university = useCustomize(state => state.customize?.partnerKey);
+  const showGoogleLogin = useFeatureIsOn('aaa:google-login-button');
+  const showOidcLogin = useFeatureIsOn('aaa:oidc-login-button');
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -88,43 +87,42 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
-      {Intl.DateTimeFormat().resolvedOptions().timeZone !== 'Asia/Tehran' && !university && (
-        <>
-          <Divider />
-          <Button
-            loading={oauthLoading}
-            icon={<img src={GoogleIcon.src} className="h-6 w-7" />}
-            variant="secondary"
-            onClick={() => {
-              setOauthLoading(true);
-              location.assign(
-                'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=google&state=' +
-                  encodeURI(`${window.location.pathname}${window.location.search}`),
-              );
-            }}
-          >
-            ورود از طریق گوگل
-          </Button>
-        </>
-      )}
-      {(customize.oauth || enableOauthLogin) && (
-        <>
-          <Divider />
-          <Button
-            loading={oauthLoading}
-            icon={<img src={ITOLogo.src} className="h-6 w-7" />}
-            variant="secondary"
-            onClick={() => {
-              setOauthLoading(true);
-              location.assign(
-                'https://auth.paziresh24.com/oauth/login?redirect_url=' +
-                  encodeURI(`${window.location.origin}/login?redirect_url=${window.location.href}`),
-              );
-            }}
-          >
-            ورود از طریق دولت من
-          </Button>
-        </>
+      {(showOidcLogin || showGoogleLogin) && (
+        <div className="flex flex-col !mt-3 gap-2">
+          <Divider className="mb-1" />
+          {showOidcLogin && (
+            <Button
+              loading={oauthLoading}
+              icon={<img src={ITOLogo.src} className="h-6 w-7" />}
+              variant="secondary"
+              onClick={() => {
+                setOauthLoading(true);
+                location.assign(
+                  'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=oidc&state=' +
+                    encodeURI(`${window.location.pathname}${window.location.search}`),
+                );
+              }}
+            >
+              ورود از طریق دولت من
+            </Button>
+          )}
+          {showGoogleLogin && (
+            <Button
+              loading={oauthLoading}
+              icon={<img src={GoogleIcon.src} className="h-6 w-7" />}
+              variant="secondary"
+              onClick={() => {
+                setOauthLoading(true);
+                location.assign(
+                  'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=google&state=' +
+                    encodeURI(`${window.location.pathname}${window.location.search}`),
+                );
+              }}
+            >
+              ورود از طریق گوگل
+            </Button>
+          )}
+        </div>
       )}
 
       <Text align="center" fontWeight="medium" className="leading-5 text-[0.7rem] md:text-xs">
