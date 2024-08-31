@@ -1,5 +1,4 @@
 import { clinicClient } from '@/common/apis/client';
-import axios from 'axios';
 import { removeCookies } from 'cookies-next';
 import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
@@ -88,6 +87,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   logout: () => {
     removeCookies('certificate');
     removeCookies('token');
+    clinicClient.get('/logout');
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       user_id: undefined,
@@ -97,11 +97,5 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       info: {},
       isLogin: false,
     }));
-    try {
-      clinicClient.get('/logout');
-      axios.get('https://users.paziresh24.com/webhook/logout', { withCredentials: true });
-    } catch (error) {
-      console.error(error);
-    }
   },
 }));

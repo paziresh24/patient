@@ -78,7 +78,6 @@ function MyApp(props: AppProps) {
       ...growthbook.getAttributes(),
       url: location.href,
       host: location.host,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
   }, [asPath]);
 
