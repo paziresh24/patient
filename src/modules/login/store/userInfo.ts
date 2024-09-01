@@ -1,6 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import axios from 'axios';
-import { removeCookies } from 'cookies-next';
+import { getCookie, removeCookies } from 'cookies-next';
 import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
 
@@ -36,6 +36,7 @@ export type UserInfo = {
   insurance_id?: string;
   father_name?: string;
   birth_date?: string;
+  email?: string;
   provider?: {
     job_title?: 'doctor';
     slug?: string;
@@ -60,7 +61,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       return {
         info: {
           ...info,
-          cell: info.cell?.startsWith('0') ? info.cell : `0${info.cell}`,
+          cell: info.cell,
           is_foreigner: info.is_foreigner == '1',
         },
         isLogin: true,
@@ -98,8 +99,18 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       isLogin: false,
     }));
     try {
-      clinicClient.get('/logout');
-      axios.get('https://users.paziresh24.com/webhook/logout', { withCredentials: true });
+      axios
+        .get('https://users.paziresh24.com/webhook/logout', {
+          withCredentials: true,
+          ...(getCookie('token') && {
+            headers: {
+              Authorization: 'Bearer ' + getCookie('token'),
+            },
+          }),
+        })
+        .then(() => {
+          clinicClient.get('/logout');
+        });
     } catch (error) {
       console.error(error);
     }

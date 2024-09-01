@@ -33,9 +33,11 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const register = useRegister();
   const resetPassword = useResetPassword();
   const [isFieldError, setIsFieldError] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState(false);
+  const [googleOauthLoading, setGoogleOauthLoading] = useState(false);
+  const [oidcOauthLoading, setOidcOauthLoading] = useState(false);
   const showGoogleLogin = useFeatureIsOn('aaa:google-login-button');
   const showOidcLogin = useFeatureIsOn('aaa:oidc-login-button');
+  const university = useCustomize(state => state.customize?.partnerKey);
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -92,14 +94,18 @@ export const MobileNumber = (props: MobileNumberProps) => {
           <Divider className="mb-1" />
           {showOidcLogin && (
             <Button
-              loading={oauthLoading}
+              loading={oidcOauthLoading}
               icon={<img src={ITOLogo.src} className="h-6 w-7" />}
               variant="secondary"
               onClick={() => {
-                setOauthLoading(true);
+                setOidcOauthLoading(true);
                 location.assign(
-                  'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=oidc&state=' +
-                    encodeURI(`${window.location.pathname}${window.location.search}`),
+                  `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
+                    university ? '?university=true' : ''
+                  }&response_type=code&scope=openid&kc_idp_hint=oidc&state=` +
+                    encodeURI(
+                      `${window.location?.origin}/login?redirect_url=${encodeURI(`${window.location.pathname}${window.location.search}`)}`,
+                    ),
                 );
               }}
             >
@@ -108,14 +114,18 @@ export const MobileNumber = (props: MobileNumberProps) => {
           )}
           {showGoogleLogin && (
             <Button
-              loading={oauthLoading}
+              loading={googleOauthLoading}
               icon={<img src={GoogleIcon.src} className="h-6 w-7" />}
               variant="secondary"
               onClick={() => {
-                setOauthLoading(true);
+                setGoogleOauthLoading(true);
                 location.assign(
-                  'https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/mostafa&response_type=code&scope=openid&kc_idp_hint=google&state=' +
-                    encodeURI(`${window.location.pathname}${window.location.search}`),
+                  `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
+                    university ? '?university=true' : ''
+                  }&response_type=code&scope=openid&kc_idp_hint=google&state=` +
+                    encodeURI(
+                      `${window.location?.origin}/login?redirect_url=${encodeURI(`${window.location.pathname}${window.location.search}`)}`,
+                    ),
                 );
               }}
             >

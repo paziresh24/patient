@@ -39,10 +39,10 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!user.cell && !isUserPending) {
+    if (!user?.id && !isUserPending) {
       router.replace(`/login?redirect_url=${asPath}`);
     }
-    if (user.id) {
+    if (user?.id) {
       splunkInstance('dashboard').sendEvent({
         group: 'dashboard',
         type: 'dashboard_page_load',

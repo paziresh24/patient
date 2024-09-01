@@ -54,7 +54,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
                     </Text>
                     <EditIcon className="w-5 h-5" />
                   </div>
-                  <Text fontSize="sm">{userInfo.cell}</Text>
+                  <Text fontSize="sm">{userInfo.cell ? `0${userInfo.cell}` : userInfo.email}</Text>
                 </>
               )}
             </div>
