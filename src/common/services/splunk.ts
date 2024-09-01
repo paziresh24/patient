@@ -2,7 +2,7 @@ import { splunk } from '@paziresh24/splunk-event';
 import { getCookie } from 'cookies-next';
 import { isPWA } from '../utils/isPwa';
 
-type Index = 'doctor-profile' | 'search' | 'center-profile' | 'booking' | 'error' | 'dashboard' | 'cwv';
+type Index = 'doctor-profile' | 'rokhnama' | 'search' | 'center-profile' | 'booking' | 'error' | 'dashboard' | 'cwv';
 
 export const splunkInstance = (index: Index) => {
   switch (index) {
@@ -10,6 +10,17 @@ export const splunkInstance = (index: Index) => {
       return splunk.create({
         baseUrl: 'https://p24splk.paziresh24.com',
         token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
+        constant: {
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
+          terminal_id: getCookie('terminal_id'),
+          is_application: isPWA(),
+        },
+      });
+    }
+    case 'rokhnama': {
+      return splunk.create({
+        baseUrl: 'https://slpunk-rokhnama.paziresh24.com',
+        token: '5c2a7141-bbfc-41c1-8e92-5c0c924b9125',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),

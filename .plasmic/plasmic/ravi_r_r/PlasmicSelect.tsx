@@ -126,6 +126,12 @@ export type PlasmicSelect__ArgsType = {
   "aria-labelledby"?: string;
   options?: any;
   onChange?: (value: string) => void;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 };
 type ArgPropType = keyof PlasmicSelect__ArgsType;
 export const PlasmicSelect__ArgProps = new Array<ArgPropType>(
@@ -137,7 +143,13 @@ export const PlasmicSelect__ArgProps = new Array<ArgPropType>(
   "aria-label",
   "aria-labelledby",
   "options",
-  "onChange"
+  "onChange",
+  "aria-label",
+  "aria-labelledby",
+  "aria-label",
+  "aria-labelledby",
+  "aria-label",
+  "aria-labelledby"
 );
 
 export type PlasmicSelect__OverridesType = {
@@ -153,6 +165,12 @@ export interface DefaultSelectProps extends pp.BaseSelectProps {
   "aria-label"?: string;
   "aria-labelledby"?: string;
   options?: any;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
   color?: SingleChoiceArg<
     | "softBlue"
     | "softCyan"

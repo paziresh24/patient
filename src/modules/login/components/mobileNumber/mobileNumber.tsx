@@ -17,7 +17,8 @@ import Divider from '@/common/components/atom/divider';
 import useCustomize from '@/common/hooks/useCustomize';
 const { publicRuntimeConfig } = config();
 import ITOLogo from '../../assets/ITOLogo.png';
-import GoogleIcon from '../../assets/google.svg';
+import GoogleLogo from '../../assets/google.svg';
+
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 interface MobileNumberProps {
   title?: string;
@@ -115,7 +116,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           {showGoogleLogin && (
             <Button
               loading={googleOauthLoading}
-              icon={<img src={GoogleIcon.src} className="h-6 w-7" />}
+              icon={<img src={GoogleLogo.src} className="h-6 w-7" />}
               variant="secondary"
               onClick={() => {
                 setGoogleOauthLoading(true);

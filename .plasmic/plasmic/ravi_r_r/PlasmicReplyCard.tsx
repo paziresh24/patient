@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
@@ -83,16 +84,23 @@ export type PlasmicReplyCard__ArgsType = {
   replyText?: string;
   userId?: number;
   isDoctor?: boolean;
+  id?: string;
+  doctorUserId?: string;
+  doctorSlug?: string;
 };
 type ArgPropType = keyof PlasmicReplyCard__ArgsType;
 export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
   "replyText",
   "userId",
-  "isDoctor"
+  "isDoctor",
+  "id",
+  "doctorUserId",
+  "doctorSlug"
 );
 
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
+  editAndReport?: Flex__<typeof EditAndReport>;
   ناماربر?: Flex__<typeof DataFetcher>;
   نامتتارخ?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
@@ -105,6 +113,9 @@ export interface DefaultReplyCardProps {
   replyText?: string;
   userId?: number;
   isDoctor?: boolean;
+  id?: string;
+  doctorUserId?: string;
+  doctorSlug?: string;
   className?: string;
 }
 
@@ -163,6 +174,81 @@ function PlasmicReplyCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
+      <EditAndReport
+        data-plasmic-name={"editAndReport"}
+        data-plasmic-override={overrides.editAndReport}
+        className={classNames("__wab_instance", sty.editAndReport)}
+        commentText={(() => {
+          try {
+            return $props.replyText;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        doctorEncounter={"null"}
+        doctorSlug={(() => {
+          try {
+            return $props.doctorSlug;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        doctorUserId={(() => {
+          try {
+            return $props.doctorUserId;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        explanationOfIssue={"null"}
+        feedbackId={(() => {
+          try {
+            return $props.id;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        isReply={true}
+        qualityOfTreatment={"null"}
+        userId={(() => {
+          try {
+            return $props.userId;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+      />
+
       <DataFetcher
         data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
         data-plasmic-override={overrides.ناماربر}
@@ -397,6 +483,7 @@ function PlasmicReplyCard__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "editAndReport",
     "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
     "httpRestApiFetcher",
@@ -404,6 +491,7 @@ const PlasmicDescendants = {
     "userAvatar",
     "chip"
   ],
+  editAndReport: ["editAndReport"],
   ناماربر: [
     "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
@@ -429,6 +517,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  editAndReport: typeof EditAndReport;
   ناماربر: typeof DataFetcher;
   نامتتارخ: "div";
   httpRestApiFetcher: typeof DataFetcher;
@@ -497,6 +586,7 @@ export const PlasmicReplyCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    editAndReport: makeNodeComponent("editAndReport"),
     ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
     نامتتارخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"

@@ -87,8 +87,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     }));
   },
   logout: () => {
-    removeCookies('certificate');
-    removeCookies('token');
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       user_id: undefined,
@@ -114,5 +112,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     } catch (error) {
       console.error(error);
     }
+    removeCookies('certificate');
+    removeCookies('token');
   },
 }));

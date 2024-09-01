@@ -11,6 +11,9 @@
   border-radius: 5px;
   padding: var(--token-Fv8-L_kN-2Ma);
 }
+.editAndReport:global(.__wab_instance) {
+  max-width: 100%;
+}
 .ناماربر:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
