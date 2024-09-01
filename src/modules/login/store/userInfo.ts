@@ -99,7 +99,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     try {
       axios
         .get('https://users.paziresh24.com/webhook/logout', {
-          withCredentials: true,
+          withCredentials: !getCookie('token'),
           ...(getCookie('token') && {
             headers: {
               Authorization: 'Bearer ' + getCookie('token'),
