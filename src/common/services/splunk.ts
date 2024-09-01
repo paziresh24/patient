@@ -17,7 +17,7 @@ export const splunkInstance = (index: Index) => {
         },
       });
     }
-   case 'rokhnama': {
+    case 'rokhnama': {
       return splunk.create({
         baseUrl: 'https://slpunk-rokhnama.paziresh24.com',
         token: '5c2a7141-bbfc-41c1-8e92-5c0c924b9125',

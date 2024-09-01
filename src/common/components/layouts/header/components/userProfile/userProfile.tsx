@@ -180,7 +180,7 @@ export const UserProfile = () => {
                           </Text>
                           <EditIcon className="w-5 h-5" />
                         </div>
-                        <Text fontSize="xs">{userInfo.cell}</Text>
+                        <Text fontSize="xs">{userInfo.cell ? `0${userInfo.cell}` : userInfo.email}</Text>
                       </>
                     )}
                   </div>

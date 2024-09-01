@@ -45,7 +45,7 @@ export const useBooking = () => {
       ...(user.father_name && { father_name: user.father_name }),
       ...(user.birth_date && { birth_date: user.birth_date }),
       ...(user.gender && { gender: user.gender }),
-      cell: user.cell,
+      cell: user.cell ? `0${user.cell}` : user.cell,
       selected_user_id: user.id,
       is_foreigner: user.is_foreigner,
       ...(user.messengerType && { online_channel: user.messengerType }),
@@ -53,7 +53,7 @@ export const useBooking = () => {
       ...(user.insurance_id && { insurance_id: user.insurance_id }),
       ...(user.insurance_number && { insurance_number: user.insurance_number }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
-      ...(user.country_code_id && { cell_country_prefix: user.country_code_id }),
+      ...(!user.cell && { cell_country_prefix: 1 }),
     });
 
     if (data.status === ClinicStatus.SUCCESS && onSuccess) return onSuccess(data);

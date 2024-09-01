@@ -20,7 +20,8 @@ import Loading from '@/common/components/atom/loading/loading';
 interface UserCardProps {
   name: string;
   family: string;
-  cell: string;
+  cell?: string;
+  email?: string;
   nationalCode: string;
   userId: string;
   gender: string;
@@ -50,6 +51,7 @@ export const UserCard = (props: UserCardProps) => {
     name,
     family,
     cell,
+    email,
     nationalCode,
     isForeigner,
     gender,
@@ -133,7 +135,7 @@ export const UserCard = (props: UserCardProps) => {
   const selectUser = (
     <Select
       title={`${name} ${family}`}
-      subTitle={cell}
+      subTitle={cell ? cell : email}
       selected={select}
       onSelect={() => !loading && handleSelect()}
       actionText="ویرایش"
