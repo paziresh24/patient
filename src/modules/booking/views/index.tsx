@@ -46,7 +46,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { CENTERS } from '@/common/types/centers';
 
 // Global Store
-import { UserInfo } from '@/modules/login/store/userInfo';
+import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 
 // Types
 import { useGetNationalCodeConfirmation } from '@/common/apis/services/booking/getNationalCodeConfirmation';
@@ -130,6 +130,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
+  const isLogin = useUserInfoStore(state => state.isLogin);
+
   const [timeId, setTimeId] = useState('');
   const [selectedTime, setSelectedTime] = useState(0);
   const symptomsAutoComplete = useSymptoms();
@@ -482,6 +484,22 @@ const BookingSteps = (props: BookingStepsProps) => {
     });
     location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
   };
+
+  useEffect(() => {
+    if (isLogin && step === 'SELECT_USER' && center?.id && service?.id) {
+      splunkInstance('booking-v2').sendEvent({
+        group: 'booking',
+        type: 'choose-sub-user',
+        event: {
+          data: {
+            center_id: center.id,
+            service_id: service.id,
+            slug,
+          },
+        },
+      });
+    }
+  }, [isLogin, step, center, service, slug]);
 
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
