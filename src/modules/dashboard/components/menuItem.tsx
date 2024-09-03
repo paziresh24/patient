@@ -18,9 +18,21 @@ interface MenuItemProps {
   type?: 'parent' | 'children';
   pattern?: string;
   onEvent?: (label: string) => void;
+  unread?: number;
 }
 
-export const MenuItem = ({ name, icon, button, link, onEvent, subMenu, className, type = 'parent', pattern = '' }: MenuItemProps) => {
+export const MenuItem = ({
+  name,
+  unread,
+  icon,
+  button,
+  link,
+  onEvent,
+  subMenu,
+  className,
+  type = 'parent',
+  pattern = '',
+}: MenuItemProps) => {
   const router = useRouter();
   const isSubMenu = !!subMenu && subMenu?.length > 0;
   const { isMobile } = useResponsive();
@@ -67,6 +79,11 @@ export const MenuItem = ({ name, icon, button, link, onEvent, subMenu, className
           <Text fontWeight="medium" fontSize="sm">
             {name}
           </Text>
+          {unread && (
+            <div className="bg-[#BA1A1A] w-5 font-medium flex justify-center items-center text-xs text-white rounded-full h-5">
+              {unread > 99 ? '99+' : unread}
+            </div>
+          )}
         </div>
         {button}
         {isSubMenu && <ChevronIcon dir={isOpen ? 'left' : 'bottom'} />}

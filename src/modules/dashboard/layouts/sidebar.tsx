@@ -16,10 +16,11 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useQueryClient } from '@tanstack/react-query';
 import range from 'lodash/range';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
+import axios from 'axios';
 
 export type App = {
   key: string;
@@ -37,6 +38,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   const { asPath, ...router } = useRouter();
   const shouldShowBazaarMenu = useFeatureIsOn('dashboard:bazaar-menu|enable');
   const queryClient = useQueryClient();
+  const [unreads, setUnreads] = useState({});
 
   useEffect(() => {
     if (!user?.id && !isUserPending) {
@@ -56,7 +58,41 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     }
   }, [user, isUserPending]);
 
-  const apps = appsData.data?.data;
+  const apps = appsData.data?.data ?? [];
+
+  useEffect(() => {
+    if (apps.length > 0 && user?.id) unreadHandler();
+  }, [apps, user]);
+
+  const unreadHandler = async () => {
+    apps
+      .filter((app: any) => !app.pin && app?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0))
+      .forEach((app: any) => {
+        if (app.fragments.find((item: any) => item.type === 'menu')?.options?.length > 0) {
+          app.fragments
+            .find((item: any) => item.type === 'menu')
+            ?.options?.forEach((menu: any) => {
+              axios
+                .get(menu?.unread_endpoint, {
+                  params: {
+                    user_id: user.id,
+                    app_key: app.key,
+                    menu_key: menu.key,
+                  },
+                })
+                .then(data => {
+                  if (data?.data?.unread && typeof data?.data?.unread === 'number') {
+                    setUnreads(prev => ({
+                      ...prev,
+                      [menu.id]: data?.data?.unread,
+                    }));
+                  }
+                })
+                .catch(e => {});
+            });
+        }
+      });
+  };
 
   const openProfileView = () => {
     window.open(`/dr/${user.provider?.slug}?@timestamp=${new Date().getTime()}`);
@@ -221,6 +257,13 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         name={app.display_name.fa}
                         icon={app.icon}
                         pattern={app.key}
+                        unread={
+                          (unreads as any)[
+                            app.fragments
+                              .find((item: any) => item.type === 'menu')
+                              ?.options?.find((item: any, index: number) => index === 0)?.id as any
+                          ]
+                        }
                         link={`/dashboard/apps/${app.key}/${
                           app.fragments
                             .find((item: any) => item.type === 'menu')
