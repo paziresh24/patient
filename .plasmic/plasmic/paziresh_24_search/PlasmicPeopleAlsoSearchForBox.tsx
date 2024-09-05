@@ -221,7 +221,9 @@ function PlasmicPeopleAlsoSearchForBox__RenderFunc(props: {
             path: "/api/qs/index/slim_clinic_query_su"
           }
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
