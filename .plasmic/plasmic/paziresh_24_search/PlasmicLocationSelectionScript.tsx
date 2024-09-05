@@ -137,7 +137,9 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           requestGeolocationAccess: false,
           givLocationButtonLoadingStatus: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );

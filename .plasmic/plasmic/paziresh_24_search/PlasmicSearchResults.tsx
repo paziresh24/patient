@@ -165,7 +165,9 @@ function PlasmicSearchResults__RenderFunc(props: {
         {
           paginationLoadingStatus: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -637,6 +639,21 @@ function PlasmicSearchResults__RenderFunc(props: {
                           ];
                         }
                       }}
+                      externalBookDesign={(() => {
+                        try {
+                          return $ctx.Growthbook.features[
+                            "search-card-externalbook-variant"
+                          ];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()}
                       price={(() => {
                         try {
                           return $ctx.fetchedData.search.result[0]?.price;
@@ -1275,6 +1292,41 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ];
                   }
                 }}
+                externalBookDesign={(() => {
+                  try {
+                    return $ctx.Growthbook.features[
+                      "search-card-externalbook-variant"
+                    ];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                externalLinkTitle={(() => {
+                  try {
+                    return currentItem.slug
+                      .split("uri=https%3A%2F%2F")[1]
+                      .split("%2F")[0].length > 2
+                      ? "نوبت‌دهی در " +
+                          currentItem.slug
+                            .split("uri=https%3A%2F%2F")[1]
+                            .split("%2F")[0]
+                      : "";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 key={currentIndex}
                 price={(() => {
                   try {
