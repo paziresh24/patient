@@ -79,6 +79,7 @@ import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-i
 import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
 import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
+import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: 2fxvviUbNC5l/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -86,13 +87,16 @@ createPlasmicElementProxy;
 
 export type PlasmicProductCard__VariantMembers = {
   _5StarRatingMode3: "_5StarA";
+  externalBookDesign: "externalBookDesign";
 };
 export type PlasmicProductCard__VariantsArgs = {
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
+  externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
 };
 type VariantPropType = keyof PlasmicProductCard__VariantsArgs;
 export const PlasmicProductCard__VariantProps = new Array<VariantPropType>(
-  "_5StarRatingMode3"
+  "_5StarRatingMode3",
+  "externalBookDesign"
 );
 
 export type PlasmicProductCard__ArgsType = {
@@ -111,6 +115,7 @@ export type PlasmicProductCard__ArgsType = {
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
+  externalLinkTitle?: string;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -128,7 +133,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "url",
   "avatarAltText",
   "eventTrigger",
-  "topBadge"
+  "topBadge",
+  "externalLinkTitle"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -140,6 +146,7 @@ export type PlasmicProductCard__OverridesType = {
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
   badgesChip?: Flex__<typeof Chip>;
+  cardAddressRow2?: Flex__<"span">;
   button?: Flex__<typeof Button>;
 };
 
@@ -159,7 +166,9 @@ export interface DefaultProductCardProps {
   avatarAltText?: string;
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
+  externalLinkTitle?: string;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
+  externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
 }
 
@@ -186,7 +195,9 @@ function PlasmicProductCard__RenderFunc(props: {
         {
           avatarVerifiedTick: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -214,6 +225,13 @@ function PlasmicProductCard__RenderFunc(props: {
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           $props._5StarRatingMode3
+      },
+      {
+        path: "externalBookDesign",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          $props.externalBookDesign
       }
     ],
     [$props, $ctx, $refs]
@@ -246,6 +264,11 @@ function PlasmicProductCard__RenderFunc(props: {
             $state,
             "_5StarRatingMode3",
             "_5StarA"
+          ),
+          [sty.rootexternalBookDesign]: hasVariant(
+            $state,
+            "externalBookDesign",
+            "externalBookDesign"
           )
         }
       )}
@@ -320,7 +343,13 @@ function PlasmicProductCard__RenderFunc(props: {
       <Stack__
         as={"div"}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__wJlKm)}
+        className={classNames(projectcss.all, sty.freeBox__wJlKm, {
+          [sty.freeBoxexternalBookDesign__wJlKmHqYe]: hasVariant(
+            $state,
+            "externalBookDesign",
+            "externalBookDesign"
+          )
+        })}
       >
         {(() => {
           try {
@@ -686,6 +715,11 @@ function PlasmicProductCard__RenderFunc(props: {
                     $state,
                     "_5StarRatingMode3",
                     "_5StarA"
+                  ),
+                  [sty.svgexternalBookDesign___4KelPhqYe]: hasVariant(
+                    $state,
+                    "externalBookDesign",
+                    "externalBookDesign"
                   )
                 })}
                 role={"img"}
@@ -799,7 +833,13 @@ function PlasmicProductCard__RenderFunc(props: {
         <Stack__
           as={"div"}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__rdT8C)}
+          className={classNames(projectcss.all, sty.freeBox__rdT8C, {
+            [sty.freeBoxexternalBookDesign__rdT8CHqYe]: hasVariant(
+              $state,
+              "externalBookDesign",
+              "externalBookDesign"
+            )
+          })}
         >
           <LocationIcon
             className={classNames(projectcss.all, sty.svg__uyLb1)}
@@ -822,6 +862,11 @@ function PlasmicProductCard__RenderFunc(props: {
                     $state,
                     "_5StarRatingMode3",
                     "_5StarA"
+                  ),
+                  [sty.cardAddressRowexternalBookDesign]: hasVariant(
+                    $state,
+                    "externalBookDesign",
+                    "externalBookDesign"
                   )
                 }
               )}
@@ -921,7 +966,13 @@ function PlasmicProductCard__RenderFunc(props: {
         <Stack__
           as={"div"}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__sd0)}
+          className={classNames(projectcss.all, sty.freeBox__sd0, {
+            [sty.freeBoxexternalBookDesign__sd0HqYe]: hasVariant(
+              $state,
+              "externalBookDesign",
+              "externalBookDesign"
+            )
+          })}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
@@ -1143,6 +1194,86 @@ function PlasmicProductCard__RenderFunc(props: {
           })}
         </Stack__>
       ) : null}
+      {(
+        hasVariant($state, "externalBookDesign", "externalBookDesign")
+          ? (() => {
+              try {
+                return (
+                  $props.externalLinkTitle &&
+                  $props.externalLinkTitle.length > 2
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })()
+          : false
+      ) ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__dEzQh, {
+            [sty.freeBoxexternalBookDesign__dEzQhHqYe]: hasVariant(
+              $state,
+              "externalBookDesign",
+              "externalBookDesign"
+            )
+          })}
+        >
+          <Icon8Icon
+            className={classNames(projectcss.all, sty.svg__jJN)}
+            role={"img"}
+          />
+
+          <LineClamp
+            className={classNames("__wab_instance", sty.lineClamp__oWcg)}
+          >
+            <span
+              data-plasmic-name={"cardAddressRow2"}
+              data-plasmic-override={overrides.cardAddressRow2}
+              className={classNames(
+                projectcss.all,
+                projectcss.span,
+                projectcss.__wab_text,
+                sty.cardAddressRow2,
+                {
+                  [sty.cardAddressRow2_5StarRatingMode3__5StarA]: hasVariant(
+                    $state,
+                    "_5StarRatingMode3",
+                    "_5StarA"
+                  ),
+                  [sty.cardAddressRow2externalBookDesign]: hasVariant(
+                    $state,
+                    "externalBookDesign",
+                    "externalBookDesign"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.externalLinkTitle;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </span>
+          </LineClamp>
+        </Stack__>
+      ) : null}
       {(() => {
         try {
           return $props.actionButtons.length > 0;
@@ -1347,6 +1478,7 @@ const PlasmicDescendants = {
     "cardPrice",
     "dialog",
     "badgesChip",
+    "cardAddressRow2",
     "button"
   ],
   avatar: ["avatar"],
@@ -1356,6 +1488,7 @@ const PlasmicDescendants = {
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip"],
   badgesChip: ["badgesChip"],
+  cardAddressRow2: ["cardAddressRow2"],
   button: ["button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -1370,6 +1503,7 @@ type NodeDefaultElementType = {
   cardPrice: "span";
   dialog: typeof Dialog;
   badgesChip: typeof Chip;
+  cardAddressRow2: "span";
   button: typeof Button;
 };
 
@@ -1440,6 +1574,7 @@ export const PlasmicProductCard = Object.assign(
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
     badgesChip: makeNodeComponent("badgesChip"),
+    cardAddressRow2: makeNodeComponent("cardAddressRow2"),
     button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicProductCard
