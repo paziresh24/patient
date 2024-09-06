@@ -2366,7 +2366,7 @@
   },
   "wrapPagesWithGlobalContexts": true,
   "nextjsConfig": {
-    "pagesDir": "../pages"
+    "pagesDir": "../src/pages"
   },
   "cliVersion": "0.1.327",
   "packageManager": "npm",
