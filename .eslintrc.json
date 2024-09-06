@@ -15,7 +15,8 @@
     "no-unused-vars": [0, { "args": "after-used", "argsIgnorePattern": "^_" }],
     "react-hooks/exhaustive-deps": 0,
     "react/display-name": 0,
-    "@next/next/no-img-element": 0
+    "@next/next/no-img-element": 0,
+    "jsx-a11y/control-has-associated-label": 0
   },
   "plugins": ["jest"]
 }
