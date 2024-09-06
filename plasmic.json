@@ -307,7 +307,8 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -581,7 +582,7 @@
           "projectId": "sMdpLWyxbzDCruwMRffW2m",
           "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
           "importSpec": {
-            "modulePath": "../pages/s/samplepage2781.tsx"
+            "modulePath": "../src/pages/s/samplepage2781.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
           "scheme": "blackbox",
