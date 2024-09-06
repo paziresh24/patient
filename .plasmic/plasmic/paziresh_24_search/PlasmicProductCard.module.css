@@ -107,6 +107,18 @@
   > img {
   margin-left: var(--token-_c276Gs_1FIE);
 }
+.freeBox__vbw0E {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80px;
+  height: auto;
+  max-width: 80px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
 .link__hyRw8 {
   display: flex;
   position: relative;
@@ -126,6 +138,28 @@
   top: auto;
   position: relative;
   flex-shrink: 0;
+}
+.classificationApi:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  height: auto;
+}
+.text___7PCh {
+  display: none;
+}
+.text__yApKc {
+  display: none;
+}
+.classificationTitle {
+  height: auto;
+  min-width: auto;
+  display: flex;
+  flex-direction: row;
+}
+.slotTargetChildren {
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre-wrap;
 }
 .freeBox__uwhEa {
   display: flex;
@@ -217,9 +251,9 @@
   position: relative;
   object-fit: cover;
   max-width: 100%;
-  width: 22px;
-  height: 22px;
-  color: var(--token-kpM4b4mG4f2d);
+  width: 15px;
+  height: 15px;
+  color: var(--token-1Ycj6LtmzBSK);
   margin-bottom: 5px;
   filter: none;
   box-shadow: none;
