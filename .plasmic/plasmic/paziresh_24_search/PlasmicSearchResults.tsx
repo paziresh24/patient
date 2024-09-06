@@ -1034,6 +1034,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               <ProductCard
                 data-plasmic-name={"productCard"}
                 data-plasmic-override={overrides.productCard}
+                _5StarRatingMode3={undefined}
                 actionButtons={(() => {
                   try {
                     return (() => {
@@ -1170,6 +1171,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   }
                 })()}
                 className={classNames("__wab_instance", sty.productCard)}
+                classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
                 eventTrigger={async (elementName, elementContent) => {
                   const $steps = {};
 

@@ -61,6 +61,7 @@ import {
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
@@ -116,6 +117,7 @@ export type PlasmicProductCard__ArgsType = {
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
   externalLinkTitle?: string;
+  classificationTitleApi?: string;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -134,13 +136,16 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "avatarAltText",
   "eventTrigger",
   "topBadge",
-  "externalLinkTitle"
+  "externalLinkTitle",
+  "classificationTitleApi"
 );
 
 export type PlasmicProductCard__OverridesType = {
   root?: Flex__<"div">;
   avatar?: Flex__<typeof Avatar>;
   cardTitle?: Flex__<"h2">;
+  classificationApi?: Flex__<typeof DataFetcher>;
+  classificationTitle?: Flex__<"span">;
   cardSubtitle?: Flex__<"span">;
   cardAddressRow?: Flex__<"span">;
   cardPrice?: Flex__<"span">;
@@ -167,6 +172,7 @@ export interface DefaultProductCardProps {
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
   externalLinkTitle?: string;
+  classificationTitleApi?: string;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
@@ -645,6 +651,115 @@ function PlasmicProductCard__RenderFunc(props: {
               className={classNames("__wab_instance", sty.lineClamp__lmqY)}
               numberOfLines={2}
             >
+              <DataFetcher
+                data-plasmic-name={"classificationApi"}
+                data-plasmic-override={overrides.classificationApi}
+                className={classNames("__wab_instance", sty.classificationApi)}
+                dataName={"fetchedData"}
+                errorDisplay={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__yApKc
+                        )}
+                      >
+                        {"Error fetching data"}
+                      </div>
+                    )}
+                  </DataCtxReader__>
+                }
+                errorName={"fetchError"}
+                headers={{
+                  "Content-Type": "application/json",
+                  Accept: "application/json"
+                }}
+                loadingDisplay={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text___7PCh
+                        )}
+                      >
+                        {""}
+                      </div>
+                    )}
+                  </DataCtxReader__>
+                }
+                method={"GET"}
+                noLayout={false}
+                previewErrorDisplay={false}
+                previewSpinner={false}
+                url={(() => {
+                  try {
+                    return $props.classificationTitleApi;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              >
+                <DataCtxReader__>
+                  {$ctx =>
+                    (() => {
+                      try {
+                        return (
+                          $ctx.fetchedData.classifications[0]?.name?.length > 2
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <span
+                        data-plasmic-name={"classificationTitle"}
+                        data-plasmic-override={overrides.classificationTitle}
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          sty.classificationTitle,
+                          {
+                            [sty.classificationTitle_5StarRatingMode3__5StarA]:
+                              hasVariant($state, "_5StarRatingMode3", "_5StarA")
+                          }
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $ctx.fetchedData.classifications[0].name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </span>
+                    ) : null
+                  }
+                </DataCtxReader__>
+              </DataFetcher>
               <span
                 data-plasmic-name={"cardSubtitle"}
                 data-plasmic-override={overrides.cardSubtitle}
@@ -658,6 +773,11 @@ function PlasmicProductCard__RenderFunc(props: {
                       $state,
                       "_5StarRatingMode3",
                       "_5StarA"
+                    ),
+                    [sty.cardSubtitleexternalBookDesign]: hasVariant(
+                      $state,
+                      "externalBookDesign",
+                      "externalBookDesign"
                     )
                   }
                 )}
@@ -1473,6 +1593,8 @@ const PlasmicDescendants = {
     "root",
     "avatar",
     "cardTitle",
+    "classificationApi",
+    "classificationTitle",
     "cardSubtitle",
     "cardAddressRow",
     "cardPrice",
@@ -1483,6 +1605,8 @@ const PlasmicDescendants = {
   ],
   avatar: ["avatar"],
   cardTitle: ["cardTitle"],
+  classificationApi: ["classificationApi", "classificationTitle"],
+  classificationTitle: ["classificationTitle"],
   cardSubtitle: ["cardSubtitle"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
@@ -1498,6 +1622,8 @@ type NodeDefaultElementType = {
   root: "div";
   avatar: typeof Avatar;
   cardTitle: "h2";
+  classificationApi: typeof DataFetcher;
+  classificationTitle: "span";
   cardSubtitle: "span";
   cardAddressRow: "span";
   cardPrice: "span";
@@ -1569,6 +1695,8 @@ export const PlasmicProductCard = Object.assign(
     // Helper components rendering sub-elements
     avatar: makeNodeComponent("avatar"),
     cardTitle: makeNodeComponent("cardTitle"),
+    classificationApi: makeNodeComponent("classificationApi"),
+    classificationTitle: makeNodeComponent("classificationTitle"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
     cardAddressRow: makeNodeComponent("cardAddressRow"),
     cardPrice: makeNodeComponent("cardPrice"),
