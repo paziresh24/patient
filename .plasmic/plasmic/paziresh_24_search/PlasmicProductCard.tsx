@@ -118,6 +118,7 @@ export type PlasmicProductCard__ArgsType = {
   topBadge?: any;
   externalLinkTitle?: string;
   classificationTitleApi?: string;
+  children?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -137,7 +138,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "eventTrigger",
   "topBadge",
   "externalLinkTitle",
-  "classificationTitleApi"
+  "classificationTitleApi",
+  "children"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -173,6 +175,7 @@ export interface DefaultProductCardProps {
   topBadge?: any;
   externalLinkTitle?: string;
   classificationTitleApi?: string;
+  children?: React.ReactNode;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
@@ -648,7 +651,13 @@ function PlasmicProductCard__RenderFunc(props: {
             }
           })() ? (
             <LineClamp
-              className={classNames("__wab_instance", sty.lineClamp__lmqY)}
+              className={classNames("__wab_instance", sty.lineClamp__lmqY, {
+                [sty.lineClampexternalBookDesign__lmqYHqYe]: hasVariant(
+                  $state,
+                  "externalBookDesign",
+                  "externalBookDesign"
+                )
+              })}
               numberOfLines={2}
             >
               <DataFetcher
@@ -732,29 +741,59 @@ function PlasmicProductCard__RenderFunc(props: {
                         className={classNames(
                           projectcss.all,
                           projectcss.span,
-                          projectcss.__wab_text,
                           sty.classificationTitle,
                           {
                             [sty.classificationTitle_5StarRatingMode3__5StarA]:
-                              hasVariant($state, "_5StarRatingMode3", "_5StarA")
+                              hasVariant(
+                                $state,
+                                "_5StarRatingMode3",
+                                "_5StarA"
+                              ),
+                            [sty.classificationTitleexternalBookDesign]:
+                              hasVariant(
+                                $state,
+                                "externalBookDesign",
+                                "externalBookDesign"
+                              )
                           }
                         )}
                       >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return $ctx.fetchedData.classifications[0].name;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
+                        {renderPlasmicSlot({
+                          defaultContents: (
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return $ctx.fetchedData.classifications[0]
+                                    .name;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return "";
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
+                          ),
+                          value: args.children,
+                          className: classNames(sty.slotTargetChildren, {
+                            [sty.slotTargetChildren_5StarRatingMode3__5StarA]:
+                              hasVariant(
+                                $state,
+                                "_5StarRatingMode3",
+                                "_5StarA"
+                              ),
+                            [sty.slotTargetChildrenexternalBookDesign]:
+                              hasVariant(
+                                $state,
+                                "externalBookDesign",
+                                "externalBookDesign"
+                              )
+                          })
+                        })}
                       </span>
                     ) : null
                   }
@@ -821,6 +860,11 @@ function PlasmicProductCard__RenderFunc(props: {
                   $state,
                   "_5StarRatingMode3",
                   "_5StarA"
+                ),
+                [sty.freeBoxexternalBookDesign__zf7BmHqYe]: hasVariant(
+                  $state,
+                  "externalBookDesign",
+                  "externalBookDesign"
                 )
               })}
             >
@@ -1332,7 +1376,22 @@ function PlasmicProductCard__RenderFunc(props: {
                 throw e;
               }
             })()
-          : false
+          : (() => {
+              try {
+                return (
+                  $props.externalLinkTitle &&
+                  $props.externalLinkTitle.length > 2
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })()
       ) ? (
         <Stack__
           as={"div"}
