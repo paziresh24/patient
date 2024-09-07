@@ -80,9 +80,9 @@ import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-i
 import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
 import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
-import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: 2fxvviUbNC5l/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import Icon9Icon from "./icons/PlasmicIcon__Icon9"; // plasmic-import: bfqtb2xTeMAi/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 
 createPlasmicElementProxy;
 
@@ -153,8 +153,6 @@ export type PlasmicProductCard__OverridesType = {
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
   badgesChip?: Flex__<typeof Chip>;
-  cardAddressRow2?: Flex__<"span">;
-  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultProductCardProps {
@@ -360,7 +358,11 @@ function PlasmicProductCard__RenderFunc(props: {
           )
         })}
       >
-        <div className={classNames(projectcss.all, sty.freeBox__vbw0E)}>
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__vbw0E)}
+        >
           {(() => {
             try {
               return !!$props.avatarSrc;
@@ -632,7 +634,7 @@ function PlasmicProductCard__RenderFunc(props: {
               }
             </DataCtxReader__>
           </DataFetcher>
-        </div>
+        </Stack__>
         <Stack__
           as={"div"}
           hasGap={true}
@@ -1397,58 +1399,101 @@ function PlasmicProductCard__RenderFunc(props: {
             )
           })}
         >
-          <Icon8Icon
-            className={classNames(projectcss.all, sty.svg__jJN)}
-            role={"img"}
-          />
-
-          <LineClamp
-            className={classNames("__wab_instance", sty.lineClamp__oWcg)}
-          >
-            <span
-              data-plasmic-name={"cardAddressRow2"}
-              data-plasmic-override={overrides.cardAddressRow2}
-              className={classNames(
-                projectcss.all,
-                projectcss.span,
-                projectcss.__wab_text,
-                sty.cardAddressRow2,
-                {
-                  [sty.cardAddressRow2_5StarRatingMode3__5StarA]: hasVariant(
-                    $state,
-                    "_5StarRatingMode3",
-                    "_5StarA"
-                  ),
-                  [sty.cardAddressRow2externalBookDesign]: hasVariant(
-                    $state,
-                    "externalBookDesign",
-                    "externalBookDesign"
-                  )
-                }
-              )}
-            >
+          <Button
+            children2={
               <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.externalLinkTitle;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
-                    }
-                    throw e;
-                  }
-                })()}
+                <Icon9Icon
+                  className={classNames(projectcss.all, sty.svg__ueCbk)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__dbuUx
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.externalLinkTitle;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "Button";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
               </React.Fragment>
-            </span>
-          </LineClamp>
+            }
+            className={classNames("__wab_instance", sty.button__gicEu)}
+            endIcon={
+              <ChevronLeftIcon
+                className={classNames(projectcss.all, sty.svg__vlToi)}
+                role={"img"}
+              />
+            }
+            link={(() => {
+              try {
+                return $props.url?.destination.startsWith("/center/https")
+                  ? $props.url?.destination.slice(8, -1)
+                  : $props.url?.destination;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runEventTrigger"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["eventTrigger"],
+                      args: ["action-button", "external-link"]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runEventTrigger"] != null &&
+                typeof $steps["runEventTrigger"] === "object" &&
+                typeof $steps["runEventTrigger"].then === "function"
+              ) {
+                $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+              }
+            }}
+            outline={true}
+            startIcon={
+              <Icon9Icon
+                className={classNames(projectcss.all, sty.svg___8Ur4M)}
+                role={"img"}
+              />
+            }
+            target={true}
+          />
         </Stack__>
       ) : null}
       {(() => {
         try {
-          return $props.actionButtons.length > 0;
+          return (
+            !(
+              $props.externalLinkTitle && $props.externalLinkTitle.length > 2
+            ) && $props.actionButtons.length > 0
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -1530,8 +1575,6 @@ function PlasmicProductCard__RenderFunc(props: {
                   </span>
                 ) : null}
                 <Button
-                  data-plasmic-name={"button"}
-                  data-plasmic-override={overrides.button}
                   children2={
                     <React.Fragment>
                       {(() => {
@@ -1549,7 +1592,7 @@ function PlasmicProductCard__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   }
-                  className={classNames("__wab_instance", sty.button)}
+                  className={classNames("__wab_instance", sty.button__kYXz)}
                   endIcon={
                     <ChevronLeftIcon
                       className={classNames(projectcss.all, sty.svg__b1Zmp)}
@@ -1651,9 +1694,7 @@ const PlasmicDescendants = {
     "cardAddressRow",
     "cardPrice",
     "dialog",
-    "badgesChip",
-    "cardAddressRow2",
-    "button"
+    "badgesChip"
   ],
   avatar: ["avatar"],
   classificationApi: ["classificationApi", "classificationTitle"],
@@ -1663,9 +1704,7 @@ const PlasmicDescendants = {
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip"],
-  badgesChip: ["badgesChip"],
-  cardAddressRow2: ["cardAddressRow2"],
-  button: ["button"]
+  badgesChip: ["badgesChip"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1681,8 +1720,6 @@ type NodeDefaultElementType = {
   cardPrice: "span";
   dialog: typeof Dialog;
   badgesChip: typeof Chip;
-  cardAddressRow2: "span";
-  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1754,8 +1791,6 @@ export const PlasmicProductCard = Object.assign(
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
     badgesChip: makeNodeComponent("badgesChip"),
-    cardAddressRow2: makeNodeComponent("cardAddressRow2"),
-    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicProductCard
     internalVariantProps: PlasmicProductCard__VariantProps,
