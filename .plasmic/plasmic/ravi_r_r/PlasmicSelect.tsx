@@ -70,8 +70,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicSelect.module.css"; // plasmic-import: zIWWWwAA3-2B/css
 
-import ChevronDownsvgIcon from "./icons/PlasmicIcon__ChevronDownsvg"; // plasmic-import: NXg4jyTHB7Sj/icon
-import ChevronUpsvgIcon from "./icons/PlasmicIcon__ChevronUpsvg"; // plasmic-import: YVM63_mcG0ZV/icon
+import ChevronDownSvgIcon from "./icons/PlasmicIcon__ChevronDownSvg"; // plasmic-import: NXg4jyTHB7Sj/icon
+import ChevronUpSvgIcon from "./icons/PlasmicIcon__ChevronUpSvg"; // plasmic-import: YVM63_mcG0ZV/icon
 
 createPlasmicElementProxy;
 
@@ -126,12 +126,6 @@ export type PlasmicSelect__ArgsType = {
   "aria-labelledby"?: string;
   options?: any;
   onChange?: (value: string) => void;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
 };
 type ArgPropType = keyof PlasmicSelect__ArgsType;
 export const PlasmicSelect__ArgProps = new Array<ArgPropType>(
@@ -143,13 +137,7 @@ export const PlasmicSelect__ArgProps = new Array<ArgPropType>(
   "aria-label",
   "aria-labelledby",
   "options",
-  "onChange",
-  "aria-label",
-  "aria-labelledby",
-  "aria-label",
-  "aria-labelledby",
-  "aria-label",
-  "aria-labelledby"
+  "onChange"
 );
 
 export type PlasmicSelect__OverridesType = {
@@ -165,12 +153,6 @@ export interface DefaultSelectProps extends pp.BaseSelectProps {
   "aria-label"?: string;
   "aria-labelledby"?: string;
   options?: any;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
   color?: SingleChoiceArg<
     | "softBlue"
     | "softCyan"
@@ -207,7 +189,16 @@ function PlasmicSelect__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -558,8 +549,8 @@ function PlasmicSelect__RenderFunc(props: {
             data-plasmic-override={overrides.dropdownIcon}
             PlasmicIconType={
               hasVariant($state, "isOpen", "isOpen")
-                ? ChevronUpsvgIcon
-                : ChevronDownsvgIcon
+                ? ChevronUpSvgIcon
+                : ChevronDownSvgIcon
             }
             className={classNames(projectcss.all, sty.dropdownIcon, {
               [sty.dropdownIcon___focusVisibleWithin]:

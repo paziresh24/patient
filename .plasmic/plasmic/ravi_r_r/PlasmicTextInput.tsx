@@ -67,8 +67,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicTextInput.module.css"; // plasmic-import: iKLtt-X_YZoa/css
 
-import SearchsvgIcon from "./icons/PlasmicIcon__Searchsvg"; // plasmic-import: W3TLlIDrGJdy/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWCYMTObqr7D/icon
+import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: W3TLlIDrGJdy/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: NWCYMTObqr7D/icon
 
 createPlasmicElementProxy;
 
@@ -113,12 +113,6 @@ export type PlasmicTextInput__ArgsType = {
     | "email"
     | "tel";
   autoFocus?: boolean;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
 };
 type ArgPropType = keyof PlasmicTextInput__ArgsType;
 export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
@@ -132,13 +126,7 @@ export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
   "aria-labelledby",
   "onChange",
   "type",
-  "autoFocus",
-  "aria-label",
-  "aria-labelledby",
-  "aria-label",
-  "aria-labelledby",
-  "aria-label",
-  "aria-labelledby"
+  "autoFocus"
 );
 
 export type PlasmicTextInput__OverridesType = {
@@ -167,12 +155,6 @@ export interface DefaultTextInputProps extends pp.BaseTextInputProps {
     | "email"
     | "tel";
   autoFocus?: boolean;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
   color?: SingleChoiceArg<"dark">;
 }
 
@@ -199,7 +181,9 @@ function PlasmicTextInput__RenderFunc(props: {
         {
           placeholder: "Enter something…"
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -324,7 +308,7 @@ function PlasmicTextInput__RenderFunc(props: {
       >
         {renderPlasmicSlot({
           defaultContents: (
-            <SearchsvgIcon
+            <SearchSvgIcon
               className={classNames(projectcss.all, sty.svg__zTzwx)}
               role={"img"}
             />
@@ -431,7 +415,7 @@ function PlasmicTextInput__RenderFunc(props: {
       >
         {renderPlasmicSlot({
           defaultContents: (
-            <ChecksvgIcon
+            <CheckSvgIcon
               className={classNames(projectcss.all, sty.svg__dHreb)}
               role={"img"}
             />

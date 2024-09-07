@@ -60,12 +60,12 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
-import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
 import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
@@ -77,15 +77,14 @@ import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZ
 
 import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
-import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: SNOnlPCvguG2/icon
 import ThumbDownIcon from "../fragment_icons/icons/PlasmicIcon__ThumbDown"; // plasmic-import: jHvDymIOvRnf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: lKZl6HF7GOiW/icon
 import Icon17Icon from "../fragment_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import Icon17Icon2 from "./icons/PlasmicIcon__Icon17"; // plasmic-import: dwPoKnXC1x2G/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import EitaaIcon from "../fragment_icons/icons/PlasmicIcon__Eitaa"; // plasmic-import: qxWwW7vbw7na/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: nQIWSFtz7b-J/icon
 import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: 9Q_oq9_FnEFj/icon
@@ -123,6 +122,7 @@ export type PlasmicReviewCard__ArgsType = {
   replyToFeedbackId?: number;
   recommendRange?: string;
   doctorUserId?: string;
+  isShowReplyInput?: boolean;
 };
 type ArgPropType = keyof PlasmicReviewCard__ArgsType;
 export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
@@ -141,36 +141,36 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
   "doctorSlug",
   "replyToFeedbackId",
   "recommendRange",
-  "doctorUserId"
+  "doctorUserId",
+  "isShowReplyInput"
 );
 
 export type PlasmicReviewCard__OverridesType = {
-  اردنماشنظر?: Flex__<"div">;
-  نامتتارخ?: Flex__<"div">;
-  userAvatar2?: Flex__<typeof Avatar>;
-  userAvatar?: Flex__<typeof Avatar>;
-  ناماربر?: Flex__<typeof DataFetcher>;
-  chip?: Flex__<typeof Chip>;
+  کاردنمایشنظر?: Flex__<"div">;
+  نامکاربر?: Flex__<typeof DataFetcher>;
+  نامتگتاریخ?: Flex__<"div">;
   editAndReport?: Flex__<typeof EditAndReport>;
+  userAvatar?: Flex__<typeof Avatar>;
+  chip?: Flex__<typeof Chip>;
   متننظر?: Flex__<"div">;
-  dialog2?: Flex__<typeof Dialog>;
-  نظربشتراز1?: Flex__<"div">;
-  لارورت?: Flex__<"div">;
-  dialog6?: Flex__<typeof Dialog>;
-  سوشالها?: Flex__<"div">;
-  توئتر?: Flex__<typeof Button>;
-  اتا?: Flex__<typeof Button>;
-  تلرام?: Flex__<typeof Button>;
-  واتسا?: Flex__<typeof Button>;
-  ردن?: Flex__<"div">;
-  لن?: Flex__<typeof Button>;
+  لایکریپورت?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   reportText?: Flex__<"textarea">;
   button?: Flex__<typeof Button>;
-  رلا?: Flex__<"div">;
+  dialog2?: Flex__<typeof Dialog>;
+  نظربیشتراز1?: Flex__<"div">;
+  dialog6?: Flex__<typeof Dialog>;
+  سوشالها?: Flex__<"div">;
+  توئیتر?: Flex__<typeof Button>;
+  ایتا?: Flex__<typeof Button>;
+  تلگرام?: Flex__<typeof Button>;
+  واتساپ?: Flex__<typeof Button>;
+  کپیکردن?: Flex__<"div">;
+  کپیلینک?: Flex__<typeof Button>;
+  ریپلای?: Flex__<"div">;
   replyText?: Flex__<"textarea">;
   multilineTextInput?: Flex__<typeof MultilineTextInput>;
-  رفتنرلا?: Flex__<typeof DataFetcher>;
+  گرفتنریپلای?: Flex__<typeof DataFetcher>;
 };
 
 export interface DefaultReviewCardProps {
@@ -190,6 +190,7 @@ export interface DefaultReviewCardProps {
   replyToFeedbackId?: number;
   recommendRange?: string;
   doctorUserId?: string;
+  isShowReplyInput?: boolean;
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
   className?: string;
 }
@@ -218,9 +219,12 @@ function PlasmicReviewCard__RenderFunc(props: {
       Object.assign(
         {
           visitedTag: false,
-          recommended: false
+          recommended: false,
+          isShowReplyInput: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -342,9 +346,9 @@ function PlasmicReviewCard__RenderFunc(props: {
     <Stack__
       as={"div"}
       data-plasmic-name={
-        "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+        "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
       }
-      data-plasmic-override={overrides.اردنماشنظر}
+      data-plasmic-override={overrides.کاردنمایشنظر}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       hasGap={true}
@@ -355,9 +359,9 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.اردنماشنظر,
+        sty.کاردنمایشنظر,
         {
-          [sty.اردنماشنظرraviExpFroDrakam]: hasVariant(
+          [sty.کاردنمایشنظرraviExpFroDrakam]: hasVariant(
             $state,
             "raviExpFroDrakam",
             "raviExpFroDrakam"
@@ -366,212 +370,387 @@ function PlasmicReviewCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <div
-        data-plasmic-name={"\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"}
-        data-plasmic-override={overrides.نامتتارخ}
-        className={classNames(projectcss.all, sty.نامتتارخ)}
-      >
-        <div
-          className={classNames(projectcss.all, sty.freeBox__n7A1U)}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["goToPage"] = true
-              ? (() => {
-                  const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return "/ravi/" + $props.userId + "/";
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+      <DataFetcher
+        data-plasmic-name={"\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"}
+        data-plasmic-override={overrides.نامکاربر}
+        className={classNames("__wab_instance", sty.نامکاربر)}
+        dataName={"fetchedData"}
+        errorDisplay={null}
+        errorName={"fetchError"}
+        headers={{
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }}
+        loadingDisplay={null}
+        method={"GET"}
+        noLayout={false}
+        url={(() => {
+          try {
+            return `https://apigw.paziresh24.com/v1/users/${$props.userId}`;
+          } catch (e) {
             if (
-              $steps["goToPage"] != null &&
-              typeof $steps["goToPage"] === "object" &&
-              typeof $steps["goToPage"].then === "function"
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
             ) {
-              $steps["goToPage"] = await $steps["goToPage"];
+              return undefined;
             }
-          }}
-        >
-          <DataFetcher
-            className={classNames(
-              "__wab_instance",
-              sty.httpRestApiFetcher__eXJp
-            )}
-            dataName={"fetchedData"}
-            errorDisplay={
-              <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
-            }
-            errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
-            loadingDisplay={
-              <DataCtxReader__>
-                {$ctx => (
-                  <Avatar
-                    data-plasmic-name={"userAvatar2"}
-                    data-plasmic-override={overrides.userAvatar2}
-                    className={classNames("__wab_instance", sty.userAvatar2)}
-                    name={(() => {
-                      try {
-                        return $props.userName;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    src={``}
-                  />
-                )}
-              </DataCtxReader__>
-            }
-            method={"GET"}
-            noLayout={false}
-            previewSpinner={true}
-            url={(() => {
-              try {
-                return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          >
-            <DataCtxReader__>
-              {$ctx => (
-                <Avatar
-                  data-plasmic-name={"userAvatar"}
-                  data-plasmic-override={overrides.userAvatar}
-                  className={classNames("__wab_instance", sty.userAvatar)}
-                  name={(() => {
-                    try {
-                      return $props.userName;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  src={(() => {
-                    try {
-                      return $ctx.fetchedData.data.image_url;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-              )}
-            </DataCtxReader__>
-          </DataFetcher>
-        </div>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__hJuBl)}
-        >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__mTvMh)}
-          >
+            throw e;
+          }
+        })()}
+      >
+        <DataCtxReader__>
+          {$ctx => (
             <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text___2VaV1
-              )}
+              data-plasmic-name={
+                "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+              }
+              data-plasmic-override={overrides.نامتگتاریخ}
+              className={classNames(projectcss.all, sty.نامتگتاریخ)}
             >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.userName;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-            <DataFetcher
-              data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
-              data-plasmic-override={overrides.ناماربر}
-              className={classNames("__wab_instance", sty.ناماربر)}
-              dataName={"fetchedData"}
-              errorDisplay={null}
-              errorName={"fetchError"}
-              headers={{
-                "Content-Type": "application/json",
-                Accept: "application/json"
-              }}
-              loadingDisplay={null}
-              method={"GET"}
-              noLayout={false}
-              url={(() => {
+              {(() => {
                 try {
-                  return `https://apigw.paziresh24.com/v1/users/${$props.userId}`;
+                  return (
+                    (
+                      (+$props.qualityOfTreatment +
+                        +$props.doctorEncounter +
+                        +$props.explanationOfIssue) /
+                      3
+                    ).toFixed(1) !== "0.0"
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return undefined;
+                    return true;
                   }
                   throw e;
                 }
-              })()}
-            >
-              <DataCtxReader__>
-                {$ctx => (
+              })() ? (
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__cAdEv)}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__rnD7L,
+                      {
+                        [sty.textraviExpFroDrakam__rnD7LQl6C7]: hasVariant(
+                          $state,
+                          "raviExpFroDrakam",
+                          "raviExpFroDrakam"
+                        )
+                      }
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (
+                            (+$props.qualityOfTreatment +
+                              +$props.doctorEncounter +
+                              +$props.explanationOfIssue) /
+                            3
+                          ).toFixed(1);
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "%80 ";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                </Stack__>
+              ) : null}
+              <EditAndReport
+                data-plasmic-name={"editAndReport"}
+                data-plasmic-override={overrides.editAndReport}
+                className={classNames("__wab_instance", sty.editAndReport)}
+                commentText={(() => {
+                  try {
+                    return $props.commentText;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorEncounter={(() => {
+                  try {
+                    return $props.doctorEncounter;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorSlug={(() => {
+                  try {
+                    return $props.doctorSlug;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorUserId={(() => {
+                  try {
+                    return $props.doctorUserId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                explanationOfIssue={(() => {
+                  try {
+                    return $props.explanationOfIssue;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                feedbackId={(() => {
+                  try {
+                    return $props.feedbackId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                qualityOfTreatment={(() => {
+                  try {
+                    return $props.qualityOfTreatment;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                recommendRange={(() => {
+                  try {
+                    return $props.recommendRange;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                userId={(() => {
+                  try {
+                    return $props.userId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              <div
+                className={classNames(projectcss.all, sty.freeBox__n7A1U)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["goToPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          destination: (() => {
+                            try {
+                              return "/ravi/" + $props.userId + "/";
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["goToPage"] != null &&
+                    typeof $steps["goToPage"] === "object" &&
+                    typeof $steps["goToPage"].then === "function"
+                  ) {
+                    $steps["goToPage"] = await $steps["goToPage"];
+                  }
+                }}
+              >
+                <DataFetcher
+                  className={classNames(
+                    "__wab_instance",
+                    sty.httpRestApiFetcher__eXJp
+                  )}
+                  dataName={"avatarData"}
+                  errorDisplay={
+                    <DataCtxReader__>
+                      {$ctx => "Error fetching data"}
+                    </DataCtxReader__>
+                  }
+                  errorName={"fetchError"}
+                  headers={{
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                  }}
+                  loadingDisplay={
+                    <DataCtxReader__>
+                      {$ctx => (
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__o8OOa
+                          )}
+                        />
+                      )}
+                    </DataCtxReader__>
+                  }
+                  method={"GET"}
+                  noLayout={false}
+                  previewSpinner={false}
+                  url={(() => {
+                    try {
+                      return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                >
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <Avatar
+                        data-plasmic-name={"userAvatar"}
+                        data-plasmic-override={overrides.userAvatar}
+                        className={classNames("__wab_instance", sty.userAvatar)}
+                        name={(() => {
+                          try {
+                            return (
+                              $ctx.fetchedData.users[0]?.name ||
+                              "کاربر بدون نام"
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        src={(() => {
+                          try {
+                            return $ctx.avatarData.data.image_url;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    )}
+                  </DataCtxReader__>
+                </DataFetcher>
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox__hJuBl)}>
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__mTvMh)}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___2VaV1
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $props.userName;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -597,257 +776,137 @@ function PlasmicReviewCard__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   </div>
-                )}
-              </DataCtxReader__>
-            </DataFetcher>
-            {(() => {
-              try {
-                return $props.visitedTag;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Chip
-                data-plasmic-name={"chip"}
-                data-plasmic-override={overrides.chip}
-                className={classNames("__wab_instance", sty.chip)}
-                color={"gray"}
-                content={"\u0648\u06cc\u0632\u06cc\u062a \u0634\u062f\u0647"}
-                rounded={true}
-                size={"small"}
-                slot={
-                  <InfoIcon
-                    className={classNames(projectcss.all, sty.svg__h3Tzz)}
-                    role={"img"}
-                  />
-                }
-              >
-                <SmileIcon
-                  className={classNames(projectcss.all, sty.svg__lsXDn)}
-                  role={"img"}
-                />
-              </Chip>
-            ) : null}
-          </Stack__>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__vdK60)}
-          >
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__aF3Jg
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.setTime;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u062f\u06cc\u0631\u0648\u0632";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-            {(() => {
-              try {
-                return !!$props.docCenter;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__yTb2M
-                )}
-              >
-                {"|"}
-              </div>
-            ) : null}
-            {(() => {
-              try {
-                return $props.docCenter !== undefined;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__pm0Q5
-                )}
-              >
-                <React.Fragment>
                   {(() => {
                     try {
-                      return $props.docCenter;
+                      return $props.visitedTag;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
                         e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        return "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0628\u0627\u0628\u06a9 \u0632\u0645\u0627\u0646\u06cc";
+                        return true;
                       }
                       throw e;
                     }
-                  })()}
-                </React.Fragment>
+                  })() ? (
+                    <Chip
+                      data-plasmic-name={"chip"}
+                      data-plasmic-override={overrides.chip}
+                      className={classNames("__wab_instance", sty.chip)}
+                      color={"gray"}
+                      content={
+                        "\u0648\u06cc\u0632\u06cc\u062a \u0634\u062f\u0647"
+                      }
+                      rounded={true}
+                      size={"small"}
+                      slot={
+                        <InfoIcon
+                          className={classNames(projectcss.all, sty.svg__h3Tzz)}
+                          role={"img"}
+                        />
+                      }
+                    >
+                      <SmileIcon
+                        className={classNames(projectcss.all, sty.svg__lsXDn)}
+                        role={"img"}
+                      />
+                    </Chip>
+                  ) : null}
+                </Stack__>
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__vdK60)}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__aF3Jg
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $props.setTime;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u062f\u06cc\u0631\u0648\u0632";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                  {(() => {
+                    try {
+                      return !!$props.docCenter;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__yTb2M
+                      )}
+                    >
+                      {"|"}
+                    </div>
+                  ) : null}
+                  {(() => {
+                    try {
+                      return $props.docCenter !== undefined;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__pm0Q5
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $props.docCenter;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0628\u0627\u0628\u06a9 \u0632\u0645\u0627\u0646\u06cc";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  ) : null}
+                </Stack__>
               </div>
-            ) : null}
-          </Stack__>
-        </Stack__>
-        <EditAndReport
-          data-plasmic-name={"editAndReport"}
-          data-plasmic-override={overrides.editAndReport}
-          className={classNames("__wab_instance", sty.editAndReport)}
-          commentText={(() => {
-            try {
-              return $props.commentText;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          doctorEncounter={(() => {
-            try {
-              return $props.doctorEncounter;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          doctorSlug={(() => {
-            try {
-              return $props.doctorSlug;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          doctorUserId={(() => {
-            try {
-              return $props.doctorUserId;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          explanationOfIssue={(() => {
-            try {
-              return $props.explanationOfIssue;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          feedbackId={(() => {
-            try {
-              return $props.feedbackId;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          qualityOfTreatment={(() => {
-            try {
-              return $props.qualityOfTreatment;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          recommendRange={(() => {
-            try {
-              return $props.recommendRange;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          userId={(() => {
-            try {
-              return $props.userId;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        />
-      </div>
+            </div>
+          )}
+        </DataCtxReader__>
+      </DataFetcher>
       <Stack__
         as={"div"}
         data-plasmic-name={"\u0645\u062a\u0646\u0646\u0638\u0631"}
@@ -860,86 +919,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox___53H3H)}
         >
-          {(() => {
-            try {
-              return (
-                (
-                  (+$props.qualityOfTreatment +
-                    +$props.doctorEncounter +
-                    +$props.explanationOfIssue) /
-                  3
-                ).toFixed(1) !== "0.0"
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__cAdEv)}
-            >
-              <Icon2Icon
-                className={classNames(projectcss.all, sty.svg__cvunB)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__rnD7L,
-                  {
-                    [sty.textraviExpFroDrakam__rnD7LQl6C7]: hasVariant(
-                      $state,
-                      "raviExpFroDrakam",
-                      "raviExpFroDrakam"
-                    )
-                  }
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return (
-                        (+$props.qualityOfTreatment +
-                          +$props.doctorEncounter +
-                          +$props.explanationOfIssue) /
-                        3
-                      ).toFixed(1);
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "%80 ";
-                      }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
-              </div>
-            </Stack__>
-          ) : null}
-          {(() => {
-            try {
-              return !$props.recommended;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
+          {false ? (
             <Stack__
               as={"div"}
               hasGap={true}
@@ -962,41 +942,27 @@ function PlasmicReviewCard__RenderFunc(props: {
               />
             </Stack__>
           ) : null}
-          {(() => {
-            try {
-              return $props.recommended;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__zLXc8)}
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__zLXc8)}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___62Bj
+              )}
             >
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text___62Bj
-                )}
-              >
-                {
-                  "\u067e\u0632\u0634\u06a9 \u0631\u0627 \u062a\u0648\u0635\u06cc\u0647 \u0645\u06cc\u06a9\u0646\u0645"
-                }
-              </div>
-              <ThumbUpIcon
-                className={classNames(projectcss.all, sty.svg__a8Ad)}
-                role={"img"}
-              />
-            </Stack__>
-          ) : null}
+              {
+                "\u067e\u0632\u0634\u06a9 \u0631\u0627 \u062a\u0648\u0635\u06cc\u0647 \u0645\u06cc\u06a9\u0646\u0645"
+              }
+            </div>
+            <ThumbUpIcon
+              className={classNames(projectcss.all, sty.svg__a8Ad)}
+              role={"img"}
+            />
+          </Stack__>
         </Stack__>
         <div
           className={classNames(
@@ -1032,1053 +998,15 @@ function PlasmicReviewCard__RenderFunc(props: {
           />
         </div>
       </Stack__>
-      <DataFetcher
-        className={classNames("__wab_instance", sty.httpRestApiFetcher__dvNua)}
-        dataName={"fetchedData"}
-        errorDisplay={null}
-        errorName={"fetchError"}
-        headers={{
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }}
-        loadingDisplay={null}
-        method={"GET"}
-        noLayout={false}
-        previewSpinner={false}
-        url={(() => {
-          try {
-            return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})&offset=0&sort=-created_at`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      >
-        <DataCtxReader__>
-          {$ctx =>
-            (() => {
-              try {
-                return $ctx.fetchedData.list.length > 1;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Dialog
-                data-plasmic-name={"dialog2"}
-                data-plasmic-override={overrides.dialog2}
-                body={
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
-                    className={classNames(projectcss.all, sty.freeBox__x126B)}
-                  >
-                    {(_par =>
-                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return $ctx.fetchedData.list;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()
-                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const currentItem = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
-                      return (
-                        <ReplyCard
-                          className={classNames(
-                            "__wab_instance",
-                            sty.replyCard__sQuYr
-                          )}
-                          isDoctor={(() => {
-                            try {
-                              return currentItem.user_id == $props.doctorUserId;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return false;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          key={currentIndex}
-                          replyText={(() => {
-                            try {
-                              return currentItem.description;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          userId={(() => {
-                            try {
-                              return currentItem.user_id;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                        />
-                      );
-                    })}
-                  </Stack__>
-                }
-                className={classNames("__wab_instance", sty.dialog2)}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "dialog2",
-                  "open"
-                ])}
-                open={generateStateValueProp($state, ["dialog2", "open"])}
-                title={"\u067e\u0627\u0633\u062e \u0647\u0627 "}
-                trigger={
-                  (() => {
-                    try {
-                      return $ctx.fetchedData.list.length > 0;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return true;
-                      }
-                      throw e;
-                    }
-                  })() ? (
-                    <Stack__
-                      as={"div"}
-                      data-plasmic-name={
-                        "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
-                      }
-                      data-plasmic-override={overrides.نظربشتراز1}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.نظربشتراز1)}
-                    >
-                      <RepliesIcon
-                        className={classNames(projectcss.all, sty.svg___34YvM)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__fw275
-                        )}
-                      >
-                        {
-                          "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
-                        }
-                      </div>
-                    </Stack__>
-                  ) : null
-                }
-              />
-            ) : null
-          }
-        </DataCtxReader__>
-      </DataFetcher>
       <Stack__
         as={"div"}
-        data-plasmic-name={"\u0644\u0627\u0631\u0648\u0631\u062a"}
-        data-plasmic-override={overrides.لارورت}
+        data-plasmic-name={
+          "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
+        }
+        data-plasmic-override={overrides.لایکریپورت}
         hasGap={true}
-        className={classNames(projectcss.all, sty.لارورت)}
+        className={classNames(projectcss.all, sty.لایکریپورت)}
       >
-        {(() => {
-          try {
-            return true;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__qhLa0)}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["updateIsLike"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["isLike"]
-                      },
-                      operation: 4
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      const oldValue = $stateGet(objRoot, variablePath);
-                      $stateSet(objRoot, variablePath, !oldValue);
-                      return !oldValue;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateIsLike"] != null &&
-                typeof $steps["updateIsLike"] === "object" &&
-                typeof $steps["updateIsLike"].then === "function"
-              ) {
-                $steps["updateIsLike"] = await $steps["updateIsLike"];
-              }
-
-              $steps["runCode"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return fetch(
-                          "https://apigw.paziresh24.com/ravi/v1/feedbacks/like-dislike?id=" +
-                            $props.feedbackId,
-                          {
-                            method: "POST",
-                            credentials: "include"
-                          }
-                        );
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runCode"] != null &&
-                typeof $steps["runCode"] === "object" &&
-                typeof $steps["runCode"].then === "function"
-              ) {
-                $steps["runCode"] = await $steps["runCode"];
-              }
-
-              $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return (() => {
-                          if ($state.isLike) {
-                            const likedComment = {
-                              user_id: $ctx.auth.info.id,
-                              id: $props.feedbackId
-                            };
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            likedCommentsList.push(likedComment);
-                            localStorage.setItem(
-                              "likedComments",
-                              JSON.stringify(likedCommentsList)
-                            );
-                          }
-                          if (!$state.isLike) {
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            const index = likedCommentsList.findIndex(
-                              comment =>
-                                comment.id === $props.feedbackId &&
-                                comment.user_id === $ctx.auth.info.id
-                            );
-                            if (index !== -1) {
-                              likedCommentsList.splice(index, 1);
-                              return localStorage.setItem(
-                                "likedComments",
-                                JSON.stringify(likedCommentsList)
-                              );
-                            }
-                          }
-                        })();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["saveInLocalStoreg"] != null &&
-                typeof $steps["saveInLocalStoreg"] === "object" &&
-                typeof $steps["saveInLocalStoreg"].then === "function"
-              ) {
-                $steps["saveInLocalStoreg"] = await $steps["saveInLocalStoreg"];
-              }
-
-              $steps["ifLogin"] =
-                $ctx.auth.isLogin == false
-                  ? (() => {
-                      const actionArgs = { args: [] };
-                      return $globalActions["AuthGlobalContext.login"]?.apply(
-                        null,
-                        [...actionArgs.args]
-                      );
-                    })()
-                  : undefined;
-              if (
-                $steps["ifLogin"] != null &&
-                typeof $steps["ifLogin"] === "object" &&
-                typeof $steps["ifLogin"].then === "function"
-              ) {
-                $steps["ifLogin"] = await $steps["ifLogin"];
-              }
-
-              $steps["splunk"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            comment_id: $props.feedbackId,
-                            doc_center: $props.docCenter
-                          },
-                          type: "like_comment",
-                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                          api_host: "https://splunk-ravi-hec.paziresh24.com"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["splunk"] != null &&
-                typeof $steps["splunk"] === "object" &&
-                typeof $steps["splunk"].then === "function"
-              ) {
-                $steps["splunk"] = await $steps["splunk"];
-              }
-            }}
-          >
-            {(() => {
-              try {
-                return +$props.like !== 0 || $state.isLike;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__zTaJf
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $state.isLike
-                        ? Number($props.like) + 1
-                        : $props.like;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "2";
-                      }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
-              </div>
-            ) : null}
-            {(() => {
-              try {
-                return !$state.isLike;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <PlasmicIcon__
-                PlasmicIconType={
-                  hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                    ? ThumbUpIcon
-                    : ThumbUpIcon
-                }
-                className={classNames(projectcss.all, sty.svg__lsG2C, {
-                  [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                })}
-                role={"img"}
-              />
-            ) : null}
-            {(() => {
-              try {
-                return $state.isLike == true;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <PlasmicIcon__
-                PlasmicIconType={
-                  hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                    ? ThumbUpIcon
-                    : ThumbUpIcon
-                }
-                className={classNames(projectcss.all, sty.svg__sdFgJ, {
-                  [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                })}
-                role={"img"}
-              />
-            ) : null}
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__dw8Rz,
-                {
-                  [sty.textraviExpFroDrakam__dw8RzQl6C7]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                }
-              )}
-            >
-              {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
-                : "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
-            </div>
-          </Stack__>
-        ) : null}
-        <div
-          className={classNames(projectcss.all, sty.freeBox__wNjA9)}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return $$.splunkEvent({
-                        group: "feedback",
-                        data: {
-                          doctor_id: $props.doctorId,
-                          comment_id: $props.feedbackId
-                        },
-                        type: "share_comment",
-                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                        api_host: "https://splunk-ravi-hec.paziresh24.com"
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
-            ) {
-              $steps["runCode"] = await $steps["runCode"];
-            }
-          }}
-        >
-          <Dialog
-            data-plasmic-name={"dialog6"}
-            data-plasmic-override={overrides.dialog6}
-            body={
-              <DataFetcher
-                className={classNames(
-                  "__wab_instance",
-                  sty.httpRestApiFetcher__ituI3
-                )}
-                dataName={"fetchedData"}
-                errorDisplay={null}
-                errorName={"fetchError"}
-                headers={{
-                  "Content-Type": "application/json",
-                  Accept: "application/json"
-                }}
-                loadingDisplay={
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <Icon17Icon
-                        className={classNames(
-                          projectcss.all,
-                          sty.svg__bbdhD,
-                          "loader"
-                        )}
-                        role={"img"}
-                      />
-                    )}
-                  </DataCtxReader__>
-                }
-                method={"GET"}
-                noLayout={false}
-                previewSpinner={false}
-                url={(() => {
-                  try {
-                    return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?slug=${$props.doctorSlug}&id=${$props.feedbackId}`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              >
-                <DataCtxReader__>
-                  {$ctx => (
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__o41Sk)}
-                    >
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__tjC
-                        )}
-                      >
-                        {
-                          "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0631\u0627 \u0628\u0627 \u062f\u06cc\u06af\u0631\u0627\u0646 \u0628\u0647 \u0627\u0634\u062a\u0631\u0627\u06a9 \u0628\u06af\u0630\u0627\u0631\u06cc\u062f."
-                        }
-                      </div>
-                      <div
-                        data-plasmic-name={
-                          "\u0633\u0648\u0634\u0627\u0644\u0647\u0627"
-                        }
-                        data-plasmic-override={overrides.سوشالها}
-                        className={classNames(projectcss.all, sty.سوشالها)}
-                      >
-                        <Button
-                          data-plasmic-name={"\u062a\u0648\u0626\u062a\u0631"}
-                          data-plasmic-override={overrides.توئتر}
-                          children2={
-                            <React.Fragment>
-                              <Icon17Icon2
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__dcuHo
-                                )}
-                                role={"img"}
-                              />
-
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__j9D5J
-                                )}
-                              >
-                                {"\u062a\u0648\u06cc\u06cc\u062a\u0631"}
-                              </div>
-                            </React.Fragment>
-                          }
-                          className={classNames("__wab_instance", sty.توئتر)}
-                          color={"blue"}
-                          link={(() => {
-                            try {
-                              return `https://twitter.com/intent/tweet/?url=${$ctx.fetchedData.url}`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runCode"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId
-                                        },
-                                        type: "share_comment-tweeter",
-                                        token:
-                                          "1668355b-c055-487f-8cb3-4274801d368c",
-                                        api_host:
-                                          "https://splunk-ravi-hec.paziresh24.com"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode"] != null &&
-                              typeof $steps["runCode"] === "object" &&
-                              typeof $steps["runCode"].then === "function"
-                            ) {
-                              $steps["runCode"] = await $steps["runCode"];
-                            }
-                          }}
-                        />
-
-                        <Button
-                          data-plasmic-name={"\u0627\u062a\u0627"}
-                          data-plasmic-override={overrides.اتا}
-                          children2={
-                            <React.Fragment>
-                              <EitaaIcon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg___8OaBn
-                                )}
-                                role={"img"}
-                              />
-
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__mNgXb
-                                )}
-                              >
-                                {"\u0627\u06cc\u062a\u0627"}
-                              </div>
-                            </React.Fragment>
-                          }
-                          className={classNames("__wab_instance", sty.اتا)}
-                          color={"orange"}
-                          link={(() => {
-                            try {
-                              return `https://eitaa.com/share/url?url=${$ctx.fetchedData.url}`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runCode"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId
-                                        },
-                                        type: "share_comment-eeta",
-                                        token:
-                                          "1668355b-c055-487f-8cb3-4274801d368c",
-                                        api_host:
-                                          "https://splunk-ravi-hec.paziresh24.com"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode"] != null &&
-                              typeof $steps["runCode"] === "object" &&
-                              typeof $steps["runCode"].then === "function"
-                            ) {
-                              $steps["runCode"] = await $steps["runCode"];
-                            }
-                          }}
-                        />
-
-                        <Button
-                          data-plasmic-name={"\u062a\u0644\u0631\u0627\u0645"}
-                          data-plasmic-override={overrides.تلرام}
-                          children2={
-                            <React.Fragment>
-                              <Icon13Icon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__oYc9Q
-                                )}
-                                role={"img"}
-                              />
-
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__u1Y8
-                                )}
-                              >
-                                {"\u062a\u0644\u06af\u0631\u0627\u0645"}
-                              </div>
-                            </React.Fragment>
-                          }
-                          className={classNames("__wab_instance", sty.تلرام)}
-                          link={(() => {
-                            try {
-                              return `https://telegram.me/share/url?url=${$ctx.fetchedData.url}`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runCode"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId
-                                        },
-                                        type: "share_comment-telegram",
-                                        token:
-                                          "1668355b-c055-487f-8cb3-4274801d368c",
-                                        api_host:
-                                          "https://splunk-ravi-hec.paziresh24.com"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode"] != null &&
-                              typeof $steps["runCode"] === "object" &&
-                              typeof $steps["runCode"].then === "function"
-                            ) {
-                              $steps["runCode"] = await $steps["runCode"];
-                            }
-                          }}
-                        />
-
-                        <Button
-                          data-plasmic-name={"\u0648\u0627\u062a\u0633\u0627"}
-                          data-plasmic-override={overrides.واتسا}
-                          children2={
-                            <React.Fragment>
-                              <Icon16Icon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__jcPhF
-                                )}
-                                role={"img"}
-                              />
-
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__gcPkG
-                                )}
-                              >
-                                {"\u0648\u0627\u062a\u0633\u0627\u067e"}
-                              </div>
-                            </React.Fragment>
-                          }
-                          className={classNames("__wab_instance", sty.واتسا)}
-                          color={"green"}
-                          link={(() => {
-                            try {
-                              return `https://wa.me/?text=${$ctx.fetchedData.url}`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runCode"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId
-                                        },
-                                        type: "share_comment-whatsapp",
-                                        token:
-                                          "1668355b-c055-487f-8cb3-4274801d368c",
-                                        api_host:
-                                          "https://splunk-ravi-hec.paziresh24.com"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode"] != null &&
-                              typeof $steps["runCode"] === "object" &&
-                              typeof $steps["runCode"].then === "function"
-                            ) {
-                              $steps["runCode"] = await $steps["runCode"];
-                            }
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__kjRpj
-                        )}
-                      />
-
-                      <div
-                        data-plasmic-name={"\u0631\u062f\u0646"}
-                        data-plasmic-override={overrides.ردن}
-                        className={classNames(projectcss.all, sty.ردن)}
-                      >
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__vjYtk
-                          )}
-                        >
-                          <React.Fragment>
-                            {(() => {
-                              try {
-                                return $ctx.fetchedData.url;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return "";
-                                }
-                                throw e;
-                              }
-                            })()}
-                          </React.Fragment>
-                        </div>
-                        <Button
-                          data-plasmic-name={"\u0644\u0646"}
-                          data-plasmic-override={overrides.لن}
-                          children2={
-                            <React.Fragment>
-                              <Icon15Icon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__wewyW
-                                )}
-                                role={"img"}
-                              />
-
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__rmbH3
-                                )}
-                              >
-                                {"\u06a9\u067e\u06cc \u0644\u06cc\u0646\u06a9"}
-                              </div>
-                            </React.Fragment>
-                          }
-                          className={classNames("__wab_instance", sty.لن)}
-                          color={"softBlue"}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runCode"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return navigator.share({
-                                        url: $ctx.fetchedData.url,
-                                        text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode"] != null &&
-                              typeof $steps["runCode"] === "object" &&
-                              typeof $steps["runCode"].then === "function"
-                            ) {
-                              $steps["runCode"] = await $steps["runCode"];
-                            }
-
-                            $steps["runCode2"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    customFunction: async () => {
-                                      return $$.splunkEvent({
-                                        group: "feedback",
-                                        data: {
-                                          doctor_id: $props.doctorId,
-                                          comment_id: $props.feedbackId
-                                        },
-                                        type: "share_comment-copy",
-                                        token:
-                                          "1668355b-c055-487f-8cb3-4274801d368c",
-                                        api_host:
-                                          "https://splunk-ravi-hec.paziresh24.com"
-                                      });
-                                    }
-                                  };
-                                  return (({ customFunction }) => {
-                                    return customFunction();
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runCode2"] != null &&
-                              typeof $steps["runCode2"] === "object" &&
-                              typeof $steps["runCode2"].then === "function"
-                            ) {
-                              $steps["runCode2"] = await $steps["runCode2"];
-                            }
-                          }}
-                          outline={true}
-                        />
-                      </div>
-                    </Stack__>
-                  )}
-                </DataCtxReader__>
-              </DataFetcher>
-            }
-            className={classNames("__wab_instance", sty.dialog6)}
-            onOpenChange={generateStateOnChangeProp($state, [
-              "dialog6",
-              "open"
-            ])}
-            open={generateStateValueProp($state, ["dialog6", "open"])}
-            title={
-              "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
-            }
-            trigger={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__iAvTv, {
-                  [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
-                    $state,
-                    "raviExpFroDrakam",
-                    "raviExpFroDrakam"
-                  )
-                })}
-              >
-                <Icon14Icon
-                  className={classNames(projectcss.all, sty.svg__buJg)}
-                  role={"img"}
-                />
-
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__v5Zas
-                  )}
-                >
-                  {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
-                </div>
-              </Stack__>
-            }
-          />
-        </div>
         <Dialog
           data-plasmic-name={"dialog"}
           data-plasmic-override={overrides.dialog}
@@ -2428,250 +1356,1349 @@ function PlasmicReviewCard__RenderFunc(props: {
             </Stack__>
           }
         />
-      </Stack__>
-      <div
-        data-plasmic-name={"\u0631\u0644\u0627"}
-        data-plasmic-override={overrides.رلا}
-        className={classNames(projectcss.all, sty.رلا)}
-      >
-        <textarea
-          data-plasmic-name={"replyText"}
-          data-plasmic-override={overrides.replyText}
+
+        <DataFetcher
           className={classNames(
-            projectcss.all,
-            projectcss.textarea,
-            sty.replyText
+            "__wab_instance",
+            sty.httpRestApiFetcher__dvNua
           )}
-          onChange={e => {
-            generateStateOnChangeProp($state, ["replyText", "value"])(
-              e.target.value
-            );
+          dataName={"fetchedData"}
+          errorDisplay={null}
+          errorName={"fetchError"}
+          headers={{
+            "Content-Type": "application/json",
+            Accept: "application/json"
           }}
-          placeholder={
-            "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
-          }
-          ref={ref => {
-            $refs["replyText"] = ref;
-          }}
-          value={generateStateValueProp($state, ["replyText", "value"]) ?? ""}
-        />
+          loadingDisplay={null}
+          method={"GET"}
+          noLayout={false}
+          previewSpinner={false}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})&offset=0&sort=-created_at`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          <DataCtxReader__>
+            {$ctx =>
+              (() => {
+                try {
+                  return $ctx.fetchedData.list.length > 1;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <Dialog
+                  data-plasmic-name={"dialog2"}
+                  data-plasmic-override={overrides.dialog2}
+                  body={
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__x126B)}
+                    >
+                      {(_par =>
+                        !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                        (() => {
+                          try {
+                            return $ctx.fetchedData.list;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()
+                      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                        const currentItem = __plasmic_item_0;
+                        const currentIndex = __plasmic_idx_0;
+                        return (
+                          <ReplyCard
+                            className={classNames(
+                              "__wab_instance",
+                              sty.replyCard__sQuYr
+                            )}
+                            isDoctor={(() => {
+                              try {
+                                return (
+                                  currentItem.user_id == $props.doctorUserId
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return false;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            key={currentIndex}
+                            replyText={(() => {
+                              try {
+                                return currentItem.description;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            userId={(() => {
+                              try {
+                                return currentItem.user_id;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                          />
+                        );
+                      })}
+                    </Stack__>
+                  }
+                  className={classNames("__wab_instance", sty.dialog2)}
+                  onOpenChange={generateStateOnChangeProp($state, [
+                    "dialog2",
+                    "open"
+                  ])}
+                  open={generateStateValueProp($state, ["dialog2", "open"])}
+                  title={"\u067e\u0627\u0633\u062e \u0647\u0627 "}
+                  trigger={
+                    (() => {
+                      try {
+                        return $ctx.fetchedData.list.length > 0;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <Stack__
+                        as={"div"}
+                        data-plasmic-name={
+                          "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+                        }
+                        data-plasmic-override={overrides.نظربیشتراز1}
+                        hasGap={true}
+                        className={classNames(projectcss.all, sty.نظربیشتراز1)}
+                      >
+                        <RepliesIcon
+                          className={classNames(
+                            projectcss.all,
+                            sty.svg___34YvM
+                          )}
+                          role={"img"}
+                        />
 
-        <MultilineTextInput
-          data-plasmic-name={"multilineTextInput"}
-          data-plasmic-override={overrides.multilineTextInput}
-          autoSize={true}
-          className={classNames("__wab_instance", sty.multilineTextInput, {
-            [sty.multilineTextInputraviExpFroDrakam]: hasVariant(
-              $state,
-              "raviExpFroDrakam",
-              "raviExpFroDrakam"
-            )
-          })}
-          onValueChange={generateStateOnChangeProp($state, [
-            "multilineTextInput",
-            "value"
-          ])}
-          placeholder={
-            "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
-          }
-          value={generateStateValueProp($state, [
-            "multilineTextInput",
-            "value"
-          ])}
-        />
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__fw275
+                          )}
+                        >
+                          {
+                            "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
+                          }
+                        </div>
+                      </Stack__>
+                    ) : null
+                  }
+                />
+              ) : null
+            }
+          </DataCtxReader__>
+        </DataFetcher>
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__o8WyD)}
+        >
+          {(() => {
+            try {
+              return true;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__qhLa0)}
+              onClick={async event => {
+                const $steps = {};
 
+                $steps["updateIsLike"] = $ctx.auth.isLogin
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLike"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLike"] != null &&
+                  typeof $steps["updateIsLike"] === "object" &&
+                  typeof $steps["updateIsLike"].then === "function"
+                ) {
+                  $steps["updateIsLike"] = await $steps["updateIsLike"];
+                }
+
+                $steps["runCode"] = $ctx.auth.isLogin
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return fetch(
+                            "https://apigw.paziresh24.com/ravi/v1/feedbacks/like-dislike?id=" +
+                              $props.feedbackId,
+                            {
+                              method: "POST",
+                              credentials: "include"
+                            }
+                          );
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+
+                $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            if ($state.isLike) {
+                              const likedComment = {
+                                user_id: $ctx.auth.info.id,
+                                id: $props.feedbackId
+                              };
+                              const likedCommentsList =
+                                JSON.parse(
+                                  localStorage.getItem("likedComments")
+                                ) || [];
+                              likedCommentsList.push(likedComment);
+                              localStorage.setItem(
+                                "likedComments",
+                                JSON.stringify(likedCommentsList)
+                              );
+                            }
+                            if (!$state.isLike) {
+                              const likedCommentsList =
+                                JSON.parse(
+                                  localStorage.getItem("likedComments")
+                                ) || [];
+                              const index = likedCommentsList.findIndex(
+                                comment =>
+                                  comment.id === $props.feedbackId &&
+                                  comment.user_id === $ctx.auth.info.id
+                              );
+                              if (index !== -1) {
+                                likedCommentsList.splice(index, 1);
+                                return localStorage.setItem(
+                                  "likedComments",
+                                  JSON.stringify(likedCommentsList)
+                                );
+                              }
+                            }
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["saveInLocalStoreg"] != null &&
+                  typeof $steps["saveInLocalStoreg"] === "object" &&
+                  typeof $steps["saveInLocalStoreg"].then === "function"
+                ) {
+                  $steps["saveInLocalStoreg"] = await $steps[
+                    "saveInLocalStoreg"
+                  ];
+                }
+
+                $steps["ifLogin"] =
+                  $ctx.auth.isLogin == false
+                    ? (() => {
+                        const actionArgs = { args: [] };
+                        return $globalActions["AuthGlobalContext.login"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                if (
+                  $steps["ifLogin"] != null &&
+                  typeof $steps["ifLogin"] === "object" &&
+                  typeof $steps["ifLogin"].then === "function"
+                ) {
+                  $steps["ifLogin"] = await $steps["ifLogin"];
+                }
+
+                $steps["splunk"] = $ctx.auth.isLogin
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              comment_id: $props.feedbackId,
+                              doc_center: $props.docCenter
+                            },
+                            type: "like_comment",
+                            token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                            api_host: "https://splunk-ravi-hec.paziresh24.com"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["splunk"] != null &&
+                  typeof $steps["splunk"] === "object" &&
+                  typeof $steps["splunk"].then === "function"
+                ) {
+                  $steps["splunk"] = await $steps["splunk"];
+                }
+              }}
+            >
+              {(() => {
+                try {
+                  return +$props.like !== 0 || $state.isLike;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__zTaJf
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $state.isLike
+                          ? Number($props.like) + 1
+                          : $props.like;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "2";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              ) : null}
+              {(() => {
+                try {
+                  return !$state.isLike;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <PlasmicIcon__
+                  PlasmicIconType={
+                    hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                      ? ThumbUpIcon
+                      : ThumbUpIcon
+                  }
+                  className={classNames(projectcss.all, sty.svg__lsG2C, {
+                    [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  })}
+                  role={"img"}
+                />
+              ) : null}
+              {(() => {
+                try {
+                  return $state.isLike == true;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <PlasmicIcon__
+                  PlasmicIconType={
+                    hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                      ? ThumbUpIcon
+                      : ThumbUpIcon
+                  }
+                  className={classNames(projectcss.all, sty.svg__sdFgJ, {
+                    [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  })}
+                  role={"img"}
+                />
+              ) : null}
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__dw8Rz,
+                  {
+                    [sty.textraviExpFroDrakam__dw8RzQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  }
+                )}
+              >
+                {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                  ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
+                  : "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
+              </div>
+            </Stack__>
+          ) : null}
+          <div
+            className={classNames(projectcss.all, sty.freeBox__wNjA9)}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return $$.splunkEvent({
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorId,
+                            comment_id: $props.feedbackId
+                          },
+                          type: "share_comment",
+                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                          api_host: "https://splunk-ravi-hec.paziresh24.com"
+                        });
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }}
+          >
+            <Dialog
+              data-plasmic-name={"dialog6"}
+              data-plasmic-override={overrides.dialog6}
+              body={
+                <DataFetcher
+                  className={classNames(
+                    "__wab_instance",
+                    sty.httpRestApiFetcher__ituI3
+                  )}
+                  dataName={"fetchedData"}
+                  errorDisplay={null}
+                  errorName={"fetchError"}
+                  headers={{
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                  }}
+                  loadingDisplay={
+                    <DataCtxReader__>
+                      {$ctx => (
+                        <Icon17Icon
+                          className={classNames(
+                            projectcss.all,
+                            sty.svg__bbdhD,
+                            "loader"
+                          )}
+                          role={"img"}
+                        />
+                      )}
+                    </DataCtxReader__>
+                  }
+                  method={"GET"}
+                  noLayout={false}
+                  previewSpinner={false}
+                  url={(() => {
+                    try {
+                      return `https://ir-ravi-n8n.darkube.app/webhook/share-comment?slug=${$props.doctorSlug}&id=${$props.feedbackId}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                >
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <Stack__
+                        as={"div"}
+                        hasGap={true}
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__o41Sk
+                        )}
+                      >
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__tjC
+                          )}
+                        >
+                          {
+                            "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0631\u0627 \u0628\u0627 \u062f\u06cc\u06af\u0631\u0627\u0646 \u0628\u0647 \u0627\u0634\u062a\u0631\u0627\u06a9 \u0628\u06af\u0630\u0627\u0631\u06cc\u062f."
+                          }
+                        </div>
+                        <div
+                          data-plasmic-name={
+                            "\u0633\u0648\u0634\u0627\u0644\u0647\u0627"
+                          }
+                          data-plasmic-override={overrides.سوشالها}
+                          className={classNames(projectcss.all, sty.سوشالها)}
+                        >
+                          <Button
+                            data-plasmic-name={
+                              "\u062a\u0648\u0626\u06cc\u062a\u0631"
+                            }
+                            data-plasmic-override={overrides.توئیتر}
+                            children2={
+                              <React.Fragment>
+                                <Icon17Icon2
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__dcuHo
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__j9D5J
+                                  )}
+                                >
+                                  {"\u062a\u0648\u06cc\u06cc\u062a\u0631"}
+                                </div>
+                              </React.Fragment>
+                            }
+                            className={classNames("__wab_instance", sty.توئیتر)}
+                            color={"blue"}
+                            link={(() => {
+                              try {
+                                return `https://twitter.com/intent/tweet/?url=${$ctx.fetchedData.url}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            onClick={async event => {
+                              const $steps = {};
+
+                              $steps["runCode"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return $$.splunkEvent({
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-tweeter",
+                                          token:
+                                            "1668355b-c055-487f-8cb3-4274801d368c",
+                                          api_host:
+                                            "https://splunk-ravi-hec.paziresh24.com"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode"] != null &&
+                                typeof $steps["runCode"] === "object" &&
+                                typeof $steps["runCode"].then === "function"
+                              ) {
+                                $steps["runCode"] = await $steps["runCode"];
+                              }
+                            }}
+                          />
+
+                          <Button
+                            data-plasmic-name={"\u0627\u06cc\u062a\u0627"}
+                            data-plasmic-override={overrides.ایتا}
+                            children2={
+                              <React.Fragment>
+                                <EitaaIcon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg___8OaBn
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__mNgXb
+                                  )}
+                                >
+                                  {"\u0627\u06cc\u062a\u0627"}
+                                </div>
+                              </React.Fragment>
+                            }
+                            className={classNames("__wab_instance", sty.ایتا)}
+                            color={"orange"}
+                            link={(() => {
+                              try {
+                                return `https://eitaa.com/share/url?url=${$ctx.fetchedData.url}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            onClick={async event => {
+                              const $steps = {};
+
+                              $steps["runCode"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return $$.splunkEvent({
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-eeta",
+                                          token:
+                                            "1668355b-c055-487f-8cb3-4274801d368c",
+                                          api_host:
+                                            "https://splunk-ravi-hec.paziresh24.com"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode"] != null &&
+                                typeof $steps["runCode"] === "object" &&
+                                typeof $steps["runCode"].then === "function"
+                              ) {
+                                $steps["runCode"] = await $steps["runCode"];
+                              }
+                            }}
+                          />
+
+                          <Button
+                            data-plasmic-name={
+                              "\u062a\u0644\u06af\u0631\u0627\u0645"
+                            }
+                            data-plasmic-override={overrides.تلگرام}
+                            children2={
+                              <React.Fragment>
+                                <Icon13Icon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__oYc9Q
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__u1Y8
+                                  )}
+                                >
+                                  {"\u062a\u0644\u06af\u0631\u0627\u0645"}
+                                </div>
+                              </React.Fragment>
+                            }
+                            className={classNames("__wab_instance", sty.تلگرام)}
+                            link={(() => {
+                              try {
+                                return `https://telegram.me/share/url?url=${$ctx.fetchedData.url}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            onClick={async event => {
+                              const $steps = {};
+
+                              $steps["runCode"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return $$.splunkEvent({
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-telegram",
+                                          token:
+                                            "1668355b-c055-487f-8cb3-4274801d368c",
+                                          api_host:
+                                            "https://splunk-ravi-hec.paziresh24.com"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode"] != null &&
+                                typeof $steps["runCode"] === "object" &&
+                                typeof $steps["runCode"].then === "function"
+                              ) {
+                                $steps["runCode"] = await $steps["runCode"];
+                              }
+                            }}
+                          />
+
+                          <Button
+                            data-plasmic-name={
+                              "\u0648\u0627\u062a\u0633\u0627\u067e"
+                            }
+                            data-plasmic-override={overrides.واتساپ}
+                            children2={
+                              <React.Fragment>
+                                <Icon16Icon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__jcPhF
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__gcPkG
+                                  )}
+                                >
+                                  {"\u0648\u0627\u062a\u0633\u0627\u067e"}
+                                </div>
+                              </React.Fragment>
+                            }
+                            className={classNames("__wab_instance", sty.واتساپ)}
+                            color={"green"}
+                            link={(() => {
+                              try {
+                                return `https://wa.me/?text=${$ctx.fetchedData.url}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            onClick={async event => {
+                              const $steps = {};
+
+                              $steps["runCode"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return $$.splunkEvent({
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-whatsapp",
+                                          token:
+                                            "1668355b-c055-487f-8cb3-4274801d368c",
+                                          api_host:
+                                            "https://splunk-ravi-hec.paziresh24.com"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode"] != null &&
+                                typeof $steps["runCode"] === "object" &&
+                                typeof $steps["runCode"].then === "function"
+                              ) {
+                                $steps["runCode"] = await $steps["runCode"];
+                              }
+                            }}
+                          />
+                        </div>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__kjRpj
+                          )}
+                        />
+
+                        <div
+                          data-plasmic-name={
+                            "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"
+                          }
+                          data-plasmic-override={overrides.کپیکردن}
+                          className={classNames(projectcss.all, sty.کپیکردن)}
+                        >
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__vjYtk
+                            )}
+                          >
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return $ctx.fetchedData.url;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return "";
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
+                          </div>
+                          <Button
+                            data-plasmic-name={
+                              "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+                            }
+                            data-plasmic-override={overrides.کپیلینک}
+                            children2={
+                              <React.Fragment>
+                                <Icon15Icon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__wewyW
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__rmbH3
+                                  )}
+                                >
+                                  {
+                                    "\u06a9\u067e\u06cc \u0644\u06cc\u0646\u06a9"
+                                  }
+                                </div>
+                              </React.Fragment>
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.کپیلینک
+                            )}
+                            color={"softBlue"}
+                            onClick={async event => {
+                              const $steps = {};
+
+                              $steps["runCode"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return navigator.share({
+                                          url: $ctx.fetchedData.url,
+                                          text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode"] != null &&
+                                typeof $steps["runCode"] === "object" &&
+                                typeof $steps["runCode"].then === "function"
+                              ) {
+                                $steps["runCode"] = await $steps["runCode"];
+                              }
+
+                              $steps["runCode2"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return $$.splunkEvent({
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-copy",
+                                          token:
+                                            "1668355b-c055-487f-8cb3-4274801d368c",
+                                          api_host:
+                                            "https://splunk-ravi-hec.paziresh24.com"
+                                        });
+                                      }
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runCode2"] != null &&
+                                typeof $steps["runCode2"] === "object" &&
+                                typeof $steps["runCode2"].then === "function"
+                              ) {
+                                $steps["runCode2"] = await $steps["runCode2"];
+                              }
+                            }}
+                            outline={true}
+                          />
+                        </div>
+                      </Stack__>
+                    )}
+                  </DataCtxReader__>
+                </DataFetcher>
+              }
+              className={classNames("__wab_instance", sty.dialog6)}
+              onOpenChange={generateStateOnChangeProp($state, [
+                "dialog6",
+                "open"
+              ])}
+              open={generateStateValueProp($state, ["dialog6", "open"])}
+              title={
+                "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
+              }
+              trigger={
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__iAvTv, {
+                    [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
+                      $state,
+                      "raviExpFroDrakam",
+                      "raviExpFroDrakam"
+                    )
+                  })}
+                >
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg__buJg)}
+                    role={"img"}
+                  />
+
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__v5Zas
+                    )}
+                  >
+                    {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
+                  </div>
+                </Stack__>
+              }
+            />
+          </div>
+        </Stack__>
+      </Stack__>
+      {(() => {
+        try {
+          return $props.isShowReplyInput;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
         <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__eTi4F,
-            {
-              [sty.textraviExpFroDrakam__eTi4FQl6C7]: hasVariant(
+          data-plasmic-name={"\u0631\u06cc\u067e\u0644\u0627\u06cc"}
+          data-plasmic-override={overrides.ریپلای}
+          className={classNames(projectcss.all, sty.ریپلای)}
+        >
+          <textarea
+            data-plasmic-name={"replyText"}
+            data-plasmic-override={overrides.replyText}
+            className={classNames(
+              projectcss.all,
+              projectcss.textarea,
+              sty.replyText
+            )}
+            onChange={e => {
+              generateStateOnChangeProp($state, ["replyText", "value"])(
+                e.target.value
+              );
+            }}
+            placeholder={
+              "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
+            }
+            ref={ref => {
+              $refs["replyText"] = ref;
+            }}
+            value={generateStateValueProp($state, ["replyText", "value"]) ?? ""}
+          />
+
+          <MultilineTextInput
+            data-plasmic-name={"multilineTextInput"}
+            data-plasmic-override={overrides.multilineTextInput}
+            autoSize={true}
+            className={classNames("__wab_instance", sty.multilineTextInput, {
+              [sty.multilineTextInputraviExpFroDrakam]: hasVariant(
                 $state,
                 "raviExpFroDrakam",
                 "raviExpFroDrakam"
               )
+            })}
+            onValueChange={generateStateOnChangeProp($state, [
+              "multilineTextInput",
+              "value"
+            ])}
+            placeholder={
+              "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
             }
-          )}
-          onClick={async event => {
-            const $steps = {};
+            value={generateStateValueProp($state, [
+              "multilineTextInput",
+              "value"
+            ])}
+          />
 
-            $steps["request"] = $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return (() => {
-                        const formData = new FormData();
-                        formData.append("feedback_id", $props.feedbackId);
-                        formData.append(
-                          "description",
-                          $state.multilineTextInput.value
-                        );
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__eTi4F,
+              {
+                [sty.textraviExpFroDrakam__eTi4FQl6C7]: hasVariant(
+                  $state,
+                  "raviExpFroDrakam",
+                  "raviExpFroDrakam"
+                )
+              }
+            )}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["request"] = $ctx.auth.isLogin
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          const formData = new FormData();
+                          formData.append("feedback_id", $props.feedbackId);
+                          formData.append(
+                            "description",
+                            $state.multilineTextInput.value
+                          );
+                          return fetch(
+                            "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                              $props.feedbackId,
+                            {
+                              method: "POST",
+                              body: formData,
+                              credentials: "include"
+                            }
+                          );
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["request"] != null &&
+                typeof $steps["request"] === "object" &&
+                typeof $steps["request"].then === "function"
+              ) {
+                $steps["request"] = await $steps["request"];
+              }
+
+              $steps["toast"] = $ctx.auth.isLogin
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        undefined,
+                        "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f.",
+                        undefined,
+                        5000
+                      ]
+                    };
+                    return $globalActions["Fragment.showToast"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["toast"] != null &&
+                typeof $steps["toast"] === "object" &&
+                typeof $steps["toast"].then === "function"
+              ) {
+                $steps["toast"] = await $steps["toast"];
+              }
+
+              $steps["multiline"] = $ctx.auth.isLogin
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["multilineTextInput", "value"]
+                      },
+                      operation: 1
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, undefined);
+                      return undefined;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["multiline"] != null &&
+                typeof $steps["multiline"] === "object" &&
+                typeof $steps["multiline"].then === "function"
+              ) {
+                $steps["multiline"] = await $steps["multiline"];
+              }
+
+              $steps["invokeGlobalAction"] =
+                $ctx.auth.isLogin == false
+                  ? (() => {
+                      const actionArgs = { args: [] };
+                      return $globalActions["AuthGlobalContext.login"]?.apply(
+                        null,
+                        [...actionArgs.args]
+                      );
+                    })()
+                  : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+
+              $steps["sendToN8N"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
                         return fetch(
-                          "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                          "https://apigw.paziresh24.com/ravi/v1/reply-webhook?id=" +
                             $props.feedbackId,
                           {
+                            headers: { "content-type": "application/json" },
+                            body: JSON.stringify({
+                              doctor_id: $props.doctorId,
+                              comment_id: $props.feedbackId,
+                              reply_text: $state.multilineTextInput.value
+                            }),
                             method: "POST",
-                            body: formData,
                             credentials: "include"
                           }
                         );
-                      })();
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["request"] != null &&
-              typeof $steps["request"] === "object" &&
-              typeof $steps["request"].then === "function"
-            ) {
-              $steps["request"] = await $steps["request"];
-            }
-
-            $steps["toast"] = $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      undefined,
-                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f.",
-                      undefined,
-                      5000
-                    ]
-                  };
-                  return $globalActions["Fragment.showToast"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
-            if (
-              $steps["toast"] != null &&
-              typeof $steps["toast"] === "object" &&
-              typeof $steps["toast"].then === "function"
-            ) {
-              $steps["toast"] = await $steps["toast"];
-            }
-
-            $steps["multiline"] = $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["multilineTextInput", "value"]
-                    },
-                    operation: 1
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    $stateSet(objRoot, variablePath, undefined);
-                    return undefined;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["multiline"] != null &&
-              typeof $steps["multiline"] === "object" &&
-              typeof $steps["multiline"].then === "function"
-            ) {
-              $steps["multiline"] = await $steps["multiline"];
-            }
-
-            $steps["invokeGlobalAction"] =
-              $ctx.auth.isLogin == false
-                ? (() => {
-                    const actionArgs = { args: [] };
-                    return $globalActions["AuthGlobalContext.login"]?.apply(
-                      null,
-                      [...actionArgs.args]
-                    );
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
                   })()
                 : undefined;
-            if (
-              $steps["invokeGlobalAction"] != null &&
-              typeof $steps["invokeGlobalAction"] === "object" &&
-              typeof $steps["invokeGlobalAction"].then === "function"
-            ) {
-              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
-            }
+              if (
+                $steps["sendToN8N"] != null &&
+                typeof $steps["sendToN8N"] === "object" &&
+                typeof $steps["sendToN8N"].then === "function"
+              ) {
+                $steps["sendToN8N"] = await $steps["sendToN8N"];
+              }
 
-            $steps["sendToN8N"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return fetch(
-                        "https://apigw.paziresh24.com/ravi/v1/reply-webhook?id=" +
-                          $props.feedbackId,
-                        {
-                          headers: { "content-type": "application/json" },
-                          body: JSON.stringify({
+              $steps["splunk"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return $$.splunkEvent({
+                          group: "feedback",
+                          data: {
                             doctor_id: $props.doctorId,
                             comment_id: $props.feedbackId,
                             reply_text: $state.multilineTextInput.value
-                          }),
-                          method: "POST",
-                          credentials: "include"
-                        }
-                      );
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["sendToN8N"] != null &&
-              typeof $steps["sendToN8N"] === "object" &&
-              typeof $steps["sendToN8N"].then === "function"
-            ) {
-              $steps["sendToN8N"] = await $steps["sendToN8N"];
-            }
-
-            $steps["splunk"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return $$.splunkEvent({
-                        group: "feedback",
-                        data: {
-                          doctor_id: $props.doctorId,
-                          comment_id: $props.feedbackId,
-                          reply_text: $state.multilineTextInput.value
-                        },
-                        type: "reply_comment",
-                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                        api_host: "https://splunk-ravi-hec.paziresh24.com"
-                      });
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["splunk"] != null &&
-              typeof $steps["splunk"] === "object" &&
-              typeof $steps["splunk"].then === "function"
-            ) {
-              $steps["splunk"] = await $steps["splunk"];
-            }
-          }}
-        >
-          {"\u0627\u0631\u0633\u0627\u0644"}
+                          },
+                          type: "reply_comment",
+                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                          api_host: "https://splunk-ravi-hec.paziresh24.com"
+                        });
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["splunk"] != null &&
+                typeof $steps["splunk"] === "object" &&
+                typeof $steps["splunk"].then === "function"
+              ) {
+                $steps["splunk"] = await $steps["splunk"];
+              }
+            }}
+          >
+            {"\u0627\u0631\u0633\u0627\u0644"}
+          </div>
         </div>
-      </div>
+      ) : null}
       <DataFetcher
-        data-plasmic-name={"\u0631\u0641\u062a\u0646\u0631\u0644\u0627"}
-        data-plasmic-override={overrides.رفتنرلا}
-        className={classNames("__wab_instance", sty.رفتنرلا)}
+        data-plasmic-name={
+          "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+        }
+        data-plasmic-override={overrides.گرفتنریپلای}
+        className={classNames("__wab_instance", sty.گرفتنریپلای)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -2803,128 +2830,142 @@ function PlasmicReviewCard__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  اردنماشنظر: [
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
-    "userAvatar2",
-    "userAvatar",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "chip",
+  کاردنمایشنظر: [
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631",
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "editAndReport",
+    "userAvatar",
+    "chip",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
-    "dialog2",
-    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321",
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
-    "dialog6",
-    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646",
+    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
     "dialog",
     "reportText",
     "button",
-    "\u0631\u0644\u0627",
-    "replyText",
-    "multilineTextInput",
-    "\u0631\u0641\u062a\u0646\u0631\u0644\u0627"
-  ],
-  نامتتارخ: [
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
-    "userAvatar2",
-    "userAvatar",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "chip",
-    "editAndReport"
-  ],
-  userAvatar2: ["userAvatar2"],
-  userAvatar: ["userAvatar"],
-  ناماربر: ["\u0646\u0627\u0645\u0627\u0631\u0628\u0631"],
-  chip: ["chip"],
-  editAndReport: ["editAndReport"],
-  متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
-  dialog2: [
     "dialog2",
-    "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
-  ],
-  نظربشتراز1: ["\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"],
-  لارورت: [
-    "\u0644\u0627\u0631\u0648\u0631\u062a",
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646",
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9",
+    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
+    "replyText",
+    "multilineTextInput",
+    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+  ],
+  نامکاربر: [
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "editAndReport",
+    "userAvatar",
+    "chip"
+  ],
+  نامتگتاریخ: [
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "editAndReport",
+    "userAvatar",
+    "chip"
+  ],
+  editAndReport: ["editAndReport"],
+  userAvatar: ["userAvatar"],
+  chip: ["chip"],
+  متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
+  لایکریپورت: [
+    "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
     "dialog",
     "reportText",
-    "button"
+    "button",
+    "dialog2",
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
+    "dialog6",
+    "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+  ],
+  dialog: ["dialog", "reportText", "button"],
+  reportText: ["reportText"],
+  button: ["button"],
+  dialog2: [
+    "dialog2",
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+  ],
+  نظربیشتراز1: [
+    "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
   ],
   dialog6: [
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627",
-    "\u0631\u062f\u0646",
-    "\u0644\u0646"
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e",
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
   ],
   سوشالها: [
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
-    "\u062a\u0648\u0626\u062a\u0631",
-    "\u0627\u062a\u0627",
-    "\u062a\u0644\u0631\u0627\u0645",
-    "\u0648\u0627\u062a\u0633\u0627"
+    "\u062a\u0648\u0626\u06cc\u062a\u0631",
+    "\u0627\u06cc\u062a\u0627",
+    "\u062a\u0644\u06af\u0631\u0627\u0645",
+    "\u0648\u0627\u062a\u0633\u0627\u067e"
   ],
-  توئتر: ["\u062a\u0648\u0626\u062a\u0631"],
-  اتا: ["\u0627\u062a\u0627"],
-  تلرام: ["\u062a\u0644\u0631\u0627\u0645"],
-  واتسا: ["\u0648\u0627\u062a\u0633\u0627"],
-  ردن: ["\u0631\u062f\u0646", "\u0644\u0646"],
-  لن: ["\u0644\u0646"],
-  dialog: ["dialog", "reportText", "button"],
-  reportText: ["reportText"],
-  button: ["button"],
-  رلا: ["\u0631\u0644\u0627", "replyText", "multilineTextInput"],
+  توئیتر: ["\u062a\u0648\u0626\u06cc\u062a\u0631"],
+  ایتا: ["\u0627\u06cc\u062a\u0627"],
+  تلگرام: ["\u062a\u0644\u06af\u0631\u0627\u0645"],
+  واتساپ: ["\u0648\u0627\u062a\u0633\u0627\u067e"],
+  کپیکردن: [
+    "\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646",
+    "\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"
+  ],
+  کپیلینک: ["\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"],
+  ریپلای: [
+    "\u0631\u06cc\u067e\u0644\u0627\u06cc",
+    "replyText",
+    "multilineTextInput"
+  ],
   replyText: ["replyText"],
   multilineTextInput: ["multilineTextInput"],
-  رفتنرلا: ["\u0631\u0641\u062a\u0646\u0631\u0644\u0627"]
+  گرفتنریپلای: [
+    "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+  ]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  اردنماشنظر: "div";
-  نامتتارخ: "div";
-  userAvatar2: typeof Avatar;
-  userAvatar: typeof Avatar;
-  ناماربر: typeof DataFetcher;
-  chip: typeof Chip;
+  کاردنمایشنظر: "div";
+  نامکاربر: typeof DataFetcher;
+  نامتگتاریخ: "div";
   editAndReport: typeof EditAndReport;
+  userAvatar: typeof Avatar;
+  chip: typeof Chip;
   متننظر: "div";
-  dialog2: typeof Dialog;
-  نظربشتراز1: "div";
-  لارورت: "div";
-  dialog6: typeof Dialog;
-  سوشالها: "div";
-  توئتر: typeof Button;
-  اتا: typeof Button;
-  تلرام: typeof Button;
-  واتسا: typeof Button;
-  ردن: "div";
-  لن: typeof Button;
+  لایکریپورت: "div";
   dialog: typeof Dialog;
   reportText: "textarea";
   button: typeof Button;
-  رلا: "div";
+  dialog2: typeof Dialog;
+  نظربیشتراز1: "div";
+  dialog6: typeof Dialog;
+  سوشالها: "div";
+  توئیتر: typeof Button;
+  ایتا: typeof Button;
+  تلگرام: typeof Button;
+  واتساپ: typeof Button;
+  کپیکردن: "div";
+  کپیلینک: typeof Button;
+  ریپلای: "div";
   replyText: "textarea";
   multilineTextInput: typeof MultilineTextInput;
-  رفتنرلا: typeof DataFetcher;
+  گرفتنریپلای: typeof DataFetcher;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2975,7 +3016,8 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
     });
   };
   if (
-    nodeName === "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+    nodeName ===
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
   ) {
     func.displayName = "PlasmicReviewCard";
   } else {
@@ -2987,39 +3029,44 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 export const PlasmicReviewCard = Object.assign(
   // Top-level PlasmicReviewCard renders the root element
   makeNodeComponent(
-    "\u0627\u0631\u062f\u0646\u0645\u0627\u0634\u0646\u0638\u0631"
+    "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
   ),
   {
     // Helper components rendering sub-elements
-    نامتتارخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+    نامکاربر: makeNodeComponent(
+      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
     ),
-    userAvatar2: makeNodeComponent("userAvatar2"),
-    userAvatar: makeNodeComponent("userAvatar"),
-    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
-    chip: makeNodeComponent("chip"),
+    نامتگتاریخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
+    ),
     editAndReport: makeNodeComponent("editAndReport"),
+    userAvatar: makeNodeComponent("userAvatar"),
+    chip: makeNodeComponent("chip"),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
-    dialog2: makeNodeComponent("dialog2"),
-    نظربشتراز1: makeNodeComponent(
-      "\u0646\u0638\u0631\u0628\u0634\u062a\u0631\u0627\u06321"
+    لایکریپورت: makeNodeComponent(
+      "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
     ),
-    لارورت: makeNodeComponent("\u0644\u0627\u0631\u0648\u0631\u062a"),
-    dialog6: makeNodeComponent("dialog6"),
-    سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
-    توئتر: makeNodeComponent("\u062a\u0648\u0626\u062a\u0631"),
-    اتا: makeNodeComponent("\u0627\u062a\u0627"),
-    تلرام: makeNodeComponent("\u062a\u0644\u0631\u0627\u0645"),
-    واتسا: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627"),
-    ردن: makeNodeComponent("\u0631\u062f\u0646"),
-    لن: makeNodeComponent("\u0644\u0646"),
     dialog: makeNodeComponent("dialog"),
     reportText: makeNodeComponent("reportText"),
     button: makeNodeComponent("button"),
-    رلا: makeNodeComponent("\u0631\u0644\u0627"),
+    dialog2: makeNodeComponent("dialog2"),
+    نظربیشتراز1: makeNodeComponent(
+      "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
+    ),
+    dialog6: makeNodeComponent("dialog6"),
+    سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
+    توئیتر: makeNodeComponent("\u062a\u0648\u0626\u06cc\u062a\u0631"),
+    ایتا: makeNodeComponent("\u0627\u06cc\u062a\u0627"),
+    تلگرام: makeNodeComponent("\u062a\u0644\u06af\u0631\u0627\u0645"),
+    واتساپ: makeNodeComponent("\u0648\u0627\u062a\u0633\u0627\u067e"),
+    کپیکردن: makeNodeComponent("\u06a9\u067e\u06cc\u06a9\u0631\u062f\u0646"),
+    کپیلینک: makeNodeComponent("\u06a9\u067e\u06cc\u0644\u06cc\u0646\u06a9"),
+    ریپلای: makeNodeComponent("\u0631\u06cc\u067e\u0644\u0627\u06cc"),
     replyText: makeNodeComponent("replyText"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),
-    رفتنرلا: makeNodeComponent("\u0631\u0641\u062a\u0646\u0631\u0644\u0627"),
+    گرفتنریپلای: makeNodeComponent(
+      "\u06af\u0631\u0641\u062a\u0646\u0631\u06cc\u067e\u0644\u0627\u06cc"
+    ),
 
     // Metadata about props expected for PlasmicReviewCard
     internalVariantProps: PlasmicReviewCard__VariantProps,
