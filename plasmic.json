@@ -697,7 +697,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -978,8 +979,8 @@
       "icons": [
         {
           "id": "NWCYMTObqr7D",
-          "name": "ChecksvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Checksvg.tsx"
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__CheckSvg.tsx"
         },
         {
           "id": "xw5A3Vn5_KNc",
@@ -988,18 +989,18 @@
         },
         {
           "id": "W3TLlIDrGJdy",
-          "name": "SearchsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Searchsvg.tsx"
+          "name": "SearchSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__SearchSvg.tsx"
         },
         {
           "id": "NXg4jyTHB7Sj",
-          "name": "ChevronDownsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronDownsvg.tsx"
+          "name": "ChevronDownSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronDownSvg.tsx"
         },
         {
           "id": "YVM63_mcG0ZV",
-          "name": "ChevronUpsvgIcon",
-          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpsvg.tsx"
+          "name": "ChevronUpSvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__ChevronUpSvg.tsx"
         },
         {
           "id": "SNOnlPCvguG2",
@@ -1136,8 +1137,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",

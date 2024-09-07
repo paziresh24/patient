@@ -76,8 +76,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList.module.css"; // plasmic-import: Bx6gxTOoja9k/css
 
-import SearchsvgIcon from "./icons/PlasmicIcon__Searchsvg"; // plasmic-import: W3TLlIDrGJdy/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: NWCYMTObqr7D/icon
+import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: W3TLlIDrGJdy/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: NWCYMTObqr7D/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon11Icon from "./icons/PlasmicIcon__Icon11"; // plasmic-import: 2W2cvQbPPcOu/icon
@@ -179,7 +179,9 @@ function PlasmicReviewList__RenderFunc(props: {
           paginationLoadingStatus: false,
           hideRates: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -953,6 +955,19 @@ function PlasmicReviewList__RenderFunc(props: {
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
                           return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    isShowReplyInput={(() => {
+                      try {
+                        return $props.information.user_id == $ctx.auth.info.id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
                         }
                         throw e;
                       }

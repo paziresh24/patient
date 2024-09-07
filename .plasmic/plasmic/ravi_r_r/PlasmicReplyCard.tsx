@@ -101,8 +101,8 @@ export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
   editAndReport?: Flex__<typeof EditAndReport>;
-  ناماربر?: Flex__<typeof DataFetcher>;
-  نامتتارخ?: Flex__<"div">;
+  نامکاربر?: Flex__<typeof DataFetcher>;
+  نامتگتاریخ?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
@@ -142,7 +142,9 @@ function PlasmicReplyCard__RenderFunc(props: {
         {
           isDoctor: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -158,11 +160,13 @@ function PlasmicReplyCard__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <div
+    <Stack__
+      as={"div"}
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
+      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -250,9 +254,9 @@ function PlasmicReplyCard__RenderFunc(props: {
       />
 
       <DataFetcher
-        data-plasmic-name={"\u0646\u0627\u0645\u0627\u0631\u0628\u0631"}
-        data-plasmic-override={overrides.ناماربر}
-        className={classNames("__wab_instance", sty.ناماربر)}
+        data-plasmic-name={"\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"}
+        data-plasmic-override={overrides.نامکاربر}
+        className={classNames("__wab_instance", sty.نامکاربر)}
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
@@ -281,10 +285,10 @@ function PlasmicReplyCard__RenderFunc(props: {
           {$ctx => (
             <div
               data-plasmic-name={
-                "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+                "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
               }
-              data-plasmic-override={overrides.نامتتارخ}
-              className={classNames(projectcss.all, sty.نامتتارخ)}
+              data-plasmic-override={overrides.نامتگتاریخ}
+              className={classNames(projectcss.all, sty.نامتگتاریخ)}
             >
               <DataFetcher
                 data-plasmic-name={"httpRestApiFetcher"}
@@ -476,7 +480,7 @@ function PlasmicReplyCard__RenderFunc(props: {
           />
         </div>
       </div>
-    </div>
+    </Stack__>
   ) as React.ReactElement | null;
 }
 
@@ -484,24 +488,24 @@ const PlasmicDescendants = {
   root: [
     "root",
     "editAndReport",
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
   editAndReport: ["editAndReport"],
-  ناماربر: [
-    "\u0646\u0627\u0645\u0627\u0631\u0628\u0631",
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  نامکاربر: [
+    "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  نامتتارخ: [
-    "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e",
+  نامتگتاریخ: [
+    "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
@@ -518,8 +522,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   editAndReport: typeof EditAndReport;
-  ناماربر: typeof DataFetcher;
-  نامتتارخ: "div";
+  نامکاربر: typeof DataFetcher;
+  نامتگتاریخ: "div";
   httpRestApiFetcher: typeof DataFetcher;
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
@@ -587,9 +591,11 @@ export const PlasmicReplyCard = Object.assign(
   {
     // Helper components rendering sub-elements
     editAndReport: makeNodeComponent("editAndReport"),
-    ناماربر: makeNodeComponent("\u0646\u0627\u0645\u0627\u0631\u0628\u0631"),
-    نامتتارخ: makeNodeComponent(
-      "\u0646\u0627\u0645\u062a\u062a\u0627\u0631\u062e"
+    نامکاربر: makeNodeComponent(
+      "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
+    ),
+    نامتگتاریخ: makeNodeComponent(
+      "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
     ),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     userAvatar2: makeNodeComponent("userAvatar2"),
