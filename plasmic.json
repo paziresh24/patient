@@ -640,6 +640,11 @@
           "id": "2fxvviUbNC5l",
           "name": "Icon8Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon8.tsx"
+        },
+        {
+          "id": "bfqtb2xTeMAi",
+          "name": "Icon9Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon9.tsx"
         }
       ],
       "images": [
@@ -697,8 +702,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1137,7 +1141,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
