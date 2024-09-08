@@ -222,11 +222,9 @@ export const sections = (data: any) => {
                     (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
                   3
                 )?.toFixed(1) * 20
-              }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند و ${
-                feedbacks?.details?.like ?? 0
-              } نفر این پزشک را توصیه کرده‌اند. <b>نظرات ${information.prefix} ${
-                information.display_name
-              }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
+              }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${
+                information.prefix
+              } ${information.display_name}</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
             : ''
         }
         ${
