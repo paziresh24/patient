@@ -798,7 +798,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                         "\u0648\u06cc\u0632\u06cc\u062a \u0634\u062f\u0647"
                       }
                       rounded={true}
-                      size={"small"}
+                      size={"xSmall"}
                       slot={
                         <InfoIcon
                           className={classNames(projectcss.all, sty.svg__h3Tzz)}

@@ -134,7 +134,9 @@ function PlasmicAvatar__RenderFunc(props: {
         {
           src: "https://avatar.iran.liara.run/public/43"
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -304,7 +306,7 @@ function PlasmicAvatar__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return `${$props.name.split(" ")?.[0]?.[0] ?? ""} ${
+                  return `${$props.name.split(" ")?.[0]?.[0] ?? ""}${
                     $props.name.split(" ")?.[1]?.[0] ?? ""
                   }`;
                 } catch (e) {

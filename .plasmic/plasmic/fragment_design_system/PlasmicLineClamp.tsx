@@ -114,7 +114,9 @@ function PlasmicLineClamp__RenderFunc(props: {
         {
           numberOfLines: 1
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
