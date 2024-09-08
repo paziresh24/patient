@@ -133,7 +133,7 @@ export const sections = (data: any) => {
     },
     // Own Page
     {
-      isShow: !customize?.partnerKey,
+      isShow: !customize?.partnerKey && centers?.length > 0,
       noWrapper: true,
       children: () => <Fragment name="Claim" props={{ ...profileData }} />,
     },

@@ -37,11 +37,11 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source.display_name,
-    name: source.name,
-    family: source.family,
-    biography: source.biography,
-    employee_id: source.medical_code,
+    display_name: source?.display_name,
+    name: source?.name,
+    family: source?.family,
+    biography: source?.biography,
+    employee_id: source?.medical_code,
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
     image: source?.image ?? null,
@@ -50,18 +50,18 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     ...overwriteData.provider,
   };
 
-  const group_expertises = flatMap(overwriteData.provider?.expertises, item => get(item, 'speciality.taggables', [])).map(
+  const group_expertises = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', [])).map(
     (item: any) => item.tag,
   );
 
-  const centers = source.centers;
+  const centers = source?.centers ?? [];
 
   const expertises = {
     group_expertises: isEmpty(group_expertises)
       ? source?.group_expertises ?? []
       : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
-    expertises: isEmpty(overwriteData.provider.expertises)
-      ? source.expertises?.map?.((item: any) => ({
+    expertises: isEmpty(overwriteData.provider?.expertises)
+      ? source?.expertises?.map?.((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
             aliasTitle: item.alias_title,
             degree: item.degree?.name,
@@ -72,7 +72,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           degree_name: item?.degree?.name ?? '',
           expertise_name: item.expertise?.name,
         })) ?? []
-      : overwriteData.provider.expertises.map((item: any) => ({
+      : overwriteData.provider?.expertises?.map((item: any) => ({
           alias_title: getDisplayDoctorExpertise({
             aliasTitle: item?.alias,
             degree: item?.academic_degree?.title,
@@ -86,13 +86,13 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   };
 
   const feedbacks = {
-    ...source.feedbacks,
+    ...source?.feedbacks,
     statistics: overwriteData.feedbacks.waiting_time_statistics || null,
     details: {
       average_rates: {
-        average_doctor_encounter: source.feedbacks?.details?.doctor_encounter,
-        average_explanation_of_issue: source.feedbacks?.details?.explanation_of_issue,
-        average_quality_of_treatment: source.feedbacks?.details?.quality_of_treatment,
+        average_doctor_encounter: source?.feedbacks?.details?.doctor_encounter,
+        average_explanation_of_issue: source?.feedbacks?.details?.explanation_of_issue,
+        average_quality_of_treatment: source?.feedbacks?.details?.quality_of_treatment,
         ...overwriteData.feedbacks?.averageRates,
       },
       hide_rates: overwriteData?.feedbacks?.hideRates,
@@ -101,13 +101,13 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
       satisfaction: overwriteData.feedbacks?.satisfactionPercent
         ? ((overwriteData.feedbacks?.satisfactionPercent ?? 0) / 20).toFixed(1)
         : null,
-      like: source.feedbacks?.details?.like ?? null,
+      like: source?.feedbacks?.details?.like ?? null,
     },
   };
 
   const media = {
     aparat: source?.aparat_video_code ?? null,
-    gallery: source.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
+    gallery: source?.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
   };
 
   const symptomes = source?.symptomes ?? [];

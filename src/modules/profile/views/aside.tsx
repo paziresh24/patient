@@ -47,7 +47,7 @@ export const aside = (data: any) => {
   return [
     {
       id: 'book-me',
-      isShow: true,
+      isShow: centers?.length > 0,
       function: () => {
         return {
           id: information.id,

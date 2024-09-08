@@ -190,6 +190,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         biography: fullProfileData?.biography ?? '',
         employee_id: fullProfileData?.medical_code ?? '',
         prefix: 'دکتر',
+        expertises: [],
       },
     };
 
@@ -207,31 +208,25 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             biography: providerData.value.biography,
             employee_id: providerData.value.employee_id,
             prefix: providerData.value?.prefix,
-            ...(shouldUseCreatedAt && {
-              experience: providerData.value?.field_start_date
-                ? Math.ceil(moment().diff(providerData.value?.field_start_date, 'months') / 12).toString()
-                : '',
-            }),
+            experience: providerData.value?.field_start_date
+              ? Math.ceil(moment().diff(providerData.value?.field_start_date, 'months') / 12).toString()
+              : '',
           };
           profileData.history = {
-            ...((shouldUseCreatedAt || getOnlyHasuraProfileData) && {
-              insert_at_age: formatDurationInMonths(providerData.value?.created_at),
-            }),
+            insert_at_age: formatDurationInMonths(providerData.value?.created_at),
             ...((shouldUsePageView || getOnlyHasuraProfileData) && {
               count_of_page_view: providerData.value?.page_view,
             }),
           };
 
-          if (shouldUseExpertice || getOnlyHasuraProfileData) {
-            const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
-            const [specialitiesData] = await Promise.allSettled(parallelRequests);
+          const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+          const [specialitiesData] = await Promise.allSettled(parallelRequests);
 
-            if (specialitiesData.status === 'fulfilled') {
-              profileData.provider = {
-                ...profileData.provider,
-                expertises: Object.values(specialitiesData.value),
-              };
-            }
+          if (specialitiesData.status === 'fulfilled') {
+            profileData.provider = {
+              ...profileData.provider,
+              expertises: Object.values(specialitiesData?.value ?? {}),
+            };
           }
 
           if (shouldUseUser || getOnlyHasuraProfileData) {
@@ -357,7 +352,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const title = `${information.prefix} ${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
       doctorCity ? `${doctorCity}،` : ''
     } نوبت دهی آنلاین و شماره تلفن`;
-    const description = `نوبت دهی اینترنتی ${information.prefix} ${information.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+    const description = `نوبت دهی اینترنتی ${information.prefix} ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
     return {
       props: {
