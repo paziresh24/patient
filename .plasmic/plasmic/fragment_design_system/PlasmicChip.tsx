@@ -71,12 +71,12 @@ createPlasmicElementProxy;
 
 export type PlasmicChip__VariantMembers = {
   color: "green" | "blue" | "gray";
-  size: "medium" | "small";
+  size: "medium" | "small" | "xSmall";
   rounded: "rounded";
 };
 export type PlasmicChip__VariantsArgs = {
   color?: SingleChoiceArg<"green" | "blue" | "gray">;
-  size?: SingleChoiceArg<"medium" | "small">;
+  size?: SingleChoiceArg<"medium" | "small" | "xSmall">;
   rounded?: SingleBooleanChoiceArg<"rounded">;
 };
 type VariantPropType = keyof PlasmicChip__VariantsArgs;
@@ -115,7 +115,7 @@ export interface DefaultChipProps {
   children?: React.ReactNode;
   slot?: React.ReactNode;
   color?: SingleChoiceArg<"green" | "blue" | "gray">;
-  size?: SingleChoiceArg<"medium" | "small">;
+  size?: SingleChoiceArg<"medium" | "small" | "xSmall">;
   rounded?: SingleBooleanChoiceArg<"rounded">;
   className?: string;
 }
@@ -145,7 +145,9 @@ function PlasmicChip__RenderFunc(props: {
           showStartIcon: false,
           showEndIcon: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -209,7 +211,8 @@ function PlasmicChip__RenderFunc(props: {
           [sty.rootcolor_green]: hasVariant($state, "color", "green"),
           [sty.rootrounded]: hasVariant($state, "rounded", "rounded"),
           [sty.rootsize_medium]: hasVariant($state, "size", "medium"),
-          [sty.rootsize_small]: hasVariant($state, "size", "small")
+          [sty.rootsize_small]: hasVariant($state, "size", "small"),
+          [sty.rootsize_xSmall]: hasVariant($state, "size", "xSmall")
         }
       )}
       dir={"rtl"}
@@ -224,7 +227,8 @@ function PlasmicChip__RenderFunc(props: {
           [sty.freeBoxcolor_gray]: hasVariant($state, "color", "gray"),
           [sty.freeBoxcolor_green]: hasVariant($state, "color", "green"),
           [sty.freeBoxrounded]: hasVariant($state, "rounded", "rounded"),
-          [sty.freeBoxsize_small]: hasVariant($state, "size", "small")
+          [sty.freeBoxsize_small]: hasVariant($state, "size", "small"),
+          [sty.freeBoxsize_xSmall]: hasVariant($state, "size", "xSmall")
         })}
       >
         {(() => {
@@ -263,7 +267,8 @@ function PlasmicChip__RenderFunc(props: {
               [sty.textcolor_gray]: hasVariant($state, "color", "gray"),
               [sty.textcolor_green]: hasVariant($state, "color", "green"),
               [sty.textsize_medium]: hasVariant($state, "size", "medium"),
-              [sty.textsize_small]: hasVariant($state, "size", "small")
+              [sty.textsize_small]: hasVariant($state, "size", "small"),
+              [sty.textsize_xSmall]: hasVariant($state, "size", "xSmall")
             }
           )}
         >

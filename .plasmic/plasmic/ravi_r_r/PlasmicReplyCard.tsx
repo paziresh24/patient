@@ -59,8 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import EditAndReport from "../../EditAndReport"; // plasmic-import: 48DkFQMlhcuA/component
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 
@@ -100,9 +100,9 @@ export const PlasmicReplyCard__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReplyCard__OverridesType = {
   root?: Flex__<"div">;
-  editAndReport?: Flex__<typeof EditAndReport>;
   نامکاربر?: Flex__<typeof DataFetcher>;
   نامتگتاریخ?: Flex__<"div">;
+  editAndReport?: Flex__<typeof EditAndReport>;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   userAvatar2?: Flex__<typeof Avatar>;
   userAvatar?: Flex__<typeof Avatar>;
@@ -178,81 +178,6 @@ function PlasmicReplyCard__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <EditAndReport
-        data-plasmic-name={"editAndReport"}
-        data-plasmic-override={overrides.editAndReport}
-        className={classNames("__wab_instance", sty.editAndReport)}
-        commentText={(() => {
-          try {
-            return $props.replyText;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        doctorEncounter={"null"}
-        doctorSlug={(() => {
-          try {
-            return $props.doctorSlug;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        doctorUserId={(() => {
-          try {
-            return $props.doctorUserId;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        explanationOfIssue={"null"}
-        feedbackId={(() => {
-          try {
-            return $props.id;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        isReply={true}
-        qualityOfTreatment={"null"}
-        userId={(() => {
-          try {
-            return $props.userId;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      />
-
       <DataFetcher
         data-plasmic-name={"\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"}
         data-plasmic-override={overrides.نامکاربر}
@@ -290,6 +215,81 @@ function PlasmicReplyCard__RenderFunc(props: {
               data-plasmic-override={overrides.نامتگتاریخ}
               className={classNames(projectcss.all, sty.نامتگتاریخ)}
             >
+              <EditAndReport
+                data-plasmic-name={"editAndReport"}
+                data-plasmic-override={overrides.editAndReport}
+                className={classNames("__wab_instance", sty.editAndReport)}
+                commentText={(() => {
+                  try {
+                    return $props.replyText;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorEncounter={"null"}
+                doctorSlug={(() => {
+                  try {
+                    return $props.doctorSlug;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                doctorUserId={(() => {
+                  try {
+                    return $props.doctorUserId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                explanationOfIssue={"null"}
+                feedbackId={(() => {
+                  try {
+                    return $props.id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                isReply={true}
+                qualityOfTreatment={"null"}
+                userId={(() => {
+                  try {
+                    return $props.userId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
               <DataFetcher
                 data-plasmic-name={"httpRestApiFetcher"}
                 data-plasmic-override={overrides.httpRestApiFetcher}
@@ -443,7 +443,7 @@ function PlasmicReplyCard__RenderFunc(props: {
                       color={"green"}
                       content={"\u062f\u0631\u0645\u0627\u0646\u06af\u0631"}
                       rounded={true}
-                      size={"small"}
+                      size={"xSmall"}
                     />
                   ) : null}
                 </Stack__>
@@ -487,18 +487,18 @@ function PlasmicReplyCard__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "editAndReport",
     "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "editAndReport",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
-  editAndReport: ["editAndReport"],
   نامکاربر: [
     "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631",
     "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "editAndReport",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
@@ -506,11 +506,13 @@ const PlasmicDescendants = {
   ],
   نامتگتاریخ: [
     "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
+    "editAndReport",
     "httpRestApiFetcher",
     "userAvatar2",
     "userAvatar",
     "chip"
   ],
+  editAndReport: ["editAndReport"],
   httpRestApiFetcher: ["httpRestApiFetcher", "userAvatar2", "userAvatar"],
   userAvatar2: ["userAvatar2"],
   userAvatar: ["userAvatar"],
@@ -521,9 +523,9 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  editAndReport: typeof EditAndReport;
   نامکاربر: typeof DataFetcher;
   نامتگتاریخ: "div";
+  editAndReport: typeof EditAndReport;
   httpRestApiFetcher: typeof DataFetcher;
   userAvatar2: typeof Avatar;
   userAvatar: typeof Avatar;
@@ -590,13 +592,13 @@ export const PlasmicReplyCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    editAndReport: makeNodeComponent("editAndReport"),
     نامکاربر: makeNodeComponent(
       "\u0646\u0627\u0645\u06a9\u0627\u0631\u0628\u0631"
     ),
     نامتگتاریخ: makeNodeComponent(
       "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e"
     ),
+    editAndReport: makeNodeComponent("editAndReport"),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     userAvatar2: makeNodeComponent("userAvatar2"),
     userAvatar: makeNodeComponent("userAvatar"),
