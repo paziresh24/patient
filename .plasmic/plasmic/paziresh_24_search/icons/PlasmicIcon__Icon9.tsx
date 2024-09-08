@@ -5,19 +5,18 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type SearchsvgIconProps = React.ComponentProps<"svg"> & {
+export type Icon9IconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function SearchsvgIcon(props: SearchsvgIconProps) {
+export function Icon9Icon(props: Icon9IconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
       xmlns={"http://www.w3.org/2000/svg"}
-      fill={"none"}
       viewBox={"0 0 24 24"}
+      fill={"none"}
       height={"1em"}
-      width={"1em"}
       className={classNames("plasmic-default__svg", className)}
       style={style}
       {...restProps}
@@ -25,17 +24,16 @@ export function SearchsvgIcon(props: SearchsvgIconProps) {
       {title && <title>{title}</title>}
 
       <path
-        stroke={"currentColor"}
-        strokeLinecap={"round"}
-        strokeLinejoin={"round"}
-        strokeWidth={"1.5"}
+        fillRule={"evenodd"}
+        clipRule={"evenodd"}
         d={
-          "M19.25 19.25L15.5 15.5M4.75 11a6.25 6.25 0 1112.5 0 6.25 6.25 0 01-12.5 0z"
+          "M14 5a1 1 0 110-2h6a1 1 0 011 1v6a1 1 0 11-2 0V6.414l-7.293 7.293a1 1 0 01-1.414-1.414L17.586 5H14zM5 7a1 1 0 00-1 1v11a1 1 0 001 1h11a1 1 0 001-1v-4.563a1 1 0 112 0V19a3 3 0 01-3 3H5a3 3 0 01-3-3V8a3 3 0 013-3h4.563a1 1 0 110 2H5z"
         }
+        fill={"currentColor"}
       ></path>
     </svg>
   );
 }
 
-export default SearchsvgIcon;
+export default Icon9Icon;
 /* prettier-ignore-end */

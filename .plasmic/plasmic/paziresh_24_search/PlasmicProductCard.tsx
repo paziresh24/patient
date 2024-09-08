@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
@@ -79,9 +80,9 @@ import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-i
 import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
 import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
-import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: 2fxvviUbNC5l/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import Icon9Icon from "./icons/PlasmicIcon__Icon9"; // plasmic-import: bfqtb2xTeMAi/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 
 createPlasmicElementProxy;
 
@@ -116,6 +117,8 @@ export type PlasmicProductCard__ArgsType = {
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
   externalLinkTitle?: string;
+  classificationTitleApi?: string;
+  children?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -134,20 +137,22 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "avatarAltText",
   "eventTrigger",
   "topBadge",
-  "externalLinkTitle"
+  "externalLinkTitle",
+  "classificationTitleApi",
+  "children"
 );
 
 export type PlasmicProductCard__OverridesType = {
   root?: Flex__<"div">;
   avatar?: Flex__<typeof Avatar>;
+  classificationApi?: Flex__<typeof DataFetcher>;
+  classificationTitle?: Flex__<"span">;
   cardTitle?: Flex__<"h2">;
   cardSubtitle?: Flex__<"span">;
   cardAddressRow?: Flex__<"span">;
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
   badgesChip?: Flex__<typeof Chip>;
-  cardAddressRow2?: Flex__<"span">;
-  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultProductCardProps {
@@ -167,6 +172,8 @@ export interface DefaultProductCardProps {
   eventTrigger?: (elementName: string, elementContent: string) => void;
   topBadge?: any;
   externalLinkTitle?: string;
+  classificationTitleApi?: string;
+  children?: React.ReactNode;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
@@ -351,80 +358,202 @@ function PlasmicProductCard__RenderFunc(props: {
           )
         })}
       >
-        {(() => {
-          try {
-            return !!$props.avatarSrc;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
-          <PlasmicLink__
-            className={classNames(
-              projectcss.all,
-              projectcss.a,
-              sty.link__hyRw8
-            )}
-            component={Link}
-            href={(() => {
-              try {
-                return $props.url?.destination.startsWith("/center/https")
-                  ? $props.url?.destination.slice(8, -1)
-                  : $props.url?.destination;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["runEventTrigger"] = true
-                ? (() => {
-                    const actionArgs = {
-                      eventRef: $props["eventTrigger"],
-                      args: ["avatar"]
-                    };
-                    return (({ eventRef, args }) => {
-                      return eventRef?.(...(args ?? []));
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__vbw0E)}
+        >
+          {(() => {
+            try {
+              return !!$props.avatarSrc;
+            } catch (e) {
               if (
-                $steps["runEventTrigger"] != null &&
-                typeof $steps["runEventTrigger"] === "object" &&
-                typeof $steps["runEventTrigger"].then === "function"
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+                return false;
               }
-            }}
-            platform={"nextjs"}
-            target={(() => {
-              try {
-                return $props.url?.openInNewTab;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              throw e;
+            }
+          })() ? (
+            <PlasmicLink__
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                sty.link__hyRw8
+              )}
+              component={Link}
+              href={(() => {
+                try {
+                  return $props.url?.destination.startsWith("/center/https")
+                    ? $props.url?.destination.slice(8, -1)
+                    : $props.url?.destination;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            title={(() => {
+              })()}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runEventTrigger"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["eventTrigger"],
+                        args: ["avatar"]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runEventTrigger"] != null &&
+                  typeof $steps["runEventTrigger"] === "object" &&
+                  typeof $steps["runEventTrigger"].then === "function"
+                ) {
+                  $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+                }
+              }}
+              platform={"nextjs"}
+              target={(() => {
+                try {
+                  return $props.url?.openInNewTab;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              title={(() => {
+                try {
+                  return $props.url?.title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            >
+              <Avatar
+                data-plasmic-name={"avatar"}
+                data-plasmic-override={overrides.avatar}
+                alt={(() => {
+                  try {
+                    return $props.avatarAltText;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                badge={(() => {
+                  try {
+                    return $props.avatarVerifiedTick ? "check" : "";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                className={classNames("__wab_instance", sty.avatar)}
+                ring={(() => {
+                  try {
+                    return $props.avatarRingColor;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                src={(() => {
+                  try {
+                    return $props.avatarSrc;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            </PlasmicLink__>
+          ) : null}
+          <DataFetcher
+            data-plasmic-name={"classificationApi"}
+            data-plasmic-override={overrides.classificationApi}
+            className={classNames("__wab_instance", sty.classificationApi)}
+            dataName={"fetchedData"}
+            errorDisplay={
+              <DataCtxReader__>
+                {$ctx => (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__yApKc
+                    )}
+                  >
+                    {"Error fetching data"}
+                  </div>
+                )}
+              </DataCtxReader__>
+            }
+            errorName={"fetchError"}
+            headers={{
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            }}
+            loadingDisplay={
+              <DataCtxReader__>
+                {$ctx => (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___7PCh
+                    )}
+                  >
+                    {""}
+                  </div>
+                )}
+              </DataCtxReader__>
+            }
+            method={"GET"}
+            noLayout={false}
+            previewErrorDisplay={false}
+            previewSpinner={false}
+            url={(() => {
               try {
-                return $props.url?.title;
+                return $props.classificationTitleApi;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -436,65 +565,76 @@ function PlasmicProductCard__RenderFunc(props: {
               }
             })()}
           >
-            <Avatar
-              data-plasmic-name={"avatar"}
-              data-plasmic-override={overrides.avatar}
-              alt={(() => {
-                try {
-                  return $props.avatarAltText;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
+            <DataCtxReader__>
+              {$ctx =>
+                (() => {
+                  try {
+                    return (
+                      $ctx.fetchedData.classifications[0]?.name?.length > 2
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()}
-              badge={(() => {
-                try {
-                  return $props.avatarVerifiedTick ? "check" : "";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
-                  }
-                  throw e;
-                }
-              })()}
-              className={classNames("__wab_instance", sty.avatar)}
-              ring={(() => {
-                try {
-                  return $props.avatarRingColor;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
-                  }
-                  throw e;
-                }
-              })()}
-              src={(() => {
-                try {
-                  return $props.avatarSrc;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-            />
-          </PlasmicLink__>
-        ) : null}
+                })() ? (
+                  <span
+                    data-plasmic-name={"classificationTitle"}
+                    data-plasmic-override={overrides.classificationTitle}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.span,
+                      sty.classificationTitle,
+                      {
+                        [sty.classificationTitle_5StarRatingMode3__5StarA]:
+                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
+                        [sty.classificationTitleexternalBookDesign]: hasVariant(
+                          $state,
+                          "externalBookDesign",
+                          "externalBookDesign"
+                        )
+                      }
+                    )}
+                  >
+                    {renderPlasmicSlot({
+                      defaultContents: (
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $ctx.fetchedData.classifications[0].name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      ),
+                      value: args.children,
+                      className: classNames(sty.slotTargetChildren, {
+                        [sty.slotTargetChildren_5StarRatingMode3__5StarA]:
+                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
+                        [sty.slotTargetChildrenexternalBookDesign]: hasVariant(
+                          $state,
+                          "externalBookDesign",
+                          "externalBookDesign"
+                        )
+                      })
+                    })}
+                  </span>
+                ) : null
+              }
+            </DataCtxReader__>
+          </DataFetcher>
+        </Stack__>
         <Stack__
           as={"div"}
           hasGap={true}
@@ -642,7 +782,13 @@ function PlasmicProductCard__RenderFunc(props: {
             }
           })() ? (
             <LineClamp
-              className={classNames("__wab_instance", sty.lineClamp__lmqY)}
+              className={classNames("__wab_instance", sty.lineClamp__lmqY, {
+                [sty.lineClampexternalBookDesign__lmqYHqYe]: hasVariant(
+                  $state,
+                  "externalBookDesign",
+                  "externalBookDesign"
+                )
+              })}
               numberOfLines={2}
             >
               <span
@@ -658,6 +804,11 @@ function PlasmicProductCard__RenderFunc(props: {
                       $state,
                       "_5StarRatingMode3",
                       "_5StarA"
+                    ),
+                    [sty.cardSubtitleexternalBookDesign]: hasVariant(
+                      $state,
+                      "externalBookDesign",
+                      "externalBookDesign"
                     )
                   }
                 )}
@@ -665,7 +816,10 @@ function PlasmicProductCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return $props.subTitle;
+                      return $props.subTitle.replace(
+                        /([^،])،([^،])/g,
+                        "$1، $2"
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -701,6 +855,11 @@ function PlasmicProductCard__RenderFunc(props: {
                   $state,
                   "_5StarRatingMode3",
                   "_5StarA"
+                ),
+                [sty.freeBoxexternalBookDesign__zf7BmHqYe]: hasVariant(
+                  $state,
+                  "externalBookDesign",
+                  "externalBookDesign"
                 )
               })}
             >
@@ -1212,7 +1371,22 @@ function PlasmicProductCard__RenderFunc(props: {
                 throw e;
               }
             })()
-          : false
+          : (() => {
+              try {
+                return (
+                  $props.externalLinkTitle &&
+                  $props.externalLinkTitle.length > 2
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })()
       ) ? (
         <Stack__
           as={"div"}
@@ -1225,58 +1399,101 @@ function PlasmicProductCard__RenderFunc(props: {
             )
           })}
         >
-          <Icon8Icon
-            className={classNames(projectcss.all, sty.svg__jJN)}
-            role={"img"}
-          />
-
-          <LineClamp
-            className={classNames("__wab_instance", sty.lineClamp__oWcg)}
-          >
-            <span
-              data-plasmic-name={"cardAddressRow2"}
-              data-plasmic-override={overrides.cardAddressRow2}
-              className={classNames(
-                projectcss.all,
-                projectcss.span,
-                projectcss.__wab_text,
-                sty.cardAddressRow2,
-                {
-                  [sty.cardAddressRow2_5StarRatingMode3__5StarA]: hasVariant(
-                    $state,
-                    "_5StarRatingMode3",
-                    "_5StarA"
-                  ),
-                  [sty.cardAddressRow2externalBookDesign]: hasVariant(
-                    $state,
-                    "externalBookDesign",
-                    "externalBookDesign"
-                  )
-                }
-              )}
-            >
+          <Button
+            children2={
               <React.Fragment>
-                {(() => {
-                  try {
-                    return $props.externalLinkTitle;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u0627\u0633\u062a\u0627\u0646 \u0641\u0644\u0627\u0646\u060c \u0634\u0647\u0631\u060c \u0645\u0646\u0637\u0642\u0647\u060c \u0645\u062d\u0644\u0647 \u0641\u0644\u0627\u0646\u060c \u062e\u06cc\u0627\u0628\u0627\u0646 \u0627\u06cc\u06a9\u0633 \u060c \u06a9\u0648\u0686\u0647 \u0627\u06cc\u06af\u0631\u06af \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0634\u062e\u0635\u06cc \u0632\u0627\u062f\u0647\u060c \u0637\u0628\u0642\u0647\u060c \u0648\u0627\u062d\u062f\u060c \u067e\u0644\u0627\u06a9 ";
-                    }
-                    throw e;
-                  }
-                })()}
+                <Icon9Icon
+                  className={classNames(projectcss.all, sty.svg__ueCbk)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__dbuUx
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.externalLinkTitle;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "Button";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
               </React.Fragment>
-            </span>
-          </LineClamp>
+            }
+            className={classNames("__wab_instance", sty.button__gicEu)}
+            endIcon={
+              <ChevronLeftIcon
+                className={classNames(projectcss.all, sty.svg__vlToi)}
+                role={"img"}
+              />
+            }
+            link={(() => {
+              try {
+                return $props.url?.destination.startsWith("/center/https")
+                  ? $props.url?.destination.slice(8, -1)
+                  : $props.url?.destination;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runEventTrigger"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["eventTrigger"],
+                      args: ["action-button", "external-link"]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runEventTrigger"] != null &&
+                typeof $steps["runEventTrigger"] === "object" &&
+                typeof $steps["runEventTrigger"].then === "function"
+              ) {
+                $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+              }
+            }}
+            outline={true}
+            startIcon={
+              <Icon9Icon
+                className={classNames(projectcss.all, sty.svg___8Ur4M)}
+                role={"img"}
+              />
+            }
+            target={true}
+          />
         </Stack__>
       ) : null}
       {(() => {
         try {
-          return $props.actionButtons.length > 0;
+          return (
+            !(
+              $props.externalLinkTitle && $props.externalLinkTitle.length > 2
+            ) && $props.actionButtons.length > 0
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -1358,8 +1575,6 @@ function PlasmicProductCard__RenderFunc(props: {
                   </span>
                 ) : null}
                 <Button
-                  data-plasmic-name={"button"}
-                  data-plasmic-override={overrides.button}
                   children2={
                     <React.Fragment>
                       {(() => {
@@ -1377,7 +1592,7 @@ function PlasmicProductCard__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   }
-                  className={classNames("__wab_instance", sty.button)}
+                  className={classNames("__wab_instance", sty.button__kYXz)}
                   endIcon={
                     <ChevronLeftIcon
                       className={classNames(projectcss.all, sty.svg__b1Zmp)}
@@ -1472,24 +1687,24 @@ const PlasmicDescendants = {
   root: [
     "root",
     "avatar",
+    "classificationApi",
+    "classificationTitle",
     "cardTitle",
     "cardSubtitle",
     "cardAddressRow",
     "cardPrice",
     "dialog",
-    "badgesChip",
-    "cardAddressRow2",
-    "button"
+    "badgesChip"
   ],
   avatar: ["avatar"],
+  classificationApi: ["classificationApi", "classificationTitle"],
+  classificationTitle: ["classificationTitle"],
   cardTitle: ["cardTitle"],
   cardSubtitle: ["cardSubtitle"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip"],
-  badgesChip: ["badgesChip"],
-  cardAddressRow2: ["cardAddressRow2"],
-  button: ["button"]
+  badgesChip: ["badgesChip"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1497,14 +1712,14 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   avatar: typeof Avatar;
+  classificationApi: typeof DataFetcher;
+  classificationTitle: "span";
   cardTitle: "h2";
   cardSubtitle: "span";
   cardAddressRow: "span";
   cardPrice: "span";
   dialog: typeof Dialog;
   badgesChip: typeof Chip;
-  cardAddressRow2: "span";
-  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1568,14 +1783,14 @@ export const PlasmicProductCard = Object.assign(
   {
     // Helper components rendering sub-elements
     avatar: makeNodeComponent("avatar"),
+    classificationApi: makeNodeComponent("classificationApi"),
+    classificationTitle: makeNodeComponent("classificationTitle"),
     cardTitle: makeNodeComponent("cardTitle"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
     cardAddressRow: makeNodeComponent("cardAddressRow"),
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
     badgesChip: makeNodeComponent("badgesChip"),
-    cardAddressRow2: makeNodeComponent("cardAddressRow2"),
-    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicProductCard
     internalVariantProps: PlasmicProductCard__VariantProps,
