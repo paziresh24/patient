@@ -789,7 +789,7 @@ function PlasmicProductCard__RenderFunc(props: {
                   "externalBookDesign"
                 )
               })}
-              numberOfLines={2}
+              numberOfLines={1}
             >
               <span
                 data-plasmic-name={"cardSubtitle"}
