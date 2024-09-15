@@ -163,6 +163,7 @@ function PlasmicSearchResults__RenderFunc(props: {
     () =>
       Object.assign(
         {
+          imageSrcPrefix: "https://cdn.paziresh24.com",
           paginationLoadingStatus: false
         },
         Object.fromEntries(

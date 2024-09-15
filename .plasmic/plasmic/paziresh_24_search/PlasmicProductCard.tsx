@@ -155,6 +155,8 @@ export type PlasmicProductCard__OverridesType = {
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
   badgesChip?: Flex__<typeof Chip>;
+  dialog2?: Flex__<typeof Dialog>;
+  badgesChip2?: Flex__<typeof Chip>;
   cardDataActionUiFetcher?: Flex__<typeof DataFetcher>;
   sideEffect?: Flex__<typeof SideEffect>;
   oldActionButtonsHorizontalStack?: Flex__<"div">;
@@ -251,6 +253,11 @@ function PlasmicProductCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => true
+      },
+      {
+        path: "dialog2[].open",
+        type: "private",
+        variableType: "boolean"
       }
     ],
     [$props, $ctx, $refs]
@@ -1387,6 +1394,248 @@ function PlasmicProductCard__RenderFunc(props: {
             })}
           </Stack__>
         ) : null}
+        {false ? (
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__esd8N, {
+              [sty.freeBoxexternalBookDesign__esd8NHqYe]: hasVariant(
+                $state,
+                "externalBookDesign",
+                "externalBookDesign"
+              )
+            })}
+          >
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $props.badges;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (() => {
+                const child$Props = {
+                  body: (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text___7VgVv
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return currentItem.description;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  ),
+                  className: classNames("__wab_instance", sty.dialog2),
+                  key: currentIndex,
+                  onOpenChange: generateStateOnChangeProp($state, [
+                    "dialog2",
+                    __plasmic_idx_0,
+                    "open"
+                  ]),
+                  open: generateStateValueProp($state, [
+                    "dialog2",
+                    __plasmic_idx_0,
+                    "open"
+                  ]),
+                  title: (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__gDwHk
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return currentItem.title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "Dialog title";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  ),
+                  trigger: (
+                    <Chip
+                      data-plasmic-name={"badgesChip2"}
+                      data-plasmic-override={overrides.badgesChip2}
+                      className={classNames("__wab_instance", sty.badgesChip2)}
+                      color={(() => {
+                        try {
+                          return currentItem.type === "success"
+                            ? "gray"
+                            : currentItem.type === "info"
+                            ? "blue"
+                            : "";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "gray";
+                          }
+                          throw e;
+                        }
+                      })()}
+                      content={(() => {
+                        try {
+                          return currentItem.title;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      rounded={true}
+                      showEndIcon={(() => {
+                        try {
+                          return !!currentItem.description;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      showStartIcon={(() => {
+                        try {
+                          return Boolean(currentItem.icon);
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      size={"xSmall"}
+                      slot={
+                        <InfoIcon
+                          className={classNames(projectcss.all, sty.svg__ug5N)}
+                          role={"img"}
+                        />
+                      }
+                    >
+                      {(() => {
+                        try {
+                          return currentItem.icon == "smile-icon";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })() ? (
+                        <SmileIcon
+                          className={classNames(projectcss.all, sty.svg__sCu7U)}
+                          role={"img"}
+                        />
+                      ) : null}
+                      {(() => {
+                        try {
+                          return currentItem.icon == "forbidden-icon";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })() ? (
+                        <CalendarIcon
+                          className={classNames(projectcss.all, sty.svg__mDkNx)}
+                          role={"img"}
+                        />
+                      ) : null}
+                      {(() => {
+                        try {
+                          return currentItem.icon == "clock-icon";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })() ? (
+                        <ClockIcon
+                          className={classNames(projectcss.all, sty.svg__bJh58)}
+                          role={"img"}
+                        />
+                      ) : null}
+                    </Chip>
+                  )
+                };
+
+                initializePlasmicStates(
+                  $state,
+                  [
+                    {
+                      name: "dialog2[].open",
+                      initFunc: ({ $props, $state, $queries }) => false
+                    }
+                  ],
+                  [__plasmic_idx_0]
+                );
+                return (
+                  <Dialog
+                    data-plasmic-name={"dialog2"}
+                    data-plasmic-override={overrides.dialog2}
+                    {...child$Props}
+                  />
+                );
+              })();
+            })}
+          </Stack__>
+        ) : null}
         {(() => {
           try {
             return $ctx.Growthbook.features["theme-config"][
@@ -1661,6 +1910,7 @@ function PlasmicProductCard__RenderFunc(props: {
                                 role={"img"}
                               />
                             }
+                            target={true}
                           />
                         </Stack__>
                       );
@@ -1883,6 +2133,8 @@ const PlasmicDescendants = {
     "cardPrice",
     "dialog",
     "badgesChip",
+    "dialog2",
+    "badgesChip2",
     "cardDataActionUiFetcher",
     "sideEffect",
     "oldActionButtonsHorizontalStack"
@@ -1896,6 +2148,8 @@ const PlasmicDescendants = {
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip"],
   badgesChip: ["badgesChip"],
+  dialog2: ["dialog2", "badgesChip2"],
+  badgesChip2: ["badgesChip2"],
   cardDataActionUiFetcher: ["cardDataActionUiFetcher", "sideEffect"],
   sideEffect: ["sideEffect"],
   oldActionButtonsHorizontalStack: ["oldActionButtonsHorizontalStack"]
@@ -1914,6 +2168,8 @@ type NodeDefaultElementType = {
   cardPrice: "span";
   dialog: typeof Dialog;
   badgesChip: typeof Chip;
+  dialog2: typeof Dialog;
+  badgesChip2: typeof Chip;
   cardDataActionUiFetcher: typeof DataFetcher;
   sideEffect: typeof SideEffect;
   oldActionButtonsHorizontalStack: "div";
@@ -1988,6 +2244,8 @@ export const PlasmicProductCard = Object.assign(
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
     badgesChip: makeNodeComponent("badgesChip"),
+    dialog2: makeNodeComponent("dialog2"),
+    badgesChip2: makeNodeComponent("badgesChip2"),
     cardDataActionUiFetcher: makeNodeComponent("cardDataActionUiFetcher"),
     sideEffect: makeNodeComponent("sideEffect"),
     oldActionButtonsHorizontalStack: makeNodeComponent(
