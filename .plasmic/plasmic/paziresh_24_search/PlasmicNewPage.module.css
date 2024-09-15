@@ -32,10 +32,6 @@
   max-width: 100%;
   min-width: 0;
 }
-.text {
-  position: relative;
-  width: 100%;
-  height: auto;
+.searchPage:global(.__wab_instance) {
   max-width: 100%;
-  min-width: 0;
 }

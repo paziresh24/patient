@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import SearchPage from "../../SearchPage"; // plasmic-import: SctdwrC6-ku4/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -79,7 +81,7 @@ export const PlasmicNewPage__ArgProps = new Array<ArgPropType>();
 export type PlasmicNewPage__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
-  text?: Flex__<"div">;
+  searchPage?: Flex__<typeof SearchPage>;
 };
 
 export interface DefaultNewPageProps {}
@@ -124,7 +126,20 @@ function PlasmicNewPage__RenderFunc(props: {
 
   return (
     <React.Fragment>
-      <Head></Head>
+      <Head>
+        <meta name="twitter:card" content="summary" />
+        <title key="title">{PlasmicNewPage.pageMetadata.title}</title>
+        <meta
+          key="og:title"
+          property="og:title"
+          content={PlasmicNewPage.pageMetadata.title}
+        />
+        <meta
+          key="twitter:title"
+          name="twitter:title"
+          content={PlasmicNewPage.pageMetadata.title}
+        />
+      </Head>
 
       <style>{`
         body {
@@ -152,19 +167,13 @@ function PlasmicNewPage__RenderFunc(props: {
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
             className={classNames(projectcss.all, sty.freeBox)}
-          >
-            <div
-              data-plasmic-name={"text"}
-              data-plasmic-override={overrides.text}
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text
-              )}
-            >
-              {"\u0633\u0644\u0627\u0645\n\u0634\u0631\u0648\u0639"}
-            </div>
-          </div>
+          />
+
+          <SearchPage
+            data-plasmic-name={"searchPage"}
+            data-plasmic-override={overrides.searchPage}
+            className={classNames("__wab_instance", sty.searchPage)}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -172,9 +181,9 @@ function PlasmicNewPage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "text"],
-  freeBox: ["freeBox", "text"],
-  text: ["text"]
+  root: ["root", "freeBox", "searchPage"],
+  freeBox: ["freeBox"],
+  searchPage: ["searchPage"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -182,7 +191,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
-  text: "div";
+  searchPage: typeof SearchPage;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -246,7 +255,7 @@ export const PlasmicNewPage = Object.assign(
   {
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
-    text: makeNodeComponent("text"),
+    searchPage: makeNodeComponent("searchPage"),
 
     // Metadata about props expected for PlasmicNewPage
     internalVariantProps: PlasmicNewPage__VariantProps,
@@ -254,7 +263,7 @@ export const PlasmicNewPage = Object.assign(
 
     // Page metadata
     pageMetadata: {
-      title: "",
+      title: "موتور جستجوی پذیرش24 - جهان‌نما",
       description: "",
       ogImageSrc: "",
       canonical: ""

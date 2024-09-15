@@ -582,7 +582,7 @@
           "projectId": "sMdpLWyxbzDCruwMRffW2m",
           "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
           "importSpec": {
-            "modulePath": "../src/pages/s/samplepage2781.tsx"
+            "modulePath": "../src/pages/s/jahannama.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
           "scheme": "blackbox",
@@ -645,6 +645,11 @@
           "id": "bfqtb2xTeMAi",
           "name": "Icon9Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon9.tsx"
+        },
+        {
+          "id": "HnIeAbFI8qzj",
+          "name": "Icon10Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon10.tsx"
         }
       ],
       "images": [
