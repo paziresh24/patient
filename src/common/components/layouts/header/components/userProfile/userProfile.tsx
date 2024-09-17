@@ -83,7 +83,7 @@ export const UserProfile = () => {
         {
           name: 'نظرات من',
           icon: <CommentIcon width={22} height={22} />,
-          link: '/dashboard/reviews',
+          link: `/dr/${userInfo.provider?.slug}/#reviews`,
           shouldShow: true,
         },
         {

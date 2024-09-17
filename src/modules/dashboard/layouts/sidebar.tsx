@@ -199,7 +199,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     {
       icon: <CommentIcon />,
       label: 'نظرات من',
-      url: '/dashboard/reviews',
+      url: `/dr/${user.provider?.slug}/#reviews`,
       shouldShowDoctor: true,
       shouldShow: true,
     },
