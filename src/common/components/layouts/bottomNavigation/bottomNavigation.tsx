@@ -114,7 +114,7 @@ export const BottomNavigation = () => {
   };
 
   return (
-    <div className=" z-40 flex items-center justify-between w-full min-h-16 h-16 px-4 bg-white border-t print:hidden md:hidden border-slate-200">
+    <div className="fixed bottom-0 left-0 z-40 flex items-center justify-between w-full min-h-16 h-16 px-4 bg-white border-t print:hidden md:hidden border-slate-200">
       {menus.map(({ icon, name, link, privateRoute, pattern, exact }, index) => (
         <div
           key={index}
