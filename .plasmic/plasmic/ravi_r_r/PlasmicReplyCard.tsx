@@ -416,7 +416,7 @@ function PlasmicReplyCard__RenderFunc(props: {
                             e instanceof TypeError ||
                             e?.plasmicType === "PlasmicUndefinedDataError"
                           ) {
-                            return "\u0622\u0646\u0627\u0647\u06cc\u062a\u0627 \u0645\u0646\u0635\u0648\u0631\u06cc";
+                            return "\u06a9\u0627\u0631\u0628\u0631 \u0628\u062f\u0648\u0646 \u0646\u0627\u0645";
                           }
                           throw e;
                         }
