@@ -2,7 +2,7 @@
   "projects": [
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
-      "version": "3.37.0",
+      "version": "3.38.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -145,7 +145,7 @@
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -486,7 +486,7 @@
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
-      "version": "0.29.0",
+      "version": "0.30.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -504,9 +504,9 @@
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "6.2.2",
         "oBJtsp5RgVpcN6KCrDTuQT": "1.3.0",
-        "sqPBLwEBBKHA2WDuGb17eV": "2.0.0",
-        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.37.0",
-        "YUiM7yqBWAqsh8KSnrdj7": "0.29.0"
+        "sqPBLwEBBKHA2WDuGb17eV": "2.1.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.38.0",
+        "YUiM7yqBWAqsh8KSnrdj7": "0.30.0"
       },
       "lang": "ts",
       "fileLocks": [
