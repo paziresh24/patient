@@ -70,8 +70,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicSelect.module.css"; // plasmic-import: x96fIRHUIj0a/css
 
-import ChevronDownsvgIcon from "./icons/PlasmicIcon__ChevronDownsvg"; // plasmic-import: zCwXncSoUStt/icon
-import ChevronUpsvgIcon from "./icons/PlasmicIcon__ChevronUpsvg"; // plasmic-import: EyMvPikEuDUD/icon
+import ChevronDownSvgIcon from "./icons/PlasmicIcon__ChevronDownSvg"; // plasmic-import: zCwXncSoUStt/icon
+import ChevronUpSvgIcon from "./icons/PlasmicIcon__ChevronUpSvg"; // plasmic-import: EyMvPikEuDUD/icon
 
 createPlasmicElementProxy;
 
@@ -189,7 +189,16 @@ function PlasmicSelect__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -540,8 +549,8 @@ function PlasmicSelect__RenderFunc(props: {
             data-plasmic-override={overrides.dropdownIcon}
             PlasmicIconType={
               hasVariant($state, "isOpen", "isOpen")
-                ? ChevronUpsvgIcon
-                : ChevronDownsvgIcon
+                ? ChevronUpSvgIcon
+                : ChevronDownSvgIcon
             }
             className={classNames(projectcss.all, sty.dropdownIcon, {
               [sty.dropdownIcon___focusVisibleWithin]:

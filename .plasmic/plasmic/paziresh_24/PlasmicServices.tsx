@@ -69,9 +69,9 @@ import sty from "./PlasmicServices.module.css"; // plasmic-import: q3FGMz6XNu9L/
 
 import Icon22Icon from "./icons/PlasmicIcon__Icon22"; // plasmic-import: -KwzHfv-9ot5/icon
 import Icon23Icon from "./icons/PlasmicIcon__Icon23"; // plasmic-import: 0nIlGiQv_m-P/icon
-import EitaasvgIcon from "./icons/PlasmicIcon__Eitaasvg"; // plasmic-import: WqDEZH1sW0Ay/icon
-import WhatsappsvgIcon from "./icons/PlasmicIcon__Whatsappsvg"; // plasmic-import: aiEdwD29mrY6/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import EitaaSvgIcon from "./icons/PlasmicIcon__EitaaSvg"; // plasmic-import: WqDEZH1sW0Ay/icon
+import WhatsappSvgIcon from "./icons/PlasmicIcon__WhatsappSvg"; // plasmic-import: aiEdwD29mrY6/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 import Icon24Icon from "./icons/PlasmicIcon__Icon24"; // plasmic-import: bFoMwbPekE8y/icon
 
@@ -137,7 +137,16 @@ function PlasmicServices__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -359,7 +368,7 @@ function PlasmicServices__RenderFunc(props: {
                     )
                   })}
                 >
-                  <EitaasvgIcon
+                  <EitaaSvgIcon
                     className={classNames(projectcss.all, sty.svg__lpwaK, {
                       [sty.svgtype_onlineVisit__lpwaK7QAlK]: hasVariant(
                         $state,
@@ -416,7 +425,7 @@ function PlasmicServices__RenderFunc(props: {
                     )
                   })}
                 >
-                  <WhatsappsvgIcon
+                  <WhatsappSvgIcon
                     className={classNames(projectcss.all, sty.svg___9I5Wv, {
                       [sty.svgtype_onlineVisit___9I5Wv7QAlK]: hasVariant(
                         $state,

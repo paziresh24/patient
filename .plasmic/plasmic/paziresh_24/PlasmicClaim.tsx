@@ -67,7 +67,7 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicClaim.module.css"; // plasmic-import: 5jjwlzFYfMqI/css
 
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 
 createPlasmicElementProxy;
@@ -115,7 +115,16 @@ function PlasmicClaim__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -225,7 +234,7 @@ function PlasmicClaim__RenderFunc(props: {
             }
 
             $steps[
-              "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+              "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
             ] = true
               ? (() => {
                   const actionArgs = {
@@ -248,19 +257,19 @@ function PlasmicClaim__RenderFunc(props: {
               : undefined;
             if (
               $steps[
-                "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
               ] != null &&
               typeof $steps[
-                "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
               ] === "object" &&
               typeof $steps[
-                "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
               ].then === "function"
             ) {
               $steps[
-                "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
               ] = await $steps[
-                "goToHttpswwwpaziresh24ComhomeintermediateRegistrationForm"
+                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
               ];
             }
           }}

@@ -5,11 +5,11 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type WhatsappsvgIconProps = React.ComponentProps<"svg"> & {
+export type WhatsappSvgIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function WhatsappsvgIcon(props: WhatsappsvgIconProps) {
+export function WhatsappSvgIcon(props: WhatsappSvgIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
@@ -35,5 +35,5 @@ export function WhatsappsvgIcon(props: WhatsappsvgIconProps) {
   );
 }
 
-export default WhatsappsvgIcon;
+export default WhatsappSvgIcon;
 /* prettier-ignore-end */

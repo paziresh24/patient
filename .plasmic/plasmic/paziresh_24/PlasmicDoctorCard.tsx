@@ -70,7 +70,7 @@ import sty from "./PlasmicDoctorCard.module.css"; // plasmic-import: NhMGML-3Q4P
 
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: x8zKpWpxm06O/icon
 import Icon18Icon from "./icons/PlasmicIcon__Icon18"; // plasmic-import: rNlcBlswymjS/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 
 createPlasmicElementProxy;
@@ -143,7 +143,9 @@ function PlasmicDoctorCard__RenderFunc(props: {
         {
           primaryButtonLoading: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );

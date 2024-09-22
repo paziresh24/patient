@@ -110,7 +110,9 @@ function PlasmicLinkPreview__RenderFunc(props: {
         {
           url: "https://plasmic.app"
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );

@@ -330,8 +330,7 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -1147,7 +1146,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -1169,8 +1169,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -1558,13 +1557,13 @@
         },
         {
           "id": "iIYeRAdEZp9l",
-          "name": "SearchsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Searchsvg.tsx"
+          "name": "SearchSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__SearchSvg.tsx"
         },
         {
           "id": "Zop7nqClMso8",
-          "name": "ChecksvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Checksvg.tsx"
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__CheckSvg.tsx"
         },
         {
           "id": "UYWDQf69XzlE",
@@ -1598,13 +1597,13 @@
         },
         {
           "id": "zCwXncSoUStt",
-          "name": "ChevronDownsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronDownsvg.tsx"
+          "name": "ChevronDownSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronDownSvg.tsx"
         },
         {
           "id": "EyMvPikEuDUD",
-          "name": "ChevronUpsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronUpsvg.tsx"
+          "name": "ChevronUpSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__ChevronUpSvg.tsx"
         },
         {
           "id": "xWGtBmgD-AZH",
@@ -1663,13 +1662,13 @@
         },
         {
           "id": "WqDEZH1sW0Ay",
-          "name": "EitaasvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Eitaasvg.tsx"
+          "name": "EitaaSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__EitaaSvg.tsx"
         },
         {
           "id": "aiEdwD29mrY6",
-          "name": "WhatsappsvgIcon",
-          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__Whatsappsvg.tsx"
+          "name": "WhatsappSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24/icons/PlasmicIcon__WhatsappSvg.tsx"
         },
         {
           "id": "0nIlGiQv_m-P",
@@ -1762,8 +1761,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
