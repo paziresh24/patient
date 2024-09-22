@@ -94,8 +94,8 @@ export type PlasmicInAppNotification__OverridesType = {
   root?: Flex__<"div">;
   popoverCore?: Flex__<typeof Popover>;
   group6?: Flex__<"div">;
-  vuesaxlinearnotification?: Flex__<"div">;
-  vuesaxlinearnotification2?: Flex__<"div">;
+  vuesaxLinearNotification?: Flex__<"div">;
+  vuesaxLinearNotification2?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
   freeBox?: Flex__<"div">;
   group7?: Flex__<"div">;
@@ -124,7 +124,16 @@ function PlasmicInAppNotification__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -255,7 +264,7 @@ function PlasmicInAppNotification__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["goToSettingworkhours"] = true
+                  $steps["goToSettingWorkhours"] = true
                     ? (() => {
                         const actionArgs = {
                           destination: "/setting/workhours"
@@ -275,12 +284,12 @@ function PlasmicInAppNotification__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["goToSettingworkhours"] != null &&
-                    typeof $steps["goToSettingworkhours"] === "object" &&
-                    typeof $steps["goToSettingworkhours"].then === "function"
+                    $steps["goToSettingWorkhours"] != null &&
+                    typeof $steps["goToSettingWorkhours"] === "object" &&
+                    typeof $steps["goToSettingWorkhours"].then === "function"
                   ) {
-                    $steps["goToSettingworkhours"] = await $steps[
-                      "goToSettingworkhours"
+                    $steps["goToSettingWorkhours"] = await $steps[
+                      "goToSettingWorkhours"
                     ];
                   }
                 }}
@@ -388,7 +397,7 @@ function PlasmicInAppNotification__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["goToSettingworkhours"] = true
+                  $steps["goToSettingWorkhours"] = true
                     ? (() => {
                         const actionArgs = {
                           destination: "/setting/workhours"
@@ -408,12 +417,12 @@ function PlasmicInAppNotification__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["goToSettingworkhours"] != null &&
-                    typeof $steps["goToSettingworkhours"] === "object" &&
-                    typeof $steps["goToSettingworkhours"].then === "function"
+                    $steps["goToSettingWorkhours"] != null &&
+                    typeof $steps["goToSettingWorkhours"] === "object" &&
+                    typeof $steps["goToSettingWorkhours"].then === "function"
                   ) {
-                    $steps["goToSettingworkhours"] = await $steps[
-                      "goToSettingworkhours"
+                    $steps["goToSettingWorkhours"] = await $steps[
+                      "goToSettingWorkhours"
                     ];
                   }
                 }}
@@ -450,16 +459,16 @@ function PlasmicInAppNotification__RenderFunc(props: {
           }}
         >
           <div
-            data-plasmic-name={"vuesaxlinearnotification"}
-            data-plasmic-override={overrides.vuesaxlinearnotification}
-            className={classNames(projectcss.all, sty.vuesaxlinearnotification)}
+            data-plasmic-name={"vuesaxLinearNotification"}
+            data-plasmic-override={overrides.vuesaxLinearNotification}
+            className={classNames(projectcss.all, sty.vuesaxLinearNotification)}
           >
             <div
-              data-plasmic-name={"vuesaxlinearnotification2"}
-              data-plasmic-override={overrides.vuesaxlinearnotification2}
+              data-plasmic-name={"vuesaxLinearNotification2"}
+              data-plasmic-override={overrides.vuesaxLinearNotification2}
               className={classNames(
                 projectcss.all,
-                sty.vuesaxlinearnotification2
+                sty.vuesaxLinearNotification2
               )}
             >
               <NotificationIcon
@@ -515,8 +524,8 @@ const PlasmicDescendants = {
     "root",
     "popoverCore",
     "group6",
-    "vuesaxlinearnotification",
-    "vuesaxlinearnotification2",
+    "vuesaxLinearNotification",
+    "vuesaxLinearNotification2",
     "img",
     "freeBox",
     "group7",
@@ -526,8 +535,8 @@ const PlasmicDescendants = {
   popoverCore: [
     "popoverCore",
     "group6",
-    "vuesaxlinearnotification",
-    "vuesaxlinearnotification2",
+    "vuesaxLinearNotification",
+    "vuesaxLinearNotification2",
     "img",
     "freeBox",
     "group7",
@@ -536,15 +545,15 @@ const PlasmicDescendants = {
   ],
   group6: [
     "group6",
-    "vuesaxlinearnotification",
-    "vuesaxlinearnotification2",
+    "vuesaxLinearNotification",
+    "vuesaxLinearNotification2",
     "img"
   ],
-  vuesaxlinearnotification: [
-    "vuesaxlinearnotification",
-    "vuesaxlinearnotification2"
+  vuesaxLinearNotification: [
+    "vuesaxLinearNotification",
+    "vuesaxLinearNotification2"
   ],
-  vuesaxlinearnotification2: ["vuesaxlinearnotification2"],
+  vuesaxLinearNotification2: ["vuesaxLinearNotification2"],
   img: ["img"],
   freeBox: ["freeBox", "group7", "group2", "group8"],
   group7: ["group7", "group2"],
@@ -558,8 +567,8 @@ type NodeDefaultElementType = {
   root: "div";
   popoverCore: typeof Popover;
   group6: "div";
-  vuesaxlinearnotification: "div";
-  vuesaxlinearnotification2: "div";
+  vuesaxLinearNotification: "div";
+  vuesaxLinearNotification2: "div";
   img: typeof PlasmicImg__;
   freeBox: "div";
   group7: "div";
@@ -629,8 +638,8 @@ export const PlasmicInAppNotification = Object.assign(
     // Helper components rendering sub-elements
     popoverCore: makeNodeComponent("popoverCore"),
     group6: makeNodeComponent("group6"),
-    vuesaxlinearnotification: makeNodeComponent("vuesaxlinearnotification"),
-    vuesaxlinearnotification2: makeNodeComponent("vuesaxlinearnotification2"),
+    vuesaxLinearNotification: makeNodeComponent("vuesaxLinearNotification"),
+    vuesaxLinearNotification2: makeNodeComponent("vuesaxLinearNotification2"),
     img: makeNodeComponent("img"),
     freeBox: makeNodeComponent("freeBox"),
     group7: makeNodeComponent("group7"),

@@ -5,11 +5,11 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type SearchsvgIconProps = React.ComponentProps<"svg"> & {
+export type ChevronUpSvgIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function SearchsvgIcon(props: SearchsvgIconProps) {
+export function ChevronUpSvgIcon(props: ChevronUpSvgIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
@@ -29,13 +29,11 @@ export function SearchsvgIcon(props: SearchsvgIconProps) {
         strokeLinecap={"round"}
         strokeLinejoin={"round"}
         strokeWidth={"1.5"}
-        d={
-          "M19.25 19.25L15.5 15.5M4.75 11a6.25 6.25 0 1112.5 0 6.25 6.25 0 01-12.5 0z"
-        }
+        d={"M15.25 14.25L12 10.75l-3.25 3.5"}
       ></path>
     </svg>
   );
 }
 
-export default SearchsvgIcon;
+export default ChevronUpSvgIcon;
 /* prettier-ignore-end */

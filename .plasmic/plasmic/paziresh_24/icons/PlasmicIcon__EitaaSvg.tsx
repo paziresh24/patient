@@ -5,11 +5,11 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type EitaasvgIconProps = React.ComponentProps<"svg"> & {
+export type EitaaSvgIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function EitaasvgIcon(props: EitaasvgIconProps) {
+export function EitaaSvgIcon(props: EitaaSvgIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
@@ -35,5 +35,5 @@ export function EitaasvgIcon(props: EitaasvgIconProps) {
   );
 }
 
-export default EitaasvgIcon;
+export default EitaaSvgIcon;
 /* prettier-ignore-end */

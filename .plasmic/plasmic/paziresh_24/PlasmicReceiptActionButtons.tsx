@@ -74,13 +74,13 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicReceiptActionButtons.module.css"; // plasmic-import: EifS7TB9I3zC/css
 
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: M2IpxUmMZTqA/icon
 import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: w8HZEw2oFpPD/icon
 import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: egi8lj9xHHo3/icon
 import Icon11Icon from "./icons/PlasmicIcon__Icon11"; // plasmic-import: R-D5rrnSi86T/icon
-import SearchsvgIcon from "./icons/PlasmicIcon__Searchsvg"; // plasmic-import: iIYeRAdEZp9l/icon
+import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: iIYeRAdEZp9l/icon
 
 import __lib_axios from "axios";
 import { random as __lib_lodash__random } from "lodash";
@@ -115,7 +115,7 @@ export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReceiptActionButtons__OverridesType = {
   root?: Flex__<"div">;
-  شرحاولهبمار?: Flex__<"div">;
+  شرحاولیهبیماری?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   doctorCard?: Flex__<typeof DoctorCard>;
   dialog3?: Flex__<typeof Dialog>;
@@ -165,7 +165,9 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
           showSubstituteDoctorAlert: false,
           illDescription: false
         },
-        props.args
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
       ),
     [props.args]
   );
@@ -747,15 +749,15 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
               children2={
                 <div
                   data-plasmic-name={
-                    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
+                    "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
                   }
-                  data-plasmic-override={overrides.شرحاولهبمار}
+                  data-plasmic-override={overrides.شرحاولیهبیماری}
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.شرحاولهبمار,
+                    sty.شرحاولیهبیماری,
                     {
-                      [sty.شرحاولهبمارtype_visitOnline]: hasVariant(
+                      [sty.شرحاولیهبیماریtype_visitOnline]: hasVariant(
                         $state,
                         "type",
                         "visitOnline"
@@ -1822,7 +1824,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                           $steps["runCode"] = await $steps["runCode"];
                         }
 
-                        $steps["goToDashboardappointments"] = true
+                        $steps["goToDashboardAppointments"] = true
                           ? (() => {
                               const actionArgs = {
                                 destination: "/dashboard/appointments/"
@@ -1842,14 +1844,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                             })()
                           : undefined;
                         if (
-                          $steps["goToDashboardappointments"] != null &&
-                          typeof $steps["goToDashboardappointments"] ===
+                          $steps["goToDashboardAppointments"] != null &&
+                          typeof $steps["goToDashboardAppointments"] ===
                             "object" &&
-                          typeof $steps["goToDashboardappointments"].then ===
+                          typeof $steps["goToDashboardAppointments"].then ===
                             "function"
                         ) {
-                          $steps["goToDashboardappointments"] = await $steps[
-                            "goToDashboardappointments"
+                          $steps["goToDashboardAppointments"] = await $steps[
+                            "goToDashboardAppointments"
                           ];
                         }
                       }}
@@ -2497,7 +2499,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 const PlasmicDescendants = {
   root: [
     "root",
-    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631",
+    "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc",
     "dialog",
     "doctorCard",
     "dialog3",
@@ -2507,8 +2509,8 @@ const PlasmicDescendants = {
     "textarea",
     "textInput"
   ],
-  شرحاولهبمار: [
-    "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
+  شرحاولیهبیماری: [
+    "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
   ],
   dialog: ["dialog", "doctorCard"],
   doctorCard: ["doctorCard"],
@@ -2524,7 +2526,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  شرحاولهبمار: "div";
+  شرحاولیهبیماری: "div";
   dialog: typeof Dialog;
   doctorCard: typeof DoctorCard;
   dialog3: typeof Dialog;
@@ -2595,8 +2597,8 @@ export const PlasmicReceiptActionButtons = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    شرحاولهبمار: makeNodeComponent(
-      "\u0634\u0631\u062d\u0627\u0648\u0644\u0647\u0628\u0645\u0627\u0631"
+    شرحاولیهبیماری: makeNodeComponent(
+      "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
     ),
     dialog: makeNodeComponent("dialog"),
     doctorCard: makeNodeComponent("doctorCard"),

@@ -73,7 +73,7 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicDialog.module.css"; // plasmic-import: 5NUpgw2K0nJD/css
 
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 
 createPlasmicElementProxy;
@@ -140,7 +140,16 @@ function PlasmicDialog__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,

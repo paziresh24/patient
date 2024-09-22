@@ -79,7 +79,7 @@ import sty from "./PlasmicActivity.module.css"; // plasmic-import: pggD1apWa_wW/
 import Icon20Icon from "./icons/PlasmicIcon__Icon20"; // plasmic-import: uUHYUjZLzaVg/icon
 import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: szEV5ojPpvII/icon
 import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: egi8lj9xHHo3/icon
-import ChecksvgIcon from "./icons/PlasmicIcon__Checksvg"; // plasmic-import: Zop7nqClMso8/icon
+import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: zsOosa-1VDPP/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
 import Icon19Icon from "./icons/PlasmicIcon__Icon19"; // plasmic-import: 4RsTY71YqzEZ/icon
@@ -137,7 +137,16 @@ function PlasmicActivity__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -531,7 +540,7 @@ function PlasmicActivity__RenderFunc(props: {
                     const actionArgs = {
                       dataOp: {
                         sourceId: "x4aryr2mRXV9jgXmh3My7a",
-                        opId: "a0077099-6811-47a6-aca7-d56d8053a2af",
+                        opId: "3bcf4cb6-1618-4ab4-8ade-417b030c3766",
                         userArgs: {
                           params: [
                             $props.centers.find(center => center.id === "5532")
@@ -581,7 +590,7 @@ function PlasmicActivity__RenderFunc(props: {
                     const actionArgs = {
                       dataOp: {
                         sourceId: "x4aryr2mRXV9jgXmh3My7a",
-                        opId: "a363a9a4-c014-47d7-a210-3f4e3c318c36",
+                        opId: "722cb646-bd6c-40d2-9378-c4ad049d93a4",
                         userArgs: {
                           params: [
                             $props.centers.find(center => center.id === "5532")

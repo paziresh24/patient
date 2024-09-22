@@ -67,8 +67,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicOpener.module.css"; // plasmic-import: HdziC2GDkrKd/css
 
-import ChevronUpsvgIcon from "./icons/PlasmicIcon__ChevronUpsvg"; // plasmic-import: EyMvPikEuDUD/icon
-import ChevronDownsvgIcon from "./icons/PlasmicIcon__ChevronDownsvg"; // plasmic-import: zCwXncSoUStt/icon
+import ChevronUpSvgIcon from "./icons/PlasmicIcon__ChevronUpSvg"; // plasmic-import: EyMvPikEuDUD/icon
+import ChevronDownSvgIcon from "./icons/PlasmicIcon__ChevronDownSvg"; // plasmic-import: zCwXncSoUStt/icon
 
 createPlasmicElementProxy;
 
@@ -110,7 +110,16 @@ function PlasmicOpener__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -269,7 +278,7 @@ function PlasmicOpener__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <ChevronUpsvgIcon
+              <ChevronUpSvgIcon
                 className={classNames(projectcss.all, sty.svg___6QgYe)}
                 role={"img"}
               />
@@ -287,7 +296,7 @@ function PlasmicOpener__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <ChevronDownsvgIcon
+              <ChevronDownSvgIcon
                 className={classNames(projectcss.all, sty.svg__ekHWz)}
                 role={"img"}
               />
