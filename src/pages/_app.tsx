@@ -21,8 +21,6 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
-import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
-import RaviGlobalContextsProvider from '../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import Script from 'next/script';
@@ -105,12 +103,10 @@ function MyApp(props: AppProps) {
       <GrowthBookProvider growthbook={growthbook}>
         <Provider pageProps={pageProps}>
           <GlobalContextsProvider>
-            <SearchGlobalContextsProvider>
-              <RaviGlobalContextsProvider>
-                <PlasmicRootProvider disableLoadingBoundary>
-                  <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-                  {isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted')) && (
-                    <Script id="najva-script">{`(function(){
+            <PlasmicRootProvider disableLoadingBoundary>
+              <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+              {isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted')) && (
+                <Script id="najva-script">{`(function(){
         var now = new Date();
         var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
             "0" + now.getHours();
@@ -125,19 +121,17 @@ function MyApp(props: AppProps) {
         script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
         head.appendChild(script);
         })()`}</Script>
-                  )}
-                  <Head>
-                    <meta
-                      name="viewport"
-                      content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
-                        isApplication ? '1.0' : '5.0'
-                      }`}
-                    />
-                  </Head>
-                  <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-                </PlasmicRootProvider>
-              </RaviGlobalContextsProvider>
-            </SearchGlobalContextsProvider>
+              )}
+              <Head>
+                <meta
+                  name="viewport"
+                  content={`viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=${
+                    isApplication ? '1.0' : '5.0'
+                  }`}
+                />
+              </Head>
+              <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+            </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
       </GrowthBookProvider>

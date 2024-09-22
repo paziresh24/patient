@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { PlasmicCanvasHost, registerFunction, registerGlobalContext } from '@plasmicapp/react-web/lib/host';
+import { PlasmicCanvasHost, registerFunction, registerGlobalContext, registerComponent } from '@plasmicapp/react-web/lib/host';
 import plasmicSplunkEvent from '@/common/services/plasmicSplunkEvent';
 import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
-import { Fragment } from '@/common/fragment/designSystemGlobalContext';
+import { Fragment, fragmentMeta } from '@/common/fragment/designSystemGlobalContext';
 import { GrowthbookGlobalContext } from '@/common/fragment/growthbookGlobalContext';
+import { ApiRequest, apiRequestMeta } from '@/common/fragment/components/api-request';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -46,50 +47,7 @@ registerGlobalContext(AuthGlobalContext, {
   importPath: '@/common/fragment/authGlobalContext',
 });
 
-registerGlobalContext(Fragment, {
-  name: 'Fragment',
-  props: {},
-  providesData: true,
-  globalActions: {
-    showToast: {
-      displayName: 'Show Toast',
-      parameters: [
-        {
-          name: 'type',
-          type: {
-            type: 'choice',
-            options: ['success', 'error'],
-            defaultValueHint: 'success',
-          },
-        },
-        {
-          name: 'message',
-          type: {
-            type: 'string',
-            defaultValueHint: 'A message for you!',
-            required: true,
-          },
-        },
-        {
-          name: 'placement',
-          type: {
-            type: 'choice',
-            options: ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'],
-            defaultValueHint: 'top-right',
-          },
-        },
-        {
-          name: 'duration',
-          type: {
-            type: 'number',
-            defaultValueHint: 3000,
-          },
-        },
-      ],
-    },
-  },
-  importPath: '@/common/fragment/designSystemGlobalContext',
-});
+registerGlobalContext(Fragment, fragmentMeta);
 
 registerGlobalContext(GrowthbookGlobalContext, {
   name: 'GrowthbookGlobalContext',
@@ -135,3 +93,5 @@ registerGlobalContext(GrowthbookGlobalContext, {
   providesData: true,
   importPath: '@/common/fragment/growthbookGlobalContext',
 });
+
+registerComponent(ApiRequest as any, apiRequestMeta);

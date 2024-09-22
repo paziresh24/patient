@@ -79,6 +79,7 @@
     "react-use": "17.4.0",
     "recharts": "2.10.4",
     "sharp": "0.33.2",
+    "swr": "2.2.5",
     "tailwind-merge": "1.10.0",
     "uuid": "8.3.2",
     "zustand": "4.3.5"
