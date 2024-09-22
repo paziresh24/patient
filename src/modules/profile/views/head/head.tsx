@@ -15,6 +15,7 @@ import EditButton from '../../components/viewAs/editButton';
 import { Fragment } from '@/common/fragment';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 
 interface HeadProps {
   image: string;
@@ -127,15 +128,17 @@ export const Head = (props: HeadProps) => {
             />
           )}
           {shouldUseFragmentReviewCard && (
-            <Fragment
-              name="RateAndCommentCount"
-              props={{
-                ...profileData,
-                rateCount: rateCount,
-                rate: satisfaction,
-                hideRates: hideRates,
-              }}
-            />
+            <RaviGlobalContextsProvider>
+              <Fragment
+                name="RateAndCommentCount"
+                props={{
+                  ...profileData,
+                  rateCount: rateCount,
+                  rate: satisfaction,
+                  hideRates: hideRates,
+                }}
+              />
+            </RaviGlobalContextsProvider>
           )}
         </div>
       )}

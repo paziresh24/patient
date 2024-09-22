@@ -5,6 +5,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
+import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
@@ -76,57 +77,59 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-1">
-      <div className="w-full space-y-3 p-4 bg-white md:rounded-t-lg flex flex-col justify-center items-center">
+    <RaviGlobalContextsProvider>
+      <div className="flex flex-col space-y-1">
+        <div className="w-full space-y-3 p-4 bg-white md:rounded-t-lg flex flex-col justify-center items-center">
+          <Fragment
+            name="RateAndCommentCount"
+            props={{
+              ...profileData,
+              rate: (
+                ((+profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                  (+profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                  (+profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                3
+              ).toFixed(1),
+              rateCount: profileData.feedbacks.details?.count_of_feedbacks,
+              hideRates: profileData.feedbacks?.details?.hide_rates,
+            }}
+          />
+          <Fragment
+            name="RateProgressBar"
+            props={{
+              ...profileData,
+              averageQualityOfTreatment: profileData.feedbacks.details.average_rates.average_quality_of_treatment,
+              averageDoctorEncounter: profileData.feedbacks.details.average_rates.average_doctor_encounter,
+              averageExplanationOfIssue: profileData.feedbacks.details.average_rates.average_explanation_of_issue,
+              hideRates: profileData.feedbacks?.details?.hide_rates,
+            }}
+          />
+        </div>
+        {shouldShowDoctorTags && (
+          <DoctorTags
+            symptomes={profileData.symptomes?.slice?.(0, 5) ?? []}
+            doctorId={profileData.information.id}
+            serverId={profileData.information.server_id}
+          />
+        )}
         <Fragment
-          name="RateAndCommentCount"
+          name="ReviewList"
           props={{
             ...profileData,
-            rate: (
-              ((+profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                (+profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                (+profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            ).toFixed(1),
-            rateCount: profileData.feedbacks.details?.count_of_feedbacks,
-            hideRates: profileData.feedbacks?.details?.hide_rates,
-          }}
-        />
-        <Fragment
-          name="RateProgressBar"
-          props={{
-            ...profileData,
-            averageQualityOfTreatment: profileData.feedbacks.details.average_rates.average_quality_of_treatment,
-            averageDoctorEncounter: profileData.feedbacks.details.average_rates.average_doctor_encounter,
-            averageExplanationOfIssue: profileData.feedbacks.details.average_rates.average_explanation_of_issue,
+            dontShow: false,
+            reviewResponse: response,
+            pageInfo: pageInfo,
+            nextPageTrigger: () => {
+              setPage(prev => prev + 1);
+            },
+            paginationLoadingStatus: page > 1 && getFeedbacks.isLoading,
+            onSearch,
+            onFilter,
+            onSort,
             hideRates: profileData.feedbacks?.details?.hide_rates,
           }}
         />
       </div>
-      {shouldShowDoctorTags && (
-        <DoctorTags
-          symptomes={profileData.symptomes?.slice?.(0, 5) ?? []}
-          doctorId={profileData.information.id}
-          serverId={profileData.information.server_id}
-        />
-      )}
-      <Fragment
-        name="ReviewList"
-        props={{
-          ...profileData,
-          dontShow: false,
-          reviewResponse: response,
-          pageInfo: pageInfo,
-          nextPageTrigger: () => {
-            setPage(prev => prev + 1);
-          },
-          paginationLoadingStatus: page > 1 && getFeedbacks.isLoading,
-          onSearch,
-          onFilter,
-          onSort,
-          hideRates: profileData.feedbacks?.details?.hide_rates,
-        }}
-      />
-    </div>
+    </RaviGlobalContextsProvider>
   );
 };

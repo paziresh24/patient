@@ -6,6 +6,7 @@ import { useSearchStore } from '../../store/search';
 import { Fragment } from '@/common/fragment';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
+import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 export const Result = () => {
   const {
@@ -35,26 +36,28 @@ export const Result = () => {
         </div>
       )}
       {(result.length === 0 ? !isLoading : true) && (
-        <Fragment
-          name="SearchResults"
-          props={{
-            searchResultResponse: {
-              ...responseData,
-              search: {
-                ...search,
-                result,
+        <SearchGlobalContextsProvider>
+          <Fragment
+            name="SearchResults"
+            props={{
+              searchResultResponse: {
+                ...responseData,
+                search: {
+                  ...search,
+                  result,
+                },
               },
-            },
-            nextPageTrigger: handleNextPage,
-            imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-            location: {
-              city_name: city?.en_slug,
-              city_id: city?.id,
-              ...geoLocation,
-            },
-            paginationLoadingStatus: isLoading,
-          }}
-        />
+              nextPageTrigger: handleNextPage,
+              imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+              location: {
+                city_name: city?.en_slug,
+                city_id: city?.id,
+                ...geoLocation,
+              },
+              paginationLoadingStatus: isLoading,
+            }}
+          />
+        </SearchGlobalContextsProvider>
       )}
     </>
   );
