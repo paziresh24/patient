@@ -163,77 +163,100 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return (function () {
-                      var createFullScreenPopup = function (url) {
-                        var overlay = document.createElement("div");
-                        overlay.id = "fullscreen-overlay";
-                        overlay.style.position = "fixed";
-                        overlay.style.top = "0";
-                        overlay.style.left = "0";
-                        overlay.style.width = "100%";
-                        overlay.style.height = "100%";
-                        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-                        overlay.style.zIndex = "9999";
-                        overlay.style.display = "flex";
-                        overlay.style.justifyContent = "center";
-                        overlay.style.alignItems = "center";
-                        var iframe = document.createElement("iframe");
-                        iframe.src = url;
-                        iframe.style.width = "95%";
-                        iframe.style.height = "95%";
-                        iframe.style.border = "none";
-                        iframe.style.borderRadius = "5px";
-                        iframe.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
-                        iframe.style.zIndex = "10000";
-                        var closeButton = document.createElement("div");
-                        closeButton.textContent = "[X]";
-                        closeButton.style.position = "fixed";
-                        closeButton.style.top = "20px";
-                        closeButton.style.right = "30px";
-                        closeButton.style.fontSize = "24px";
-                        closeButton.style.color = "#333";
-                        closeButton.style.cursor = "pointer";
-                        closeButton.style.zIndex = "10001";
-                        closeButton.onclick = function () {
-                          document.body.removeChild(overlay);
+                    return (() => {
+                      return (function () {
+                        var createFullScreenPopup = function (url) {
+                          var overlay = document.createElement("div");
+                          overlay.id = "fullscreen-overlay";
+                          overlay.style.position = "fixed";
+                          overlay.style.top = "0";
+                          overlay.style.left = "0";
+                          overlay.style.width = "100%";
+                          overlay.style.height = "100%";
+                          overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                          overlay.style.zIndex = "9999";
+                          overlay.style.display = "flex";
+                          overlay.style.justifyContent = "center";
+                          overlay.style.alignItems = "center";
+                          var iframe = document.createElement("iframe");
+                          iframe.src = url;
+                          iframe.style.width = "95%";
+                          iframe.style.height = "95%";
+                          iframe.style.border = "none";
+                          iframe.style.borderRadius = "5px";
+                          iframe.style.boxShadow =
+                            "0 0 10px rgba(0, 0, 0, 0.5)";
+                          iframe.style.zIndex = "10000";
+                          var closeButton = document.createElement("div");
+                          closeButton.textContent = "[X]";
+                          closeButton.style.position = "fixed";
+                          closeButton.style.top = "20px";
+                          closeButton.style.right = "30px";
+                          closeButton.style.fontSize = "24px";
+                          closeButton.style.color = "#333";
+                          closeButton.style.cursor = "pointer";
+                          closeButton.style.zIndex = "10001";
+                          closeButton.onclick = function () {
+                            document.body.removeChild(overlay);
+                          };
+                          var closeTextButton =
+                            document.createElement("button");
+                          closeTextButton.textContent = "بستن";
+                          closeTextButton.style.position = "fixed";
+                          closeTextButton.style.bottom = "20px";
+                          closeTextButton.style.left = "30px";
+                          closeTextButton.style.fontSize = "14px";
+                          closeTextButton.style.padding = "10px 20px";
+                          closeTextButton.style.backgroundColor = "#ddd";
+                          closeTextButton.style.color = "#000";
+                          closeTextButton.style.border = "none";
+                          closeTextButton.style.borderRadius = "5px";
+                          closeTextButton.style.cursor = "pointer";
+                          closeTextButton.style.zIndex = "10001";
+                          closeTextButton.onclick = function () {
+                            document.body.removeChild(overlay);
+                          };
+                          overlay.appendChild(iframe);
+                          overlay.appendChild(closeButton);
+                          overlay.appendChild(closeTextButton);
+                          document.body.appendChild(overlay);
                         };
-                        overlay.appendChild(iframe);
-                        overlay.appendChild(closeButton);
-                        document.body.appendChild(overlay);
-                      };
-                      var getTransitionData = function () {
-                        var name = "transitionData=";
-                        var decodedCookie = decodeURIComponent(document.cookie);
-                        var ca = decodedCookie.split(";");
-                        for (var i = 0; i < ca.length; i++) {
-                          var c = ca[i];
-                          while (c.charAt(0) == " ") {
-                            c = c.substring(1);
+                        var getTransitionData = function () {
+                          var name = "transitionData=";
+                          var decodedCookie = decodeURIComponent(
+                            document.cookie
+                          );
+                          var ca = decodedCookie.split(";");
+                          for (var i = 0; i < ca.length; i++) {
+                            var c = ca[i];
+                            while (c.charAt(0) == " ") {
+                              c = c.substring(1);
+                            }
+                            if (c.indexOf(name) == 0) {
+                              return JSON.parse(
+                                c.substring(name.length, c.length)
+                              );
+                            }
                           }
-                          if (c.indexOf(name) == 0) {
-                            return JSON.parse(
-                              c.substring(name.length, c.length)
-                            );
-                          }
+                          return null;
+                        };
+                        var transitionData = getTransitionData();
+                        if (transitionData) {
+                          var terminalId = encodeURIComponent(
+                            transitionData.terminalId || ""
+                          );
+                          var siteTitle = encodeURIComponent(
+                            transitionData.destinationHost || ""
+                          );
+                          var drName = encodeURIComponent(
+                            transitionData.destinationDoctorName || ""
+                          );
+                          var surveyURL = `https://survey.porsline.ir/s/CA0z9O8?ac=0&ns=1&terminal-id=${terminalId}&site-title=${siteTitle}&dr-name=${drName}`;
+                          createFullScreenPopup(surveyURL);
+                        } else {
+                          console.error("transitionData cookie not found.");
                         }
-                        return null;
-                      };
-                      var transitionData = getTransitionData();
-                      if (transitionData) {
-                        var terminalId = encodeURIComponent(
-                          transitionData.terminalId || ""
-                        );
-                        var siteTitle = encodeURIComponent(
-                          transitionData.destinationHost || ""
-                        );
-                        var drName = encodeURIComponent(
-                          transitionData.destinationDoctorName || ""
-                        );
-                        var surveyURL = `https://survey.porsline.ir/s/CA0z9O8?ac=0&ns=1&terminal-id=${terminalId}&site-title=${siteTitle}&dr-name=${drName}`;
-                        createFullScreenPopup(surveyURL);
-                      } else {
-                        console.error("transitionData cookie not found.");
-                      }
+                      })();
                     })();
                   }
                 };
@@ -248,6 +271,31 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
             typeof $steps["showSurveyPopup"].then === "function"
           ) {
             $steps["showSurveyPopup"] = await $steps["showSurveyPopup"];
+          }
+
+          $steps["removeTheTransitionDataCookie"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      return (document.cookie =
+                        "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.paziresh24.com; path=/");
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["removeTheTransitionDataCookie"] != null &&
+            typeof $steps["removeTheTransitionDataCookie"] === "object" &&
+            typeof $steps["removeTheTransitionDataCookie"].then === "function"
+          ) {
+            $steps["removeTheTransitionDataCookie"] = await $steps[
+              "removeTheTransitionDataCookie"
+            ];
           }
 
           $steps["sendSplunkEvent"] = true
@@ -306,29 +354,6 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
             typeof $steps["sendSplunkEvent"].then === "function"
           ) {
             $steps["sendSplunkEvent"] = await $steps["sendSplunkEvent"];
-          }
-
-          $steps["removeTheTransitionDataCookie"] = true
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return (document.cookie =
-                      "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;");
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["removeTheTransitionDataCookie"] != null &&
-            typeof $steps["removeTheTransitionDataCookie"] === "object" &&
-            typeof $steps["removeTheTransitionDataCookie"].then === "function"
-          ) {
-            $steps["removeTheTransitionDataCookie"] = await $steps[
-              "removeTheTransitionDataCookie"
-            ];
           }
         }}
       />
