@@ -197,6 +197,7 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                           closeButton.style.cursor = "pointer";
                           closeButton.style.zIndex = "10001";
                           closeButton.onclick = function () {
+                            deleteTransitionDataCookie();
                             document.body.removeChild(overlay);
                           };
                           var closeTextButton =
@@ -214,6 +215,7 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                           closeTextButton.style.cursor = "pointer";
                           closeTextButton.style.zIndex = "10001";
                           closeTextButton.onclick = function () {
+                            deleteTransitionDataCookie();
                             document.body.removeChild(overlay);
                           };
                           overlay.appendChild(iframe);
@@ -239,6 +241,12 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                             }
                           }
                           return null;
+                        };
+                        var deleteTransitionDataCookie = function () {
+                          document.cookie =
+                            "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.paziresh24.com;";
+                          document.cookie =
+                            "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=www.paziresh24.com;";
                         };
                         var transitionData = getTransitionData();
                         if (transitionData) {
@@ -278,8 +286,10 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                 const actionArgs = {
                   customFunction: async () => {
                     return (() => {
+                      document.cookie =
+                        "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.paziresh24.com; path=/";
                       return (document.cookie =
-                        "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.paziresh24.com; path=/");
+                        "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.paziresh24.com;");
                     })();
                   }
                 };
@@ -316,7 +326,27 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                             terminal_id: window.document.cookie
                               ?.split("; ")
                               ?.find?.(row => row.startsWith("terminal_id="))
-                              ?.split?.("=")?.[1]
+                              ?.split?.("=")?.[1],
+                            survey_response_status: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("surveyResponseStatus%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_url: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationURL%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_host: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationHost%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_doctor_name: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationDoctorName%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0]
                           }
                         };
                       } catch (e) {
