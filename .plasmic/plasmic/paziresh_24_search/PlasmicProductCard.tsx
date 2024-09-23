@@ -70,6 +70,8 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
@@ -120,6 +122,7 @@ export type PlasmicProductCard__ArgsType = {
   classificationTitleApi?: string;
   children?: React.ReactNode;
   searchCardId?: string;
+  debugModeResult?: any;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -141,7 +144,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "externalLinkTitle",
   "classificationTitleApi",
   "children",
-  "searchCardId"
+  "searchCardId",
+  "debugModeResult"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -182,6 +186,7 @@ export interface DefaultProductCardProps {
   classificationTitleApi?: string;
   children?: React.ReactNode;
   searchCardId?: string;
+  debugModeResult?: any;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
@@ -297,6 +302,8 @@ function PlasmicProductCard__RenderFunc(props: {
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
           plasmic_fragment_design_system_css.plasmic_tokens,
+          plasmic_antd_5_hostless_css.plasmic_tokens,
+          plasmic_plasmic_rich_components_css.plasmic_tokens,
           sty.root,
           {
             [sty.root_5StarRatingMode3__5StarA]: hasVariant(
@@ -2115,6 +2122,102 @@ function PlasmicProductCard__RenderFunc(props: {
               );
             })}
           </Stack__>
+        ) : null}
+        {(() => {
+          try {
+            return Object.keys($props.debugModeResult).length > 2;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return false;
+            }
+            throw e;
+          }
+        })() ? (
+          <div className={classNames(projectcss.all, sty.freeBox__pV4)}>
+            <div className={classNames(projectcss.all, sty.freeBox___7UCt)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__bz8I
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.debugModeResult.indexName;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__yzXdY
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.debugModeResult.documentId;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__u1Q0)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___7Gyd
+                )}
+              >
+                <div
+                  className={projectcss.__wab_expr_html_text}
+                  dangerouslySetInnerHTML={{
+                    __html: (() => {
+                      try {
+                        return Object.entries(
+                          $props.debugModeResult.documentInfo
+                        )
+                          .map(([key, value]) => `${key}: ${value}`)
+                          .join("<br>");
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "";
+                        }
+                        throw e;
+                      }
+                    })()
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         ) : null}
       </Stack__>
     ) : null
