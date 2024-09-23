@@ -65,11 +65,14 @@ import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
 import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
+import ExternalBookSurveyPopup from "../../ExternalBookSurveyPopup"; // plasmic-import: YHypsyWp2tOf/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
@@ -124,6 +127,7 @@ export type PlasmicSearchResults__OverridesType = {
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
+  externalBookSurveyPopup?: Flex__<typeof ExternalBookSurveyPopup>;
 };
 
 export interface DefaultSearchResultsProps {
@@ -218,6 +222,8 @@ function PlasmicSearchResults__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -459,6 +465,21 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 className={classNames("__wab_instance", sty.productCard)}
                 classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
+                debugModeResult={(() => {
+                  try {
+                    return $props.searchResultResponse.debug_mode_result.search_engine_response.entity.results.find(
+                      result => result.documentId === currentItem._id
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 eventTrigger={async (elementName, elementContent) => {
                   const $steps = {};
 
@@ -2130,6 +2151,25 @@ function PlasmicSearchResults__RenderFunc(props: {
           })()}
         />
       ) : null}
+      {(() => {
+        try {
+          return $ctx.Growthbook.features["search-external-book-survey-popup"];
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <ExternalBookSurveyPopup
+          data-plasmic-name={"externalBookSurveyPopup"}
+          data-plasmic-override={overrides.externalBookSurveyPopup}
+          className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
+        />
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -2147,7 +2187,8 @@ const PlasmicDescendants = {
     "noResultsBlockVerticalStack",
     "setGrowthbookAttributes",
     "peopleAlsoSearchForBox",
-    "searchFooterSecondaryTasks"
+    "searchFooterSecondaryTasks",
+    "externalBookSurveyPopup"
   ],
   showMySearchPerformance: ["showMySearchPerformance"],
   resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
@@ -2163,7 +2204,8 @@ const PlasmicDescendants = {
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
-  searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"]
+  searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"],
+  externalBookSurveyPopup: ["externalBookSurveyPopup"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2181,6 +2223,7 @@ type NodeDefaultElementType = {
   setGrowthbookAttributes: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
+  externalBookSurveyPopup: typeof ExternalBookSurveyPopup;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2258,6 +2301,7 @@ export const PlasmicSearchResults = Object.assign(
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
+    externalBookSurveyPopup: makeNodeComponent("externalBookSurveyPopup"),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,

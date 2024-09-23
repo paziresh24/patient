@@ -330,7 +330,8 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -587,6 +588,19 @@
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/s/samplepage2781"
+        },
+        {
+          "id": "YHypsyWp2tOf",
+          "name": "ExternalBookSurveyPopup",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicExternalBookSurveyPopup.tsx",
+          "importSpec": {
+            "modulePath": "ExternalBookSurveyPopup.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicExternalBookSurveyPopup.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -696,6 +710,12 @@
           "name": "GrowthbookGlobalContext",
           "displayName": "GrowthbookGlobalContext",
           "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "vW4UBuHCFshJ",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
         }
       ],
       "customFunctions": [
@@ -706,8 +726,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1169,7 +1188,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -1761,7 +1781,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2251,8 +2272,7 @@
           "componentImportPath": "@plasmicpkgs/antd5/skinny/registerBreadcrumb"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "jkU633o1Cz7HrJdwdxhVHk",
@@ -2306,8 +2326,7 @@
           }
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "kS7YGZfVr6mU43XDQjXELc",
