@@ -201,6 +201,16 @@
       }
     },
     {
+      "name": "System: Bg Elevated",
+      "type": "color",
+      "value": "var(--antd-colorBgElevated)",
+      "category": "color",
+      "meta": {
+        "projectId": "sMdpLWyxbzDCruwMRffW2m",
+        "id": "LDegABTF5Rf8"
+      }
+    },
+    {
       "name": "System: Bg Layout",
       "type": "color",
       "value": "var(--antd-colorBgLayout)",
@@ -258,6 +268,16 @@
       "meta": {
         "projectId": "jkU633o1Cz7HrJdwdxhVHk",
         "id": "WxvvgatuPYoJ"
+      }
+    },
+    {
+      "name": "System: Bg Spotlight",
+      "type": "color",
+      "value": "var(--antd-colorBgSpotlight)",
+      "category": "color",
+      "meta": {
+        "projectId": "sMdpLWyxbzDCruwMRffW2m",
+        "id": "5x7axv4RdCvL"
       }
     },
     {

@@ -495,6 +495,14 @@
   flex-shrink: 1;
   flex-grow: 0;
 }
+.text__hzVw {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: none;
+}
 .freeBox__esd8N {
   display: flex;
   position: relative;
@@ -603,9 +611,25 @@
   object-fit: cover;
   min-width: 0;
 }
-.sideEffect:global(.__wab_instance) {
+.cardActionSduiV2UiRequest:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
+}
+.text___9H2S0 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: none;
+}
+.text__s4JDx {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: none;
 }
 .freeBox__ybVvU {
   display: flex;
