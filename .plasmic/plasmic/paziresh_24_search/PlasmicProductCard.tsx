@@ -1988,10 +1988,8 @@ function PlasmicProductCard__RenderFunc(props: {
                 $ctx.Growthbook.features["theme-config"][
                   "search_result:show_card_action_sdui_v2"
                 ] &&
-                $state.cardActionSduiV2UiRequest.data.search_result_card_ui[0]
-                  .data.actions &&
-                $state.cardActionSduiV2UiRequest.data.search_result_card_ui[0]
-                  .data.actions.length > 0
+                $state.cardActionSduiV2UiRequest.data?.search_result_card_ui[0]
+                  ?.data?.actions !== undefined
               )
             );
           } catch (e) {
