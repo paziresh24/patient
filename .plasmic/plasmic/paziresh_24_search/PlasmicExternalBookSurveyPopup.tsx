@@ -65,7 +65,6 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicExternalBookSurveyPopup.module.css"; // plasmic-import: YHypsyWp2tOf/css
 
@@ -145,7 +144,6 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -158,84 +156,6 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
         )}
         onMount={async () => {
           const $steps = {};
-
-          $steps["sendSplunkEvent"] = true
-            ? (() => {
-                const actionArgs = {
-                  args: [
-                    "POST",
-                    "https://rokhdad-splunk-hec.paziresh24.com/services/collector",
-                    undefined,
-                    (() => {
-                      try {
-                        return {
-                          sourcetype: "_json",
-                          event: {
-                            event_group: "search_metrics",
-                            event_type: "external_book_survey",
-                            current_url: window.location.href,
-                            terminal_id: window.document.cookie
-                              ?.split("; ")
-                              ?.find?.(row => row.startsWith("terminal_id="))
-                              ?.split?.("=")?.[1],
-                            survey_response_status: window.document.cookie
-                              ?.split("; ")
-                              ?.find?.(row => row.startsWith("transitionData="))
-                              ?.split?.("surveyResponseStatus%22%3A")?.[1]
-                              ?.split?.("%22%2C")?.[0],
-                            destination_url: window.document.cookie
-                              ?.split("; ")
-                              ?.find?.(row => row.startsWith("transitionData="))
-                              ?.split?.("destinationURL%22%3A")?.[1]
-                              ?.split?.("%22%2C")?.[0],
-                            destination_host: window.document.cookie
-                              ?.split("; ")
-                              ?.find?.(row => row.startsWith("transitionData="))
-                              ?.split?.("destinationHost%22%3A")?.[1]
-                              ?.split?.("%22%2C")?.[0],
-                            destination_doctor_name: window.document.cookie
-                              ?.split("; ")
-                              ?.find?.(row => row.startsWith("transitionData="))
-                              ?.split?.("destinationDoctorName%22%3A")?.[1]
-                              ?.split?.("%22%2C")?.[0]
-                          }
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return {
-                            sourcetype: "_json",
-                            event: {
-                              event_group: "search_metrics",
-                              event_type: "external_book_survey"
-                            }
-                          };
-                        }
-                        throw e;
-                      }
-                    })(),
-                    {
-                      headers: {
-                        Authorization:
-                          "Splunk 9da1ff03-1642-4f63-aba2-2ea5e033f06d"
-                      }
-                    }
-                  ]
-                };
-                return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
-            : undefined;
-          if (
-            $steps["sendSplunkEvent"] != null &&
-            typeof $steps["sendSplunkEvent"] === "object" &&
-            typeof $steps["sendSplunkEvent"].then === "function"
-          ) {
-            $steps["sendSplunkEvent"] = await $steps["sendSplunkEvent"];
-          }
 
           $steps["showSurveyPopup"] = document.cookie.includes("transitionData")
             ? (() => {
@@ -357,6 +277,84 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
             typeof $steps["showSurveyPopup"].then === "function"
           ) {
             $steps["showSurveyPopup"] = await $steps["showSurveyPopup"];
+          }
+
+          $steps["sendSplunkEvent"] = document.cookie.includes("transitionData")
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "POST",
+                    "https://rokhdad-splunk-hec.paziresh24.com/services/collector",
+                    undefined,
+                    (() => {
+                      try {
+                        return {
+                          sourcetype: "_json",
+                          event: {
+                            event_group: "search_metrics",
+                            event_type: "external_book_survey",
+                            current_url: window.location.href,
+                            terminal_id: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("terminal_id="))
+                              ?.split?.("=")?.[1],
+                            survey_response_status: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("surveyResponseStatus%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_url: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationURL%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_host: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationHost%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0],
+                            destination_doctor_name: window.document.cookie
+                              ?.split("; ")
+                              ?.find?.(row => row.startsWith("transitionData="))
+                              ?.split?.("destinationDoctorName%22%3A")?.[1]
+                              ?.split?.("%22%2C")?.[0]
+                          }
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return {
+                            sourcetype: "_json",
+                            event: {
+                              event_group: "search_metrics",
+                              event_type: "external_book_survey"
+                            }
+                          };
+                        }
+                        throw e;
+                      }
+                    })(),
+                    {
+                      headers: {
+                        Authorization:
+                          "Splunk 9da1ff03-1642-4f63-aba2-2ea5e033f06d"
+                      }
+                    }
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["sendSplunkEvent"] != null &&
+            typeof $steps["sendSplunkEvent"] === "object" &&
+            typeof $steps["sendSplunkEvent"].then === "function"
+          ) {
+            $steps["sendSplunkEvent"] = await $steps["sendSplunkEvent"];
           }
 
           $steps["removeTheTransitionDataCookie"] = true

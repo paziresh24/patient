@@ -3,6 +3,10 @@
 .plasmic_tokens {
   --token-1Ycj6LtmzBSK: #ffb700;
   --plasmic-token-golden: var(--token-1Ycj6LtmzBSK);
+  --token-5x7axv4RdCvL: var(--antd-colorBgSpotlight);
+  --plasmic-token-system-bg-spotlight: var(--token-5x7axv4RdCvL);
+  --token-LDegABTF5Rf8: var(--antd-colorBgElevated);
+  --plasmic-token-system-bg-elevated: var(--token-LDegABTF5Rf8);
 }
 
 .plasmic_default_styles {

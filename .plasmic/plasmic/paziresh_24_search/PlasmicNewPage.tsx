@@ -59,13 +59,14 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import SearchPage from "../../SearchPage"; // plasmic-import: SctdwrC6-ku4/component
+import Suggestion from "../../Suggestion"; // plasmic-import: f83TZwYbQ2l0/component
+import SearchFilters from "../../SearchFilters"; // plasmic-import: zLShj09Q9POm/component
+import MainSearchRequest from "../../MainSearchRequest"; // plasmic-import: SctdwrC6-ku4/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicNewPage.module.css"; // plasmic-import: GQOCScvj145-/css
 
@@ -81,9 +82,10 @@ type ArgPropType = keyof PlasmicNewPage__ArgsType;
 export const PlasmicNewPage__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicNewPage__OverridesType = {
-  root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
-  searchPage?: Flex__<typeof SearchPage>;
+  paziresh24Search?: Flex__<"div">;
+  suggestion?: Flex__<typeof Suggestion>;
+  searchFilters?: Flex__<typeof SearchFilters>;
+  mainSearchRequest?: Flex__<typeof MainSearchRequest>;
 };
 
 export interface DefaultNewPageProps {}
@@ -126,6 +128,24 @@ function PlasmicNewPage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "mainSearchRequest.apiRequestData",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <React.Fragment>
       <Head>
@@ -151,8 +171,8 @@ function PlasmicNewPage__RenderFunc(props: {
 
       <div className={projectcss.plasmic_page_wrapper}>
         <div
-          data-plasmic-name={"root"}
-          data-plasmic-override={overrides.root}
+          data-plasmic-name={"paziresh24Search"}
+          data-plasmic-override={overrides.paziresh24Search}
           data-plasmic-root={true}
           data-plasmic-for-node={forNode}
           className={classNames(
@@ -163,20 +183,110 @@ function PlasmicNewPage__RenderFunc(props: {
             projectcss.plasmic_tokens,
             plasmic_fragment_design_system_css.plasmic_tokens,
             plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
-            sty.root
+            sty.paziresh24Search
           )}
         >
-          <div
-            data-plasmic-name={"freeBox"}
-            data-plasmic-override={overrides.freeBox}
-            className={classNames(projectcss.all, sty.freeBox)}
+          <Suggestion
+            data-plasmic-name={"suggestion"}
+            data-plasmic-override={overrides.suggestion}
+            className={classNames("__wab_instance", sty.suggestion)}
+            defaultSearchQuery={(() => {
+              try {
+                return $ctx.query.text;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            onSelect={async searchQuery => {
+              const $steps = {};
+
+              $steps["goToPage"] = true
+                ? (() => {
+                    const actionArgs = {
+                      destination: (() => {
+                        try {
+                          return `/s/jahannama/?text=${searchQuery}`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return `/s/jahannama`;
+                          }
+                          throw e;
+                        }
+                      })()
+                    };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToPage"] != null &&
+                typeof $steps["goToPage"] === "object" &&
+                typeof $steps["goToPage"].then === "function"
+              ) {
+                $steps["goToPage"] = await $steps["goToPage"];
+              }
+            }}
           />
 
-          <SearchPage
-            data-plasmic-name={"searchPage"}
-            data-plasmic-override={overrides.searchPage}
-            className={classNames("__wab_instance", sty.searchPage)}
+          <SearchFilters
+            data-plasmic-name={"searchFilters"}
+            data-plasmic-override={overrides.searchFilters}
+            className={classNames("__wab_instance", sty.searchFilters)}
+            filters={(() => {
+              try {
+                return $state.mainSearchRequest.apiRequestData.entity.facets;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
+                }
+                throw e;
+              }
+            })()}
+          />
+
+          <MainSearchRequest
+            data-plasmic-name={"mainSearchRequest"}
+            data-plasmic-override={overrides.mainSearchRequest}
+            className={classNames("__wab_instance", sty.mainSearchRequest)}
+            onApiRequestDataChange={generateStateOnChangeProp($state, [
+              "mainSearchRequest",
+              "apiRequestData"
+            ])}
+            searchQuery={(() => {
+              try {
+                return $ctx.query.text;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
           />
         </div>
       </div>
@@ -185,17 +295,24 @@ function PlasmicNewPage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "searchPage"],
-  freeBox: ["freeBox"],
-  searchPage: ["searchPage"]
+  paziresh24Search: [
+    "paziresh24Search",
+    "suggestion",
+    "searchFilters",
+    "mainSearchRequest"
+  ],
+  suggestion: ["suggestion"],
+  searchFilters: ["searchFilters"],
+  mainSearchRequest: ["mainSearchRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  root: "div";
-  freeBox: "div";
-  searchPage: typeof SearchPage;
+  paziresh24Search: "div";
+  suggestion: typeof Suggestion;
+  searchFilters: typeof SearchFilters;
+  mainSearchRequest: typeof MainSearchRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -245,7 +362,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
       forNode: nodeName
     });
   };
-  if (nodeName === "root") {
+  if (nodeName === "paziresh24Search") {
     func.displayName = "PlasmicNewPage";
   } else {
     func.displayName = `PlasmicNewPage.${nodeName}`;
@@ -255,11 +372,12 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicNewPage = Object.assign(
   // Top-level PlasmicNewPage renders the root element
-  makeNodeComponent("root"),
+  makeNodeComponent("paziresh24Search"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
-    searchPage: makeNodeComponent("searchPage"),
+    suggestion: makeNodeComponent("suggestion"),
+    searchFilters: makeNodeComponent("searchFilters"),
+    mainSearchRequest: makeNodeComponent("mainSearchRequest"),
 
     // Metadata about props expected for PlasmicNewPage
     internalVariantProps: PlasmicNewPage__VariantProps,
