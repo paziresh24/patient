@@ -1,4 +1,4 @@
-.root {
+.paziresh24Search {
   display: grid;
   flex-direction: column;
   position: relative;
@@ -8,6 +8,7 @@
   justify-items: center;
   justify-content: flex-start;
   align-items: center;
+  grid-row-gap: 20px;
   min-width: 0;
   min-height: 0;
   grid-template-columns:
@@ -17,21 +18,21 @@
       calc(100% - var(--plsmc-viewport-gap) - var(--plsmc-viewport-gap))
     )
     minmax(0, var(--plsmc-wide-chunk)) 1fr var(--plsmc-viewport-gap);
+  padding: var(--token-W6cMLA0AZVBO);
 }
-.root > * {
+.paziresh24Search > * {
   grid-column: 4;
 }
-.freeBox {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  height: auto;
+.suggestion:global(.__wab_instance) {
   max-width: 100%;
+  width: 100%;
   min-width: 0;
 }
-.searchPage:global(.__wab_instance) {
+.searchFilters:global(.__wab_instance) {
   max-width: 100%;
+}
+.mainSearchRequest:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
 }

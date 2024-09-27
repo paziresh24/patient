@@ -59,16 +59,21 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import FilterRowItem from "../../FilterRowItem"; // plasmic-import: gbTY0L-vUhOv/component
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import FilterItemToggle from "../../FilterItemToggle"; // plasmic-import: mTGIwE12clXg/component
+import FilterItemSingleSelect from "../../FilterItemSingleSelect"; // plasmic-import: AK8GMS7oZ_Fh/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchFilters.module.css"; // plasmic-import: zLShj09Q9POm/css
 
-import frame2Fz0Uj9IwMr22 from "./images/frame2.svg"; // plasmic-import: fz0uj9IWMr22/picture
-import frameKMzUGonk3Gso from "./images/frame.svg"; // plasmic-import: kMzUGonk3GSO/picture
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -77,73 +82,33 @@ export type PlasmicSearchFilters__VariantsArgs = {};
 type VariantPropType = keyof PlasmicSearchFilters__VariantsArgs;
 export const PlasmicSearchFilters__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicSearchFilters__ArgsType = {};
+export type PlasmicSearchFilters__ArgsType = {
+  filters?: any;
+  activeFilters?: any;
+  onSelect?: (key: string, value: string) => void;
+  onRemove?: (key: string) => void;
+};
 type ArgPropType = keyof PlasmicSearchFilters__ArgsType;
-export const PlasmicSearchFilters__ArgProps = new Array<ArgPropType>();
+export const PlasmicSearchFilters__ArgProps = new Array<ArgPropType>(
+  "filters",
+  "activeFilters",
+  "onSelect",
+  "onRemove"
+);
 
 export type PlasmicSearchFilters__OverridesType = {
   root?: Flex__<"div">;
-  figmaPaste?: Flex__<"div">;
-  rectangle?: Flex__<"div">;
-  rectangle2?: Flex__<"div">;
-  rectangle3?: Flex__<"div">;
-  rectangle4?: Flex__<"div">;
-  rectangle5?: Flex__<"div">;
-  frame?: Flex__<"div">;
-  rectangle6?: Flex__<"div">;
-  rectangle7?: Flex__<"div">;
-  rectangle8?: Flex__<"div">;
-  rectangle9?: Flex__<"div">;
-  rectangle10?: Flex__<"div">;
-  rectangle11?: Flex__<"div">;
-  rectangle12?: Flex__<"div">;
-  rectangle13?: Flex__<"div">;
-  rectangle14?: Flex__<"div">;
-  rectangle15?: Flex__<"div">;
-  rectangle16?: Flex__<"div">;
-  rectangle17?: Flex__<"div">;
-  rectangle18?: Flex__<"div">;
-  rectangle19?: Flex__<"div">;
-  rectangle20?: Flex__<"div">;
-  rectangle21?: Flex__<"div">;
-  rectangle22?: Flex__<"div">;
-  rectangle23?: Flex__<"div">;
-  frame2?: Flex__<"div">;
-  rectangle24?: Flex__<"div">;
-  rectangle25?: Flex__<"div">;
-  rectangle26?: Flex__<"div">;
-  rectangle27?: Flex__<"div">;
-  rectangle28?: Flex__<"div">;
-  rectangle29?: Flex__<"div">;
-  rectangle30?: Flex__<"div">;
-  rectangle31?: Flex__<"div">;
-  rectangle32?: Flex__<"div">;
-  rectangle33?: Flex__<"div">;
-  rectangle34?: Flex__<"div">;
-  rectangle35?: Flex__<"div">;
-  rectangle36?: Flex__<"div">;
-  rectangle37?: Flex__<"div">;
-  rectangle38?: Flex__<"div">;
-  rectangle39?: Flex__<"div">;
-  rectangle40?: Flex__<"div">;
-  rectangle41?: Flex__<"div">;
-  rectangle42?: Flex__<"div">;
-  rectangle43?: Flex__<"div">;
-  rectangle44?: Flex__<"div">;
-  rectangle45?: Flex__<"div">;
-  rectangle46?: Flex__<"div">;
-  rectangle47?: Flex__<"div">;
-  rectangle48?: Flex__<"div">;
-  rectangle49?: Flex__<"div">;
-  rectangle50?: Flex__<"div">;
-  rectangle51?: Flex__<"div">;
-  rectangle52?: Flex__<"div">;
-  rectangle53?: Flex__<"div">;
-  rectangle54?: Flex__<"div">;
-  rectangle55?: Flex__<"div">;
+  filterRowItem?: Flex__<typeof FilterRowItem>;
+  dialog?: Flex__<typeof Dialog>;
+  filterItemToggle?: Flex__<typeof FilterItemToggle>;
+  filterItemSingleSelect?: Flex__<typeof FilterItemSingleSelect>;
 };
 
 export interface DefaultSearchFiltersProps {
+  filters?: any;
+  activeFilters?: any;
+  onSelect?: (key: string, value: string) => void;
+  onRemove?: (key: string) => void;
   className?: string;
 }
 
@@ -167,7 +132,9 @@ function PlasmicSearchFilters__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          filters: []
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -185,12 +152,32 @@ function PlasmicSearchFilters__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "dialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
-    <div
+    <Stack__
+      as={"div"}
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
+      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -199,753 +186,295 @@ function PlasmicSearchFilters__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
-      <div
-        data-plasmic-name={"figmaPaste"}
-        data-plasmic-override={overrides.figmaPaste}
-        className={classNames(projectcss.all, sty.figmaPaste)}
-      >
-        <div
-          data-plasmic-name={"rectangle"}
-          data-plasmic-override={overrides.rectangle}
-          className={classNames(projectcss.all, sty.rectangle)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle2"}
-          data-plasmic-override={overrides.rectangle2}
-          className={classNames(projectcss.all, sty.rectangle2)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle3"}
-          data-plasmic-override={overrides.rectangle3}
-          className={classNames(projectcss.all, sty.rectangle3)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle4"}
-          data-plasmic-override={overrides.rectangle4}
-          className={classNames(projectcss.all, sty.rectangle4)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle5"}
-          data-plasmic-override={overrides.rectangle5}
-          className={classNames(projectcss.all, sty.rectangle5)}
-        />
-
-        <div
-          data-plasmic-name={"frame"}
-          data-plasmic-override={overrides.frame}
-          className={classNames(projectcss.all, sty.frame)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle6"}
-          data-plasmic-override={overrides.rectangle6}
-          className={classNames(projectcss.all, sty.rectangle6)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle7"}
-          data-plasmic-override={overrides.rectangle7}
-          className={classNames(projectcss.all, sty.rectangle7)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle8"}
-          data-plasmic-override={overrides.rectangle8}
-          className={classNames(projectcss.all, sty.rectangle8)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle9"}
-          data-plasmic-override={overrides.rectangle9}
-          className={classNames(projectcss.all, sty.rectangle9)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle10"}
-          data-plasmic-override={overrides.rectangle10}
-          className={classNames(projectcss.all, sty.rectangle10)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle11"}
-          data-plasmic-override={overrides.rectangle11}
-          className={classNames(projectcss.all, sty.rectangle11)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle12"}
-          data-plasmic-override={overrides.rectangle12}
-          className={classNames(projectcss.all, sty.rectangle12)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle13"}
-          data-plasmic-override={overrides.rectangle13}
-          className={classNames(projectcss.all, sty.rectangle13)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle14"}
-          data-plasmic-override={overrides.rectangle14}
-          className={classNames(projectcss.all, sty.rectangle14)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle15"}
-          data-plasmic-override={overrides.rectangle15}
-          className={classNames(projectcss.all, sty.rectangle15)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle16"}
-          data-plasmic-override={overrides.rectangle16}
-          className={classNames(projectcss.all, sty.rectangle16)}
-        />
-
-        <PlasmicImg__
-          alt={""}
-          className={classNames(sty.img__tGOd5)}
-          displayHeight={"16px"}
-          displayMaxHeight={"none"}
-          displayMaxWidth={"100%"}
-          displayMinHeight={"0"}
-          displayMinWidth={"0"}
-          displayWidth={"16px"}
-          loading={"lazy"}
-          src={{
-            src: frame2Fz0Uj9IwMr22,
-            fullWidth: 16,
-            fullHeight: 16,
-            aspectRatio: 1
-          }}
-        />
-
-        <div
-          data-plasmic-name={"rectangle17"}
-          data-plasmic-override={overrides.rectangle17}
-          className={classNames(projectcss.all, sty.rectangle17)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle18"}
-          data-plasmic-override={overrides.rectangle18}
-          className={classNames(projectcss.all, sty.rectangle18)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle19"}
-          data-plasmic-override={overrides.rectangle19}
-          className={classNames(projectcss.all, sty.rectangle19)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle20"}
-          data-plasmic-override={overrides.rectangle20}
-          className={classNames(projectcss.all, sty.rectangle20)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle21"}
-          data-plasmic-override={overrides.rectangle21}
-          className={classNames(projectcss.all, sty.rectangle21)}
-        />
-
-        <PlasmicImg__
-          alt={""}
-          className={classNames(sty.img__y50B)}
-          displayHeight={"16px"}
-          displayMaxHeight={"none"}
-          displayMaxWidth={"100%"}
-          displayMinHeight={"0"}
-          displayMinWidth={"0"}
-          displayWidth={"16px"}
-          loading={"lazy"}
-          src={{
-            src: frameKMzUGonk3Gso,
-            fullWidth: 16,
-            fullHeight: 16,
-            aspectRatio: 1
-          }}
-        />
-
-        <div
-          data-plasmic-name={"rectangle22"}
-          data-plasmic-override={overrides.rectangle22}
-          className={classNames(projectcss.all, sty.rectangle22)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle23"}
-          data-plasmic-override={overrides.rectangle23}
-          className={classNames(projectcss.all, sty.rectangle23)}
-        />
-
-        <div
-          data-plasmic-name={"frame2"}
-          data-plasmic-override={overrides.frame2}
-          className={classNames(projectcss.all, sty.frame2)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle24"}
-          data-plasmic-override={overrides.rectangle24}
-          className={classNames(projectcss.all, sty.rectangle24)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle25"}
-          data-plasmic-override={overrides.rectangle25}
-          className={classNames(projectcss.all, sty.rectangle25)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle26"}
-          data-plasmic-override={overrides.rectangle26}
-          className={classNames(projectcss.all, sty.rectangle26)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle27"}
-          data-plasmic-override={overrides.rectangle27}
-          className={classNames(projectcss.all, sty.rectangle27)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle28"}
-          data-plasmic-override={overrides.rectangle28}
-          className={classNames(projectcss.all, sty.rectangle28)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle29"}
-          data-plasmic-override={overrides.rectangle29}
-          className={classNames(projectcss.all, sty.rectangle29)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle30"}
-          data-plasmic-override={overrides.rectangle30}
-          className={classNames(projectcss.all, sty.rectangle30)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle31"}
-          data-plasmic-override={overrides.rectangle31}
-          className={classNames(projectcss.all, sty.rectangle31)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle32"}
-          data-plasmic-override={overrides.rectangle32}
-          className={classNames(projectcss.all, sty.rectangle32)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle33"}
-          data-plasmic-override={overrides.rectangle33}
-          className={classNames(projectcss.all, sty.rectangle33)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle34"}
-          data-plasmic-override={overrides.rectangle34}
-          className={classNames(projectcss.all, sty.rectangle34)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle35"}
-          data-plasmic-override={overrides.rectangle35}
-          className={classNames(projectcss.all, sty.rectangle35)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle36"}
-          data-plasmic-override={overrides.rectangle36}
-          className={classNames(projectcss.all, sty.rectangle36)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle37"}
-          data-plasmic-override={overrides.rectangle37}
-          className={classNames(projectcss.all, sty.rectangle37)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle38"}
-          data-plasmic-override={overrides.rectangle38}
-          className={classNames(projectcss.all, sty.rectangle38)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle39"}
-          data-plasmic-override={overrides.rectangle39}
-          className={classNames(projectcss.all, sty.rectangle39)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle40"}
-          data-plasmic-override={overrides.rectangle40}
-          className={classNames(projectcss.all, sty.rectangle40)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle41"}
-          data-plasmic-override={overrides.rectangle41}
-          className={classNames(projectcss.all, sty.rectangle41)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle42"}
-          data-plasmic-override={overrides.rectangle42}
-          className={classNames(projectcss.all, sty.rectangle42)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle43"}
-          data-plasmic-override={overrides.rectangle43}
-          className={classNames(projectcss.all, sty.rectangle43)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle44"}
-          data-plasmic-override={overrides.rectangle44}
-          className={classNames(projectcss.all, sty.rectangle44)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle45"}
-          data-plasmic-override={overrides.rectangle45}
-          className={classNames(projectcss.all, sty.rectangle45)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle46"}
-          data-plasmic-override={overrides.rectangle46}
-          className={classNames(projectcss.all, sty.rectangle46)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle47"}
-          data-plasmic-override={overrides.rectangle47}
-          className={classNames(projectcss.all, sty.rectangle47)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle48"}
-          data-plasmic-override={overrides.rectangle48}
-          className={classNames(projectcss.all, sty.rectangle48)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle49"}
-          data-plasmic-override={overrides.rectangle49}
-          className={classNames(projectcss.all, sty.rectangle49)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle50"}
-          data-plasmic-override={overrides.rectangle50}
-          className={classNames(projectcss.all, sty.rectangle50)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle51"}
-          data-plasmic-override={overrides.rectangle51}
-          className={classNames(projectcss.all, sty.rectangle51)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle52"}
-          data-plasmic-override={overrides.rectangle52}
-          className={classNames(projectcss.all, sty.rectangle52)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle53"}
-          data-plasmic-override={overrides.rectangle53}
-          className={classNames(projectcss.all, sty.rectangle53)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle54"}
-          data-plasmic-override={overrides.rectangle54}
-          className={classNames(projectcss.all, sty.rectangle54)}
-        />
-
-        <div
-          data-plasmic-name={"rectangle55"}
-          data-plasmic-override={overrides.rectangle55}
-          className={classNames(projectcss.all, sty.rectangle55)}
-        />
-
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__ppkT
-          )}
-        >
-          {"\u0641\u06cc\u0644\u062a\u0631\u0647\u0627"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__tGhJc
-          )}
-        >
-          {"\u0639\u0641\u0648\u0646\u06cc"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__zHpG
-          )}
-        >
-          {"\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__uEgBn
-          )}
-        >
-          {"\u0645\u062d\u0628\u0648\u0628"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__gM8Ho
-          )}
-        >
-          {"\u0645\u0631\u062a\u0628 \u0633\u0627\u0632\u06cc"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__yB4Af
-          )}
-        >
-          {"\u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__gpHxc
-          )}
-        >
-          {"\u062c\u0646\u0633\u06cc\u062a"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__cKq6E
-          )}
-        >
-          {"\u0645\u06cc\u0632\u0627\u0646 \u062a\u062e\u0635\u0635"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__cr5Me
-          )}
-        >
-          {"\u0646\u0648\u0639 \u062e\u062f\u0645\u062a"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__ps5Dt
-          )}
-        >
-          {"\u062e\u0648\u0634 \u0628\u0631\u062e\u0648\u0631\u062f"}
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__h3J3
-          )}
-        >
-          {
-            "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc"
+      {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+        (() => {
+          try {
+            return $props.filters;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return [];
+            }
+            throw e;
           }
-        </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__hB9AW
-          )}
-        >
-          {
-            "\u0646\u0633\u062e\u0647 \u0646\u0648\u06cc\u0633\u06cc \u0622\u0646\u0644\u0627\u06cc\u0646"
-          }
-        </div>
-      </div>
-    </div>
+        })()
+      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+        const currentItem = __plasmic_item_0;
+        const currentIndex = __plasmic_idx_0;
+        return (
+          <FilterRowItem
+            data-plasmic-name={"filterRowItem"}
+            data-plasmic-override={overrides.filterRowItem}
+            active={(() => {
+              try {
+                return $props.activeFilters?.some(
+                  item => item.key === currentItem.facetName
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
+                }
+                throw e;
+              }
+            })()}
+            className={classNames("__wab_instance", sty.filterRowItem)}
+            filterKey={(() => {
+              try {
+                return currentItem.facetName;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            key={currentIndex}
+            label={(() => {
+              try {
+                return currentItem.facetLabel;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            onRemove={async key => {
+              const $steps = {};
+
+              $steps["runOnRemove"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onRemove"],
+                      args: [
+                        (() => {
+                          try {
+                            return currentItem.facetName;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnRemove"] != null &&
+                typeof $steps["runOnRemove"] === "object" &&
+                typeof $steps["runOnRemove"].then === "function"
+              ) {
+                $steps["runOnRemove"] = await $steps["runOnRemove"];
+              }
+            }}
+            onSelect={async key => {
+              const $steps = {};
+
+              $steps["updateDialogOpen"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["dialog", "open"]
+                      },
+                      operation: 0,
+                      value: true
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateDialogOpen"] != null &&
+                typeof $steps["updateDialogOpen"] === "object" &&
+                typeof $steps["updateDialogOpen"].then === "function"
+              ) {
+                $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+              }
+            }}
+          />
+        );
+      })}
+      <Dialog
+        data-plasmic-name={"dialog"}
+        data-plasmic-override={overrides.dialog}
+        body={
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox___9Z8Y0)}
+          >
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $props.filters;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <div
+                  className={classNames(projectcss.all, sty.freeBox___0AFrI)}
+                  key={currentIndex}
+                >
+                  {(() => {
+                    try {
+                      return currentItem.fieldType === "boolean";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <FilterItemToggle
+                      data-plasmic-name={"filterItemToggle"}
+                      data-plasmic-override={overrides.filterItemToggle}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.filterItemToggle
+                      )}
+                      label={(() => {
+                        try {
+                          return currentItem.facetLabel;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  ) : null}
+                  {(() => {
+                    try {
+                      return currentItem.fieldType === "long";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <FilterItemSingleSelect
+                      data-plasmic-name={"filterItemSingleSelect"}
+                      data-plasmic-override={overrides.filterItemSingleSelect}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.filterItemSingleSelect
+                      )}
+                      label={(() => {
+                        try {
+                          return currentItem.facetLabel;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      options={(() => {
+                        try {
+                          return currentItem.facetRecords;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  ) : null}
+                </div>
+              );
+            })}
+          </Stack__>
+        }
+        className={classNames("__wab_instance", sty.dialog)}
+        noTrigger={true}
+        onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+        open={generateStateValueProp($state, ["dialog", "open"])}
+        title={"\u0641\u06cc\u0644\u062a\u0631\u0647\u0627"}
+      />
+    </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
   root: [
     "root",
-    "figmaPaste",
-    "rectangle",
-    "rectangle2",
-    "rectangle3",
-    "rectangle4",
-    "rectangle5",
-    "frame",
-    "rectangle6",
-    "rectangle7",
-    "rectangle8",
-    "rectangle9",
-    "rectangle10",
-    "rectangle11",
-    "rectangle12",
-    "rectangle13",
-    "rectangle14",
-    "rectangle15",
-    "rectangle16",
-    "rectangle17",
-    "rectangle18",
-    "rectangle19",
-    "rectangle20",
-    "rectangle21",
-    "rectangle22",
-    "rectangle23",
-    "frame2",
-    "rectangle24",
-    "rectangle25",
-    "rectangle26",
-    "rectangle27",
-    "rectangle28",
-    "rectangle29",
-    "rectangle30",
-    "rectangle31",
-    "rectangle32",
-    "rectangle33",
-    "rectangle34",
-    "rectangle35",
-    "rectangle36",
-    "rectangle37",
-    "rectangle38",
-    "rectangle39",
-    "rectangle40",
-    "rectangle41",
-    "rectangle42",
-    "rectangle43",
-    "rectangle44",
-    "rectangle45",
-    "rectangle46",
-    "rectangle47",
-    "rectangle48",
-    "rectangle49",
-    "rectangle50",
-    "rectangle51",
-    "rectangle52",
-    "rectangle53",
-    "rectangle54",
-    "rectangle55"
+    "filterRowItem",
+    "dialog",
+    "filterItemToggle",
+    "filterItemSingleSelect"
   ],
-  figmaPaste: [
-    "figmaPaste",
-    "rectangle",
-    "rectangle2",
-    "rectangle3",
-    "rectangle4",
-    "rectangle5",
-    "frame",
-    "rectangle6",
-    "rectangle7",
-    "rectangle8",
-    "rectangle9",
-    "rectangle10",
-    "rectangle11",
-    "rectangle12",
-    "rectangle13",
-    "rectangle14",
-    "rectangle15",
-    "rectangle16",
-    "rectangle17",
-    "rectangle18",
-    "rectangle19",
-    "rectangle20",
-    "rectangle21",
-    "rectangle22",
-    "rectangle23",
-    "frame2",
-    "rectangle24",
-    "rectangle25",
-    "rectangle26",
-    "rectangle27",
-    "rectangle28",
-    "rectangle29",
-    "rectangle30",
-    "rectangle31",
-    "rectangle32",
-    "rectangle33",
-    "rectangle34",
-    "rectangle35",
-    "rectangle36",
-    "rectangle37",
-    "rectangle38",
-    "rectangle39",
-    "rectangle40",
-    "rectangle41",
-    "rectangle42",
-    "rectangle43",
-    "rectangle44",
-    "rectangle45",
-    "rectangle46",
-    "rectangle47",
-    "rectangle48",
-    "rectangle49",
-    "rectangle50",
-    "rectangle51",
-    "rectangle52",
-    "rectangle53",
-    "rectangle54",
-    "rectangle55"
-  ],
-  rectangle: ["rectangle"],
-  rectangle2: ["rectangle2"],
-  rectangle3: ["rectangle3"],
-  rectangle4: ["rectangle4"],
-  rectangle5: ["rectangle5"],
-  frame: ["frame"],
-  rectangle6: ["rectangle6"],
-  rectangle7: ["rectangle7"],
-  rectangle8: ["rectangle8"],
-  rectangle9: ["rectangle9"],
-  rectangle10: ["rectangle10"],
-  rectangle11: ["rectangle11"],
-  rectangle12: ["rectangle12"],
-  rectangle13: ["rectangle13"],
-  rectangle14: ["rectangle14"],
-  rectangle15: ["rectangle15"],
-  rectangle16: ["rectangle16"],
-  rectangle17: ["rectangle17"],
-  rectangle18: ["rectangle18"],
-  rectangle19: ["rectangle19"],
-  rectangle20: ["rectangle20"],
-  rectangle21: ["rectangle21"],
-  rectangle22: ["rectangle22"],
-  rectangle23: ["rectangle23"],
-  frame2: ["frame2"],
-  rectangle24: ["rectangle24"],
-  rectangle25: ["rectangle25"],
-  rectangle26: ["rectangle26"],
-  rectangle27: ["rectangle27"],
-  rectangle28: ["rectangle28"],
-  rectangle29: ["rectangle29"],
-  rectangle30: ["rectangle30"],
-  rectangle31: ["rectangle31"],
-  rectangle32: ["rectangle32"],
-  rectangle33: ["rectangle33"],
-  rectangle34: ["rectangle34"],
-  rectangle35: ["rectangle35"],
-  rectangle36: ["rectangle36"],
-  rectangle37: ["rectangle37"],
-  rectangle38: ["rectangle38"],
-  rectangle39: ["rectangle39"],
-  rectangle40: ["rectangle40"],
-  rectangle41: ["rectangle41"],
-  rectangle42: ["rectangle42"],
-  rectangle43: ["rectangle43"],
-  rectangle44: ["rectangle44"],
-  rectangle45: ["rectangle45"],
-  rectangle46: ["rectangle46"],
-  rectangle47: ["rectangle47"],
-  rectangle48: ["rectangle48"],
-  rectangle49: ["rectangle49"],
-  rectangle50: ["rectangle50"],
-  rectangle51: ["rectangle51"],
-  rectangle52: ["rectangle52"],
-  rectangle53: ["rectangle53"],
-  rectangle54: ["rectangle54"],
-  rectangle55: ["rectangle55"]
+  filterRowItem: ["filterRowItem"],
+  dialog: ["dialog", "filterItemToggle", "filterItemSingleSelect"],
+  filterItemToggle: ["filterItemToggle"],
+  filterItemSingleSelect: ["filterItemSingleSelect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  figmaPaste: "div";
-  rectangle: "div";
-  rectangle2: "div";
-  rectangle3: "div";
-  rectangle4: "div";
-  rectangle5: "div";
-  frame: "div";
-  rectangle6: "div";
-  rectangle7: "div";
-  rectangle8: "div";
-  rectangle9: "div";
-  rectangle10: "div";
-  rectangle11: "div";
-  rectangle12: "div";
-  rectangle13: "div";
-  rectangle14: "div";
-  rectangle15: "div";
-  rectangle16: "div";
-  rectangle17: "div";
-  rectangle18: "div";
-  rectangle19: "div";
-  rectangle20: "div";
-  rectangle21: "div";
-  rectangle22: "div";
-  rectangle23: "div";
-  frame2: "div";
-  rectangle24: "div";
-  rectangle25: "div";
-  rectangle26: "div";
-  rectangle27: "div";
-  rectangle28: "div";
-  rectangle29: "div";
-  rectangle30: "div";
-  rectangle31: "div";
-  rectangle32: "div";
-  rectangle33: "div";
-  rectangle34: "div";
-  rectangle35: "div";
-  rectangle36: "div";
-  rectangle37: "div";
-  rectangle38: "div";
-  rectangle39: "div";
-  rectangle40: "div";
-  rectangle41: "div";
-  rectangle42: "div";
-  rectangle43: "div";
-  rectangle44: "div";
-  rectangle45: "div";
-  rectangle46: "div";
-  rectangle47: "div";
-  rectangle48: "div";
-  rectangle49: "div";
-  rectangle50: "div";
-  rectangle51: "div";
-  rectangle52: "div";
-  rectangle53: "div";
-  rectangle54: "div";
-  rectangle55: "div";
+  filterRowItem: typeof FilterRowItem;
+  dialog: typeof Dialog;
+  filterItemToggle: typeof FilterItemToggle;
+  filterItemSingleSelect: typeof FilterItemSingleSelect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1008,64 +537,10 @@ export const PlasmicSearchFilters = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    figmaPaste: makeNodeComponent("figmaPaste"),
-    rectangle: makeNodeComponent("rectangle"),
-    rectangle2: makeNodeComponent("rectangle2"),
-    rectangle3: makeNodeComponent("rectangle3"),
-    rectangle4: makeNodeComponent("rectangle4"),
-    rectangle5: makeNodeComponent("rectangle5"),
-    frame: makeNodeComponent("frame"),
-    rectangle6: makeNodeComponent("rectangle6"),
-    rectangle7: makeNodeComponent("rectangle7"),
-    rectangle8: makeNodeComponent("rectangle8"),
-    rectangle9: makeNodeComponent("rectangle9"),
-    rectangle10: makeNodeComponent("rectangle10"),
-    rectangle11: makeNodeComponent("rectangle11"),
-    rectangle12: makeNodeComponent("rectangle12"),
-    rectangle13: makeNodeComponent("rectangle13"),
-    rectangle14: makeNodeComponent("rectangle14"),
-    rectangle15: makeNodeComponent("rectangle15"),
-    rectangle16: makeNodeComponent("rectangle16"),
-    rectangle17: makeNodeComponent("rectangle17"),
-    rectangle18: makeNodeComponent("rectangle18"),
-    rectangle19: makeNodeComponent("rectangle19"),
-    rectangle20: makeNodeComponent("rectangle20"),
-    rectangle21: makeNodeComponent("rectangle21"),
-    rectangle22: makeNodeComponent("rectangle22"),
-    rectangle23: makeNodeComponent("rectangle23"),
-    frame2: makeNodeComponent("frame2"),
-    rectangle24: makeNodeComponent("rectangle24"),
-    rectangle25: makeNodeComponent("rectangle25"),
-    rectangle26: makeNodeComponent("rectangle26"),
-    rectangle27: makeNodeComponent("rectangle27"),
-    rectangle28: makeNodeComponent("rectangle28"),
-    rectangle29: makeNodeComponent("rectangle29"),
-    rectangle30: makeNodeComponent("rectangle30"),
-    rectangle31: makeNodeComponent("rectangle31"),
-    rectangle32: makeNodeComponent("rectangle32"),
-    rectangle33: makeNodeComponent("rectangle33"),
-    rectangle34: makeNodeComponent("rectangle34"),
-    rectangle35: makeNodeComponent("rectangle35"),
-    rectangle36: makeNodeComponent("rectangle36"),
-    rectangle37: makeNodeComponent("rectangle37"),
-    rectangle38: makeNodeComponent("rectangle38"),
-    rectangle39: makeNodeComponent("rectangle39"),
-    rectangle40: makeNodeComponent("rectangle40"),
-    rectangle41: makeNodeComponent("rectangle41"),
-    rectangle42: makeNodeComponent("rectangle42"),
-    rectangle43: makeNodeComponent("rectangle43"),
-    rectangle44: makeNodeComponent("rectangle44"),
-    rectangle45: makeNodeComponent("rectangle45"),
-    rectangle46: makeNodeComponent("rectangle46"),
-    rectangle47: makeNodeComponent("rectangle47"),
-    rectangle48: makeNodeComponent("rectangle48"),
-    rectangle49: makeNodeComponent("rectangle49"),
-    rectangle50: makeNodeComponent("rectangle50"),
-    rectangle51: makeNodeComponent("rectangle51"),
-    rectangle52: makeNodeComponent("rectangle52"),
-    rectangle53: makeNodeComponent("rectangle53"),
-    rectangle54: makeNodeComponent("rectangle54"),
-    rectangle55: makeNodeComponent("rectangle55"),
+    filterRowItem: makeNodeComponent("filterRowItem"),
+    dialog: makeNodeComponent("dialog"),
+    filterItemToggle: makeNodeComponent("filterItemToggle"),
+    filterItemSingleSelect: makeNodeComponent("filterItemSingleSelect"),
 
     // Metadata about props expected for PlasmicSearchFilters
     internalVariantProps: PlasmicSearchFilters__VariantProps,

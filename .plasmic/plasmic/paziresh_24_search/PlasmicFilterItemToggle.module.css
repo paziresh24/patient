@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+}
+.text {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-weight: 600;
+}
+._switch:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 3rem;
+  height: 1rem;
+  align-self: auto;
+  flex-shrink: 0;
+}

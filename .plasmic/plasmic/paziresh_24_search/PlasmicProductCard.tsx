@@ -64,14 +64,13 @@ import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
@@ -162,7 +161,7 @@ export type PlasmicProductCard__OverridesType = {
   dialog2?: Flex__<typeof Dialog>;
   badgesChip2?: Flex__<typeof Chip>;
   cardDataActionUiFetcher?: Flex__<typeof DataFetcher>;
-  sideEffect?: Flex__<typeof SideEffect>;
+  cardActionSduiV2UiRequest?: Flex__<typeof ApiRequest>;
   oldActionButtonsHorizontalStack?: Flex__<"div">;
 };
 
@@ -263,6 +262,24 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "dialog2[].open",
         type: "private",
         variableType: "boolean"
+      },
+      {
+        path: "cardActionSduiV2UiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "cardActionSduiV2UiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "cardActionSduiV2UiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -303,7 +320,6 @@ function PlasmicProductCard__RenderFunc(props: {
           projectcss.plasmic_tokens,
           plasmic_fragment_design_system_css.plasmic_tokens,
           plasmic_antd_5_hostless_css.plasmic_tokens,
-          plasmic_plasmic_rich_components_css.plasmic_tokens,
           sty.root,
           {
             [sty.root_5StarRatingMode3__5StarA]: hasVariant(
@@ -1401,6 +1417,37 @@ function PlasmicProductCard__RenderFunc(props: {
             })}
           </Stack__>
         ) : null}
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__hzVw
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return (
+                  "search_result:show_card_action_sdui_v2: " +
+                  $ctx.Growthbook.features["theme-config"][
+                    "search_result:show_card_action_sdui_v2"
+                  ] +
+                  " \r\n " +
+                  "ctx.Growthbook.attributes.url: " +
+                  $ctx.Growthbook.attributes.url
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
+        </div>
         {false ? (
           <Stack__
             as={"div"}
@@ -1643,26 +1690,11 @@ function PlasmicProductCard__RenderFunc(props: {
             })}
           </Stack__>
         ) : null}
-        {(() => {
-          try {
-            return $ctx.Growthbook.features["theme-config"][
-              "search_result:show_card_action_sdui_v2"
-            ]
-              ? true
-              : false;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
+        {false ? (
           <DataFetcher
             data-plasmic-name={"cardDataActionUiFetcher"}
             data-plasmic-override={overrides.cardDataActionUiFetcher}
+            children={null}
             className={classNames(
               "__wab_instance",
               sty.cardDataActionUiFetcher
@@ -1692,54 +1724,238 @@ function PlasmicProductCard__RenderFunc(props: {
                 throw e;
               }
             })()}
-          >
-            <DataCtxReader__>
-              {$ctx => (
-                <React.Fragment>
-                  <SideEffect
-                    data-plasmic-name={"sideEffect"}
-                    data-plasmic-override={overrides.sideEffect}
-                    className={classNames("__wab_instance", sty.sideEffect)}
-                    onMount={async () => {
-                      const $steps = {};
-
-                      $steps["runCode"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return (() => {
-                                  return ($state.actionButtonsVisibility =
-                                    !$ctx["search-result-card-ui-fetchedData"]
-                                      .search_result_card_ui[0]?.data?.actions);
-                                })();
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["runCode"] != null &&
-                        typeof $steps["runCode"] === "object" &&
-                        typeof $steps["runCode"].then === "function"
-                      ) {
-                        $steps["runCode"] = await $steps["runCode"];
-                      }
-                    }}
-                  />
-
+          />
+        ) : null}
+        <ApiRequest
+          data-plasmic-name={"cardActionSduiV2UiRequest"}
+          data-plasmic-override={overrides.cardActionSduiV2UiRequest}
+          className={classNames(
+            "__wab_instance",
+            sty.cardActionSduiV2UiRequest
+          )}
+          errorDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__s4JDx
+              )}
+            >
+              {"Error fetching data"}
+            </div>
+          }
+          loadingDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___9H2S0
+              )}
+            >
+              {"Loading..."}
+            </div>
+          }
+          method={"GET"}
+          onError={generateStateOnChangeProp($state, [
+            "cardActionSduiV2UiRequest",
+            "error"
+          ])}
+          onLoading={generateStateOnChangeProp($state, [
+            "cardActionSduiV2UiRequest",
+            "loading"
+          ])}
+          onSuccess={generateStateOnChangeProp($state, [
+            "cardActionSduiV2UiRequest",
+            "data"
+          ])}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          {(() => {
+            try {
+              return $ctx.Growthbook.features["theme-config"][
+                "search_result:show_card_action_sdui_v2"
+              ]
+                ? true
+                : false;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__ybVvU)}
+            >
+              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                (() => {
+                  try {
+                    return $state.cardActionSduiV2UiRequest.data
+                      .search_result_card_ui[0].data.actions;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()
+              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                const actionButton = __plasmic_item_0;
+                const currentIndex = __plasmic_idx_0;
+                return (
                   <Stack__
                     as={"div"}
                     hasGap={true}
-                    className={classNames(projectcss.all, sty.freeBox__ybVvU)}
+                    className={classNames(projectcss.all, sty.freeBox__mf4Qz)}
+                    key={currentIndex}
                   >
-                    {(_par =>
-                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
+                    {(() => {
+                      try {
+                        return actionButton.top_title;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <span
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          sty.span___0BetQ
+                        )}
+                      >
+                        <div
+                          className={projectcss.__wab_expr_html_text}
+                          dangerouslySetInnerHTML={{
+                            __html: (() => {
+                              try {
+                                return actionButton.top_title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()
+                          }}
+                        />
+                      </span>
+                    ) : null}
+                    <Button
+                      children2={
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return actionButton.title;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "Button";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__j7YzP
+                      )}
+                      endIcon={
+                        <ChevronLeftIcon
+                          className={classNames(projectcss.all, sty.svg__ptUpu)}
+                          role={"img"}
+                        />
+                      }
+                      link={(() => {
                         try {
-                          return $ctx["search-result-card-ui-fetchedData"]
-                            .search_result_card_ui[0].data.actions;
+                          return actionButton.url.startsWith("/center/https")
+                            ? actionButton.url.slice(8, -1)
+                            : actionButton.url;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["runEventTrigger"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                eventRef: $props["eventTrigger"],
+                                args: [
+                                  "action-button",
+                                  (() => {
+                                    try {
+                                      return actionButton.title;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return (({ eventRef, args }) => {
+                                return eventRef?.(...(args ?? []));
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runEventTrigger"] != null &&
+                          typeof $steps["runEventTrigger"] === "object" &&
+                          typeof $steps["runEventTrigger"].then === "function"
+                        ) {
+                          $steps["runEventTrigger"] = await $steps[
+                            "runEventTrigger"
+                          ];
+                        }
+                      }}
+                      outline={(() => {
+                        try {
+                          return actionButton.outline;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -1749,189 +1965,34 @@ function PlasmicProductCard__RenderFunc(props: {
                           }
                           throw e;
                         }
-                      })()
-                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const actionButton = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
-                      return (
-                        <Stack__
-                          as={"div"}
-                          hasGap={true}
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox__mf4Qz
-                          )}
-                          key={currentIndex}
-                        >
-                          {(() => {
-                            try {
-                              return actionButton.top_title;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return true;
-                              }
-                              throw e;
-                            }
-                          })() ? (
-                            <span
-                              className={classNames(
-                                projectcss.all,
-                                projectcss.span,
-                                projectcss.__wab_text,
-                                sty.span___0BetQ
-                              )}
-                            >
-                              <div
-                                className={projectcss.__wab_expr_html_text}
-                                dangerouslySetInnerHTML={{
-                                  __html: (() => {
-                                    try {
-                                      return actionButton.top_title;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return "";
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                }}
-                              />
-                            </span>
-                          ) : null}
-                          <Button
-                            children2={
-                              <React.Fragment>
-                                {(() => {
-                                  try {
-                                    return actionButton.title;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return "Button";
-                                    }
-                                    throw e;
-                                  }
-                                })()}
-                              </React.Fragment>
-                            }
-                            className={classNames(
-                              "__wab_instance",
-                              sty.button__j7YzP
-                            )}
-                            endIcon={
-                              <ChevronLeftIcon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__ptUpu
-                                )}
-                                role={"img"}
-                              />
-                            }
-                            link={(() => {
-                              try {
-                                return actionButton.url.startsWith(
-                                  "/center/https"
-                                )
-                                  ? actionButton.url.slice(8, -1)
-                                  : actionButton.url;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                            onClick={async event => {
-                              const $steps = {};
-
-                              $steps["runEventTrigger"] = true
-                                ? (() => {
-                                    const actionArgs = {
-                                      eventRef: $props["eventTrigger"],
-                                      args: [
-                                        "action-button",
-                                        (() => {
-                                          try {
-                                            return actionButton.title;
-                                          } catch (e) {
-                                            if (
-                                              e instanceof TypeError ||
-                                              e?.plasmicType ===
-                                                "PlasmicUndefinedDataError"
-                                            ) {
-                                              return undefined;
-                                            }
-                                            throw e;
-                                          }
-                                        })()
-                                      ]
-                                    };
-                                    return (({ eventRef, args }) => {
-                                      return eventRef?.(...(args ?? []));
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
-                              if (
-                                $steps["runEventTrigger"] != null &&
-                                typeof $steps["runEventTrigger"] === "object" &&
-                                typeof $steps["runEventTrigger"].then ===
-                                  "function"
-                              ) {
-                                $steps["runEventTrigger"] = await $steps[
-                                  "runEventTrigger"
-                                ];
-                              }
-                            }}
-                            outline={(() => {
-                              try {
-                                return actionButton.outline;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return [];
-                                }
-                                throw e;
-                              }
-                            })()}
-                            startIcon={
-                              <ChevronRightIcon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__fAvHp
-                                )}
-                                role={"img"}
-                              />
-                            }
-                            target={true}
-                          />
-                        </Stack__>
-                      );
-                    })}
+                      })()}
+                      startIcon={
+                        <ChevronRightIcon
+                          className={classNames(projectcss.all, sty.svg__fAvHp)}
+                          role={"img"}
+                        />
+                      }
+                      target={true}
+                    />
                   </Stack__>
-                </React.Fragment>
-              )}
-            </DataCtxReader__>
-          </DataFetcher>
-        ) : null}
+                );
+              })}
+            </Stack__>
+          ) : null}
+        </ApiRequest>
         {(() => {
           try {
             return (
-              $state.actionButtonsVisibility && $props.actionButtons.length > 0
+              $props.actionButtons.length > 0 &&
+              !(
+                $ctx.Growthbook.features["theme-config"][
+                  "search_result:show_card_action_sdui_v2"
+                ] &&
+                $state.cardActionSduiV2UiRequest.data.search_result_card_ui[0]
+                  .data.actions &&
+                $state.cardActionSduiV2UiRequest.data.search_result_card_ui[0]
+                  .data.actions.length > 0
+              )
             );
           } catch (e) {
             if (
@@ -2239,7 +2300,7 @@ const PlasmicDescendants = {
     "dialog2",
     "badgesChip2",
     "cardDataActionUiFetcher",
-    "sideEffect",
+    "cardActionSduiV2UiRequest",
     "oldActionButtonsHorizontalStack"
   ],
   avatar: ["avatar"],
@@ -2253,8 +2314,8 @@ const PlasmicDescendants = {
   badgesChip: ["badgesChip"],
   dialog2: ["dialog2", "badgesChip2"],
   badgesChip2: ["badgesChip2"],
-  cardDataActionUiFetcher: ["cardDataActionUiFetcher", "sideEffect"],
-  sideEffect: ["sideEffect"],
+  cardDataActionUiFetcher: ["cardDataActionUiFetcher"],
+  cardActionSduiV2UiRequest: ["cardActionSduiV2UiRequest"],
   oldActionButtonsHorizontalStack: ["oldActionButtonsHorizontalStack"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -2274,7 +2335,7 @@ type NodeDefaultElementType = {
   dialog2: typeof Dialog;
   badgesChip2: typeof Chip;
   cardDataActionUiFetcher: typeof DataFetcher;
-  sideEffect: typeof SideEffect;
+  cardActionSduiV2UiRequest: typeof ApiRequest;
   oldActionButtonsHorizontalStack: "div";
 };
 
@@ -2350,7 +2411,7 @@ export const PlasmicProductCard = Object.assign(
     dialog2: makeNodeComponent("dialog2"),
     badgesChip2: makeNodeComponent("badgesChip2"),
     cardDataActionUiFetcher: makeNodeComponent("cardDataActionUiFetcher"),
-    sideEffect: makeNodeComponent("sideEffect"),
+    cardActionSduiV2UiRequest: makeNodeComponent("cardActionSduiV2UiRequest"),
     oldActionButtonsHorizontalStack: makeNodeComponent(
       "oldActionButtonsHorizontalStack"
     ),
