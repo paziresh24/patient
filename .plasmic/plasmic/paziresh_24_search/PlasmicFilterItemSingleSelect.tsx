@@ -59,8 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { AntdRadioGroup } from "@plasmicpkgs/antd5/skinny/registerRadio";
-import { AntdRadio } from "@plasmicpkgs/antd5/skinny/registerRadio";
+import Checkbox from "../../Checkbox"; // plasmic-import: g0pqddGARgnV/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -68,6 +67,9 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicFilterItemSingleSelect.module.css"; // plasmic-import: AK8GMS7oZ_Fh/css
+
+import ChevronDownIcon from "../fragment_icons/icons/PlasmicIcon__ChevronDown"; // plasmic-import: aC_QFogxt1Ko/icon
+import ChevronUpIcon from "../fragment_icons/icons/PlasmicIcon__ChevronUp"; // plasmic-import: YXreB8gS3SjV/icon
 
 createPlasmicElementProxy;
 
@@ -80,22 +82,28 @@ export const PlasmicFilterItemSingleSelect__VariantProps =
 export type PlasmicFilterItemSingleSelect__ArgsType = {
   label?: string;
   options?: any;
+  defaultSelected?: any;
+  onSelect?: (itemsSelected: any) => void;
 };
 type ArgPropType = keyof PlasmicFilterItemSingleSelect__ArgsType;
 export const PlasmicFilterItemSingleSelect__ArgProps = new Array<ArgPropType>(
   "label",
-  "options"
+  "options",
+  "defaultSelected",
+  "onSelect"
 );
 
 export type PlasmicFilterItemSingleSelect__OverridesType = {
   root?: Flex__<"div">;
-  radioGroup?: Flex__<typeof AntdRadioGroup>;
-  radio?: Flex__<typeof AntdRadio>;
+  checkbox?: Flex__<typeof Checkbox>;
+  freeBox?: Flex__<"div">;
 };
 
 export interface DefaultFilterItemSingleSelectProps {
   label?: string;
   options?: any;
+  defaultSelected?: any;
+  onSelect?: (itemsSelected: any) => void;
   className?: string;
 }
 
@@ -119,7 +127,9 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          defaultSelected: []
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -140,10 +150,34 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "radioGroup.value",
+        path: "checkbox[].isChecked",
         type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        variableType: "boolean"
+      },
+      {
+        path: "open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "selected",
+        type: "private",
+        variableType: "array",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $props?.defaultSelected ? $props.defaultSelected : [];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
       }
     ],
     [$props, $ctx, $refs]
@@ -156,11 +190,13 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
   });
 
   return (
-    <div
+    <Stack__
+      as={"div"}
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
+      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -195,66 +231,200 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
           })()}
         </React.Fragment>
       </div>
-      <AntdRadioGroup
-        data-plasmic-name={"radioGroup"}
-        data-plasmic-override={overrides.radioGroup}
-        className={classNames("__wab_instance", sty.radioGroup)}
-        onChange={generateStateOnChangeProp($state, ["radioGroup", "value"])}
-        optionType={"button"}
-        options={(() => {
-          const __composite = [
-            { value: "option1", label: null },
-            { value: "option2", label: "Option 2" }
-          ];
-          __composite["0"]["label"] = "Option 1ww";
-          return __composite;
-        })()}
-        useChildren={true}
-        value={generateStateValueProp($state, ["radioGroup", "value"])}
-      >
-        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-          (() => {
-            try {
-              return $props.options;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
+      {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+        (() => {
+          try {
+            return $state.open || $props.options <= 6
+              ? $props.options
+              : $props.options?.slice(0, 6);
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return [];
             }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <AntdRadio
-              data-plasmic-name={"radio"}
-              data-plasmic-override={overrides.radio}
-              autoFocus={false}
-              className={classNames("__wab_instance", sty.radio)}
-              key={currentIndex}
-              value={(() => {
-                try {
-                  return currentItem.name;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
+            throw e;
+          }
+        })()
+      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+        const currentItem = __plasmic_item_0;
+        const currentIndex = __plasmic_idx_0;
+        return (() => {
+          const child$Props = {
+            className: classNames("__wab_instance", sty.checkbox),
+            isChecked:
+              generateStateValueProp($state, [
+                "checkbox",
+                __plasmic_idx_0,
+                "isChecked"
+              ]) ?? false,
+            key: currentIndex,
+            onChange: async (...eventArgs: any) => {
+              ((...eventArgs) => {
+                generateStateOnChangeProp($state, [
+                  "checkbox",
+                  __plasmic_idx_0,
+                  "isChecked"
+                ])(eventArgs[0]);
+              }).apply(null, eventArgs);
+              (async isChecked => {
+                const $steps = {};
+
+                $steps["updateSelected2"] = !isChecked
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["selected"]
+                        },
+                        operation: 0,
+                        value: $state.selected?.filter?.(
+                          item => item !== currentItem.name
+                        )
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateSelected2"] != null &&
+                  typeof $steps["updateSelected2"] === "object" &&
+                  typeof $steps["updateSelected2"].then === "function"
+                ) {
+                  $steps["updateSelected2"] = await $steps["updateSelected2"];
                 }
-              })()}
+
+                $steps["updateSelected"] = isChecked
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["selected"]
+                        },
+                        operation: 5,
+                        value: currentItem.name
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const arr = $stateGet(objRoot, variablePath);
+                        arr.push(value);
+                        return arr;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateSelected"] != null &&
+                  typeof $steps["updateSelected"] === "object" &&
+                  typeof $steps["updateSelected"].then === "function"
+                ) {
+                  $steps["updateSelected"] = await $steps["updateSelected"];
+                }
+
+                $steps["runOnSelect"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onSelect"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.selected;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnSelect"] != null &&
+                  typeof $steps["runOnSelect"] === "object" &&
+                  typeof $steps["runOnSelect"].then === "function"
+                ) {
+                  $steps["runOnSelect"] = await $steps["runOnSelect"];
+                }
+              }).apply(null, eventArgs);
+            },
+            value: (() => {
+              try {
+                return currentItem.name;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()
+          };
+
+          initializePlasmicStates(
+            $state,
+            [
+              {
+                name: "checkbox[].isChecked",
+                initFunc: ({ $props, $state, $queries }) =>
+                  (() => {
+                    try {
+                      return $state.selected?.includes(currentItem.name);
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+              }
+            ],
+            [__plasmic_idx_0]
+          );
+          return (
+            <Checkbox
+              data-plasmic-name={"checkbox"}
+              data-plasmic-override={overrides.checkbox}
+              {...child$Props}
             >
               <div
                 className={classNames(
                   projectcss.all,
                   projectcss.__wab_text,
-                  sty.text__zmbox
+                  sty.text__tCoRz
                 )}
               >
                 <React.Fragment>
@@ -266,33 +436,169 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
                         e instanceof TypeError ||
                         e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        return "Option 1";
+                        return "";
                       }
                       throw e;
                     }
                   })()}
                 </React.Fragment>
               </div>
-            </AntdRadio>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__nxNgD
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return `(${currentItem.count})`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            </Checkbox>
           );
-        })}
-      </AntdRadioGroup>
-    </div>
+        })();
+      })}
+      {(() => {
+        try {
+          return $props.options.length > 6;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          data-plasmic-name={"freeBox"}
+          data-plasmic-override={overrides.freeBox}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox)}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["updateOpen"] = true
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["open"]
+                    },
+                    operation: 4
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    const oldValue = $stateGet(objRoot, variablePath);
+                    $stateSet(objRoot, variablePath, !oldValue);
+                    return !oldValue;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateOpen"] != null &&
+              typeof $steps["updateOpen"] === "object" &&
+              typeof $steps["updateOpen"].then === "function"
+            ) {
+              $steps["updateOpen"] = await $steps["updateOpen"];
+            }
+          }}
+        >
+          {(() => {
+            try {
+              return !$state.open;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <ChevronDownIcon
+              className={classNames(projectcss.all, sty.svg__lrujQ)}
+              role={"img"}
+            />
+          ) : null}
+          {(() => {
+            try {
+              return $state.open;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <ChevronUpIcon
+              className={classNames(projectcss.all, sty.svg__uaKsg)}
+              role={"img"}
+            />
+          ) : null}
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___7Ruk7
+            )}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $state.open ? "مشاهده کمتر" : "مشاهده بیشتر";
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </div>
+        </Stack__>
+      ) : null}
+    </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "radioGroup", "radio"],
-  radioGroup: ["radioGroup", "radio"],
-  radio: ["radio"]
+  root: ["root", "checkbox", "freeBox"],
+  checkbox: ["checkbox"],
+  freeBox: ["freeBox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  radioGroup: typeof AntdRadioGroup;
-  radio: typeof AntdRadio;
+  checkbox: typeof Checkbox;
+  freeBox: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -355,8 +661,8 @@ export const PlasmicFilterItemSingleSelect = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    radioGroup: makeNodeComponent("radioGroup"),
-    radio: makeNodeComponent("radio"),
+    checkbox: makeNodeComponent("checkbox"),
+    freeBox: makeNodeComponent("freeBox"),
 
     // Metadata about props expected for PlasmicFilterItemSingleSelect
     internalVariantProps: PlasmicFilterItemSingleSelect__VariantProps,
