@@ -32,48 +32,6 @@
   font-weight: 700;
   padding-top: 8px;
 }
-.resultCardsVerticalStack2 {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  margin-right: 0px;
-  background: none;
-  min-width: 0;
-  min-height: 0;
-}
-.resultCardsVerticalStack2 > :global(.__wab_flex-container) {
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  align-content: stretch;
-  min-width: 0;
-  min-height: 0;
-  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
-  height: calc(100% + var(--token-vMUQwr5Jto1d));
-}
-.resultCardsVerticalStack2 > :global(.__wab_flex-container) > *,
-.resultCardsVerticalStack2
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > *,
-.resultCardsVerticalStack2 > :global(.__wab_flex-container) > picture > img,
-.resultCardsVerticalStack2
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: var(--token-vMUQwr5Jto1d);
-}
-.productCard:global(.__wab_instance) {
-  max-width: 100%;
-  width: 100%;
-  position: relative;
-  min-width: 0;
-}
 .topSuggestedCardVerticalStack {
   display: flex;
   position: relative;
@@ -128,6 +86,48 @@
 .sideEffect__hY4TD:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
+}
+.resultCardsVerticalStack2 {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin-right: 0px;
+  background: none;
+  min-width: 0;
+  min-height: 0;
+}
+.resultCardsVerticalStack2 > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
+  height: calc(100% + var(--token-vMUQwr5Jto1d));
+}
+.resultCardsVerticalStack2 > :global(.__wab_flex-container) > *,
+.resultCardsVerticalStack2
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > *,
+.resultCardsVerticalStack2 > :global(.__wab_flex-container) > picture > img,
+.resultCardsVerticalStack2
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-vMUQwr5Jto1d);
+}
+.productCard:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+  min-width: 0;
 }
 .paginationMoreButton:global(.__wab_instance) {
   max-width: 100%;
