@@ -84,16 +84,14 @@ export const PlasmicSearchFilters__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicSearchFilters__ArgsType = {
   filters?: any;
-  activeFilters?: any;
-  onSelect?: (key: string, value: string) => void;
-  onRemove?: (key: string) => void;
+  selected?: any;
+  onSelectedChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicSearchFilters__ArgsType;
 export const PlasmicSearchFilters__ArgProps = new Array<ArgPropType>(
   "filters",
-  "activeFilters",
-  "onSelect",
-  "onRemove"
+  "selected",
+  "onSelectedChange"
 );
 
 export type PlasmicSearchFilters__OverridesType = {
@@ -106,9 +104,8 @@ export type PlasmicSearchFilters__OverridesType = {
 
 export interface DefaultSearchFiltersProps {
   filters?: any;
-  activeFilters?: any;
-  onSelect?: (key: string, value: string) => void;
-  onRemove?: (key: string) => void;
+  selected?: any;
+  onSelectedChange?: (val: string) => void;
   className?: string;
 }
 
@@ -152,6 +149,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -159,6 +158,14 @@ function PlasmicSearchFilters__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "selected",
+        type: "writable",
+        variableType: "object",
+
+        valueProp: "selected",
+        onChangeProp: "onSelectedChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -192,7 +199,12 @@ function PlasmicSearchFilters__RenderFunc(props: {
       {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
         (() => {
           try {
-            return $props.filters;
+            return (() => {
+              const filters = JSON.parse(JSON.stringify($props.filters));
+              return filters.sort((a, b) =>
+                !!$state.selected[a.facetName] ? -1 : 1
+              );
+            })();
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -212,9 +224,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
             data-plasmic-override={overrides.filterRowItem}
             active={(() => {
               try {
-                return $props.activeFilters?.some(
-                  item => item.key === currentItem.facetName
-                );
+                return $state.selected?.[currentItem.facetName]?.length > 0;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -256,51 +266,18 @@ function PlasmicSearchFilters__RenderFunc(props: {
             onRemove={async key => {
               const $steps = {};
 
-              $steps["runOnRemove"] = true
-                ? (() => {
-                    const actionArgs = {
-                      eventRef: $props["onRemove"],
-                      args: [
-                        (() => {
-                          try {
-                            return currentItem.facetName;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return (({ eventRef, args }) => {
-                      return eventRef?.(...(args ?? []));
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runOnRemove"] != null &&
-                typeof $steps["runOnRemove"] === "object" &&
-                typeof $steps["runOnRemove"].then === "function"
-              ) {
-                $steps["runOnRemove"] = await $steps["runOnRemove"];
-              }
-            }}
-            onSelect={async key => {
-              const $steps = {};
-
-              $steps["updateDialogOpen"] = true
+              $steps["updateSelected"] = true
                 ? (() => {
                     const actionArgs = {
                       variable: {
                         objRoot: $state,
-                        variablePath: ["dialog", "open"]
+                        variablePath: ["selected"]
                       },
                       operation: 0,
-                      value: true
+                      value: {
+                        ...$state.selected,
+                        [currentItem.facetName]: []
+                      }
                     };
                     return (({ variable, value, startIndex, deleteCount }) => {
                       if (!variable) {
@@ -314,11 +291,188 @@ function PlasmicSearchFilters__RenderFunc(props: {
                   })()
                 : undefined;
               if (
+                $steps["updateSelected"] != null &&
+                typeof $steps["updateSelected"] === "object" &&
+                typeof $steps["updateSelected"].then === "function"
+              ) {
+                $steps["updateSelected"] = await $steps["updateSelected"];
+              }
+            }}
+            onSelect={async key => {
+              const $steps = {};
+
+              $steps["updateDialogOpen"] =
+                currentItem.fieldType !== "boolean"
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["dialog", "open"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
                 $steps["updateDialogOpen"] != null &&
                 typeof $steps["updateDialogOpen"] === "object" &&
                 typeof $steps["updateDialogOpen"].then === "function"
               ) {
                 $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+              }
+
+              $steps["updateDialogOpen3"] =
+                currentItem.fieldType !== "boolean"
+                  ? (() => {
+                      const actionArgs = { args: [500] };
+                      return $globalActions["Fragment.wait"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateDialogOpen3"] != null &&
+                typeof $steps["updateDialogOpen3"] === "object" &&
+                typeof $steps["updateDialogOpen3"].then === "function"
+              ) {
+                $steps["updateDialogOpen3"] = await $steps["updateDialogOpen3"];
+              }
+
+              $steps["updateDialogOpen2"] =
+                currentItem.fieldType !== "boolean"
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            const filterContainer =
+                              window.document.getElementById(
+                                "filters-containter"
+                              );
+                            const filterItem = window.document.getElementById(
+                              `filters-item-${currentItem.facetName}`
+                            );
+                            if (!filterContainer && !filterItem) {
+                              return;
+                            }
+                            filterContainer.scrollTo({
+                              top: filterItem.offsetTop,
+                              behavior: "smooth"
+                            });
+                            return (filterItem.style.backgroundColor =
+                              "#ffc50024");
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateDialogOpen2"] != null &&
+                typeof $steps["updateDialogOpen2"] === "object" &&
+                typeof $steps["updateDialogOpen2"].then === "function"
+              ) {
+                $steps["updateDialogOpen2"] = await $steps["updateDialogOpen2"];
+              }
+
+              $steps["updateDialogOpen4"] =
+                currentItem.fieldType !== "boolean"
+                  ? (() => {
+                      const actionArgs = { args: [1500] };
+                      return $globalActions["Fragment.wait"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateDialogOpen4"] != null &&
+                typeof $steps["updateDialogOpen4"] === "object" &&
+                typeof $steps["updateDialogOpen4"].then === "function"
+              ) {
+                $steps["updateDialogOpen4"] = await $steps["updateDialogOpen4"];
+              }
+
+              $steps["updateDialogOpen5"] =
+                currentItem.fieldType !== "boolean"
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            const filterItem = window.document.getElementById(
+                              `filters-item-${currentItem.facetName}`
+                            );
+                            if (filterItem) {
+                              return (filterItem.style.backgroundColor =
+                                "transparent");
+                            }
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateDialogOpen5"] != null &&
+                typeof $steps["updateDialogOpen5"] === "object" &&
+                typeof $steps["updateDialogOpen5"].then === "function"
+              ) {
+                $steps["updateDialogOpen5"] = await $steps["updateDialogOpen5"];
+              }
+
+              $steps["updateDialogOpen6"] =
+                currentItem.fieldType === "boolean"
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["selected"]
+                        },
+                        operation: 0,
+                        value: {
+                          ...$state.selected,
+                          [currentItem.facetName]: [true]
+                        }
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateDialogOpen6"] != null &&
+                typeof $steps["updateDialogOpen6"] === "object" &&
+                typeof $steps["updateDialogOpen6"].then === "function"
+              ) {
+                $steps["updateDialogOpen6"] = await $steps["updateDialogOpen6"];
               }
             }}
           />
@@ -328,10 +482,9 @@ function PlasmicSearchFilters__RenderFunc(props: {
         data-plasmic-name={"dialog"}
         data-plasmic-override={overrides.dialog}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(projectcss.all, sty.freeBox___9Z8Y0)}
+            id={"filters-containter"}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
               (() => {
@@ -353,6 +506,19 @@ function PlasmicSearchFilters__RenderFunc(props: {
               return (
                 <div
                   className={classNames(projectcss.all, sty.freeBox___0AFrI)}
+                  id={(() => {
+                    try {
+                      return `filters-item-${currentItem.facetName}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   key={currentIndex}
                 >
                   {(() => {
@@ -375,6 +541,19 @@ function PlasmicSearchFilters__RenderFunc(props: {
                         "__wab_instance",
                         sty.filterItemToggle
                       )}
+                      defaultSelected={(() => {
+                        try {
+                          return $state.selected?.[currentItem.facetName]?.[0];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
                       label={(() => {
                         try {
                           return currentItem.facetLabel;
@@ -388,11 +567,97 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           throw e;
                         }
                       })()}
+                      onSelect={async itemSelect => {
+                        const $steps = {};
+
+                        $steps["updateSelected"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["selected"]
+                                },
+                                operation: 0,
+                                value: {
+                                  ...$state.selected,
+                                  [currentItem.facetName]: itemSelect
+                                    ? [itemSelect]
+                                    : []
+                                }
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateSelected"] != null &&
+                          typeof $steps["updateSelected"] === "object" &&
+                          typeof $steps["updateSelected"].then === "function"
+                        ) {
+                          $steps["updateSelected"] = await $steps[
+                            "updateSelected"
+                          ];
+                        }
+
+                        $steps["updateDialogOpen2"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog", "open"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateDialogOpen2"] != null &&
+                          typeof $steps["updateDialogOpen2"] === "object" &&
+                          typeof $steps["updateDialogOpen2"].then === "function"
+                        ) {
+                          $steps["updateDialogOpen2"] = await $steps[
+                            "updateDialogOpen2"
+                          ];
+                        }
+                      }}
                     />
                   ) : null}
                   {(() => {
                     try {
-                      return currentItem.fieldType === "long";
+                      return (
+                        currentItem.fieldType === "long" ||
+                        currentItem.fieldType === "text"
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -410,6 +675,19 @@ function PlasmicSearchFilters__RenderFunc(props: {
                         "__wab_instance",
                         sty.filterItemSingleSelect
                       )}
+                      defaultSelected={(() => {
+                        try {
+                          return $state.selected[currentItem.facetName];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
                       label={(() => {
                         try {
                           return currentItem.facetLabel;
@@ -423,6 +701,87 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           throw e;
                         }
                       })()}
+                      onSelect={async itemsSelected => {
+                        const $steps = {};
+
+                        $steps["updateSelected"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["selected"]
+                                },
+                                operation: 0,
+                                value: {
+                                  ...$state.selected,
+                                  [currentItem.facetName]: itemsSelected
+                                }
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateSelected"] != null &&
+                          typeof $steps["updateSelected"] === "object" &&
+                          typeof $steps["updateSelected"].then === "function"
+                        ) {
+                          $steps["updateSelected"] = await $steps[
+                            "updateSelected"
+                          ];
+                        }
+
+                        $steps["updateDialogOpen"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog", "open"]
+                                },
+                                operation: 4
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                const oldValue = $stateGet(
+                                  objRoot,
+                                  variablePath
+                                );
+                                $stateSet(objRoot, variablePath, !oldValue);
+                                return !oldValue;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateDialogOpen"] != null &&
+                          typeof $steps["updateDialogOpen"] === "object" &&
+                          typeof $steps["updateDialogOpen"].then === "function"
+                        ) {
+                          $steps["updateDialogOpen"] = await $steps[
+                            "updateDialogOpen"
+                          ];
+                        }
+                      }}
                       options={(() => {
                         try {
                           return currentItem.facetRecords;
@@ -441,7 +800,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
                 </div>
               );
             })}
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.dialog)}
         noTrigger={true}
