@@ -563,20 +563,6 @@
           "plumeType": "text-input"
         },
         {
-          "id": "GQOCScvj145-",
-          "name": "NewPage",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.tsx",
-          "importSpec": {
-            "modulePath": "../src/pages/s/jahannama.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicNewPage.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/s/samplepage2781"
-        },
-        {
           "id": "YHypsyWp2tOf",
           "name": "ExternalBookSurveyPopup",
           "type": "managed",
@@ -679,6 +665,34 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterItemToggle.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "GQOCScvj145-",
+          "name": "SearchPage",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage.tsx",
+          "importSpec": {
+            "modulePath": "../src/pages/s/jahannama.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/s/jahannama"
+        },
+        {
+          "id": "g0pqddGARgnV",
+          "name": "Checkbox",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicCheckbox.tsx",
+          "importSpec": {
+            "modulePath": "Checkbox.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicCheckbox.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "checkbox"
         }
       ],
       "icons": [
@@ -761,6 +775,21 @@
           "id": "eKLBqU_Fr5SV",
           "name": "Icon14Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon14.tsx"
+        },
+        {
+          "id": "hYUK7_Ew7oOx",
+          "name": "SquareSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__SquareSvg.tsx"
+        },
+        {
+          "id": "9sQVBJngUq-E",
+          "name": "SquareCheckFilledSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__SquareCheckFilledSvg.tsx"
+        },
+        {
+          "id": "C5_Pw_14PsnQ",
+          "name": "SquareMinusSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__SquareMinusSvg.tsx"
         }
       ],
       "images": [

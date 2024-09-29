@@ -4,9 +4,23 @@
   position: relative;
   width: 100%;
   height: auto;
-  justify-content: flex-start;
-  align-items: center;
+  overflow: auto;
+  justify-self: flex-start;
   min-width: 0;
+}
+.root > :global(.__wab_flex-container) {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - 5px);
+  height: calc(100% + 5px);
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: 5px;
 }
 .text__shEly {
   position: relative;
@@ -16,33 +30,58 @@
   font-weight: 600;
   min-width: 0;
 }
-.radioGroup:global(.__wab_instance) {
+.checkbox:global(.__wab_instance) {
+  max-width: 100%;
+  width: auto;
+}
+.text__nxNgD {
+  font-size: var(--token-VrIY9r5RDQZ_);
+  align-self: center;
+  margin-right: 4px;
+}
+.freeBox {
   display: flex;
   flex-direction: row;
   position: relative;
-  align-items: stretch;
+  height: auto;
+  max-width: 100%;
+  cursor: pointer;
+}
+.freeBox > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  object-fit: cover;
-  min-width: 0;
-  padding: 8px;
+  margin-left: calc(0px - 0px);
+  width: calc(100% + 0px);
 }
-.radio:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  width: 100%;
-  align-self: auto;
-  min-width: 0;
+.freeBox > :global(.__wab_flex-container) > *,
+.freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox > :global(.__wab_flex-container) > picture > img,
+.freeBox
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 0px;
 }
-.text__zmbox {
+.svg__lrujQ {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  height: 1em;
+}
+.svg__uaKsg {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  height: 1em;
+}
+.text___7Ruk7 {
   position: relative;
-  width: 100%;
+  width: auto;
   height: auto;
   max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  font-weight: 600;
   font-size: var(--token-6NbVMeD6zQwn);
-  font-weight: 500;
-  text-align: center;
-  min-width: 0;
 }

@@ -78,10 +78,14 @@ export const PlasmicFilterItemToggle__VariantProps =
 
 export type PlasmicFilterItemToggle__ArgsType = {
   label?: string;
+  defaultSelected?: boolean;
+  onSelect?: (itemSelect: boolean) => void;
 };
 type ArgPropType = keyof PlasmicFilterItemToggle__ArgsType;
 export const PlasmicFilterItemToggle__ArgProps = new Array<ArgPropType>(
-  "label"
+  "label",
+  "defaultSelected",
+  "onSelect"
 );
 
 export type PlasmicFilterItemToggle__OverridesType = {
@@ -92,6 +96,8 @@ export type PlasmicFilterItemToggle__OverridesType = {
 
 export interface DefaultFilterItemToggleProps {
   label?: string;
+  defaultSelected?: boolean;
+  onSelect?: (itemSelect: boolean) => void;
   className?: string;
 }
 
@@ -115,7 +121,9 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          defaultSelected: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -139,7 +147,20 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
         path: "_switch.checked",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $props.defaultSelected;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()
       }
     ],
     [$props, $ctx, $refs]
@@ -194,7 +215,61 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
         data-plasmic-override={overrides._switch}
         checked={generateStateValueProp($state, ["_switch", "checked"])}
         className={classNames("__wab_instance", sty._switch)}
-        onChange={generateStateOnChangeProp($state, ["_switch", "checked"])}
+        defaultChecked={(() => {
+          try {
+            return $props.defaultSelected;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["_switch", "checked"]).apply(
+            null,
+            eventArgs
+          );
+          (async checked => {
+            const $steps = {};
+
+            $steps["runOnSelect"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onSelect"],
+                    args: [
+                      (() => {
+                        try {
+                          return checked;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runOnSelect"] != null &&
+              typeof $steps["runOnSelect"] === "object" &&
+              typeof $steps["runOnSelect"].then === "function"
+            ) {
+              $steps["runOnSelect"] = await $steps["runOnSelect"];
+            }
+          }).apply(null, eventArgs);
+        }}
       />
     </div>
   ) as React.ReactElement | null;

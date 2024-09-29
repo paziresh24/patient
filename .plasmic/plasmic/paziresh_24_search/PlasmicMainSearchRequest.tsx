@@ -82,11 +82,13 @@ export const PlasmicMainSearchRequest__VariantProps =
 export type PlasmicMainSearchRequest__ArgsType = {
   searchQuery?: string;
   onApiRequestDataChange?: (val: any) => void;
+  searchFilters?: any;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
 export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchQuery",
-  "onApiRequestDataChange"
+  "onApiRequestDataChange",
+  "searchFilters"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
@@ -100,6 +102,7 @@ export type PlasmicMainSearchRequest__OverridesType = {
 export interface DefaultMainSearchRequestProps {
   searchQuery?: string;
   onApiRequestDataChange?: (val: any) => void;
+  searchFilters?: any;
   className?: string;
 }
 
@@ -234,8 +237,19 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               from: 0,
               size: 10,
               query: ` + ${$props.searchQuery} + `,
-              facets:
-                "record_type,result_type,gender,turn_type,degree,good_behave_doctor,popular_doctor,less_waiting_time_doctor,consult_price,has_prescription,work_time_frames,hospital_affiliation,group_expertise,expertise,center_type"
+              facets: "*",
+              ...(Object.values(
+                $props.searchFilters ? $props.searchFilters : {}
+              ).length > 0 && {
+                facetFilters: Object.entries($props.searchFilters).reduce(
+                  (acc, item) => {
+                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                      .map(i => `${item[0]}:${i}`)
+                      .join(",")}`;
+                  },
+                  ""
+                )
+              })
             };
           } catch (e) {
             if (
@@ -320,22 +334,24 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       ].join(", "),
                       waiting_time: null,
                       badges: [],
-                      is_bulk: true,
+                      is_bulk: doctor.source.centers.every(
+                        center => Number(center.status) === 1
+                      ),
                       consult_active_booking:
                         doctor.source.consult_active_booking,
                       presence_active_booking:
                         doctor.source.presence_active_booking,
-                      url: `/dr/${doctor.slug}`,
+                      url: `/dr/${doctor.source.slug}`,
                       actions: [
                         {
                           title: "مشاهده",
                           outline: true,
                           top_title: "",
-                          url: `/dr/${doctor.slug}`
+                          url: `/dr/${doctor.source.slug}`
                         }
                       ],
                       experience: doctor.source.experience,
-                      position: 2, // Example position, you might assign a specific value here
+                      position: doctor.beforePersonalizationPosition,
                       has_presciption: false,
                       insurances: doctor.source.insurances,
                       experiment_details: {
@@ -350,7 +366,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       doctor_id: doctor.source.doctor_id,
                       number_of_visits: doctor.source.number_of_visits,
                       waiting_time_info: doctor.source.waiting_time_info,
-                      slug: doctor.slug,
+                      slug: doctor.source.slug,
                       graduation_date: doctor.source.graduation_date,
                       star: doctor.source.star,
                       services: doctor.source.services.map(service => ({
