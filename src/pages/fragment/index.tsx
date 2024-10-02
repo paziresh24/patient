@@ -5,6 +5,7 @@ import { AuthGlobalContext } from '@/common/fragment/authGlobalContext';
 import { Fragment, fragmentMeta } from '@/common/fragment/designSystemGlobalContext';
 import { GrowthbookGlobalContext } from '@/common/fragment/growthbookGlobalContext';
 import { ApiRequest, apiRequestMeta } from '@/common/fragment/components/api-request';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -95,3 +96,46 @@ registerGlobalContext(GrowthbookGlobalContext, {
 });
 
 registerComponent(ApiRequest as any, apiRequestMeta);
+
+registerComponent(LayoutWithHeaderAndFooter, {
+  name: 'LayoutWithHeaderAndFooter',
+  importPath: '@/common/components/layouts/layoutWithHeaderAndFooter',
+  displayName: 'Paziresh24/LayoutWithHeaderAndFooter',
+  props: {
+    children: {
+      type: 'slot',
+    },
+    shouldShowBrand: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    shouldShowPromoteApp: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    showBottomNavigation: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    showHeader: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    showFooter: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    compactFooter: {
+      type: 'boolean',
+      defaultValue: false,
+    },
+    showSearchSuggestionButton: {
+      type: 'boolean',
+      defaultValue: false,
+    },
+  },
+  classNameProp: 'className',
+  defaultStyles: {
+    width: 'stretch',
+  },
+});
