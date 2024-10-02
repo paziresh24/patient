@@ -17,6 +17,7 @@ export const LayoutWithHeaderAndFooter = ({
   showFooter = true,
   compactFooter = false,
   showSearchSuggestionButton = false,
+  className,
 }: {
   children: ReactNode;
   shouldShowBrand?: boolean;
@@ -26,12 +27,13 @@ export const LayoutWithHeaderAndFooter = ({
   showFooter?: boolean;
   showSearchSuggestionButton?: boolean;
   compactFooter?: boolean;
+  className?: string;
 }) => {
   const customize = useCustomize(state => state.customize);
   const isWebView = useWebView();
 
   return (
-    <div className={classNames('min-h-screen flex flex-col', { 'pb-16 md:pb-0': showBottomNavigation })}>
+    <div className={classNames('min-h-screen w-full flex flex-col', { 'pb-16 md:pb-0': showBottomNavigation }, className)}>
       {customize.showHeader && !isWebView && showHeader && (
         <Header
           showSearchSuggestionButton={showSearchSuggestionButton}
@@ -39,7 +41,7 @@ export const LayoutWithHeaderAndFooter = ({
           shouldShowPromoteApp={shouldShowPromoteApp}
         />
       )}
-      <div className="flex flex-col flex-grow">{children}</div>
+      <div className="flex flex-col flex-grow w-full">{children}</div>
       {customize.showFooter &&
         !isWebView &&
         showFooter &&
