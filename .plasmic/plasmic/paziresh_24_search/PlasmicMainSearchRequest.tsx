@@ -268,19 +268,30 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
           data-plasmic-override={overrides.searchResults}
           className={classNames("__wab_instance", sty.searchResults)}
           imageSrcPrefix={"https://cdn.paziresh24.com"}
-          location={(() => {
-            try {
-              return undefined;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
+          nextPageTrigger={async () => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return ($state.fragmentApiRequest.data.path +=
+                        "?from=1&size=10");
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
             }
-          })()}
+          }}
           searchResultResponse={(() => {
             try {
               return {
@@ -303,7 +314,10 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       image: `/getImage/p24/search-men/${doctor.source.image}?size=150`,
                       view: doctor.source.number_of_visits,
                       display_expertise: doctor.source.expertises
-                        .map(expertise => expertise.expertise.name)
+                        .map(
+                          expertise =>
+                            expertise.alias_title || expertise.expertise.name
+                        )
                         .join(", "),
                       satisfaction: doctor.source.satisfaction || 0,
                       rates_count: doctor.source.rates_count || 0,
@@ -325,16 +339,28 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                         active_booking: center.active_booking
                       })),
                       display_address_full: `${doctor.source.city_name}, ${doctor.source.centers[0].address}`,
-                      display_address: [
-                        ...new Set(
-                          doctor.source.centers
-                            .filter(center => center.id != "5532")
-                            .map(center => center.city_name)
-                        )
-                      ].join(", "),
+                      display_address: (() => {
+                        const cityNames = [
+                          ...new Set(
+                            doctor.source.centers
+                              .filter(center => center.id != "5532")
+                              .map(center => center.city_name)
+                          )
+                        ].join(", ");
+                        const centerNames = doctor.source.centers
+                          .filter(
+                            center =>
+                              center.center_type != 1 && center.id != "5532"
+                          )
+                          .map(center => center.name)
+                          .join(", ");
+                        return centerNames
+                          ? `${cityNames}, ${centerNames}`
+                          : cityNames;
+                      })(),
                       waiting_time: null,
                       badges: [],
-                      is_bulk: doctor.source.centers.every(
+                      is_bulk: !doctor.source.centers.some(
                         center => Number(center.status) === 1
                       ),
                       consult_active_booking:
@@ -342,14 +368,109 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       presence_active_booking:
                         doctor.source.presence_active_booking,
                       url: `/dr/${doctor.source.slug}`,
-                      actions: [
-                        {
-                          title: "مشاهده",
-                          outline: true,
-                          top_title: "",
-                          url: `/dr/${doctor.source.slug}`
+                      actions: (() => {
+                        const actions = [];
+                        const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+
+                        // Helper function to format the time until the freeturn
+                        const formatTimeToFarsi = timestamp => {
+                          // Implement this function to return a Farsi string indicating the time until the provided timestamp
+                          // For example: "کمتر از 1 ساعت دیگر"
+                          // This is a placeholder implementation; you'll need to replace it with actual logic
+                          const timeDifference = timestamp - now;
+
+                          if (timeDifference <= 0) {
+                            return "هم‌اکنون";
+                          } else if (timeDifference < 3600) {
+                            return "کمتر از 1 ساعت دیگر";
+                          } else if (timeDifference < 86400) {
+                            const hours = Math.floor(timeDifference / 3600);
+                            return `حدود ${hours} ساعت دیگر`;
+                          } else {
+                            const days = Math.floor(timeDifference / 86400);
+                            return `حدود ${days} روز دیگر`;
+                          }
+                        };
+
+                        // Online Visit Action (ویزیت آنلاین)
+                        const hasOnlineCenter = doctor.source.centers.some(
+                          center => center.id === "5532"
+                        );
+                        const consult_freeturn = doctor.source.consult_freeturn;
+                        const consultTimeValid =
+                          consult_freeturn &&
+                          consult_freeturn >= now - 24 * 3600;
+
+                        if (hasOnlineCenter && consultTimeValid) {
+                          const isImmediateConsult =
+                            consult_freeturn >= now - 90 * 60 &&
+                            consult_freeturn <= now + 60 * 60;
+                          const outline = false; // As per your notes, outline is false if consult_freeturn is valid
+
+                          let top_title = "";
+                          if (isImmediateConsult) {
+                            top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
+                          } else {
+                            const timeText =
+                              formatTimeToFarsi(consult_freeturn);
+                            top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
+                          }
+
+                          const consultServiceId =
+                            doctor.source.consult_services &&
+                            doctor.source.consult_services.length > 0
+                              ? doctor.source.consult_services[0].id
+                              : "";
+
+                          const url = `/booking/${doctor.source.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
+
+                          actions.push({
+                            title: "ویزیت آنلاین",
+                            outline: outline,
+                            top_title: top_title,
+                            url: url
+                          });
                         }
-                      ],
+
+                        // In-Person Action (نوبت دهی اینترنتی or مشاهده صفحه)
+                        const presence_freeturn =
+                          doctor.source.presence_freeturn;
+                        const presenceTimeValid =
+                          presence_freeturn &&
+                          presence_freeturn >= now - 24 * 3600;
+                        const hasActiveBookingCenter =
+                          doctor.source.centers.some(
+                            center =>
+                              center.id !== "5532" && center.active_booking
+                          );
+
+                        let inPersonTitle = "";
+                        if (presenceTimeValid || hasActiveBookingCenter) {
+                          inPersonTitle = "نوبت دهی اینترنتی";
+                        } else {
+                          inPersonTitle = "آدرس و اطلاعات بیشتر";
+                        }
+
+                        const inPersonOutline = !presenceTimeValid;
+                        let inPersonTopTitle = "";
+
+                        if (presenceTimeValid) {
+                          const timeText = formatTimeToFarsi(presence_freeturn);
+                          inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
+                        }
+
+                        const inPersonUrl = `/dr/${doctor.source.slug}`;
+
+                        actions.push({
+                          title: inPersonTitle,
+                          outline: inPersonOutline,
+                          top_title: inPersonTopTitle,
+                          url: inPersonUrl
+                        });
+
+                        return actions;
+                      })(),
+
                       experience: doctor.source.experience,
                       position: doctor.beforePersonalizationPosition,
                       has_presciption: false,
