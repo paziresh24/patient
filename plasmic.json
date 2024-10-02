@@ -843,6 +843,12 @@
           "name": "ApiRequest",
           "displayName": "ApiRequest",
           "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "mmczjg-nvsXL",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
         }
       ],
       "customFunctions": [
