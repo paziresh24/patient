@@ -153,7 +153,9 @@ function PlasmicSearchPage__RenderFunc(props: {
                 : Object.fromEntries(
                     Array.from(
                       new window.URLSearchParams(window.location.search)
-                    ).map(([k, v]) => [k, JSON.parse(v)])
+                    )
+                      .filter(([k]) => k !== "text")
+                      .map(([k, v]) => [k, JSON.parse(v)])
                   );
             } catch (e) {
               if (
@@ -165,6 +167,12 @@ function PlasmicSearchPage__RenderFunc(props: {
               throw e;
             }
           })()
+      },
+      {
+        path: "mainSearchRequest.page",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) => 1
       }
     ],
     [$props, $ctx, $refs]
@@ -395,7 +403,9 @@ function PlasmicSearchPage__RenderFunc(props: {
                                     new window.URLSearchParams(
                                       window.location.search
                                     )
-                                  ).map(([k, v]) => [k, JSON.parse(v)])
+                                  )
+                                    .filter(([k]) => k !== "text")
+                                    .map(([k, v]) => [k, JSON.parse(v)])
                                 );
                           } catch (e) {
                             if (
@@ -427,6 +437,14 @@ function PlasmicSearchPage__RenderFunc(props: {
                   "mainSearchRequest",
                   "apiRequestData"
                 ])}
+                onPageChange={generateStateOnChangeProp($state, [
+                  "mainSearchRequest",
+                  "page"
+                ])}
+                page={generateStateValueProp($state, [
+                  "mainSearchRequest",
+                  "page"
+                ])}
                 searchFilters={(() => {
                   try {
                     return typeof window === "undefined"
@@ -434,7 +452,9 @@ function PlasmicSearchPage__RenderFunc(props: {
                       : Object.fromEntries(
                           Array.from(
                             new window.URLSearchParams(window.location.search)
-                          ).map(([k, v]) => [k, JSON.parse(v)])
+                          )
+                            .filter(([k]) => k !== "text")
+                            .map(([k, v]) => [k, JSON.parse(v)])
                         );
                   } catch (e) {
                     if (
