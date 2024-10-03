@@ -381,6 +381,31 @@ function PlasmicSuggestionInput__RenderFunc(props: {
               "updateSuggestedContentVisibility"
             ];
           }
+
+          $steps["runCode"] =
+            event.key === "Enter"
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        return document
+                          .querySelector('input[name="search-input"]')
+                          .blur();
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
         }}
       >
         <TextInput
@@ -467,6 +492,7 @@ function PlasmicSuggestionInput__RenderFunc(props: {
               role={"img"}
             />
           }
+          name={"search-input"}
           onChange={async (...eventArgs: any) => {
             ((...eventArgs) => {
               generateStateOnChangeProp($state, ["textInput", "value"])(
@@ -531,39 +557,37 @@ function PlasmicSuggestionInput__RenderFunc(props: {
               onClick={async event => {
                 const $steps = {};
 
-                $steps["updateTextInputValue"] = true
+                $steps["runOnSelect"] = true
                   ? (() => {
                       const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["textInput", "value"]
-                        },
-                        operation: 0
+                        eventRef: $props["onSelect"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.selectedOption;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
                       };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
                       })?.apply(null, [actionArgs]);
                     })()
                   : undefined;
                 if (
-                  $steps["updateTextInputValue"] != null &&
-                  typeof $steps["updateTextInputValue"] === "object" &&
-                  typeof $steps["updateTextInputValue"].then === "function"
+                  $steps["runOnSelect"] != null &&
+                  typeof $steps["runOnSelect"] === "object" &&
+                  typeof $steps["runOnSelect"].then === "function"
                 ) {
-                  $steps["updateTextInputValue"] = await $steps[
-                    "updateTextInputValue"
-                  ];
+                  $steps["runOnSelect"] = await $steps["runOnSelect"];
                 }
               }}
               role={"img"}

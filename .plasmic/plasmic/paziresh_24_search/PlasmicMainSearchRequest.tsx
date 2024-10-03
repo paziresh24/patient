@@ -83,12 +83,16 @@ export type PlasmicMainSearchRequest__ArgsType = {
   searchQuery?: string;
   onApiRequestDataChange?: (val: any) => void;
   searchFilters?: any;
+  page?: number;
+  onPageChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
 export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchQuery",
   "onApiRequestDataChange",
-  "searchFilters"
+  "searchFilters",
+  "page",
+  "onPageChange"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
@@ -103,6 +107,8 @@ export interface DefaultMainSearchRequestProps {
   searchQuery?: string;
   onApiRequestDataChange?: (val: any) => void;
   searchFilters?: any;
+  page?: number;
+  onPageChange?: (val: string) => void;
   className?: string;
 }
 
@@ -167,6 +173,14 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "page",
+        type: "writable",
+        variableType: "number",
+
+        valueProp: "page",
+        onChangeProp: "onPageChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -316,8 +330,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return ($state.fragmentApiRequest.data.path +=
-                        "?from=1&size=10");
+                      return undefined;
                     }
                   };
                   return (({ customFunction }) => {
