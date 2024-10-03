@@ -66,6 +66,8 @@ import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import ReplyCard from "../../ReplyCard"; // plasmic-import: qY29Y1sogsUa/component
+import { Popover } from "@plasmicpkgs/radix-ui";
+import StarRate from "../../StarRate"; // plasmic-import: mLhzoRbR5vw6/component
 import MultilineTextInput from "../../MultilineTextInput"; // plasmic-import: CZBpNouNw7Ui/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
@@ -159,6 +161,8 @@ export type PlasmicReviewCard__OverridesType = {
   button?: Flex__<typeof Button>;
   dialog2?: Flex__<typeof Dialog>;
   نظربیشتراز1?: Flex__<"div">;
+  popoverCore?: Flex__<typeof Popover>;
+  starRate?: Flex__<typeof StarRate>;
   dialog6?: Flex__<typeof Dialog>;
   سوشالها?: Flex__<"div">;
   توئیتر?: Flex__<typeof Button>;
@@ -331,6 +335,40 @@ function PlasmicReviewCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "popoverCore.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "likeRate",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return (() => {
+                if (typeof window === "undefined") return 0;
+                return window.localStorage.getItem("likedComments")
+                  ? JSON.parse(localStorage.getItem("likedComments")).find(
+                      item =>
+                        item.id === $props.feedbackId &&
+                        item.user_id === $ctx.auth.info.id
+                    )?.rate
+                  : 0;
+              })();
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return 0;
+              }
+              throw e;
+            }
+          })()
       }
     ],
     [$props, $ctx, $refs]
@@ -1544,308 +1582,521 @@ function PlasmicReviewCard__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox__o8WyD)}
         >
-          {(() => {
-            try {
-              return true;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__qhLa0)}
-              onClick={async event => {
-                const $steps = {};
+          <Popover
+            data-plasmic-name={"popoverCore"}
+            data-plasmic-override={overrides.popoverCore}
+            align={"center"}
+            className={classNames("__wab_instance", sty.popoverCore)}
+            defaultOpen={false}
+            modal={true}
+            onOpenChange={generateStateOnChangeProp($state, [
+              "popoverCore",
+              "open"
+            ])}
+            open={generateStateValueProp($state, ["popoverCore", "open"])}
+            overlay={
+              <div className={classNames(projectcss.all, sty.freeBox__gJfpv)}>
+                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                  (() => {
+                    try {
+                      return [1, 2, 3, 4, 5];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+                ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                  const currentItem = __plasmic_item_0;
+                  const currentIndex = __plasmic_idx_0;
+                  return (
+                    <StarRate
+                      data-plasmic-name={"starRate"}
+                      data-plasmic-override={overrides.starRate}
+                      className={classNames("__wab_instance", sty.starRate)}
+                      key={currentIndex}
+                      onSelect={async () => {
+                        const $steps = {};
 
-                $steps["updateIsLike"] = $ctx.auth.isLogin
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["isLike"]
-                        },
-                        operation: 4
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
+                        $steps["invokeGlobalAction2"] = !$ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = { args: [] };
+                              return $globalActions[
+                                "AuthGlobalContext.login"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["invokeGlobalAction2"] != null &&
+                          typeof $steps["invokeGlobalAction2"] === "object" &&
+                          typeof $steps["invokeGlobalAction2"].then ===
+                            "function"
+                        ) {
+                          $steps["invokeGlobalAction2"] = await $steps[
+                            "invokeGlobalAction2"
+                          ];
                         }
-                        const { objRoot, variablePath } = variable;
 
-                        const oldValue = $stateGet(objRoot, variablePath);
-                        $stateSet(objRoot, variablePath, !oldValue);
-                        return !oldValue;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["updateIsLike"] != null &&
-                  typeof $steps["updateIsLike"] === "object" &&
-                  typeof $steps["updateIsLike"].then === "function"
-                ) {
-                  $steps["updateIsLike"] = await $steps["updateIsLike"];
-                }
-
-                $steps["runCode"] = $ctx.auth.isLogin
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return fetch(
-                            "https://apigw.paziresh24.com/ravi/v1/feedbacks/like-dislike?id=" +
-                              $props.feedbackId,
-                            {
-                              method: "POST",
-                              credentials: "include"
-                            }
-                          );
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-
-                $steps["saveInLocalStoreg"] = $ctx.auth.isLogin
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return (() => {
-                            if ($state.isLike) {
-                              const likedComment = {
-                                user_id: $ctx.auth.info.id,
-                                id: $props.feedbackId
+                        $steps["updateLikeRate"] = $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["likeRate"]
+                                },
+                                operation: 0,
+                                value: currentItem
                               };
-                              const likedCommentsList =
-                                JSON.parse(
-                                  localStorage.getItem("likedComments")
-                                ) || [];
-                              likedCommentsList.push(likedComment);
-                              localStorage.setItem(
-                                "likedComments",
-                                JSON.stringify(likedCommentsList)
-                              );
-                            }
-                            if (!$state.isLike) {
-                              const likedCommentsList =
-                                JSON.parse(
-                                  localStorage.getItem("likedComments")
-                                ) || [];
-                              const index = likedCommentsList.findIndex(
-                                comment =>
-                                  comment.id === $props.feedbackId &&
-                                  comment.user_id === $ctx.auth.info.id
-                              );
-                              if (index !== -1) {
-                                likedCommentsList.splice(index, 1);
-                                return localStorage.setItem(
-                                  "likedComments",
-                                  JSON.stringify(likedCommentsList)
-                                );
-                              }
-                            }
-                          })();
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["saveInLocalStoreg"] != null &&
-                  typeof $steps["saveInLocalStoreg"] === "object" &&
-                  typeof $steps["saveInLocalStoreg"].then === "function"
-                ) {
-                  $steps["saveInLocalStoreg"] = await $steps[
-                    "saveInLocalStoreg"
-                  ];
-                }
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
 
-                $steps["ifLogin"] =
-                  $ctx.auth.isLogin == false
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateLikeRate"] != null &&
+                          typeof $steps["updateLikeRate"] === "object" &&
+                          typeof $steps["updateLikeRate"].then === "function"
+                        ) {
+                          $steps["updateLikeRate"] = await $steps[
+                            "updateLikeRate"
+                          ];
+                        }
+
+                        $steps["updatePopoverCoreOpen"] = $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["popoverCore", "open"]
+                                },
+                                operation: 0,
+                                value: false
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updatePopoverCoreOpen"] != null &&
+                          typeof $steps["updatePopoverCoreOpen"] === "object" &&
+                          typeof $steps["updatePopoverCoreOpen"].then ===
+                            "function"
+                        ) {
+                          $steps["updatePopoverCoreOpen"] = await $steps[
+                            "updatePopoverCoreOpen"
+                          ];
+                        }
+
+                        $steps["updateIsLike"] = $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["isLike"]
+                                },
+                                operation: 0,
+                                value: true
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateIsLike"] != null &&
+                          typeof $steps["updateIsLike"] === "object" &&
+                          typeof $steps["updateIsLike"].then === "function"
+                        ) {
+                          $steps["updateIsLike"] = await $steps["updateIsLike"];
+                        }
+
+                        $steps["runCode"] = $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return (() => {
+                                    if ($state.isLike) {
+                                      const likedComment = {
+                                        user_id: $ctx.auth.info.id,
+                                        id: $props.feedbackId,
+                                        rate: $state.likeRate
+                                      };
+                                      const likedCommentsList =
+                                        JSON.parse(
+                                          localStorage.getItem("likedComments")
+                                        ) || [];
+                                      likedCommentsList.push(likedComment);
+                                      localStorage.setItem(
+                                        "likedComments",
+                                        JSON.stringify(likedCommentsList)
+                                      );
+                                    }
+                                    if (!$state.isLike) {
+                                      const likedCommentsList =
+                                        JSON.parse(
+                                          localStorage.getItem("likedComments")
+                                        ) || [];
+                                      const index = likedCommentsList.findIndex(
+                                        comment =>
+                                          comment.id === $props.feedbackId &&
+                                          comment.user_id === $ctx.auth.info.id
+                                      );
+                                      if (index !== -1) {
+                                        likedCommentsList.splice(index, 1);
+                                        return localStorage.setItem(
+                                          "likedComments",
+                                          JSON.stringify(likedCommentsList)
+                                        );
+                                      }
+                                    }
+                                  })();
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runCode"] != null &&
+                          typeof $steps["runCode"] === "object" &&
+                          typeof $steps["runCode"].then === "function"
+                        ) {
+                          $steps["runCode"] = await $steps["runCode"];
+                        }
+
+                        $steps["invokeGlobalAction"] = $ctx.auth.isLogin
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  "POST",
+                                  "https://ir-ravi-n8n.darkube.app/webhook/like_rate",
+                                  undefined,
+                                  (() => {
+                                    try {
+                                      return {
+                                        feedback_id: $props.feedbackId,
+                                        rate: $state.likeRate,
+                                        user_id: $ctx.auth.info.id
+                                      };
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.apiRequest"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["invokeGlobalAction"] != null &&
+                          typeof $steps["invokeGlobalAction"] === "object" &&
+                          typeof $steps["invokeGlobalAction"].then ===
+                            "function"
+                        ) {
+                          $steps["invokeGlobalAction"] = await $steps[
+                            "invokeGlobalAction"
+                          ];
+                        }
+                      }}
+                      selected={(() => {
+                        try {
+                          return currentItem <= $state.likeRate;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  );
+                })}
+              </div>
+            }
+            side={"bottom"}
+            slideIn={true}
+            themeResetClass={classNames(
+              projectcss.root_reset,
+              projectcss.plasmic_default_styles,
+              projectcss.plasmic_mixins,
+              projectcss.plasmic_tokens,
+              plasmic_fragment_design_system_css.plasmic_tokens
+            )}
+            trigger={false}
+          >
+            {(() => {
+              try {
+                return true;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__qhLa0)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["ifLogin"] =
+                    $ctx.auth.isLogin == false
+                      ? (() => {
+                          const actionArgs = { args: [] };
+                          return $globalActions[
+                            "AuthGlobalContext.login"
+                          ]?.apply(null, [...actionArgs.args]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["ifLogin"] != null &&
+                    typeof $steps["ifLogin"] === "object" &&
+                    typeof $steps["ifLogin"].then === "function"
+                  ) {
+                    $steps["ifLogin"] = await $steps["ifLogin"];
+                  }
+
+                  $steps["updatePopoverCoreOpen"] = $ctx.auth.isLogin
                     ? (() => {
-                        const actionArgs = { args: [] };
-                        return $globalActions["AuthGlobalContext.login"]?.apply(
-                          null,
-                          [...actionArgs.args]
-                        );
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["popoverCore", "open"]
+                          },
+                          operation: 4,
+                          value: true
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
-                if (
-                  $steps["ifLogin"] != null &&
-                  typeof $steps["ifLogin"] === "object" &&
-                  typeof $steps["ifLogin"].then === "function"
-                ) {
-                  $steps["ifLogin"] = await $steps["ifLogin"];
-                }
-
-                $steps["splunk"] = $ctx.auth.isLogin
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return $$.splunkEvent({
-                            group: "feedback",
-                            data: {
-                              comment_id: $props.feedbackId,
-                              doc_center: $props.docCenter
-                            },
-                            type: "like_comment",
-                            token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                            api_host: "https://splunk-ravi-hec.paziresh24.com"
-                          });
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["splunk"] != null &&
-                  typeof $steps["splunk"] === "object" &&
-                  typeof $steps["splunk"].then === "function"
-                ) {
-                  $steps["splunk"] = await $steps["splunk"];
-                }
-              }}
-            >
-              {(() => {
-                try {
-                  return +$props.like !== 0 || $state.isLike;
-                } catch (e) {
                   if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
+                    $steps["updatePopoverCoreOpen"] != null &&
+                    typeof $steps["updatePopoverCoreOpen"] === "object" &&
+                    typeof $steps["updatePopoverCoreOpen"].then === "function"
                   ) {
-                    return true;
+                    $steps["updatePopoverCoreOpen"] = await $steps[
+                      "updatePopoverCoreOpen"
+                    ];
                   }
-                  throw e;
-                }
-              })() ? (
+
+                  $steps["splunk"] = false
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return $$.splunkEvent({
+                              group: "feedback",
+                              data: {
+                                comment_id: $props.feedbackId,
+                                doc_center: $props.docCenter
+                              },
+                              type: "like_comment",
+                              token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                              api_host: "https://splunk-ravi-hec.paziresh24.com"
+                            });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["splunk"] != null &&
+                    typeof $steps["splunk"] === "object" &&
+                    typeof $steps["splunk"].then === "function"
+                  ) {
+                    $steps["splunk"] = await $steps["splunk"];
+                  }
+                }}
+              >
+                {(() => {
+                  try {
+                    return +$props.like !== 0 || $state.isLike;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__zTaJf
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $state.isLike
+                            ? Number($props.like) + 1
+                            : $props.like;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "2";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                ) : null}
+                {(() => {
+                  try {
+                    return !$state.isLike;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <PlasmicIcon__
+                    PlasmicIconType={
+                      hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                        ? ThumbUpIcon
+                        : ThumbUpIcon
+                    }
+                    className={classNames(projectcss.all, sty.svg__lsG2C, {
+                      [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
+                        $state,
+                        "raviExpFroDrakam",
+                        "raviExpFroDrakam"
+                      )
+                    })}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.isLike == true;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <PlasmicIcon__
+                    PlasmicIconType={
+                      hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                        ? ThumbUpIcon
+                        : ThumbUpIcon
+                    }
+                    className={classNames(projectcss.all, sty.svg__sdFgJ, {
+                      [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
+                        $state,
+                        "raviExpFroDrakam",
+                        "raviExpFroDrakam"
+                      )
+                    })}
+                    role={"img"}
+                  />
+                ) : null}
                 <div
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text__zTaJf
+                    sty.text__dw8Rz,
+                    {
+                      [sty.textraviExpFroDrakam__dw8RzQl6C7]: hasVariant(
+                        $state,
+                        "raviExpFroDrakam",
+                        "raviExpFroDrakam"
+                      )
+                    }
                   )}
                 >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $state.isLike
-                          ? Number($props.like) + 1
-                          : $props.like;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "2";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
+                  {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
+                    ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
+                    : "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
                 </div>
-              ) : null}
-              {(() => {
-                try {
-                  return !$state.isLike;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <PlasmicIcon__
-                  PlasmicIconType={
-                    hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                      ? ThumbUpIcon
-                      : ThumbUpIcon
-                  }
-                  className={classNames(projectcss.all, sty.svg__lsG2C, {
-                    [sty.svgraviExpFroDrakam__lsG2CQl6C7]: hasVariant(
-                      $state,
-                      "raviExpFroDrakam",
-                      "raviExpFroDrakam"
-                    )
-                  })}
-                  role={"img"}
-                />
-              ) : null}
-              {(() => {
-                try {
-                  return $state.isLike == true;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <PlasmicIcon__
-                  PlasmicIconType={
-                    hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                      ? ThumbUpIcon
-                      : ThumbUpIcon
-                  }
-                  className={classNames(projectcss.all, sty.svg__sdFgJ, {
-                    [sty.svgraviExpFroDrakam__sdFgJQl6C7]: hasVariant(
-                      $state,
-                      "raviExpFroDrakam",
-                      "raviExpFroDrakam"
-                    )
-                  })}
-                  role={"img"}
-                />
-              ) : null}
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__dw8Rz,
-                  {
-                    [sty.textraviExpFroDrakam__dw8RzQl6C7]: hasVariant(
-                      $state,
-                      "raviExpFroDrakam",
-                      "raviExpFroDrakam"
-                    )
-                  }
-                )}
-              >
-                {hasVariant($state, "raviExpFroDrakam", "raviExpFroDrakam")
-                  ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
-                  : "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
-              </div>
-            </Stack__>
-          ) : null}
+              </Stack__>
+            ) : null}
+          </Popover>
           <div
             className={classNames(projectcss.all, sty.freeBox__wNjA9)}
             onClick={async event => {
@@ -2844,6 +3095,8 @@ const PlasmicDescendants = {
     "button",
     "dialog2",
     "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
+    "popoverCore",
+    "starRate",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u06cc\u062a\u0631",
@@ -2881,6 +3134,8 @@ const PlasmicDescendants = {
     "button",
     "dialog2",
     "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321",
+    "popoverCore",
+    "starRate",
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
     "\u062a\u0648\u0626\u06cc\u062a\u0631",
@@ -2900,6 +3155,8 @@ const PlasmicDescendants = {
   نظربیشتراز1: [
     "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
   ],
+  popoverCore: ["popoverCore", "starRate"],
+  starRate: ["starRate"],
   dialog6: [
     "dialog6",
     "\u0633\u0648\u0634\u0627\u0644\u0647\u0627",
@@ -2954,6 +3211,8 @@ type NodeDefaultElementType = {
   button: typeof Button;
   dialog2: typeof Dialog;
   نظربیشتراز1: "div";
+  popoverCore: typeof Popover;
+  starRate: typeof StarRate;
   dialog6: typeof Dialog;
   سوشالها: "div";
   توئیتر: typeof Button;
@@ -3053,6 +3312,8 @@ export const PlasmicReviewCard = Object.assign(
     نظربیشتراز1: makeNodeComponent(
       "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
     ),
+    popoverCore: makeNodeComponent("popoverCore"),
+    starRate: makeNodeComponent("starRate"),
     dialog6: makeNodeComponent("dialog6"),
     سوشالها: makeNodeComponent("\u0633\u0648\u0634\u0627\u0644\u0647\u0627"),
     توئیتر: makeNodeComponent("\u062a\u0648\u0626\u06cc\u062a\u0631"),
