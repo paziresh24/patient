@@ -83,7 +83,7 @@ type ArgPropType = keyof PlasmicSearchPage__ArgsType;
 export const PlasmicSearchPage__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicSearchPage__OverridesType = {
-  paziresh24Search?: Flex__<"div">;
+  root?: Flex__<"div">;
   paziresh24LayoutWithHeaderAndFooter?: Flex__<
     typeof LayoutWithHeaderAndFooter
   >;
@@ -222,8 +222,8 @@ function PlasmicSearchPage__RenderFunc(props: {
 
       <div className={projectcss.plasmic_page_wrapper}>
         <div
-          data-plasmic-name={"paziresh24Search"}
-          data-plasmic-override={overrides.paziresh24Search}
+          data-plasmic-name={"root"}
+          data-plasmic-override={overrides.root}
           data-plasmic-root={true}
           data-plasmic-for-node={forNode}
           className={classNames(
@@ -234,7 +234,7 @@ function PlasmicSearchPage__RenderFunc(props: {
             projectcss.plasmic_tokens,
             plasmic_fragment_design_system_css.plasmic_tokens,
             plasmic_antd_5_hostless_css.plasmic_tokens,
-            sty.paziresh24Search
+            sty.root
           )}
         >
           <LayoutWithHeaderAndFooter
@@ -254,9 +254,11 @@ function PlasmicSearchPage__RenderFunc(props: {
             showHeader={true}
             showSearchSuggestionButton={false}
           >
-            <div
+            <Stack__
+              as={"div"}
               data-plasmic-name={"freeBox"}
               data-plasmic-override={overrides.freeBox}
+              hasGap={true}
               className={classNames(projectcss.all, sty.freeBox)}
             >
               <Suggestion
@@ -584,7 +586,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                   />
                 );
               })()}
-            </div>
+            </Stack__>
           </LayoutWithHeaderAndFooter>
         </div>
       </div>
@@ -593,8 +595,8 @@ function PlasmicSearchPage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  paziresh24Search: [
-    "paziresh24Search",
+  root: [
+    "root",
     "paziresh24LayoutWithHeaderAndFooter",
     "freeBox",
     "suggestion",
@@ -617,7 +619,7 @@ type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  paziresh24Search: "div";
+  root: "div";
   paziresh24LayoutWithHeaderAndFooter: typeof LayoutWithHeaderAndFooter;
   freeBox: "div";
   suggestion: typeof Suggestion;
@@ -672,7 +674,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
       forNode: nodeName
     });
   };
-  if (nodeName === "paziresh24Search") {
+  if (nodeName === "root") {
     func.displayName = "PlasmicSearchPage";
   } else {
     func.displayName = `PlasmicSearchPage.${nodeName}`;
@@ -682,7 +684,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicSearchPage = Object.assign(
   // Top-level PlasmicSearchPage renders the root element
-  makeNodeComponent("paziresh24Search"),
+  makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
     paziresh24LayoutWithHeaderAndFooter: makeNodeComponent(
