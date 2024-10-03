@@ -91,7 +91,6 @@ export type PlasmicSuggestion__OverridesType = {
   root?: Flex__<"div">;
   suggestionInput?: Flex__<typeof SuggestionInput>;
   freeBox?: Flex__<"div">;
-  suggestedItem?: Flex__<typeof SuggestedItem>;
   fragmentApiRequest?: Flex__<typeof ApiRequest>;
 };
 
@@ -224,32 +223,33 @@ function PlasmicSuggestion__RenderFunc(props: {
         onSelect={async option => {
           const $steps = {};
 
-          $steps["runOnSelect"] = !!option
-            ? (() => {
-                const actionArgs = {
-                  eventRef: $props["onSelect"],
-                  args: [
-                    (() => {
-                      try {
-                        return $state.fragmentApiRequest.data.entity
-                          .topQuerySuggestions[option];
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+          $steps["runOnSelect"] =
+            option > 0
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onSelect"],
+                    args: [
+                      (() => {
+                        try {
+                          return $state.fragmentApiRequest.data.entity
+                            .topQuerySuggestions[option];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return (({ eventRef, args }) => {
-                  return eventRef?.(...(args ?? []));
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
           if (
             $steps["runOnSelect"] != null &&
             typeof $steps["runOnSelect"] === "object" &&
@@ -258,31 +258,33 @@ function PlasmicSuggestion__RenderFunc(props: {
             $steps["runOnSelect"] = await $steps["runOnSelect"];
           }
 
-          $steps["invokeGlobalAction2"] = !option
-            ? (() => {
-                const actionArgs = {
-                  eventRef: $props["onSelect"],
-                  args: [
-                    (() => {
-                      try {
-                        return $state.suggestionInput.suggestionTextInputValue;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+          $steps["invokeGlobalAction2"] =
+            option === 0
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onSelect"],
+                    args: [
+                      (() => {
+                        try {
+                          return $state.suggestionInput
+                            .suggestionTextInputValue;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return (({ eventRef, args }) => {
-                  return eventRef?.(...(args ?? []));
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
           if (
             $steps["invokeGlobalAction2"] != null &&
             typeof $steps["invokeGlobalAction2"] === "object" &&
@@ -305,8 +307,10 @@ function PlasmicSuggestion__RenderFunc(props: {
         ])}
         optionsLength={(() => {
           try {
-            return $state.fragmentApiRequest.data.entity.topQuerySuggestions
-              ?.length;
+            return (
+              $state.fragmentApiRequest.data.entity.topQuerySuggestions
+                ?.length + 1
+            );
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -321,74 +325,29 @@ function PlasmicSuggestion__RenderFunc(props: {
           "suggestionInput",
           "suggestedContentVisibility"
         ])}
-        suggestionContents2={(_par =>
-          !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-          (() => {
-            try {
-              return $state.fragmentApiRequest.data.entity.topQuerySuggestions;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
-            }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <div
-              data-plasmic-name={"freeBox"}
-              data-plasmic-override={overrides.freeBox}
-              className={classNames(projectcss.all, sty.freeBox)}
-              key={currentIndex}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runOnSelect"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        eventRef: $props["onSelect"],
-                        args: [
-                          (() => {
-                            try {
-                              return currentItem;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        ]
-                      };
-                      return (({ eventRef, args }) => {
-                        return eventRef?.(...(args ?? []));
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
+        suggestionContents2={
+          <React.Fragment>
+            {(() => {
+              try {
+                return $state.suggestionInput.suggestionTextInputValue;
+              } catch (e) {
                 if (
-                  $steps["runOnSelect"] != null &&
-                  typeof $steps["runOnSelect"] === "object" &&
-                  typeof $steps["runOnSelect"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["runOnSelect"] = await $steps["runOnSelect"];
+                  return true;
                 }
-              }}
-            >
+                throw e;
+              }
+            })() ? (
               <SuggestedItem
-                data-plasmic-name={"suggestedItem"}
-                data-plasmic-override={overrides.suggestedItem}
-                className={classNames("__wab_instance", sty.suggestedItem)}
+                className={classNames(
+                  "__wab_instance",
+                  sty.suggestedItem___9AqF7
+                )}
                 name={(() => {
                   try {
-                    return currentItem;
+                    return $state.suggestionInput.suggestionTextInputValue;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -401,9 +360,7 @@ function PlasmicSuggestion__RenderFunc(props: {
                 })()}
                 selected={(() => {
                   try {
-                    return (
-                      currentIndex === $state.suggestionInput.selectedOption
-                    );
+                    return 0 === $state.suggestionInput.selectedOption;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -415,9 +372,109 @@ function PlasmicSuggestion__RenderFunc(props: {
                   }
                 })()}
               />
-            </div>
-          );
-        })}
+            ) : null}
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $state.fragmentApiRequest.data.entity
+                    .topQuerySuggestions;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <div
+                  data-plasmic-name={"freeBox"}
+                  data-plasmic-override={overrides.freeBox}
+                  className={classNames(projectcss.all, sty.freeBox)}
+                  key={currentIndex}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runOnSelect"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            eventRef: $props["onSelect"],
+                            args: [
+                              (() => {
+                                try {
+                                  return currentItem;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnSelect"] != null &&
+                      typeof $steps["runOnSelect"] === "object" &&
+                      typeof $steps["runOnSelect"].then === "function"
+                    ) {
+                      $steps["runOnSelect"] = await $steps["runOnSelect"];
+                    }
+                  }}
+                >
+                  <SuggestedItem
+                    className={classNames(
+                      "__wab_instance",
+                      sty.suggestedItem__emdMt
+                    )}
+                    name={(() => {
+                      try {
+                        return currentItem;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    selected={(() => {
+                      try {
+                        return (
+                          currentIndex + 1 ===
+                          $state.suggestionInput.selectedOption
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                  />
+                </div>
+              );
+            })}
+          </React.Fragment>
+        }
         suggestionTextInputValue={generateStateValueProp($state, [
           "suggestionInput",
           "suggestionTextInputValue"
@@ -447,7 +504,7 @@ function PlasmicSuggestion__RenderFunc(props: {
         params={(() => {
           try {
             return {
-              query: $state.suggestionInput.suggestionTextInputValue
+              query: $state.suggestionInput?.suggestionTextInputValue ?? ""
             };
           } catch (e) {
             if (
@@ -466,16 +523,9 @@ function PlasmicSuggestion__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "suggestionInput",
-    "freeBox",
-    "suggestedItem",
-    "fragmentApiRequest"
-  ],
-  suggestionInput: ["suggestionInput", "freeBox", "suggestedItem"],
-  freeBox: ["freeBox", "suggestedItem"],
-  suggestedItem: ["suggestedItem"],
+  root: ["root", "suggestionInput", "freeBox", "fragmentApiRequest"],
+  suggestionInput: ["suggestionInput", "freeBox"],
+  freeBox: ["freeBox"],
   fragmentApiRequest: ["fragmentApiRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -485,7 +535,6 @@ type NodeDefaultElementType = {
   root: "div";
   suggestionInput: typeof SuggestionInput;
   freeBox: "div";
-  suggestedItem: typeof SuggestedItem;
   fragmentApiRequest: typeof ApiRequest;
 };
 
@@ -551,7 +600,6 @@ export const PlasmicSuggestion = Object.assign(
     // Helper components rendering sub-elements
     suggestionInput: makeNodeComponent("suggestionInput"),
     freeBox: makeNodeComponent("freeBox"),
-    suggestedItem: makeNodeComponent("suggestedItem"),
     fragmentApiRequest: makeNodeComponent("fragmentApiRequest"),
 
     // Metadata about props expected for PlasmicSuggestion

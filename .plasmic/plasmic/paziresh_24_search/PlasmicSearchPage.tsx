@@ -331,7 +331,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                 })()}
                 searchQuery={(() => {
                   try {
-                    return $ctx.query.text;
+                    return $ctx.query.text ? $ctx.query.text : "";
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
