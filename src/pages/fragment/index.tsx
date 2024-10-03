@@ -6,6 +6,8 @@ import { Fragment, fragmentMeta } from '@/common/fragment/designSystemGlobalCont
 import { GrowthbookGlobalContext } from '@/common/fragment/growthbookGlobalContext';
 import { ApiRequest, apiRequestMeta } from '@/common/fragment/components/api-request';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import { Splunk, splunkMeta } from '@/common/fragment/splunk';
+import { Switch, switchMeta } from '@/common/fragment/components/switch';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -95,7 +97,10 @@ registerGlobalContext(GrowthbookGlobalContext, {
   importPath: '@/common/fragment/growthbookGlobalContext',
 });
 
+registerGlobalContext(Splunk, splunkMeta);
+
 registerComponent(ApiRequest as any, apiRequestMeta);
+registerComponent(Switch as any, switchMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',
