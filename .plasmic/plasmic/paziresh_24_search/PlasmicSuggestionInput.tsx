@@ -69,6 +69,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCru
 import sty from "./PlasmicSuggestionInput.module.css"; // plasmic-import: KILAc4YdRdGh/css
 
 import Icon12Icon from "./icons/PlasmicIcon__Icon12"; // plasmic-import: IrGZtNznvLs2/icon
+import Icon15Icon from "./icons/PlasmicIcon__Icon15"; // plasmic-import: gfQyZuOHl54J/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: E9NGWfCxi3aB/icon
 
 createPlasmicElementProxy;
@@ -552,46 +553,146 @@ function PlasmicSuggestionInput__RenderFunc(props: {
           })()}
           showStartIcon={true}
           startIcon={
-            <Icon12Icon
-              className={classNames(projectcss.all, sty.svg__abY32)}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runOnSelect"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        eventRef: $props["onSelect"],
-                        args: [
-                          (() => {
-                            try {
-                              return $state.selectedOption;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        ]
-                      };
-                      return (({ eventRef, args }) => {
-                        return eventRef?.(...(args ?? []));
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runOnSelect"] != null &&
-                  typeof $steps["runOnSelect"] === "object" &&
-                  typeof $steps["runOnSelect"].then === "function"
-                ) {
-                  $steps["runOnSelect"] = await $steps["runOnSelect"];
+            <React.Fragment>
+              {(() => {
+                try {
+                  return !$state.textInput.value;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
                 }
-              }}
-              role={"img"}
-            />
+              })() ? (
+                <Icon12Icon
+                  className={classNames(projectcss.all, sty.svg__abY32)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runOnSelect"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            eventRef: $props["onSelect"],
+                            args: [
+                              (() => {
+                                try {
+                                  return $state.selectedOption;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnSelect"] != null &&
+                      typeof $steps["runOnSelect"] === "object" &&
+                      typeof $steps["runOnSelect"].then === "function"
+                    ) {
+                      $steps["runOnSelect"] = await $steps["runOnSelect"];
+                    }
+                  }}
+                  role={"img"}
+                />
+              ) : null}
+              {(() => {
+                try {
+                  return $state.textInput.value;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <Icon15Icon
+                  className={classNames(projectcss.all, sty.svg__yakt9)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateSuggestedContentVisibility"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["suggestedContentVisibility"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateSuggestedContentVisibility"] != null &&
+                      typeof $steps["updateSuggestedContentVisibility"] ===
+                        "object" &&
+                      typeof $steps["updateSuggestedContentVisibility"].then ===
+                        "function"
+                    ) {
+                      $steps["updateSuggestedContentVisibility"] = await $steps[
+                        "updateSuggestedContentVisibility"
+                      ];
+                    }
+
+                    $steps["runCode"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                return document
+                                  .querySelector('input[name="search-input"]')
+                                  .blur();
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
+                    }
+                  }}
+                  role={"img"}
+                />
+              ) : null}
+            </React.Fragment>
           }
           type={(() => {
             try {

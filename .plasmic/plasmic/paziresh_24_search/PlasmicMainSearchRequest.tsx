@@ -186,7 +186,20 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "result",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => []
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $state?.fragmentApiRequest?.data?.entity?.results ?? [];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
       },
       {
         path: "total",
@@ -564,35 +577,36 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               ];
             }
 
-            $steps["updateResult"] = true
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["result"]
-                    },
-                    operation: 0,
-                    value: Array.from(
-                      new Map(
-                        [
-                          ...$state.result,
-                          ...($state.fragmentApiRequest.data?.entity?.results ??
-                            [])
-                        ].map(item => [item.documentId, item])
-                      ).values()
-                    )
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+            $steps["updateResult"] =
+              page > 1
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["result"]
+                      },
+                      operation: 0,
+                      value: Array.from(
+                        new Map(
+                          [
+                            ...$state.result,
+                            ...($state.fragmentApiRequest.data?.entity
+                              ?.results ?? [])
+                          ].map(item => [item.documentId, item])
+                        ).values()
+                      )
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
             if (
               $steps["updateResult"] != null &&
               typeof $steps["updateResult"] === "object" &&
