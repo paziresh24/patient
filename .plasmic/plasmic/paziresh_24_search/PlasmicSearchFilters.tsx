@@ -96,7 +96,6 @@ export const PlasmicSearchFilters__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchFilters__OverridesType = {
   root?: Flex__<"div">;
-  filterRowItem?: Flex__<typeof FilterRowItem>;
   dialog?: Flex__<typeof Dialog>;
   filterItemToggle?: Flex__<typeof FilterItemToggle>;
   filterItemSingleSelect?: Flex__<typeof FilterItemSingleSelect>;
@@ -196,6 +195,43 @@ function PlasmicSearchFilters__RenderFunc(props: {
         sty.root
       )}
     >
+      <FilterRowItem
+        className={classNames("__wab_instance", sty.filterRowItem__y0CiX)}
+        icon={"sliders-horizontal"}
+        onSelect={async key => {
+          const $steps = {};
+
+          $steps["updateDialogOpen"] = true
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["dialog", "open"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateDialogOpen"] != null &&
+            typeof $steps["updateDialogOpen"] === "object" &&
+            typeof $steps["updateDialogOpen"].then === "function"
+          ) {
+            $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+          }
+        }}
+      />
+
       {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
         (() => {
           try {
@@ -220,8 +256,6 @@ function PlasmicSearchFilters__RenderFunc(props: {
         const currentIndex = __plasmic_idx_0;
         return (
           <FilterRowItem
-            data-plasmic-name={"filterRowItem"}
-            data-plasmic-override={overrides.filterRowItem}
             active={(() => {
               try {
                 return $state.selected?.[currentItem.facetName]?.length > 0;
@@ -235,7 +269,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
                 throw e;
               }
             })()}
-            className={classNames("__wab_instance", sty.filterRowItem)}
+            className={classNames("__wab_instance", sty.filterRowItem__q1JtC)}
             filterKey={(() => {
               try {
                 return currentItem.facetName;
@@ -812,14 +846,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "filterRowItem",
-    "dialog",
-    "filterItemToggle",
-    "filterItemSingleSelect"
-  ],
-  filterRowItem: ["filterRowItem"],
+  root: ["root", "dialog", "filterItemToggle", "filterItemSingleSelect"],
   dialog: ["dialog", "filterItemToggle", "filterItemSingleSelect"],
   filterItemToggle: ["filterItemToggle"],
   filterItemSingleSelect: ["filterItemSingleSelect"]
@@ -829,7 +856,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  filterRowItem: typeof FilterRowItem;
   dialog: typeof Dialog;
   filterItemToggle: typeof FilterItemToggle;
   filterItemSingleSelect: typeof FilterItemSingleSelect;
@@ -895,7 +921,6 @@ export const PlasmicSearchFilters = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    filterRowItem: makeNodeComponent("filterRowItem"),
     dialog: makeNodeComponent("dialog"),
     filterItemToggle: makeNodeComponent("filterItemToggle"),
     filterItemSingleSelect: makeNodeComponent("filterItemSingleSelect"),
