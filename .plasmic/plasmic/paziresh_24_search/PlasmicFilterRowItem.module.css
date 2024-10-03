@@ -1,14 +1,14 @@
 .root {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   position: relative;
-  width: 100%;
+  width: auto;
   height: auto;
   justify-self: flex-start;
   background: #ffffff;
   min-width: 5rem;
   cursor: pointer;
-  border-radius: 77px;
+  border-radius: 7px;
   padding: 3px 10px;
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }

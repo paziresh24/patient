@@ -10,24 +10,23 @@ import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plas
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: 3GeFj3s3tzRm/codeComponent
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: p_3q3KAjUnHO/codeComponent
 import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
+import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: wuGBHXYibkGk/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
+  splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
 }
 
 export default function GlobalContextsProvider(
@@ -38,7 +37,8 @@ export default function GlobalContextsProvider(
     authGlobalContextProps,
     fragmentProps,
     growthbookGlobalContextProps,
-    antdConfigProviderProps
+    antdConfigProviderProps,
+    splunkProps
   } = props;
 
   return (
@@ -186,7 +186,21 @@ export default function GlobalContextsProvider(
                 : false
             }
           >
-            {children}
+            <Splunk
+              {...splunkProps}
+              defaultApiHost={
+                splunkProps && "defaultApiHost" in splunkProps
+                  ? splunkProps.defaultApiHost!
+                  : "https://rokhdad-splunk-hec.paziresh24.com"
+              }
+              defaultApiKey={
+                splunkProps && "defaultApiKey" in splunkProps
+                  ? splunkProps.defaultApiKey!
+                  : "1e490c2c-d98b-4777-816d-cf7f09b21888"
+              }
+            >
+              {children}
+            </Splunk>
           </AntdConfigProvider>
         </GrowthbookGlobalContext>
       </Fragment>

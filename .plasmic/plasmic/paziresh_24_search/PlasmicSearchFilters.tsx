@@ -654,9 +654,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
                   ) : null}
                   {(() => {
                     try {
-                      return (
-                        currentItem.fieldType === "long" ||
-                        currentItem.fieldType === "text"
+                      return ["text", "long", "double"].includes(
+                        currentItem.fieldType
                       );
                     } catch (e) {
                       if (

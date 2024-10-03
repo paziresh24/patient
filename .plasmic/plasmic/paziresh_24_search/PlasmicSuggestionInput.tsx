@@ -348,6 +348,39 @@ function PlasmicSuggestionInput__RenderFunc(props: {
           ) {
             $steps["enter"] = await $steps["enter"];
           }
+
+          $steps["updateSuggestedContentVisibility"] =
+            event.key === "Enter"
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["suggestedContentVisibility"]
+                    },
+                    operation: 0,
+                    value: false
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["updateSuggestedContentVisibility"] != null &&
+            typeof $steps["updateSuggestedContentVisibility"] === "object" &&
+            typeof $steps["updateSuggestedContentVisibility"].then ===
+              "function"
+          ) {
+            $steps["updateSuggestedContentVisibility"] = await $steps[
+              "updateSuggestedContentVisibility"
+            ];
+          }
         }}
       >
         <TextInput
@@ -495,15 +528,66 @@ function PlasmicSuggestionInput__RenderFunc(props: {
           startIcon={
             <Icon12Icon
               className={classNames(projectcss.all, sty.svg__abY32)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateTextInputValue"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["textInput", "value"]
+                        },
+                        operation: 0
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateTextInputValue"] != null &&
+                  typeof $steps["updateTextInputValue"] === "object" &&
+                  typeof $steps["updateTextInputValue"].then === "function"
+                ) {
+                  $steps["updateTextInputValue"] = await $steps[
+                    "updateTextInputValue"
+                  ];
+                }
+              }}
               role={"img"}
             />
           }
+          type={(() => {
+            try {
+              return "search";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
           value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
         />
       </div>
       {(() => {
         try {
-          return $state.suggestedContentVisibility && $props.optionsLength > 0;
+          return $state.suggestedContentVisibility;
         } catch (e) {
           if (
             e instanceof TypeError ||
