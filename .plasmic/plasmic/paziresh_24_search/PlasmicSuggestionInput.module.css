@@ -30,6 +30,12 @@
   height: 100%;
   min-height: 0;
 }
+.svg__yakt9 {
+  position: relative;
+  object-fit: cover;
+  height: 20px;
+  width: 20px;
+}
 .svg___7MjT1 {
   position: relative;
   object-fit: cover;
@@ -49,7 +55,7 @@
   left: 0px;
   top: 50px;
   background: #ffffff;
-  z-index: 50;
+  z-index: 60;
   min-width: 0;
   border-radius: var(--token-_c276Gs_1FIE);
   padding: var(--token-W6cMLA0AZVBO);
