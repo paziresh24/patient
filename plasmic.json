@@ -790,6 +790,16 @@
           "id": "C5_Pw_14PsnQ",
           "name": "SquareMinusSvgIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__SquareMinusSvg.tsx"
+        },
+        {
+          "id": "gfQyZuOHl54J",
+          "name": "Icon15Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon15.tsx"
+        },
+        {
+          "id": "jX-MgKdWVzUV",
+          "name": "Icon16Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon16.tsx"
         }
       ],
       "images": [
