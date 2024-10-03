@@ -1541,28 +1541,6 @@ function PlasmicSearchResults__RenderFunc(props: {
             ) {
               $steps["runNextPageTrigger"] = await $steps["runNextPageTrigger"];
             }
-
-            $steps["updateStateVariable"] = true
-              ? (() => {
-                  const actionArgs = {};
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-                    undefined;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["updateStateVariable"] != null &&
-              typeof $steps["updateStateVariable"] === "object" &&
-              typeof $steps["updateStateVariable"].then === "function"
-            ) {
-              $steps["updateStateVariable"] = await $steps[
-                "updateStateVariable"
-              ];
-            }
           }}
           outline={true}
           startIcon={
