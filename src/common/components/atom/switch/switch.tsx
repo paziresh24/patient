@@ -30,6 +30,7 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
           {
             '!bg-primary': isChecked,
           },
+          className,
         )}
       >
         <div
