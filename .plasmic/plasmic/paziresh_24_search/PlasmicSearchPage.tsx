@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { LayoutWithHeaderAndFooter } from "@/common/components/layouts/layoutWithHeaderAndFooter"; // plasmic-import: mmczjg-nvsXL/codeComponent
 import Suggestion from "../../Suggestion"; // plasmic-import: f83TZwYbQ2l0/component
 import SearchFilters from "../../SearchFilters"; // plasmic-import: zLShj09Q9POm/component
 import MainSearchRequest from "../../MainSearchRequest"; // plasmic-import: SctdwrC6-ku4/component
@@ -82,7 +83,11 @@ type ArgPropType = keyof PlasmicSearchPage__ArgsType;
 export const PlasmicSearchPage__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicSearchPage__OverridesType = {
-  paziresh24Search?: Flex__<"div">;
+  root?: Flex__<"div">;
+  paziresh24LayoutWithHeaderAndFooter?: Flex__<
+    typeof LayoutWithHeaderAndFooter
+  >;
+  freeBox?: Flex__<"div">;
   suggestion?: Flex__<typeof Suggestion>;
   searchFilters?: Flex__<typeof SearchFilters>;
   mainSearchRequest?: Flex__<typeof MainSearchRequest>;
@@ -140,7 +145,47 @@ function PlasmicSearchPage__RenderFunc(props: {
         path: "searchFilters.selected",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ({})
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return typeof window === "undefined"
+                ? {}
+                : Object.fromEntries(
+                    Array.from(
+                      new window.URLSearchParams(window.location.search)
+                    )
+                      .filter(([k]) => k !== "text")
+                      .map(([k, v]) => [k, JSON.parse(v)])
+                  );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return {};
+              }
+              throw e;
+            }
+          })()
+      },
+      {
+        path: "mainSearchRequest.page",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return +($ctx?.query?.page ? $ctx?.query?.page : 1);
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return 1;
+              }
+              throw e;
+            }
+          })()
       }
     ],
     [$props, $ctx, $refs]
@@ -177,8 +222,8 @@ function PlasmicSearchPage__RenderFunc(props: {
 
       <div className={projectcss.plasmic_page_wrapper}>
         <div
-          data-plasmic-name={"paziresh24Search"}
-          data-plasmic-override={overrides.paziresh24Search}
+          data-plasmic-name={"root"}
+          data-plasmic-override={overrides.root}
           data-plasmic-root={true}
           data-plasmic-for-node={forNode}
           className={classNames(
@@ -189,132 +234,360 @@ function PlasmicSearchPage__RenderFunc(props: {
             projectcss.plasmic_tokens,
             plasmic_fragment_design_system_css.plasmic_tokens,
             plasmic_antd_5_hostless_css.plasmic_tokens,
-            sty.paziresh24Search
+            sty.root
           )}
         >
-          <Suggestion
-            data-plasmic-name={"suggestion"}
-            data-plasmic-override={overrides.suggestion}
-            className={classNames("__wab_instance", sty.suggestion)}
-            defaultSearchQuery={(() => {
-              try {
-                return $ctx.query.text;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            onSelect={async searchQuery => {
-              const $steps = {};
+          <LayoutWithHeaderAndFooter
+            data-plasmic-name={"paziresh24LayoutWithHeaderAndFooter"}
+            data-plasmic-override={
+              overrides.paziresh24LayoutWithHeaderAndFooter
+            }
+            className={classNames(
+              "__wab_instance",
+              sty.paziresh24LayoutWithHeaderAndFooter
+            )}
+            compactFooter={false}
+            shouldShowBrand={true}
+            shouldShowPromoteApp={true}
+            showBottomNavigation={true}
+            showFooter={true}
+            showHeader={true}
+            showSearchSuggestionButton={false}
+          >
+            <Stack__
+              as={"div"}
+              data-plasmic-name={"freeBox"}
+              data-plasmic-override={overrides.freeBox}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox)}
+            >
+              <Suggestion
+                data-plasmic-name={"suggestion"}
+                data-plasmic-override={overrides.suggestion}
+                className={classNames("__wab_instance", sty.suggestion)}
+                defaultSearchQuery={(() => {
+                  try {
+                    return $ctx.query.text;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                onSelect={async searchQuery => {
+                  const $steps = {};
 
-              $steps["goToPage"] = true
-                ? (() => {
-                    const actionArgs = {
-                      destination: (() => {
-                        try {
-                          return `/s/jahannama/?text=${searchQuery}`;
-                        } catch (e) {
+                  $steps["goToPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          destination: (() => {
+                            try {
+                              return `/s/jahannama/?text=${searchQuery}`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return `/s/jahannama`;
+                              }
+                              throw e;
+                            }
+                          })()
+                        };
+                        return (({ destination }) => {
                           if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
                           ) {
-                            return `/s/jahannama`;
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
                           }
-                          throw e;
-                        }
+                        })?.apply(null, [actionArgs]);
                       })()
-                    };
-                    return (({ destination }) => {
+                    : undefined;
+                  if (
+                    $steps["goToPage"] != null &&
+                    typeof $steps["goToPage"] === "object" &&
+                    typeof $steps["goToPage"].then === "function"
+                  ) {
+                    $steps["goToPage"] = await $steps["goToPage"];
+                  }
+                }}
+              />
+
+              {(() => {
+                const child$Props = {
+                  className: classNames("__wab_instance", sty.searchFilters),
+                  filters: (() => {
+                    try {
+                      return $state.mainSearchRequest.apiRequestData.entity
+                        .facets;
+                    } catch (e) {
                       if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
+                        return [];
                       }
-                    })?.apply(null, [actionArgs]);
+                      throw e;
+                    }
+                  })(),
+                  onSelectedChange: async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "searchFilters",
+                      "selected"
+                    ]).apply(null, eventArgs);
+                    (async val => {
+                      const $steps = {};
+
+                      $steps["goToPage"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              destination: (() => {
+                                try {
+                                  return `/s/jahannama/?text=${
+                                    $ctx.query.text
+                                  }${Object.entries(
+                                    $state.searchFilters.selected
+                                  ).reduce((acc, item) => {
+                                    acc += `&${item[0]}=${JSON.stringify(
+                                      item[1]
+                                    )}`;
+                                    return acc;
+                                  }, "")}`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["goToPage"] != null &&
+                        typeof $steps["goToPage"] === "object" &&
+                        typeof $steps["goToPage"].then === "function"
+                      ) {
+                        $steps["goToPage"] = await $steps["goToPage"];
+                      }
+                    }).apply(null, eventArgs);
+                  },
+                  selected: generateStateValueProp($state, [
+                    "searchFilters",
+                    "selected"
+                  ])
+                };
+
+                initializePlasmicStates(
+                  $state,
+                  [
+                    {
+                      name: "searchFilters.selected",
+                      initFunc: ({ $props, $state, $queries }) =>
+                        (() => {
+                          try {
+                            return typeof window === "undefined"
+                              ? {}
+                              : Object.fromEntries(
+                                  Array.from(
+                                    new window.URLSearchParams(
+                                      window.location.search
+                                    )
+                                  )
+                                    .filter(([k]) => k !== "text")
+                                    .map(([k, v]) => [k, JSON.parse(v)])
+                                );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return {};
+                            }
+                            throw e;
+                          }
+                        })()
+                    }
+                  ],
+                  []
+                );
+                return (
+                  <SearchFilters
+                    data-plasmic-name={"searchFilters"}
+                    data-plasmic-override={overrides.searchFilters}
+                    {...child$Props}
+                  />
+                );
+              })()}
+              {(() => {
+                const child$Props = {
+                  className: classNames(
+                    "__wab_instance",
+                    sty.mainSearchRequest
+                  ),
+                  onApiRequestDataChange: generateStateOnChangeProp($state, [
+                    "mainSearchRequest",
+                    "apiRequestData"
+                  ]),
+                  onPageChange: async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "mainSearchRequest",
+                      "page"
+                    ]).apply(null, eventArgs);
+                    (async val => {
+                      const $steps = {};
+
+                      $steps["goToPage"] =
+                        $state.mainSearchRequest.page > 1
+                          ? (() => {
+                              const actionArgs = {
+                                destination: (() => {
+                                  try {
+                                    return `/s/jahannama/?text=${
+                                      $ctx.query.text
+                                    }${Object.entries(
+                                      $state.searchFilters.selected
+                                    ).reduce((acc, item) => {
+                                      acc += `&${item[0]}=${JSON.stringify(
+                                        item[1]
+                                      )}`;
+                                      return acc;
+                                    }, "")}&page=${
+                                      $state.mainSearchRequest.page
+                                    }`;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              };
+                              return (({ destination }) => {
+                                if (
+                                  typeof destination === "string" &&
+                                  destination.startsWith("#")
+                                ) {
+                                  document
+                                    .getElementById(destination.substr(1))
+                                    .scrollIntoView({ behavior: "smooth" });
+                                } else {
+                                  __nextRouter?.push(destination);
+                                }
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                      if (
+                        $steps["goToPage"] != null &&
+                        typeof $steps["goToPage"] === "object" &&
+                        typeof $steps["goToPage"].then === "function"
+                      ) {
+                        $steps["goToPage"] = await $steps["goToPage"];
+                      }
+                    }).apply(null, eventArgs);
+                  },
+                  page: generateStateValueProp($state, [
+                    "mainSearchRequest",
+                    "page"
+                  ]),
+                  searchFilters: (() => {
+                    try {
+                      return typeof window === "undefined"
+                        ? {}
+                        : Object.fromEntries(
+                            Array.from(
+                              new window.URLSearchParams(window.location.search)
+                            )
+                              .filter(([k]) => k !== "text")
+                              .map(([k, v]) => [k, JSON.parse(v)])
+                          );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })(),
+                  searchQuery: (() => {
+                    try {
+                      return $ctx.query.text ? $ctx.query.text : "";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
                   })()
-                : undefined;
-              if (
-                $steps["goToPage"] != null &&
-                typeof $steps["goToPage"] === "object" &&
-                typeof $steps["goToPage"].then === "function"
-              ) {
-                $steps["goToPage"] = await $steps["goToPage"];
-              }
-            }}
-          />
+                };
 
-          <SearchFilters
-            data-plasmic-name={"searchFilters"}
-            data-plasmic-override={overrides.searchFilters}
-            className={classNames("__wab_instance", sty.searchFilters)}
-            filters={(() => {
-              try {
-                return $state.mainSearchRequest.apiRequestData.entity.facets;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()}
-            onSelectedChange={generateStateOnChangeProp($state, [
-              "searchFilters",
-              "selected"
-            ])}
-            selected={generateStateValueProp($state, [
-              "searchFilters",
-              "selected"
-            ])}
-          />
-
-          <MainSearchRequest
-            data-plasmic-name={"mainSearchRequest"}
-            data-plasmic-override={overrides.mainSearchRequest}
-            className={classNames("__wab_instance", sty.mainSearchRequest)}
-            onApiRequestDataChange={generateStateOnChangeProp($state, [
-              "mainSearchRequest",
-              "apiRequestData"
-            ])}
-            searchFilters={(() => {
-              try {
-                return $state.searchFilters.selected;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            searchQuery={(() => {
-              try {
-                return $ctx.query.text;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          />
+                initializePlasmicStates(
+                  $state,
+                  [
+                    {
+                      name: "mainSearchRequest.page",
+                      initFunc: ({ $props, $state, $queries }) =>
+                        (() => {
+                          try {
+                            return +($ctx?.query?.page ? $ctx?.query?.page : 1);
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return 1;
+                            }
+                            throw e;
+                          }
+                        })()
+                    }
+                  ],
+                  []
+                );
+                return (
+                  <MainSearchRequest
+                    data-plasmic-name={"mainSearchRequest"}
+                    data-plasmic-override={overrides.mainSearchRequest}
+                    {...child$Props}
+                  />
+                );
+              })()}
+            </Stack__>
+          </LayoutWithHeaderAndFooter>
         </div>
       </div>
     </React.Fragment>
@@ -322,12 +595,22 @@ function PlasmicSearchPage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  paziresh24Search: [
-    "paziresh24Search",
+  root: [
+    "root",
+    "paziresh24LayoutWithHeaderAndFooter",
+    "freeBox",
     "suggestion",
     "searchFilters",
     "mainSearchRequest"
   ],
+  paziresh24LayoutWithHeaderAndFooter: [
+    "paziresh24LayoutWithHeaderAndFooter",
+    "freeBox",
+    "suggestion",
+    "searchFilters",
+    "mainSearchRequest"
+  ],
+  freeBox: ["freeBox", "suggestion", "searchFilters", "mainSearchRequest"],
   suggestion: ["suggestion"],
   searchFilters: ["searchFilters"],
   mainSearchRequest: ["mainSearchRequest"]
@@ -336,7 +619,9 @@ type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  paziresh24Search: "div";
+  root: "div";
+  paziresh24LayoutWithHeaderAndFooter: typeof LayoutWithHeaderAndFooter;
+  freeBox: "div";
   suggestion: typeof Suggestion;
   searchFilters: typeof SearchFilters;
   mainSearchRequest: typeof MainSearchRequest;
@@ -389,7 +674,7 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
       forNode: nodeName
     });
   };
-  if (nodeName === "paziresh24Search") {
+  if (nodeName === "root") {
     func.displayName = "PlasmicSearchPage";
   } else {
     func.displayName = `PlasmicSearchPage.${nodeName}`;
@@ -399,9 +684,13 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicSearchPage = Object.assign(
   // Top-level PlasmicSearchPage renders the root element
-  makeNodeComponent("paziresh24Search"),
+  makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    paziresh24LayoutWithHeaderAndFooter: makeNodeComponent(
+      "paziresh24LayoutWithHeaderAndFooter"
+    ),
+    freeBox: makeNodeComponent("freeBox"),
     suggestion: makeNodeComponent("suggestion"),
     searchFilters: makeNodeComponent("searchFilters"),
     mainSearchRequest: makeNodeComponent("mainSearchRequest"),

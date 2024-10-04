@@ -790,6 +790,16 @@
           "id": "C5_Pw_14PsnQ",
           "name": "SquareMinusSvgIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__SquareMinusSvg.tsx"
+        },
+        {
+          "id": "gfQyZuOHl54J",
+          "name": "Icon15Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon15.tsx"
+        },
+        {
+          "id": "jX-MgKdWVzUV",
+          "name": "Icon16Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon16.tsx"
         }
       ],
       "images": [
@@ -843,6 +853,24 @@
           "name": "ApiRequest",
           "displayName": "ApiRequest",
           "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "mmczjg-nvsXL",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "3ov1diNJvJkk",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "wuGBHXYibkGk",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
         }
       ],
       "customFunctions": [

@@ -66,6 +66,7 @@ import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicFilterRowItem.module.css"; // plasmic-import: gbTY0L-vUhOv/css
 
+import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: jX-MgKdWVzUV/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: E9NGWfCxi3aB/icon
 
 createPlasmicElementProxy;
@@ -86,19 +87,20 @@ export type PlasmicFilterRowItem__ArgsType = {
   onSelect?: (key: string) => void;
   filterKey?: string;
   onRemove?: (key: string) => void;
+  icon?: string;
 };
 type ArgPropType = keyof PlasmicFilterRowItem__ArgsType;
 export const PlasmicFilterRowItem__ArgProps = new Array<ArgPropType>(
   "label",
   "onSelect",
   "filterKey",
-  "onRemove"
+  "onRemove",
+  "icon"
 );
 
 export type PlasmicFilterRowItem__OverridesType = {
   root?: Flex__<"div">;
   text?: Flex__<"div">;
-  svg?: Flex__<"svg">;
 };
 
 export interface DefaultFilterRowItemProps {
@@ -106,6 +108,7 @@ export interface DefaultFilterRowItemProps {
   onSelect?: (key: string) => void;
   filterKey?: string;
   onRemove?: (key: string) => void;
+  icon?: string;
   active?: SingleBooleanChoiceArg<"active">;
   className?: string;
 }
@@ -261,34 +264,67 @@ function PlasmicFilterRowItem__RenderFunc(props: {
         }
       }}
     >
-      <div
-        data-plasmic-name={"text"}
-        data-plasmic-override={overrides.text}
-        className={classNames(projectcss.all, projectcss.__wab_text, sty.text, {
-          [sty.textactive]: hasVariant($state, "active", "active")
-        })}
-      >
-        <React.Fragment>
-          {(() => {
-            try {
-              return $props.label;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "";
+      {(() => {
+        try {
+          return $props.icon;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Icon16Icon
+          className={classNames(projectcss.all, sty.svg__z1Wpp)}
+          role={"img"}
+        />
+      ) : null}
+      {(() => {
+        try {
+          return $props.label;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <div
+          data-plasmic-name={"text"}
+          data-plasmic-override={overrides.text}
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text,
+            { [sty.textactive]: hasVariant($state, "active", "active") }
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.label;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-        </React.Fragment>
-      </div>
+            })()}
+          </React.Fragment>
+        </div>
+      ) : null}
       <Icon13Icon
-        data-plasmic-name={"svg"}
-        data-plasmic-override={overrides.svg}
-        className={classNames(projectcss.all, sty.svg, {
-          [sty.svgactive]: hasVariant($state, "active", "active")
+        className={classNames(projectcss.all, sty.svg__iqJxy, {
+          [sty.svgactive__iqJxy7W96W]: hasVariant($state, "active", "active")
         })}
         role={"img"}
       />
@@ -297,9 +333,8 @@ function PlasmicFilterRowItem__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "text", "svg"],
-  text: ["text"],
-  svg: ["svg"]
+  root: ["root", "text"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -307,7 +342,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   text: "div";
-  svg: "svg";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -371,7 +405,6 @@ export const PlasmicFilterRowItem = Object.assign(
   {
     // Helper components rendering sub-elements
     text: makeNodeComponent("text"),
-    svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicFilterRowItem
     internalVariantProps: PlasmicFilterRowItem__VariantProps,

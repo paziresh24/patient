@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { AntdSwitch } from "@plasmicpkgs/antd5/skinny/registerSwitch";
+import Checkbox from "../../Checkbox"; // plasmic-import: g0pqddGARgnV/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -91,7 +91,7 @@ export const PlasmicFilterItemToggle__ArgProps = new Array<ArgPropType>(
 export type PlasmicFilterItemToggle__OverridesType = {
   root?: Flex__<"div">;
   text?: Flex__<"div">;
-  _switch?: Flex__<typeof AntdSwitch>;
+  checkbox?: Flex__<typeof Checkbox>;
 };
 
 export interface DefaultFilterItemToggleProps {
@@ -144,7 +144,7 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "_switch.checked",
+        path: "checkbox.isChecked",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
@@ -156,7 +156,7 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return undefined;
+                return [];
               }
               throw e;
             }
@@ -210,30 +210,21 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
           })()}
         </React.Fragment>
       </div>
-      <AntdSwitch
-        data-plasmic-name={"_switch"}
-        data-plasmic-override={overrides._switch}
-        checked={generateStateValueProp($state, ["_switch", "checked"])}
-        className={classNames("__wab_instance", sty._switch)}
-        defaultChecked={(() => {
-          try {
-            return $props.defaultSelected;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
+      <Checkbox
+        data-plasmic-name={"checkbox"}
+        data-plasmic-override={overrides.checkbox}
+        children={null}
+        className={classNames("__wab_instance", sty.checkbox)}
+        isChecked={
+          generateStateValueProp($state, ["checkbox", "isChecked"]) ?? false
+        }
         onChange={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["_switch", "checked"]).apply(
-            null,
-            eventArgs
-          );
-          (async checked => {
+          ((...eventArgs) => {
+            generateStateOnChangeProp($state, ["checkbox", "isChecked"])(
+              eventArgs[0]
+            );
+          }).apply(null, eventArgs);
+          (async isChecked => {
             const $steps = {};
 
             $steps["runOnSelect"] = true
@@ -243,7 +234,7 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
                     args: [
                       (() => {
                         try {
-                          return checked;
+                          return $state.checkbox.isChecked;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -276,9 +267,9 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "text", "_switch"],
+  root: ["root", "text", "checkbox"],
   text: ["text"],
-  _switch: ["_switch"]
+  checkbox: ["checkbox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -286,7 +277,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   text: "div";
-  _switch: typeof AntdSwitch;
+  checkbox: typeof Checkbox;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -350,7 +341,7 @@ export const PlasmicFilterItemToggle = Object.assign(
   {
     // Helper components rendering sub-elements
     text: makeNodeComponent("text"),
-    _switch: makeNodeComponent("_switch"),
+    checkbox: makeNodeComponent("checkbox"),
 
     // Metadata about props expected for PlasmicFilterItemToggle
     internalVariantProps: PlasmicFilterItemToggle__VariantProps,
