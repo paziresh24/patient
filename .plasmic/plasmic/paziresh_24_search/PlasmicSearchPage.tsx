@@ -286,7 +286,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                         const actionArgs = {
                           destination: (() => {
                             try {
-                              return `/s/jahannama/?text=${searchQuery}`;
+                              return `/s/jahannama/?text=${searchQuery || ""}`;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
