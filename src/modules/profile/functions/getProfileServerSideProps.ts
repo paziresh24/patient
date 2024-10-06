@@ -333,12 +333,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             {
               slug: slugFormmated,
               sort: 'default_order',
+              showOnlyPositiveFeedbacks: true,
             },
           ],
           () =>
             getReviews({
               slug: slugFormmated,
               sort: 'default_order',
+              showOnlyPositiveFeedbacks: true,
             }),
         );
       }

@@ -17,13 +17,13 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [page, setPage] = useState(1);
   const listOfShowDoctorTags = useFeatureValue('profile:doctor-tags|enabled', { slugs: [] });
   const shouldShowDoctorTags = newApiFeatureFlaggingCondition(listOfShowDoctorTags?.slugs, profileData.seo.slug);
-
   const getFeedbacks = useGetReview(
     {
       slug: profileData.seo.slug,
       sort,
       search: searchTerm,
       offset: (page - 1) * 10,
+      showOnlyPositiveFeedbacks: userInfo?.id === profileData.information.user_id ? false : true,
       ...filterParams,
     },
     {

@@ -11,6 +11,7 @@ export interface ReviewParams {
   visited?: boolean;
   center_id?: string;
   offset?: number;
+  showOnlyPositiveFeedbacks: boolean;
 }
 
 export const getReviews = async (params: ReviewParams) => {
@@ -24,6 +25,7 @@ export const getReviews = async (params: ReviewParams) => {
         params.not_recommended && `(recommended,eq,0)`,
         params.visited && `(visit_status,eq,visited)`,
         params.center_id && `(center_id,eq,${params.center_id})`,
+        params.showOnlyPositiveFeedbacks && `(avg_rate_value,gt,3.5)`,
       ]
         .filter(Boolean)
         .join('~and'),
