@@ -174,9 +174,9 @@ function PlasmicSearchFooterSecondaryTasks__RenderFunc(props: {
           component={Link}
           href={(() => {
             try {
-              return `${
-                $props.taskObject.destination
-              }?#url=${encodeURIComponent(
+              return `${$props.taskObject.destination}${
+                $props.taskObject.destination.includes("?") ? "" : "?"
+              }#url=${encodeURIComponent(
                 window.location.href
               )}&tid=${document.cookie.replace(
                 /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,

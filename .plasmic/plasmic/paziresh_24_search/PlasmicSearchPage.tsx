@@ -62,6 +62,7 @@ import {
 import { LayoutWithHeaderAndFooter } from "@/common/components/layouts/layoutWithHeaderAndFooter"; // plasmic-import: mmczjg-nvsXL/codeComponent
 import Suggestion from "../../Suggestion"; // plasmic-import: f83TZwYbQ2l0/component
 import SearchFilters from "../../SearchFilters"; // plasmic-import: zLShj09Q9POm/component
+import UserLocation from "../../UserLocation"; // plasmic-import: YoStZ8eQd9r-/component
 import MainSearchRequest from "../../MainSearchRequest"; // plasmic-import: SctdwrC6-ku4/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -90,6 +91,7 @@ export type PlasmicSearchPage__OverridesType = {
   freeBox?: Flex__<"div">;
   suggestion?: Flex__<typeof Suggestion>;
   searchFilters?: Flex__<typeof SearchFilters>;
+  userLocation?: Flex__<typeof UserLocation>;
   mainSearchRequest?: Flex__<typeof MainSearchRequest>;
 };
 
@@ -186,6 +188,12 @@ function PlasmicSearchPage__RenderFunc(props: {
               throw e;
             }
           })()
+      },
+      {
+        path: "userLocation.userCity",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -444,6 +452,16 @@ function PlasmicSearchPage__RenderFunc(props: {
                   />
                 );
               })()}
+              <UserLocation
+                data-plasmic-name={"userLocation"}
+                data-plasmic-override={overrides.userLocation}
+                className={classNames("__wab_instance", sty.userLocation)}
+                onUserCityChange={generateStateOnChangeProp($state, [
+                  "userLocation",
+                  "userCity"
+                ])}
+              />
+
               {(() => {
                 const child$Props = {
                   className: classNames(
@@ -540,6 +558,21 @@ function PlasmicSearchPage__RenderFunc(props: {
                       throw e;
                     }
                   })(),
+                  searchOptionalFilters: (() => {
+                    try {
+                      return {
+                        city_id: [JSON.parse($state.userLocation.userCity).id]
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })(),
                   searchQuery: (() => {
                     try {
                       return $ctx.query.text ? $ctx.query.text : "";
@@ -601,6 +634,7 @@ const PlasmicDescendants = {
     "freeBox",
     "suggestion",
     "searchFilters",
+    "userLocation",
     "mainSearchRequest"
   ],
   paziresh24LayoutWithHeaderAndFooter: [
@@ -608,11 +642,19 @@ const PlasmicDescendants = {
     "freeBox",
     "suggestion",
     "searchFilters",
+    "userLocation",
     "mainSearchRequest"
   ],
-  freeBox: ["freeBox", "suggestion", "searchFilters", "mainSearchRequest"],
+  freeBox: [
+    "freeBox",
+    "suggestion",
+    "searchFilters",
+    "userLocation",
+    "mainSearchRequest"
+  ],
   suggestion: ["suggestion"],
   searchFilters: ["searchFilters"],
+  userLocation: ["userLocation"],
   mainSearchRequest: ["mainSearchRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -624,6 +666,7 @@ type NodeDefaultElementType = {
   freeBox: "div";
   suggestion: typeof Suggestion;
   searchFilters: typeof SearchFilters;
+  userLocation: typeof UserLocation;
   mainSearchRequest: typeof MainSearchRequest;
 };
 
@@ -693,6 +736,7 @@ export const PlasmicSearchPage = Object.assign(
     freeBox: makeNodeComponent("freeBox"),
     suggestion: makeNodeComponent("suggestion"),
     searchFilters: makeNodeComponent("searchFilters"),
+    userLocation: makeNodeComponent("userLocation"),
     mainSearchRequest: makeNodeComponent("mainSearchRequest"),
 
     // Metadata about props expected for PlasmicSearchPage
