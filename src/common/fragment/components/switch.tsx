@@ -46,7 +46,7 @@ export const switchMeta: CodeComponentMeta<SwitchType> = {
   states: {
     checked: {
       type: 'writable',
-      variableType: 'text',
+      variableType: 'boolean',
       valueProp: 'checked',
       onChangeProp: 'onCheckedChange',
     },
