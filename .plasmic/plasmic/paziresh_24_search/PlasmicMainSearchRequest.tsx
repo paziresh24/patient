@@ -85,6 +85,7 @@ export type PlasmicMainSearchRequest__ArgsType = {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  searchOptionalFilters?: any;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
 export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
@@ -92,7 +93,8 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "onApiRequestDataChange",
   "searchFilters",
   "page",
-  "onPageChange"
+  "onPageChange",
+  "searchOptionalFilters"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
@@ -109,6 +111,7 @@ export interface DefaultMainSearchRequestProps {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  searchOptionalFilters?: any;
   className?: string;
 }
 
@@ -684,6 +687,17 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                   },
                   ""
                 )
+              }),
+              ...(Object.values(
+                $props.searchOptionalFilters ? $props.searchOptionalFilters : {}
+              ).length > 0 && {
+                optionalFilters: Object.entries(
+                  $props.searchOptionalFilters
+                ).reduce((acc, item) => {
+                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                    .map(i => `${item[0]}:${i}`)
+                    .join(",")}`;
+                }, "")
               })
             };
           } catch (e) {
