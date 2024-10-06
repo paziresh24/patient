@@ -881,7 +881,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1157,6 +1158,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicEditAndReport.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "mLhzoRbR5vw6",
+          "name": "StarRate",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicStarRate.tsx",
+          "importSpec": {
+            "modulePath": "StarRate.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicStarRate.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1274,6 +1288,21 @@
           "id": "QzsC7KWBHDeN",
           "name": "Icon18Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon18.tsx"
+        },
+        {
+          "id": "RqJpin9qROiW",
+          "name": "Icon19Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon19.tsx"
+        },
+        {
+          "id": "cgCUDUxysAqU",
+          "name": "Icon20Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon20.tsx"
+        },
+        {
+          "id": "BAtt58GWyi8d",
+          "name": "Icon21Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon21.tsx"
         }
       ],
       "images": [],
@@ -1310,6 +1339,30 @@
           "name": "GrowthbookGlobalContext",
           "displayName": "GrowthbookGlobalContext",
           "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "rQxw_Usvf1CS",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "Sqa2TCX0_xd4",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "_7EgOQSHXPeF",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "fAahHOA889lI",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
         }
       ],
       "customFunctions": [
@@ -1320,8 +1373,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
