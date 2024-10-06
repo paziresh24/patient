@@ -9,20 +9,20 @@ import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
 import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: Xco54Kekq-Th/codeComponent
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: I9xFO0-CXlvU/codeComponent
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: lWTHKw5gCzCj/codeComponent
+import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: fAahHOA889lI/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
+  splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
 }
 
 export default function GlobalContextsProvider(
@@ -32,7 +32,8 @@ export default function GlobalContextsProvider(
     children,
     authGlobalContextProps,
     fragmentProps,
-    growthbookGlobalContextProps
+    growthbookGlobalContextProps,
+    splunkProps
   } = props;
 
   return (
@@ -44,7 +45,19 @@ export default function GlobalContextsProvider(
           : undefined
       }
     >
-      <Fragment {...fragmentProps}>
+      <Fragment
+        {...fragmentProps}
+        apiConfig={
+          fragmentProps && "apiConfig" in fragmentProps
+            ? fragmentProps.apiConfig!
+            : undefined
+        }
+        previewApiConfig={
+          fragmentProps && "previewApiConfig" in fragmentProps
+            ? fragmentProps.previewApiConfig!
+            : undefined
+        }
+      >
         <GrowthbookGlobalContext
           {...growthbookGlobalContextProps}
           apiHost={
@@ -66,7 +79,21 @@ export default function GlobalContextsProvider(
               : undefined
           }
         >
-          {children}
+          <Splunk
+            {...splunkProps}
+            defaultApiHost={
+              splunkProps && "defaultApiHost" in splunkProps
+                ? splunkProps.defaultApiHost!
+                : undefined
+            }
+            defaultApiKey={
+              splunkProps && "defaultApiKey" in splunkProps
+                ? splunkProps.defaultApiKey!
+                : undefined
+            }
+          >
+            {children}
+          </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>
     </AuthGlobalContext>

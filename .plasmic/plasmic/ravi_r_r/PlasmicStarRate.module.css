@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  min-width: 0;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  width: 21px;
+  height: 21px;
+  color: #cacaca;
+  flex-shrink: 0;
+}
+.svgselected {
+  color: #ec9c07;
+}
