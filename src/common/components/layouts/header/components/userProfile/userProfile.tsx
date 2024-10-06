@@ -47,6 +47,9 @@ export const UserProfile = () => {
   const isShowPremiumFeatures = useShowPremiumFeatures();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const redirectToGozargah = useFeatureValue<{
+    destination?: string;
+  }>('redirect-to-gozargah', {});
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -122,6 +125,10 @@ export const UserProfile = () => {
   }, [open]);
 
   const handleLogin = () => {
+    if (redirectToGozargah?.destination) {
+      window.location.assign(redirectToGozargah?.destination);
+      return;
+    }
     handleOpenLoginModal({
       state: true,
     });
