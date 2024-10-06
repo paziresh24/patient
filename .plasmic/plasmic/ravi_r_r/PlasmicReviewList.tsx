@@ -617,10 +617,14 @@ function PlasmicReviewList__RenderFunc(props: {
                             }
                           ]
                         : []),
-                      {
-                        value: "not_recommended",
-                        label: "نظرات منفی"
-                      },
+                      ...($ctx.auth?.info?.id === $props.information?.user_id
+                        ? [
+                            {
+                              value: "not_recommended",
+                              label: "نظرات منفی"
+                            }
+                          ]
+                        : []),
                       {
                         value: "visited",
                         label: "بیماران دارای نوبت"
