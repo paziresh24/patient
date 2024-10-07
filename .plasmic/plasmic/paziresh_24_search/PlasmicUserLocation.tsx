@@ -178,9 +178,13 @@ function PlasmicUserLocation__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
             try {
-              return localStorage.getItem("search_user_city")
-                ? JSON.parse(localStorage.getItem("search_user_city"))
-                : {};
+              return (() => {
+                if (typeof window !== "undefined") {
+                  return localStorage.getItem("search_user_city")
+                    ? JSON.parse(localStorage.getItem("search_user_city"))
+                    : {};
+                }
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
