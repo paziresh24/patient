@@ -482,50 +482,49 @@ function PlasmicSearchPage__RenderFunc(props: {
                     (async val => {
                       const $steps = {};
 
-                      $steps["goToPage"] =
-                        $state.mainSearchRequest.page > 1
-                          ? (() => {
-                              const actionArgs = {
-                                destination: (() => {
-                                  try {
-                                    return `/s/jahannama/?text=${
-                                      $ctx.query.text
-                                    }${Object.entries(
-                                      $state.searchFilters.selected
-                                    ).reduce((acc, item) => {
-                                      acc += `&${item[0]}=${JSON.stringify(
-                                        item[1]
-                                      )}`;
-                                      return acc;
-                                    }, "")}&page=${
-                                      $state.mainSearchRequest.page
-                                    }`;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
-                                    }
-                                    throw e;
+                      $steps["goToPage"] = false
+                        ? (() => {
+                            const actionArgs = {
+                              destination: (() => {
+                                try {
+                                  return `/s/jahannama/?text=${
+                                    $ctx.query?.text ?? ""
+                                  }${Object.entries(
+                                    $state.searchFilters.selected
+                                  ).reduce((acc, item) => {
+                                    acc += `&${item[0]}=${JSON.stringify(
+                                      item[1]
+                                    )}`;
+                                    return acc;
+                                  }, "")}&page=${
+                                    $state.mainSearchRequest.page
+                                  }`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
                                   }
-                                })()
-                              };
-                              return (({ destination }) => {
-                                if (
-                                  typeof destination === "string" &&
-                                  destination.startsWith("#")
-                                ) {
-                                  document
-                                    .getElementById(destination.substr(1))
-                                    .scrollIntoView({ behavior: "smooth" });
-                                } else {
-                                  __nextRouter?.push(destination);
+                                  throw e;
                                 }
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
+                              })()
+                            };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
                       if (
                         $steps["goToPage"] != null &&
                         typeof $steps["goToPage"] === "object" &&
