@@ -62,7 +62,9 @@ import {
 import { LayoutWithHeaderAndFooter } from "@/common/components/layouts/layoutWithHeaderAndFooter"; // plasmic-import: mmczjg-nvsXL/codeComponent
 import Suggestion from "../../Suggestion"; // plasmic-import: f83TZwYbQ2l0/component
 import SearchFilters from "../../SearchFilters"; // plasmic-import: zLShj09Q9POm/component
+import UserLocation from "../../UserLocation"; // plasmic-import: YoStZ8eQd9r-/component
 import MainSearchRequest from "../../MainSearchRequest"; // plasmic-import: SctdwrC6-ku4/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -90,7 +92,9 @@ export type PlasmicSearchPage__OverridesType = {
   freeBox?: Flex__<"div">;
   suggestion?: Flex__<typeof Suggestion>;
   searchFilters?: Flex__<typeof SearchFilters>;
+  userLocation?: Flex__<typeof UserLocation>;
   mainSearchRequest?: Flex__<typeof MainSearchRequest>;
+  runGtmAndMetricaSideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchPageProps {}
@@ -186,6 +190,12 @@ function PlasmicSearchPage__RenderFunc(props: {
               throw e;
             }
           })()
+      },
+      {
+        path: "userLocation.userCity",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -353,7 +363,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                               destination: (() => {
                                 try {
                                   return `/s/jahannama/?text=${
-                                    $ctx.query.text
+                                    $ctx.query?.text ?? ""
                                   }${Object.entries(
                                     $state.searchFilters.selected
                                   ).reduce((acc, item) => {
@@ -444,6 +454,16 @@ function PlasmicSearchPage__RenderFunc(props: {
                   />
                 );
               })()}
+              <UserLocation
+                data-plasmic-name={"userLocation"}
+                data-plasmic-override={overrides.userLocation}
+                className={classNames("__wab_instance", sty.userLocation)}
+                onUserCityChange={generateStateOnChangeProp($state, [
+                  "userLocation",
+                  "userCity"
+                ])}
+              />
+
               {(() => {
                 const child$Props = {
                   className: classNames(
@@ -462,50 +482,49 @@ function PlasmicSearchPage__RenderFunc(props: {
                     (async val => {
                       const $steps = {};
 
-                      $steps["goToPage"] =
-                        $state.mainSearchRequest.page > 1
-                          ? (() => {
-                              const actionArgs = {
-                                destination: (() => {
-                                  try {
-                                    return `/s/jahannama/?text=${
-                                      $ctx.query.text
-                                    }${Object.entries(
-                                      $state.searchFilters.selected
-                                    ).reduce((acc, item) => {
-                                      acc += `&${item[0]}=${JSON.stringify(
-                                        item[1]
-                                      )}`;
-                                      return acc;
-                                    }, "")}&page=${
-                                      $state.mainSearchRequest.page
-                                    }`;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
-                                    }
-                                    throw e;
+                      $steps["goToPage"] = false
+                        ? (() => {
+                            const actionArgs = {
+                              destination: (() => {
+                                try {
+                                  return `/s/jahannama/?text=${
+                                    $ctx.query?.text ?? ""
+                                  }${Object.entries(
+                                    $state.searchFilters.selected
+                                  ).reduce((acc, item) => {
+                                    acc += `&${item[0]}=${JSON.stringify(
+                                      item[1]
+                                    )}`;
+                                    return acc;
+                                  }, "")}&page=${
+                                    $state.mainSearchRequest.page
+                                  }`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
                                   }
-                                })()
-                              };
-                              return (({ destination }) => {
-                                if (
-                                  typeof destination === "string" &&
-                                  destination.startsWith("#")
-                                ) {
-                                  document
-                                    .getElementById(destination.substr(1))
-                                    .scrollIntoView({ behavior: "smooth" });
-                                } else {
-                                  __nextRouter?.push(destination);
+                                  throw e;
                                 }
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
+                              })()
+                            };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
                       if (
                         $steps["goToPage"] != null &&
                         typeof $steps["goToPage"] === "object" &&
@@ -530,6 +549,22 @@ function PlasmicSearchPage__RenderFunc(props: {
                               .filter(([k]) => k !== "text")
                               .map(([k, v]) => [k, JSON.parse(v)])
                           );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })(),
+                  searchOptionalFilters: (() => {
+                    try {
+                      return (() => {
+                        if (!$state.userLocation.userCity?.id) return;
+                        return { city_id: [$state.userLocation.userCity?.id] };
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -588,6 +623,102 @@ function PlasmicSearchPage__RenderFunc(props: {
               })()}
             </Stack__>
           </LayoutWithHeaderAndFooter>
+          <SideEffect
+            data-plasmic-name={"runGtmAndMetricaSideEffect"}
+            data-plasmic-override={overrides.runGtmAndMetricaSideEffect}
+            className={classNames(
+              "__wab_instance",
+              sty.runGtmAndMetricaSideEffect
+            )}
+            onMount={async () => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          function loadGTM() {
+                            var gtmScript = document.createElement("script");
+                            gtmScript.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P5RPLDP');`;
+                            document.head.appendChild(gtmScript);
+                            var gtmNoScript =
+                              document.createElement("noscript");
+                            gtmNoScript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5RPLDP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+                            document.body.insertBefore(
+                              gtmNoScript,
+                              document.body.firstChild
+                            );
+                          }
+                          return loadGTM();
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+
+              $steps["runCode2"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          function loadMetrika() {
+                            var metrikaScript =
+                              document.createElement("script");
+                            metrikaScript.innerHTML = `(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(98010713, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+    });`;
+                            document.head.appendChild(metrikaScript);
+                            var metrikaNoScript =
+                              document.createElement("noscript");
+                            metrikaNoScript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/98010713" style="position:absolute; left:-9999px;" alt="" /></div>`;
+                            document.body.insertBefore(
+                              metrikaNoScript,
+                              document.body.firstChild
+                            );
+                          }
+                          return loadMetrika();
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode2"] != null &&
+                typeof $steps["runCode2"] === "object" &&
+                typeof $steps["runCode2"].then === "function"
+              ) {
+                $steps["runCode2"] = await $steps["runCode2"];
+              }
+            }}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -601,19 +732,30 @@ const PlasmicDescendants = {
     "freeBox",
     "suggestion",
     "searchFilters",
-    "mainSearchRequest"
+    "userLocation",
+    "mainSearchRequest",
+    "runGtmAndMetricaSideEffect"
   ],
   paziresh24LayoutWithHeaderAndFooter: [
     "paziresh24LayoutWithHeaderAndFooter",
     "freeBox",
     "suggestion",
     "searchFilters",
+    "userLocation",
     "mainSearchRequest"
   ],
-  freeBox: ["freeBox", "suggestion", "searchFilters", "mainSearchRequest"],
+  freeBox: [
+    "freeBox",
+    "suggestion",
+    "searchFilters",
+    "userLocation",
+    "mainSearchRequest"
+  ],
   suggestion: ["suggestion"],
   searchFilters: ["searchFilters"],
-  mainSearchRequest: ["mainSearchRequest"]
+  userLocation: ["userLocation"],
+  mainSearchRequest: ["mainSearchRequest"],
+  runGtmAndMetricaSideEffect: ["runGtmAndMetricaSideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -624,7 +766,9 @@ type NodeDefaultElementType = {
   freeBox: "div";
   suggestion: typeof Suggestion;
   searchFilters: typeof SearchFilters;
+  userLocation: typeof UserLocation;
   mainSearchRequest: typeof MainSearchRequest;
+  runGtmAndMetricaSideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -693,7 +837,9 @@ export const PlasmicSearchPage = Object.assign(
     freeBox: makeNodeComponent("freeBox"),
     suggestion: makeNodeComponent("suggestion"),
     searchFilters: makeNodeComponent("searchFilters"),
+    userLocation: makeNodeComponent("userLocation"),
     mainSearchRequest: makeNodeComponent("mainSearchRequest"),
+    runGtmAndMetricaSideEffect: makeNodeComponent("runGtmAndMetricaSideEffect"),
 
     // Metadata about props expected for PlasmicSearchPage
     internalVariantProps: PlasmicSearchPage__VariantProps,

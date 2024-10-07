@@ -85,6 +85,7 @@ export type PlasmicMainSearchRequest__ArgsType = {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  searchOptionalFilters?: any;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
 export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
@@ -92,7 +93,8 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "onApiRequestDataChange",
   "searchFilters",
   "page",
-  "onPageChange"
+  "onPageChange",
+  "searchOptionalFilters"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
@@ -109,6 +111,7 @@ export interface DefaultMainSearchRequestProps {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  searchOptionalFilters?: any;
   className?: string;
 }
 
@@ -186,20 +189,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "result",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return $state?.fragmentApiRequest?.data?.entity?.results ?? [];
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => []
       },
       {
         path: "total",
@@ -236,11 +226,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
     >
       {(() => {
         try {
-          return (
-            $state.fragmentApiRequest.data !== null &&
-            $state.fragmentApiRequest.error === null &&
-            !$state.fragmentApiRequest.loading
-          );
+          return $state.page === 1 ? !!$state.fragmentApiRequest?.data : true;
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -312,7 +298,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                     limit: 10,
                     page: $state.page
                   },
-                  result: $state.result.map(doctor => ({
+                  result: $state.result?.map(doctor => ({
                     _id: doctor.documentId,
                     id: doctor.source.doctor_id,
                     server_id: doctor.source.server_id,
@@ -539,12 +525,26 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
           </div>
         }
         loadingDisplay={
-          <Icon14Icon
-            data-plasmic-name={"svg"}
-            data-plasmic-override={overrides.svg}
-            className={classNames(projectcss.all, sty.svg)}
-            role={"img"}
-          />
+          (() => {
+            try {
+              return $state.page === 1;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <Icon14Icon
+              data-plasmic-name={"svg"}
+              data-plasmic-override={overrides.svg}
+              className={classNames(projectcss.all, sty.svg)}
+              role={"img"}
+            />
+          ) : null
         }
         method={"GET"}
         onError={generateStateOnChangeProp($state, [
@@ -563,7 +563,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
           (async data => {
             const $steps = {};
 
-            $steps["searchViewSplunkEvent"] = true
+            $steps["searchViewSplunkEvent"] = false
               ? (() => {
                   const actionArgs = {
                     args: [
@@ -597,16 +597,34 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               ];
             }
 
-            $steps["updateResult"] =
-              page > 1
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["result"]
-                      },
-                      operation: 0,
-                      value: Array.from(
+            $steps["updateResult"] = (() => {
+              console.log(
+                "condition",
+                $state.fragmentApiRequest.data?.entity?.results,
+                !!$state.fragmentApiRequest.data?.entity?.results,
+                $state.result
+              );
+              return !!$state.fragmentApiRequest.data?.entity?.results;
+            })()
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["result"]
+                    },
+                    operation: 0,
+                    value: (() => {
+                      console.log(
+                        "$state.result",
+                        $state.result?.length,
+                        $state.result
+                      );
+                      console.log(
+                        "$state.fragmentApiRequest.data?.entity?.results",
+                        $state.fragmentApiRequest.data?.entity?.results?.length,
+                        $state.fragmentApiRequest.data?.entity?.results
+                      );
+                      return Array.from(
                         new Map(
                           [
                             ...$state.result,
@@ -614,19 +632,20 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                               ?.results ?? [])
                           ].map(item => [item.documentId, item])
                         ).values()
-                      )
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+                      );
+                    })()
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
             if (
               $steps["updateResult"] != null &&
               typeof $steps["updateResult"] === "object" &&
@@ -635,7 +654,8 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               $steps["updateResult"] = await $steps["updateResult"];
             }
 
-            $steps["updateTotal"] = true
+            $steps["updateTotal"] = $state.fragmentApiRequest?.data?.entity
+              ?.totalHits
               ? (() => {
                   const actionArgs = {
                     variable: {
@@ -643,8 +663,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       variablePath: ["total"]
                     },
                     operation: 0,
-                    value:
-                      $state.fragmentApiRequest?.data?.entity?.totalHits ?? 0
+                    value: $state.fragmentApiRequest?.data?.entity?.totalHits
                   };
                   return (({ variable, value, startIndex, deleteCount }) => {
                     if (!variable) {
@@ -671,7 +690,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
             return {
               from: (+($state?.page ?? 1) - 1) * 10,
               size: 10,
-              query: ` + ${$props.searchQuery} + `,
+              query: $props.searchQuery,
               facets: "*",
               ...(Object.values(
                 $props.searchFilters ? $props.searchFilters : {}
@@ -684,6 +703,17 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                   },
                   ""
                 )
+              }),
+              ...(Object.values(
+                $props.searchOptionalFilters ? $props.searchOptionalFilters : {}
+              ).length > 0 && {
+                optionalFilters: Object.entries(
+                  $props.searchOptionalFilters
+                ).reduce((acc, item) => {
+                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                    .map(i => `${item[0]}:${i}`)
+                    .join(",")}`;
+                }, "")
               })
             };
           } catch (e) {
