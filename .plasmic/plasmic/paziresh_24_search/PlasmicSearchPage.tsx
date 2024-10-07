@@ -363,7 +363,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                               destination: (() => {
                                 try {
                                   return `/s/jahannama/?text=${
-                                    $ctx.query.text
+                                    $ctx.query?.text ?? ""
                                   }${Object.entries(
                                     $state.searchFilters.selected
                                   ).reduce((acc, item) => {
