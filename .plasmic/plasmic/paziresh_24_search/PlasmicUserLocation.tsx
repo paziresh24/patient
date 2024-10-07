@@ -179,8 +179,8 @@ function PlasmicUserLocation__RenderFunc(props: {
           (() => {
             try {
               return localStorage.getItem("search_user_city")
-                ? localStorage.getItem("search_user_city")
-                : "{}";
+                ? JSON.parse(localStorage.getItem("search_user_city"))
+                : {};
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -223,10 +223,7 @@ function PlasmicUserLocation__RenderFunc(props: {
     >
       {(() => {
         try {
-          return (
-            JSON.parse($state.userCity).name &&
-            JSON.parse($state.userCity).name.trim() !== ""
-          );
+          return $state.userCity?.name && $state.userCity?.name?.trim() !== "";
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -249,9 +246,7 @@ function PlasmicUserLocation__RenderFunc(props: {
             dangerouslySetInnerHTML={{
               __html: (() => {
                 try {
-                  return `نتایج مرتبط با <b>شهر ${
-                    JSON.parse($state.userCity).name
-                  }</b> اولویت نمایش بالاتری دارند.`;
+                  return `نتایج مرتبط با <b>شهر ${$state.userCity?.name}</b> اولویت نمایش بالاتری دارند.`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
