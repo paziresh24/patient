@@ -249,7 +249,7 @@ function PlasmicSearchPage__RenderFunc(props: {
               "__wab_instance",
               sty.paziresh24LayoutWithHeaderAndFooter
             )}
-            compactFooter={false}
+            compactFooter={true}
             shouldShowBrand={true}
             shouldShowPromoteApp={true}
             showBottomNavigation={true}
@@ -797,15 +797,30 @@ function PlasmicSearchPage__RenderFunc(props: {
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
-                        return (async () => {
-                          async function loadMetrika() {
-                            await import("https://mc.yandex.ru/metrika/tag.js");
-                            ym(98010713, "init", {
-                              clickmap: true,
-                              trackLinks: true,
-                              accurateTrackBounce: true,
-                              webvisor: true
-                            });
+                        return (() => {
+                          function loadMetrika() {
+                            var metrikaScript =
+                              document.createElement("script");
+                            metrikaScript.innerHTML = `(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(98010713, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+    });`;
+                            document.head.appendChild(metrikaScript);
+                            var metrikaNoScript =
+                              document.createElement("noscript");
+                            metrikaNoScript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/98010713" style="position:absolute; left:-9999px;" alt="" /></div>`;
+                            document.body.insertBefore(
+                              metrikaNoScript,
+                              document.body.firstChild
+                            );
                           }
                           return loadMetrika();
                         })();
