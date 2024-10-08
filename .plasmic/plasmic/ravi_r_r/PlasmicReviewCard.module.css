@@ -205,6 +205,27 @@
   height: 18px;
   color: #15803d;
 }
+.نمایشفقطبرایدرمانگر:global(.__wab_instance) {
+  position: relative;
+  margin-left: calc(0px + var(--token-fhaz6q6bl-fW)) !important;
+  width: auto;
+}
+.svg___91WbQ {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 15px;
+  height: 15px;
+  color: var(--token-8itld8j2DCdr);
+}
+.svg__r0FJe {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: #15803d;
+}
 .freeBox__vdK60 {
   display: flex;
   position: relative;

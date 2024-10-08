@@ -864,6 +864,19 @@ function PlasmicReviewList__RenderFunc(props: {
                   key={currentIndex}
                 >
                   <ReviewCard
+                    avgRateValue={(() => {
+                      try {
+                        return currentItem.avg_rate_value;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return 0;
+                        }
+                        throw e;
+                      }
+                    })()}
                     className={classNames(
                       "__wab_instance",
                       sty.reviewCard___1LxxJ
