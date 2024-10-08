@@ -1553,7 +1553,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return $props.searchResultResponse.search.result.length === 0;
+          return $props?.searchResultResponse?.search?.total === 0;
         } catch (e) {
           if (
             e instanceof TypeError ||

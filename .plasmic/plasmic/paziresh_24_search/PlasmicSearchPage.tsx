@@ -435,6 +435,8 @@ function PlasmicSearchPage__RenderFunc(props: {
                                   }${Object.entries(
                                     $state.searchFilters.selected
                                   ).reduce((acc, item) => {
+                                    if (item[1] && item[1]?.length > 0)
+                                      return acc;
                                     acc += `&${item[0]}=${JSON.stringify(
                                       item[1]
                                     )}`;

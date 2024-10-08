@@ -137,6 +137,8 @@ function PlasmicSuggestion__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -290,6 +292,39 @@ function PlasmicSuggestion__RenderFunc(props: {
             typeof $steps["invokeGlobalAction2"].then === "function"
           ) {
             $steps["invokeGlobalAction2"] = await $steps["invokeGlobalAction2"];
+          }
+
+          $steps["invokeGlobalAction"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    undefined,
+                    (() => {
+                      try {
+                        return $state.suggestionInput.selectedOption;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
           }
         }}
         onSelectedOptionChange={generateStateOnChangeProp($state, [
