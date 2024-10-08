@@ -299,7 +299,22 @@ function PlasmicSearchFilters__RenderFunc(props: {
             key={currentIndex}
             label={(() => {
               try {
-                return currentItem.facetLabel;
+                return (() => {
+                  if ($state.selected?.[currentItem.facetName]?.length > 0) {
+                    const selectedRecords = currentItem.facetRecords.filter(
+                      item =>
+                        $state.selected?.[currentItem.facetName].includes(
+                          item.name
+                        )
+                    );
+                    return `${selectedRecords?.[0]?.label}${
+                      selectedRecords?.length > 1
+                        ? ` + ${selectedRecords?.length - 1}`
+                        : ""
+                    }`;
+                  }
+                  return currentItem.facetLabel;
+                })();
               } catch (e) {
                 if (
                   e instanceof TypeError ||
