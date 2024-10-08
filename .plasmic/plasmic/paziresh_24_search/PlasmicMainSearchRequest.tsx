@@ -59,8 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import SearchResults from "../../SearchResults"; // plasmic-import: XhSI4pxMLR3L/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
+import SearchResults from "../../SearchResults"; // plasmic-import: XhSI4pxMLR3L/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -85,6 +85,8 @@ export type PlasmicMainSearchRequest__ArgsType = {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  result?: any;
+  onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
@@ -94,15 +96,17 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchFilters",
   "page",
   "onPageChange",
+  "result",
+  "onResultChange",
   "searchOptionalFilters"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
   root?: Flex__<"div">;
-  searchResults?: Flex__<typeof SearchResults>;
   fragmentApiRequest?: Flex__<typeof ApiRequest>;
   svg?: Flex__<"svg">;
   text?: Flex__<"div">;
+  searchResults?: Flex__<typeof SearchResults>;
 };
 
 export interface DefaultMainSearchRequestProps {
@@ -111,6 +115,8 @@ export interface DefaultMainSearchRequestProps {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  result?: any;
+  onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
   className?: string;
 }
@@ -187,9 +193,11 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
       },
       {
         path: "result",
-        type: "private",
+        type: "writable",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => []
+
+        valueProp: "result",
+        onChangeProp: "onResultChange"
       },
       {
         path: "total",
@@ -224,9 +232,235 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         sty.root
       )}
     >
+      <ApiRequest
+        data-plasmic-name={"fragmentApiRequest"}
+        data-plasmic-override={overrides.fragmentApiRequest}
+        children={null}
+        className={classNames("__wab_instance", sty.fragmentApiRequest)}
+        errorDisplay={
+          <div
+            data-plasmic-name={"text"}
+            data-plasmic-override={overrides.text}
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text
+            )}
+          >
+            {"Error fetching data"}
+          </div>
+        }
+        loadingDisplay={
+          (() => {
+            try {
+              return $state.page === 1;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <Icon14Icon
+              data-plasmic-name={"svg"}
+              data-plasmic-override={overrides.svg}
+              className={classNames(projectcss.all, sty.svg)}
+              role={"img"}
+            />
+          ) : null
+        }
+        method={"GET"}
+        onError={generateStateOnChangeProp($state, [
+          "fragmentApiRequest",
+          "error"
+        ])}
+        onLoading={generateStateOnChangeProp($state, [
+          "fragmentApiRequest",
+          "loading"
+        ])}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "data"
+          ]).apply(null, eventArgs);
+          (async data => {
+            const $steps = {};
+
+            $steps["searchViewSplunkEvent"] = false
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return JSON.stringify($state.fragmentApiRequest.data);
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["searchViewSplunkEvent"] != null &&
+              typeof $steps["searchViewSplunkEvent"] === "object" &&
+              typeof $steps["searchViewSplunkEvent"].then === "function"
+            ) {
+              $steps["searchViewSplunkEvent"] = await $steps[
+                "searchViewSplunkEvent"
+              ];
+            }
+
+            $steps["updateResult"] = (() => {
+              console.log(
+                "condition",
+                $state.fragmentApiRequest.data?.entity?.results,
+                !!$state.fragmentApiRequest.data?.entity?.results,
+                $state.result
+              );
+              return !!$state.fragmentApiRequest.data?.entity?.results;
+            })()
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["result"]
+                    },
+                    operation: 0,
+                    value: (() => {
+                      console.log(
+                        "$state.result",
+                        $state.result?.length,
+                        $state.result
+                      );
+                      console.log(
+                        "$state.fragmentApiRequest.data?.entity?.results",
+                        $state.fragmentApiRequest.data?.entity?.results?.length,
+                        $state.fragmentApiRequest.data?.entity?.results
+                      );
+                      return Array.from(
+                        new Map(
+                          [
+                            ...$state.result,
+                            ...($state.fragmentApiRequest.data?.entity
+                              ?.results ?? [])
+                          ].map(item => [item.documentId, item])
+                        ).values()
+                      );
+                    })()
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateResult"] != null &&
+              typeof $steps["updateResult"] === "object" &&
+              typeof $steps["updateResult"].then === "function"
+            ) {
+              $steps["updateResult"] = await $steps["updateResult"];
+            }
+
+            $steps["updateTotal"] = $state.fragmentApiRequest?.data?.entity
+              ?.totalHits
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["total"]
+                    },
+                    operation: 0,
+                    value: $state.fragmentApiRequest?.data?.entity?.totalHits
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateTotal"] != null &&
+              typeof $steps["updateTotal"] === "object" &&
+              typeof $steps["updateTotal"].then === "function"
+            ) {
+              $steps["updateTotal"] = await $steps["updateTotal"];
+            }
+          }).apply(null, eventArgs);
+        }}
+        params={(() => {
+          try {
+            return {
+              from: (+($state?.page ?? 1) - 1) * 10,
+              size: 10,
+              query: $props.searchQuery,
+              facets: "*",
+              ...(Object.values(
+                $props.searchFilters ? $props.searchFilters : {}
+              ).length > 0 && {
+                facetFilters: Object.entries($props.searchFilters).reduce(
+                  (acc, item) => {
+                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                      .map(i => `${item[0]}:${i}`)
+                      .join(",")}`;
+                  },
+                  ""
+                )
+              }),
+              ...(Object.values(
+                $props.searchOptionalFilters ? $props.searchOptionalFilters : {}
+              ).length > 0 && {
+                optionalFilters: Object.entries(
+                  $props.searchOptionalFilters
+                ).reduce((acc, item) => {
+                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                    .map(i => `${item[0]}:${i}`)
+                    .join(",")}`;
+                }, "")
+              })
+            };
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        url={"https://apigw.paziresh24.com/v1/jahannama"}
+      />
+
       {(() => {
         try {
-          return $state.page === 1 ? !!$state.fragmentApiRequest?.data : true;
+          return $state.page === 1
+            ? !$state.fragmentApiRequest?.loading &&
+                !!$state.fragmentApiRequest?.data
+            : true;
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -506,248 +740,26 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
           })()}
         />
       ) : null}
-      <ApiRequest
-        data-plasmic-name={"fragmentApiRequest"}
-        data-plasmic-override={overrides.fragmentApiRequest}
-        children={null}
-        className={classNames("__wab_instance", sty.fragmentApiRequest)}
-        errorDisplay={
-          <div
-            data-plasmic-name={"text"}
-            data-plasmic-override={overrides.text}
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text
-            )}
-          >
-            {"Error fetching data"}
-          </div>
-        }
-        loadingDisplay={
-          (() => {
-            try {
-              return $state.page === 1;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <Icon14Icon
-              data-plasmic-name={"svg"}
-              data-plasmic-override={overrides.svg}
-              className={classNames(projectcss.all, sty.svg)}
-              role={"img"}
-            />
-          ) : null
-        }
-        method={"GET"}
-        onError={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "error"
-        ])}
-        onLoading={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "loading"
-        ])}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "fragmentApiRequest",
-            "data"
-          ]).apply(null, eventArgs);
-          (async data => {
-            const $steps = {};
-
-            $steps["searchViewSplunkEvent"] = false
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return JSON.stringify($state.fragmentApiRequest.data);
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Splunk.sendLog"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
-            if (
-              $steps["searchViewSplunkEvent"] != null &&
-              typeof $steps["searchViewSplunkEvent"] === "object" &&
-              typeof $steps["searchViewSplunkEvent"].then === "function"
-            ) {
-              $steps["searchViewSplunkEvent"] = await $steps[
-                "searchViewSplunkEvent"
-              ];
-            }
-
-            $steps["updateResult"] = (() => {
-              console.log(
-                "condition",
-                $state.fragmentApiRequest.data?.entity?.results,
-                !!$state.fragmentApiRequest.data?.entity?.results,
-                $state.result
-              );
-              return !!$state.fragmentApiRequest.data?.entity?.results;
-            })()
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["result"]
-                    },
-                    operation: 0,
-                    value: (() => {
-                      console.log(
-                        "$state.result",
-                        $state.result?.length,
-                        $state.result
-                      );
-                      console.log(
-                        "$state.fragmentApiRequest.data?.entity?.results",
-                        $state.fragmentApiRequest.data?.entity?.results?.length,
-                        $state.fragmentApiRequest.data?.entity?.results
-                      );
-                      return Array.from(
-                        new Map(
-                          [
-                            ...$state.result,
-                            ...($state.fragmentApiRequest.data?.entity
-                              ?.results ?? [])
-                          ].map(item => [item.documentId, item])
-                        ).values()
-                      );
-                    })()
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["updateResult"] != null &&
-              typeof $steps["updateResult"] === "object" &&
-              typeof $steps["updateResult"].then === "function"
-            ) {
-              $steps["updateResult"] = await $steps["updateResult"];
-            }
-
-            $steps["updateTotal"] = $state.fragmentApiRequest?.data?.entity
-              ?.totalHits
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["total"]
-                    },
-                    operation: 0,
-                    value: $state.fragmentApiRequest?.data?.entity?.totalHits
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["updateTotal"] != null &&
-              typeof $steps["updateTotal"] === "object" &&
-              typeof $steps["updateTotal"].then === "function"
-            ) {
-              $steps["updateTotal"] = await $steps["updateTotal"];
-            }
-          }).apply(null, eventArgs);
-        }}
-        params={(() => {
-          try {
-            return {
-              from: (+($state?.page ?? 1) - 1) * 10,
-              size: 10,
-              query: $props.searchQuery,
-              facets: "*",
-              ...(Object.values(
-                $props.searchFilters ? $props.searchFilters : {}
-              ).length > 0 && {
-                facetFilters: Object.entries($props.searchFilters).reduce(
-                  (acc, item) => {
-                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                      .map(i => `${item[0]}:${i}`)
-                      .join(",")}`;
-                  },
-                  ""
-                )
-              }),
-              ...(Object.values(
-                $props.searchOptionalFilters ? $props.searchOptionalFilters : {}
-              ).length > 0 && {
-                optionalFilters: Object.entries(
-                  $props.searchOptionalFilters
-                ).reduce((acc, item) => {
-                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                    .map(i => `${item[0]}:${i}`)
-                    .join(",")}`;
-                }, "")
-              })
-            };
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        url={"https://apigw.paziresh24.com/v1/jahannama"}
-      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "searchResults", "fragmentApiRequest", "svg", "text"],
-  searchResults: ["searchResults"],
+  root: ["root", "fragmentApiRequest", "svg", "text", "searchResults"],
   fragmentApiRequest: ["fragmentApiRequest", "svg", "text"],
   svg: ["svg"],
-  text: ["text"]
+  text: ["text"],
+  searchResults: ["searchResults"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  searchResults: typeof SearchResults;
   fragmentApiRequest: typeof ApiRequest;
   svg: "svg";
   text: "div";
+  searchResults: typeof SearchResults;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -810,10 +822,10 @@ export const PlasmicMainSearchRequest = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    searchResults: makeNodeComponent("searchResults"),
     fragmentApiRequest: makeNodeComponent("fragmentApiRequest"),
     svg: makeNodeComponent("svg"),
     text: makeNodeComponent("text"),
+    searchResults: makeNodeComponent("searchResults"),
 
     // Metadata about props expected for PlasmicMainSearchRequest
     internalVariantProps: PlasmicMainSearchRequest__VariantProps,
