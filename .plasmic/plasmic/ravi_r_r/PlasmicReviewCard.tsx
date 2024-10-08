@@ -125,6 +125,7 @@ export type PlasmicReviewCard__ArgsType = {
   recommendRange?: string;
   doctorUserId?: string;
   isShowReplyInput?: boolean;
+  avgRateValue?: number;
 };
 type ArgPropType = keyof PlasmicReviewCard__ArgsType;
 export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
@@ -144,7 +145,8 @@ export const PlasmicReviewCard__ArgProps = new Array<ArgPropType>(
   "replyToFeedbackId",
   "recommendRange",
   "doctorUserId",
-  "isShowReplyInput"
+  "isShowReplyInput",
+  "avgRateValue"
 );
 
 export type PlasmicReviewCard__OverridesType = {
@@ -154,6 +156,7 @@ export type PlasmicReviewCard__OverridesType = {
   editAndReport?: Flex__<typeof EditAndReport>;
   userAvatar?: Flex__<typeof Avatar>;
   chip?: Flex__<typeof Chip>;
+  نمایشفقطبرایدرمانگر?: Flex__<typeof Chip>;
   متننظر?: Flex__<"div">;
   لایکریپورت?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
@@ -195,6 +198,7 @@ export interface DefaultReviewCardProps {
   recommendRange?: string;
   doctorUserId?: string;
   isShowReplyInput?: boolean;
+  avgRateValue?: number;
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
   className?: string;
 }
@@ -224,7 +228,8 @@ function PlasmicReviewCard__RenderFunc(props: {
         {
           visitedTag: false,
           recommended: false,
-          isShowReplyInput: false
+          isShowReplyInput: false,
+          avgRateValue: 2
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -487,12 +492,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                     <React.Fragment>
                       {(() => {
                         try {
-                          return (
-                            (+$props.qualityOfTreatment +
-                              +$props.doctorEncounter +
-                              +$props.explanationOfIssue) /
-                            3
-                          ).toFixed(1);
+                          return $props.avgRateValue;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -846,6 +846,47 @@ function PlasmicReviewCard__RenderFunc(props: {
                     >
                       <SmileIcon
                         className={classNames(projectcss.all, sty.svg__lsXDn)}
+                        role={"img"}
+                      />
+                    </Chip>
+                  ) : null}
+                  {(() => {
+                    try {
+                      return $props.avgRateValue < 3.5;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Chip
+                      data-plasmic-name={
+                        "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
+                      }
+                      data-plasmic-override={overrides.نمایشفقطبرایدرمانگر}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.نمایشفقطبرایدرمانگر
+                      )}
+                      color={"blue"}
+                      content={
+                        "\u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u0641\u0642\u0637 \u0628\u0631\u0627\u06cc \u062e\u0648\u062f \u062f\u0631\u0645\u0627\u0646\u06af\u0631"
+                      }
+                      rounded={true}
+                      size={"xSmall"}
+                      slot={
+                        <InfoIcon
+                          className={classNames(projectcss.all, sty.svg__r0FJe)}
+                          role={"img"}
+                        />
+                      }
+                    >
+                      <SmileIcon
+                        className={classNames(projectcss.all, sty.svg___91WbQ)}
                         role={"img"}
                       />
                     </Chip>
@@ -3088,6 +3129,7 @@ const PlasmicDescendants = {
     "editAndReport",
     "userAvatar",
     "chip",
+    "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631",
     "\u0645\u062a\u0646\u0646\u0638\u0631",
     "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
     "dialog",
@@ -3115,17 +3157,22 @@ const PlasmicDescendants = {
     "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "editAndReport",
     "userAvatar",
-    "chip"
+    "chip",
+    "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
   ],
   نامتگتاریخ: [
     "\u0646\u0627\u0645\u062a\u06af\u062a\u0627\u0631\u06cc\u062e",
     "editAndReport",
     "userAvatar",
-    "chip"
+    "chip",
+    "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
   ],
   editAndReport: ["editAndReport"],
   userAvatar: ["userAvatar"],
   chip: ["chip"],
+  نمایشفقطبرایدرمانگر: [
+    "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
+  ],
   متننظر: ["\u0645\u062a\u0646\u0646\u0638\u0631"],
   لایکریپورت: [
     "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a",
@@ -3204,6 +3251,7 @@ type NodeDefaultElementType = {
   editAndReport: typeof EditAndReport;
   userAvatar: typeof Avatar;
   chip: typeof Chip;
+  نمایشفقطبرایدرمانگر: typeof Chip;
   متننظر: "div";
   لایکریپورت: "div";
   dialog: typeof Dialog;
@@ -3301,6 +3349,9 @@ export const PlasmicReviewCard = Object.assign(
     editAndReport: makeNodeComponent("editAndReport"),
     userAvatar: makeNodeComponent("userAvatar"),
     chip: makeNodeComponent("chip"),
+    نمایشفقطبرایدرمانگر: makeNodeComponent(
+      "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
+    ),
     متننظر: makeNodeComponent("\u0645\u062a\u0646\u0646\u0638\u0631"),
     لایکریپورت: makeNodeComponent(
       "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
