@@ -425,57 +425,6 @@ function PlasmicSearchPage__RenderFunc(props: {
                     (async val => {
                       const $steps = {};
 
-                      $steps["goToPage"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              destination: (() => {
-                                try {
-                                  return `/s/jahannama/?text=${
-                                    $ctx.query?.text ?? ""
-                                  }${Object.entries(
-                                    $state.searchFilters.selected
-                                  ).reduce((acc, item) => {
-                                    if (item[1] && item[1]?.length > 0)
-                                      return acc;
-                                    acc += `&${item[0]}=${JSON.stringify(
-                                      item[1]
-                                    )}`;
-                                    return acc;
-                                  }, "")}`;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            };
-                            return (({ destination }) => {
-                              if (
-                                typeof destination === "string" &&
-                                destination.startsWith("#")
-                              ) {
-                                document
-                                  .getElementById(destination.substr(1))
-                                  .scrollIntoView({ behavior: "smooth" });
-                              } else {
-                                __nextRouter?.push(destination);
-                              }
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["goToPage"] != null &&
-                        typeof $steps["goToPage"] === "object" &&
-                        typeof $steps["goToPage"].then === "function"
-                      ) {
-                        $steps["goToPage"] = await $steps["goToPage"];
-                      }
-
                       $steps["updateMainSearchRequestResult"] = true
                         ? (() => {
                             const actionArgs = {
@@ -550,6 +499,56 @@ function PlasmicSearchPage__RenderFunc(props: {
                         $steps["updateMainSearchRequestPage"] = await $steps[
                           "updateMainSearchRequestPage"
                         ];
+                      }
+
+                      $steps["goToPage"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              destination: (() => {
+                                try {
+                                  return `/s/jahannama/?text=${
+                                    $ctx.query?.text ?? ""
+                                  }${Object.entries(
+                                    $state.searchFilters.selected
+                                  ).reduce((acc, item) => {
+                                    if (item[1]?.length == 0) return acc;
+                                    acc += `&${item[0]}=${JSON.stringify(
+                                      item[1]
+                                    )}`;
+                                    return acc;
+                                  }, "")}`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["goToPage"] != null &&
+                        typeof $steps["goToPage"] === "object" &&
+                        typeof $steps["goToPage"].then === "function"
+                      ) {
+                        $steps["goToPage"] = await $steps["goToPage"];
                       }
                     }).apply(null, eventArgs);
                   },
@@ -755,24 +754,29 @@ function PlasmicSearchPage__RenderFunc(props: {
                     const actionArgs = {
                       customFunction: async () => {
                         return (() => {
-                          function loadGTM() {
-                            var gtmScript = document.createElement("script");
-                            gtmScript.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P5RPLDP');`;
-                            document.head.appendChild(gtmScript);
-                            var gtmNoScript =
-                              document.createElement("noscript");
-                            gtmNoScript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5RPLDP"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
-                            document.body.insertBefore(
-                              gtmNoScript,
-                              document.body.firstChild
+                          return (window.onload = function () {
+                            (function (w, d, s, l, i) {
+                              w[l] = w[l] || [];
+                              w[l].push({
+                                "gtm.start": new Date().getTime(),
+                                event: "gtm.js"
+                              });
+                              var j = d.createElement(s),
+                                dl = l != "dataLayer" ? "&l=" + l : "";
+                              j.async = true;
+                              j.src =
+                                "https://www.googletagmanager.com/gtm.js?id=" +
+                                i +
+                                dl;
+                              d.getElementsByTagName("head")[0].appendChild(j);
+                            })(
+                              window,
+                              document,
+                              "script",
+                              "dataLayer",
+                              "GTM-P5RPLDP"
                             );
-                          }
-                          return loadGTM();
+                          });
                         })();
                       }
                     };
@@ -793,30 +797,15 @@ function PlasmicSearchPage__RenderFunc(props: {
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
-                        return (() => {
-                          function loadMetrika() {
-                            var metrikaScript =
-                              document.createElement("script");
-                            metrikaScript.innerHTML = `(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();
-    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-    ym(98010713, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-    });`;
-                            document.head.appendChild(metrikaScript);
-                            var metrikaNoScript =
-                              document.createElement("noscript");
-                            metrikaNoScript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/98010713" style="position:absolute; left:-9999px;" alt="" /></div>`;
-                            document.body.insertBefore(
-                              metrikaNoScript,
-                              document.body.firstChild
-                            );
+                        return (async () => {
+                          async function loadMetrika() {
+                            await import("https://mc.yandex.ru/metrika/tag.js");
+                            ym(98010713, "init", {
+                              clickmap: true,
+                              trackLinks: true,
+                              accurateTrackBounce: true,
+                              webvisor: true
+                            });
                           }
                           return loadMetrika();
                         })();
