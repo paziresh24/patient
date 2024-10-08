@@ -101,6 +101,7 @@ export const PlasmicFilterRowItem__ArgProps = new Array<ArgPropType>(
 export type PlasmicFilterRowItem__OverridesType = {
   root?: Flex__<"div">;
   text?: Flex__<"div">;
+  freeBox?: Flex__<"div">;
 };
 
 export interface DefaultFilterRowItemProps {
@@ -197,7 +198,7 @@ function PlasmicFilterRowItem__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["runOnSelect"] = !$state.active
+        $steps["runOnSelect"] = true
           ? (() => {
               const actionArgs = {
                 eventRef: $props["onSelect"],
@@ -229,39 +230,6 @@ function PlasmicFilterRowItem__RenderFunc(props: {
         ) {
           $steps["runOnSelect"] = await $steps["runOnSelect"];
         }
-
-        $steps["runOnRemove"] = !!$state.active
-          ? (() => {
-              const actionArgs = {
-                eventRef: $props["onRemove"],
-                args: [
-                  (() => {
-                    try {
-                      return $props.filterKey;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()
-                ]
-              };
-              return (({ eventRef, args }) => {
-                return eventRef?.(...(args ?? []));
-              })?.apply(null, [actionArgs]);
-            })()
-          : undefined;
-        if (
-          $steps["runOnRemove"] != null &&
-          typeof $steps["runOnRemove"] === "object" &&
-          typeof $steps["runOnRemove"].then === "function"
-        ) {
-          $steps["runOnRemove"] = await $steps["runOnRemove"];
-        }
       }}
     >
       {(() => {
@@ -278,7 +246,9 @@ function PlasmicFilterRowItem__RenderFunc(props: {
         }
       })() ? (
         <Icon16Icon
-          className={classNames(projectcss.all, sty.svg__z1Wpp)}
+          className={classNames(projectcss.all, sty.svg__z1Wpp, {
+            [sty.svgactive__z1Wpp7W96W]: hasVariant($state, "active", "active")
+          })}
           role={"img"}
         />
       ) : null}
@@ -322,19 +292,84 @@ function PlasmicFilterRowItem__RenderFunc(props: {
           </React.Fragment>
         </div>
       ) : null}
-      <Icon13Icon
-        className={classNames(projectcss.all, sty.svg__iqJxy, {
-          [sty.svgactive__iqJxy7W96W]: hasVariant($state, "active", "active")
+      <div
+        data-plasmic-name={"freeBox"}
+        data-plasmic-override={overrides.freeBox}
+        className={classNames(projectcss.all, sty.freeBox, {
+          [sty.freeBoxactive]: hasVariant($state, "active", "active")
         })}
-        role={"img"}
-      />
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["runCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return event?.stopPropagation();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+
+          $steps["runOnRemove"] = true
+            ? (() => {
+                const actionArgs = {
+                  eventRef: $props["onRemove"],
+                  args: [
+                    (() => {
+                      try {
+                        return $props.filterKey;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runOnRemove"] != null &&
+            typeof $steps["runOnRemove"] === "object" &&
+            typeof $steps["runOnRemove"].then === "function"
+          ) {
+            $steps["runOnRemove"] = await $steps["runOnRemove"];
+          }
+        }}
+      >
+        <Icon13Icon
+          className={classNames(projectcss.all, sty.svg__iqJxy, {
+            [sty.svgactive__iqJxy7W96W]: hasVariant($state, "active", "active")
+          })}
+          role={"img"}
+        />
+      </div>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "text"],
-  text: ["text"]
+  root: ["root", "text", "freeBox"],
+  text: ["text"],
+  freeBox: ["freeBox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -342,6 +377,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   text: "div";
+  freeBox: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -405,6 +441,7 @@ export const PlasmicFilterRowItem = Object.assign(
   {
     // Helper components rendering sub-elements
     text: makeNodeComponent("text"),
+    freeBox: makeNodeComponent("freeBox"),
 
     // Metadata about props expected for PlasmicFilterRowItem
     internalVariantProps: PlasmicFilterRowItem__VariantProps,

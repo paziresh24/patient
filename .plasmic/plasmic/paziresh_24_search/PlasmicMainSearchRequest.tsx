@@ -539,7 +539,9 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                     type: "doctor",
                     title: doctor.source.display_name,
                     prefix: doctor.source.prefix || "",
-                    image: `/getImage/p24/search-men/${doctor.source.image}?size=150`,
+                    image: `/getImage/p24/search-${
+                      doctor.source.gender ? "men" : "women"
+                    }/${doctor?.source?.image ?? "noimage.png"}?size=150`,
                     view: doctor.source.number_of_visits,
                     display_expertise: doctor.source.expertises
                       .map(

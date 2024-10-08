@@ -385,7 +385,13 @@ function PlasmicUserLocation__RenderFunc(props: {
                       variablePath: ["userCity"]
                     },
                     operation: 0,
-                    value: localStorage.getItem("search_user_city")
+                    value: (() => {
+                      if (typeof window !== "undefined") {
+                        return localStorage.getItem("search_user_city")
+                          ? JSON.parse(localStorage.getItem("search_user_city"))
+                          : {};
+                      }
+                    })()
                   };
                   return (({ variable, value, startIndex, deleteCount }) => {
                     if (!variable) {

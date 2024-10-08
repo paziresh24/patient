@@ -9,7 +9,7 @@
   min-width: 5rem;
   cursor: pointer;
   border-radius: 7px;
-  padding: 3px 10px;
+  padding: 0px 10px;
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
 .root > :global(.__wab_flex-container) {
@@ -28,6 +28,7 @@
 .rootactive {
   display: flex;
   flex-direction: row;
+  padding-left: 0px;
   border: 1px solid var(--token-JDvyxAtm9ONK);
 }
 .rootactive > :global(.__wab_flex-container) {
@@ -67,6 +68,30 @@
 }
 .textactive {
   color: var(--token-JDvyxAtm9ONK);
+}
+.freeBox {
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 24px;
+  height: 100%;
+  max-width: 100%;
+  padding-left: 10px;
+  min-width: 24px;
+  padding-right: 5px;
+  flex-shrink: 0;
+  min-height: 0;
+  display: none;
+}
+.freeBoxactive {
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 15px;
+  padding-right: 2px;
+  flex-shrink: 0;
+  display: flex;
 }
 .svg__iqJxy {
   object-fit: cover;
