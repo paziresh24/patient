@@ -85,6 +85,8 @@ export type PlasmicMainSearchRequest__ArgsType = {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  result?: any;
+  onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
@@ -94,6 +96,8 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchFilters",
   "page",
   "onPageChange",
+  "result",
+  "onResultChange",
   "searchOptionalFilters"
 );
 
@@ -111,6 +115,8 @@ export interface DefaultMainSearchRequestProps {
   searchFilters?: any;
   page?: number;
   onPageChange?: (val: string) => void;
+  result?: any;
+  onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
   className?: string;
 }
@@ -187,9 +193,11 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
       },
       {
         path: "result",
-        type: "private",
+        type: "writable",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => []
+
+        valueProp: "result",
+        onChangeProp: "onResultChange"
       },
       {
         path: "total",
@@ -226,7 +234,10 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
     >
       {(() => {
         try {
-          return $state.page === 1 ? !!$state.fragmentApiRequest?.data : true;
+          return $state.page === 1
+            ? !$state.fragmentApiRequest?.loading &&
+                !!$state.fragmentApiRequest?.data
+            : true;
         } catch (e) {
           if (
             e instanceof TypeError ||

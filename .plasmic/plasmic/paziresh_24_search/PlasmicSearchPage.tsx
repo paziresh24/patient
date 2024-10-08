@@ -176,26 +176,19 @@ function PlasmicSearchPage__RenderFunc(props: {
         path: "mainSearchRequest.page",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return +($ctx?.query?.page ? $ctx?.query?.page : 1);
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return 1;
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => 1
       },
       {
         path: "userLocation.userCity",
         type: "private",
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "mainSearchRequest.result",
+        type: "private",
+        variableType: "array",
+        initFunc: ({ $props, $state, $queries, $ctx }) => []
       }
     ],
     [$props, $ctx, $refs]
@@ -329,6 +322,81 @@ function PlasmicSearchPage__RenderFunc(props: {
                   ) {
                     $steps["goToPage"] = await $steps["goToPage"];
                   }
+
+                  $steps["updateMainSearchRequestResult"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["mainSearchRequest", "result"]
+                          },
+                          operation: 0,
+                          value: []
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateMainSearchRequestResult"] != null &&
+                    typeof $steps["updateMainSearchRequestResult"] ===
+                      "object" &&
+                    typeof $steps["updateMainSearchRequestResult"].then ===
+                      "function"
+                  ) {
+                    $steps["updateMainSearchRequestResult"] = await $steps[
+                      "updateMainSearchRequestResult"
+                    ];
+                  }
+
+                  $steps["updateMainSearchRequestPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["mainSearchRequest", "page"]
+                          },
+                          operation: 0,
+                          value: 1
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateMainSearchRequestPage"] != null &&
+                    typeof $steps["updateMainSearchRequestPage"] === "object" &&
+                    typeof $steps["updateMainSearchRequestPage"].then ===
+                      "function"
+                  ) {
+                    $steps["updateMainSearchRequestPage"] = await $steps[
+                      "updateMainSearchRequestPage"
+                    ];
+                  }
                 }}
               />
 
@@ -405,6 +473,82 @@ function PlasmicSearchPage__RenderFunc(props: {
                       ) {
                         $steps["goToPage"] = await $steps["goToPage"];
                       }
+
+                      $steps["updateMainSearchRequestResult"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["mainSearchRequest", "result"]
+                              },
+                              operation: 0,
+                              value: []
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateMainSearchRequestResult"] != null &&
+                        typeof $steps["updateMainSearchRequestResult"] ===
+                          "object" &&
+                        typeof $steps["updateMainSearchRequestResult"].then ===
+                          "function"
+                      ) {
+                        $steps["updateMainSearchRequestResult"] = await $steps[
+                          "updateMainSearchRequestResult"
+                        ];
+                      }
+
+                      $steps["updateMainSearchRequestPage"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["mainSearchRequest", "page"]
+                              },
+                              operation: 0,
+                              value: 1
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateMainSearchRequestPage"] != null &&
+                        typeof $steps["updateMainSearchRequestPage"] ===
+                          "object" &&
+                        typeof $steps["updateMainSearchRequestPage"].then ===
+                          "function"
+                      ) {
+                        $steps["updateMainSearchRequestPage"] = await $steps[
+                          "updateMainSearchRequestPage"
+                        ];
+                      }
                     }).apply(null, eventArgs);
                   },
                   selected: generateStateValueProp($state, [
@@ -464,163 +608,134 @@ function PlasmicSearchPage__RenderFunc(props: {
                 ])}
               />
 
-              {(() => {
-                const child$Props = {
-                  className: classNames(
-                    "__wab_instance",
-                    sty.mainSearchRequest
-                  ),
-                  onApiRequestDataChange: generateStateOnChangeProp($state, [
-                    "mainSearchRequest",
-                    "apiRequestData"
-                  ]),
-                  onPageChange: async (...eventArgs: any) => {
-                    generateStateOnChangeProp($state, [
-                      "mainSearchRequest",
-                      "page"
-                    ]).apply(null, eventArgs);
-                    (async val => {
-                      const $steps = {};
-
-                      $steps["goToPage"] = false
-                        ? (() => {
-                            const actionArgs = {
-                              destination: (() => {
-                                try {
-                                  return `/s/jahannama/?text=${
-                                    $ctx.query?.text ?? ""
-                                  }${Object.entries(
-                                    $state.searchFilters.selected
-                                  ).reduce((acc, item) => {
-                                    acc += `&${item[0]}=${JSON.stringify(
-                                      item[1]
-                                    )}`;
-                                    return acc;
-                                  }, "")}&page=${
-                                    $state.mainSearchRequest.page
-                                  }`;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            };
-                            return (({ destination }) => {
-                              if (
-                                typeof destination === "string" &&
-                                destination.startsWith("#")
-                              ) {
-                                document
-                                  .getElementById(destination.substr(1))
-                                  .scrollIntoView({ behavior: "smooth" });
-                              } else {
-                                __nextRouter?.push(destination);
-                              }
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["goToPage"] != null &&
-                        typeof $steps["goToPage"] === "object" &&
-                        typeof $steps["goToPage"].then === "function"
-                      ) {
-                        $steps["goToPage"] = await $steps["goToPage"];
-                      }
-                    }).apply(null, eventArgs);
-                  },
-                  page: generateStateValueProp($state, [
+              <MainSearchRequest
+                data-plasmic-name={"mainSearchRequest"}
+                data-plasmic-override={overrides.mainSearchRequest}
+                className={classNames("__wab_instance", sty.mainSearchRequest)}
+                onApiRequestDataChange={generateStateOnChangeProp($state, [
+                  "mainSearchRequest",
+                  "apiRequestData"
+                ])}
+                onPageChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
                     "mainSearchRequest",
                     "page"
-                  ]),
-                  searchFilters: (() => {
-                    try {
-                      return typeof window === "undefined"
-                        ? {}
-                        : Object.fromEntries(
-                            Array.from(
-                              new window.URLSearchParams(window.location.search)
-                            )
-                              .filter(([k]) => k !== "text")
-                              .map(([k, v]) => [k, JSON.parse(v)])
-                          );
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })(),
-                  searchOptionalFilters: (() => {
-                    try {
-                      return (() => {
-                        if (!$state.userLocation.userCity?.id) return;
-                        return { city_id: [$state.userLocation.userCity?.id] };
-                      })();
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })(),
-                  searchQuery: (() => {
-                    try {
-                      return $ctx.query.text ? $ctx.query.text : "";
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()
-                };
+                  ]).apply(null, eventArgs);
+                  (async val => {
+                    const $steps = {};
 
-                initializePlasmicStates(
-                  $state,
-                  [
-                    {
-                      name: "mainSearchRequest.page",
-                      initFunc: ({ $props, $state, $queries }) =>
-                        (() => {
-                          try {
-                            return +($ctx?.query?.page ? $ctx?.query?.page : 1);
-                          } catch (e) {
+                    $steps["goToPage"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            destination: (() => {
+                              try {
+                                return `/s/jahannama/?text=${
+                                  $ctx.query?.text ?? ""
+                                }${Object.entries(
+                                  $state.searchFilters.selected
+                                ).reduce((acc, item) => {
+                                  acc += `&${item[0]}=${JSON.stringify(
+                                    item[1]
+                                  )}`;
+                                  return acc;
+                                }, "")}&page=${$state.mainSearchRequest.page}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          };
+                          return (({ destination }) => {
                             if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
+                              typeof destination === "string" &&
+                              destination.startsWith("#")
                             ) {
-                              return 1;
+                              document
+                                .getElementById(destination.substr(1))
+                                .scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              __nextRouter?.push(destination);
                             }
-                            throw e;
-                          }
+                          })?.apply(null, [actionArgs]);
                         })()
+                      : undefined;
+                    if (
+                      $steps["goToPage"] != null &&
+                      typeof $steps["goToPage"] === "object" &&
+                      typeof $steps["goToPage"].then === "function"
+                    ) {
+                      $steps["goToPage"] = await $steps["goToPage"];
                     }
-                  ],
-                  []
-                );
-                return (
-                  <MainSearchRequest
-                    data-plasmic-name={"mainSearchRequest"}
-                    data-plasmic-override={overrides.mainSearchRequest}
-                    {...child$Props}
-                  />
-                );
-              })()}
+                  }).apply(null, eventArgs);
+                }}
+                onResultChange={generateStateOnChangeProp($state, [
+                  "mainSearchRequest",
+                  "result"
+                ])}
+                page={generateStateValueProp($state, [
+                  "mainSearchRequest",
+                  "page"
+                ])}
+                result={generateStateValueProp($state, [
+                  "mainSearchRequest",
+                  "result"
+                ])}
+                searchFilters={(() => {
+                  try {
+                    return typeof window === "undefined"
+                      ? {}
+                      : Object.fromEntries(
+                          Array.from(
+                            new window.URLSearchParams(window.location.search)
+                          )
+                            .filter(([k]) => k !== "text")
+                            .map(([k, v]) => [k, JSON.parse(v)])
+                        );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                searchOptionalFilters={(() => {
+                  try {
+                    return (() => {
+                      if (!$state.userLocation.userCity?.id) return;
+                      return { city_id: [$state.userLocation.userCity?.id] };
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                searchQuery={(() => {
+                  try {
+                    return $ctx.query.text ? $ctx.query.text : "";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
             </Stack__>
           </LayoutWithHeaderAndFooter>
           <SideEffect
