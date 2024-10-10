@@ -76,6 +76,7 @@ import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { Symptoms } from '../types/selectSymptoms';
 import { growthbook } from 'src/pages/_app';
+import { template, templateSettings } from 'lodash';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -109,6 +110,7 @@ type Payloads = {
   serviceId: string;
   timeId: string;
 };
+templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
 export type Step = 'SELECT_CENTER' | 'SELECT_SERVICES' | 'SELECT_TIME' | 'SELECT_USER' | 'BOOK_REQUEST';
 
@@ -131,7 +133,11 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
   const isLogin = useUserInfoStore(state => state.isLogin);
-
+  const bookEvent = useFeatureValue<{
+    destination?: string;
+    enable_online_visit?: string;
+    skip_call_booking?: string;
+  }>('events::book', {});
   const [timeId, setTimeId] = useState('');
   const [selectedTime, setSelectedTime] = useState(0);
   const symptomsAutoComplete = useSymptoms();
@@ -253,11 +259,32 @@ const BookingSteps = (props: BookingStepsProps) => {
           full_date: freeturnData?.full_date,
           status: freeturnData?.status,
           message: freeturnData?.message,
-          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - center?.freeturn ?? null,
+          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - (center?.freeturn ?? null),
         },
         doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
       });
       reserveId = freeturnData.timeId;
+    }
+
+    if (
+      !!bookEvent?.skip_call_booking &&
+      !!bookEvent?.destination &&
+      (center?.id === CENTERS.CONSULT ? bookEvent?.enable_online_visit : true)
+    ) {
+      const compiled = template(bookEvent?.destination);
+      const destination = compiled({
+        center_id: center.id,
+        service_id: service.id,
+        slug: slug,
+        request_code: reserveId,
+        selected_national_code: user?.national_code,
+        selected_cell: user?.cell,
+        user_id: router.query?.userId,
+        provider_id: router.query?.providerId,
+      });
+      router.replace(destination);
+
+      return;
     }
 
     handleBook(
@@ -294,8 +321,21 @@ const BookingSteps = (props: BookingStepsProps) => {
             });
           if (data.payment.reqiure_payment === '1') {
             if (center.server_id === 1) {
-              if (useNewFactorPage) {
-                return router.replace(`/_/booking/factor/${center.id}/${data.book_info.id}`);
+              if (bookEvent?.destination) {
+                if (center?.id === CENTERS.CONSULT ? bookEvent?.enable_online_visit : true) {
+                  const compiled = template(bookEvent?.destination);
+                  const destination = compiled({
+                    center_id: center.id,
+                    service_id: service.id,
+                    slug: slug,
+                    selected_national_code: user?.national_code,
+                    selected_cell: user?.cell,
+                    user_id: router.query?.userId,
+                    provider_id: router.query?.providerId,
+                    book_id: data.book_info.id,
+                  });
+                  return router.replace(destination);
+                }
               }
               return router.replace(`/factor/${center.id}/${data.book_info.id}`);
             }
