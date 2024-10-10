@@ -452,10 +452,6 @@ const BookingSteps = (props: BookingStepsProps) => {
 
     return () => {
       clearTimeout(getTurnTimeout.current);
-      unsuspend.mutate({
-        center_id: router.query?.centerId! as string,
-        request_code: timeId,
-      });
     };
   }, [step]);
 
