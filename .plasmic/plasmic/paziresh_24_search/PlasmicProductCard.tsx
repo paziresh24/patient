@@ -122,6 +122,8 @@ export type PlasmicProductCard__ArgsType = {
   children?: React.ReactNode;
   searchCardId?: string;
   debugModeResult?: any;
+  slug?: string;
+  centers?: any;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -144,7 +146,9 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "classificationTitleApi",
   "children",
   "searchCardId",
-  "debugModeResult"
+  "debugModeResult",
+  "slug",
+  "centers"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -163,6 +167,8 @@ export type PlasmicProductCard__OverridesType = {
   cardDataActionUiFetcher?: Flex__<typeof DataFetcher>;
   cardActionSduiV2UiRequest?: Flex__<typeof ApiRequest>;
   oldActionButtonsHorizontalStack?: Flex__<"div">;
+  getProviderFromSlugApiRequest?: Flex__<typeof ApiRequest>;
+  availabilityStatus?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultProductCardProps {
@@ -186,6 +192,8 @@ export interface DefaultProductCardProps {
   children?: React.ReactNode;
   searchCardId?: string;
   debugModeResult?: any;
+  slug?: string;
+  centers?: any;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   className?: string;
@@ -280,6 +288,36 @@ function PlasmicProductCard__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "getProviderFromSlugApiRequest[].data",
+        type: "private",
+        variableType: "object"
+      },
+      {
+        path: "getProviderFromSlugApiRequest[].error",
+        type: "private",
+        variableType: "object"
+      },
+      {
+        path: "getProviderFromSlugApiRequest[].loading",
+        type: "private",
+        variableType: "boolean"
+      },
+      {
+        path: "availabilityStatus[].data",
+        type: "private",
+        variableType: "object"
+      },
+      {
+        path: "availabilityStatus[].error",
+        type: "private",
+        variableType: "object"
+      },
+      {
+        path: "availabilityStatus[].loading",
+        type: "private",
+        variableType: "boolean"
       }
     ],
     [$props, $ctx, $refs]
@@ -2038,13 +2076,19 @@ function PlasmicProductCard__RenderFunc(props: {
                 >
                   {(() => {
                     try {
-                      return actionButton.top_title;
+                      return (
+                        actionButton.top_title &&
+                        actionButton.top_title.trim() !== "" &&
+                        !$ctx.Growthbook.features["theme-config"][
+                          "search_result:first_free_time_data_src_from_availability-status_api"
+                        ]
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
                         e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        return true;
+                        return false;
                       }
                       throw e;
                     }
@@ -2076,6 +2120,243 @@ function PlasmicProductCard__RenderFunc(props: {
                         }}
                       />
                     </span>
+                  ) : null}
+                  {(() => {
+                    try {
+                      return (
+                        $ctx.Growthbook.features["theme-config"][
+                          "search_result:first_free_time_data_src_from_availability-status_api"
+                        ] !== undefined &&
+                        $ctx.Growthbook.features["theme-config"][
+                          "search_result:first_free_time_data_src_from_availability-status_api"
+                        ] === true
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__xzb64)}
+                    >
+                      <ApiRequest
+                        data-plasmic-name={"getProviderFromSlugApiRequest"}
+                        data-plasmic-override={
+                          overrides.getProviderFromSlugApiRequest
+                        }
+                        className={classNames(
+                          "__wab_instance",
+                          sty.getProviderFromSlugApiRequest
+                        )}
+                        errorDisplay={
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__lq4Dj
+                            )}
+                          >
+                            {"Error fetching data"}
+                          </div>
+                        }
+                        loadingDisplay={
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__c1SLh
+                            )}
+                          >
+                            {"Loading..."}
+                          </div>
+                        }
+                        method={"GET"}
+                        onError={generateStateOnChangeProp($state, [
+                          "getProviderFromSlugApiRequest",
+                          __plasmic_idx_0,
+                          "error"
+                        ])}
+                        onLoading={generateStateOnChangeProp($state, [
+                          "getProviderFromSlugApiRequest",
+                          __plasmic_idx_0,
+                          "loading"
+                        ])}
+                        onSuccess={generateStateOnChangeProp($state, [
+                          "getProviderFromSlugApiRequest",
+                          __plasmic_idx_0,
+                          "data"
+                        ])}
+                        url={(() => {
+                          try {
+                            return (
+                              "https://apigw.paziresh24.com/v1/providers?slug=" +
+                              $props.slug
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      >
+                        <ApiRequest
+                          data-plasmic-name={"availabilityStatus"}
+                          data-plasmic-override={overrides.availabilityStatus}
+                          className={classNames(
+                            "__wab_instance",
+                            sty.availabilityStatus
+                          )}
+                          errorDisplay={
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__utvuQ
+                              )}
+                            >
+                              {"Error fetching data"}
+                            </div>
+                          }
+                          loadingDisplay={
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__emhrt
+                              )}
+                            >
+                              {"Loading..."}
+                            </div>
+                          }
+                          method={"GET"}
+                          onError={generateStateOnChangeProp($state, [
+                            "availabilityStatus",
+                            __plasmic_idx_0,
+                            "error"
+                          ])}
+                          onLoading={generateStateOnChangeProp($state, [
+                            "availabilityStatus",
+                            __plasmic_idx_0,
+                            "loading"
+                          ])}
+                          onSuccess={generateStateOnChangeProp($state, [
+                            "availabilityStatus",
+                            __plasmic_idx_0,
+                            "data"
+                          ])}
+                          url={(() => {
+                            try {
+                              return (
+                                "https://apigw.paziresh24.com/core-booking/v1/providers/" +
+                                $state.getProviderFromSlugApiRequest[
+                                  currentIndex
+                                ].data.providers[0].user_id +
+                                "/availability-status"
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                        >
+                          <span
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.span,
+                              projectcss.__wab_text,
+                              sty.span__dqNWz
+                            )}
+                          >
+                            <div
+                              className={projectcss.__wab_expr_html_text}
+                              dangerouslySetInnerHTML={{
+                                __html: (() => {
+                                  try {
+                                    return (() => {
+                                      const centerIds = $props.centers.map(
+                                        center => center.id
+                                      );
+                                      const availabilities =
+                                        $state.availabilityStatus[currentIndex]
+                                          .data.availability;
+                                      const filteredAvailabilities =
+                                        availabilities.filter(availability =>
+                                          centerIds.includes(
+                                            availability.center_id
+                                          )
+                                        );
+                                      if (filteredAvailabilities.length > 0) {
+                                        const nearestAvailability =
+                                          filteredAvailabilities.reduce(
+                                            (earliest, current) =>
+                                              new Date(current.freeturn) <
+                                              new Date(earliest.freeturn)
+                                                ? current
+                                                : earliest
+                                          );
+                                        const presence_freeturn = new Date(
+                                          nearestAvailability.freeturn
+                                        );
+                                        const now = new Date();
+                                        const timeDifference =
+                                          (presence_freeturn - now) / 1000;
+                                        const formatTimeToFarsi =
+                                          timeDifference => {
+                                            if (timeDifference <= 0) {
+                                              return "هم‌اکنون";
+                                            } else if (timeDifference < 3600) {
+                                              return "کمتر از ۱ ساعت دیگر";
+                                            } else if (timeDifference < 86400) {
+                                              const hours = Math.floor(
+                                                timeDifference / 3600
+                                              );
+                                              return `حدود ${hours} ساعت دیگر`;
+                                            } else {
+                                              const days = Math.floor(
+                                                timeDifference / 86400
+                                              );
+                                              return `حدود ${days} روز دیگر`;
+                                            }
+                                          };
+                                        const timeText =
+                                          formatTimeToFarsi(timeDifference);
+                                        const inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
+                                        return inPersonTopTitle;
+                                      } else {
+                                        return null;
+                                      }
+                                    })();
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              }}
+                            />
+                          </span>
+                        </ApiRequest>
+                      </ApiRequest>
+                    </div>
                   ) : null}
                   <Button
                     children2={
@@ -2299,7 +2580,9 @@ const PlasmicDescendants = {
     "badgesChip2",
     "cardDataActionUiFetcher",
     "cardActionSduiV2UiRequest",
-    "oldActionButtonsHorizontalStack"
+    "oldActionButtonsHorizontalStack",
+    "getProviderFromSlugApiRequest",
+    "availabilityStatus"
   ],
   avatar: ["avatar"],
   classificationApi: ["classificationApi", "classificationTitle"],
@@ -2314,7 +2597,16 @@ const PlasmicDescendants = {
   badgesChip2: ["badgesChip2"],
   cardDataActionUiFetcher: ["cardDataActionUiFetcher"],
   cardActionSduiV2UiRequest: ["cardActionSduiV2UiRequest"],
-  oldActionButtonsHorizontalStack: ["oldActionButtonsHorizontalStack"]
+  oldActionButtonsHorizontalStack: [
+    "oldActionButtonsHorizontalStack",
+    "getProviderFromSlugApiRequest",
+    "availabilityStatus"
+  ],
+  getProviderFromSlugApiRequest: [
+    "getProviderFromSlugApiRequest",
+    "availabilityStatus"
+  ],
+  availabilityStatus: ["availabilityStatus"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2335,6 +2627,8 @@ type NodeDefaultElementType = {
   cardDataActionUiFetcher: typeof DataFetcher;
   cardActionSduiV2UiRequest: typeof ApiRequest;
   oldActionButtonsHorizontalStack: "div";
+  getProviderFromSlugApiRequest: typeof ApiRequest;
+  availabilityStatus: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2413,6 +2707,10 @@ export const PlasmicProductCard = Object.assign(
     oldActionButtonsHorizontalStack: makeNodeComponent(
       "oldActionButtonsHorizontalStack"
     ),
+    getProviderFromSlugApiRequest: makeNodeComponent(
+      "getProviderFromSlugApiRequest"
+    ),
+    availabilityStatus: makeNodeComponent("availabilityStatus"),
 
     // Metadata about props expected for PlasmicProductCard
     internalVariantProps: PlasmicProductCard__VariantProps,
