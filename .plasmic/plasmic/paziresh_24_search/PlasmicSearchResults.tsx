@@ -1175,6 +1175,19 @@ function PlasmicSearchResults__RenderFunc(props: {
                     throw e;
                   }
                 })()}
+                centers={(() => {
+                  try {
+                    return currentItem.centers;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 className={classNames("__wab_instance", sty.productCard)}
                 classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
                 debugModeResult={(() => {
@@ -1396,6 +1409,19 @@ function PlasmicSearchResults__RenderFunc(props: {
                 searchCardId={(() => {
                   try {
                     return currentItem._id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                slug={(() => {
+                  try {
+                    return currentItem.slug;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
