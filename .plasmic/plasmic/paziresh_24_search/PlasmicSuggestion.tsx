@@ -257,7 +257,7 @@ function PlasmicSuggestion__RenderFunc(props: {
             $steps["runOnSelect"] = await $steps["runOnSelect"];
           }
 
-          $steps["invokeGlobalAction2"] =
+          $steps["onSelectInteractProb"] =
             option === 0
               ? (() => {
                   const actionArgs = {
@@ -285,11 +285,13 @@ function PlasmicSuggestion__RenderFunc(props: {
                 })()
               : undefined;
           if (
-            $steps["invokeGlobalAction2"] != null &&
-            typeof $steps["invokeGlobalAction2"] === "object" &&
-            typeof $steps["invokeGlobalAction2"].then === "function"
+            $steps["onSelectInteractProb"] != null &&
+            typeof $steps["onSelectInteractProb"] === "object" &&
+            typeof $steps["onSelectInteractProb"].then === "function"
           ) {
-            $steps["invokeGlobalAction2"] = await $steps["invokeGlobalAction2"];
+            $steps["onSelectInteractProb"] = await $steps[
+              "onSelectInteractProb"
+            ];
           }
         }}
         onSelectedOptionChange={generateStateOnChangeProp($state, [

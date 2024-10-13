@@ -84,7 +84,7 @@ export type PlasmicMainSearchRequest__ArgsType = {
   onApiRequestDataChange?: (val: any) => void;
   searchFilters?: any;
   page?: number;
-  onPageChange?: (val: string) => void;
+  onPageChange2?: (val: string) => void;
   result?: any;
   onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
@@ -95,7 +95,7 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "onApiRequestDataChange",
   "searchFilters",
   "page",
-  "onPageChange",
+  "onPageChange2",
   "result",
   "onResultChange",
   "searchOptionalFilters"
@@ -114,7 +114,7 @@ export interface DefaultMainSearchRequestProps {
   onApiRequestDataChange?: (val: any) => void;
   searchFilters?: any;
   page?: number;
-  onPageChange?: (val: string) => void;
+  onPageChange2?: (val: string) => void;
   result?: any;
   onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
@@ -189,7 +189,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         variableType: "number",
 
         valueProp: "page",
-        onChangeProp: "onPageChange"
+        onChangeProp: "onPageChange2"
       },
       {
         path: "result",
@@ -600,15 +600,9 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                     url: `/dr/${doctor.source.slug}`,
                     actions: (() => {
                       const actions = [];
-                      const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-
-                      // Helper function to format the time until the freeturn
+                      const now = Math.floor(Date.now() / 1000);
                       const formatTimeToFarsi = timestamp => {
-                        // Implement this function to return a Farsi string indicating the time until the provided timestamp
-                        // For example: "کمتر از 1 ساعت دیگر"
-                        // This is a placeholder implementation; you'll need to replace it with actual logic
                         const timeDifference = timestamp - now;
-
                         if (timeDifference <= 0) {
                           return "هم‌اکنون";
                         } else if (timeDifference < 3600) {
@@ -621,21 +615,17 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                           return `حدود ${days} روز دیگر`;
                         }
                       };
-
-                      // Online Visit Action (ویزیت آنلاین)
                       const hasOnlineCenter = doctor.source.centers.some(
                         center => center.id === "5532"
                       );
                       const consult_freeturn = doctor.source.consult_freeturn;
                       const consultTimeValid =
                         consult_freeturn && consult_freeturn >= now - 24 * 3600;
-
                       if (hasOnlineCenter && consultTimeValid) {
                         const isImmediateConsult =
                           consult_freeturn >= now - 90 * 60 &&
                           consult_freeturn <= now + 60 * 60;
-                        const outline = false; // As per your notes, outline is false if consult_freeturn is valid
-
+                        const outline = false;
                         let top_title = "";
                         if (isImmediateConsult) {
                           top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
@@ -643,15 +633,12 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                           const timeText = formatTimeToFarsi(consult_freeturn);
                           top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
                         }
-
                         const consultServiceId =
                           doctor.source.consult_services &&
                           doctor.source.consult_services.length > 0
                             ? doctor.source.consult_services[0].id
                             : "";
-
                         const url = `/booking/${doctor.source.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
-
                         actions.push({
                           title: "ویزیت آنلاین",
                           outline: outline,
@@ -659,8 +646,6 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                           url: url
                         });
                       }
-
-                      // In-Person Action (نوبت دهی اینترنتی or مشاهده صفحه)
                       const presence_freeturn = doctor.source.presence_freeturn;
                       const presenceTimeValid =
                         presence_freeturn &&
@@ -668,34 +653,27 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                       const hasActiveBookingCenter = doctor.source.centers.some(
                         center => center.id !== "5532" && center.active_booking
                       );
-
                       let inPersonTitle = "";
                       if (presenceTimeValid || hasActiveBookingCenter) {
                         inPersonTitle = "نوبت دهی اینترنتی";
                       } else {
                         inPersonTitle = "آدرس و اطلاعات بیشتر";
                       }
-
                       const inPersonOutline = !presenceTimeValid;
                       let inPersonTopTitle = "";
-
                       if (presenceTimeValid) {
                         const timeText = formatTimeToFarsi(presence_freeturn);
                         inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
                       }
-
                       const inPersonUrl = `/dr/${doctor.source.slug}`;
-
                       actions.push({
                         title: inPersonTitle,
                         outline: inPersonOutline,
                         top_title: inPersonTopTitle,
                         url: inPersonUrl
                       });
-
                       return actions;
                     })(),
-
                     experience: doctor.source.experience,
                     position: doctor.beforePersonalizationPosition,
                     has_presciption: false,
