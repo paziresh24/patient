@@ -56,6 +56,12 @@
   margin-top: var(--token-Fv8-L_kN-2Ma) !important;
   min-width: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .suggestion:global(.__wab_instance) {
+    max-width: 95%;
+    margin-top: var(--token-Fv8-L_kN-2Ma) !important;
+  }
+}
 .searchFilters:global(.__wab_instance) {
   max-width: 100%;
 }
@@ -63,10 +69,22 @@
   max-width: 100%;
   align-self: flex-start;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .userLocation:global(.__wab_instance) {
+    max-width: 95%;
+    align-self: flex-start;
+    margin-right: 12px;
+  }
+}
 .mainSearchRequest:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
   min-width: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .mainSearchRequest:global(.__wab_instance) {
+    max-width: 95%;
+  }
 }
 .runGtmAndMetricaSideEffect:global(.__wab_instance) {
   max-width: 100%;
