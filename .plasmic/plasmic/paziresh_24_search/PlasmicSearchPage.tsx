@@ -137,8 +137,6 @@ function PlasmicSearchPage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const $globalActions = useGlobalActions?.();
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -324,99 +322,6 @@ function PlasmicSearchPage__RenderFunc(props: {
                     ];
                   }
 
-                  $steps["updateMainSearchRequestPage"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["mainSearchRequest", "page"]
-                          },
-                          operation: 0,
-                          value: 1
-                        };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
-
-                          $stateSet(objRoot, variablePath, value);
-                          return value;
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["updateMainSearchRequestPage"] != null &&
-                    typeof $steps["updateMainSearchRequestPage"] === "object" &&
-                    typeof $steps["updateMainSearchRequestPage"].then ===
-                      "function"
-                  ) {
-                    $steps["updateMainSearchRequestPage"] = await $steps[
-                      "updateMainSearchRequestPage"
-                    ];
-                  }
-
-                  $steps["testToast"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            undefined,
-                            (() => {
-                              try {
-                                return `/s/jahannama/?text=${
-                                  searchQuery || ""
-                                }`;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Fragment.showToast"]?.apply(
-                          null,
-                          [...actionArgs.args]
-                        );
-                      })()
-                    : undefined;
-                  if (
-                    $steps["testToast"] != null &&
-                    typeof $steps["testToast"] === "object" &&
-                    typeof $steps["testToast"].then === "function"
-                  ) {
-                    $steps["testToast"] = await $steps["testToast"];
-                  }
-
-                  $steps["setPageTo1"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return setTimeout(() => {}, 2000);
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["setPageTo1"] != null &&
-                    typeof $steps["setPageTo1"] === "object" &&
-                    typeof $steps["setPageTo1"].then === "function"
-                  ) {
-                    $steps["setPageTo1"] = await $steps["setPageTo1"];
-                  }
-
                   $steps["goToPage"] = true
                     ? (() => {
                         const actionArgs = {
@@ -454,6 +359,43 @@ function PlasmicSearchPage__RenderFunc(props: {
                     typeof $steps["goToPage"].then === "function"
                   ) {
                     $steps["goToPage"] = await $steps["goToPage"];
+                  }
+
+                  $steps["updateMainSearchRequestPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["mainSearchRequest", "page"]
+                          },
+                          operation: 0,
+                          value: 1
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateMainSearchRequestPage"] != null &&
+                    typeof $steps["updateMainSearchRequestPage"] === "object" &&
+                    typeof $steps["updateMainSearchRequestPage"].then ===
+                      "function"
+                  ) {
+                    $steps["updateMainSearchRequestPage"] = await $steps[
+                      "updateMainSearchRequestPage"
+                    ];
                   }
                 }}
               />
@@ -521,44 +463,6 @@ function PlasmicSearchPage__RenderFunc(props: {
                         ];
                       }
 
-                      $steps["updateMainSearchRequestPage"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["mainSearchRequest", "page"]
-                              },
-                              operation: 0,
-                              value: 1
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateMainSearchRequestPage"] != null &&
-                        typeof $steps["updateMainSearchRequestPage"] ===
-                          "object" &&
-                        typeof $steps["updateMainSearchRequestPage"].then ===
-                          "function"
-                      ) {
-                        $steps["updateMainSearchRequestPage"] = await $steps[
-                          "updateMainSearchRequestPage"
-                        ];
-                      }
-
                       $steps["goToPage"] = true
                         ? (() => {
                             const actionArgs = {
@@ -607,6 +511,44 @@ function PlasmicSearchPage__RenderFunc(props: {
                         typeof $steps["goToPage"].then === "function"
                       ) {
                         $steps["goToPage"] = await $steps["goToPage"];
+                      }
+
+                      $steps["updateMainSearchRequestPage"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["mainSearchRequest", "page"]
+                              },
+                              operation: 0,
+                              value: 1
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateMainSearchRequestPage"] != null &&
+                        typeof $steps["updateMainSearchRequestPage"] ===
+                          "object" &&
+                        typeof $steps["updateMainSearchRequestPage"].then ===
+                          "function"
+                      ) {
+                        $steps["updateMainSearchRequestPage"] = await $steps[
+                          "updateMainSearchRequestPage"
+                        ];
                       }
                     }).apply(null, eventArgs);
                   },

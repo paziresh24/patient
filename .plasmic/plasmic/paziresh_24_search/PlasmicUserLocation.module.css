@@ -11,6 +11,7 @@
   height: auto;
   max-width: 100%;
   text-align: right;
+  font-size: var(--token-6NbVMeD6zQwn);
   min-width: 0;
 }
 .setUserCityStateVarByCookieIfExist:global(.__wab_instance) {
