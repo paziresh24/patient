@@ -251,9 +251,9 @@ function PlasmicSearchPage__RenderFunc(props: {
             )}
             compactFooter={true}
             shouldShowBrand={true}
-            shouldShowPromoteApp={true}
+            shouldShowPromoteApp={false}
             showBottomNavigation={true}
-            showFooter={true}
+            showFooter={false}
             showHeader={true}
             showSearchSuggestionButton={false}
           >
@@ -617,7 +617,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                   "mainSearchRequest",
                   "apiRequestData"
                 ])}
-                onPageChange={async (...eventArgs: any) => {
+                onPageChange2={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
                     "mainSearchRequest",
                     "page"
@@ -753,31 +753,29 @@ function PlasmicSearchPage__RenderFunc(props: {
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
-                        return (() => {
-                          return (window.onload = function () {
-                            (function (w, d, s, l, i) {
-                              w[l] = w[l] || [];
-                              w[l].push({
-                                "gtm.start": new Date().getTime(),
-                                event: "gtm.js"
-                              });
-                              var j = d.createElement(s),
-                                dl = l != "dataLayer" ? "&l=" + l : "";
-                              j.async = true;
-                              j.src =
-                                "https://www.googletagmanager.com/gtm.js?id=" +
-                                i +
-                                dl;
-                              d.getElementsByTagName("head")[0].appendChild(j);
-                            })(
-                              window,
-                              document,
-                              "script",
-                              "dataLayer",
-                              "GTM-P5RPLDP"
-                            );
-                          });
-                        })();
+                        return (window.onload = function () {
+                          (function (w, d, s, l, i) {
+                            w[l] = w[l] || [];
+                            w[l].push({
+                              "gtm.start": new Date().getTime(),
+                              event: "gtm.js"
+                            });
+                            var j = d.createElement(s),
+                              dl = l != "dataLayer" ? "&l=" + l : "";
+                            j.async = true;
+                            j.src =
+                              "https://www.googletagmanager.com/gtm.js?id=" +
+                              i +
+                              dl;
+                            d.getElementsByTagName("head")[0].appendChild(j);
+                          })(
+                            window,
+                            document,
+                            "script",
+                            "dataLayer",
+                            "GTM-P5RPLDP"
+                          );
+                        });
                       }
                     };
                     return (({ customFunction }) => {
@@ -793,7 +791,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                 $steps["runCode"] = await $steps["runCode"];
               }
 
-              $steps["runCode2"] = true
+              $steps["loadMetrika"] = true
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
@@ -832,11 +830,11 @@ function PlasmicSearchPage__RenderFunc(props: {
                   })()
                 : undefined;
               if (
-                $steps["runCode2"] != null &&
-                typeof $steps["runCode2"] === "object" &&
-                typeof $steps["runCode2"].then === "function"
+                $steps["loadMetrika"] != null &&
+                typeof $steps["loadMetrika"] === "object" &&
+                typeof $steps["loadMetrika"].then === "function"
               ) {
-                $steps["runCode2"] = await $steps["runCode2"];
+                $steps["loadMetrika"] = await $steps["loadMetrika"];
               }
             }}
           />
