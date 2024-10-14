@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Location from '../../location/location';
 import Rate from '../../rate/rate';
 import TurnDetails from '../../turnDetails';
+import { useGetReview } from '@/common/apis/services/reviews/getReviews';
 
 interface TurnBodyProps {
   detailsData: Array<{ id: number; name: string; value: string | React.ReactNode }>;
@@ -30,10 +31,15 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
   const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo, paymentStatus } = props;
   const router = useRouter();
   const { customize } = useCustomize();
+  const feedback = useGetReview({
+    book_id: id,
+  });
 
   const shouldShowLocation = centerType !== CenterType.consult;
   const shouldShowRate =
-    ((centerId !== CENTERS.CONSULT && status === BookStatus.expired) || (centerId === CENTERS.CONSULT && status === BookStatus.visited)) &&
+    feedback.isSuccess &&
+    feedback?.data?.pageInfo?.totalRows === 0 &&
+    (status === BookStatus.expired || status === BookStatus.visited) &&
     feedbackUrl;
 
   const handleClickCard = () => {
