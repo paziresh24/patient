@@ -25,6 +25,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'react-use';
+import { growthbook } from '../_app';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -123,6 +124,19 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       }
     );
   }, [expertises, selectedExpertise]);
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
+      });
+    };
+  }, [slug]);
 
   useEffect(() => {
     if (profileData) {

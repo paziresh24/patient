@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField/textField';
 import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
@@ -52,6 +52,25 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     isFetchingNextPage,
   } = props;
   const page = useRef<number>(1);
+  const router = useRouter();
+  const customTheme = useFeatureValue('them-config', {
+    'search_result:show_first_free_time': true,
+    'search_result:show_available_time': true,
+  });
+  const usePlasmicSearchResult = useFeatureIsOn('center-profile::use-plasmic-search-result');
+
+  const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
+    splunkInstance('center-profile').sendEvent({
+      group: 'center_profile',
+      type: 'doctor_card_click',
+      event: {
+        element_name: elementName,
+        element_content: elementContent,
+        card_data: { ...item },
+        terminal_id: getCookie('terminal_id'),
+      },
+    });
+  };
   const result = flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? [];
 
   return (
@@ -83,38 +102,107 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           />
         </div>
       )}
-      <div className="flex flex-col space-y-2">
-        {loading && (
-          <>
-            <Skeleton h="13rem" w="100%" rounded="lg" />
-            <Skeleton h="13rem" w="100%" rounded="lg" />
-            <Skeleton h="13rem" w="100%" rounded="lg" />
-          </>
-        )}
-        {(result.length === 0 ? !loading : true) && (
-          <SearchGlobalContextsProvider>
-            <Fragment
-              name="SearchResults"
-              props={{
-                searchResultResponse: {
-                  ...doctors?.pages?.[0],
-                  search: {
-                    ...doctors?.pages?.[0]?.search,
-                    result,
-                  },
-                },
-                nextPageTrigger: () => {
-                  page.current += 1;
-                  return onChangePage(page.current);
-                },
-                imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-                location: {},
-                paginationLoadingStatus: isFetchingNextPage,
+      {!usePlasmicSearchResult && (
+        <div className="flex flex-col space-y-2">
+          {loading && (
+            <>
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+            </>
+          )}
+          {!loading && !result.length && (
+            <div className="p-4 text-center rounded-lg bg-slate-200">
+              <Text fontSize="sm" fontWeight="medium">
+                پزشکی یافت نشد.
+              </Text>
+            </div>
+          )}
+          {!loading &&
+            result.map(doctor => (
+              <SearchCard
+                key={doctor.id}
+                type="doctor"
+                baseInfo={{
+                  displayName: doctor.title,
+                  avatar: doctor.image,
+                  url: doctor.url,
+                  expertise: doctor.display_expertise,
+                  isVerify: !doctor.is_bulk,
+                  ...(showRateAndReviews && {
+                    rate: {
+                      count: doctor.rates_count,
+                      satisfaction: doctor.satisfaction,
+                    },
+                  }),
+                  viewCount: doctor.view,
+                }}
+                details={{
+                  badges: doctor.badges.filter((item: any) =>
+                    !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
+                  ),
+                }}
+                actions={doctor.actions
+                  .filter((action: any) => action.title !== 'ویزیت آنلاین')
+                  ?.map((action: any) => ({
+                    text: action.title,
+                    description: customTheme['search_result:show_available_time'] ? action.top_title : '',
+                    outline: action.outline,
+                    action: () => {
+                      router.push(action.url);
+                    },
+                  }))}
+                sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
+              />
+            ))}
+          {hasNextPage && !loading && (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                page.current += 1;
+                return onChangePage(page.current);
               }}
-            />
-          </SearchGlobalContextsProvider>
-        )}
-      </div>
+              loading={isFetchingNextPage}
+            >
+              مشاهده بیشتر
+            </Button>
+          )}
+        </div>
+      )}
+      {usePlasmicSearchResult && (
+        <div className="flex flex-col space-y-2">
+          {loading && (
+            <>
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+              <Skeleton h="13rem" w="100%" rounded="lg" />
+            </>
+          )}
+          {(result.length === 0 ? !loading : true) && (
+            <SearchGlobalContextsProvider>
+              <Fragment
+                name="SearchResults"
+                props={{
+                  searchResultResponse: {
+                    ...doctors?.pages?.[0],
+                    search: {
+                      ...doctors?.pages?.[0]?.search,
+                      result,
+                    },
+                  },
+                  nextPageTrigger: () => {
+                    page.current += 1;
+                    return onChangePage(page.current);
+                  },
+                  imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+                  location: {},
+                  paginationLoadingStatus: isFetchingNextPage,
+                }}
+              />
+            </SearchGlobalContextsProvider>
+          )}
+        </div>
+      )}
     </div>
   );
 };
