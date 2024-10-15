@@ -452,14 +452,7 @@ function PlasmicReviewCard__RenderFunc(props: {
             >
               {(() => {
                 try {
-                  return (
-                    (
-                      (+$props.qualityOfTreatment +
-                        +$props.doctorEncounter +
-                        +$props.explanationOfIssue) /
-                      3
-                    ).toFixed(1) !== "0.0"
-                  );
+                  return Math.round($props.avgRateValue * 10) / 10;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
