@@ -452,7 +452,7 @@ function PlasmicReviewCard__RenderFunc(props: {
             >
               {(() => {
                 try {
-                  return Math.round($props.avgRateValue * 10) / 10;
+                  return $props.avgRateValue !== null;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -485,7 +485,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                     <React.Fragment>
                       {(() => {
                         try {
-                          return Math.round($props.avgRateValue * 10) / 10;
+                          return Number($props.avgRateValue.toFixed(1));
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -845,7 +845,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                   ) : null}
                   {(() => {
                     try {
-                      return $props.avgRateValue < 3.5;
+                      return (
+                        $props.avgRateValue < 3.5 ||
+                        $props.avgRateValue === null
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
