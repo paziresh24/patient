@@ -313,7 +313,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             </Text>
             <div className="px-4 md:p-0">
               <ListOfDoctors
-                doctors={flatten(doctors?.pages?.map(page => page?.search?.result as any[]) ?? []) ?? []}
+                doctors={doctors}
                 expertises={
                   expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
                     label: expertise.name,

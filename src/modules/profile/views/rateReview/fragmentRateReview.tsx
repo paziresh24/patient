@@ -10,6 +10,7 @@ import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
   const userInfo = useUserInfoStore(state => state.info);
+  const isLogin = useUserInfoStore(state => state.isLogin);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterParams, setFilterParams] = useState({});
   const [response, setResponse] = useState(profileData.feedbacks?.feedbacks?.list ?? []);
@@ -23,7 +24,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
       sort,
       search: searchTerm,
       offset: (page - 1) * 10,
-      showOnlyPositiveFeedbacks: userInfo?.id === profileData.information.user_id ? false : true,
+      showOnlyPositiveFeedbacks: isLogin && userInfo?.id === profileData.information.user_id ? false : true,
       ...filterParams,
     },
     {
@@ -85,9 +86,9 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
             props={{
               ...profileData,
               rate: (
-                ((+profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                  (+profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                  (+profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                  +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                  +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
                 3
               ).toFixed(1),
               rateCount: profileData.feedbacks.details?.count_of_feedbacks,
