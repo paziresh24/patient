@@ -26,7 +26,7 @@ export const getReviews = async (params: ReviewParams) => {
         params.not_recommended && `(recommended,eq,0)`,
         params.visited && `(visit_status,eq,visited)`,
         params.center_id && `(center_id,eq,${params.center_id})`,
-        params.showOnlyPositiveFeedbacks && `(avg_rate_value,gt,3.5)`,
+        params.showOnlyPositiveFeedbacks && `((avg_rate_value,gt,3.5)~or(avg_rate_value,is,null))`,
         params.book_id && `(book_id,eq,${params.book_id})`,
       ]
         .filter(Boolean)

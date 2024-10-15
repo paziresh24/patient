@@ -3,19 +3,26 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
+import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import config from 'next/config';
+import { flatten } from 'lodash';
+import { InfiniteData } from '@tanstack/react-query';
+
+const { publicRuntimeConfig } = config();
 
 type ExpertiseType = {
   lable: string;
   value: string;
 };
 interface ListOfDoctorsProps {
-  doctors: any[];
+  doctors: InfiniteData<any> | undefined;
   expertises: ExpertiseType[];
   onSearch: (query: string) => void;
   searchQuery: string;
@@ -45,24 +52,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     isFetchingNextPage,
   } = props;
   const page = useRef<number>(1);
-  const router = useRouter();
-  const customTheme = useFeatureValue('theme-config', {
-    'search_result:show_first_free_time': true,
-    'search_result:show_available_time': true,
-  });
-
-  const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
-    splunkInstance('center-profile').sendEvent({
-      group: 'center_profile',
-      type: 'doctor_card_click',
-      event: {
-        element_name: elementName,
-        element_content: elementContent,
-        card_data: { ...item },
-        terminal_id: getCookie('terminal_id'),
-      },
-    });
-  };
+  const result = flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? [];
 
   return (
     <div className="flex flex-col space-y-3">
@@ -101,61 +91,28 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
             <Skeleton h="13rem" w="100%" rounded="lg" />
           </>
         )}
-        {!loading && !doctors.length && (
-          <div className="p-4 text-center rounded-lg bg-slate-200">
-            <Text fontSize="sm" fontWeight="medium">
-              پزشکی یافت نشد.
-            </Text>
-          </div>
-        )}
-        {!loading &&
-          doctors.map(doctor => (
-            <SearchCard
-              key={doctor.id}
-              type="doctor"
-              baseInfo={{
-                displayName: doctor.title,
-                avatar: doctor.image,
-                url: doctor.url,
-                expertise: doctor.display_expertise,
-                isVerify: !doctor.is_bulk,
-                ...(showRateAndReviews && {
-                  rate: {
-                    count: doctor.rates_count,
-                    satisfaction: doctor.satisfaction,
+        {(result.length === 0 ? !loading : true) && (
+          <SearchGlobalContextsProvider>
+            <Fragment
+              name="SearchResults"
+              props={{
+                searchResultResponse: {
+                  ...doctors?.pages?.[0],
+                  search: {
+                    ...doctors?.pages?.[0]?.search,
+                    result,
                   },
-                }),
-                viewCount: doctor.view,
+                },
+                nextPageTrigger: () => {
+                  page.current += 1;
+                  return onChangePage(page.current);
+                },
+                imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+                location: {},
+                paginationLoadingStatus: isFetchingNextPage,
               }}
-              details={{
-                badges: doctor.badges.filter((item: any) =>
-                  !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
-                ),
-              }}
-              actions={doctor.actions
-                .filter((action: any) => action.title !== 'ویزیت آنلاین')
-                ?.map((action: any) => ({
-                  text: action.title,
-                  description: customTheme['search_result:show_available_time'] ? action.top_title : '',
-                  outline: action.outline,
-                  action: () => {
-                    router.push(action.url);
-                  },
-                }))}
-              sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
             />
-          ))}
-        {hasNextPage && !loading && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              page.current += 1;
-              return onChangePage(page.current);
-            }}
-            loading={isFetchingNextPage}
-          >
-            مشاهده بیشتر
-          </Button>
+          </SearchGlobalContextsProvider>
         )}
       </div>
     </div>
