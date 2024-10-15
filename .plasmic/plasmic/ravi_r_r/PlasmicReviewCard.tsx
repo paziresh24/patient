@@ -491,7 +491,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                             e instanceof TypeError ||
                             e?.plasmicType === "PlasmicUndefinedDataError"
                           ) {
-                            return "%80 ";
+                            return "-";
                           }
                           throw e;
                         }
@@ -843,7 +843,22 @@ function PlasmicReviewCard__RenderFunc(props: {
                       />
                     </Chip>
                   ) : null}
-                  {false ? (
+                  {(() => {
+                    try {
+                      return (
+                        $props.avgRateValue <= 3.5 &&
+                        $props.avgRateValue !== null
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
                     <Chip
                       data-plasmic-name={
                         "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
