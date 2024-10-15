@@ -62,6 +62,7 @@ import {
 import SuggestionInput from "../../SuggestionInput"; // plasmic-import: KILAc4YdRdGh/component
 import SuggestedItem from "../../SuggestedItem"; // plasmic-import: Q8q3z8vRCZn_/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -78,13 +79,19 @@ type VariantPropType = keyof PlasmicSuggestion__VariantsArgs;
 export const PlasmicSuggestion__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicSuggestion__ArgsType = {
+  onSuggestionInputTextInputValueChange?: (val: string) => void;
   onSelect?: (searchQuery: string) => void;
   defaultSearchQuery?: string;
+  suggestionInputInputQueryText?: string;
+  onSuggestionInputInputQueryTextChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicSuggestion__ArgsType;
 export const PlasmicSuggestion__ArgProps = new Array<ArgPropType>(
+  "onSuggestionInputTextInputValueChange",
   "onSelect",
-  "defaultSearchQuery"
+  "defaultSearchQuery",
+  "suggestionInputInputQueryText",
+  "onSuggestionInputInputQueryTextChange"
 );
 
 export type PlasmicSuggestion__OverridesType = {
@@ -94,8 +101,11 @@ export type PlasmicSuggestion__OverridesType = {
 };
 
 export interface DefaultSuggestionProps {
+  onSuggestionInputTextInputValueChange?: (val: string) => void;
   onSelect?: (searchQuery: string) => void;
   defaultSearchQuery?: string;
+  suggestionInputInputQueryText?: string;
+  onSuggestionInputInputQueryTextChange?: (val: string) => void;
   className?: string;
 }
 
@@ -165,7 +175,7 @@ function PlasmicSuggestion__RenderFunc(props: {
       },
       {
         path: "suggestionInput.suggestionTextInputValue",
-        type: "private",
+        type: "readonly",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
@@ -180,13 +190,23 @@ function PlasmicSuggestion__RenderFunc(props: {
               }
               throw e;
             }
-          })()
+          })(),
+
+        onChangeProp: "onSuggestionInputTextInputValueChange"
       },
       {
         path: "suggestionInput.selectedOption",
         type: "private",
         variableType: "number",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "suggestionInput.inputQueryText",
+        type: "writable",
+        variableType: "text",
+
+        valueProp: "suggestionInputInputQueryText",
+        onChangeProp: "onSuggestionInputInputQueryTextChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -219,6 +239,14 @@ function PlasmicSuggestion__RenderFunc(props: {
         data-plasmic-name={"suggestionInput"}
         data-plasmic-override={overrides.suggestionInput}
         className={classNames("__wab_instance", sty.suggestionInput)}
+        inputQueryText={generateStateValueProp($state, [
+          "suggestionInput",
+          "inputQueryText"
+        ])}
+        onInputQueryTextChange={generateStateOnChangeProp($state, [
+          "suggestionInput",
+          "inputQueryText"
+        ])}
         onSelect={async option => {
           const $steps = {};
 
@@ -257,7 +285,7 @@ function PlasmicSuggestion__RenderFunc(props: {
             $steps["runOnSelect"] = await $steps["runOnSelect"];
           }
 
-          $steps["invokeGlobalAction2"] =
+          $steps["onSelectInteractProb"] =
             option === 0
               ? (() => {
                   const actionArgs = {
@@ -285,11 +313,13 @@ function PlasmicSuggestion__RenderFunc(props: {
                 })()
               : undefined;
           if (
-            $steps["invokeGlobalAction2"] != null &&
-            typeof $steps["invokeGlobalAction2"] === "object" &&
-            typeof $steps["invokeGlobalAction2"].then === "function"
+            $steps["onSelectInteractProb"] != null &&
+            typeof $steps["onSelectInteractProb"] === "object" &&
+            typeof $steps["onSelectInteractProb"].then === "function"
           ) {
-            $steps["invokeGlobalAction2"] = await $steps["invokeGlobalAction2"];
+            $steps["onSelectInteractProb"] = await $steps[
+              "onSelectInteractProb"
+            ];
           }
         }}
         onSelectedOptionChange={generateStateOnChangeProp($state, [

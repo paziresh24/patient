@@ -89,6 +89,8 @@ export type PlasmicSuggestionInput__ArgsType = {
   optionsLength?: number;
   onSelectedOptionChange?: (val: string) => void;
   onSelect?: (option: number) => void;
+  inputQueryText?: string;
+  onInputQueryTextChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicSuggestionInput__ArgsType;
 export const PlasmicSuggestionInput__ArgProps = new Array<ArgPropType>(
@@ -99,7 +101,9 @@ export const PlasmicSuggestionInput__ArgProps = new Array<ArgPropType>(
   "suggestionContents2",
   "optionsLength",
   "onSelectedOptionChange",
-  "onSelect"
+  "onSelect",
+  "inputQueryText",
+  "onInputQueryTextChange"
 );
 
 export type PlasmicSuggestionInput__OverridesType = {
@@ -117,6 +121,8 @@ export interface DefaultSuggestionInputProps {
   optionsLength?: number;
   onSelectedOptionChange?: (val: string) => void;
   onSelect?: (option: number) => void;
+  inputQueryText?: string;
+  onInputQueryTextChange?: (val: string) => void;
   className?: string;
 }
 
@@ -185,6 +191,14 @@ function PlasmicSuggestionInput__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => 0,
 
         onChangeProp: "onSelectedOptionChange"
+      },
+      {
+        path: "inputQueryText",
+        type: "writable",
+        variableType: "text",
+
+        valueProp: "inputQueryText",
+        onChangeProp: "onInputQueryTextChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -383,16 +397,14 @@ function PlasmicSuggestionInput__RenderFunc(props: {
             ];
           }
 
-          $steps["runCode"] =
+          $steps["removesFocusFromSearchInput"] =
             event.key === "Enter"
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return (() => {
-                        return document
-                          .querySelector('input[name="search-input"]')
-                          .blur();
-                      })();
+                      return document
+                        .querySelector('input[name="search-input"]')
+                        .blur();
                     }
                   };
                   return (({ customFunction }) => {
@@ -401,11 +413,13 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                 })()
               : undefined;
           if (
-            $steps["runCode"] != null &&
-            typeof $steps["runCode"] === "object" &&
-            typeof $steps["runCode"].then === "function"
+            $steps["removesFocusFromSearchInput"] != null &&
+            typeof $steps["removesFocusFromSearchInput"] === "object" &&
+            typeof $steps["removesFocusFromSearchInput"].then === "function"
           ) {
-            $steps["runCode"] = await $steps["runCode"];
+            $steps["removesFocusFromSearchInput"] = await $steps[
+              "removesFocusFromSearchInput"
+            ];
           }
         }}
       >
@@ -531,6 +545,37 @@ function PlasmicSuggestionInput__RenderFunc(props: {
               ) {
                 $steps["updateSelectedOption"] = await $steps[
                   "updateSelectedOption"
+                ];
+              }
+
+              $steps["updateInputQueryText"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["inputQueryText"]
+                      },
+                      operation: 0,
+                      value: $state.textInput.value
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateInputQueryText"] != null &&
+                typeof $steps["updateInputQueryText"] === "object" &&
+                typeof $steps["updateInputQueryText"].then === "function"
+              ) {
+                $steps["updateInputQueryText"] = await $steps[
+                  "updateInputQueryText"
                 ];
               }
             }).apply(null, eventArgs);
