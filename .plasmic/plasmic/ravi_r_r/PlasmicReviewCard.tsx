@@ -492,7 +492,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                     <React.Fragment>
                       {(() => {
                         try {
-                          return $props.avgRateValue;
+                          return Math.round($props.avgRateValue * 10) / 10;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
