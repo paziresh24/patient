@@ -706,6 +706,20 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicUserLocation.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "nA_GgXV5mxEW",
+          "name": "SearchPage2",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage2.tsx",
+          "importSpec": {
+            "modulePath": "../src/pages/s/jahannama-2.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage2.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/s/jahannama-2"
         }
       ],
       "icons": [
@@ -894,8 +908,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1386,7 +1399,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
