@@ -88,6 +88,7 @@ export type PlasmicMainSearchRequest__ArgsType = {
   result?: any;
   onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
+  suggestionExecutionSource?: boolean;
 };
 type ArgPropType = keyof PlasmicMainSearchRequest__ArgsType;
 export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
@@ -98,7 +99,8 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "onPageChange2",
   "result",
   "onResultChange",
-  "searchOptionalFilters"
+  "searchOptionalFilters",
+  "suggestionExecutionSource"
 );
 
 export type PlasmicMainSearchRequest__OverridesType = {
@@ -118,6 +120,7 @@ export interface DefaultMainSearchRequestProps {
   result?: any;
   onResultChange?: (val: string) => void;
   searchOptionalFilters?: any;
+  suggestionExecutionSource?: boolean;
   className?: string;
 }
 
@@ -141,7 +144,9 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          suggestionExecutionSource: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
