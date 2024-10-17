@@ -2077,11 +2077,11 @@ function PlasmicProductCard__RenderFunc(props: {
                   {(() => {
                     try {
                       return (
-                        actionButton.top_title &&
-                        actionButton.top_title.trim() !== "" &&
                         !$ctx.Growthbook.features["theme-config"][
                           "search_result:first_free_time_data_src_from_availability-status_api"
-                        ]
+                        ] &&
+                        actionButton.top_title &&
+                        actionButton.top_title.trim() !== ""
                       );
                     } catch (e) {
                       if (
