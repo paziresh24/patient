@@ -931,7 +931,7 @@ function PlasmicProductCard__RenderFunc(props: {
             ) : null}
             {(() => {
               try {
-                return $props.rateCount;
+                return !!+$props.rateCount;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
