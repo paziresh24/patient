@@ -1382,7 +1382,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 rateCount={(() => {
                   try {
-                    return currentItem.rates_count;
+                    return (
+                      $ctx.Growthbook.features["theme-config"][
+                        "search_result:show_rate_and_reviews"
+                      ] && currentItem.rates_count
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1395,7 +1399,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 satisfactionPercent={(() => {
                   try {
-                    return currentItem.satisfaction;
+                    return (
+                      $ctx.Growthbook.features["theme-config"][
+                        "search_result:show_rate_and_reviews"
+                      ] && currentItem.satisfaction
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
