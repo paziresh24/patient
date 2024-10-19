@@ -86,7 +86,7 @@ export type PlasmicMainSearchRequest__ArgsType = {
   page?: number;
   onPageChange2?: (val: string) => void;
   result?: any;
-  onResultChange?: (val: string) => void;
+  onResultChange2?: (val: string) => void;
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
 };
@@ -98,7 +98,7 @@ export const PlasmicMainSearchRequest__ArgProps = new Array<ArgPropType>(
   "page",
   "onPageChange2",
   "result",
-  "onResultChange",
+  "onResultChange2",
   "searchOptionalFilters",
   "suggestionExecutionSource"
 );
@@ -118,7 +118,7 @@ export interface DefaultMainSearchRequestProps {
   page?: number;
   onPageChange2?: (val: string) => void;
   result?: any;
-  onResultChange?: (val: string) => void;
+  onResultChange2?: (val: string) => void;
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
   className?: string;
@@ -202,7 +202,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         variableType: "array",
 
         valueProp: "result",
-        onChangeProp: "onResultChange"
+        onChangeProp: "onResultChange2"
       },
       {
         path: "total",
