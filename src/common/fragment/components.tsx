@@ -23,6 +23,7 @@ import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/pazir
 import PlasmicProductCard, { PlasmicProductCard__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicProductCard';
 import PlasmicSearchResults, { PlasmicSearchResults__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
 import PlasmicSchedules, { PlasmicSchedules__ArgProps } from '.plasmic/plasmic/paziresh_24_booking/PlasmicSchedules';
+import PlasmicMainSearchRequest, { PlasmicMainSearchRequest__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicMainSearchRequest';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -86,5 +87,11 @@ export const Components = {
     id: 'Mt_WMP6AHSGv',
     propsAllowed: PlasmicSchedules__ArgProps,
     projectId: '8NbkXymcLwvMUC2yXeRrWk',
+  },
+  MainSearchRequest: {
+    Component: PlasmicMainSearchRequest,
+    id: 'SctdwrC6-ku4',
+    propsAllowed: PlasmicMainSearchRequest__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };

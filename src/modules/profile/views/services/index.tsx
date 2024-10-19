@@ -15,6 +15,7 @@ import { useInView } from 'react-intersection-observer';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { growthbook } from 'src/pages/_app';
+import moment from 'jalali-moment';
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -122,6 +123,13 @@ export const Services = ({
                 waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
                 ...(useAvailabilityStatusApi && {
                   is_active: alabilityStatus.data?.data?.availability.some((c: any) => c.center_id === center.id),
+                  freeturn_text: moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
+                    ?.locale('fa')
+                    .calendar(undefined, {
+                      sameDay: '[امروز] ساعت HH:mm',
+                      nextDay: '[فردا] ساعت HH:mm',
+                      sameElse: 'jD jMMMM ساعت HH:mm',
+                    }),
                 }),
               }))}
             onBook={({ centerId, serviceId }) =>

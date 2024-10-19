@@ -5,6 +5,10 @@ import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick
 import { Item } from '@/modules/search/types/suggestion';
 import getConfig from 'next/config';
 import style from './section.module.css';
+import { Fragment } from '@/common/fragment';
+import { useSearchStore } from '@/modules/search/store/search';
+import { useMemo } from 'react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 const { publicRuntimeConfig } = getConfig();
 
 interface CardSectionProps {
@@ -14,6 +18,25 @@ interface CardSectionProps {
 export const CardSection = (props: CardSectionProps) => {
   const { items } = props;
   const { handleItemClick } = useSuggestionItem();
+  const userSearchValue = useSearchStore(state => state.userSearchValue);
+  const city = useSearchStore(state => state.city);
+  const useMainSearchRequest = useFeatureIsOn('use-main-search-request-for-card-search-suggestion');
+
+  const fragmentProps = useMemo(
+    () => ({
+      searchQuery: userSearchValue,
+      searchOptionalFilters: city?.id !== '-1' ? { city_id: [city?.id] } : {},
+      suggestionExecutionSource: true,
+      page: 1,
+      result: [],
+      searchFilters: {},
+    }),
+    [userSearchValue],
+  );
+
+  if (useMainSearchRequest) {
+    return <Fragment name="MainSearchRequest" props={fragmentProps} />;
+  }
 
   return (
     <div className="py-2 space-y-1 bg-white">
