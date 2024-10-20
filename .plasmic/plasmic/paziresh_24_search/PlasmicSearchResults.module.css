@@ -79,25 +79,26 @@
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
-.httpRestApiFetcher:global(.__wab_instance) {
-  width: 100%;
+.apiRequest:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
-  min-width: 0;
 }
-.text__i9D53 {
+.text__oSJu {
   margin-bottom: 354px;
   margin-top: 2px;
+}
+.text__ffikx {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
 }
 .topSuggestedCard:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
   position: relative;
   min-width: 0;
-}
-.sideEffect__hY4TD:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
 }
 .resultCardsVerticalStack2 {
   display: flex;
@@ -134,6 +135,17 @@
   > picture
   > img {
   margin-top: var(--token-vMUQwr5Jto1d);
+}
+.freeBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
 }
 .productCard:global(.__wab_instance) {
   max-width: 100%;
@@ -249,7 +261,7 @@
   > img {
   margin-top: var(--token-fhaz6q6bl-fW);
 }
-.sideEffect__pyDki:global(.__wab_instance) {
+.sideEffect:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   position: relative;
