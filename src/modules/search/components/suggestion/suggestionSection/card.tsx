@@ -10,6 +10,7 @@ import { useSearchStore } from '@/modules/search/store/search';
 import { useMemo } from 'react';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 const { publicRuntimeConfig } = getConfig();
+import SearchGlobalContextsProvider from '../../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 interface CardSectionProps {
   items: Item[];
@@ -27,15 +28,16 @@ export const CardSection = (props: CardSectionProps) => {
       searchQuery: userSearchValue,
       searchOptionalFilters: city?.id !== '-1' ? { city_id: [city?.id] } : {},
       suggestionExecutionSource: true,
-      page: 1,
-      result: [],
-      searchFilters: {},
     }),
-    [userSearchValue],
+    [],
   );
 
   if (useMainSearchRequest) {
-    return <Fragment name="MainSearchRequest" props={fragmentProps} />;
+    return (
+      <SearchGlobalContextsProvider>
+        <Fragment name="SearchRequest" props={{ ...fragmentProps }} />
+      </SearchGlobalContextsProvider>
+    );
   }
 
   return (

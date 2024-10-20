@@ -23,7 +23,7 @@ import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/pazir
 import PlasmicProductCard, { PlasmicProductCard__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicProductCard';
 import PlasmicSearchResults, { PlasmicSearchResults__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
 import PlasmicSchedules, { PlasmicSchedules__ArgProps } from '.plasmic/plasmic/paziresh_24_booking/PlasmicSchedules';
-import PlasmicMainSearchRequest, { PlasmicMainSearchRequest__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicMainSearchRequest';
+import PlasmicSearchRequest, { PlasmicSearchRequest__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchRequest';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -88,10 +88,10 @@ export const Components = {
     propsAllowed: PlasmicSchedules__ArgProps,
     projectId: '8NbkXymcLwvMUC2yXeRrWk',
   },
-  MainSearchRequest: {
-    Component: PlasmicMainSearchRequest,
-    id: 'SctdwrC6-ku4',
-    propsAllowed: PlasmicMainSearchRequest__ArgProps,
+  SearchRequest: {
+    Component: PlasmicSearchRequest,
+    id: '35vwUOYdUX87',
+    propsAllowed: PlasmicSearchRequest__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };
