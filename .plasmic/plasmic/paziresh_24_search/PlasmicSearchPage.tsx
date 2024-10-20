@@ -698,7 +698,7 @@ function PlasmicSearchPage__RenderFunc(props: {
                     }
                   }).apply(null, eventArgs);
                 }}
-                onResultChange={generateStateOnChangeProp($state, [
+                onResultChange2={generateStateOnChangeProp($state, [
                   "mainSearchRequest",
                   "result"
                 ])}
