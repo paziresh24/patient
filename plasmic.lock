@@ -636,16 +636,6 @@
           "assetId": "sMdpLWyxbzDCruwMRffW2m",
           "type": "projectCss",
           "checksum": "e1b9325fa9f4608e8584c9cac66d503c"
-        },
-        {
-          "type": "renderModule",
-          "assetId": "yVMuK32CxLFG",
-          "checksum": "b98745752937ad97753d85f9814f7f2a"
-        },
-        {
-          "type": "cssRules",
-          "assetId": "yVMuK32CxLFG",
-          "checksum": "b98745752937ad97753d85f9814f7f2a"
         }
       ],
       "codegenVersion": "0.0.1"

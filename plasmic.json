@@ -733,20 +733,6 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchRequest.module.css",
           "scheme": "blackbox",
           "componentType": "component"
-        },
-        {
-          "id": "yVMuK32CxLFG",
-          "name": "Button",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicButton.tsx",
-          "importSpec": {
-            "modulePath": "Button.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicButton.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "button"
         }
       ],
       "icons": [
