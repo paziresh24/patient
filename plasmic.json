@@ -720,6 +720,19 @@
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/s/jahannama-2"
+        },
+        {
+          "id": "35vwUOYdUX87",
+          "name": "SearchRequest",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchRequest.tsx",
+          "importSpec": {
+            "modulePath": "SearchRequest.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchRequest.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
