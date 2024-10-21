@@ -573,12 +573,13 @@ function PlasmicSearchResults__RenderFunc(props: {
           >
             {(() => {
               try {
-                return $state.apiRequest.data.search.result[0]?.title?.length >=
-                  3 &&
-                  $state.apiRequest.data.search.result[0].title ===
+                return (
+                  $state.apiRequest?.data?.search?.result?.[0]?.title?.length >=
+                    3 &&
+                  $props?.topSuggestedCardFeature?.enable &&
+                  $state.apiRequest.data.search.result[0].title !==
                     $props.searchResultResponse.search.result[0].title
-                  ? false
-                  : $props?.topSuggestedCardFeature?.enable;
+                );
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -1203,74 +1204,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   eventTrigger={async (elementName, elementContent) => {
                     const $steps = {};
 
-                    $steps["runCodeSplunkEvent"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return $$.splunkEvent({
-                                token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                                group: "search_metrics",
-                                type: "search_click_position",
-                                data: {
-                                  card_data: {
-                                    action: currentItem.actions?.map?.(item =>
-                                      JSON.stringify({
-                                        outline: item.outline,
-                                        title: item.title,
-                                        top_title: item.top_title.replace(
-                                          /(<([^>]+)>)/gi,
-                                          ""
-                                        )
-                                      })
-                                    ),
-                                    online_visit_buttons_custom_destination:
-                                      $props.onlineVisitButtonsCustomDestination &&
-                                      $props.onlineVisitButtonsCustomDestination
-                                        .enable
-                                        ? $props
-                                            .onlineVisitButtonsCustomDestination
-                                            .url_template
-                                        : undefined,
-                                    _id: currentItem._id,
-                                    position: currentItem.position,
-                                    server_id: currentItem.server_id,
-                                    title: currentItem.title,
-                                    type: currentItem.type,
-                                    url: currentItem.url,
-                                    rates_count: currentItem.rates_count,
-                                    satisfaction: currentItem.satisfaction
-                                  },
-                                  filters:
-                                    $props.searchResultResponse
-                                      .selected_filters,
-                                  result_count:
-                                    $props.searchResultResponse.lent,
-                                  location: $props.location.city_name,
-                                  city_id: $props.location.city_id,
-                                  lat: $props.location.lat,
-                                  lon: $props.location.lon,
-                                  query_id:
-                                    $props.searchResultResponse.search.query_id
-                                }
-                              });
-                            }
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runCodeSplunkEvent"] != null &&
-                      typeof $steps["runCodeSplunkEvent"] === "object" &&
-                      typeof $steps["runCodeSplunkEvent"].then === "function"
-                    ) {
-                      $steps["runCodeSplunkEvent"] = await $steps[
-                        "runCodeSplunkEvent"
-                      ];
-                    }
-
-                    $steps["sendSplunkClickEvent"] = false
+                    $steps["sendSplunkClickEvent"] = true
                       ? (() => {
                           const actionArgs = {
                             args: [
@@ -1279,50 +1213,47 @@ function PlasmicSearchResults__RenderFunc(props: {
                                   return {
                                     event_group: "search_metrics",
                                     event_type: "search_click_position",
-                                    data: {
-                                      card_data: {
-                                        action: currentItem.actions?.map?.(
-                                          item =>
-                                            JSON.stringify({
-                                              outline: item.outline,
-                                              title: item.title,
-                                              top_title: item.top_title.replace(
-                                                /(<([^>]+)>)/gi,
-                                                ""
-                                              )
-                                            })
-                                        ),
-                                        online_visit_buttons_custom_destination:
-                                          $props.onlineVisitButtonsCustomDestination &&
-                                          $props
-                                            .onlineVisitButtonsCustomDestination
-                                            .enable
-                                            ? $props
-                                                .onlineVisitButtonsCustomDestination
-                                                .url_template
-                                            : undefined,
-                                        _id: currentItem._id,
-                                        position: currentItem.position,
-                                        server_id: currentItem.server_id,
-                                        title: currentItem.title,
-                                        type: currentItem.type,
-                                        url: currentItem.url,
-                                        rates_count: currentItem.rates_count,
-                                        satisfaction: currentItem.satisfaction
-                                      },
-                                      filters:
-                                        $props.searchResultResponse
-                                          .selected_filters,
-                                      result_count:
-                                        $props.searchResultResponse.lent,
-                                      location: $props.location.city_name,
-                                      city_id: $props.location.city_id,
-                                      lat: $props.location.lat,
-                                      lon: $props.location.lon,
-                                      query_id:
-                                        $props.searchResultResponse.search
-                                          .query_id
-                                    }
+                                    card_data: {
+                                      action: currentItem.actions?.map?.(item =>
+                                        JSON.stringify({
+                                          outline: item.outline,
+                                          title: item.title,
+                                          top_title: item.top_title.replace(
+                                            /(<([^>]+)>)/gi,
+                                            ""
+                                          )
+                                        })
+                                      ),
+                                      online_visit_buttons_custom_destination:
+                                        $props.onlineVisitButtonsCustomDestination &&
+                                        $props
+                                          .onlineVisitButtonsCustomDestination
+                                          .enable
+                                          ? $props
+                                              .onlineVisitButtonsCustomDestination
+                                              .url_template
+                                          : undefined,
+                                      _id: currentItem._id,
+                                      position: currentItem.position,
+                                      server_id: currentItem.server_id,
+                                      title: currentItem.title,
+                                      type: currentItem.type,
+                                      url: currentItem.url,
+                                      rates_count: currentItem.rates_count,
+                                      satisfaction: currentItem.satisfaction
+                                    },
+                                    filters:
+                                      $props.searchResultResponse
+                                        .selected_filters,
+                                    result_count:
+                                      $props.searchResultResponse.lent,
+                                    location: $props.location.city_name,
+                                    city_id: $props.location.city_id,
+                                    lat: $props.location.lat,
+                                    lon: $props.location.lon,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id
                                   };
                                 } catch (e) {
                                   if (
@@ -1406,6 +1337,110 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["runCodeSv2CtrRequest"] = await $steps[
                         "runCodeSv2CtrRequest"
+                      ];
+                    }
+
+                    $steps["runCodeSplunkEvent"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                                group: "search_metrics",
+                                type: "search_click_position",
+                                data: {
+                                  card_data: {
+                                    action: currentItem.actions?.map?.(item =>
+                                      JSON.stringify({
+                                        outline: item.outline,
+                                        title: item.title,
+                                        top_title: item.top_title.replace(
+                                          /(<([^>]+)>)/gi,
+                                          ""
+                                        )
+                                      })
+                                    ),
+                                    online_visit_buttons_custom_destination:
+                                      $props.onlineVisitButtonsCustomDestination &&
+                                      $props.onlineVisitButtonsCustomDestination
+                                        .enable
+                                        ? $props
+                                            .onlineVisitButtonsCustomDestination
+                                            .url_template
+                                        : undefined,
+                                    _id: currentItem._id,
+                                    position: currentItem.position,
+                                    server_id: currentItem.server_id,
+                                    title: currentItem.title,
+                                    type: currentItem.type,
+                                    url: currentItem.url,
+                                    rates_count: currentItem.rates_count,
+                                    satisfaction: currentItem.satisfaction
+                                  },
+                                  filters:
+                                    $props.searchResultResponse
+                                      .selected_filters,
+                                  result_count:
+                                    $props.searchResultResponse.lent,
+                                  location: $props.location.city_name,
+                                  city_id: $props.location.city_id,
+                                  lat: $props.location.lat,
+                                  lon: $props.location.lon,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id
+                                }
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCodeSplunkEvent"] != null &&
+                      typeof $steps["runCodeSplunkEvent"] === "object" &&
+                      typeof $steps["runCodeSplunkEvent"].then === "function"
+                    ) {
+                      $steps["runCodeSplunkEvent"] = await $steps[
+                        "runCodeSplunkEvent"
+                      ];
+                    }
+
+                    $steps["invokeGlobalAction"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              (() => {
+                                try {
+                                  return event.target;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["invokeGlobalAction"] != null &&
+                      typeof $steps["invokeGlobalAction"] === "object" &&
+                      typeof $steps["invokeGlobalAction"].then === "function"
+                    ) {
+                      $steps["invokeGlobalAction"] = await $steps[
+                        "invokeGlobalAction"
                       ];
                     }
                   }}
