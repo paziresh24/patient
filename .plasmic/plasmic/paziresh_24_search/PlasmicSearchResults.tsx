@@ -1213,6 +1213,18 @@ function PlasmicSearchResults__RenderFunc(props: {
                                   return {
                                     event_group: "search_metrics",
                                     event_type: "search_click_position",
+                                    url: {
+                                      href: window.location.href,
+                                      query: window.location.search,
+                                      pathname: window.location.pathname,
+                                      host: window.location.host
+                                    },
+                                    userAgent:
+                                      navigator &&
+                                      navigator.userAgent &&
+                                      navigator.userAgent.length <= 3
+                                        ? ""
+                                        : navigator.userAgent,
                                     card_data: {
                                       action: currentItem.actions?.map?.(item =>
                                         JSON.stringify({
@@ -1253,7 +1265,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     lon: $props.location.lon,
                                     query_id:
                                       $props.searchResultResponse.search
-                                        .query_id
+                                        .query_id,
+                                    terminal_id: document.cookie.replace(
+                                      /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                      "$1"
+                                    )
                                   };
                                 } catch (e) {
                                   if (
@@ -1404,43 +1420,6 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["runCodeSplunkEvent"] = await $steps[
                         "runCodeSplunkEvent"
-                      ];
-                    }
-
-                    $steps["invokeGlobalAction"] = false
-                      ? (() => {
-                          const actionArgs = {
-                            args: [
-                              undefined,
-                              (() => {
-                                try {
-                                  return event.target;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            ]
-                          };
-                          return $globalActions["Fragment.showToast"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
-                      : undefined;
-                    if (
-                      $steps["invokeGlobalAction"] != null &&
-                      typeof $steps["invokeGlobalAction"] === "object" &&
-                      typeof $steps["invokeGlobalAction"].then === "function"
-                    ) {
-                      $steps["invokeGlobalAction"] = await $steps[
-                        "invokeGlobalAction"
                       ];
                     }
                   }}

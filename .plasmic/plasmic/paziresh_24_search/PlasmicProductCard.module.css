@@ -22,6 +22,25 @@
 .root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
   margin-top: var(--token-vMUQwr5Jto1d);
 }
+.link__tIltE {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.cardTitle1 {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-RxWJli6xyBzp);
+  color: #000000;
+  min-width: 0;
+}
 .freeBox__bcNgL {
   display: flex;
   position: relative;
