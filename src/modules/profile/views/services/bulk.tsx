@@ -17,9 +17,10 @@ import { useMemo } from 'react';
 interface BulkServiceProps {
   displayName: string;
   expertises: any;
+  availableTime?: string;
 }
 
-export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
+export const BulkService = ({ displayName, expertises, availableTime }: BulkServiceProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
   const searchData = useSearch(
@@ -81,6 +82,14 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
           <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
             <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
           </Alert>
+          {availableTime && (
+            <div className="flex justify-between text-sm">
+              <Text className="text-slate-500">زمان اعلام نوبت های جدید: </Text>
+              <Text fontWeight="medium" className="text-slate-800">
+                {availableTime}
+              </Text>
+            </div>
+          )}
           <Button id="bulk-profile-button" block onClick={handleOpenSubstituteDoctorModal}>
             <Text>دریافت نوبت از پزشک جایگزین</Text>
           </Button>
@@ -92,9 +101,14 @@ export const BulkService = ({ displayName, expertises }: BulkServiceProps) => {
             <ErrorIcon className="w-5 h-5" />
             <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
           </Alert>
-          <Text fontWeight="medium" fontSize="sm" className="text-slate-500">
-            شما می توانید از سایر پزشکان حاذق در این حوزه نوبت بگیرید.
-          </Text>
+          {availableTime && (
+            <div className="flex justify-between text-sm">
+              <Text className="text-slate-500">زمان اعلام نوبت های جدید: </Text>
+              <Text fontWeight="medium" className="text-slate-800">
+                {availableTime}
+              </Text>
+            </div>
+          )}
         </Card>
       )}
       <Modal bodyClassName="p-3" title="" {...modalProps}>

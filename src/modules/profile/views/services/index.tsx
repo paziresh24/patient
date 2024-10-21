@@ -16,6 +16,7 @@ import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
+import { sortBy } from 'lodash';
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -94,7 +95,19 @@ export const Services = ({
   }
 
   if (useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
-    return <BulkService displayName={doctor.display_name} expertises={expertises} />;
+    const sortedAvalaibleTime = () => {
+      const centers = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
+      const availableTime = sortBy(centers, 'available_time')[0]?.available_time;
+      if (availableTime) {
+        return moment(availableTime)?.locale('fa').calendar(undefined, {
+          sameDay: '[امروز] ساعت HH:mm',
+          nextDay: '[فردا] ساعت HH:mm',
+          sameElse: 'jD jMMMM ساعت HH:mm',
+        });
+      }
+      return '';
+    };
+    return <BulkService displayName={doctor.display_name} expertises={expertises} availableTime={sortedAvalaibleTime()} />;
   }
 
   return (
@@ -122,14 +135,28 @@ export const Services = ({
                 ...center,
                 waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
                 ...(useAvailabilityStatusApi && {
-                  is_active: alabilityStatus.data?.data?.availability.some((c: any) => c.center_id === center.id),
-                  freeturn_text: moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
-                    ?.locale('fa')
-                    .calendar(undefined, {
-                      sameDay: '[امروز] ساعت HH:mm',
-                      nextDay: '[فردا] ساعت HH:mm',
-                      sameElse: 'jD jMMMM ساعت HH:mm',
-                    }),
+                  is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
+                  freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
+                    ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
+                        ?.locale('fa')
+                        .calendar(undefined, {
+                          sameDay: '[امروز] ساعت HH:mm',
+                          nextDay: '[فردا] ساعت HH:mm',
+                          sameElse: 'jD jMMMM ساعت HH:mm',
+                        })
+                    : '',
+                  freeturns_info: alabilityStatus.data?.data?.availability
+                    ?.filter((c: any) => c.center_id === center.id)
+                    ?.map((item: any) => ({
+                      available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
+                      availalbe_time_text: item?.available_time
+                        ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
+                            sameDay: '[امروز] ساعت HH:mm',
+                            nextDay: '[فردا] ساعت HH:mm',
+                            sameElse: 'jD jMMMM ساعت HH:mm',
+                          })
+                        : '',
+                    })),
                 }),
               }))}
             onBook={({ centerId, serviceId }) =>
