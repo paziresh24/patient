@@ -153,6 +153,7 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicProductCard__OverridesType = {
   root?: Flex__<"div">;
+  cardTitle1?: Flex__<"h2">;
   avatar?: Flex__<typeof Avatar>;
   classificationApi?: Flex__<typeof DataFetcher>;
   classificationTitle?: Flex__<"span">;
@@ -238,6 +239,8 @@ function PlasmicProductCard__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -374,6 +377,142 @@ function PlasmicProductCard__RenderFunc(props: {
         )}
         dir={"rtl"}
       >
+        {false ? (
+          <PlasmicLink__
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              sty.link__tIltE
+            )}
+            component={Link}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runEventTrigger"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["eventTrigger"],
+                      args: [
+                        "title",
+                        (() => {
+                          try {
+                            return $props.title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runEventTrigger"] != null &&
+                typeof $steps["runEventTrigger"] === "object" &&
+                typeof $steps["runEventTrigger"].then === "function"
+              ) {
+                $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+              }
+
+              $steps["invokeGlobalAction"] = false
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        undefined,
+                        (() => {
+                          try {
+                            return $props.title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Fragment.showToast"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+            }}
+            platform={"nextjs"}
+            target={(() => {
+              try {
+                return $props.url?.openInNewTab;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            title={(() => {
+              try {
+                return $props.url?.title;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          >
+            <h2
+              data-plasmic-name={"cardTitle1"}
+              data-plasmic-override={overrides.cardTitle1}
+              className={classNames(
+                projectcss.all,
+                projectcss.h2,
+                projectcss.__wab_text,
+                sty.cardTitle1
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0639\u0646\u0648\u0627\u0646 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u0646\u0627\u0645 \u06a9\u0627\u0631\u0628\u0631 \u06cc\u0627 \u0646\u062a\u06cc\u062c\u0647";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </h2>
+          </PlasmicLink__>
+        ) : null}
         <Stack__
           as={"div"}
           hasGap={true}
@@ -2227,6 +2366,43 @@ function PlasmicProductCard__RenderFunc(props: {
                             "runEventTrigger"
                           ];
                         }
+
+                        $steps["invokeGlobalAction"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  undefined,
+                                  (() => {
+                                    try {
+                                      return $props.eventTrigger;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.showToast"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["invokeGlobalAction"] != null &&
+                          typeof $steps["invokeGlobalAction"] === "object" &&
+                          typeof $steps["invokeGlobalAction"].then ===
+                            "function"
+                        ) {
+                          $steps["invokeGlobalAction"] = await $steps[
+                            "invokeGlobalAction"
+                          ];
+                        }
                       }}
                       outline={(() => {
                         try {
@@ -2813,6 +2989,7 @@ function PlasmicProductCard__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "cardTitle1",
     "avatar",
     "classificationApi",
     "classificationTitle",
@@ -2830,6 +3007,7 @@ const PlasmicDescendants = {
     "getProviderFromSlugApiRequest",
     "availabilityStatus"
   ],
+  cardTitle1: ["cardTitle1"],
   avatar: ["avatar"],
   classificationApi: ["classificationApi", "classificationTitle"],
   classificationTitle: ["classificationTitle"],
@@ -2859,6 +3037,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  cardTitle1: "h2";
   avatar: typeof Avatar;
   classificationApi: typeof DataFetcher;
   classificationTitle: "span";
@@ -2937,6 +3116,7 @@ export const PlasmicProductCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    cardTitle1: makeNodeComponent("cardTitle1"),
     avatar: makeNodeComponent("avatar"),
     classificationApi: makeNodeComponent("classificationApi"),
     classificationTitle: makeNodeComponent("classificationTitle"),
