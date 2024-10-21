@@ -1263,6 +1263,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     city_id: $props.location.city_id,
                                     lat: $props.location.lat,
                                     lon: $props.location.lon,
+                                    elementName: elementName,
+                                    elementContent: elementContent,
                                     query_id:
                                       $props.searchResultResponse.search
                                         .query_id,
@@ -1420,6 +1422,43 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["runCodeSplunkEvent"] = await $steps[
                         "runCodeSplunkEvent"
+                      ];
+                    }
+
+                    $steps["invokeGlobalAction"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              (() => {
+                                try {
+                                  return elementName;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["invokeGlobalAction"] != null &&
+                      typeof $steps["invokeGlobalAction"] === "object" &&
+                      typeof $steps["invokeGlobalAction"].then === "function"
+                    ) {
+                      $steps["invokeGlobalAction"] = await $steps[
+                        "invokeGlobalAction"
                       ];
                     }
                   }}
