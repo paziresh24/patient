@@ -15,7 +15,7 @@ export const reformattedCentersProperty = ({ centers, displayName }: { centers: 
           isDisable: !center.is_active,
           isAvailable:
             center.services.length === 1 && !!freeturnsInfo
-              ? freeturnsInfo?.available_time < Math.floor(new Date().getTime() / 1000)
+              ? freeturnsInfo?.available_time <= Math.floor(new Date().getTime() / 1000)
               : true,
           availableTime: freeturnsInfo?.availalbe_time_text,
           services: center.services,
