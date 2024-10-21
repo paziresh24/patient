@@ -573,12 +573,13 @@ function PlasmicSearchResults__RenderFunc(props: {
           >
             {(() => {
               try {
-                return $state.apiRequest.data.search.result[0]?.title?.length >=
-                  3 &&
-                  $state.apiRequest.data.search.result[0].title ===
+                return (
+                  $state.apiRequest?.data?.search?.result?.[0]?.title?.length >=
+                    3 &&
+                  $props?.topSuggestedCardFeature?.enable &&
+                  $state.apiRequest.data.search.result[0].title !==
                     $props.searchResultResponse.search.result[0].title
-                  ? false
-                  : $props?.topSuggestedCardFeature?.enable;
+                );
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -1270,7 +1271,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                       ];
                     }
 
-                    $steps["sendSplunkClickEvent"] = false
+                    $steps["sendSplunkClickEvent"] = true
                       ? (() => {
                           const actionArgs = {
                             args: [
