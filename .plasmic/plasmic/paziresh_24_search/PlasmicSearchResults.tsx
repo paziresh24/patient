@@ -60,7 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
@@ -118,12 +118,14 @@ export type PlasmicSearchResults__OverridesType = {
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
   topSuggestedCardVerticalStack?: Flex__<"div">;
-  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
+  freeBox?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
   externalBookSurveyPopup?: Flex__<typeof ExternalBookSurveyPopup>;
@@ -195,6 +197,24 @@ function PlasmicSearchResults__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -402,40 +422,130 @@ function PlasmicSearchResults__RenderFunc(props: {
             sty.topSuggestedCardVerticalStack
           )}
         >
-          <DataFetcher
-            data-plasmic-name={"httpRestApiFetcher"}
-            data-plasmic-override={overrides.httpRestApiFetcher}
-            className={classNames("__wab_instance", sty.httpRestApiFetcher)}
-            dataName={"fetchedData"}
+          <ApiRequest
+            data-plasmic-name={"apiRequest"}
+            data-plasmic-override={overrides.apiRequest}
+            className={classNames("__wab_instance", sty.apiRequest)}
             errorDisplay={
-              <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
-            }
-            errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
-            loadingDisplay={
-              <DataCtxReader__>
-                {$ctx => (
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__i9D53
-                    )}
-                  >
-                    {
-                      "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
-                    }
-                  </div>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__ffikx
                 )}
-              </DataCtxReader__>
+              >
+                {"Error fetching data"}
+              </div>
+            }
+            loadingDisplay={
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__oSJu
+                )}
+              >
+                {
+                  "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
+                }
+              </div>
             }
             method={"GET"}
-            noLayout={false}
-            previewErrorDisplay={false}
-            previewSpinner={false}
+            onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
+            onLoading={generateStateOnChangeProp($state, [
+              "apiRequest",
+              "loading"
+            ])}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+                null,
+                eventArgs
+              );
+              (async data => {
+                const $steps = {};
+
+                $steps["sendEvent"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                group: "search_metrics",
+                                type: "search_top_suggested_card_view",
+                                data: {
+                                  card_data: {
+                                    action:
+                                      $state?.apiRequest?.data?.search?.result?.[0].actions?.map?.(
+                                        item =>
+                                          JSON.stringify({
+                                            outline: item.outline,
+                                            title: item.title,
+                                            top_title: item.top_title.replace(
+                                              /(<([^>]+)>)/gi,
+                                              ""
+                                            )
+                                          })
+                                      ),
+                                    _id: $state?.apiRequest?.data?.search
+                                      ?.result?.[0]._id,
+                                    server_id:
+                                      $state?.apiRequest?.data?.search
+                                        ?.result?.[0].server_id,
+                                    title:
+                                      $state?.apiRequest?.data?.search
+                                        ?.result?.[0].title,
+                                    type: $state?.apiRequest?.data?.search
+                                      ?.result?.[0].type,
+                                    url: $state?.apiRequest?.data?.search
+                                      ?.result?.[0].url,
+                                    rates_count:
+                                      $state?.apiRequest?.data?.search
+                                        ?.result?.[0].rates_count,
+                                    satisfaction:
+                                      $state?.apiRequest?.data?.search
+                                        ?.result?.[0].satisfaction
+                                  },
+                                  filters:
+                                    $props.searchResultResponse
+                                      .selected_filters,
+                                  result_count:
+                                    $props.searchResultResponse?.search?.result
+                                      ?.length,
+                                  location: $props.location.city_name,
+                                  city_id: $props.location.city_id,
+                                  lat: $props.location.lat,
+                                  lon: $props.location.lon,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendEvent"] != null &&
+                  typeof $steps["sendEvent"] === "object" &&
+                  typeof $steps["sendEvent"].then === "function"
+                ) {
+                  $steps["sendEvent"] = await $steps["sendEvent"];
+                }
+              }).apply(null, eventArgs);
+            }}
             url={(() => {
               try {
                 return `https://apigw.paziresh24.com/seapi/v1/search/ir/${
@@ -461,669 +571,28 @@ function PlasmicSearchResults__RenderFunc(props: {
               }
             })()}
           >
-            <DataCtxReader__>
-              {$ctx => (
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return (
-                        $ctx.fetchedData.search.result[0]?.title?.length >= 3
-                      );
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return true;
-                      }
-                      throw e;
-                    }
-                  })() ? (
-                    <ProductCard
-                      data-plasmic-name={"topSuggestedCard"}
-                      data-plasmic-override={overrides.topSuggestedCard}
-                      actionButtons={(() => {
-                        try {
-                          return (() => {
-                            if (
-                              typeof $ctx.Growthbook?.features?.[
-                                "theme-config"
-                              ]?.["search_result:show_first_free_time"] !==
-                              "undefined"
-                            ) {
-                              if (
-                                !$ctx.Growthbook?.features?.["theme-config"]?.[
-                                  "search_result:show_first_free_time"
-                                ]
-                              ) {
-                                $ctx.fetchedData.search.result[0].actions =
-                                  $ctx.fetchedData.search.result[0].actions.map(
-                                    action => ({
-                                      ...action,
-                                      top_title: ""
-                                    })
-                                  );
-                              }
-                              if (
-                                $ctx.fetchedData.search.result[0].actions[0]
-                                  ?.title === "ویزیت آنلاین" &&
-                                $props.onlineVisitButtonsCustomDestination
-                                  ?.enable
-                              ) {
-                                $ctx.fetchedData.search.result[0].actions[0].url =
-                                  $props.onlineVisitButtonsCustomDestination.url_template.replace(
-                                    "dr-slug-variable",
-                                    $ctx.fetchedData.search.result[0].slug
-                                  );
-                              }
-                            }
-                            return $ctx.fetchedData.search.result[0].actions;
-                          })();
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      address={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0]
-                            ?.display_address;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      avatarAltText={(() => {
-                        try {
-                          return `${
-                            $ctx.fetchedData.search.result[0].prefix
-                              ? $ctx.fetchedData.search.result[0].prefix + " "
-                              : ""
-                          }${
-                            $ctx.fetchedData.search.result[0].title
-                              ? $ctx.fetchedData.search.result[0].title + " "
-                              : ""
-                          }${
-                            $ctx.fetchedData.search.result[0].display_expertise
-                              ? $ctx.fetchedData.search.result[0]
-                                  .display_expertise
-                              : ""
-                          }`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      avatarRingColor={(() => {
-                        try {
-                          return !$ctx.fetchedData.search.result[0].is_bulk &&
-                            $ctx.fetchedData.search.result[0].is_bulk !==
-                              undefined
-                            ? "blue"
-                            : undefined;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      avatarSrc={`${$props.imageSrcPrefix}${$ctx.fetchedData.search.result[0]?.image}`}
-                      avatarVerifiedTick={(() => {
-                        try {
-                          return (
-                            !$ctx.fetchedData.search.result[0].is_bulk &&
-                            $ctx.fetchedData.search.result[0].is_bulk !==
-                              undefined
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return false;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      badges={(() => {
-                        try {
-                          return (() => {
-                            if (
-                              typeof $ctx.Growthbook?.features?.[
-                                "theme-config"
-                              ]?.["search_result:show_available_time"] ===
-                              "undefined"
-                            ) {
-                              return $ctx.fetchedData.search.result[0].badges;
-                            }
-                            return $ctx.Growthbook?.features?.[
-                              "theme-config"
-                            ]?.["search_result:show_available_time"]
-                              ? $ctx.fetchedData.search.result[0].badges
-                              : $ctx.fetchedData.search.result[0].badges.filter(
-                                  badge =>
-                                    !badge.title.includes("فعال شدن نوبت")
-                                );
-                          })();
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      className={classNames(
-                        "__wab_instance",
-                        sty.topSuggestedCard
-                      )}
-                      eventTrigger={async (elementName, elementContent) => {
-                        const $steps = {};
-
-                        $steps["runCodeSplunkEvent"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return $$.splunkEvent({
-                                    token:
-                                      "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                                    group: "search_metrics",
-                                    type: "search_top_suggested_card_click",
-                                    data: {
-                                      card_data: {
-                                        action:
-                                          $ctx.fetchedData.search.result[0].actions?.map?.(
-                                            item =>
-                                              JSON.stringify({
-                                                outline: item.outline,
-                                                title: item.title,
-                                                top_title:
-                                                  item.top_title.replace(
-                                                    /(<([^>]+)>)/gi,
-                                                    ""
-                                                  )
-                                              })
-                                          ),
-                                        online_visit_buttons_custom_destination:
-                                          $props.onlineVisitButtonsCustomDestination &&
-                                          $props
-                                            .onlineVisitButtonsCustomDestination
-                                            .enable
-                                            ? $props
-                                                .onlineVisitButtonsCustomDestination
-                                                .url_template
-                                            : undefined,
-                                        _id: $ctx.fetchedData.search.result[0]
-                                          ._id,
-                                        position:
-                                          $ctx.fetchedData.search.result[0]
-                                            .position,
-                                        server_id:
-                                          $ctx.fetchedData.search.result[0]
-                                            .server_id,
-                                        title:
-                                          $ctx.fetchedData.search.result[0]
-                                            .title,
-                                        type: $ctx.fetchedData.search.result[0]
-                                          .type,
-                                        url: $ctx.fetchedData.search.result[0]
-                                          .url,
-                                        rates_count:
-                                          $ctx.fetchedData.search.result[0]
-                                            .rates_count,
-                                        satisfaction:
-                                          $ctx.fetchedData.search.result[0]
-                                            .satisfaction
-                                      },
-                                      filters:
-                                        $props.searchResultResponse
-                                          .selected_filters,
-                                      result_count:
-                                        $props.searchResultResponse.lent,
-                                      location: $props.location.city_name,
-                                      city_id: $props.location.city_id,
-                                      lat: $props.location.lat,
-                                      lon: $props.location.lon,
-                                      query_id:
-                                        $props.searchResultResponse.search
-                                          .query_id
-                                    }
-                                  });
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                        if (
-                          $steps["runCodeSplunkEvent"] != null &&
-                          typeof $steps["runCodeSplunkEvent"] === "object" &&
-                          typeof $steps["runCodeSplunkEvent"].then ===
-                            "function"
-                        ) {
-                          $steps["runCodeSplunkEvent"] = await $steps[
-                            "runCodeSplunkEvent"
-                          ];
-                        }
-                      }}
-                      externalBookDesign={(() => {
-                        try {
-                          return $ctx.Growthbook.features[
-                            "search-card-externalbook-variant"
-                          ];
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()}
-                      price={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0]?.price;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      rateCount={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0].rates_count;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      satisfactionPercent={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0].satisfaction;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      subTitle={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0]
-                            ?.display_expertise;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      title={(() => {
-                        try {
-                          return $ctx.fetchedData.search.result[0]?.title;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      topBadge={(() => {
-                        try {
-                          return [
-                            {
-                              title: $props.topSuggestedCardFeature.badge_lable,
-                              description: "",
-                              type: "success"
-                            }
-                          ];
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [
-                              { title: "", description: "", type: "success" }
-                            ];
-                          }
-                          throw e;
-                        }
-                      })()}
-                      url={(() => {
-                        try {
-                          return {
-                            destination: $ctx.fetchedData.search.result[0].url,
-                            title: `${
-                              $ctx.fetchedData.search.result[0].prefix
-                                ? $ctx.fetchedData.search.result[0].prefix + " "
-                                : ""
-                            }${
-                              $ctx.fetchedData.search.result[0].title
-                                ? $ctx.fetchedData.search.result[0].title + " "
-                                : ""
-                            }${
-                              $ctx.fetchedData.search.result[0]
-                                .display_expertise
-                                ? $ctx.fetchedData.search.result[0]
-                                    .display_expertise
-                                : ""
-                            }`
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                    />
-                  ) : null}
-                  <SideEffect
-                    className={classNames(
-                      "__wab_instance",
-                      sty.sideEffect__hY4TD
-                    )}
-                    onMount={async () => {
-                      const $steps = {};
-
-                      $steps["hideTopSuggestIfTheCardTitleIsSameAsFirstItem"] =
-                        true
-                          ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return ($props.topSuggestedCardFeature.enable =
-                                    $ctx.fetchedData.search.result[0].title ===
-                                    $props.searchResultResponse.search.result[0]
-                                      .title
-                                      ? false
-                                      : true);
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                      if (
-                        $steps[
-                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
-                        ] != null &&
-                        typeof $steps[
-                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
-                        ] === "object" &&
-                        typeof $steps[
-                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
-                        ].then === "function"
-                      ) {
-                        $steps[
-                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
-                        ] = await $steps[
-                          "hideTopSuggestIfTheCardTitleIsSameAsFirstItem"
-                        ];
-                      }
-
-                      $steps["injectNewCardItem"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return (() => {
-                                  if (
-                                    $props.searchResultResponse.search.result
-                                      .length > 2 &&
-                                    $ctx.fetchedData.search.result[1]
-                                  ) {
-                                    return $props.searchResultResponse.search.result.splice(
-                                      3,
-                                      0,
-                                      $ctx.fetchedData.search.result[1]
-                                    );
-                                  }
-                                })();
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["injectNewCardItem"] != null &&
-                        typeof $steps["injectNewCardItem"] === "object" &&
-                        typeof $steps["injectNewCardItem"].then === "function"
-                      ) {
-                        $steps["injectNewCardItem"] = await $steps[
-                          "injectNewCardItem"
-                        ];
-                      }
-
-                      $steps["putTopsuggestRibbonObjectToResultObjects"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return (() => {
-                                  if (
-                                    $props.searchResultResponse.search.result
-                                      .length > 2 &&
-                                    $ctx.fetchedData.search.result[1]
-                                  ) {
-                                    return ($props.searchResultResponse.search.result[3].topSuggestedCardFeature =
-                                      $props.topSuggestedCardFeature);
-                                  }
-                                })();
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["putTopsuggestRibbonObjectToResultObjects"] !=
-                          null &&
-                        typeof $steps[
-                          "putTopsuggestRibbonObjectToResultObjects"
-                        ] === "object" &&
-                        typeof $steps[
-                          "putTopsuggestRibbonObjectToResultObjects"
-                        ].then === "function"
-                      ) {
-                        $steps["putTopsuggestRibbonObjectToResultObjects"] =
-                          await $steps[
-                            "putTopsuggestRibbonObjectToResultObjects"
-                          ];
-                      }
-
-                      $steps["invokeGlobalAction"] = false
-                        ? (() => {
-                            const actionArgs = {
-                              args: [
-                                undefined,
-                                "\u06a9\u0627\u0631\u062f \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062a\u0632\u0631\u06cc\u0642 \u0634\u062f",
-                                undefined,
-                                25000
-                              ]
-                            };
-                            return $globalActions["Fragment.showToast"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
-                        : undefined;
-                      if (
-                        $steps["invokeGlobalAction"] != null &&
-                        typeof $steps["invokeGlobalAction"] === "object" &&
-                        typeof $steps["invokeGlobalAction"].then === "function"
-                      ) {
-                        $steps["invokeGlobalAction"] = await $steps[
-                          "invokeGlobalAction"
-                        ];
-                      }
-
-                      $steps["sendSplunkTopCardView"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return $$.splunkEvent({
-                                  token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                                  group: "search_metrics",
-                                  type: "search_top_suggested_card_view",
-                                  data: {
-                                    card_data: {
-                                      action:
-                                        $ctx.fetchedData.search.result[0].actions?.map?.(
-                                          item =>
-                                            JSON.stringify({
-                                              outline: item.outline,
-                                              title: item.title,
-                                              top_title: item.top_title.replace(
-                                                /(<([^>]+)>)/gi,
-                                                ""
-                                              )
-                                            })
-                                        ),
-                                      _id: $ctx.fetchedData.search.result[0]
-                                        ._id,
-                                      server_id:
-                                        $ctx.fetchedData.search.result[0]
-                                          .server_id,
-                                      title:
-                                        $ctx.fetchedData.search.result[0].title,
-                                      type: $ctx.fetchedData.search.result[0]
-                                        .type,
-                                      url: $ctx.fetchedData.search.result[0]
-                                        .url,
-                                      rates_count:
-                                        $ctx.fetchedData.search.result[0]
-                                          .rates_count,
-                                      satisfaction:
-                                        $ctx.fetchedData.search.result[0]
-                                          .satisfaction
-                                    },
-                                    filters:
-                                      $props.searchResultResponse
-                                        .selected_filters,
-                                    result_count:
-                                      $props.searchResultResponse.lent,
-                                    location: $props.location.city_name,
-                                    city_id: $props.location.city_id,
-                                    lat: $props.location.lat,
-                                    lon: $props.location.lon,
-                                    query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id
-                                  }
-                                });
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["sendSplunkTopCardView"] != null &&
-                        typeof $steps["sendSplunkTopCardView"] === "object" &&
-                        typeof $steps["sendSplunkTopCardView"].then ===
-                          "function"
-                      ) {
-                        $steps["sendSplunkTopCardView"] = await $steps[
-                          "sendSplunkTopCardView"
-                        ];
-                      }
-                    }}
-                  />
-                </React.Fragment>
-              )}
-            </DataCtxReader__>
-          </DataFetcher>
-        </Stack__>
-      ) : null}
-      {(() => {
-        try {
-          return $props.searchResultResponse.search.result.length !== 0;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
-          }
-          throw e;
-        }
-      })() ? (
-        <Stack__
-          as={"div"}
-          data-plasmic-name={"resultCardsVerticalStack2"}
-          data-plasmic-override={overrides.resultCardsVerticalStack2}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.resultCardsVerticalStack2)}
-        >
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
+            {(() => {
               try {
-                return $props.searchResultResponse.search.result;
+                return (
+                  $state.apiRequest?.data?.search?.result?.[0]?.title?.length >=
+                    3 &&
+                  $props?.topSuggestedCardFeature?.enable &&
+                  $state.apiRequest.data.search.result[0].title !==
+                    $props.searchResultResponse.search.result[0].title
+                );
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return [];
+                  return false;
                 }
                 throw e;
               }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
+            })() ? (
               <ProductCard
-                data-plasmic-name={"productCard"}
-                data-plasmic-override={overrides.productCard}
-                _5StarRatingMode3={undefined}
+                data-plasmic-name={"topSuggestedCard"}
+                data-plasmic-override={overrides.topSuggestedCard}
                 actionButtons={(() => {
                   try {
                     return (() => {
@@ -1137,25 +606,27 @@ function PlasmicSearchResults__RenderFunc(props: {
                             "search_result:show_first_free_time"
                           ]
                         ) {
-                          currentItem.actions = currentItem.actions.map(
-                            action => ({
-                              ...action,
-                              top_title: ""
-                            })
-                          );
+                          $state.apiRequest.data.search.result[0].actions =
+                            $state.apiRequest.data.search.result[0].actions.map(
+                              action => ({
+                                ...action,
+                                top_title: ""
+                              })
+                            );
                         }
                         if (
-                          currentItem.actions[0]?.title === "ویزیت آنلاین" &&
+                          $state.apiRequest.data.search.result[0].actions[0]
+                            ?.title === "ویزیت آنلاین" &&
                           $props.onlineVisitButtonsCustomDestination?.enable
                         ) {
-                          currentItem.actions[0].url =
+                          $state.apiRequest.data.search.result[0].actions[0].url =
                             $props.onlineVisitButtonsCustomDestination.url_template.replace(
                               "dr-slug-variable",
-                              currentItem.slug
+                              $state.apiRequest.data.search.result[0].slug
                             );
                         }
                       }
-                      return currentItem.actions;
+                      return $state.apiRequest.data.search.result[0].actions;
                     })();
                   } catch (e) {
                     if (
@@ -1169,7 +640,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 address={(() => {
                   try {
-                    return currentItem.display_address;
+                    return $state.apiRequest.data.search.result[0]
+                      ?.display_address;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1183,10 +655,17 @@ function PlasmicSearchResults__RenderFunc(props: {
                 avatarAltText={(() => {
                   try {
                     return `${
-                      currentItem.prefix ? currentItem.prefix + " " : ""
-                    }${currentItem.title ? currentItem.title + " " : ""}${
-                      currentItem.display_expertise
-                        ? currentItem.display_expertise
+                      $state.apiRequest.data.search.result[0].prefix
+                        ? $state.apiRequest.data.search.result[0].prefix + " "
+                        : ""
+                    }${
+                      $state.apiRequest.data.search.result[0].title
+                        ? $state.apiRequest.data.search.result[0].title + " "
+                        : ""
+                    }${
+                      $state.apiRequest.data.search.result[0].display_expertise
+                        ? $state.apiRequest.data.search.result[0]
+                            .display_expertise
                         : ""
                     }`;
                   } catch (e) {
@@ -1201,8 +680,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 avatarRingColor={(() => {
                   try {
-                    return !currentItem.is_bulk &&
-                      currentItem.is_bulk !== undefined
+                    return !$state.apiRequest.data.search.result[0].is_bulk &&
+                      $state.apiRequest.data.search.result[0].is_bulk !==
+                        undefined
                       ? "blue"
                       : undefined;
                   } catch (e) {
@@ -1215,11 +695,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                avatarSrc={`${$props.imageSrcPrefix}${currentItem.image}`}
+                avatarSrc={`${$props.imageSrcPrefix}${$state.apiRequest.data.search.result[0]?.image}`}
                 avatarVerifiedTick={(() => {
                   try {
                     return (
-                      !currentItem.is_bulk && currentItem.is_bulk !== undefined
+                      !$state.apiRequest.data.search.result[0].is_bulk &&
+                      $state.apiRequest.data.search.result[0].is_bulk !==
+                        undefined
                     );
                   } catch (e) {
                     if (
@@ -1239,13 +721,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                           "search_result:show_available_time"
                         ] === "undefined"
                       ) {
-                        return currentItem.badges;
+                        return $state.apiRequest.data.search.result[0].badges;
                       }
                       return $ctx.Growthbook?.features?.["theme-config"]?.[
                         "search_result:show_available_time"
                       ]
-                        ? currentItem.badges
-                        : currentItem.badges.filter(
+                        ? $state.apiRequest.data.search.result[0].badges
+                        : $state.apiRequest.data.search.result[0].badges.filter(
                             badge => !badge.title.includes("فعال شدن نوبت")
                           );
                     })();
@@ -1259,36 +741,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                centers={(() => {
-                  try {
-                    return currentItem.centers;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                className={classNames("__wab_instance", sty.productCard)}
-                classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
-                debugModeResult={(() => {
-                  try {
-                    return $props.searchResultResponse.debug_mode_result.search_engine_response.entity.results.find(
-                      result => result.documentId === currentItem._id
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
+                className={classNames("__wab_instance", sty.topSuggestedCard)}
                 eventTrigger={async (elementName, elementContent) => {
                   const $steps = {};
 
@@ -1299,19 +752,21 @@ function PlasmicSearchResults__RenderFunc(props: {
                             return $$.splunkEvent({
                               token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
                               group: "search_metrics",
-                              type: "search_click_position",
+                              type: "search_top_suggested_card_click",
                               data: {
                                 card_data: {
-                                  action: currentItem.actions?.map?.(item =>
-                                    JSON.stringify({
-                                      outline: item.outline,
-                                      title: item.title,
-                                      top_title: item.top_title.replace(
-                                        /(<([^>]+)>)/gi,
-                                        ""
-                                      )
-                                    })
-                                  ),
+                                  action:
+                                    $state.apiRequest.data.search.result[0].actions?.map?.(
+                                      item =>
+                                        JSON.stringify({
+                                          outline: item.outline,
+                                          title: item.title,
+                                          top_title: item.top_title.replace(
+                                            /(<([^>]+)>)/gi,
+                                            ""
+                                          )
+                                        })
+                                    ),
                                   online_visit_buttons_custom_destination:
                                     $props.onlineVisitButtonsCustomDestination &&
                                     $props.onlineVisitButtonsCustomDestination
@@ -1320,14 +775,27 @@ function PlasmicSearchResults__RenderFunc(props: {
                                           .onlineVisitButtonsCustomDestination
                                           .url_template
                                       : undefined,
-                                  _id: currentItem._id,
-                                  position: currentItem.position,
-                                  server_id: currentItem.server_id,
-                                  title: currentItem.title,
-                                  type: currentItem.type,
-                                  url: currentItem.url,
-                                  rates_count: currentItem.rates_count,
-                                  satisfaction: currentItem.satisfaction
+                                  _id: $state.apiRequest.data.search.result[0]
+                                    ._id,
+                                  position:
+                                    $state.apiRequest.data.search.result[0]
+                                      .position,
+                                  server_id:
+                                    $state.apiRequest.data.search.result[0]
+                                      .server_id,
+                                  title:
+                                    $state.apiRequest.data.search.result[0]
+                                      .title,
+                                  type: $state.apiRequest.data.search.result[0]
+                                    .type,
+                                  url: $state.apiRequest.data.search.result[0]
+                                    .url,
+                                  rates_count:
+                                    $state.apiRequest.data.search.result[0]
+                                      .rates_count,
+                                  satisfaction:
+                                    $state.apiRequest.data.search.result[0]
+                                      .satisfaction
                                 },
                                 filters:
                                   $props.searchResultResponse.selected_filters,
@@ -1356,60 +824,6 @@ function PlasmicSearchResults__RenderFunc(props: {
                       "runCodeSplunkEvent"
                     ];
                   }
-
-                  $steps["runCodeSv2CtrRequest"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return fetch(
-                              "https://www.paziresh24.com/api/sv2ctr",
-                              {
-                                headers: {
-                                  accept: "application/json, text/plain, */*",
-                                  "accept-language": "fa",
-                                  "content-type": "application/json",
-                                  "sec-fetch-dest": "empty",
-                                  "sec-fetch-mode": "cors",
-                                  "sec-fetch-site": "same-origin"
-                                },
-                                body: JSON.stringify({
-                                  terminal_id: document.cookie
-                                    .split("; ")
-                                    .find(row => row.startsWith("terminal_id"))
-                                    ? document.cookie
-                                        .split("; ")
-                                        .find(row =>
-                                          row.startsWith("terminal_id")
-                                        )
-                                        .split("=")[1]
-                                    : "sample-empty-terminal-id-cookie",
-                                  id: currentItem._id,
-                                  position: currentItem.position,
-                                  query_id:
-                                    $props.searchResultResponse.search.query_id,
-                                  server_id: currentItem.server_id,
-                                  type: currentItem.type
-                                }),
-                                method: "POST",
-                                credentials: "include"
-                              }
-                            );
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runCodeSv2CtrRequest"] != null &&
-                    typeof $steps["runCodeSv2CtrRequest"] === "object" &&
-                    typeof $steps["runCodeSv2CtrRequest"].then === "function"
-                  ) {
-                    $steps["runCodeSv2CtrRequest"] = await $steps[
-                      "runCodeSv2CtrRequest"
-                    ];
-                  }
                 }}
                 externalBookDesign={(() => {
                   try {
@@ -1426,34 +840,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                externalLinkTitle={(() => {
-                  try {
-                    return currentItem.slug
-                      .split("uri=https%3A%2F%2F")[1]
-                      .split("%2F")[0].length > 2
-                      ? "نوبت‌دهی در " +
-                          (currentItem.slug
-                            .split("uri=https%3A%2F%2F")[1]
-                            .split("%2F")[0] === "drdr.ir"
-                            ? "دکتردکتر"
-                            : currentItem.slug
-                                .split("uri=https%3A%2F%2F")[1]
-                                .split("%2F")[0])
-                      : "";
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                key={currentIndex}
                 price={(() => {
                   try {
-                    return currentItem.price;
+                    return $state.apiRequest.data.search.result[0]?.price;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1466,27 +855,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 rateCount={(() => {
                   try {
-                    return (() => {
-                      console.log(
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:show_rate_and_reviews"
-                        ],
-                        $ctx.Growthbook.features["theme-config"]
-                      );
-                      if (
-                        $ctx.Growthbook.attributes?.url &&
-                        !!$ctx.Growthbook.isReady &&
-                        !!$ctx.Growthbook.features["theme-config"] &&
-                        !!$ctx.Growthbook.features["theme-config"][
-                          "search_result:show_rate_and_reviews"
-                        ] &&
-                        currentItem.rates_count !== undefined
-                      ) {
-                        return currentItem.rates_count;
-                      } else {
-                        return false;
-                      }
-                    })();
+                    return $state.apiRequest.data.search.result[0].rates_count;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1499,37 +868,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 satisfactionPercent={(() => {
                   try {
-                    return (
-                      $ctx.Growthbook.features["theme-config"][
-                        "search_result:show_rate_and_reviews"
-                      ] && currentItem.satisfaction
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                searchCardId={(() => {
-                  try {
-                    return currentItem._id;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                slug={(() => {
-                  try {
-                    return currentItem.slug;
+                    return $state.apiRequest.data.search.result[0].satisfaction;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1542,7 +881,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 subTitle={(() => {
                   try {
-                    return currentItem.display_expertise;
+                    return $state.apiRequest.data.search.result[0]
+                      ?.display_expertise;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1555,7 +895,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                 })()}
                 title={(() => {
                   try {
-                    return currentItem.title;
+                    return $state.apiRequest.data.search.result[0]?.title;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1570,9 +910,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   try {
                     return [
                       {
-                        title: currentItem.topSuggestedCardFeature.badge_lable
-                          ? currentItem.topSuggestedCardFeature.badge_lable
-                          : null,
+                        title: $props.topSuggestedCardFeature.badge_lable,
                         description: "",
                         type: "success"
                       }
@@ -1582,7 +920,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return undefined;
+                      return [{ title: "", description: "", type: "success" }];
                     }
                     throw e;
                   }
@@ -1590,12 +928,20 @@ function PlasmicSearchResults__RenderFunc(props: {
                 url={(() => {
                   try {
                     return {
-                      destination: currentItem.url,
+                      destination: $state.apiRequest.data.search.result[0].url,
                       title: `${
-                        currentItem.prefix ? currentItem.prefix + " " : ""
-                      }${currentItem.title ? currentItem.title + " " : ""}${
-                        currentItem.display_expertise
-                          ? currentItem.display_expertise
+                        $state.apiRequest.data.search.result[0].prefix
+                          ? $state.apiRequest.data.search.result[0].prefix + " "
+                          : ""
+                      }${
+                        $state.apiRequest.data.search.result[0].title
+                          ? $state.apiRequest.data.search.result[0].title + " "
+                          : ""
+                      }${
+                        $state.apiRequest.data.search.result[0]
+                          .display_expertise
+                          ? $state.apiRequest.data.search.result[0]
+                              .display_expertise
                           : ""
                       }`
                     };
@@ -1610,6 +956,739 @@ function PlasmicSearchResults__RenderFunc(props: {
                   }
                 })()}
               />
+            ) : null}
+          </ApiRequest>
+        </Stack__>
+      ) : null}
+      {(() => {
+        try {
+          return $props.searchResultResponse.search.result.length !== 0;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          data-plasmic-name={"resultCardsVerticalStack2"}
+          data-plasmic-override={overrides.resultCardsVerticalStack2}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.resultCardsVerticalStack2)}
+        >
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return (() => {
+                  return [
+                    ...$props?.searchResultResponse?.search?.result?.slice(
+                      0,
+                      3
+                    ),
+                    $state?.apiRequest?.data?.search?.result?.[1]
+                      ? {
+                          ...$state?.apiRequest?.data?.search?.result?.[1],
+                          topSuggestedCardFeature:
+                            $props.topSuggestedCardFeature
+                        }
+                      : null,
+                    ...$props?.searchResultResponse?.search?.result?.slice(3)
+                  ]?.filter(Boolean);
+                })();
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
+                }
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <div
+                data-plasmic-name={"freeBox"}
+                data-plasmic-override={overrides.freeBox}
+                className={classNames(projectcss.all, sty.freeBox)}
+                key={(() => {
+                  try {
+                    return currentItem._id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              >
+                <ProductCard
+                  data-plasmic-name={"productCard"}
+                  data-plasmic-override={overrides.productCard}
+                  _5StarRatingMode3={undefined}
+                  actionButtons={(() => {
+                    try {
+                      return (() => {
+                        if (
+                          typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_first_free_time"
+                          ] !== "undefined"
+                        ) {
+                          if (
+                            !$ctx.Growthbook?.features?.["theme-config"]?.[
+                              "search_result:show_first_free_time"
+                            ]
+                          ) {
+                            currentItem.actions = currentItem.actions.map(
+                              action => ({
+                                ...action,
+                                top_title: ""
+                              })
+                            );
+                          }
+                          if (
+                            currentItem.actions[0]?.title === "ویزیت آنلاین" &&
+                            $props.onlineVisitButtonsCustomDestination?.enable
+                          ) {
+                            currentItem.actions[0].url =
+                              $props.onlineVisitButtonsCustomDestination.url_template.replace(
+                                "dr-slug-variable",
+                                currentItem.slug
+                              );
+                          }
+                        }
+                        return currentItem.actions;
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  address={(() => {
+                    try {
+                      return currentItem.display_address;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarAltText={(() => {
+                    try {
+                      return `${
+                        currentItem.prefix ? currentItem.prefix + " " : ""
+                      }${currentItem.title ? currentItem.title + " " : ""}${
+                        currentItem.display_expertise
+                          ? currentItem.display_expertise
+                          : ""
+                      }`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarRingColor={(() => {
+                    try {
+                      return !currentItem.is_bulk &&
+                        currentItem.is_bulk !== undefined
+                        ? "blue"
+                        : undefined;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  avatarSrc={`${$props.imageSrcPrefix}${currentItem.image}`}
+                  avatarVerifiedTick={(() => {
+                    try {
+                      return (
+                        !currentItem.is_bulk &&
+                        currentItem.is_bulk !== undefined
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  badges={(() => {
+                    try {
+                      return (() => {
+                        if (
+                          typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                            "search_result:show_available_time"
+                          ] === "undefined"
+                        ) {
+                          return currentItem.badges;
+                        }
+                        return $ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_available_time"
+                        ]
+                          ? currentItem.badges
+                          : currentItem.badges.filter(
+                              badge => !badge.title.includes("فعال شدن نوبت")
+                            );
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  centers={(() => {
+                    try {
+                      return currentItem.centers;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  className={classNames("__wab_instance", sty.productCard)}
+                  classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
+                  debugModeResult={(() => {
+                    try {
+                      return $props.searchResultResponse.debug_mode_result.search_engine_response.entity.results.find(
+                        result => result.documentId === currentItem._id
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  eventTrigger={async (elementName, elementContent) => {
+                    const $steps = {};
+
+                    $steps["sendSplunkClickEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    event_group: "search_metrics",
+                                    event_type: "search_click_position",
+                                    url: {
+                                      href: window.location.href,
+                                      query: window.location.search,
+                                      pathname: window.location.pathname,
+                                      host: window.location.host
+                                    },
+                                    userAgent:
+                                      navigator &&
+                                      navigator.userAgent &&
+                                      navigator.userAgent.length <= 3
+                                        ? ""
+                                        : navigator.userAgent,
+                                    card_data: {
+                                      action: currentItem.actions?.map?.(item =>
+                                        JSON.stringify({
+                                          outline: item.outline,
+                                          title: item.title,
+                                          top_title: item.top_title.replace(
+                                            /(<([^>]+)>)/gi,
+                                            ""
+                                          )
+                                        })
+                                      ),
+                                      online_visit_buttons_custom_destination:
+                                        $props.onlineVisitButtonsCustomDestination &&
+                                        $props
+                                          .onlineVisitButtonsCustomDestination
+                                          .enable
+                                          ? $props
+                                              .onlineVisitButtonsCustomDestination
+                                              .url_template
+                                          : undefined,
+                                      _id: currentItem._id,
+                                      position: currentItem.position,
+                                      server_id: currentItem.server_id,
+                                      title: currentItem.title,
+                                      type: currentItem.type,
+                                      url: currentItem.url,
+                                      rates_count: currentItem.rates_count,
+                                      satisfaction: currentItem.satisfaction
+                                    },
+                                    filters:
+                                      $props.searchResultResponse
+                                        .selected_filters,
+                                    result_count:
+                                      $props.searchResultResponse.lent,
+                                    location: $props.location.city_name,
+                                    city_id: $props.location.city_id,
+                                    lat: $props.location.lat,
+                                    lon: $props.location.lon,
+                                    elementName: elementName,
+                                    elementContent: elementContent,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id,
+                                    terminal_id: document.cookie.replace(
+                                      /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                      "$1"
+                                    )
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendSplunkClickEvent"] != null &&
+                      typeof $steps["sendSplunkClickEvent"] === "object" &&
+                      typeof $steps["sendSplunkClickEvent"].then === "function"
+                    ) {
+                      $steps["sendSplunkClickEvent"] = await $steps[
+                        "sendSplunkClickEvent"
+                      ];
+                    }
+
+                    $steps["runCodeSv2CtrRequest"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return fetch(
+                                "https://www.paziresh24.com/api/sv2ctr",
+                                {
+                                  headers: {
+                                    accept: "application/json, text/plain, */*",
+                                    "accept-language": "fa",
+                                    "content-type": "application/json",
+                                    "sec-fetch-dest": "empty",
+                                    "sec-fetch-mode": "cors",
+                                    "sec-fetch-site": "same-origin"
+                                  },
+                                  body: JSON.stringify({
+                                    terminal_id: document.cookie
+                                      .split("; ")
+                                      .find(row =>
+                                        row.startsWith("terminal_id")
+                                      )
+                                      ? document.cookie
+                                          .split("; ")
+                                          .find(row =>
+                                            row.startsWith("terminal_id")
+                                          )
+                                          .split("=")[1]
+                                      : "sample-empty-terminal-id-cookie",
+                                    id: currentItem._id,
+                                    position: currentItem.position,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id,
+                                    server_id: currentItem.server_id,
+                                    type: currentItem.type
+                                  }),
+                                  method: "POST",
+                                  credentials: "include"
+                                }
+                              );
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCodeSv2CtrRequest"] != null &&
+                      typeof $steps["runCodeSv2CtrRequest"] === "object" &&
+                      typeof $steps["runCodeSv2CtrRequest"].then === "function"
+                    ) {
+                      $steps["runCodeSv2CtrRequest"] = await $steps[
+                        "runCodeSv2CtrRequest"
+                      ];
+                    }
+
+                    $steps["runCodeSplunkEvent"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                                group: "search_metrics",
+                                type: "search_click_position",
+                                data: {
+                                  card_data: {
+                                    action: currentItem.actions?.map?.(item =>
+                                      JSON.stringify({
+                                        outline: item.outline,
+                                        title: item.title,
+                                        top_title: item.top_title.replace(
+                                          /(<([^>]+)>)/gi,
+                                          ""
+                                        )
+                                      })
+                                    ),
+                                    online_visit_buttons_custom_destination:
+                                      $props.onlineVisitButtonsCustomDestination &&
+                                      $props.onlineVisitButtonsCustomDestination
+                                        .enable
+                                        ? $props
+                                            .onlineVisitButtonsCustomDestination
+                                            .url_template
+                                        : undefined,
+                                    _id: currentItem._id,
+                                    position: currentItem.position,
+                                    server_id: currentItem.server_id,
+                                    title: currentItem.title,
+                                    type: currentItem.type,
+                                    url: currentItem.url,
+                                    rates_count: currentItem.rates_count,
+                                    satisfaction: currentItem.satisfaction
+                                  },
+                                  filters:
+                                    $props.searchResultResponse
+                                      .selected_filters,
+                                  result_count:
+                                    $props.searchResultResponse.lent,
+                                  location: $props.location.city_name,
+                                  city_id: $props.location.city_id,
+                                  lat: $props.location.lat,
+                                  lon: $props.location.lon,
+                                  query_id:
+                                    $props.searchResultResponse.search.query_id
+                                }
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCodeSplunkEvent"] != null &&
+                      typeof $steps["runCodeSplunkEvent"] === "object" &&
+                      typeof $steps["runCodeSplunkEvent"].then === "function"
+                    ) {
+                      $steps["runCodeSplunkEvent"] = await $steps[
+                        "runCodeSplunkEvent"
+                      ];
+                    }
+
+                    $steps["invokeGlobalAction"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              (() => {
+                                try {
+                                  return elementName;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["invokeGlobalAction"] != null &&
+                      typeof $steps["invokeGlobalAction"] === "object" &&
+                      typeof $steps["invokeGlobalAction"].then === "function"
+                    ) {
+                      $steps["invokeGlobalAction"] = await $steps[
+                        "invokeGlobalAction"
+                      ];
+                    }
+                  }}
+                  externalBookDesign={(() => {
+                    try {
+                      return $ctx.Growthbook.features[
+                        "search-card-externalbook-variant"
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()}
+                  externalLinkTitle={(() => {
+                    try {
+                      return currentItem.slug
+                        .split("uri=https%3A%2F%2F")[1]
+                        ?.split?.("%2F")?.[0]?.length > 2
+                        ? "نوبت‌دهی در " +
+                            (currentItem.slug
+                              .split("uri=https%3A%2F%2F")[1]
+                              ?.split?.("%2F")[0] === "drdr.ir"
+                              ? "دکتردکتر"
+                              : currentItem.slug
+                                  .split("uri=https%3A%2F%2F")[1]
+                                  ?.split?.("%2F")?.[0])
+                        : "";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  price={(() => {
+                    try {
+                      return currentItem.price;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  rateCount={(() => {
+                    try {
+                      return (() => {
+                        console.log(
+                          $ctx.Growthbook.features["theme-config"][
+                            "search_result:show_rate_and_reviews"
+                          ],
+                          $ctx.Growthbook.features["theme-config"]
+                        );
+                        if (
+                          $ctx.Growthbook.attributes?.url &&
+                          !!$ctx.Growthbook.isReady &&
+                          !!$ctx.Growthbook.features["theme-config"] &&
+                          !!$ctx.Growthbook.features["theme-config"][
+                            "search_result:show_rate_and_reviews"
+                          ] &&
+                          currentItem.rates_count !== undefined
+                        ) {
+                          return currentItem.rates_count;
+                        } else {
+                          return false;
+                        }
+                      })();
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  satisfactionPercent={(() => {
+                    try {
+                      return (
+                        $ctx.Growthbook.features["theme-config"][
+                          "search_result:show_rate_and_reviews"
+                        ] && currentItem.satisfaction
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  searchCardId={(() => {
+                    try {
+                      return currentItem._id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  slug={(() => {
+                    try {
+                      return currentItem.slug;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  subTitle={(() => {
+                    try {
+                      return currentItem.display_expertise;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  title={(() => {
+                    try {
+                      return currentItem.title;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  topBadge={(() => {
+                    try {
+                      return [
+                        {
+                          title: currentItem.topSuggestedCardFeature.badge_lable
+                            ? currentItem.topSuggestedCardFeature.badge_lable
+                            : null,
+                          description: "",
+                          type: "success"
+                        }
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  url={(() => {
+                    try {
+                      return {
+                        destination: currentItem.url,
+                        title: `${
+                          currentItem.prefix ? currentItem.prefix + " " : ""
+                        }${currentItem.title ? currentItem.title + " " : ""}${
+                          currentItem.display_expertise
+                            ? currentItem.display_expertise
+                            : ""
+                        }`
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                >
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__hqZtm
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $ctx.fetchedData.classifications[0].name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
+                    )}
+                  </DataCtxReader__>
+                </ProductCard>
+              </div>
             );
           })}
         </Stack__>
@@ -1874,7 +1953,9 @@ function PlasmicSearchResults__RenderFunc(props: {
         </Stack__>
       ) : null}
       <SideEffect
-        className={classNames("__wab_instance", sty.sideEffect__pyDki)}
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
         onMount={async () => {
           const $steps = {};
 
@@ -1965,7 +2046,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               ];
           }
 
-          $steps["topSuggestedCardViewSplunkEvent"] = true
+          $steps["topSuggestedCardViewSplunkEvent"] = false
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
@@ -2232,12 +2313,14 @@ const PlasmicDescendants = {
     "setGrowthbookAttributes",
     "showMySearchPerformance",
     "topSuggestedCardVerticalStack",
-    "httpRestApiFetcher",
+    "apiRequest",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
+    "freeBox",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
+    "sideEffect",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks",
     "externalBookSurveyPopup"
@@ -2246,15 +2329,21 @@ const PlasmicDescendants = {
   showMySearchPerformance: ["showMySearchPerformance"],
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
-    "httpRestApiFetcher",
+    "apiRequest",
     "topSuggestedCard"
   ],
-  httpRestApiFetcher: ["httpRestApiFetcher", "topSuggestedCard"],
+  apiRequest: ["apiRequest", "topSuggestedCard"],
   topSuggestedCard: ["topSuggestedCard"],
-  resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
+  resultCardsVerticalStack2: [
+    "resultCardsVerticalStack2",
+    "freeBox",
+    "productCard"
+  ],
+  freeBox: ["freeBox", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
+  sideEffect: ["sideEffect"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"],
   externalBookSurveyPopup: ["externalBookSurveyPopup"]
@@ -2267,12 +2356,14 @@ type NodeDefaultElementType = {
   setGrowthbookAttributes: typeof SideEffect;
   showMySearchPerformance: "a";
   topSuggestedCardVerticalStack: "div";
-  httpRestApiFetcher: typeof DataFetcher;
+  apiRequest: typeof ApiRequest;
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
+  freeBox: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
+  sideEffect: typeof SideEffect;
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
   externalBookSurveyPopup: typeof ExternalBookSurveyPopup;
@@ -2343,14 +2434,16 @@ export const PlasmicSearchResults = Object.assign(
     topSuggestedCardVerticalStack: makeNodeComponent(
       "topSuggestedCardVerticalStack"
     ),
-    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
+    freeBox: makeNodeComponent("freeBox"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
     noResultsBlockVerticalStack: makeNodeComponent(
       "noResultsBlockVerticalStack"
     ),
+    sideEffect: makeNodeComponent("sideEffect"),
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
     externalBookSurveyPopup: makeNodeComponent("externalBookSurveyPopup"),
