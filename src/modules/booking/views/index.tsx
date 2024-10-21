@@ -279,6 +279,8 @@ const BookingSteps = (props: BookingStepsProps) => {
         request_code: reserveId,
         selected_national_code: user?.national_code,
         selected_cell: user?.cell,
+        selected_name: user?.name,
+        selected_family: user?.family,
         user_id: router.query?.userId,
         provider_id: router.query?.providerId,
       });
@@ -330,6 +332,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                     slug: slug,
                     selected_national_code: user?.national_code,
                     selected_cell: user?.cell,
+                    selected_name: user?.name,
+                    selected_family: user?.family,
                     user_id: router.query?.userId,
                     provider_id: router.query?.providerId,
                     book_id: data.book_info.id,
