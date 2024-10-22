@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import SearchResults from "../../SearchResults"; // plasmic-import: XhSI4pxMLR3L/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -90,7 +90,7 @@ export const PlasmicSearchRequest__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchRequest__OverridesType = {
   root?: Flex__<"div">;
-  apiRequest?: Flex__<typeof ApiRequest>;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   searchResults?: Flex__<typeof SearchResults>;
 };
 
@@ -141,36 +141,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
-    () => [
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      }
-    ],
-    [$props, $ctx, $refs]
-  );
-  const $state = useDollarState(stateSpecs, {
-    $props,
-    $ctx,
-    $queries: {},
-    $refs
-  });
-
   return (
     <div
       data-plasmic-name={"root"}
@@ -188,67 +158,52 @@ function PlasmicSearchRequest__RenderFunc(props: {
         sty.root
       )}
     >
-      <ApiRequest
-        data-plasmic-name={"apiRequest"}
-        data-plasmic-override={overrides.apiRequest}
-        className={classNames("__wab_instance", sty.apiRequest)}
+      <DataFetcher
+        data-plasmic-name={"httpRestApiFetcher"}
+        data-plasmic-override={overrides.httpRestApiFetcher}
+        className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+        dataName={"fetchedData"}
         errorDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__eYbE
-            )}
-          >
-            {"Error fetching data"}
-          </div>
+          <DataCtxReader__>{$ctx => "Error fetching data"}</DataCtxReader__>
         }
+        errorName={"fetchError"}
+        headers={{
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }}
         loadingDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__vr9Ke
-            )}
-          >
-            {"Loading..."}
-          </div>
+          <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
         }
         method={"GET"}
-        onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
-        onLoading={generateStateOnChangeProp($state, ["apiRequest", "loading"])}
-        onSuccess={generateStateOnChangeProp($state, ["apiRequest", "data"])}
-        params={(() => {
+        noLayout={false}
+        url={(() => {
           try {
-            return {
-              from: (+($state?.page ?? 1) - 1) * 10,
-              size: 10,
-              query: $props.searchQuery,
-              facets: "*",
-              ...(Object.values(
-                $props.searchFilters ? $props.searchFilters : {}
-              ).length > 0 && {
-                facetFilters: Object.entries($props.searchFilters).reduce(
-                  (acc, item) => {
+            return (() => {
+              const queries = {
+                from: 0,
+                size: 10,
+                query: $props.searchQuery,
+                facets: "*",
+                ...(Object.values(
+                  $props.searchOptionalFilters
+                    ? $props.searchOptionalFilters
+                    : {}
+                ).length > 0 && {
+                  optionalFilters: Object.entries(
+                    $props.searchOptionalFilters
+                  ).reduce((acc, item) => {
                     return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
                       .map(i => `${item[0]}:${i}`)
                       .join(",")}`;
-                  },
-                  ""
-                )
-              }),
-              ...(Object.values(
-                $props.searchOptionalFilters ? $props.searchOptionalFilters : {}
-              ).length > 0 && {
-                optionalFilters: Object.entries(
-                  $props.searchOptionalFilters
-                ).reduce((acc, item) => {
-                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                    .map(i => `${item[0]}:${i}`)
-                    .join(",")}`;
-                }, "")
-              })
-            };
+                  }, "")
+                })
+              };
+              return `https://apigw.paziresh24.com/v1/jahannama?${Object.entries(
+                queries
+              )
+                .map(([key, value]) => `${key}=${value}`)
+                .join("&")}`;
+            })();
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -259,248 +214,259 @@ function PlasmicSearchRequest__RenderFunc(props: {
             throw e;
           }
         })()}
-        url={"https://apigw.paziresh24.com/v1/jahannama"}
       >
-        <SearchResults
-          data-plasmic-name={"searchResults"}
-          data-plasmic-override={overrides.searchResults}
-          className={classNames("__wab_instance", sty.searchResults)}
-          searchResultResponse={(() => {
-            try {
-              return {
-                search: {
-                  query_id: "",
-                  total: $state.total,
-                  is_landing: false,
-                  pagination: {
-                    limit: 10,
-                    page: $state.page
-                  },
-                  result: $state.apiRequest.data.entity.results?.map(item => {
-                    if (item.source.record_type === "doctor") {
-                      return {
-                        _id: item.documentId,
-                        id: item.source.doctor_id,
-                        server_id: item.source.server_id,
-                        type: "doctor",
-                        title: item.source.display_name,
-                        prefix: item.source.prefix || "",
-                        image: `/getImage/p24/search-${
-                          item.source.gender ? "men" : "women"
-                        }/${item?.source?.image ?? "noimage.png"}?size=150`,
-                        view: item.source.number_of_visits,
-                        display_expertise: item.source.expertises
-                          .map(
-                            expertise =>
-                              expertise.alias_title || expertise.expertise.name
-                          )
-                          .join(", "),
-                        satisfaction: item.source.satisfaction || 0,
-                        rates_count: item.source.rates_count || 0,
-                        centers: item.source.centers.map(center => ({
-                          id: center.id,
-                          status: center.status,
-                          user_center_id: center.user_center_id,
-                          server_id: center.server_id,
-                          name: center.name,
-                          display_number: center.display_number,
-                          address: center.address,
-                          province_name: center.province_name,
-                          city_name: center.city_name,
-                          center_type: center.center_type,
-                          map: {
-                            lat: center.map ? center.map.lat : null,
-                            lon: center.map ? center.map.lon : null
-                          },
-                          active_booking: center.active_booking
-                        })),
-                        display_address_full: `${item.source.city_name}, ${item.source.centers[0].address}`,
-                        display_address: (() => {
-                          const cityNames = [
-                            ...new Set(
-                              item.source.centers
-                                .filter(center => center.id != "5532")
-                                .map(center => center.city_name)
-                            )
-                          ].join(", ");
-                          const centerNames = item.source.centers
-                            .filter(
-                              center =>
-                                center.center_type != 1 && center.id != "5532"
-                            )
-                            .map(center => center.name)
-                            .join(", ");
-                          return centerNames
-                            ? `${cityNames}, ${centerNames}`
-                            : cityNames;
-                        })(),
-                        waiting_time: null,
-                        badges: [],
-                        is_bulk: !item.source.centers.some(
-                          center => Number(center.status) === 1
-                        ),
-                        consult_active_booking:
-                          item.source.consult_active_booking,
-                        presence_active_booking:
-                          item.source.presence_active_booking,
-                        url: `/dr/${item.source.slug}`,
-                        actions: (() => {
-                          const actions = [];
-                          const now = Math.floor(Date.now() / 1000);
-                          const formatTimeToFarsi = timestamp => {
-                            const timeDifference = timestamp - now;
-                            if (timeDifference <= 0) {
-                              return "هم‌اکنون";
-                            } else if (timeDifference < 3600) {
-                              return "کمتر از 1 ساعت دیگر";
-                            } else if (timeDifference < 86400) {
-                              const hours = Math.floor(timeDifference / 3600);
-                              return `حدود ${hours} ساعت دیگر`;
-                            } else {
-                              const days = Math.floor(timeDifference / 86400);
-                              return `حدود ${days} روز دیگر`;
-                            }
+        <DataCtxReader__>
+          {$ctx => (
+            <SearchResults
+              data-plasmic-name={"searchResults"}
+              data-plasmic-override={overrides.searchResults}
+              className={classNames("__wab_instance", sty.searchResults)}
+              searchResultResponse={(() => {
+                try {
+                  return {
+                    search: {
+                      query_id: "",
+                      total: $ctx.fetchedData?.entity?.totalHits,
+                      is_landing: false,
+                      pagination: {
+                        limit: 10,
+                        page: 1
+                      },
+                      result: $ctx.fetchedData?.entity?.results?.map(item => {
+                        if (item.source.record_type === "doctor") {
+                          return {
+                            _id: item.documentId,
+                            id: item.source.doctor_id,
+                            server_id: item.source.server_id,
+                            type: "doctor",
+                            title: item.source.display_name,
+                            prefix: item.source.prefix || "",
+                            image: `/getImage/p24/search-${
+                              item.source.gender ? "men" : "women"
+                            }/${item?.source?.image ?? "noimage.png"}?size=150`,
+                            view: item.source.number_of_visits,
+                            display_expertise: item.source.expertises
+                              .map(
+                                expertise =>
+                                  expertise.alias_title ||
+                                  expertise.expertise.name
+                              )
+                              .join(", "),
+                            satisfaction: item.source.satisfaction || 0,
+                            rates_count: item.source.rates_count || 0,
+                            centers: item.source.centers.map(center => ({
+                              id: center.id,
+                              status: center.status,
+                              user_center_id: center.user_center_id,
+                              server_id: center.server_id,
+                              name: center.name,
+                              display_number: center.display_number,
+                              address: center.address,
+                              province_name: center.province_name,
+                              city_name: center.city_name,
+                              center_type: center.center_type,
+                              map: {
+                                lat: center.map ? center.map.lat : null,
+                                lon: center.map ? center.map.lon : null
+                              },
+                              active_booking: center.active_booking
+                            })),
+                            display_address_full: `${item.source.city_name}, ${item.source.centers[0].address}`,
+                            display_address: (() => {
+                              const cityNames = [
+                                ...new Set(
+                                  item.source.centers
+                                    .filter(center => center.id != "5532")
+                                    .map(center => center.city_name)
+                                )
+                              ].join(", ");
+                              const centerNames = item.source.centers
+                                .filter(
+                                  center =>
+                                    center.center_type != 1 &&
+                                    center.id != "5532"
+                                )
+                                .map(center => center.name)
+                                .join(", ");
+                              return centerNames
+                                ? `${cityNames}, ${centerNames}`
+                                : cityNames;
+                            })(),
+                            waiting_time: null,
+                            badges: [],
+                            is_bulk: !item.source.centers.some(
+                              center => Number(center.status) === 1
+                            ),
+                            consult_active_booking:
+                              item.source.consult_active_booking,
+                            presence_active_booking:
+                              item.source.presence_active_booking,
+                            url: `/dr/${item.source.slug}`,
+                            actions: (() => {
+                              const actions = [];
+                              const now = Math.floor(Date.now() / 1000);
+                              const formatTimeToFarsi = timestamp => {
+                                const timeDifference = timestamp - now;
+                                if (timeDifference <= 0) {
+                                  return "هم‌اکنون";
+                                } else if (timeDifference < 3600) {
+                                  return "کمتر از 1 ساعت دیگر";
+                                } else if (timeDifference < 86400) {
+                                  const hours = Math.floor(
+                                    timeDifference / 3600
+                                  );
+                                  return `حدود ${hours} ساعت دیگر`;
+                                } else {
+                                  const days = Math.floor(
+                                    timeDifference / 86400
+                                  );
+                                  return `حدود ${days} روز دیگر`;
+                                }
+                              };
+                              const hasOnlineCenter = item.source.centers.some(
+                                center => center.id === "5532"
+                              );
+                              const consult_freeturn =
+                                item.source.consult_freeturn;
+                              const consultTimeValid =
+                                consult_freeturn &&
+                                consult_freeturn >= now - 24 * 3600;
+                              if (hasOnlineCenter && consultTimeValid) {
+                                const isImmediateConsult =
+                                  consult_freeturn >= now - 90 * 60 &&
+                                  consult_freeturn <= now + 60 * 60;
+                                const outline = false;
+                                let top_title = "";
+                                if (isImmediateConsult) {
+                                  top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
+                                } else {
+                                  const timeText =
+                                    formatTimeToFarsi(consult_freeturn);
+                                  top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
+                                }
+                                const consultServiceId =
+                                  item.source.consult_services &&
+                                  item.source.consult_services.length > 0
+                                    ? item.source.consult_services[0].id
+                                    : "";
+                                const url = `/booking/${item.source.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
+                                actions.push({
+                                  title: "ویزیت آنلاین",
+                                  outline: outline,
+                                  top_title: top_title,
+                                  url: url
+                                });
+                              }
+                              const presence_freeturn =
+                                item.source.presence_freeturn;
+                              const presenceTimeValid =
+                                presence_freeturn &&
+                                presence_freeturn >= now - 24 * 3600;
+                              const hasActiveBookingCenter =
+                                item.source.centers.some(
+                                  center =>
+                                    center.id !== "5532" &&
+                                    center.active_booking
+                                );
+                              let inPersonTitle = "";
+                              if (presenceTimeValid || hasActiveBookingCenter) {
+                                inPersonTitle = "نوبت دهی اینترنتی";
+                              } else {
+                                inPersonTitle = "آدرس و اطلاعات بیشتر";
+                              }
+                              const inPersonOutline = !presenceTimeValid;
+                              let inPersonTopTitle = "";
+                              if (presenceTimeValid) {
+                                const timeText =
+                                  formatTimeToFarsi(presence_freeturn);
+                                inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
+                              }
+                              const inPersonUrl = `/dr/${item.source.slug}`;
+                              actions.push({
+                                title: inPersonTitle,
+                                outline: inPersonOutline,
+                                top_title: inPersonTopTitle,
+                                url: inPersonUrl
+                              });
+                              return actions;
+                            })(),
+                            experience: item.source.experience,
+                            position: item.beforePersonalizationPosition,
+                            has_presciption: false,
+                            insurances: item.source.insurances,
+                            experiment_details: {
+                              search_index: "slim_clinic",
+                              consult_search_index: "slim_clinic_online_visit"
+                            },
+                            expertises: item.source.expertises,
+                            gender: item.source.gender,
+                            expertise: item.source.expertise,
+                            rate_info: item.source.rate_info,
+                            consult_services: item.source.consult_services,
+                            doctor_id: item.source.doctor_id,
+                            number_of_visits: item.source.number_of_visits,
+                            waiting_time_info: item.source.waiting_time_info,
+                            slug: item.source.slug,
+                            graduation_date: item.source.graduation_date,
+                            star: item.source.star,
+                            services: item.source.services.map(service => ({
+                              workhours: service.workhours,
+                              center_id: service.center_id,
+                              id: service.id
+                            })),
+                            university_name: item.source.university_name,
+                            display_name: item.source.display_name,
+                            record_type: item.source.record_type,
+                            center_id: item.source.center_id,
+                            name: item.source.name,
+                            medical_code: item.source.medical_code,
+                            calculated_rate: item.source.calculated_rate
                           };
-                          const hasOnlineCenter = item.source.centers.some(
-                            center => center.id === "5532"
-                          );
-                          const consult_freeturn = item.source.consult_freeturn;
-                          const consultTimeValid =
-                            consult_freeturn &&
-                            consult_freeturn >= now - 24 * 3600;
-                          if (hasOnlineCenter && consultTimeValid) {
-                            const isImmediateConsult =
-                              consult_freeturn >= now - 90 * 60 &&
-                              consult_freeturn <= now + 60 * 60;
-                            const outline = false;
-                            let top_title = "";
-                            if (isImmediateConsult) {
-                              top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
-                            } else {
-                              const timeText =
-                                formatTimeToFarsi(consult_freeturn);
-                              top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
-                            }
-                            const consultServiceId =
-                              item.source.consult_services &&
-                              item.source.consult_services.length > 0
-                                ? item.source.consult_services[0].id
-                                : "";
-                            const url = `/booking/${item.source.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
-                            actions.push({
-                              title: "ویزیت آنلاین",
-                              outline: outline,
-                              top_title: top_title,
-                              url: url
-                            });
-                          }
-                          const presence_freeturn =
-                            item.source.presence_freeturn;
-                          const presenceTimeValid =
-                            presence_freeturn &&
-                            presence_freeturn >= now - 24 * 3600;
-                          const hasActiveBookingCenter =
-                            item.source.centers.some(
-                              center =>
-                                center.id !== "5532" && center.active_booking
-                            );
-                          let inPersonTitle = "";
-                          if (presenceTimeValid || hasActiveBookingCenter) {
-                            inPersonTitle = "نوبت دهی اینترنتی";
-                          } else {
-                            inPersonTitle = "آدرس و اطلاعات بیشتر";
-                          }
-                          const inPersonOutline = !presenceTimeValid;
-                          let inPersonTopTitle = "";
-                          if (presenceTimeValid) {
-                            const timeText =
-                              formatTimeToFarsi(presence_freeturn);
-                            inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
-                          }
-                          const inPersonUrl = `/dr/${item.source.slug}`;
-                          actions.push({
-                            title: inPersonTitle,
-                            outline: inPersonOutline,
-                            top_title: inPersonTopTitle,
-                            url: inPersonUrl
-                          });
-                          return actions;
-                        })(),
-                        experience: item.source.experience,
-                        position: item.beforePersonalizationPosition,
-                        has_presciption: false,
-                        insurances: item.source.insurances,
-                        experiment_details: {
-                          search_index: "slim_clinic",
-                          consult_search_index: "slim_clinic_online_visit"
-                        },
-                        expertises: item.source.expertises,
-                        gender: item.source.gender,
-                        expertise: item.source.expertise,
-                        rate_info: item.source.rate_info,
-                        consult_services: item.source.consult_services,
-                        doctor_id: item.source.doctor_id,
-                        number_of_visits: item.source.number_of_visits,
-                        waiting_time_info: item.source.waiting_time_info,
-                        slug: item.source.slug,
-                        graduation_date: item.source.graduation_date,
-                        star: item.source.star,
-                        services: item.source.services.map(service => ({
-                          workhours: service.workhours,
-                          center_id: service.center_id,
-                          id: service.id
-                        })),
-                        university_name: item.source.university_name,
-                        display_name: item.source.display_name,
-                        record_type: item.source.record_type,
-                        center_id: item.source.center_id,
-                        name: item.source.name,
-                        medical_code: item.source.medical_code,
-                        calculated_rate: item.source.calculated_rate
-                      };
-                    } else if (item.source.record_type === "center") {
-                      return {
-                        _id: item.documentId,
-                        id: item.source.center_id,
-                        server_id: item.source.server_id,
-                        type: "center",
-                        title: item.source.display_name,
-                        image: `/getImage/p24/search-hospitalclinic/${
-                          item.source.image ?? "noimage.png"
-                        }?size=150`,
-                        view: item.source.number_of_visits,
-                        address: item.source.address,
-                        city_id: item.source.city_id,
-                        slug: item.source.slug,
-                        url: `/center/${item.source.slug}`,
-                        university_name: item.source.university_name,
-                        name: item.source.name,
-                        record_type: item.source.record_type,
-                        status: item.source.status
-                      };
+                        } else if (item.source.record_type === "center") {
+                          return {
+                            _id: item.documentId,
+                            id: item.source.center_id,
+                            server_id: item.source.server_id,
+                            type: "center",
+                            title: item.source.display_name,
+                            image: `/getImage/p24/search-hospitalclinic/${
+                              item.source.image ?? "noimage.png"
+                            }?size=150`,
+                            view: item.source.number_of_visits,
+                            address: item.source.address,
+                            city_id: item.source.city_id,
+                            slug: item.source.slug,
+                            url: `/center/${item.source.slug}`,
+                            university_name: item.source.university_name,
+                            name: item.source.name,
+                            record_type: item.source.record_type,
+                            status: item.source.status
+                          };
+                        }
+                      })
                     }
-                  })
+                  };
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-              };
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        />
-      </ApiRequest>
+              })()}
+            />
+          )}
+        </DataCtxReader__>
+      </DataFetcher>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "searchResults"],
-  apiRequest: ["apiRequest", "searchResults"],
+  root: ["root", "httpRestApiFetcher", "searchResults"],
+  httpRestApiFetcher: ["httpRestApiFetcher", "searchResults"],
   searchResults: ["searchResults"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -508,7 +474,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  apiRequest: typeof ApiRequest;
+  httpRestApiFetcher: typeof DataFetcher;
   searchResults: typeof SearchResults;
 };
 
@@ -572,7 +538,7 @@ export const PlasmicSearchRequest = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    apiRequest: makeNodeComponent("apiRequest"),
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     searchResults: makeNodeComponent("searchResults"),
 
     // Metadata about props expected for PlasmicSearchRequest
