@@ -63,8 +63,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'search': {
       return splunk.create({
-        baseUrl: 'https://p24splk.paziresh24.com',
-        token: '7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd',
+        baseUrl: 'https://rokhdad-splunk-hec.paziresh24.com',
+        token: '1e490c2c-d98b-4777-816d-cf7f09b21888',
         constant: {
           current_url: window.location.href,
           terminal_id: getCookie('terminal_id'),
