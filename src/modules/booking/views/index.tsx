@@ -234,14 +234,17 @@ const BookingSteps = (props: BookingStepsProps) => {
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       slug,
+      center_id: center?.id,
     });
 
     return () => {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
+        slug: undefined,
+        center_id: undefined,
       });
     };
-  }, [slug]);
+  }, [slug, center]);
 
   const handleBookAction = async (user: any) => {
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
@@ -266,11 +269,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       reserveId = freeturnData.timeId;
     }
 
-    if (
-      !!bookEvent?.skip_call_booking &&
-      !!bookEvent?.destination &&
-      (center?.id === CENTERS.CONSULT ? bookEvent?.enable_online_visit : true)
-    ) {
+    if (!!bookEvent?.skip_call_booking && !!bookEvent?.destination) {
       const compiled = template(bookEvent?.destination);
       const destination = compiled({
         center_id: center.id,
@@ -322,25 +321,23 @@ const BookingSteps = (props: BookingStepsProps) => {
               },
             });
           if (data.payment.reqiure_payment === '1') {
+            if (bookEvent?.destination) {
+              const compiled = template(bookEvent?.destination);
+              const destination = compiled({
+                center_id: center.id,
+                service_id: service.id,
+                slug: slug,
+                selected_national_code: user?.national_code,
+                selected_cell: user?.cell,
+                selected_name: user?.name,
+                selected_family: user?.family,
+                user_id: router.query?.userId,
+                provider_id: router.query?.providerId,
+                book_id: data.book_info.id,
+              });
+              return router.replace(destination);
+            }
             if (center.server_id === 1) {
-              if (bookEvent?.destination) {
-                if (center?.id === CENTERS.CONSULT ? bookEvent?.enable_online_visit : true) {
-                  const compiled = template(bookEvent?.destination);
-                  const destination = compiled({
-                    center_id: center.id,
-                    service_id: service.id,
-                    slug: slug,
-                    selected_national_code: user?.national_code,
-                    selected_cell: user?.cell,
-                    selected_name: user?.name,
-                    selected_family: user?.family,
-                    user_id: router.query?.userId,
-                    provider_id: router.query?.providerId,
-                    book_id: data.book_info.id,
-                  });
-                  return router.replace(destination);
-                }
-              }
               return router.replace(`/factor/${center.id}/${data.book_info.id}`);
             }
             if (isApplication) return window.open(`${data?.payment?.redirect_url}`);
@@ -632,7 +629,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                     status,
                     message,
                     meta,
-                    difference_freeTurn_profile_by_real: result?.timestamp - center?.freeturn ?? null,
+                    difference_freeTurn_profile_by_real: result?.timestamp - center?.freeturn,
                   },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
                 });
