@@ -87,7 +87,7 @@ export const UserProfile = () => {
           name: 'نظرات من',
           icon: <CommentIcon width={22} height={22} />,
           link: `/dr/${userInfo.provider?.slug}/#reviews`,
-          shouldShow: true,
+          shouldShow: userInfo.provider?.job_title === 'doctor',
         },
         {
           name: 'مشاهده پروفایل عمومی',
