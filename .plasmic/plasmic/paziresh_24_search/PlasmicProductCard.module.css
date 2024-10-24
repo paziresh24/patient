@@ -130,16 +130,16 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 80px;
+  width: 74px;
   height: auto;
-  max-width: 80px;
-  min-width: 80px;
+  max-width: 74px;
+  min-width: 74px;
   flex-shrink: 0;
 }
 .freeBox__vbw0E > :global(.__wab_flex-container) {
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: calc(0px - var(--token-fhaz6q6bl-fW));
   height: calc(100% + var(--token-fhaz6q6bl-fW));
 }
@@ -163,11 +163,11 @@
   max-width: 100%;
 }
 .avatar:global(.__wab_instance) {
-  max-width: 80px;
-  width: 80px;
-  height: 80px;
-  max-height: 80px;
-  min-width: 80px;
+  max-width: 74px;
+  width: 74px;
+  height: 74px;
+  max-height: 74px;
+  min-width: 74px;
   left: auto;
   top: auto;
   position: relative;
@@ -253,7 +253,7 @@
 }
 .cardSubtitle {
   height: auto;
-  font-size: var(--token-6NbVMeD6zQwn);
+  font-size: var(--token-tM2Vh4zTir7U);
   font-weight: 400;
   white-space: pre-wrap;
   min-width: auto;
@@ -265,6 +265,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  margin-top: calc(0.5rem + var(--token-_c276Gs_1FIE)) !important;
   min-width: 0;
 }
 .freeBox__zf7Bm > :global(.__wab_flex-container) {
@@ -284,6 +285,12 @@
   > picture
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
+}
+.freeBox_5StarRatingMode3__5StarA__zf7BmfZd0 {
+  margin-top: calc(0.5rem + var(--token-_c276Gs_1FIE)) !important;
+}
+.freeBoxexternalBookDesign__zf7BmHqYe {
+  margin-top: calc(0.5rem + var(--token-_c276Gs_1FIE)) !important;
 }
 .svg___4KelP {
   position: relative;
@@ -354,6 +361,7 @@
   width: 18px;
   height: 18px;
   min-width: 18px;
+  color: var(--token-LqpCVPPZF4_r);
   flex-shrink: 0;
 }
 .lineClamp__sDffa:global(.__wab_instance) {
@@ -367,6 +375,8 @@
   font-weight: 400;
   white-space: pre-wrap;
   width: 100%;
+  filter: grayscale(100%);
+  color: var(--token-LqpCVPPZF4_r);
   min-width: 0;
 }
 .freeBox__ddsL {
@@ -851,6 +861,8 @@
   height: auto;
   max-width: 100%;
   min-width: 0;
+  border-radius: 7px;
+  border: 0px solid var(--token-JDvyxAtm9ONK);
 }
 .freeBox__xozVc > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -874,8 +886,10 @@
   position: relative;
   width: 100%;
   height: auto;
-  max-width: 100%;
+  max-width: 95%;
   font-size: var(--token-VrIY9r5RDQZ_);
+  flex-shrink: 1;
+  margin-bottom: -6px;
   min-width: 0;
 }
 .freeBox__xzb64 {
