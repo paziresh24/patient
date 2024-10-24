@@ -91,6 +91,7 @@ export const PlasmicSearchRequest__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchRequest__OverridesType = {
   root?: Flex__<"div">;
+  text?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
   searchResults?: Flex__<typeof SearchResults>;
   sendSplunkEvent?: Flex__<typeof SideEffect>;
@@ -163,6 +164,13 @@ function PlasmicSearchRequest__RenderFunc(props: {
         sty.root
       )}
     >
+      <div
+        data-plasmic-name={"text"}
+        data-plasmic-override={overrides.text}
+        className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
+      >
+        {"Enter U+1F3E5text\ud83c\udfe5 "}
+      </div>
       <DataFetcher
         data-plasmic-name={"httpRestApiFetcher"}
         data-plasmic-override={overrides.httpRestApiFetcher}
@@ -292,25 +300,41 @@ function PlasmicSearchRequest__RenderFunc(props: {
                               })),
                               display_address_full: `${item.source.city_name}, ${item.source.centers[0].address}`,
                               display_address: (() => {
+                                const validCenters = item.source.centers.filter(
+                                  center =>
+                                    center.id != "5532" && center.city_name
+                                );
+
                                 const cityNames = [
                                   ...new Set(
-                                    item.source.centers
-                                      .filter(center => center.id != "5532")
-                                      .map(center => center.city_name)
+                                    validCenters.map(center => center.city_name)
                                   )
-                                ].join(", ");
-                                const centerNames = item.source.centers
-                                  .filter(
-                                    center =>
-                                      center.center_type != 1 &&
-                                      center.id != "5532"
+                                ].join(" و ");
+
+                                if (!cityNames) {
+                                  return null;
+                                }
+
+                                const centerNamesArray = validCenters
+                                  .filter(center => center.center_type != 1)
+                                  .map(center => center.name);
+
+                                // Add "مطب" if any center has center_type == 1
+                                if (
+                                  validCenters.some(
+                                    center => center.center_type == 1
                                   )
-                                  .map(center => center.name)
-                                  .join(", ");
+                                ) {
+                                  centerNamesArray.push("مطب");
+                                }
+
+                                const centerNames =
+                                  centerNamesArray.join(" و ");
                                 return centerNames
-                                  ? `${cityNames}, ${centerNames}`
+                                  ? `${cityNames} 🏥 ${centerNames}`
                                   : cityNames;
                               })(),
+
                               waiting_time: null,
                               badges: [],
                               is_bulk: !item.source.centers.some(
@@ -960,11 +984,13 @@ function PlasmicSearchRequest__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "text",
     "httpRestApiFetcher",
     "searchResults",
     "sendSplunkEvent",
     "sendClarityEvents"
   ],
+  text: ["text"],
   httpRestApiFetcher: [
     "httpRestApiFetcher",
     "searchResults",
@@ -980,6 +1006,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  text: "div";
   httpRestApiFetcher: typeof DataFetcher;
   searchResults: typeof SearchResults;
   sendSplunkEvent: typeof SideEffect;
@@ -1046,6 +1073,7 @@ export const PlasmicSearchRequest = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    text: makeNodeComponent("text"),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
     searchResults: makeNodeComponent("searchResults"),
     sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
