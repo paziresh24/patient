@@ -130,10 +130,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 62px;
+  width: 74px;
   height: auto;
-  max-width: 62px;
-  min-width: 62px;
+  max-width: 74px;
+  min-width: 74px;
   flex-shrink: 0;
 }
 .freeBox__vbw0E > :global(.__wab_flex-container) {
@@ -163,11 +163,11 @@
   max-width: 100%;
 }
 .avatar:global(.__wab_instance) {
-  max-width: 62px;
-  width: 62px;
-  height: 62px;
-  max-height: 62px;
-  min-width: 62px;
+  max-width: 74px;
+  width: 74px;
+  height: 74px;
+  max-height: 74px;
+  min-width: 74px;
   left: auto;
   top: auto;
   position: relative;
