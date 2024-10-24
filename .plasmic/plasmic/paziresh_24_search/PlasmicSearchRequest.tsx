@@ -510,6 +510,11 @@ function PlasmicSearchRequest__RenderFunc(props: {
                               record_type: item.source.record_type,
                               status: item.source.status
                             };
+                          } else {
+                            return {
+                              _id: item.documentId,
+                              ...item.source
+                            };
                           }
                         })
                       }

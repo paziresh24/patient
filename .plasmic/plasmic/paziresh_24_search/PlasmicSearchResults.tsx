@@ -1126,7 +1126,24 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
-                  avatarSrc={`${$props.imageSrcPrefix}${currentItem.image}`}
+                  avatarSrc={(() => {
+                    try {
+                      return currentItem.image === undefined ||
+                        currentItem.image === ""
+                        ? undefined
+                        : currentItem.image.startsWith("https")
+                        ? currentItem.image
+                        : $props.imageSrcPrefix + currentItem.image;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   avatarVerifiedTick={(() => {
                     try {
                       return (
@@ -1592,7 +1609,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                   })()}
                   subTitle={(() => {
                     try {
-                      return currentItem.display_expertise;
+                      return (
+                        currentItem.display_expertise ||
+                        currentItem.subtitle ||
+                        ""
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
