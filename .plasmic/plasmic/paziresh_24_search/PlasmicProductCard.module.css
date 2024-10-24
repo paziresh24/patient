@@ -374,6 +374,7 @@
   font-weight: 400;
   white-space: pre-wrap;
   width: 100%;
+  filter: grayscale(100%);
   min-width: 0;
 }
 .freeBox__ddsL {
