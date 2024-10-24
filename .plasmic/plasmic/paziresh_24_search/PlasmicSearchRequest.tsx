@@ -281,6 +281,27 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 .join(", "),
                               satisfaction: item.source.satisfaction || 0,
                               rates_count: item.source.rates_count || 0,
+                              price: (() => {
+                                const consultServices =
+                                  item.source.consult_services;
+                                if (
+                                  consultServices &&
+                                  consultServices.length > 0
+                                ) {
+                                  const freePrice =
+                                    consultServices[0].free_price;
+                                  if (freePrice && freePrice > 1000) {
+                                    const priceValue = Math.floor(
+                                      freePrice / 10
+                                    ); // Remove one zero
+                                    const formattedPrice = priceValue
+                                      .toString()
+                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    return `${formattedPrice} تومان`;
+                                  }
+                                }
+                                return null;
+                              })(),
                               centers: item.source.centers.map(center => ({
                                 id: center.id,
                                 status: center.status,
