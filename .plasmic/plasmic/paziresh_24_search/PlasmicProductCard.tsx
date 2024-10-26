@@ -2987,7 +2987,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return $props.debugModeResult.indexName;
+                      return `indexName: ` + $props.debugModeResult.indexName;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -3010,7 +3010,9 @@ function PlasmicProductCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return $props.debugModeResult.documentId;
+                      return (
+                        `document id: ` + $props.debugModeResult.documentId
+                      );
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -3037,11 +3039,12 @@ function PlasmicProductCard__RenderFunc(props: {
                   dangerouslySetInnerHTML={{
                     __html: (() => {
                       try {
-                        return Object.entries(
-                          $props.debugModeResult.documentInfo
-                        )
-                          .map(([key, value]) => `${key}: ${value}`)
-                          .join("<br>");
+                        return (
+                          `<br> <b>debug output</b> <br>` +
+                          Object.entries($props.debugModeResult.documentInfo)
+                            .map(([key, value]) => `${key}: ${value}`)
+                            .join("<br>")
+                        );
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
