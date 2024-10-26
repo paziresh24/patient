@@ -961,6 +961,7 @@ function PlasmicProductCard__RenderFunc(props: {
                   }
                 }}
                 platform={"nextjs"}
+                rel={"external"}
                 target={(() => {
                   try {
                     return $props.url?.openInNewTab;
