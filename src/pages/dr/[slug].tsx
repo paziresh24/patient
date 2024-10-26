@@ -36,6 +36,7 @@ import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
 import pick from 'lodash/pick';
+import moment from 'jalali-moment';
 
 const { publicRuntimeConfig } = config();
 
@@ -419,12 +420,30 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             'worstRating': 0,
             'ratingCount': feedbacks?.details?.count_of_feedbacks ?? 0,
             'ratingValue': +(
-              ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
               3
             ).toFixed(1),
           },
+          review:
+            feedbacks?.feedbacks?.list
+              ?.filter((item: any) => !!item?.avg_rate_value)
+              ?.map?.((feedback: any) => ({
+                '@type': 'Review',
+                'author': {
+                  '@type': 'Person',
+                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? '',
+                },
+                'reviewRating': {
+                  '@type': 'Rating',
+                  'ratingValue': feedback?.avg_rate_value ?? 0,
+                  'bestRating': 5,
+                  'worstRating': 0,
+                },
+                'reviewBody': feedback?.description,
+                'datePublished': moment(feedback?.created_at).format('YYYY-MM-DD'),
+              })) ?? [],
         }),
       },
       {
