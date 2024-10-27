@@ -928,17 +928,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                 url={(() => {
                   try {
                     return {
-                      destination:
-                        $state.apiRequest.data.search.result[0].url.startsWith(
-                          "http://"
-                        ) ||
-                        $state.apiRequest.data.search.result[0].url.startsWith(
-                          "https://"
-                        )
-                          ? $state.apiRequest.data.search.result[0].url
-                          : window.location.origin +
-                            $state.apiRequest.data.search.result[0].url,
-                      //   destination: $state.apiRequest.data.search.result[0].url,
+                      destination: $state.apiRequest.data.search.result[0].url,
                       title: `${
                         $state.apiRequest.data.search.result[0].prefix
                           ? $state.apiRequest.data.search.result[0].prefix + " "
@@ -1076,32 +1066,6 @@ function PlasmicSearchResults__RenderFunc(props: {
                               );
                           }
                         }
-                        function adjustUrl(url) {
-                          if (
-                            url.startsWith("http://") ||
-                            url.startsWith("https://")
-                          ) {
-                            return url;
-                          } else if (url.startsWith("/center/")) {
-                            const urlAfterCenter = url.slice("/center/".length);
-                            if (
-                              urlAfterCenter.startsWith("http://") ||
-                              urlAfterCenter.startsWith("https://")
-                            ) {
-                              return urlAfterCenter;
-                            } else {
-                              return window.location.origin + url;
-                            }
-                          } else {
-                            return window.location.origin + url;
-                          }
-                        }
-                        currentItem.actions = currentItem.actions.map(
-                          action => ({
-                            ...action,
-                            url: adjustUrl(action.url)
-                          })
-                        );
                         return currentItem.actions;
                       })();
                     } catch (e) {
@@ -1697,33 +1661,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   url={(() => {
                     try {
                       return {
-                        destination: (() => {
-                          if (
-                            currentItem.url.startsWith("http://") ||
-                            currentItem.url.startsWith("https://")
-                          ) {
-                            // If the URL starts with 'http://' or 'https://', use it as is
-                            return currentItem.url;
-                          } else if (currentItem.url.startsWith("/center/")) {
-                            // If the URL starts with '/center/', extract the URL after '/center/'
-                            const urlAfterCenter = currentItem.url.slice(
-                              "/center/".length
-                            );
-                            if (
-                              urlAfterCenter.startsWith("http://") ||
-                              urlAfterCenter.startsWith("https://")
-                            ) {
-                              // If the extracted part is a full URL, use it
-                              return urlAfterCenter;
-                            } else {
-                              // If not, prepend the origin to the original URL
-                              return window.location.origin + currentItem.url;
-                            }
-                          } else {
-                            // For all other cases, prepend the origin to the URL
-                            return window.location.origin + currentItem.url;
-                          }
-                        })(),
+                        destination: currentItem.url,
                         title: `${
                           currentItem.prefix ? currentItem.prefix + " " : ""
                         }${currentItem.title ? currentItem.title + " " : ""}${

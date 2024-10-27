@@ -961,7 +961,6 @@ function PlasmicProductCard__RenderFunc(props: {
                   }
                 }}
                 platform={"nextjs"}
-                rel={"external"}
                 target={(() => {
                   try {
                     return $props.url?.openInNewTab;
@@ -2988,7 +2987,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return `indexName: ` + $props.debugModeResult.indexName;
+                      return $props.debugModeResult.indexName;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -3011,9 +3010,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return (
-                        `document id: ` + $props.debugModeResult.documentId
-                      );
+                      return $props.debugModeResult.documentId;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -3040,12 +3037,11 @@ function PlasmicProductCard__RenderFunc(props: {
                   dangerouslySetInnerHTML={{
                     __html: (() => {
                       try {
-                        return (
-                          `<br> <b>debug output</b> <br>` +
-                          Object.entries($props.debugModeResult.documentInfo)
-                            .map(([key, value]) => `${key}: ${value}`)
-                            .join("<br>")
-                        );
+                        return Object.entries(
+                          $props.debugModeResult.documentInfo
+                        )
+                          .map(([key, value]) => `${key}: ${value}`)
+                          .join("<br>");
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
