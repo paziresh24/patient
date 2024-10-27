@@ -23,7 +23,7 @@ export const SearchInput = (props: SearchInputProps) => {
       )}
 
       <input
-        className={classNames('h-full w-full bg-transparent outline-none text-sm md:text-base appearance-none', className)}
+        className={classNames('h-full w-full bg-transparent outline-none text-base appearance-none', className)}
         {...inputProps}
         autoComplete="off"
         data-hj-allow
