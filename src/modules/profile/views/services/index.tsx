@@ -105,7 +105,7 @@ export const Services = ({
           sameElse: 'jD jMMMM ساعت HH:mm',
         });
       }
-      return '';
+      return undefined;
     };
     return <BulkService displayName={doctor.display_name} expertises={expertises} availableTime={sortedAvalaibleTime()} />;
   }

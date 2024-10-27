@@ -1,11 +1,19 @@
 import SearchIcon from '@/common/components/icons/search';
 import dynamic from 'next/dynamic';
 import { useSearchStore } from '../../store/search';
+import { useEffect } from 'react';
+import useLockScroll from '@/common/hooks/useLockScroll';
 const Suggestion = dynamic(() => import('./suggestion'));
 
 export const ButtonSuggestion = () => {
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+  const { openScroll } = useLockScroll();
+
+  useEffect(() => {
+    setIsOpenSuggestion(false);
+    openScroll();
+  }, []);
 
   return (
     <>
