@@ -921,7 +921,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1210,6 +1211,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicStarRate.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "A6i205c24jU-",
+          "name": "Test",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicTest.tsx",
+          "importSpec": {
+            "modulePath": "Test.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicTest.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1412,8 +1426,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",

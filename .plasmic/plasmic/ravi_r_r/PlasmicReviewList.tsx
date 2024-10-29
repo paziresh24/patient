@@ -866,7 +866,7 @@ function PlasmicReviewList__RenderFunc(props: {
                   <ReviewCard
                     avgRateValue={(() => {
                       try {
-                        return currentItem.avg_rate_value;
+                        return currentItem?.avg_rate_value;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

@@ -491,7 +491,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                             e instanceof TypeError ||
                             e?.plasmicType === "PlasmicUndefinedDataError"
                           ) {
-                            return "%80 ";
+                            return "-";
                           }
                           throw e;
                         }
@@ -843,7 +843,22 @@ function PlasmicReviewCard__RenderFunc(props: {
                       />
                     </Chip>
                   ) : null}
-                  {false ? (
+                  {(() => {
+                    try {
+                      return (
+                        $props.avgRateValue <= 3.5 &&
+                        $props.avgRateValue !== null
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
                     <Chip
                       data-plasmic-name={
                         "\u0646\u0645\u0627\u06cc\u0634\u0641\u0642\u0637\u0628\u0631\u0627\u06cc\u062f\u0631\u0645\u0627\u0646\u06af\u0631"
@@ -2984,7 +2999,7 @@ function PlasmicReviewCard__RenderFunc(props: {
         noLayout={false}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})&limit=1&offset=0&sort=-created_at`;
+            return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})~and(show,eq,1)~and(delete,eq,0)~and(description,isnot,null)&limit=1&offset=0&sort=-created_at`;
           } catch (e) {
             if (
               e instanceof TypeError ||
