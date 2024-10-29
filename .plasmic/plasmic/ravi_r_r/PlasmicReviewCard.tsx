@@ -1450,7 +1450,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           previewSpinner={false}
           url={(() => {
             try {
-              return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})&offset=0&sort=-created_at`;
+              return `https://apigw.paziresh24.com/ravi/v1/ravi_get_reply?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})~and(show,eq,1)~and(delete,eq,0)~and(description,isnot,null)&limit=1&offset=0&sort=-created_at`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -2999,7 +2999,7 @@ function PlasmicReviewCard__RenderFunc(props: {
         noLayout={false}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/ravi/v1/feedbacks?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})~and(show,eq,1)~and(delete,eq,0)~and(description,isnot,null)&limit=1&offset=0&sort=-created_at`;
+            return `https://apigw.paziresh24.com/ravi/v1/ravi_get_reply?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.replyToFeedbackId})~and(show,eq,1)~and(delete,eq,0)~and(description,isnot,null)&limit=1&offset=0&sort=-created_at`;
           } catch (e) {
             if (
               e instanceof TypeError ||
