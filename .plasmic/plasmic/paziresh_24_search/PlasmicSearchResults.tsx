@@ -745,7 +745,89 @@ function PlasmicSearchResults__RenderFunc(props: {
                 eventTrigger={async (elementName, elementContent) => {
                   const $steps = {};
 
-                  $steps["runCodeSplunkEvent"] = true
+                  $steps["clickEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  group: "search_metrics",
+                                  type: "search_top_suggested_card_click",
+                                  data: {
+                                    card_data: {
+                                      action:
+                                        $state?.apiRequest?.data?.search?.result?.[0].actions?.map?.(
+                                          item =>
+                                            JSON.stringify({
+                                              outline: item.outline,
+                                              title: item.title,
+                                              top_title: item.top_title.replace(
+                                                /(<([^>]+)>)/gi,
+                                                ""
+                                              )
+                                            })
+                                        ),
+                                      _id: $state?.apiRequest?.data?.search
+                                        ?.result?.[0]._id,
+                                      server_id:
+                                        $state?.apiRequest?.data?.search
+                                          ?.result?.[0].server_id,
+                                      title:
+                                        $state?.apiRequest?.data?.search
+                                          ?.result?.[0].title,
+                                      type: $state?.apiRequest?.data?.search
+                                        ?.result?.[0].type,
+                                      url: $state?.apiRequest?.data?.search
+                                        ?.result?.[0].url,
+                                      rates_count:
+                                        $state?.apiRequest?.data?.search
+                                          ?.result?.[0].rates_count,
+                                      satisfaction:
+                                        $state?.apiRequest?.data?.search
+                                          ?.result?.[0].satisfaction
+                                    },
+                                    filters:
+                                      $props.searchResultResponse
+                                        .selected_filters,
+                                    result_count:
+                                      $props.searchResultResponse?.search
+                                        ?.result?.length,
+                                    location: $props.location.city_name,
+                                    city_id: $props.location.city_id,
+                                    lat: $props.location.lat,
+                                    lon: $props.location.lon,
+                                    query_id:
+                                      $props.searchResultResponse.search
+                                        .query_id
+                                  }
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["clickEvent"] != null &&
+                    typeof $steps["clickEvent"] === "object" &&
+                    typeof $steps["clickEvent"].then === "function"
+                  ) {
+                    $steps["clickEvent"] = await $steps["clickEvent"];
+                  }
+
+                  $steps["runCodeSplunkEvent"] = false
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
