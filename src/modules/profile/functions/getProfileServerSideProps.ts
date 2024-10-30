@@ -52,8 +52,13 @@ const createBreadcrumb = (
 };
 
 function formatDurationInMonths(date: string) {
-  const months = moment().diff(date, 'months') / 12;
-  const years = moment().diff(date, 'years');
+  const pastDate = moment(date);
+  const currentDate = moment();
+
+  const duration = moment.duration(currentDate.diff(pastDate));
+
+  const months = duration.months();
+  const years = duration.years();
 
   if (years <= 1 && months <= 1) return '1 ماه';
   if (years <= 1 && months < 12) return `${Math.floor(months)} ماه`;
