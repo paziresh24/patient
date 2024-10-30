@@ -42,7 +42,7 @@ export const SuggestionContent = (props: SuggestionContentProps) => {
   return wrapper(
     <div
       className={classNames(
-        'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:h-96 md:top-16 w-full flex flex-col bg-slate-100 md:rounded-bl-xl md:rounded-br-xl',
+        'fixed right-0 overflow-hidden top-0 h-full z-infinity md:absolute md:top-16 w-full flex flex-col bg-slate-100 md:rounded-bl-xl md:rounded-br-xl',
         className,
       )}
     >

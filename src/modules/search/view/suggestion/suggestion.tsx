@@ -13,6 +13,7 @@ import suggestionEvents from '../../functions/suggestionEvents';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
 import { Section } from '../../types/suggestion';
+import classNames from '@/common/utils/classNames';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
@@ -190,7 +191,10 @@ export const Suggestion = (props: SuggestionProps) => {
             ) : undefined
           }
           items={searchSuggestion.data ?? []}
-          className="border border-solid shadow-md border-slate-200"
+          className={classNames('border border-solid shadow-md border-slate-200', {
+            'md:h-[calc(100vh_-_180px)]': !!overlay,
+            'md:h-[calc(100vh_-_430px)]': !overlay,
+          })}
           isLoading={isLoading}
         />
       )}
