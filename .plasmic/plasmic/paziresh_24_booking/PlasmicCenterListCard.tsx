@@ -394,6 +394,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
                 projectcss.__wab_text,
                 sty.text__g0Smo,
                 {
+                  [sty.textinActive__g0SmoNPejH]: hasVariant(
+                    $state,
+                    "inActive",
+                    "inActive"
+                  ),
                   [sty.texttype_hospital__g0SmodUdd3]: hasVariant(
                     $state,
                     "type",
@@ -517,7 +522,15 @@ function PlasmicCenterListCard__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <div className={classNames(projectcss.all, sty.freeBox__dMd33)}>
+        <div
+          className={classNames(projectcss.all, sty.freeBox__dMd33, {
+            [sty.freeBoxinActive__dMd33NPejH]: hasVariant(
+              $state,
+              "inActive",
+              "inActive"
+            )
+          })}
+        >
           {(() => {
             try {
               return !!$props.freeTurn && $props.isAvailable;
@@ -726,11 +739,7 @@ function PlasmicCenterListCard__RenderFunc(props: {
         hasVariant($state, "inActive", "inActive")
           ? (() => {
               try {
-                return (
-                  !$props.isAvailable &&
-                  !!$props.nextFreeTurn &&
-                  !$state.inActive
-                );
+                return !$props.isAvailable || !!$state.inActive;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -743,11 +752,7 @@ function PlasmicCenterListCard__RenderFunc(props: {
             })()
           : (() => {
               try {
-                return (
-                  !$props.isAvailable &&
-                  !!$props.nextFreeTurn &&
-                  !$state.inActive
-                );
+                return !$props.isAvailable || $state.inActive;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -802,52 +807,224 @@ function PlasmicCenterListCard__RenderFunc(props: {
           />
         </div>
       ) : null}
-      <div
-        className={classNames(projectcss.all, sty.freeBox__gtke, {
-          [sty.freeBoxinActive__gtkenPejH]: hasVariant(
-            $state,
-            "inActive",
-            "inActive"
-          )
-        })}
-      >
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text___9MYwY,
-            {
-              [sty.textinActive___9MYwYnPejH]: hasVariant(
-                $state,
-                "inActive",
-                "inActive"
-              )
-            }
-          )}
-        >
-          {
-            "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u062f\u0631 \u0627\u06cc\u0646 \u0645\u0637\u0628 \u063a\u06cc\u0631 \u0641\u0639\u0627\u0644 \u0627\u0633\u062a."
-          }
-        </div>
-        {(
-          hasVariant($state, "inActive", "inActive")
-            ? (() => {
-                try {
-                  return $props.phoneNumbers.length !== 0;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+      {(
+        hasVariant($state, "inActive", "inActive")
+          ? (() => {
+              try {
+                return $props.isAvailable;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
                 }
-              })()
-            : true
-        ) ? (
-          <Button
-            children2={
+                throw e;
+              }
+            })()
+          : true
+      ) ? (
+        <div
+          className={classNames(projectcss.all, sty.freeBox__gtke, {
+            [sty.freeBoxinActive__gtkenPejH]: hasVariant(
+              $state,
+              "inActive",
+              "inActive"
+            )
+          })}
+        >
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___9MYwY,
+              {
+                [sty.textinActive___9MYwYnPejH]: hasVariant(
+                  $state,
+                  "inActive",
+                  "inActive"
+                )
+              }
+            )}
+          >
+            {
+              "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u062f\u0631 \u0627\u06cc\u0646 \u0645\u0637\u0628 \u063a\u06cc\u0631 \u0641\u0639\u0627\u0644 \u0627\u0633\u062a."
+            }
+          </div>
+          {(
+            hasVariant($state, "inActive", "inActive")
+              ? (() => {
+                  try {
+                    return $props.phoneNumbers.length !== 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })()
+              : true
+          ) ? (
+            <Button
+              children2={
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return `تماس تلفنی با ${
+                        $state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"
+                      }`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "Button";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              }
+              className={classNames("__wab_instance", sty.button__bWb6L, {
+                [sty.buttoninActive__bWb6LnPejH]: hasVariant(
+                  $state,
+                  "inActive",
+                  "inActive"
+                )
+              })}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateDialogOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["dialog", "open"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateDialogOpen"] != null &&
+                  typeof $steps["updateDialogOpen"] === "object" &&
+                  typeof $steps["updateDialogOpen"].then === "function"
+                ) {
+                  $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+                }
+              }}
+              outline={true}
+            />
+          ) : null}
+          <Dialog
+            data-plasmic-name={"dialog"}
+            data-plasmic-override={overrides.dialog}
+            body={
+              <div
+                className={classNames(projectcss.all, sty.freeBox__ovUQk, {
+                  [sty.freeBoxinActive__ovUQkNPejH]: hasVariant(
+                    $state,
+                    "inActive",
+                    "inActive"
+                  )
+                })}
+              >
+                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                  (() => {
+                    try {
+                      return $props.phoneNumbers;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+                ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                  const currentItem = __plasmic_item_0;
+                  const currentIndex = __plasmic_idx_0;
+                  return (
+                    <Button
+                      children2={
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return currentItem;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "Button";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__dLaJz
+                      )}
+                      key={currentIndex}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["runCode"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return (location.href = `tel:${currentItem}`);
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runCode"] != null &&
+                          typeof $steps["runCode"] === "object" &&
+                          typeof $steps["runCode"].then === "function"
+                        ) {
+                          $steps["runCode"] = await $steps["runCode"];
+                        }
+                      }}
+                      outline={true}
+                    />
+                  );
+                })}
+              </div>
+            }
+            className={classNames("__wab_instance", sty.dialog, {
+              [sty.dialoginActive]: hasVariant($state, "inActive", "inActive")
+            })}
+            noTrigger={true}
+            onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+            open={generateStateValueProp($state, ["dialog", "open"])}
+            title={
               <React.Fragment>
                 {(() => {
                   try {
@@ -859,196 +1036,50 @@ function PlasmicCenterListCard__RenderFunc(props: {
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "Button";
+                      return "Dialog title";
                     }
                     throw e;
                   }
                 })()}
               </React.Fragment>
             }
-            className={classNames("__wab_instance", sty.button__bWb6L, {
-              [sty.buttoninActive__bWb6LnPejH]: hasVariant(
-                $state,
-                "inActive",
-                "inActive"
-              )
-            })}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["updateDialogOpen"] = true
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["dialog", "open"]
-                      },
-                      operation: 4
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      const oldValue = $stateGet(objRoot, variablePath);
-                      $stateSet(objRoot, variablePath, !oldValue);
-                      return !oldValue;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateDialogOpen"] != null &&
-                typeof $steps["updateDialogOpen"] === "object" &&
-                typeof $steps["updateDialogOpen"].then === "function"
-              ) {
-                $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
-              }
-            }}
-            outline={true}
-          />
-        ) : null}
-        <Dialog
-          data-plasmic-name={"dialog"}
-          data-plasmic-override={overrides.dialog}
-          body={
-            <div
-              className={classNames(projectcss.all, sty.freeBox__ovUQk, {
-                [sty.freeBoxinActive__ovUQkNPejH]: hasVariant(
-                  $state,
-                  "inActive",
-                  "inActive"
-                )
-              })}
-            >
-              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                (() => {
-                  try {
-                    return $props.phoneNumbers;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
-                    }
-                    throw e;
-                  }
-                })()
-              ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                const currentItem = __plasmic_item_0;
-                const currentIndex = __plasmic_idx_0;
-                return (
-                  <Button
-                    children2={
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return currentItem;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return "Button";
-                            }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
-                    }
-                    className={classNames("__wab_instance", sty.button__dLaJz)}
-                    key={currentIndex}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["runCode"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return (location.href = `tel:${currentItem}`);
-                              }
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["runCode"] != null &&
-                        typeof $steps["runCode"] === "object" &&
-                        typeof $steps["runCode"].then === "function"
-                      ) {
-                        $steps["runCode"] = await $steps["runCode"];
-                      }
-                    }}
-                    outline={true}
-                  />
-                );
-              })}
-            </div>
-          }
-          className={classNames("__wab_instance", sty.dialog, {
-            [sty.dialoginActive]: hasVariant($state, "inActive", "inActive")
-          })}
-          noTrigger={true}
-          onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
-          open={generateStateValueProp($state, ["dialog", "open"])}
-          title={
-            <React.Fragment>
-              {(() => {
-                try {
-                  return `تماس تلفنی با ${
-                    $state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"
-                  }`;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "Dialog title";
-                  }
-                  throw e;
+            trigger={
+              <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__fmRb5
+                    )}
+                  >
+                    {"Show dialog"}
+                  </div>
                 }
-              })()}
-            </React.Fragment>
-          }
-          trigger={
-            <Button
-              children2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__fmRb5
-                  )}
-                >
-                  {"Show dialog"}
-                </div>
-              }
-              className={classNames("__wab_instance", {
-                [sty.buttoninActive__oMbj6NPejH]: hasVariant(
-                  $state,
-                  "inActive",
-                  "inActive"
-                )
-              })}
-              endIcon={
-                <ChevronLeftIcon
-                  className={classNames(projectcss.all, sty.svg__pWp9W)}
-                  role={"img"}
-                />
-              }
-              startIcon={
-                <ChevronRightIcon
-                  className={classNames(projectcss.all, sty.svg__avOGg)}
-                  role={"img"}
-                />
-              }
-            />
-          }
-        />
-      </div>
+                className={classNames("__wab_instance", {
+                  [sty.buttoninActive__oMbj6NPejH]: hasVariant(
+                    $state,
+                    "inActive",
+                    "inActive"
+                  )
+                })}
+                endIcon={
+                  <ChevronLeftIcon
+                    className={classNames(projectcss.all, sty.svg__pWp9W)}
+                    role={"img"}
+                  />
+                }
+                startIcon={
+                  <ChevronRightIcon
+                    className={classNames(projectcss.all, sty.svg__avOGg)}
+                    role={"img"}
+                  />
+                }
+              />
+            }
+          />
+        </div>
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
