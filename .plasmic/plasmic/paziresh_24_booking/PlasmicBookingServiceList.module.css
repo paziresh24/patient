@@ -18,7 +18,8 @@
   max-width: 100%;
   margin-top: var(--token-UIMkdd_bvvx_);
   margin-bottom: var(--token-UIMkdd_bvvx_);
-  height: 1em;
+  width: 24px;
+  height: 24px;
 }
 .apiRequest:global(.__wab_instance) {
   max-width: 100%;
@@ -70,6 +71,10 @@
 }
 .bookingService___5MdRf:global(.__wab_instance) {
   max-width: 100%;
+}
+.sideEffect:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
 }
 .centerListDialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;

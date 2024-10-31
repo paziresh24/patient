@@ -61,6 +61,7 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: -32RqKI9mlfN/codeComponent
 import BookingService from "../../BookingService"; // plasmic-import: Fbeul3tjKryJ/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import CenterList from "../../CenterList"; // plasmic-import: 4Y4p7schjdHw/component
 import CenterListService from "../../CenterListService"; // plasmic-import: oxKPcE6Kc5i3/component
@@ -69,8 +70,6 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingServiceList.module.css"; // plasmic-import: fpdRSzutXHoq/css
 
@@ -99,6 +98,7 @@ export type PlasmicBookingServiceList__OverridesType = {
   getFullProfileData?: Flex__<typeof ApiRequest>;
   svg?: Flex__<"svg">;
   apiRequest?: Flex__<typeof ApiRequest>;
+  sideEffect?: Flex__<typeof SideEffect>;
   centerListDialog?: Flex__<typeof Dialog>;
   centerList?: Flex__<typeof CenterList>;
   serviceListDialog?: Flex__<typeof Dialog>;
@@ -242,8 +242,6 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -342,7 +340,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
             {(() => {
               try {
                 return $state.getFullProfileData.data.data.centers?.some(
-                  center => center.id == 5532
+                  center => center.id == 5532 && center.is_active
                 );
               } catch (e) {
                 if (
@@ -890,6 +888,34 @@ function PlasmicBookingServiceList__RenderFunc(props: {
               />
             ) : null}
           </Stack__>
+          <SideEffect
+            data-plasmic-name={"sideEffect"}
+            data-plasmic-override={overrides.sideEffect}
+            className={classNames("__wab_instance", sty.sideEffect)}
+            onMount={async () => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return console.log($state.getFullProfileData.data);
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }}
+          />
         </ApiRequest>
       </ApiRequest>
       <Dialog
@@ -1389,6 +1415,7 @@ const PlasmicDescendants = {
     "getFullProfileData",
     "svg",
     "apiRequest",
+    "sideEffect",
     "centerListDialog",
     "centerList",
     "serviceListDialog",
@@ -1397,9 +1424,10 @@ const PlasmicDescendants = {
     "link",
     "applicationDialog"
   ],
-  getFullProfileData: ["getFullProfileData", "svg", "apiRequest"],
+  getFullProfileData: ["getFullProfileData", "svg", "apiRequest", "sideEffect"],
   svg: ["svg"],
-  apiRequest: ["apiRequest"],
+  apiRequest: ["apiRequest", "sideEffect"],
+  sideEffect: ["sideEffect"],
   centerListDialog: ["centerListDialog", "centerList"],
   centerList: ["centerList"],
   serviceListDialog: ["serviceListDialog", "centerListService"],
@@ -1416,6 +1444,7 @@ type NodeDefaultElementType = {
   getFullProfileData: typeof ApiRequest;
   svg: "svg";
   apiRequest: typeof ApiRequest;
+  sideEffect: typeof SideEffect;
   centerListDialog: typeof Dialog;
   centerList: typeof CenterList;
   serviceListDialog: typeof Dialog;
@@ -1488,6 +1517,7 @@ export const PlasmicBookingServiceList = Object.assign(
     getFullProfileData: makeNodeComponent("getFullProfileData"),
     svg: makeNodeComponent("svg"),
     apiRequest: makeNodeComponent("apiRequest"),
+    sideEffect: makeNodeComponent("sideEffect"),
     centerListDialog: makeNodeComponent("centerListDialog"),
     centerList: makeNodeComponent("centerList"),
     serviceListDialog: makeNodeComponent("serviceListDialog"),
