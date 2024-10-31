@@ -21,6 +21,16 @@
       }
     },
     {
+      "name": "1.5",
+      "type": "spacing",
+      "value": "0.375rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "CAyzeJd_-oh4"
+      }
+    },
+    {
       "name": "10",
       "type": "spacing",
       "value": "2.5rem",
@@ -2241,6 +2251,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token",
+      "type": "color",
+      "value": "#EA7525",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "O6pDaOQ0VqQn"
+      }
+    },
+    {
       "name": "Unnamed Style Token 2",
       "type": "color",
       "value": "#F3FB03",
@@ -2248,6 +2268,16 @@
       "meta": {
         "projectId": "qQzsBf58SqzNJX45iggq96",
         "id": "REI58znBN2-8"
+      }
+    },
+    {
+      "name": "Unnamed Style Token 2",
+      "type": "color",
+      "value": "#EA7525",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "oBgwYVJk3n4Z"
       }
     },
     {
@@ -2261,6 +2291,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token 3",
+      "type": "color",
+      "value": "#3861FB33",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "yv-HUbLsd0eb"
+      }
+    },
+    {
       "name": "Unnamed Style Token 4",
       "type": "color",
       "value": "#E0FFEC",
@@ -2268,6 +2308,16 @@
       "meta": {
         "projectId": "qQzsBf58SqzNJX45iggq96",
         "id": "wrnGBuDxfQLW"
+      }
+    },
+    {
+      "name": "Unnamed Style Token 4",
+      "type": "color",
+      "value": "#FFFBEB",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "lyYwjohGAMqC"
       }
     },
     {
@@ -2588,6 +2638,16 @@
       "meta": {
         "projectId": "iDYgiKJB9Yi7CUB81stQBK",
         "id": "9YpWDRZpBZcs"
+      }
+    },
+    {
+      "name": "sm",
+      "type": "fontsize",
+      "value": "0.875rem",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "tKyCk2cmS2CI"
       }
     },
     {
