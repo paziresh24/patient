@@ -65,8 +65,6 @@ import AddressesCard from "../../AddressesCard"; // plasmic-import: z1k0-vbkFtby
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicAddresses.module.css"; // plasmic-import: xUh1xJ9SUAar/css
 
@@ -82,14 +80,18 @@ export const PlasmicAddresses__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicAddresses__ArgsType = {
   centers?: any;
+  slug?: string;
 };
 type ArgPropType = keyof PlasmicAddresses__ArgsType;
-export const PlasmicAddresses__ArgProps = new Array<ArgPropType>("centers");
+export const PlasmicAddresses__ArgProps = new Array<ArgPropType>(
+  "centers",
+  "slug"
+);
 
 export type PlasmicAddresses__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
-  text?: Flex__<"div">;
+  h2?: Flex__<"h2">;
   button?: Flex__<typeof Button>;
   svg?: Flex__<"svg">;
   addressesCard?: Flex__<typeof AddressesCard>;
@@ -97,6 +99,7 @@ export type PlasmicAddresses__OverridesType = {
 
 export interface DefaultAddressesProps {
   centers?: any;
+  slug?: string;
   className?: string;
 }
 
@@ -153,8 +156,6 @@ function PlasmicAddresses__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -163,19 +164,20 @@ function PlasmicAddresses__RenderFunc(props: {
         data-plasmic-override={overrides.freeBox}
         className={classNames(projectcss.all, sty.freeBox)}
       >
-        <div
-          data-plasmic-name={"text"}
-          data-plasmic-override={overrides.text}
+        <h2
+          data-plasmic-name={"h2"}
+          data-plasmic-override={overrides.h2}
           className={classNames(
             projectcss.all,
+            projectcss.h2,
             projectcss.__wab_text,
-            sty.text
+            sty.h2
           )}
         >
           {
             "\u0622\u062f\u0631\u0633 \u0648 \u062a\u0644\u0641\u0646 \u062a\u0645\u0627\u0633"
           }
-        </div>
+        </h2>
         <Button
           data-plasmic-name={"button"}
           data-plasmic-override={overrides.button}
@@ -184,6 +186,19 @@ function PlasmicAddresses__RenderFunc(props: {
           }
           className={classNames("__wab_instance", sty.button)}
           color={"text"}
+          link={(() => {
+            try {
+              return `https://www.paziresh24.com/patient/contribute/?slug=${$props.slug}&test_src=profile_eslah`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return "";
+              }
+              throw e;
+            }
+          })()}
           showStartIcon={true}
           startIcon={
             <Icon14Icon
@@ -336,6 +351,19 @@ function PlasmicAddresses__RenderFunc(props: {
                 throw e;
               }
             })()}
+            slug={(() => {
+              try {
+                return $props.slug;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
             title={(() => {
               try {
                 return currentItem.title;
@@ -370,9 +398,9 @@ function PlasmicAddresses__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "text", "button", "svg", "addressesCard"],
-  freeBox: ["freeBox", "text", "button", "svg"],
-  text: ["text"],
+  root: ["root", "freeBox", "h2", "button", "svg", "addressesCard"],
+  freeBox: ["freeBox", "h2", "button", "svg"],
+  h2: ["h2"],
   button: ["button", "svg"],
   svg: ["svg"],
   addressesCard: ["addressesCard"]
@@ -383,7 +411,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
-  text: "div";
+  h2: "h2";
   button: typeof Button;
   svg: "svg";
   addressesCard: typeof AddressesCard;
@@ -450,7 +478,7 @@ export const PlasmicAddresses = Object.assign(
   {
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
-    text: makeNodeComponent("text"),
+    h2: makeNodeComponent("h2"),
     button: makeNodeComponent("button"),
     svg: makeNodeComponent("svg"),
     addressesCard: makeNodeComponent("addressesCard"),

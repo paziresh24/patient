@@ -68,8 +68,6 @@ import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingService.module.css"; // plasmic-import: Fbeul3tjKryJ/css
 
@@ -120,7 +118,6 @@ export const PlasmicBookingService__ArgProps = new Array<ArgPropType>(
 export type PlasmicBookingService__OverridesType = {
   root?: Flex__<"div">;
   bookingNotAvailible?: Flex__<typeof BookingNotAvailible>;
-  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultBookingServiceProps {
@@ -214,8 +211,6 @@ function PlasmicBookingService__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root,
         {
           [sty.rootisUnAvailable]: hasVariant(
@@ -552,79 +547,43 @@ function PlasmicBookingService__RenderFunc(props: {
           })}
         </Stack__>
         {(
-          hasVariant($state, "isUnAvailable", "isUnAvailable")
-            ? (() => {
-                try {
-                  return !!$props.groupExpertiseSlug;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })()
-            : true
+          hasVariant($state, "isUnAvailable", "isUnAvailable") ? false : true
         ) ? (
           <Button
-            data-plasmic-name={"button"}
-            data-plasmic-override={overrides.button}
             children2={
-              <React.Fragment>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___25V2L,
-                    {
-                      [sty.textisUnAvailable___25V2LhFZbh]: hasVariant(
-                        $state,
-                        "isUnAvailable",
-                        "isUnAvailable"
-                      )
-                    }
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $props.buttonContent;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "\u0634\u0631\u0648\u0639 \u0648\u06cc\u0632\u06cc\u062a \u0628\u0627";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </div>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___8MSrm,
-                    {
-                      [sty.textisUnAvailable___8MSrMhFZbh]: hasVariant(
-                        $state,
-                        "isUnAvailable",
-                        "isUnAvailable"
-                      )
-                    }
-                  )}
-                >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___25V2L,
                   {
-                    "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u067e\u0632\u0634\u06a9 \u062c\u0627\u06cc\u06af\u0632\u06cc\u0646"
+                    [sty.textisUnAvailable___25V2LhFZbh]: hasVariant(
+                      $state,
+                      "isUnAvailable",
+                      "isUnAvailable"
+                    )
                   }
-                </div>
-              </React.Fragment>
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.buttonContent;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0634\u0631\u0648\u0639 \u0648\u06cc\u0632\u06cc\u062a \u0628\u0627";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
             }
-            className={classNames("__wab_instance", sty.button, {
-              [sty.buttonisUnAvailable]: hasVariant(
+            className={classNames("__wab_instance", sty.button___9Jriu, {
+              [sty.buttonisUnAvailable___9JriuhFZbh]: hasVariant(
                 $state,
                 "isUnAvailable",
                 "isUnAvailable"
@@ -634,6 +593,97 @@ function PlasmicBookingService__RenderFunc(props: {
               <ChevronLeftIcon
                 className={classNames(projectcss.all, sty.svg__motgm, {
                   [sty.svgisUnAvailable__motgmhFZbh]: hasVariant(
+                    $state,
+                    "isUnAvailable",
+                    "isUnAvailable"
+                  )
+                })}
+                role={"img"}
+              />
+            }
+            link={
+              hasVariant($state, "isUnAvailable", "isUnAvailable")
+                ? (() => {
+                    try {
+                      return `https://www.paziresh24.com/s/ir/${$props.groupExpertiseSlug}/?turn_type=consult`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                : undefined
+            }
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runOnClick"] = true
+                ? (() => {
+                    const actionArgs = { eventRef: $props["onClick"] };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnClick"] != null &&
+                typeof $steps["runOnClick"] === "object" &&
+                typeof $steps["runOnClick"].then === "function"
+              ) {
+                $steps["runOnClick"] = await $steps["runOnClick"];
+              }
+            }}
+            showEndIcon={
+              hasVariant($state, "isUnAvailable", "isUnAvailable")
+                ? undefined
+                : true
+            }
+            space={
+              hasVariant($state, "isUnAvailable", "isUnAvailable")
+                ? undefined
+                : true
+            }
+          />
+        ) : null}
+        {(
+          hasVariant($state, "isUnAvailable", "isUnAvailable") ? true : false
+        ) ? (
+          <Button
+            children2={
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___83Exu,
+                  {
+                    [sty.textisUnAvailable___83ExUhFZbh]: hasVariant(
+                      $state,
+                      "isUnAvailable",
+                      "isUnAvailable"
+                    )
+                  }
+                )}
+              >
+                {
+                  "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u067e\u0632\u0634\u06a9 \u062c\u0627\u06cc\u06af\u0632\u06cc\u0646"
+                }
+              </div>
+            }
+            className={classNames("__wab_instance", sty.button__zQOd4, {
+              [sty.buttonisUnAvailable__zQOd4HFZbh]: hasVariant(
+                $state,
+                "isUnAvailable",
+                "isUnAvailable"
+              )
+            })}
+            endIcon={
+              <ChevronLeftIcon
+                className={classNames(projectcss.all, sty.svg__afK3W, {
+                  [sty.svgisUnAvailable__afK3WhFZbh]: hasVariant(
                     $state,
                     "isUnAvailable",
                     "isUnAvailable"
@@ -680,9 +730,8 @@ function PlasmicBookingService__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "bookingNotAvailible", "button"],
-  bookingNotAvailible: ["bookingNotAvailible"],
-  button: ["button"]
+  root: ["root", "bookingNotAvailible"],
+  bookingNotAvailible: ["bookingNotAvailible"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -690,7 +739,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   bookingNotAvailible: typeof BookingNotAvailible;
-  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -754,7 +802,6 @@ export const PlasmicBookingService = Object.assign(
   {
     // Helper components rendering sub-elements
     bookingNotAvailible: makeNodeComponent("bookingNotAvailible"),
-    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicBookingService
     internalVariantProps: PlasmicBookingService__VariantProps,

@@ -6,7 +6,6 @@
   height: auto;
   min-width: 0;
   border-radius: var(--token-vMUQwr5Jto1d);
-  padding: var(--token-vMUQwr5Jto1d);
 }
 .root > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -33,12 +32,13 @@
   max-width: 100%;
   min-width: 0;
 }
-.text {
+.h2 {
   position: relative;
   width: auto;
   height: auto;
   max-width: 100%;
   font-weight: 700;
+  font-size: var(--token-tM2Vh4zTir7U);
 }
 .button:global(.__wab_instance) {
   max-width: 100%;

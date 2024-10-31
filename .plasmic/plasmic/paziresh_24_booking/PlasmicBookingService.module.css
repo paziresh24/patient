@@ -366,7 +366,7 @@
 .textisUnAvailable__d6I1JhFZbh {
   display: none;
 }
-.button:global(.__wab_instance) {
+.button___9Jriu:global(.__wab_instance) {
   max-width: 100%;
   align-self: auto;
   width: 100%;
@@ -381,17 +381,6 @@
 .textisUnAvailable___25V2LhFZbh {
   display: none;
 }
-.text___8MSrm {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-  display: none;
-}
-.textisUnAvailable___8MSrMhFZbh {
-  display: block;
-}
 .svg__motgm {
   position: relative;
   object-fit: cover;
@@ -404,5 +393,45 @@
   margin-left: 0px;
 }
 .svgisUnAvailable__motgmhFZbh {
+  display: none;
+}
+.button__zQOd4:global(.__wab_instance) {
+  max-width: 100%;
+  align-self: auto;
+  width: 100%;
+  min-width: 0;
+}
+.buttonisUnAvailable__zQOd4HFZbh:global(.__wab_instance) {
+  display: flex;
+}
+.svg__uUc1P {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.text___83Exu {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: none;
+}
+.textisUnAvailable___83ExUhFZbh {
+  display: block;
+}
+.svg__afK3W {
+  position: relative;
+  object-fit: cover;
+  height: 1em;
+  width: auto;
+  margin-right: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  margin-left: 0px;
+}
+.svgisUnAvailable__afK3WhFZbh {
   display: none;
 }
