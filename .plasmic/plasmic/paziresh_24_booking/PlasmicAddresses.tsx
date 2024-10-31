@@ -90,10 +90,10 @@ export const PlasmicAddresses__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicAddresses__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   h2?: Flex__<"h2">;
   button?: Flex__<typeof Button>;
   svg?: Flex__<"svg">;
+  text?: Flex__<"div">;
   addressesCard?: Flex__<typeof AddressesCard>;
 };
 
@@ -159,11 +159,7 @@ function PlasmicAddresses__RenderFunc(props: {
         sty.root
       )}
     >
-      <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__ks94I)}>
         <h2
           data-plasmic-name={"h2"}
           data-plasmic-override={overrides.h2}
@@ -182,7 +178,19 @@ function PlasmicAddresses__RenderFunc(props: {
           data-plasmic-name={"button"}
           data-plasmic-override={overrides.button}
           children2={
-            "\u06af\u0632\u0627\u0631\u0634 \u062a\u0644\u0641\u0646 \u0648 \u0622\u062f\u0631\u0633 \u0635\u062d\u06cc\u062d"
+            <div
+              data-plasmic-name={"text"}
+              data-plasmic-override={overrides.text}
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text
+              )}
+            >
+              {
+                "\u06af\u0632\u0627\u0631\u0634 \u062a\u0644\u0641\u0646 \u0648 \u0622\u062f\u0631\u0633 \u0635\u062d\u06cc\u062d"
+              }
+            </div>
           }
           className={classNames("__wab_instance", sty.button)}
           color={"text"}
@@ -210,199 +218,201 @@ function PlasmicAddresses__RenderFunc(props: {
           }
         />
       </div>
-      {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-        (() => {
-          try {
-            return $props.centers
-              .filter(item => item.id != 5532)
-              .map(center => ({
-                title: center.name,
-                map: center.map,
-                id: center.id,
-                address: center.address,
-                city: center.city,
-                display_number_array: center.display_number_array,
-                slug: center.slug,
-                center_type: center.center_type == 1 ? "office" : "hospital",
-                description: center.description?.trim(),
-                userCenterId: center.user_center_id,
-                centerName: center.name
-              }));
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return [];
+      <div className={classNames(projectcss.all, sty.freeBox___4Opzc)}>
+        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+          (() => {
+            try {
+              return $props.centers
+                .filter(item => item.id != 5532)
+                .map(center => ({
+                  title: center.name,
+                  map: center.map,
+                  id: center.id,
+                  address: center.address,
+                  city: center.city,
+                  display_number_array: center.display_number_array,
+                  slug: center.slug,
+                  center_type: center.center_type == 1 ? "office" : "hospital",
+                  description: center.description?.trim(),
+                  userCenterId: center.user_center_id,
+                  centerName: center.name
+                }));
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
             }
-            throw e;
-          }
-        })()
-      ).map((__plasmic_item_0, __plasmic_idx_0) => {
-        const currentItem = __plasmic_item_0;
-        const currentIndex = __plasmic_idx_0;
-        return (
-          <AddressesCard
-            data-plasmic-name={"addressesCard"}
-            data-plasmic-override={overrides.addressesCard}
-            address={(() => {
-              try {
-                return currentItem.address;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+          })()
+        ).map((__plasmic_item_0, __plasmic_idx_0) => {
+          const currentItem = __plasmic_item_0;
+          const currentIndex = __plasmic_idx_0;
+          return (
+            <AddressesCard
+              data-plasmic-name={"addressesCard"}
+              data-plasmic-override={overrides.addressesCard}
+              address={(() => {
+                try {
+                  return currentItem.address;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            centerId={(() => {
-              try {
-                return currentItem.id;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              centerId={(() => {
+                try {
+                  return currentItem.id;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            centerName={(() => {
-              try {
-                return currentItem.centerName;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              centerName={(() => {
+                try {
+                  return currentItem.centerName;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            centerType={(() => {
-              try {
-                return currentItem.center_type;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              centerType={(() => {
+                try {
+                  return currentItem.center_type;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            city={(() => {
-              try {
-                return currentItem.city;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              city={(() => {
+                try {
+                  return currentItem.city;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            className={classNames("__wab_instance", sty.addressesCard)}
-            description={(() => {
-              try {
-                return currentItem.description;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              className={classNames("__wab_instance", sty.addressesCard)}
+              description={(() => {
+                try {
+                  return currentItem.description;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            displayNumberArray={(() => {
-              try {
-                return currentItem.display_number_array;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              displayNumberArray={(() => {
+                try {
+                  return currentItem.display_number_array;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            key={currentIndex}
-            map={(() => {
-              try {
-                return currentItem.map;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              key={currentIndex}
+              map={(() => {
+                try {
+                  return currentItem.map;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            slug={(() => {
-              try {
-                return $props.slug;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              slug={(() => {
+                try {
+                  return $props.slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            title={(() => {
-              try {
-                return currentItem.title;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              title={(() => {
+                try {
+                  return currentItem.title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-            userCenterId={(() => {
-              try {
-                return currentItem.userCenterId;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
+              })()}
+              userCenterId={(() => {
+                try {
+                  return currentItem.userCenterId;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-          />
-        );
-      })}
+              })()}
+            />
+          );
+        })}
+      </div>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "h2", "button", "svg", "addressesCard"],
-  freeBox: ["freeBox", "h2", "button", "svg"],
+  root: ["root", "h2", "button", "svg", "text", "addressesCard"],
   h2: ["h2"],
-  button: ["button", "svg"],
+  button: ["button", "svg", "text"],
   svg: ["svg"],
+  text: ["text"],
   addressesCard: ["addressesCard"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -410,10 +420,10 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
   h2: "h2";
   button: typeof Button;
   svg: "svg";
+  text: "div";
   addressesCard: typeof AddressesCard;
 };
 
@@ -477,10 +487,10 @@ export const PlasmicAddresses = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
     h2: makeNodeComponent("h2"),
     button: makeNodeComponent("button"),
     svg: makeNodeComponent("svg"),
+    text: makeNodeComponent("text"),
     addressesCard: makeNodeComponent("addressesCard"),
 
     // Metadata about props expected for PlasmicAddresses

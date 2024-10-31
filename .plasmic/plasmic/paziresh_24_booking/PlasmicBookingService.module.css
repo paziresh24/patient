@@ -9,6 +9,7 @@
   padding-top: var(--token-Fv8-L_kN-2Ma);
   padding-bottom: var(--token-Fv8-L_kN-2Ma);
   background: #ffffff;
+  box-shadow: 0px 7px 25px 0px #98a1a926;
   min-width: 0;
   border-radius: 0.5rem;
 }
@@ -134,6 +135,9 @@
   > picture
   > img {
   margin-top: var(--token-vMUQwr5Jto1d);
+}
+.freeBoxisUnAvailable__sLNKhFZbh {
+  padding-bottom: var(--token-Fv8-L_kN-2Ma);
 }
 .bookingNotAvailible:global(.__wab_instance) {
   max-width: 100%;
