@@ -90,7 +90,7 @@ export const Dashboard = (props: any) => {
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
                 src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&user_id=${
                   user.id
-                }&src=${encodeURIComponent(selctedMenu?.embed_src)}`}
+                }&src=${encodeURIComponent(`${selctedMenu?.embed_src}${window?.location?.search ? window?.location?.search : ''}`)}`}
               />
             )}
           </div>
