@@ -5,35 +5,39 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type ChevronUpsvgIconProps = React.ComponentProps<"svg"> & {
+export type Icon10IconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function ChevronUpsvgIcon(props: ChevronUpsvgIconProps) {
+export function Icon10Icon(props: Icon10IconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
-      xmlns={"http://www.w3.org/2000/svg"}
       fill={"none"}
+      xmlns={"http://www.w3.org/2000/svg"}
+      className={classNames("plasmic-default__svg", className, "w-10 h-6")}
       viewBox={"0 0 24 24"}
-      height={"1em"}
-      width={"1em"}
-      className={classNames("plasmic-default__svg", className)}
       style={style}
       {...restProps}
     >
       {title && <title>{title}</title>}
 
       <path
+        d={"M2 6a4 4 0 014-4h12a4 4 0 014 4v12a4 4 0 01-4 4H6a4 4 0 01-4-4V6z"}
         stroke={"currentColor"}
+        strokeWidth={"1.5"}
+      ></path>
+
+      <path
+        d={"M16 8v8m0-4H8m0-4v8"}
+        stroke={"currentColor"}
+        strokeWidth={"1.5"}
         strokeLinecap={"round"}
         strokeLinejoin={"round"}
-        strokeWidth={"1.5"}
-        d={"M15.25 14.25L12 10.75l-3.25 3.5"}
       ></path>
     </svg>
   );
 }
 
-export default ChevronUpsvgIcon;
+export default Icon10Icon;
 /* prettier-ignore-end */

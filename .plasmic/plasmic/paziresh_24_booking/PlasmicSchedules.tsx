@@ -69,6 +69,8 @@ import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicSchedules.module.css"; // plasmic-import: Mt_WMP6AHSGv/css
 
@@ -130,7 +132,16 @@ function PlasmicSchedules__RenderFunc(props: {
 }) {
   const { variants, overrides, forNode } = props;
 
-  const args = React.useMemo(() => Object.assign({}, props.args), [props.args]);
+  const args = React.useMemo(
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
+  );
 
   const $props = {
     ...args,
@@ -189,6 +200,8 @@ function PlasmicSchedules__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
       dir={"rtl"}
@@ -496,7 +509,9 @@ function PlasmicSchedules__RenderFunc(props: {
                           projectcss.plasmic_default_styles,
                           projectcss.plasmic_mixins,
                           projectcss.plasmic_tokens,
-                          plasmic_fragment_design_system_css.plasmic_tokens
+                          plasmic_fragment_design_system_css.plasmic_tokens,
+                          plasmic_antd_5_hostless_css.plasmic_tokens,
+                          plasmic_plasmic_rich_components_css.plasmic_tokens
                         )}
                       >
                         <Button
@@ -864,7 +879,6 @@ function PlasmicSchedules__RenderFunc(props: {
               </div>
             }
             className={classNames("__wab_instance", sty.button__o3I8D)}
-            color={"text"}
             outline={
               hasVariant(globalVariants, "screen", "mobileOnly") ? true : true
             }

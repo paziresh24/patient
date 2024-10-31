@@ -6,23 +6,29 @@
 
 import * as React from "react";
 import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
-import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: iBaF5ywj0AJ8/codeComponent
-import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: KPPZOncTz2u1/codeComponent
-import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: VkD3uYb7XY3e/codeComponent
+import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: 2Zc9s3lJHlRm/codeComponent
+import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: vnho86JbS8U9/codeComponent
+import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: c3ZkUFU_sp6u/codeComponent
+import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: pl8QLmlPxW_d/codeComponent
+import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
+import { PWA } from "@/common/fragment/pwa"; // plasmic-import: OC-wfWxHiBNw/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
+  splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
+  antdConfigProviderProps?: Partial<
+    Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
+  >;
+  pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
 
 export default function GlobalContextsProvider(
@@ -32,7 +38,10 @@ export default function GlobalContextsProvider(
     children,
     authGlobalContextProps,
     fragmentProps,
-    growthbookGlobalContextProps
+    growthbookGlobalContextProps,
+    splunkProps,
+    antdConfigProviderProps,
+    pwaProps
   } = props;
 
   return (
@@ -44,7 +53,19 @@ export default function GlobalContextsProvider(
           : undefined
       }
     >
-      <Fragment {...fragmentProps}>
+      <Fragment
+        {...fragmentProps}
+        apiConfig={
+          fragmentProps && "apiConfig" in fragmentProps
+            ? fragmentProps.apiConfig!
+            : undefined
+        }
+        previewApiConfig={
+          fragmentProps && "previewApiConfig" in fragmentProps
+            ? fragmentProps.previewApiConfig!
+            : undefined
+        }
+      >
         <GrowthbookGlobalContext
           {...growthbookGlobalContextProps}
           apiHost={
@@ -66,7 +87,128 @@ export default function GlobalContextsProvider(
               : undefined
           }
         >
-          {children}
+          <Splunk
+            {...splunkProps}
+            defaultApiHost={
+              splunkProps && "defaultApiHost" in splunkProps
+                ? splunkProps.defaultApiHost!
+                : undefined
+            }
+            defaultApiKey={
+              splunkProps && "defaultApiKey" in splunkProps
+                ? splunkProps.defaultApiKey!
+                : undefined
+            }
+          >
+            <AntdConfigProvider
+              {...antdConfigProviderProps}
+              borderRadius={
+                antdConfigProviderProps &&
+                "borderRadius" in antdConfigProviderProps
+                  ? antdConfigProviderProps.borderRadius!
+                  : 6
+              }
+              colorBgBase={
+                antdConfigProviderProps &&
+                "colorBgBase" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorBgBase!
+                  : "#ffffff"
+              }
+              colorError={
+                antdConfigProviderProps &&
+                "colorError" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorError!
+                  : "#ff4d4f"
+              }
+              colorInfo={
+                antdConfigProviderProps &&
+                "colorInfo" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorInfo!
+                  : "#1677ff"
+              }
+              colorPrimary={
+                antdConfigProviderProps &&
+                "colorPrimary" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorPrimary!
+                  : "#1677ff"
+              }
+              colorSuccess={
+                antdConfigProviderProps &&
+                "colorSuccess" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorSuccess!
+                  : "#52c41a"
+              }
+              colorWarning={
+                antdConfigProviderProps &&
+                "colorWarning" in antdConfigProviderProps
+                  ? antdConfigProviderProps.colorWarning!
+                  : "#faad14"
+              }
+              controlHeight={
+                antdConfigProviderProps &&
+                "controlHeight" in antdConfigProviderProps
+                  ? antdConfigProviderProps.controlHeight!
+                  : 32
+              }
+              defaultDark={
+                antdConfigProviderProps &&
+                "defaultDark" in antdConfigProviderProps
+                  ? antdConfigProviderProps.defaultDark!
+                  : false
+              }
+              lineWidth={
+                antdConfigProviderProps &&
+                "lineWidth" in antdConfigProviderProps
+                  ? antdConfigProviderProps.lineWidth!
+                  : 1
+              }
+              loadingText={
+                antdConfigProviderProps &&
+                "loadingText" in antdConfigProviderProps
+                  ? antdConfigProviderProps.loadingText!
+                  : undefined
+              }
+              removeLoading={
+                antdConfigProviderProps &&
+                "removeLoading" in antdConfigProviderProps
+                  ? antdConfigProviderProps.removeLoading!
+                  : undefined
+              }
+              sizeStep={
+                antdConfigProviderProps && "sizeStep" in antdConfigProviderProps
+                  ? antdConfigProviderProps.sizeStep!
+                  : 4
+              }
+              sizeUnit={
+                antdConfigProviderProps && "sizeUnit" in antdConfigProviderProps
+                  ? antdConfigProviderProps.sizeUnit!
+                  : 4
+              }
+              themeStyles={
+                antdConfigProviderProps &&
+                "themeStyles" in antdConfigProviderProps
+                  ? antdConfigProviderProps.themeStyles!
+                  : true
+                  ? {
+                      fontFamily: "initial",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      lineHeight: "1.5",
+                      color: "#2B2F33",
+                      letterSpacing: "normal"
+                    }
+                  : undefined
+              }
+              wireframe={
+                antdConfigProviderProps &&
+                "wireframe" in antdConfigProviderProps
+                  ? antdConfigProviderProps.wireframe!
+                  : false
+              }
+            >
+              <PWA {...pwaProps}>{children}</PWA>
+            </AntdConfigProvider>
+          </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>
     </AuthGlobalContext>
