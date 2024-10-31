@@ -63,6 +63,8 @@ import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/com
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Schedules from "../../Schedules"; // plasmic-import: Mt_WMP6AHSGv/component
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -169,6 +171,10 @@ function PlasmicAddressesCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
+  });
+
   return (
     <Stack__
       as={"div"}
@@ -241,62 +247,69 @@ function PlasmicAddressesCard__RenderFunc(props: {
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text__cYtS
+              sty.text___2AcXj
             )}
           >
             <React.Fragment>
-              {(() => {
-                try {
-                  return $props.city;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "\u062f\u0627\u0645\u063a\u0627\u0646 - ";
-                  }
-                  throw e;
-                }
-              })()}
+              <React.Fragment>{""}</React.Fragment>
+              {
+                <span
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.span,
+                    projectcss.__wab_text,
+                    projectcss.plasmic_default__inline,
+                    sty.span__zUOp6
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.city;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "-";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </span>
+              }
+              <React.Fragment>{" - "}</React.Fragment>
+              {
+                <span
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.span,
+                    projectcss.__wab_text,
+                    projectcss.plasmic_default__inline,
+                    sty.span__uaLGb
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.address;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "-";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </span>
+              }
+              <React.Fragment>{""}</React.Fragment>
             </React.Fragment>
           </div>
-          {(() => {
-            try {
-              return !!$props.address;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__mKNt
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return ` - ${$props.address}`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "\u062f\u0627\u0645\u063a\u0627\u0646 - \u0628\u0644\u0648\u0627\u0631 \u0686\u0634\u0645\u0647 \u0639\u0644\u06cc - \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u0627\u06cc\u062a \u062f\u0627\u0645\u063a\u0627\u0646";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-          ) : null}
         </Stack__>
       </div>
       {(() => {
