@@ -5,6 +5,7 @@
   width: 100%;
   height: auto;
   background: var(--token-It8BufY6ejOY);
+  box-shadow: none;
   min-width: 0;
   border-radius: var(--token-_c276Gs_1FIE);
   padding: var(--token-Fv8-L_kN-2Ma);
@@ -82,24 +83,21 @@
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
 }
-.text__cYtS {
-  position: relative;
-  height: auto;
-  max-width: 100%;
-  margin-top: var(--token-fhaz6q6bl-fW);
-  font-size: var(--token-tKyCk2cmS2CI);
-  font-weight: 600;
-  width: auto;
-}
-.text__mKNt {
+.text___2AcXj {
   position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
-  margin-top: var(--token-fhaz6q6bl-fW);
   font-size: var(--token-tKyCk2cmS2CI);
-  font-weight: 400;
+  margin-top: var(--token-fhaz6q6bl-fW);
   min-width: 0;
+}
+.span__zUOp6 {
+  font-weight: 600;
+  font-size: var(--token-tKyCk2cmS2CI);
+}
+.span__uaLGb {
+  font-size: var(--token-tKyCk2cmS2CI);
 }
 .collapsible:global(.__wab_instance) {
   max-width: 100%;

@@ -233,7 +233,13 @@ function PlasmicBookingService__RenderFunc(props: {
         <Stack__
           as={"div"}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__tiTvf)}
+          className={classNames(projectcss.all, sty.freeBox__tiTvf, {
+            [sty.freeBoxisUnAvailable__tiTvfhFZbh]: hasVariant(
+              $state,
+              "isUnAvailable",
+              "isUnAvailable"
+            )
+          })}
         >
           {(() => {
             try {
