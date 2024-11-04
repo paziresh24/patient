@@ -1,9 +1,9 @@
 'use client';
 
 import { CodeComponentMeta, useSelector } from '@plasmicapp/host';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import axios from 'axios';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 
 type ApiRequestType = {
   method: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH';
@@ -38,41 +38,44 @@ export const ApiRequest = (props: ApiRequestType) => {
     onSuccess,
   } = props;
   const fragmentConfig = useSelector('Fragment');
-  const [isLoading, setIsLoading] = useState(false);
-  const fetchProps = {
-    method,
-    url,
-    params,
-    body,
-    config: {
-      ...fragmentConfig?.apiConfig,
-      ...fragmentConfig?.previewApiConfig,
-      ...config,
+  const fetchProps = useMemo(
+    () => ({
+      method,
+      url,
+      params,
+      body,
+      config: {
+        ...fragmentConfig?.apiConfig,
+        ...fragmentConfig?.previewApiConfig,
+        ...config,
+      },
+    }),
+    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
+  );
+
+  const { data, isLoading, isInitialLoading, isError } = useQuery(
+    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
+    () => reuqestFn(fetchProps),
+    {
+      onError(err) {
+        onLoading?.(false);
+        if (axios.isAxiosError(err)) {
+          onError?.(err.response?.data);
+        }
+      },
+      onSuccess(data) {
+        onLoading?.(false);
+        onSuccess?.(data?.data);
+      },
+      keepPreviousData: false,
+      refetchOnWindowFocus: false,
     },
-  };
-  const { error } = useSWR(JSON.stringify(fetchProps), () => reuqestFn(fetchProps), {
-    onError(err) {
-      onLoading?.(false);
-      setIsLoading(false);
-      if (axios.isAxiosError(err)) {
-        onError?.(err.response?.data);
-      }
-    },
-    onSuccess(data) {
-      onLoading?.(false);
-      setIsLoading(false);
-      onSuccess?.(data?.data);
-    },
-    errorRetryCount: 0,
-    revalidateOnFocus: false,
-    keepPreviousData: false,
-  });
+  );
 
   const reuqestFn = async ({ method, url, params, body, config }: any) => {
     onLoading?.(true);
     onError?.(null);
     onSuccess?.(null);
-    setIsLoading(true);
     if (method === 'GET') {
       return await axios.get(url, {
         params,
@@ -85,14 +88,17 @@ export const ApiRequest = (props: ApiRequestType) => {
     });
   };
 
-  if (isLoading || previewLoadingDisplay) {
+  if (isInitialLoading || isLoading || previewLoadingDisplay) {
     return loadingDisplay;
   }
 
-  if (!!error || previewErrorDisplay) {
+  if (isError || previewErrorDisplay) {
     return errorDisplay;
   }
-  return children;
+
+  if (data?.data) {
+    return children;
+  }
 };
 
 export const apiRequestMeta: CodeComponentMeta<ApiRequestType> = {
