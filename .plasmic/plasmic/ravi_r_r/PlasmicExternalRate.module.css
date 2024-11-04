@@ -88,6 +88,8 @@
   max-width: 100%;
   font-size: var(--token-6NbVMeD6zQwn);
   text-align: center;
+  text-decoration-line: underline;
+  color: var(--token-n7oRIobFxMYD);
   min-width: 0;
 }
 .text___0KxbA {
