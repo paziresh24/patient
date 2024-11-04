@@ -1237,6 +1237,19 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicTest.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "q0EXGV78MZIZ",
+          "name": "ExternalRate",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicExternalRate.tsx",
+          "importSpec": {
+            "modulePath": "ExternalRate.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicExternalRate.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1429,6 +1442,12 @@
           "name": "Splunk",
           "displayName": "Splunk",
           "componentImportPath": "@/common/fragment/splunk"
+        },
+        {
+          "id": "GVjCCx3Y_il9",
+          "name": "PWA",
+          "displayName": "PWA",
+          "componentImportPath": "@/common/fragment/pwa"
         }
       ],
       "customFunctions": [
@@ -1439,8 +1458,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -2362,7 +2380,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "ohDidvG9XsCeFumugENU3J",
