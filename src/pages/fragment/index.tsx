@@ -8,7 +8,7 @@ import { ApiRequest, apiRequestMeta } from '@/common/fragment/components/api-req
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { Splunk, splunkMeta } from '@/common/fragment/splunk';
 import { Switch, switchMeta } from '@/common/fragment/components/switch';
-import { FragmentPWA, fragmentPWAMeta } from '@/common/fragment/pwa';
+import { fragmentPWAMeta, PWA } from '@/common/fragment/pwa';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -102,7 +102,7 @@ registerGlobalContext(Splunk, splunkMeta);
 
 registerComponent(ApiRequest as any, apiRequestMeta);
 registerComponent(Switch as any, switchMeta);
-registerGlobalContext(FragmentPWA, fragmentPWAMeta);
+registerGlobalContext(PWA, fragmentPWAMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',
