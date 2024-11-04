@@ -4,7 +4,7 @@ import useApplication from '../hooks/useApplication';
 
 interface FragmentPWAProps {}
 
-export const FragmentPWA = ({ children }: React.PropsWithChildren<FragmentPWAProps>) => {
+export const PWA = ({ children }: React.PropsWithChildren<FragmentPWAProps>) => {
   const isApplication = useApplication();
   return (
     <GlobalActionsProvider contextName="FragmentPWAActions" actions={{}}>
