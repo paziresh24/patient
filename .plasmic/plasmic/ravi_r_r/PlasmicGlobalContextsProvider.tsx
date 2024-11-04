@@ -10,22 +10,21 @@ import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plas
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: I9xFO0-CXlvU/codeComponent
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: lWTHKw5gCzCj/codeComponent
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: fAahHOA889lI/codeComponent
+import { PWA } from "@/common/fragment/pwa"; // plasmic-import: GVjCCx3Y_il9/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
+  pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
 
 export default function GlobalContextsProvider(
@@ -36,7 +35,8 @@ export default function GlobalContextsProvider(
     authGlobalContextProps,
     fragmentProps,
     growthbookGlobalContextProps,
-    splunkProps
+    splunkProps,
+    pwaProps
   } = props;
 
   return (
@@ -95,7 +95,7 @@ export default function GlobalContextsProvider(
                 : undefined
             }
           >
-            {children}
+            <PWA {...pwaProps}>{children}</PWA>
           </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>
