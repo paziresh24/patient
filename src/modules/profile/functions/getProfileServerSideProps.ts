@@ -112,6 +112,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let shouldUseNewRateCalculations: boolean = false;
     let shouldUsePlasmicReviewCard: boolean = false;
     let getOnlyHasuraProfileData: boolean = false;
+    let shouldUsePlasmicAddresses = {};
+    let shouldUsePlasmicBookingServiceList = {};
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -183,6 +185,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       // Plasmic Reviews Card
       shouldUsePlasmicReviewCard = growthbook.isOn('plasmic:review-card|slugs');
       getOnlyHasuraProfileData = growthbook.isOn('get-only-hasura-profile-data');
+      shouldUsePlasmicAddresses = growthbook.getFeatureValue('hamdast::profile-addresses', { hide: true });
+      shouldUsePlasmicBookingServiceList = growthbook.getFeatureValue('hamdast::profile-booking-service-list', { hide: true });
     } catch (error) {
       console.error(error);
     }
@@ -385,6 +389,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         slug: slugFormmated,
         fragmentComponents: {
           reviewCard: shouldUsePlasmicReviewCard,
+          addresses: shouldUsePlasmicAddresses,
+          bookingServiceList: shouldUsePlasmicBookingServiceList,
         },
         getOnlyHasuraProfileData,
       },
