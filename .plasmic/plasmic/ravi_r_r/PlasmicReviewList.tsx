@@ -432,6 +432,19 @@ function PlasmicReviewList__RenderFunc(props: {
               data-plasmic-name={"externalRate"}
               data-plasmic-override={overrides.externalRate}
               className={classNames("__wab_instance", sty.externalRate)}
+              doctorSlug={(() => {
+                try {
+                  return $props.centers[0].slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             />
           ) : null}
           {(() => {
