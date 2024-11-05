@@ -6,7 +6,6 @@
   height: auto;
   background: none;
   min-width: 0;
-  border-radius: var(--token-vMUQwr5Jto1d);
 }
 .root > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -84,6 +83,11 @@
   min-width: 0;
   border-radius: var(--token-_c276Gs_1FIE);
   padding: var(--token-vMUQwr5Jto1d);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox___4Opzc {
+    border-radius: 0px;
+  }
 }
 .addressesCard:global(.__wab_instance) {
   max-width: 100%;
