@@ -417,6 +417,37 @@ function PlasmicProfileActions__RenderFunc(props: {
                 ];
               }
 
+              $steps["updateIsBookMarked"] = !$ctx["auth"].isLogin
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["isBookMarked"]
+                      },
+                      operation: 4
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      const oldValue = $stateGet(objRoot, variablePath);
+                      $stateSet(objRoot, variablePath, !oldValue);
+                      return !oldValue;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateIsBookMarked"] != null &&
+                typeof $steps["updateIsBookMarked"] === "object" &&
+                typeof $steps["updateIsBookMarked"].then === "function"
+              ) {
+                $steps["updateIsBookMarked"] = await $steps[
+                  "updateIsBookMarked"
+                ];
+              }
+
               $steps["invokeGlobalAction2"] =
                 !$state.isBookMarked && $ctx.auth.isLogin
                   ? (() => {
@@ -427,11 +458,9 @@ function PlasmicProfileActions__RenderFunc(props: {
                           undefined,
                           (() => {
                             try {
-                              return (() => {
-                                {
-                                  slug: $props.slug;
-                                }
-                              })();
+                              return {
+                                slug: $props.slug
+                              };
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
