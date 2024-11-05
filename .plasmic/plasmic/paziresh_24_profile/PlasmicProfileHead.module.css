@@ -76,7 +76,7 @@
 .viewCount > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
   width: calc(100% + var(--token-fhaz6q6bl-fW));
 }
@@ -117,12 +117,14 @@
   height: auto;
   max-width: 100%;
   overflow: auto;
+  padding-right: var(--token-fhaz6q6bl-fW);
+  padding-left: var(--token-fhaz6q6bl-fW);
   min-width: 0;
 }
 .freeBox__ekp4F > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-width: 0;
   margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
   width: calc(100% + var(--token-fhaz6q6bl-fW));
@@ -141,12 +143,13 @@
   position: relative;
   width: auto;
   height: auto;
-  max-width: 100%;
   background: #f1f5f900;
   color: var(--token-rjAIDXsTjJqJ);
   font-size: var(--token-VrIY9r5RDQZ_);
   font-weight: 600;
-  border-radius: 1000px;
+  white-space: pre-wrap;
+  text-align: center;
+  border-radius: 14px;
   padding: var(--token-fhaz6q6bl-fW) var(--token-vMUQwr5Jto1d);
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
