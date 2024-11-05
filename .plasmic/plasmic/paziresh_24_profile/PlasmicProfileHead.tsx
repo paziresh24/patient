@@ -85,6 +85,7 @@ export type PlasmicProfileHead__ArgsType = {
   title?: string;
   subTitle?: string;
   imageUrl?: string;
+  slug?: string;
 };
 type ArgPropType = keyof PlasmicProfileHead__ArgsType;
 export const PlasmicProfileHead__ArgProps = new Array<ArgPropType>(
@@ -94,7 +95,8 @@ export const PlasmicProfileHead__ArgProps = new Array<ArgPropType>(
   "displayName",
   "title",
   "subTitle",
-  "imageUrl"
+  "imageUrl",
+  "slug"
 );
 
 export type PlasmicProfileHead__OverridesType = {
@@ -113,6 +115,7 @@ export interface DefaultProfileHeadProps {
   title?: string;
   subTitle?: string;
   imageUrl?: string;
+  slug?: string;
   className?: string;
 }
 
@@ -182,6 +185,19 @@ function PlasmicProfileHead__RenderFunc(props: {
             data-plasmic-name={"profileActions"}
             data-plasmic-override={overrides.profileActions}
             className={classNames("__wab_instance", sty.profileActions)}
+            slug={(() => {
+              try {
+                return $props.slug;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
           />
 
           <Stack__
@@ -286,11 +302,7 @@ function PlasmicProfileHead__RenderFunc(props: {
       <Stack__
         as={"div"}
         hasGap={true}
-        className={classNames(
-          projectcss.all,
-          sty.freeBox__ekp4F,
-          "indiana-scroll-container indiana-scroll-container--hide-scrollbars"
-        )}
+        className={classNames(projectcss.all, sty.freeBox__ekp4F, "no-scroll")}
       >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
@@ -317,6 +329,7 @@ function PlasmicProfileHead__RenderFunc(props: {
                 sty.text__yflB8
               )}
               key={currentIndex}
+              style={{ width: "max-content", minWidth: "fit-content" }}
             >
               <React.Fragment>
                 {(() => {
