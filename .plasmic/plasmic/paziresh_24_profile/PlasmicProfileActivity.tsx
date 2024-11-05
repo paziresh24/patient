@@ -98,8 +98,8 @@ export const PlasmicProfileActivity__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicProfileActivity__OverridesType = {
   root?: Flex__<"div">;
-  allVisitOnlineCountBook?: Flex__<typeof ApiRequest>;
   removedVisitOnlineCountBook?: Flex__<typeof ApiRequest>;
+  allVisitOnlineCountBook?: Flex__<typeof ApiRequest>;
   popoverCore?: Flex__<typeof Popover>;
 };
 
@@ -239,6 +239,121 @@ function PlasmicProfileActivity__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox__a0EzN)}
         >
+          <ApiRequest
+            data-plasmic-name={"removedVisitOnlineCountBook"}
+            data-plasmic-override={overrides.removedVisitOnlineCountBook}
+            children={null}
+            className={classNames(
+              "__wab_instance",
+              sty.removedVisitOnlineCountBook
+            )}
+            config={{
+              headers: {
+                Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
+              }
+            }}
+            errorDisplay={null}
+            loadingDisplay={null}
+            method={"GET"}
+            onError={generateStateOnChangeProp($state, [
+              "removedVisitOnlineCountBook",
+              "error"
+            ])}
+            onLoading={generateStateOnChangeProp($state, [
+              "removedVisitOnlineCountBook",
+              "loading"
+            ])}
+            onSuccess={generateStateOnChangeProp($state, [
+              "removedVisitOnlineCountBook",
+              "data"
+            ])}
+            params={(() => {
+              try {
+                return {
+                  user_center_id: $props.centers.find(
+                    center => center.id === "5532"
+                  ).user_center_id,
+                  payment_status_in: "4",
+                  from_less_than: Math.floor(
+                    new Date().setHours(0, 0, 0, 0) / 1000
+                  ),
+                  from_greather_than: Math.floor(
+                    (new Date().setHours(0, 0, 0, 0) -
+                      30 * 24 * 60 * 60 * 1000) /
+                      1000
+                  ),
+                  deleted_at_greater_than: "from"
+                };
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            url={"https://apigw.paziresh24.com/v2/appointments/count"}
+          />
+
+          <ApiRequest
+            data-plasmic-name={"allVisitOnlineCountBook"}
+            data-plasmic-override={overrides.allVisitOnlineCountBook}
+            children={null}
+            className={classNames(
+              "__wab_instance",
+              sty.allVisitOnlineCountBook
+            )}
+            config={{
+              headers: {
+                Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
+              }
+            }}
+            errorDisplay={null}
+            loadingDisplay={null}
+            method={"GET"}
+            onError={generateStateOnChangeProp($state, [
+              "allVisitOnlineCountBook",
+              "error"
+            ])}
+            onLoading={generateStateOnChangeProp($state, [
+              "allVisitOnlineCountBook",
+              "loading"
+            ])}
+            onSuccess={generateStateOnChangeProp($state, [
+              "allVisitOnlineCountBook",
+              "data"
+            ])}
+            params={(() => {
+              try {
+                return {
+                  user_center_id: $props.centers.find(
+                    center => center.id === "5532"
+                  ).user_center_id,
+                  payment_status_in: "3,4,5,6,7,8,9",
+                  from_less_than: Math.floor(
+                    new Date().setHours(0, 0, 0, 0) / 1000
+                  ),
+                  from_greather_than: Math.floor(
+                    (new Date().setHours(0, 0, 0, 0) -
+                      30 * 24 * 60 * 60 * 1000) /
+                      1000
+                  )
+                };
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            url={"https://apigw.paziresh24.com/v2/appointments/count"}
+          />
+
           {(() => {
             try {
               return $props.onlineVisit.enabled;
@@ -324,197 +439,95 @@ function PlasmicProfileActivity__RenderFunc(props: {
                 hasGap={true}
                 className={classNames(projectcss.all, sty.freeBox__s7TW)}
               >
-                <ApiRequest
-                  data-plasmic-name={"allVisitOnlineCountBook"}
-                  data-plasmic-override={overrides.allVisitOnlineCountBook}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.allVisitOnlineCountBook
-                  )}
-                  config={{
-                    headers: {
-                      Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
+                {(() => {
+                  try {
+                    return (
+                      $state.allVisitOnlineCountBook.loading ||
+                      $state.removedVisitOnlineCountBook.loading
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
-                  }}
-                  errorDisplay={null}
-                  loadingDisplay={
-                    <React.Fragment>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__hYvx2
-                        )}
-                      >
-                        {"Loading..."}
-                      </div>
-                      <Icon11Icon
-                        className={classNames(
-                          projectcss.all,
-                          sty.svg__hefA,
-                          "loader"
-                        )}
-                        role={"img"}
-                      />
-                    </React.Fragment>
+                    throw e;
                   }
-                  method={"GET"}
-                  onError={generateStateOnChangeProp($state, [
-                    "allVisitOnlineCountBook",
-                    "error"
-                  ])}
-                  onLoading={generateStateOnChangeProp($state, [
-                    "allVisitOnlineCountBook",
-                    "loading"
-                  ])}
-                  onSuccess={generateStateOnChangeProp($state, [
-                    "allVisitOnlineCountBook",
-                    "data"
-                  ])}
-                  params={(() => {
-                    try {
-                      return {
-                        user_center_id: $props.centers.find(
-                          center => center.id === "5532"
-                        ).user_center_id,
-                        payment_status_in: "3,4,5,6,7,8,9",
-                        from_less_than: Math.floor(
-                          new Date().setHours(0, 0, 0, 0) / 1000
-                        ),
-                        from_greather_than: Math.floor(
-                          (new Date().setHours(0, 0, 0, 0) -
-                            30 * 24 * 60 * 60 * 1000) /
-                            1000
-                        )
-                      };
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  url={"https://apigw.paziresh24.com/v2/appointments/count"}
-                >
-                  <ApiRequest
-                    data-plasmic-name={"removedVisitOnlineCountBook"}
-                    data-plasmic-override={
-                      overrides.removedVisitOnlineCountBook
-                    }
+                })() ? (
+                  <Icon11Icon
                     className={classNames(
-                      "__wab_instance",
-                      sty.removedVisitOnlineCountBook
+                      projectcss.all,
+                      sty.svg__rFwLw,
+                      "loader"
                     )}
-                    config={{
-                      headers: {
-                        Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
-                      }
-                    }}
-                    errorDisplay={null}
-                    loadingDisplay={
-                      <Icon11Icon
-                        className={classNames(
-                          projectcss.all,
-                          sty.svg__rFwLw,
-                          "loader"
-                        )}
-                        role={"img"}
-                      />
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return (
+                      !$state.allVisitOnlineCountBook.loading &&
+                      !$state.removedVisitOnlineCountBook.loading
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
-                    method={"GET"}
-                    onError={generateStateOnChangeProp($state, [
-                      "removedVisitOnlineCountBook",
-                      "error"
-                    ])}
-                    onLoading={generateStateOnChangeProp($state, [
-                      "removedVisitOnlineCountBook",
-                      "loading"
-                    ])}
-                    onSuccess={generateStateOnChangeProp($state, [
-                      "removedVisitOnlineCountBook",
-                      "data"
-                    ])}
-                    params={(() => {
-                      try {
-                        return {
-                          user_center_id: $props.centers.find(
-                            center => center.id === "5532"
-                          ).user_center_id,
-                          payment_status_in: "4",
-                          from_less_than: Math.floor(
-                            new Date().setHours(0, 0, 0, 0) / 1000
-                          ),
-                          from_greather_than: Math.floor(
-                            (new Date().setHours(0, 0, 0, 0) -
-                              30 * 24 * 60 * 60 * 1000) /
-                              1000
-                          ),
-                          deleted_at_greater_than: "from"
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    url={"https://apigw.paziresh24.com/v2/appointments/count"}
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__f9Ar
+                    )}
                   >
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__f9Ar
-                      )}
-                    >
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return (() => {
-                              if (
-                                $state.allVisitOnlineCountBook.data
-                                  .count_book <= 0 ||
-                                !$state.removedVisitOnlineCountBook.data
-                                  ?.count_book <= 0
-                              ) {
-                                return "100%";
-                              }
-                              const percent = `${Math.ceil(
-                                100 -
-                                  (($state.removedVisitOnlineCountBook.data
-                                    ?.count_book
-                                    ? +$state.removedVisitOnlineCountBook.data
-                                        ?.count_book
-                                    : 0) /
-                                    ($state.allVisitOnlineCountBook.data
-                                      ?.count_book
-                                      ? +$state.allVisitOnlineCountBook.data
-                                          ?.count_book
-                                      : 1)) *
-                                    100
-                              )}%`;
-                              return percent;
-                            })();
-                          } catch (e) {
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (() => {
                             if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
+                              $state.allVisitOnlineCountBook.data.count_book <=
+                                0 ||
+                              $state.removedVisitOnlineCountBook.data
+                                ?.count_book <= 0
                             ) {
                               return "";
                             }
-                            throw e;
+                            const percent = `${Math.ceil(
+                              100 -
+                                (($state.removedVisitOnlineCountBook.data
+                                  ?.count_book
+                                  ? +$state.removedVisitOnlineCountBook.data
+                                      ?.count_book
+                                  : 0) /
+                                  ($state.allVisitOnlineCountBook.data
+                                    ?.count_book
+                                    ? +$state.allVisitOnlineCountBook.data
+                                        ?.count_book
+                                    : 1)) *
+                                  100
+                            )}%`;
+                            return percent;
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "";
                           }
-                        })()}
-                      </React.Fragment>
-                    </div>
-                  </ApiRequest>
-                </ApiRequest>
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                ) : null}
                 <div
                   className={classNames(
                     projectcss.all,
@@ -616,15 +629,12 @@ function PlasmicProfileActivity__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "allVisitOnlineCountBook",
     "removedVisitOnlineCountBook",
+    "allVisitOnlineCountBook",
     "popoverCore"
   ],
-  allVisitOnlineCountBook: [
-    "allVisitOnlineCountBook",
-    "removedVisitOnlineCountBook"
-  ],
   removedVisitOnlineCountBook: ["removedVisitOnlineCountBook"],
+  allVisitOnlineCountBook: ["allVisitOnlineCountBook"],
   popoverCore: ["popoverCore"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -632,8 +642,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  allVisitOnlineCountBook: typeof ApiRequest;
   removedVisitOnlineCountBook: typeof ApiRequest;
+  allVisitOnlineCountBook: typeof ApiRequest;
   popoverCore: typeof Popover;
 };
 
@@ -697,10 +707,10 @@ export const PlasmicProfileActivity = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    allVisitOnlineCountBook: makeNodeComponent("allVisitOnlineCountBook"),
     removedVisitOnlineCountBook: makeNodeComponent(
       "removedVisitOnlineCountBook"
     ),
+    allVisitOnlineCountBook: makeNodeComponent("allVisitOnlineCountBook"),
     popoverCore: makeNodeComponent("popoverCore"),
 
     // Metadata about props expected for PlasmicProfileActivity
