@@ -53,7 +53,10 @@ export default function GlobalContextsProvider(
         apiConfig={
           fragmentProps && "apiConfig" in fragmentProps
             ? fragmentProps.apiConfig!
-            : undefined
+            : {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true
+              }
         }
         previewApiConfig={
           fragmentProps && "previewApiConfig" in fragmentProps
