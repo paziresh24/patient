@@ -200,11 +200,9 @@ function PlasmicProfileHead__RenderFunc(props: {
             })()}
           />
 
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"viewCount"}
             data-plasmic-override={overrides.viewCount}
-            hasGap={true}
             className={classNames(projectcss.all, sty.viewCount)}
           >
             <div
@@ -238,7 +236,7 @@ function PlasmicProfileHead__RenderFunc(props: {
               className={classNames(projectcss.all, sty.svg)}
               role={"img"}
             />
-          </Stack__>
+          </div>
         </div>
       </Stack__>
       <ProfileInfo
