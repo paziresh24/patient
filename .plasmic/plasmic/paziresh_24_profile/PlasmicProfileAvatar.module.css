@@ -1,0 +1,35 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 0;
+}
+.freeBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 85px;
+  height: 85px;
+  max-width: 100%;
+  background: var(--token-BU1JCAY6hntB);
+  flex-shrink: 0;
+  border-radius: 1000px;
+  border: 2px solid var(--token-Y3HOiwZmAcAF);
+}
+.img {
+  object-fit: cover;
+  max-width: 100%;
+  width: 85px;
+  height: 85px;
+  flex-shrink: 0;
+  border-radius: 1000px;
+}
+.img > picture > img {
+  object-fit: cover;
+}

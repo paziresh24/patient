@@ -2651,6 +2651,16 @@
       }
     },
     {
+      "name": "sm",
+      "type": "fontsize",
+      "value": "0.875rem",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "7r312uiqyadpVPdnRoAggk",
+        "id": "KeHe2fFUQ6pK"
+      }
+    },
+    {
       "name": "small",
       "type": "fontsize",
       "value": "0.875rem",
