@@ -10,6 +10,7 @@ import Services from './services';
 import pick from 'lodash/pick';
 import { Fragment } from '@/common/fragment';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
+import { FragmentRateReview } from './rateReview/fragmentRateReview';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -110,6 +111,17 @@ export const aside = (data: any) => {
       },
       children: (props: any) => <RecommendWrapper {...props} />,
       dataAttributes: { 'data-nosnippet': 'true' },
+    },
+    // Reviews
+    {
+      id: 'reviews',
+      isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
+      children: (props: any) => (
+        <div className="md:hidden flex flex-col gap-y-3">
+          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
+          <FragmentRateReview profileData={profileData} />
+        </div>
+      ),
     },
     // Centers Info
     {
