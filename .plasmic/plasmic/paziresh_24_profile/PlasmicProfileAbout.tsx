@@ -174,120 +174,138 @@ function PlasmicProfileAbout__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox__djeR5)}
         >
-          <Collapsible
-            data-plasmic-name={"collapsible"}
-            data-plasmic-override={overrides.collapsible}
-            className={classNames("__wab_instance", sty.collapsible)}
-            slot={
-              <div className={classNames(projectcss.all, sty.freeBox__w7QYx)}>
+          {(() => {
+            try {
+              return (
+                $props.information.biography.replace(/<[^>]+>/g, "").length >
+                750
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Collapsible
+              data-plasmic-name={"collapsible"}
+              data-plasmic-override={overrides.collapsible}
+              className={classNames("__wab_instance", sty.collapsible)}
+              slot={
+                <div className={classNames(projectcss.all, sty.freeBox__w7QYx)}>
+                  <Button
+                    children2={
+                      "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
+                    }
+                    className={classNames("__wab_instance", sty.button__f422L)}
+                    color={"text"}
+                    showStartIcon={true}
+                    size={"compact"}
+                    startIcon={
+                      <ChevronUpIcon
+                        className={classNames(projectcss.all, sty.svg__ksmZb)}
+                        role={"img"}
+                      />
+                    }
+                  />
+                </div>
+              }
+              slot2={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__jIy7H
+                  )}
+                >
+                  <div
+                    className={projectcss.__wab_expr_html_text}
+                    dangerouslySetInnerHTML={{
+                      __html: (() => {
+                        try {
+                          return $props.information.biography;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "";
+                          }
+                          throw e;
+                        }
+                      })()
+                    }}
+                  />
+                </div>
+              }
+            >
+              <div className={classNames(projectcss.all, sty.freeBox__pz6Dy)}>
                 <Button
                   children2={
-                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
                   }
-                  className={classNames("__wab_instance", sty.button__f422L)}
+                  className={classNames("__wab_instance", sty.button___87O5G)}
                   color={"text"}
                   showStartIcon={true}
                   size={"compact"}
                   startIcon={
-                    <ChevronUpIcon
-                      className={classNames(projectcss.all, sty.svg__ksmZb)}
+                    <ChevronDownIcon
+                      className={classNames(projectcss.all, sty.svg__cdurB)}
                       role={"img"}
                     />
                   }
                 />
               </div>
+            </Collapsible>
+          ) : null}
+          {(() => {
+            try {
+              return (
+                $props.information.biography.replace(/<[^>]+>/g, "").length <=
+                750
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
             }
-            slot2={
+          })() ? (
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__vDoPe
+              )}
+            >
               <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__jIy7H
-                )}
-              >
-                <div
-                  className={projectcss.__wab_expr_html_text}
-                  dangerouslySetInnerHTML={{
-                    __html: (() => {
-                      try {
-                        return $props.information.biography;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
+                className={projectcss.__wab_expr_html_text}
+                dangerouslySetInnerHTML={{
+                  __html: (() => {
+                    try {
+                      return $props.information.biography;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
                       }
-                    })()
-                  }}
-                />
-              </div>
-            }
-          >
-            <div className={classNames(projectcss.all, sty.freeBox__pz6Dy)}>
-              <Button
-                children2={
-                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
-                }
-                className={classNames("__wab_instance", sty.button___87O5G)}
-                color={"text"}
-                showStartIcon={true}
-                size={"compact"}
-                startIcon={
-                  <ChevronDownIcon
-                    className={classNames(projectcss.all, sty.svg__cdurB)}
-                    role={"img"}
-                  />
-                }
+                      throw e;
+                    }
+                  })()
+                }}
               />
             </div>
-          </Collapsible>
+          ) : null}
         </Stack__>
       </Stack__>
-      {(() => {
-        try {
-          return (
-            $props.information.biography.replace(/<[^>]+>/g, "").length <= 750
-          );
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
-          }
-          throw e;
-        }
-      })() ? (
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__vDoPe
-          )}
-        >
-          <div
-            className={projectcss.__wab_expr_html_text}
-            dangerouslySetInnerHTML={{
-              __html: (() => {
-                try {
-                  return $props.information.biography;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "";
-                  }
-                  throw e;
-                }
-              })()
-            }}
-          />
-        </div>
-      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
