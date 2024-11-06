@@ -114,6 +114,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let getOnlyHasuraProfileData: boolean = false;
     let shouldUsePlasmicAddresses = {};
     let shouldUsePlasmicBookingServiceList = {};
+    let shouldUsePlasmicHeadInfo = {};
+    let raviComponentTopOrderProfile: boolean = false;
 
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
@@ -187,6 +189,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       getOnlyHasuraProfileData = growthbook.isOn('get-only-hasura-profile-data');
       shouldUsePlasmicAddresses = growthbook.getFeatureValue('hamdast::profile-addresses', { hide: true });
       shouldUsePlasmicBookingServiceList = growthbook.getFeatureValue('hamdast::profile-booking-service-list', { hide: true });
+      shouldUsePlasmicHeadInfo = growthbook.getFeatureValue('hamdast::profile-head-info', { hide: true });
+      raviComponentTopOrderProfile = growthbook.isOn('ravi_component_top_order_profile');
     } catch (error) {
       console.error(error);
     }
@@ -391,6 +395,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           reviewCard: shouldUsePlasmicReviewCard,
           addresses: shouldUsePlasmicAddresses,
           bookingServiceList: shouldUsePlasmicBookingServiceList,
+          headInfo: shouldUsePlasmicHeadInfo,
+          raviComponentTopOrderProfile: raviComponentTopOrderProfile,
         },
         getOnlyHasuraProfileData,
       },

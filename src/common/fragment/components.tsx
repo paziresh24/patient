@@ -28,6 +28,9 @@ import PlasmicAddresses, { PlasmicAddresses__ArgProps } from '.plasmic/plasmic/p
 import PlasmicBookingServiceList, {
   PlasmicBookingServiceList__ArgProps,
 } from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingServiceList';
+import PlasmicProfileHead, { PlasmicProfileHead__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
+import PlasmicProfileAbout, { PlasmicProfileAbout__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
+import PlasmicProfileActivity, { PlasmicProfileActivity__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileActivity';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -109,5 +112,23 @@ export const Components = {
     id: 'fpdRSzutXHoq',
     propsAllowed: PlasmicBookingServiceList__ArgProps,
     projectId: '8NbkXymcLwvMUC2yXeRrWk',
+  },
+  ProfileHead: {
+    Component: PlasmicProfileHead,
+    id: 'fKBGdItR62E2',
+    propsAllowed: PlasmicProfileHead__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
+  },
+  ProfileAbout: {
+    Component: PlasmicProfileAbout,
+    id: 'VlJvd0AHTT9_',
+    propsAllowed: PlasmicProfileAbout__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
+  },
+  ProfileActivity: {
+    Component: PlasmicProfileActivity,
+    id: 'LIHtK_X7GpDY',
+    propsAllowed: PlasmicProfileActivity__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
   },
 };
