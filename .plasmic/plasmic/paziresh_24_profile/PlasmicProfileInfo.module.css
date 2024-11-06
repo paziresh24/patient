@@ -38,9 +38,12 @@
   > img {
   margin-left: var(--token-vMUQwr5Jto1d);
 }
-.profileAvatar:global(.__wab_instance) {
+.avatar:global(.__wab_instance) {
   max-width: 100%;
-  width: auto;
+  width: 85px;
+  height: 85px;
+  min-width: 85px;
+  flex-shrink: 0;
 }
 .freeBox__v8PvT {
   display: flex;
@@ -67,13 +70,14 @@
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
-.text___5Lwkx {
+.h1 {
   position: relative;
   width: auto;
   height: auto;
   max-width: 100%;
   font-weight: 700;
   font-size: var(--token-y5gXq2Mgh7sV);
+  letter-spacing: normal;
 }
 .freeBox__n2ZAh {
   display: flex;
@@ -110,7 +114,7 @@
   height: 20px;
   flex-shrink: 0;
 }
-.text__yS8Mj {
+.span__yS8Mj {
   position: relative;
   width: 100%;
   height: auto;
@@ -119,7 +123,7 @@
   font-size: var(--token-6NbVMeD6zQwn);
   min-width: 0;
 }
-.text__rpctd {
+.span__rpctd {
   position: relative;
   width: 100%;
   height: auto;

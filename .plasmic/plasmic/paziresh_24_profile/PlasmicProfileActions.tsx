@@ -398,6 +398,25 @@ function PlasmicProfileActions__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
+              $steps["invokeGlobalAction"] = !$ctx["auth"].isLogin
+                ? (() => {
+                    const actionArgs = { args: [] };
+                    return $globalActions["AuthGlobalContext.login"]?.apply(
+                      null,
+                      [...actionArgs.args]
+                    );
+                  })()
+                : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+
               $steps["updateIsBookMarked"] = $ctx["auth"].isLogin
                 ? (() => {
                     const actionArgs = {
@@ -429,27 +448,8 @@ function PlasmicProfileActions__RenderFunc(props: {
                 ];
               }
 
-              $steps["invokeGlobalAction"] = !$ctx["auth"].isLogin
-                ? (() => {
-                    const actionArgs = { args: [] };
-                    return $globalActions["AuthGlobalContext.login"]?.apply(
-                      null,
-                      [...actionArgs.args]
-                    );
-                  })()
-                : undefined;
-              if (
-                $steps["invokeGlobalAction"] != null &&
-                typeof $steps["invokeGlobalAction"] === "object" &&
-                typeof $steps["invokeGlobalAction"].then === "function"
-              ) {
-                $steps["invokeGlobalAction"] = await $steps[
-                  "invokeGlobalAction"
-                ];
-              }
-
               $steps["invokeGlobalAction2"] =
-                !$state.isBookMarked && $ctx.auth.isLogin
+                $state.isBookMarked && $ctx.auth.isLogin
                   ? (() => {
                       const actionArgs = {
                         args: [
@@ -490,7 +490,7 @@ function PlasmicProfileActions__RenderFunc(props: {
               }
 
               $steps["invokeGlobalAction3"] =
-                $state.isBookMarked && $ctx.auth.isLogin
+                !$state.isBookMarked && $ctx.auth.isLogin
                   ? (() => {
                       const actionArgs = {
                         args: [

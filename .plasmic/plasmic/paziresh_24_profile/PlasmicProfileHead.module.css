@@ -55,8 +55,8 @@
   display: flex;
   flex-direction: row;
   position: relative;
-  align-items: stretch;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: auto;
   max-width: 100%;
@@ -75,13 +75,14 @@
   height: auto;
   max-width: 100%;
 }
-.span {
+.span__plQaR {
   position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
   color: var(--token-u3OudfMChOo3);
   margin-left: var(--token-fhaz6q6bl-fW);
+  font-size: var(--token-KeHe2fFUQ6pK);
   min-width: 0;
 }
 .svg {
@@ -125,7 +126,7 @@
   > img {
   margin-left: var(--token-fhaz6q6bl-fW);
 }
-.text {
+.span__yflB8 {
   position: relative;
   width: auto;
   height: auto;

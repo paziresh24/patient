@@ -1,12 +1,12 @@
 .root {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   position: relative;
-  width: 100%;
+  width: auto;
   height: auto;
   justify-content: flex-start;
   align-items: flex-start;
-  min-width: 0;
+  justify-self: flex-start;
 }
 .freeBox__jYihM {
   display: flex;
@@ -86,7 +86,7 @@
   font-weight: 400;
   font-size: var(--token-6NbVMeD6zQwn);
 }
-.svg__ac6P1 {
+.svg__zWpFz {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -141,7 +141,7 @@
   font-weight: 400;
   font-size: var(--token-6NbVMeD6zQwn);
 }
-.svg___84On2 {
+.svg__zD5S {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -189,7 +189,7 @@
   font-weight: 400;
   font-size: var(--token-6NbVMeD6zQwn);
 }
-.svg__csKkU {
+.svg__bx4S0 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -237,7 +237,7 @@
   font-weight: 400;
   font-size: var(--token-6NbVMeD6zQwn);
 }
-.svg__vy788 {
+.svg__d85Wn {
   position: relative;
   object-fit: cover;
   width: auto;

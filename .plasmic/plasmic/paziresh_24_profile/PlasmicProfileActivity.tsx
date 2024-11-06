@@ -98,6 +98,7 @@ export const PlasmicProfileActivity__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicProfileActivity__OverridesType = {
   root?: Flex__<"div">;
+  h2?: Flex__<"h2">;
   removedVisitOnlineCountBook?: Flex__<typeof ApiRequest>;
   allVisitOnlineCountBook?: Flex__<typeof ApiRequest>;
   popoverCore?: Flex__<typeof Popover>;
@@ -225,15 +226,18 @@ function PlasmicProfileActivity__RenderFunc(props: {
         className={classNames(projectcss.all, sty.freeBox__fYPi)}
         dir={"rtl"}
       >
-        <div
+        <h2
+          data-plasmic-name={"h2"}
+          data-plasmic-override={overrides.h2}
           className={classNames(
             projectcss.all,
+            projectcss.h2,
             projectcss.__wab_text,
-            sty.text__lWlIw
+            sty.h2
           )}
         >
           {"\u0641\u0639\u0627\u0644\u06cc\u062a \u0647\u0627"}
-        </div>
+        </h2>
         <Stack__
           as={"div"}
           hasGap={true}
@@ -629,10 +633,12 @@ function PlasmicProfileActivity__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "h2",
     "removedVisitOnlineCountBook",
     "allVisitOnlineCountBook",
     "popoverCore"
   ],
+  h2: ["h2"],
   removedVisitOnlineCountBook: ["removedVisitOnlineCountBook"],
   allVisitOnlineCountBook: ["allVisitOnlineCountBook"],
   popoverCore: ["popoverCore"]
@@ -642,6 +648,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  h2: "h2";
   removedVisitOnlineCountBook: typeof ApiRequest;
   allVisitOnlineCountBook: typeof ApiRequest;
   popoverCore: typeof Popover;
@@ -707,6 +714,7 @@ export const PlasmicProfileActivity = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    h2: makeNodeComponent("h2"),
     removedVisitOnlineCountBook: makeNodeComponent(
       "removedVisitOnlineCountBook"
     ),

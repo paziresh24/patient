@@ -473,8 +473,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -2880,19 +2879,6 @@
             "modulePath": "ProfileActions.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileActions.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "XlhvTt6fEygx",
-          "name": "ProfileAvatar",
-          "type": "managed",
-          "projectId": "7r312uiqyadpVPdnRoAggk",
-          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileAvatar.tsx",
-          "importSpec": {
-            "modulePath": "ProfileAvatar.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileAvatar.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },

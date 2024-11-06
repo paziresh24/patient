@@ -34,7 +34,7 @@
   > img {
   margin-top: var(--token-vMUQwr5Jto1d);
 }
-.text__r6T2L {
+.h2 {
   position: relative;
   width: 100%;
   height: auto;
@@ -56,7 +56,7 @@
   min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .text__r6T2L {
+  .h2 {
     padding-right: var(--token-Fv8-L_kN-2Ma);
     padding-left: var(--token-Fv8-L_kN-2Ma);
   }
@@ -133,7 +133,7 @@
   height: 1em;
   color: var(--token-JDvyxAtm9ONK);
 }
-.svg__n94RM {
+.svg__g9G3T {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -161,7 +161,7 @@
   height: 1em;
   color: var(--token-JDvyxAtm9ONK);
 }
-.svg__tKHn3 {
+.svg__rbdig {
   position: relative;
   object-fit: cover;
   width: auto;
