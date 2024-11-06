@@ -34,7 +34,7 @@
   > img {
   margin-top: var(--token-vMUQwr5Jto1d);
 }
-.text__lWlIw {
+.h2 {
   position: relative;
   width: 100%;
   height: auto;
@@ -55,7 +55,7 @@
   min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .text__lWlIw {
+  .h2 {
     padding-right: var(--token-Fv8-L_kN-2Ma);
     padding-left: var(--token-Fv8-L_kN-2Ma);
   }

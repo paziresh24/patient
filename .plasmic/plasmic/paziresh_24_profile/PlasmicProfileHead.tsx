@@ -103,10 +103,8 @@ export type PlasmicProfileHead__OverridesType = {
   root?: Flex__<"div">;
   profileActions?: Flex__<typeof ProfileActions>;
   viewCount?: Flex__<"div">;
-  span?: Flex__<"span">;
   svg?: Flex__<"svg">;
   profileInfo?: Flex__<typeof ProfileInfo>;
-  text?: Flex__<"div">;
 };
 
 export interface DefaultProfileHeadProps {
@@ -208,13 +206,11 @@ function PlasmicProfileHead__RenderFunc(props: {
             className={classNames(projectcss.all, sty.viewCount)}
           >
             <span
-              data-plasmic-name={"span"}
-              data-plasmic-override={overrides.span}
               className={classNames(
                 projectcss.all,
                 projectcss.span,
                 projectcss.__wab_text,
-                sty.span
+                sty.span__plQaR
               )}
             >
               <React.Fragment>
@@ -276,7 +272,7 @@ function PlasmicProfileHead__RenderFunc(props: {
         })()}
         subTitle={(() => {
           try {
-            return $props.title;
+            return $props.subTitle;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -325,16 +321,14 @@ function PlasmicProfileHead__RenderFunc(props: {
           const currentItem = __plasmic_item_0;
           const currentIndex = __plasmic_idx_0;
           return (
-            <div
-              data-plasmic-name={"text"}
-              data-plasmic-override={overrides.text}
+            <span
               className={classNames(
                 projectcss.all,
+                projectcss.span,
                 projectcss.__wab_text,
-                sty.text
+                sty.span__yflB8
               )}
               key={currentIndex}
-              style={{ width: "max-content", minWidth: "fit-content" }}
             >
               <React.Fragment>
                 {(() => {
@@ -351,7 +345,7 @@ function PlasmicProfileHead__RenderFunc(props: {
                   }
                 })()}
               </React.Fragment>
-            </div>
+            </span>
           );
         })}
       </Stack__>
@@ -366,21 +360,11 @@ function PlasmicProfileHead__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "profileActions",
-    "viewCount",
-    "span",
-    "svg",
-    "profileInfo",
-    "text"
-  ],
+  root: ["root", "profileActions", "viewCount", "svg", "profileInfo"],
   profileActions: ["profileActions"],
-  viewCount: ["viewCount", "span", "svg"],
-  span: ["span"],
+  viewCount: ["viewCount", "svg"],
   svg: ["svg"],
-  profileInfo: ["profileInfo"],
-  text: ["text"]
+  profileInfo: ["profileInfo"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -389,10 +373,8 @@ type NodeDefaultElementType = {
   root: "div";
   profileActions: typeof ProfileActions;
   viewCount: "div";
-  span: "span";
   svg: "svg";
   profileInfo: typeof ProfileInfo;
-  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -457,10 +439,8 @@ export const PlasmicProfileHead = Object.assign(
     // Helper components rendering sub-elements
     profileActions: makeNodeComponent("profileActions"),
     viewCount: makeNodeComponent("viewCount"),
-    span: makeNodeComponent("span"),
     svg: makeNodeComponent("svg"),
     profileInfo: makeNodeComponent("profileInfo"),
-    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicProfileHead
     internalVariantProps: PlasmicProfileHead__VariantProps,

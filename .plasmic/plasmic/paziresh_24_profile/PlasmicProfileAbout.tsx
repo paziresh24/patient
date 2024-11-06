@@ -89,6 +89,7 @@ export const PlasmicProfileAbout__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicProfileAbout__OverridesType = {
   root?: Flex__<"div">;
+  h2?: Flex__<"h2">;
   collapsible?: Flex__<typeof Collapsible>;
 };
 
@@ -156,15 +157,18 @@ function PlasmicProfileAbout__RenderFunc(props: {
         hasGap={true}
         className={classNames(projectcss.all, sty.freeBox__q5Jgk)}
       >
-        <div
+        <h2
+          data-plasmic-name={"h2"}
+          data-plasmic-override={overrides.h2}
           className={classNames(
             projectcss.all,
+            projectcss.h2,
             projectcss.__wab_text,
-            sty.text__r6T2L
+            sty.h2
           )}
         >
           {"\u062f\u0631\u0628\u0627\u0631\u0647 \u0645\u0646"}
-        </div>
+        </h2>
         <Stack__
           as={"div"}
           hasGap={true}
@@ -289,7 +293,8 @@ function PlasmicProfileAbout__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "collapsible"],
+  root: ["root", "h2", "collapsible"],
+  h2: ["h2"],
   collapsible: ["collapsible"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -297,6 +302,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  h2: "h2";
   collapsible: typeof Collapsible;
 };
 
@@ -360,6 +366,7 @@ export const PlasmicProfileAbout = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    h2: makeNodeComponent("h2"),
     collapsible: makeNodeComponent("collapsible"),
 
     // Metadata about props expected for PlasmicProfileAbout
