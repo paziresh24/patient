@@ -8,6 +8,9 @@ import Link from 'next/link';
 import CentersInfo from './centersInfo';
 import Services from './services';
 import pick from 'lodash/pick';
+import { Fragment } from '@/common/fragment';
+import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
+import { FragmentRateReview } from './rateReview/fragmentRateReview';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -61,7 +64,19 @@ export const aside = (data: any) => {
           isBulk,
         };
       },
-      children: (props: any) => <Services {...props} />,
+      children: (props: any) =>
+        fragmentComponents?.bookingServiceList?.hide === false ? (
+          <BookingGlobalContextsProvider>
+            <Fragment
+              name="BookingServiceList"
+              props={{
+                slug: seo.slug,
+              }}
+            />
+          </BookingGlobalContextsProvider>
+        ) : (
+          <Services {...props} />
+        ),
     },
     // Rcommend
     {
@@ -97,19 +112,32 @@ export const aside = (data: any) => {
       children: (props: any) => <RecommendWrapper {...props} />,
       dataAttributes: { 'data-nosnippet': 'true' },
     },
+    // Reviews
+    {
+      id: 'reviews',
+      isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
+      children: (props: any) => (
+        <div className="md:hidden flex flex-col gap-y-3">
+          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
+          <FragmentRateReview profileData={profileData} />
+        </div>
+      ),
+    },
     // Centers Info
     {
       id: 'phone-and-address',
-      title: 'آدرس و تلفن تماس',
       isShow: centers.some((center: any) => center.id !== CENTERS.CONSULT),
-      ActionButton: customize.showContribute && !editable && (
-        <Link href={`/patient/contribute/?slug=${seo.slug}&test_src=profile_eslah`} prefetch={false}>
-          <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
-            <EditIcon width={17} height={17} />
-            گزارش تلفن و آدرس صحیح
-          </Button>
-        </Link>
-      ),
+      ...(fragmentComponents?.addresses?.hide === true && {
+        title: 'آدرس و تلفن تماس',
+        ActionButton: customize.showContribute && !editable && (
+          <Link href={`/patient/contribute/?slug=${seo.slug}&test_src=profile_eslah`} prefetch={false}>
+            <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
+              <EditIcon width={17} height={17} />
+              گزارش تلفن و آدرس صحیح
+            </Button>
+          </Link>
+        ),
+      }),
       function: () => {
         return {
           centers: centers
@@ -183,7 +211,20 @@ export const aside = (data: any) => {
           },
         };
       },
-      children: (props: any) => <CentersInfo className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) =>
+        fragmentComponents?.addresses?.hide === false ? (
+          <BookingGlobalContextsProvider>
+            <Fragment
+              name="Addresses"
+              props={{
+                centers: centers,
+                slug: seo.slug,
+              }}
+            />
+          </BookingGlobalContextsProvider>
+        ) : (
+          <CentersInfo className="bg-white md:rounded-lg" {...props} />
+        ),
     },
   ];
 };

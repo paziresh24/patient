@@ -8,6 +8,8 @@ import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
+import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
+import classNames from '@/common/utils/classNames';
 
 const { publicRuntimeConfig } = config();
 
@@ -71,7 +73,11 @@ export const sections = (data: any) => {
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
       isShow: information.biography,
       isShowFallback: !information.biography && editable,
-      children: (props: any) => <Fragment name="About" props={{ ...profileData }} />,
+      children: (props: any) => (
+        <ProfileGlobalContextsProvider>
+          <Fragment name="ProfileAbout" props={{ ...profileData }} />
+        </ProfileGlobalContextsProvider>
+      ),
       fallback: (props: any) => (
         <div
           onClick={() => handleViewAs('biography')}
@@ -115,7 +121,11 @@ export const sections = (data: any) => {
     {
       isShow: customize?.showActivityProfile,
       noWrapper: true,
-      children: () => <Fragment name="Activity" props={{ ...profileData }} />,
+      children: () => (
+        <ProfileGlobalContextsProvider>
+          <Fragment name="ProfileActivity" props={{ ...profileData }} />
+        </ProfileGlobalContextsProvider>
+      ),
     },
     // Waiting Time Statistics
     {
@@ -140,62 +150,17 @@ export const sections = (data: any) => {
     // Reviews
     {
       id: 'reviews',
-      title: `نظرات در مورد ${information.display_name}`,
       isShow: customize.showRateAndReviews,
-      function: () => {
-        const doctorInfo = {
-          center: centers
-            .filter((center: any) => center.id !== '5532')
-            .map((center: any) => center && { id: center.id, name: center.name }),
-          id: information.id,
-          name: information.display_name,
-          image: information.image,
-          group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
-          group_expertises_slug: expertises.group_expertises?.[0]?.en_slug ?? 'other',
-          expertise: expertises?.expertises?.[0]?.alias_title,
-          slug: seo.slug,
-          city: centers.map((center: any) => center.city),
-          server_id: information.server_id,
-        };
-
-        const rateDetails = {
-          satisfaction: fragmentComponents.reviewCard ? feedbacks.details?.satisfaction : feedbacks.details?.satisfaction_percent,
-          count: feedbacks.details.count_of_feedbacks,
-          satisfactionHint:
-            'درصد رضایت، حاصل میانگین سه پارامتر <b>"برخورد"، "توضیح" و "مهارت و تخصص"</b> پزشک می باشد که همگی توسط بیماران اعلام گردیده اند.',
-          information: [
-            {
-              id: 1,
-              title: 'برخورد مناسب پزشک',
-              satisfaction: feedbacks.details.average_rates.average_doctor_encounter * 20,
-              avg_star: feedbacks.details.average_rates.average_doctor_encounter,
-            },
-            {
-              id: 2,
-              title: 'توضیح پزشک در هنگام ویزیت',
-              satisfaction: feedbacks.details.average_rates.average_explanation_of_issue * 20,
-              avg_star: feedbacks.details.average_rates.average_explanation_of_issue,
-            },
-            {
-              id: 3,
-              title: 'مهارت و تخصص پزشک',
-              satisfaction: feedbacks.details.average_rates.average_quality_of_treatment * 20,
-              avg_star: feedbacks.details.average_rates.average_quality_of_treatment,
-            },
-          ],
-        };
-        return {
-          doctor: doctorInfo,
-          rateDetails,
-          averageRates: feedbacks.details.average_rates,
-          feedbacks: feedbacks.feedbacks,
-          serverId: information.server_id,
-          symptomes: symptomes?.slice?.(0, 5) ?? [],
-          shouldUseFragmentReviewCard: fragmentComponents.reviewCard,
-          profileData,
-        };
-      },
-      children: (props: any) => (fragmentComponents.reviewCard ? <FragmentRateReview {...props} /> : <RateReview {...props} />),
+      children: (props: any) => (
+        <div
+          className={classNames('flex flex-col gap-y-3', {
+            '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
+          })}
+        >
+          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
+          <FragmentRateReview profileData={profileData} />
+        </div>
+      ),
     },
     // Seo Box
     {
@@ -217,9 +182,9 @@ export const sections = (data: any) => {
           !feedbacks?.details?.hide_rates
             ? `همچنین ${
                 +(
-                  ((+feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                    (+feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                    (+feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                  (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                    +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                    +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
                   3
                 )?.toFixed(1) * 20
               }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${

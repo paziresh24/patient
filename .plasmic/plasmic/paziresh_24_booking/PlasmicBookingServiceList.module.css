@@ -13,7 +13,7 @@
   max-width: 100%;
   object-fit: cover;
 }
-.svg {
+.svg__o8Sgz {
   object-fit: cover;
   max-width: 100%;
   margin-top: var(--token-UIMkdd_bvvx_);
@@ -25,12 +25,13 @@
   max-width: 100%;
   object-fit: cover;
 }
-.text__uLa5 {
-  position: relative;
-  width: 100%;
-  height: auto;
+.svg__oQMsp {
+  object-fit: cover;
   max-width: 100%;
-  min-width: 0;
+  margin-top: var(--token-UIMkdd_bvvx_);
+  margin-bottom: var(--token-UIMkdd_bvvx_);
+  width: 24px;
+  height: 24px;
 }
 .text__xdYt {
   position: relative;

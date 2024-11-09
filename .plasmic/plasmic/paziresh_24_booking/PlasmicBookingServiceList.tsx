@@ -96,7 +96,6 @@ export const PlasmicBookingServiceList__ArgProps = new Array<ArgPropType>(
 export type PlasmicBookingServiceList__OverridesType = {
   root?: Flex__<"div">;
   getFullProfileData?: Flex__<typeof ApiRequest>;
-  svg?: Flex__<"svg">;
   apiRequest?: Flex__<typeof ApiRequest>;
   sideEffect?: Flex__<typeof SideEffect>;
   centerListDialog?: Flex__<typeof Dialog>;
@@ -252,9 +251,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         errorDisplay={null}
         loadingDisplay={
           <Icon15Icon
-            data-plasmic-name={"svg"}
-            data-plasmic-override={overrides.svg}
-            className={classNames(projectcss.all, sty.svg)}
+            className={classNames(projectcss.all, sty.svg__o8Sgz)}
             role={"img"}
           />
         }
@@ -301,15 +298,10 @@ function PlasmicBookingServiceList__RenderFunc(props: {
             </div>
           }
           loadingDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__uLa5
-              )}
-            >
-              {"Loading..."}
-            </div>
+            <Icon15Icon
+              className={classNames(projectcss.all, sty.svg__oQMsp)}
+              role={"img"}
+            />
           }
           method={"GET"}
           onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
@@ -1413,7 +1405,6 @@ const PlasmicDescendants = {
   root: [
     "root",
     "getFullProfileData",
-    "svg",
     "apiRequest",
     "sideEffect",
     "centerListDialog",
@@ -1424,8 +1415,7 @@ const PlasmicDescendants = {
     "link",
     "applicationDialog"
   ],
-  getFullProfileData: ["getFullProfileData", "svg", "apiRequest", "sideEffect"],
-  svg: ["svg"],
+  getFullProfileData: ["getFullProfileData", "apiRequest", "sideEffect"],
   apiRequest: ["apiRequest", "sideEffect"],
   sideEffect: ["sideEffect"],
   centerListDialog: ["centerListDialog", "centerList"],
@@ -1442,7 +1432,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   getFullProfileData: typeof ApiRequest;
-  svg: "svg";
   apiRequest: typeof ApiRequest;
   sideEffect: typeof SideEffect;
   centerListDialog: typeof Dialog;
@@ -1515,7 +1504,6 @@ export const PlasmicBookingServiceList = Object.assign(
   {
     // Helper components rendering sub-elements
     getFullProfileData: makeNodeComponent("getFullProfileData"),
-    svg: makeNodeComponent("svg"),
     apiRequest: makeNodeComponent("apiRequest"),
     sideEffect: makeNodeComponent("sideEffect"),
     centerListDialog: makeNodeComponent("centerListDialog"),

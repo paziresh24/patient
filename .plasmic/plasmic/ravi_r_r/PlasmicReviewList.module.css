@@ -28,6 +28,9 @@
   margin-bottom: 14px;
   margin-top: 14px;
 }
+.externalRate:global(.__wab_instance) {
+  max-width: 100%;
+}
 .freeBox__onbte {
   display: flex;
   position: relative;

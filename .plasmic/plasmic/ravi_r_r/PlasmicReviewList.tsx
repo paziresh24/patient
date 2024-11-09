@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Summery from "../../Summery"; // plasmic-import: JoYR24nI9z66/component
+import ExternalRate from "../../ExternalRate"; // plasmic-import: q0EXGV78MZIZ/component
 import RateDetail from "../../RateDetail"; // plasmic-import: 5Lu5manJiJCz/component
 import SetNweReview from "../../SetNweReview"; // plasmic-import: ZewL2B_Ktxrj/component
 import Select from "../../Select"; // plasmic-import: zIWWWwAA3-2B/component
@@ -125,6 +126,7 @@ export const PlasmicReviewList__ArgProps = new Array<ArgPropType>(
 export type PlasmicReviewList__OverridesType = {
   root?: Flex__<"div">;
   summery?: Flex__<typeof Summery>;
+  externalRate?: Flex__<typeof ExternalRate>;
   rateDetail?: Flex__<typeof RateDetail>;
   setNweReview?: Flex__<typeof SetNweReview>;
   filterInput?: Flex__<typeof Select>;
@@ -411,6 +413,38 @@ function PlasmicReviewList__RenderFunc(props: {
                   $steps["sendEvent"] = await $steps["sendEvent"];
                 }
               }}
+            />
+          ) : null}
+          {(() => {
+            try {
+              return $ctx.Growthbook.features.ravi_show_external_rate;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <ExternalRate
+              data-plasmic-name={"externalRate"}
+              data-plasmic-override={overrides.externalRate}
+              className={classNames("__wab_instance", sty.externalRate)}
+              doctorSlug={(() => {
+                try {
+                  return $props.centers[0].slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             />
           ) : null}
           {(() => {
@@ -1932,6 +1966,7 @@ const PlasmicDescendants = {
   root: [
     "root",
     "summery",
+    "externalRate",
     "rateDetail",
     "setNweReview",
     "filterInput",
@@ -1944,6 +1979,7 @@ const PlasmicDescendants = {
     "httpRestApiFetcher"
   ],
   summery: ["summery"],
+  externalRate: ["externalRate"],
   rateDetail: ["rateDetail"],
   setNweReview: ["setNweReview"],
   filterInput: ["filterInput"],
@@ -1961,6 +1997,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   summery: typeof Summery;
+  externalRate: typeof ExternalRate;
   rateDetail: typeof RateDetail;
   setNweReview: typeof SetNweReview;
   filterInput: typeof Select;
@@ -2034,6 +2071,7 @@ export const PlasmicReviewList = Object.assign(
   {
     // Helper components rendering sub-elements
     summery: makeNodeComponent("summery"),
+    externalRate: makeNodeComponent("externalRate"),
     rateDetail: makeNodeComponent("rateDetail"),
     setNweReview: makeNodeComponent("setNweReview"),
     filterInput: makeNodeComponent("filterInput"),
