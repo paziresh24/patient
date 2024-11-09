@@ -9,6 +9,7 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import { Splunk, splunkMeta } from '@/common/fragment/splunk';
 import { Switch, switchMeta } from '@/common/fragment/components/switch';
 import { FragmentPWA, fragmentPWAMeta } from '@/common/fragment/pwa';
+import { RadioFilter, radioFilterMeta } from '@/common/fragment/components/radioFilter';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -102,6 +103,7 @@ registerGlobalContext(Splunk, splunkMeta);
 
 registerComponent(ApiRequest as any, apiRequestMeta);
 registerComponent(Switch as any, switchMeta);
+registerComponent(RadioFilter as any, radioFilterMeta);
 registerGlobalContext(FragmentPWA, fragmentPWAMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
