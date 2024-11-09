@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MobileNumber from '../components/mobileNumber';
 import OtpCode from '../components/otpCode';
 import Password from '../components/password/password';
 import { UserInfo } from '../store/userInfo';
+import { splunkInstance } from '@/common/services/splunk';
 export type StepLoginForm = 'mobile_number' | 'otp_code' | 'password';
 
 interface LoginFormProps {
@@ -15,6 +16,13 @@ export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => 
   const [step, setStep] = useState<StepLoginForm>('mobile_number');
   const [mobileNumberValue, setMobileNumberValue] = useState('');
   const [retryGetPasswordNumber, setRetryGetPasswordNumber] = useState(1);
+
+  useEffect(() => {
+    splunkInstance('gozargah').sendEvent({
+      group: 'legacy-login-steps',
+      type: 'load',
+    });
+  }, []);
 
   return (
     <div className="flex flex-col justify-center h-full space-y-5">

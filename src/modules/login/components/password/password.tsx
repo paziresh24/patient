@@ -10,6 +10,7 @@ import { useLogin } from '../../hooks/useLogin';
 import { UserInfo } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
+import { splunkInstance } from '@/common/services/splunk';
 
 interface PasswordProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
@@ -24,6 +25,10 @@ export const Password = (props: PasswordProps) => {
   const { login, isLoading } = useLogin();
 
   const handleLogin = async (password: string) => {
+    splunkInstance('gozargah').sendEvent({
+      group: 'legacy-login-steps',
+      type: 'login-with-static-password',
+    });
     try {
       const data = await login({
         username: mobileNumberValue,
@@ -59,6 +64,12 @@ export const Password = (props: PasswordProps) => {
         href={`/login/forgot?mobile_number=${mobileNumberValue}`}
         as="/login/forgot"
         className="flex !mt-4 items-center space-s-1 text-slate-500"
+        onClick={() => {
+          splunkInstance('gozargah').sendEvent({
+            group: 'legacy-login-steps',
+            type: 'forget-static-password',
+          });
+        }}
       >
         <PasswordIcon className="w-5 h-5" />
         <Text fontSize="xs" fontWeight="medium">
