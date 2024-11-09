@@ -11,6 +11,7 @@ import { useLogin } from '../../hooks/useLogin';
 import { UserInfo } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
+import { splunkInstance } from '@/common/services/splunk';
 interface OtpCodeProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
@@ -29,6 +30,10 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   const handleLogin = async (password: string) => {
     try {
+      splunkInstance('gozargah').sendEvent({
+        group: 'legacy-login-steps',
+        type: 'login-with-otp-code',
+      });
       const data = await login({
         username: mobileNumberValue,
         password,
@@ -42,6 +47,13 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   const handleReset = async () => {
     if (!shouldShowResetButton) return;
+    splunkInstance('gozargah').sendEvent({
+      group: 'legacy-login-steps',
+      type: 'resend-otp-code',
+      event: {
+        number_reset_password: retryGetPasswordNumber + 1,
+      },
+    });
     setShouldShowResetButton(false);
     const { data: resetPasswordRes } = await resetPassword.mutateAsync({
       cell: +mobileNumberValue,

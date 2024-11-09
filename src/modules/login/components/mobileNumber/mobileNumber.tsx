@@ -20,6 +20,7 @@ import ITOLogo from '../../assets/ITOLogo.png';
 import GoogleLogo from '../../assets/google.svg';
 
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { splunkInstance } from '@/common/services/splunk';
 interface MobileNumberProps {
   title?: string;
   description?: string;
@@ -46,6 +47,10 @@ export const MobileNumber = (props: MobileNumberProps) => {
       setIsFieldError(true);
       return;
     }
+    splunkInstance('gozargah').sendEvent({
+      group: 'legacy-login-steps',
+      type: 'submit-mobile-number',
+    });
     const { data: registerRes } = await register.mutateAsync({
       cell: +mobileNumberValue,
     });
@@ -99,6 +104,10 @@ export const MobileNumber = (props: MobileNumberProps) => {
               icon={<img src={ITOLogo.src} className="h-6 w-7" />}
               variant="secondary"
               onClick={() => {
+                splunkInstance('gozargah').sendEvent({
+                  group: 'legacy-login-steps',
+                  type: 'login-with-oidc',
+                });
                 setOidcOauthLoading(true);
                 location.assign(
                   `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
@@ -119,6 +128,10 @@ export const MobileNumber = (props: MobileNumberProps) => {
               icon={<img src={GoogleLogo.src} className="h-6 w-7" />}
               variant="secondary"
               onClick={() => {
+                splunkInstance('gozargah').sendEvent({
+                  group: 'legacy-login-steps',
+                  type: 'login-with-google',
+                });
                 setGoogleOauthLoading(true);
                 location.assign(
                   `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${

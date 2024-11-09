@@ -2,7 +2,17 @@ import { splunk } from '@paziresh24/splunk-event';
 import { getCookie } from 'cookies-next';
 import { isPWA } from '../utils/isPwa';
 
-type Index = 'doctor-profile' | 'booking-v2' | 'rokhnama' | 'search' | 'center-profile' | 'booking' | 'error' | 'dashboard' | 'cwv';
+type Index =
+  | 'doctor-profile'
+  | 'booking-v2'
+  | 'gozargah'
+  | 'rokhnama'
+  | 'search'
+  | 'center-profile'
+  | 'booking'
+  | 'error'
+  | 'dashboard'
+  | 'cwv';
 
 export const splunkInstance = (index: Index) => {
   switch (index) {
@@ -111,6 +121,24 @@ export const splunkInstance = (index: Index) => {
             pathname: window.location.pathname,
             host: window.location.host,
           },
+          userAgent: window.navigator.userAgent,
+          terminal_id: getCookie('terminal_id'),
+          is_application: isPWA(),
+        },
+      });
+    }
+    case 'gozargah': {
+      return splunk.create({
+        baseUrl: 'https://gozargah-splunk.paziresh24.com',
+        token: '319fa7e9-15e9-4bda-87d0-f0e746caeeed',
+        constant: {
+          url: {
+            href: window.location.href,
+            qurey: window.location.search,
+            pathname: window.location.pathname,
+            host: window.location.host,
+          },
+          popupForm: !window.location.pathname?.startsWith('/login/'),
           userAgent: window.navigator.userAgent,
           terminal_id: getCookie('terminal_id'),
           is_application: isPWA(),
