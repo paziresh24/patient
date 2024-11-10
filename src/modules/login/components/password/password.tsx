@@ -25,16 +25,16 @@ export const Password = (props: PasswordProps) => {
   const { login, isLoading } = useLogin();
 
   const handleLogin = async (password: string) => {
-    splunkInstance('gozargah').sendEvent({
-      group: 'legacy-login-steps',
-      type: 'login-with-static-password',
-    });
     try {
       const data = await login({
         username: mobileNumberValue,
         password,
       });
 
+      splunkInstance('gozargah').sendEvent({
+        group: 'legacy-login-steps',
+        type: 'login-with-static-password',
+      });
       postLogin && postLogin(data);
     } catch (error) {
       toast.error((error as any).message);
