@@ -30,13 +30,13 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   const handleLogin = async (password: string) => {
     try {
-      splunkInstance('gozargah').sendEvent({
-        group: 'legacy-login-steps',
-        type: 'login-with-otp-code',
-      });
       const data = await login({
         username: mobileNumberValue,
         password,
+      });
+      splunkInstance('gozargah').sendEvent({
+        group: 'legacy-login-steps',
+        type: 'login-with-otp-code',
       });
 
       postLogin && postLogin(data);
@@ -47,17 +47,17 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   const handleReset = async () => {
     if (!shouldShowResetButton) return;
+    setShouldShowResetButton(false);
+    const { data: resetPasswordRes } = await resetPassword.mutateAsync({
+      cell: +mobileNumberValue,
+      number_reset_password: retryGetPasswordNumber + 1,
+    });
     splunkInstance('gozargah').sendEvent({
       group: 'legacy-login-steps',
       type: 'resend-otp-code',
       event: {
         number_reset_password: retryGetPasswordNumber + 1,
       },
-    });
-    setShouldShowResetButton(false);
-    const { data: resetPasswordRes } = await resetPassword.mutateAsync({
-      cell: +mobileNumberValue,
-      number_reset_password: retryGetPasswordNumber + 1,
     });
     setRetryGetPasswordNumber(prev => ++prev);
     if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
