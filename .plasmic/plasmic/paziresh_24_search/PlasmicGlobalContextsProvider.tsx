@@ -11,26 +11,24 @@ import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasm
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: p_3q3KAjUnHO/codeComponent
 import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: wuGBHXYibkGk/codeComponent
+import { PWA } from "@/common/fragment/pwa"; // plasmic-import: -ndasJXDpxzQ/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
+  pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
 
 export default function GlobalContextsProvider(
@@ -42,7 +40,8 @@ export default function GlobalContextsProvider(
     fragmentProps,
     growthbookGlobalContextProps,
     antdConfigProviderProps,
-    splunkProps
+    splunkProps,
+    pwaProps
   } = props;
 
   return (
@@ -203,7 +202,7 @@ export default function GlobalContextsProvider(
                   : "1e490c2c-d98b-4777-816d-cf7f09b21888"
               }
             >
-              {children}
+              <PWA {...pwaProps}>{children}</PWA>
             </Splunk>
           </AntdConfigProvider>
         </GrowthbookGlobalContext>
