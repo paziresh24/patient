@@ -7,7 +7,7 @@ export const MobileToolbar = () => {
   const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
 
   return (
-    <div className="md:hidden">
+    <div className="md:hidden w-full">
       <Fragment
         name="FilterRow"
         props={{

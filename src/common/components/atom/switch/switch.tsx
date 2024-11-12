@@ -1,11 +1,12 @@
 import classNames from '@/common/utils/classNames';
-import { ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useState } from 'react';
+import { ForwardedRef, forwardRef, InputHTMLAttributes, useEffect, useId, useState } from 'react';
 
 export type SwitchProps = InputHTMLAttributes<HTMLInputElement>;
 
 export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) => {
   const { className, onChange, ...checkBoxProps } = props;
   const [isChecked, setIsChecked] = useState(checkBoxProps.defaultChecked);
+  const uniqueId = useId();
 
   useEffect(() => {
     setIsChecked(props.checked);
@@ -22,8 +23,10 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
         ref={ref}
         className="absolute invisible"
         {...checkBoxProps}
+        id={uniqueId}
       ></input>
-      <div
+      <label
+        htmlFor={uniqueId}
         onClick={() => setIsChecked(prev => !prev)}
         className={classNames(
           'w-[54px] h-[30px] flex items-center bg-slate-200 rounded-full p-[4px] duration-300 ease-in-out cursor-pointer',
@@ -38,7 +41,7 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
             '-translate-x-6': isChecked,
           })}
         ></div>
-      </div>
+      </label>
     </div>
   );
 });

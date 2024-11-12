@@ -18,8 +18,8 @@ interface FilterProps {
 export const Filter = (props: FilterProps) => {
   const { isLoading } = props;
   const { isMobile } = useResponsive();
-  const { selectedFilters, filters, categories, selectedCategory, selectedSubCategory, searchCity } = useSearch();
-  const { handleChange, removeFilter } = useFilterChange();
+  const { filters, categories, selectedCategory, selectedSubCategory, searchCity } = useSearch();
+  const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
   const { changeRoute } = useSearchRouting();
   const showDesktopFilters = useFeatureIsOn('search::desktop-filters');
   const showDesktopCategories = useFeatureIsOn('search::desktop-categories');
@@ -31,7 +31,9 @@ export const Filter = (props: FilterProps) => {
         <Fragment
           name="FilterSelectedView"
           props={{
-            items: selectedFilters,
+            selected: selectedFilters,
+            categories,
+            filters,
             onRemoveItem: (name: string) => removeFilter(name),
             onDelete: () => changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true }),
           }}
