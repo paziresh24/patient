@@ -112,8 +112,9 @@ const DoctorProfile = ({
       }
 
       addPageView.mutate({
-        doctorId: information.id,
+        ownerId: information.id,
         serverId: information.server_id,
+        type: 'doctor',
       });
 
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };

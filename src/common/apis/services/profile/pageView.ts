@@ -5,16 +5,17 @@ import { setTerminal } from '../auth/setTerminal';
 
 export interface Params {
   serverId: string;
-  doctorId: string;
+  ownerId: string;
+  type: string;
 }
 
-export const pageView = async ({ doctorId, serverId }: Params) => {
+export const pageView = async ({ ownerId, serverId, type }: Params) => {
   await setTerminal();
   return await clinicClient.post(
     `/api/vicControl`,
     formData({
-      owner_id: doctorId,
-      type: 'doctor',
+      owner_id: ownerId,
+      type: type,
       server_id: serverId,
       gateway: 'web',
     }),

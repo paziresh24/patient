@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { growthbook } from '../_app';
+import { usePageView } from '@/common/apis/services/profile/pageView';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -35,6 +36,8 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
   const share = useShare();
   const { customize } = useCustomize();
   const slug = query.slug as string;
+  const addPageView = usePageView();
+
   const [searchQuery, setSearchQuery] = useState(text ?? '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(text ?? '');
   useDebounce(
@@ -149,6 +152,11 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             terminal_id: getCookie('terminal_id'),
           },
         },
+      });
+      addPageView.mutate({
+        ownerId: profileData?.id,
+        serverId: profileData?.server_id,
+        type: 'center',
       });
     }
   }, [profileData]);
