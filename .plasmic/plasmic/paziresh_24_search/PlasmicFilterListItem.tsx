@@ -97,7 +97,7 @@ export const PlasmicFilterListItem__ArgProps = new Array<ArgPropType>(
 export type PlasmicFilterListItem__OverridesType = {
   root?: Flex__<"div">;
   text?: Flex__<"div">;
-  _switch?: Flex__<typeof Switch>;
+  switchButton?: Flex__<typeof Switch>;
   radioFilter?: Flex__<typeof RadioFilter>;
 };
 
@@ -169,13 +169,13 @@ function PlasmicFilterListItem__RenderFunc(props: {
           })()
       },
       {
-        path: "_switch.checked",
+        path: "switchButton.checked",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
             try {
-              return $props.selected;
+              return $props.selected == "true" ? true : false;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -273,17 +273,40 @@ function PlasmicFilterListItem__RenderFunc(props: {
           }
         })() ? (
           <Switch
-            data-plasmic-name={"_switch"}
-            data-plasmic-override={overrides._switch}
-            checked={generateStateValueProp($state, ["_switch", "checked"])}
-            className={classNames("__wab_instance", sty._switch)}
+            data-plasmic-name={"switchButton"}
+            data-plasmic-override={overrides.switchButton}
+            checked={generateStateValueProp($state, [
+              "switchButton",
+              "checked"
+            ])}
+            className={classNames("__wab_instance", sty.switchButton)}
             onCheckedChange={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["_switch", "checked"]).apply(
-                null,
-                eventArgs
-              );
+              generateStateOnChangeProp($state, [
+                "switchButton",
+                "checked"
+              ]).apply(null, eventArgs);
               (async checked => {
                 const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return console.log(checked);
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
 
                 $steps["runOnClick"] = true
                   ? (() => {
@@ -292,7 +315,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
                         args: [
                           (() => {
                             try {
-                              return $state._switch.checked;
+                              return $state.switchButton.checked;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -450,9 +473,9 @@ function PlasmicFilterListItem__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "text", "_switch", "radioFilter"],
+  root: ["root", "text", "switchButton", "radioFilter"],
   text: ["text"],
-  _switch: ["_switch"],
+  switchButton: ["switchButton"],
   radioFilter: ["radioFilter"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -461,7 +484,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   text: "div";
-  _switch: typeof Switch;
+  switchButton: typeof Switch;
   radioFilter: typeof RadioFilter;
 };
 
@@ -526,7 +549,7 @@ export const PlasmicFilterListItem = Object.assign(
   {
     // Helper components rendering sub-elements
     text: makeNodeComponent("text"),
-    _switch: makeNodeComponent("_switch"),
+    switchButton: makeNodeComponent("switchButton"),
     radioFilter: makeNodeComponent("radioFilter"),
 
     // Metadata about props expected for PlasmicFilterListItem

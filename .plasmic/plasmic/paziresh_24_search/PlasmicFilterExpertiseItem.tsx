@@ -59,12 +59,17 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicFilterExpertiseItem.module.css"; // plasmic-import: Lt7HZLy_mQCZ/css
+
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -80,23 +85,29 @@ export const PlasmicFilterExpertiseItem__VariantProps =
 
 export type PlasmicFilterExpertiseItem__ArgsType = {
   title?: string;
+  onClick?: (value: string) => void;
+  value?: string;
   link?: string;
 };
 type ArgPropType = keyof PlasmicFilterExpertiseItem__ArgsType;
 export const PlasmicFilterExpertiseItem__ArgProps = new Array<ArgPropType>(
   "title",
+  "onClick",
+  "value",
   "link"
 );
 
 export type PlasmicFilterExpertiseItem__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
-  link?: Flex__<"a"> & Partial<LinkProps>;
+  button?: Flex__<typeof Button>;
   text?: Flex__<"div">;
 };
 
 export interface DefaultFilterExpertiseItemProps {
   title?: string;
+  onClick?: (value: string) => void;
+  value?: string;
   link?: string;
   isSelected?: SingleBooleanChoiceArg<"isSelected">;
   className?: string;
@@ -181,68 +192,92 @@ function PlasmicFilterExpertiseItem__RenderFunc(props: {
         data-plasmic-override={overrides.freeBox}
         className={classNames(projectcss.all, sty.freeBox)}
       >
-        <PlasmicLink__
-          data-plasmic-name={"link"}
-          data-plasmic-override={overrides.link}
-          className={classNames(projectcss.all, projectcss.a, sty.link)}
-          component={Link}
-          href={(() => {
-            try {
-              return $props.link;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-          platform={"nextjs"}
-        >
-          <div
-            data-plasmic-name={"text"}
-            data-plasmic-override={overrides.text}
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text,
-              {
-                [sty.textisSelected]: hasVariant(
-                  $state,
-                  "isSelected",
-                  "isSelected"
-                )
-              }
-            )}
-          >
-            <React.Fragment>
-              {(() => {
-                try {
-                  return $props.title;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "";
-                  }
-                  throw e;
+        <Button
+          data-plasmic-name={"button"}
+          data-plasmic-override={overrides.button}
+          children2={
+            <div
+              data-plasmic-name={"text"}
+              data-plasmic-override={overrides.text}
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text,
+                {
+                  [sty.textisSelected]: hasVariant(
+                    $state,
+                    "isSelected",
+                    "isSelected"
+                  )
                 }
-              })()}
-            </React.Fragment>
-          </div>
-        </PlasmicLink__>
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
+          }
+          className={classNames("__wab_instance", sty.button)}
+          color={"text"}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["runOnClick"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onClick"],
+                    args: [
+                      (() => {
+                        try {
+                          return $props.value;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runOnClick"] != null &&
+              typeof $steps["runOnClick"] === "object" &&
+              typeof $steps["runOnClick"].then === "function"
+            ) {
+              $steps["runOnClick"] = await $steps["runOnClick"];
+            }
+          }}
+          space={true}
+        />
       </div>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "link", "text"],
-  freeBox: ["freeBox", "link", "text"],
-  link: ["link", "text"],
+  root: ["root", "freeBox", "button", "text"],
+  freeBox: ["freeBox", "button", "text"],
+  button: ["button", "text"],
   text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -251,7 +286,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
-  link: "a";
+  button: typeof Button;
   text: "div";
 };
 
@@ -316,7 +351,7 @@ export const PlasmicFilterExpertiseItem = Object.assign(
   {
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
-    link: makeNodeComponent("link"),
+    button: makeNodeComponent("button"),
     text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicFilterExpertiseItem
