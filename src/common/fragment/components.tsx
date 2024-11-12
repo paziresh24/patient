@@ -31,6 +31,14 @@ import PlasmicBookingServiceList, {
 import PlasmicProfileHead, { PlasmicProfileHead__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicProfileAbout, { PlasmicProfileAbout__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
 import PlasmicProfileActivity, { PlasmicProfileActivity__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileActivity';
+import PlasmicFilterListView, { PlasmicFilterListView__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterListView';
+import PlasmicFilterExpertiseView, {
+  PlasmicFilterExpertiseView__ArgProps,
+} from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterExpertiseView';
+import PlasmicFilterSelectedView, {
+  PlasmicFilterSelectedView__ArgProps,
+} from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterSelectedView';
+import PlasmicFilterRow, { PlasmicFilterRow__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterRow';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -130,5 +138,29 @@ export const Components = {
     id: 'LIHtK_X7GpDY',
     propsAllowed: PlasmicProfileActivity__ArgProps,
     projectId: '7r312uiqyadpVPdnRoAggk',
+  },
+  FilterListView: {
+    Component: PlasmicFilterListView,
+    id: 'Z5K_XiJUvXFD',
+    propsAllowed: PlasmicFilterListView__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  FilterExpertiseView: {
+    Component: PlasmicFilterExpertiseView,
+    id: 'N8MUho5TZvBe',
+    propsAllowed: PlasmicFilterExpertiseView__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  FilterSelectedView: {
+    Component: PlasmicFilterSelectedView,
+    id: 'hzanYC1FO-Wr',
+    propsAllowed: PlasmicFilterSelectedView__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  FilterRow: {
+    Component: PlasmicFilterRow,
+    id: 'OC23iWRW1Dia',
+    propsAllowed: PlasmicFilterRow__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };
