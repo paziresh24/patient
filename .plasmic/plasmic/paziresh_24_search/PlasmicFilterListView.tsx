@@ -76,13 +76,17 @@ type VariantPropType = keyof PlasmicFilterListView__VariantsArgs;
 export const PlasmicFilterListView__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicFilterListView__ArgsType = {
-  items?: any;
+  filters?: any;
   onClick?: (name: string, value: string) => void;
+  selected?: any;
+  categories?: any;
 };
 type ArgPropType = keyof PlasmicFilterListView__ArgsType;
 export const PlasmicFilterListView__ArgProps = new Array<ArgPropType>(
-  "items",
-  "onClick"
+  "filters",
+  "onClick",
+  "selected",
+  "categories"
 );
 
 export type PlasmicFilterListView__OverridesType = {
@@ -91,8 +95,10 @@ export type PlasmicFilterListView__OverridesType = {
 };
 
 export interface DefaultFilterListViewProps {
-  items?: any;
+  filters?: any;
   onClick?: (name: string, value: string) => void;
+  selected?: any;
+  categories?: any;
   className?: string;
 }
 
@@ -157,7 +163,7 @@ function PlasmicFilterListView__RenderFunc(props: {
         className={classNames("__wab_instance", sty.filterList)}
         filters={(() => {
           try {
-            return $props.items;
+            return $props.filters;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -1339,6 +1345,19 @@ function PlasmicFilterListView__RenderFunc(props: {
             $steps["runOnClick"] = await $steps["runOnClick"];
           }
         }}
+        selected={(() => {
+          try {
+            return $props.selected;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
       />
     </div>
   ) as React.ReactElement | null;

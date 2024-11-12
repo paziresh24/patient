@@ -74,6 +74,8 @@
   min-width: 0;
   margin-left: calc(0px - var(--token-_c276Gs_1FIE));
   width: calc(100% + var(--token-_c276Gs_1FIE));
+  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
+  height: calc(100% + var(--token-_c276Gs_1FIE));
 }
 .freeBox___17Ie4 > :global(.__wab_flex-container) > *,
 .freeBox___17Ie4 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
@@ -84,6 +86,7 @@
   > picture
   > img {
   margin-left: var(--token-_c276Gs_1FIE);
+  margin-top: var(--token-_c276Gs_1FIE);
 }
 .freeBox___7Lfff {
   display: flex;

@@ -81,15 +81,17 @@ export const PlasmicFilterRow__VariantProps = new Array<VariantPropType>();
 export type PlasmicFilterRow__ArgsType = {
   items?: any;
   onClick?: (name: string, value: string) => void;
-  onDelete?: (name: string) => void;
   selectedSort?: string;
+  onDelete?: (name: string, value: string) => void;
+  categories?: any;
 };
 type ArgPropType = keyof PlasmicFilterRow__ArgsType;
 export const PlasmicFilterRow__ArgProps = new Array<ArgPropType>(
   "items",
   "onClick",
+  "selectedSort",
   "onDelete",
-  "selectedSort"
+  "categories"
 );
 
 export type PlasmicFilterRow__OverridesType = {
@@ -105,8 +107,9 @@ export type PlasmicFilterRow__OverridesType = {
 export interface DefaultFilterRowProps {
   items?: any;
   onClick?: (name: string, value: string) => void;
-  onDelete?: (name: string) => void;
   selectedSort?: string;
+  onDelete?: (name: string, value: string) => void;
+  categories?: any;
   className?: string;
 }
 
@@ -240,6 +243,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                 const selected = $props.items.selected_filters;
                 const order_items = $props.items.order_items;
                 const allFilters = $props.items.filters;
+                const categories = $props.categories;
                 const additionalItems = [
                   {
                     title: "فیلتر ها",
@@ -252,6 +256,20 @@ function PlasmicFilterRow__RenderFunc(props: {
                       : "مرتب سازی",
                     name: "order_items",
                     type: ""
+                  },
+                  {
+                    title: !!selected?.sub_category
+                      ? categories
+                          .find(cat => cat.value === selected.category)
+                          ?.sub_categories.find(
+                            sub => sub.value === selected.sub_category
+                          ).title
+                      : !!selected?.category
+                      ? categories.find(cat => cat.value === selected.category)
+                          .title
+                      : "تخصص",
+                    name: "category",
+                    type: "category"
                   }
                 ];
 
@@ -545,37 +563,50 @@ function PlasmicFilterRow__RenderFunc(props: {
               onDelete={async name => {
                 const $steps = {};
 
-                $steps["updateDialogOpen"] = true
+                $steps["runOnDelete"] = false
                   ? (() => {
                       const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["filterListDialog", "open"]
-                        },
-                        operation: 0
+                        eventRef: $props["onDelete"],
+                        args: [
+                          (() => {
+                            try {
+                              return name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })(),
+                          (() => {
+                            try {
+                              return $props.items.selected_filters[name];
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
                       };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
                       })?.apply(null, [actionArgs]);
                     })()
                   : undefined;
                 if (
-                  $steps["updateDialogOpen"] != null &&
-                  typeof $steps["updateDialogOpen"] === "object" &&
-                  typeof $steps["updateDialogOpen"].then === "function"
+                  $steps["runOnDelete"] != null &&
+                  typeof $steps["runOnDelete"] === "object" &&
+                  typeof $steps["runOnDelete"].then === "function"
                 ) {
-                  $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+                  $steps["runOnDelete"] = await $steps["runOnDelete"];
                 }
               }}
             />

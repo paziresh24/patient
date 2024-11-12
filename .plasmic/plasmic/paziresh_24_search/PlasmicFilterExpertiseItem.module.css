@@ -24,19 +24,16 @@
 .root:hover .freeBox {
   background: var(--token-It8BufY6ejOY);
 }
-.link {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  height: auto;
+.button:global(.__wab_instance) {
   max-width: 100%;
-  padding-top: var(--token-_c276Gs_1FIE);
-  padding-bottom: var(--token-_c276Gs_1FIE);
-  font-weight: 500;
+  width: 100%;
   min-width: 0;
+}
+.svg__kgJxO {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
 }
 .text {
   position: relative;
@@ -49,4 +46,10 @@
 }
 .textisSelected {
   color: var(--token-JDvyxAtm9ONK);
+}
+.svg__vrpUe {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
 }
