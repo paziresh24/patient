@@ -18,8 +18,8 @@ export const splunkInstance = (index: Index) => {
   switch (index) {
     case 'doctor-profile': {
       return splunk.create({
-        baseUrl: 'https://p24splk.paziresh24.com',
-        token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
+        baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
+        token: '64bd80f1-14cb-4808-8986-c183013cbc9d',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
@@ -62,8 +62,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'booking': {
       return splunk.create({
-        baseUrl: 'https://p24splk.paziresh24.com',
-        token: 'f4fd4b50-fe90-48f3-a1ab-5a5070140318',
+        baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
+        token: '64bd80f1-14cb-4808-8986-c183013cbc9d',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
