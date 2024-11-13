@@ -78,18 +78,18 @@ export const PlasmicFilterSelectedView__VariantProps =
 
 export type PlasmicFilterSelectedView__ArgsType = {
   onDelete?: () => void;
-  onRemoveItem?: (value: string) => void;
   filters?: any;
   categories?: any;
   selected?: any;
+  onRemoveItem?: (name: string, value: string) => void;
 };
 type ArgPropType = keyof PlasmicFilterSelectedView__ArgsType;
 export const PlasmicFilterSelectedView__ArgProps = new Array<ArgPropType>(
   "onDelete",
-  "onRemoveItem",
   "filters",
   "categories",
-  "selected"
+  "selected",
+  "onRemoveItem"
 );
 
 export type PlasmicFilterSelectedView__OverridesType = {
@@ -99,10 +99,10 @@ export type PlasmicFilterSelectedView__OverridesType = {
 
 export interface DefaultFilterSelectedViewProps {
   onDelete?: () => void;
-  onRemoveItem?: (value: string) => void;
   filters?: any;
   categories?: any;
   selected?: any;
+  onRemoveItem?: (name: string, value: string) => void;
   className?: string;
 }
 
@@ -143,6 +143,8 @@ function PlasmicFilterSelectedView__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   return (
     <div
@@ -191,6 +193,88 @@ function PlasmicFilterSelectedView__RenderFunc(props: {
             throw e;
           }
         })()}
+        onClickRemoveItem={async (name, value) => {
+          const $steps = {};
+
+          $steps["invokeGlobalAction"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "success",
+                    (() => {
+                      try {
+                        return `${name}, ${value}`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+          }
+
+          $steps["runOnRemoveItem"] = false
+            ? (() => {
+                const actionArgs = {
+                  eventRef: $props["onRemoveItem"],
+                  args: [
+                    (() => {
+                      try {
+                        return name;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })(),
+                    (() => {
+                      try {
+                        return value;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runOnRemoveItem"] != null &&
+            typeof $steps["runOnRemoveItem"] === "object" &&
+            typeof $steps["runOnRemoveItem"].then === "function"
+          ) {
+            $steps["runOnRemoveItem"] = await $steps["runOnRemoveItem"];
+          }
+        }}
         onDelete={async () => {
           const $steps = {};
 
