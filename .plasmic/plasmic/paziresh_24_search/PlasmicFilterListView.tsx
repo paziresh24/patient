@@ -71,14 +71,14 @@ import sty from "./PlasmicFilterListView.module.css"; // plasmic-import: Z5K_XiJ
 createPlasmicElementProxy;
 
 export type PlasmicFilterListView__VariantMembers = {
-  unnamedVariant: "unnamedVariant";
+  hideBackground: "hideBackground";
 };
 export type PlasmicFilterListView__VariantsArgs = {
-  unnamedVariant?: SingleBooleanChoiceArg<"unnamedVariant">;
+  hideBackground?: SingleBooleanChoiceArg<"hideBackground">;
 };
 type VariantPropType = keyof PlasmicFilterListView__VariantsArgs;
 export const PlasmicFilterListView__VariantProps = new Array<VariantPropType>(
-  "unnamedVariant"
+  "hideBackground"
 );
 
 export type PlasmicFilterListView__ArgsType = {
@@ -102,7 +102,7 @@ export interface DefaultFilterListViewProps {
   items?: any;
   onClick?: (name: string, value: string) => void;
   selected?: any;
-  unnamedVariant?: SingleBooleanChoiceArg<"unnamedVariant">;
+  hideBackground?: SingleBooleanChoiceArg<"hideBackground">;
   className?: string;
 }
 
@@ -147,10 +147,10 @@ function PlasmicFilterListView__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "unnamedVariant",
+        path: "hideBackground",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.unnamedVariant
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hideBackground
       }
     ],
     [$props, $ctx, $refs]
@@ -176,17 +176,24 @@ function PlasmicFilterListView__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        {
+          [sty.roothideBackground]: hasVariant(
+            $state,
+            "hideBackground",
+            "hideBackground"
+          )
+        }
       )}
     >
       <FilterList
         data-plasmic-name={"filterList"}
         data-plasmic-override={overrides.filterList}
         className={classNames("__wab_instance", sty.filterList, {
-          [sty.filterListunnamedVariant]: hasVariant(
+          [sty.filterListhideBackground]: hasVariant(
             $state,
-            "unnamedVariant",
-            "unnamedVariant"
+            "hideBackground",
+            "hideBackground"
           )
         })}
         filters={(() => {
