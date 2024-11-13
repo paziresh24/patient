@@ -2,9 +2,9 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import {
-  PlasmicSortSelection,
-  DefaultSortSelectionProps
-} from "./plasmic/paziresh_24_search/PlasmicSortSelection";
+  PlasmicFilterExpertiseDialog,
+  DefaultFilterExpertiseDialogProps
+} from "./plasmic/paziresh_24_search/PlasmicFilterExpertiseDialog";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
@@ -14,35 +14,36 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // If you don't want to expose certain variants or slots as a prop, you can use
 // Omit to hide them:
 //
-// interface SortSelectionProps extends Omit<DefaultSortSelectionProps, "hideProps1"|"hideProp2"> {
+// interface FilterExpertiseDialogProps extends Omit<DefaultFilterExpertiseDialogProps, "hideProps1"|"hideProp2"> {
 //   // etc.
 // }
 //
-// You can also stop extending from DefaultSortSelectionProps altogether and have
+// You can also stop extending from DefaultFilterExpertiseDialogProps altogether and have
 // total control over the props for your component.
-export interface SortSelectionProps extends DefaultSortSelectionProps {}
+export interface FilterExpertiseDialogProps
+  extends DefaultFilterExpertiseDialogProps {}
 
-function SortSelection_(
-  props: SortSelectionProps,
+function FilterExpertiseDialog_(
+  props: FilterExpertiseDialogProps,
   ref: HTMLElementRefOf<"div">
 ) {
-  // Use PlasmicSortSelection to render this component as it was
+  // Use PlasmicFilterExpertiseDialog to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
   // can also install whatever React hooks you need here to manage state or
   // fetch data.
   //
-  // Props you can pass into PlasmicSortSelection are:
+  // Props you can pass into PlasmicFilterExpertiseDialog are:
   // 1. Variants you want to activate,
   // 2. Contents for slots you want to fill,
   // 3. Overrides for any named node in the component to attach behavior and data,
   // 4. Props to set on the root node.
   //
-  // By default, we are just piping all SortSelectionProps here, but feel free
+  // By default, we are just piping all FilterExpertiseDialogProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicSortSelection root={{ ref }} {...props} />;
+  return <PlasmicFilterExpertiseDialog root={{ ref }} {...props} />;
 }
 
-const SortSelection = React.forwardRef(SortSelection_);
-export default SortSelection;
+const FilterExpertiseDialog = React.forwardRef(FilterExpertiseDialog_);
+export default FilterExpertiseDialog;

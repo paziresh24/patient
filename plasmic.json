@@ -800,19 +800,6 @@
           "componentType": "component"
         },
         {
-          "id": "-Px5cdSoxYMl",
-          "name": "SortSelection",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSortSelection.tsx",
-          "importSpec": {
-            "modulePath": "SortSelection.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSortSelection.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "ntYs5RkH7Wwi",
           "name": "FilterRow",
           "type": "managed",
@@ -887,6 +874,45 @@
             "modulePath": "FilterExpertiseView.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseView.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "eB9_wsyhXmu5",
+          "name": "Location",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicLocation.tsx",
+          "importSpec": {
+            "modulePath": "Location.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicLocation.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "euanWfTHYzGh",
+          "name": "LocationListItem",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicLocationListItem.tsx",
+          "importSpec": {
+            "modulePath": "LocationListItem.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicLocationListItem.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "GKz-Lh1X9Vdq",
+          "name": "FilterExpertiseDialog",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseDialog.tsx",
+          "importSpec": {
+            "modulePath": "FilterExpertiseDialog.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseDialog.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }

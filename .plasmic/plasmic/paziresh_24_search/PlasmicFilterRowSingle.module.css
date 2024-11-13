@@ -8,6 +8,7 @@
   align-items: flex-start;
   cursor: pointer;
   justify-self: flex-start;
+  flex-shrink: 1;
 }
 .freeBox {
   display: flex;

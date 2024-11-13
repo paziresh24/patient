@@ -287,9 +287,51 @@ function PlasmicFilterExpertise__RenderFunc(props: {
                 }
               })()}
               key={currentIndex}
-              link={(() => {
+              onClick={async value => {
+                const $steps = {};
+
+                $steps["goToPage"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return undefined;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
+                ) {
+                  $steps["goToPage"] = await $steps["goToPage"];
+                }
+              }}
+              title={(() => {
                 try {
-                  return currentItem.url;
+                  return currentItem.title;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -300,9 +342,9 @@ function PlasmicFilterExpertise__RenderFunc(props: {
                   throw e;
                 }
               })()}
-              title={(() => {
+              value={(() => {
                 try {
-                  return currentItem.title;
+                  return currentItem.value;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||

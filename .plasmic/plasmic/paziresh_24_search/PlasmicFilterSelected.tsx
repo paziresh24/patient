@@ -81,14 +81,18 @@ export const PlasmicFilterSelected__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicFilterSelected__ArgsType = {
   onDelete?: () => void;
-  items?: any;
-  onClickRemoveItem?: (value: string) => void;
+  filters?: any;
+  onClickRemoveItem?: (name: string, value: string) => void;
+  categories?: any;
+  selected?: any;
 };
 type ArgPropType = keyof PlasmicFilterSelected__ArgsType;
 export const PlasmicFilterSelected__ArgProps = new Array<ArgPropType>(
   "onDelete",
-  "items",
-  "onClickRemoveItem"
+  "filters",
+  "onClickRemoveItem",
+  "categories",
+  "selected"
 );
 
 export type PlasmicFilterSelected__OverridesType = {
@@ -99,8 +103,10 @@ export type PlasmicFilterSelected__OverridesType = {
 
 export interface DefaultFilterSelectedProps {
   onDelete?: () => void;
-  items?: any;
-  onClickRemoveItem?: (value: string) => void;
+  filters?: any;
+  onClickRemoveItem?: (name: string, value: string) => void;
+  categories?: any;
+  selected?: any;
   className?: string;
 }
 
@@ -220,7 +226,72 @@ function PlasmicFilterSelected__RenderFunc(props: {
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
             try {
-              return $props.items;
+              return (() => {
+                const filters = $props.filters;
+                const categories = $props.categories;
+                const selected = $props.selected;
+                const freeturnItems = {
+                  all: "هر زمان",
+                  today: "امروز",
+                  tomorrow: "تا فردا",
+                  nextThreeDays: "تا سه روز آینده",
+                  nextFiveDays: "تا پنج روز آینده",
+                  nextSevenDays: "تا هفت روز آینده"
+                };
+                const text = selected?.text
+                  ? {
+                      title: selected.text,
+                      value: selected.text,
+                      name: "text"
+                    }
+                  : null;
+                const selectedFilters = filters
+                  .map(filter =>
+                    selected?.[filter.name]
+                      ? {
+                          title: filter.title,
+                          name: filter.name,
+                          value: selected[filter.name]
+                        }
+                      : null
+                  )
+                  .filter(Boolean);
+                const freeTurn = selected?.freeturn
+                  ? {
+                      title: freeturnItems[selected.freeturn],
+                      value: selected.freeturn,
+                      name: "freeTurn"
+                    }
+                  : null;
+                const selectedCategory = selected?.category
+                  ? {
+                      title: categories.find(
+                        cat => cat.value === selected.category
+                      )?.title,
+                      name: "category",
+                      value: selected.category
+                    }
+                  : null;
+                const selectedSubcategory = selected?.sub_category
+                  ? {
+                      title: categories
+                        .find(cat => cat.value === selected.category)
+                        ?.sub_categories.find(
+                          sub => sub.value === selected.sub_category
+                        ).title,
+                      value: selected.sub_category,
+                      name: "sub_category"
+                    }
+                  : null;
+                const allSelectedFilters = [
+                  selectedCategory,
+                  selectedSubcategory,
+                  freeTurn,
+                  text,
+                  ...selectedFilters
+                ].filter(Boolean);
+                return allSelectedFilters;
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -251,7 +322,7 @@ function PlasmicFilterSelected__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return currentItem;
+                      return currentItem.title;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -278,7 +349,20 @@ function PlasmicFilterSelected__RenderFunc(props: {
                           args: [
                             (() => {
                               try {
-                                return currentItem;
+                                return currentItem.name;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })(),
+                            (() => {
+                              try {
+                                return currentItem.value;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||

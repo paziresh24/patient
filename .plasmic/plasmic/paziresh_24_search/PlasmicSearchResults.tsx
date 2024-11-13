@@ -1313,64 +1313,72 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     event_group: "search_metrics",
                                     event_type: "search_click_position",
                                     url: {
-                                      href: window.location.href,
-                                      query: window.location.search,
-                                      pathname: window.location.pathname,
-                                      host: window.location.host
+                                      href: window.location?.href ?? "",
+                                      query: window.location?.search ?? "",
+                                      pathname: window.location?.pathname ?? "",
+                                      host: window.location?.host ?? ""
                                     },
                                     userAgent:
-                                      navigator &&
-                                      navigator.userAgent &&
-                                      navigator.userAgent.length <= 3
-                                        ? ""
-                                        : navigator.userAgent,
+                                      navigator?.userAgent?.length > 3
+                                        ? navigator.userAgent
+                                        : "",
                                     card_data: {
-                                      action: currentItem.actions?.map?.(item =>
-                                        JSON.stringify({
-                                          outline: item.outline,
-                                          title: item.title,
-                                          top_title: item.top_title.replace(
-                                            /(<([^>]+)>)/gi,
-                                            ""
-                                          )
-                                        })
-                                      ),
+                                      action:
+                                        currentItem?.actions?.map?.(item =>
+                                          JSON.stringify({
+                                            outline: item?.outline ?? "",
+                                            title: item?.title ?? "",
+                                            top_title:
+                                              item?.top_title?.replace(
+                                                /(<([^>]+)>)/gi,
+                                                ""
+                                              ) ?? ""
+                                          })
+                                        ) ?? [],
                                       online_visit_buttons_custom_destination:
-                                        $props.onlineVisitButtonsCustomDestination &&
                                         $props
-                                          .onlineVisitButtonsCustomDestination
-                                          .enable
+                                          ?.onlineVisitButtonsCustomDestination
+                                          ?.enable
                                           ? $props
                                               .onlineVisitButtonsCustomDestination
                                               .url_template
                                           : undefined,
-                                      _id: currentItem._id,
-                                      position: currentItem.position,
-                                      server_id: currentItem.server_id,
-                                      title: currentItem.title,
-                                      type: currentItem.type,
-                                      url: currentItem.url,
-                                      rates_count: currentItem.rates_count,
-                                      satisfaction: currentItem.satisfaction
+                                      _id: currentItem?._id ?? "",
+                                      position: currentItem?.position ?? "",
+                                      server_id: currentItem?.server_id ?? "",
+                                      title: currentItem?.title ?? "",
+                                      type: currentItem?.type ?? "",
+                                      url: currentItem?.url ?? "",
+                                      rates_count:
+                                        currentItem?.rates_count ?? 0,
+                                      satisfaction:
+                                        currentItem?.satisfaction ?? 0
                                     },
                                     filters:
-                                      $props.searchResultResponse
-                                        .selected_filters,
+                                      $props?.searchResultResponse
+                                        ?.selected_filters ?? [],
                                     result_count:
-                                      $props.searchResultResponse.lent,
-                                    location: $props.location.city_name,
-                                    city_id: $props.location.city_id,
-                                    lat: $props.location.lat,
-                                    lon: $props.location.lon,
-                                    elementName: elementName,
-                                    elementContent: elementContent,
+                                      $props?.searchResultResponse?.lent ?? 0,
+                                    location: $props?.location?.city_name ?? "",
+                                    city_id: $props?.location?.city_id ?? "",
+                                    lat: $props?.location?.lat ?? 0,
+                                    lon: $props?.location?.lon ?? 0,
+                                    elementName:
+                                      typeof elementName !== "undefined"
+                                        ? elementName
+                                        : "",
+                                    elementContent:
+                                      typeof elementContent !== "undefined"
+                                        ? elementContent
+                                        : "",
                                     query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id,
-                                    terminal_id: document.cookie.replace(
-                                      /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                                      "$1"
-                                    )
+                                      $props?.searchResultResponse?.search
+                                        ?.query_id ?? "",
+                                    terminal_id:
+                                      document.cookie?.replace(
+                                        /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                        "$1"
+                                      ) ?? ""
                                   };
                                 } catch (e) {
                                   if (

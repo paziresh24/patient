@@ -187,6 +187,7 @@ function PlasmicFilterRowSingle__RenderFunc(props: {
         sty.root,
         { [sty.rootisSelected]: hasVariant($state, "isSelected", "isSelected") }
       )}
+      style={{ minWidth: "max-content" }}
     >
       <Stack__
         as={"div"}
@@ -339,7 +340,11 @@ function PlasmicFilterRowSingle__RenderFunc(props: {
           hasVariant($state, "isSelected", "isSelected")
             ? (() => {
                 try {
-                  return $props.name !== "filters";
+                  return (
+                    $props.name !== "filters" &&
+                    $props.name !== "order_items" &&
+                    $props.name !== "category"
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
