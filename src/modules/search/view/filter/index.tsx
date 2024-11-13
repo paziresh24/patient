@@ -69,7 +69,7 @@ export const Filter = (props: FilterProps) => {
                 props={{
                   items: filters,
                   onClick: (name: string, value: string) => handleChange(name, value),
-                  seleted: selectedFilters,
+                  selected: selectedFilters,
                 }}
               />
             </div>
