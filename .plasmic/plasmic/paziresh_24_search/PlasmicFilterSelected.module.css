@@ -130,6 +130,7 @@
   max-width: 100%;
   color: var(--token-rjAIDXsTjJqJ);
   width: 16px;
+  cursor: pointer;
   flex-shrink: 0;
   height: 1em;
 }

@@ -1037,6 +1037,11 @@
           "id": "1c4VKcJb9X7m",
           "name": "Icon19Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon19.tsx"
+        },
+        {
+          "id": "b2YDtQiXaU1z",
+          "name": "Icon20Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon20.tsx"
         }
       ],
       "images": [

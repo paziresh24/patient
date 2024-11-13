@@ -63,6 +63,8 @@ import FilterRowSingle from "../../FilterRowSingle"; // plasmic-import: OC23iWRW
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import FilterListItem from "../../FilterListItem"; // plasmic-import: SBcorS0J8ajp/component
 import FilterList from "../../FilterList"; // plasmic-import: qU4-tv66hXdh/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import FilterExpertiseList from "../../FilterExpertiseList"; // plasmic-import: GKz-Lh1X9Vdq/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -70,6 +72,9 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicFilterRow.module.css"; // plasmic-import: ntYs5RkH7Wwi/css
+
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -83,7 +88,8 @@ export type PlasmicFilterRow__ArgsType = {
   onClick?: (name: string, value: string) => void;
   selectedSort?: string;
   onDelete?: (name: string, value: string) => void;
-  categories?: any;
+  countOfFilters?: string;
+  onRemoveAllFilters?: () => void;
 };
 type ArgPropType = keyof PlasmicFilterRow__ArgsType;
 export const PlasmicFilterRow__ArgProps = new Array<ArgPropType>(
@@ -91,16 +97,18 @@ export const PlasmicFilterRow__ArgProps = new Array<ArgPropType>(
   "onClick",
   "selectedSort",
   "onDelete",
-  "categories"
+  "countOfFilters",
+  "onRemoveAllFilters"
 );
 
 export type PlasmicFilterRow__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   filterRowSingle?: Flex__<typeof FilterRowSingle>;
   sortDialog?: Flex__<typeof Dialog>;
   filterListDialog?: Flex__<typeof Dialog>;
   filterList?: Flex__<typeof FilterList>;
+  categoriesDialog?: Flex__<typeof Dialog>;
+  filterExpertiseList?: Flex__<typeof FilterExpertiseList>;
   optionsDialog?: Flex__<typeof Dialog>;
 };
 
@@ -109,7 +117,8 @@ export interface DefaultFilterRowProps {
   onClick?: (name: string, value: string) => void;
   selectedSort?: string;
   onDelete?: (name: string, value: string) => void;
-  categories?: any;
+  countOfFilters?: string;
+  onRemoveAllFilters?: () => void;
   className?: string;
 }
 
@@ -201,6 +210,12 @@ function PlasmicFilterRow__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "categoriesDialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -231,10 +246,8 @@ function PlasmicFilterRow__RenderFunc(props: {
     >
       <Stack__
         as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox, "no-scroll")}
+        className={classNames(projectcss.all, sty.freeBox__dbjg, "no-scroll")}
       >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
@@ -243,7 +256,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                 const selected = $props.items.selected_filters;
                 const order_items = $props.items.order_items;
                 const allFilters = $props.items.filters;
-                const categories = $props.categories;
+                const categories = $props.items.categories;
                 const additionalItems = [
                   {
                     title: "فیلتر ها",
@@ -394,6 +407,44 @@ function PlasmicFilterRow__RenderFunc(props: {
                 ) {
                   $steps["openFiltersDialog"] = await $steps[
                     "openFiltersDialog"
+                  ];
+                }
+
+                $steps["updateCategoriesDialogOpen"] =
+                  name === "category"
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["categoriesDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateCategoriesDialogOpen"] != null &&
+                  typeof $steps["updateCategoriesDialogOpen"] === "object" &&
+                  typeof $steps["updateCategoriesDialogOpen"].then ===
+                    "function"
+                ) {
+                  $steps["updateCategoriesDialogOpen"] = await $steps[
+                    "updateCategoriesDialogOpen"
                   ];
                 }
 
@@ -563,7 +614,7 @@ function PlasmicFilterRow__RenderFunc(props: {
               onDelete={async name => {
                 const $steps = {};
 
-                $steps["runOnDelete"] = false
+                $steps["runOnDelete"] = true
                   ? (() => {
                       const actionArgs = {
                         eventRef: $props["onDelete"],
@@ -722,1177 +773,1332 @@ function PlasmicFilterRow__RenderFunc(props: {
         data-plasmic-name={"filterListDialog"}
         data-plasmic-override={overrides.filterListDialog}
         body={
-          <FilterList
-            data-plasmic-name={"filterList"}
-            data-plasmic-override={overrides.filterList}
-            className={classNames("__wab_instance", sty.filterList)}
-            filters={[
-              {
-                title: "\u0646\u0648\u0639 \u0646\u062a\u0627\u06cc\u062c",
-                name: "result_type",
-                type: "radio",
-                items: [
+          <div className={classNames(projectcss.all, sty.freeBox__psYtf)}>
+            <div className={classNames(projectcss.all, sty.freeBox__mZLm)}>
+              <FilterList
+                data-plasmic-name={"filterList"}
+                data-plasmic-override={overrides.filterList}
+                className={classNames("__wab_instance", sty.filterList)}
+                filters={[
                   {
-                    title:
-                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
-                    value:
-                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
-                    count: 1794
+                    title: "\u0646\u0648\u0639 \u0646\u062a\u0627\u06cc\u062c",
+                    name: "result_type",
+                    type: "radio",
+                    items: [
+                      {
+                        title:
+                          "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                        value:
+                          "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                        count: 1794
+                      },
+                      {
+                        title:
+                          "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
+                        value:
+                          "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
+                        count: 59707
+                      },
+                      {
+                        title:
+                          "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
+                        value:
+                          "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
+                        count: 60907
+                      }
+                    ]
                   },
                   {
                     title:
-                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
-                    value:
-                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
-                    count: 59707
+                      "\u062c\u0646\u0633\u06cc\u062a \u067e\u0632\u0634\u06a9",
+                    name: "gender",
+                    type: "radio",
+                    items: [
+                      {
+                        title: "\u062e\u0627\u0646\u0645",
+                        value: "female",
+                        count: 2332
+                      },
+                      { title: "\u0622\u0642\u0627", value: "male", count: 130 }
+                    ]
+                  },
+                  {
+                    title: "\u062f\u0631\u062c\u0647 \u0639\u0644\u0645\u06cc",
+                    name: "degree",
+                    type: "radio",
+                    items: [
+                      {
+                        title: "\u0641\u0644\u0648\u0634\u06cc\u067e",
+                        value: "\u0641\u0644\u0648\u0634\u06cc\u067e",
+                        count: 652
+                      },
+                      {
+                        title: "\u0641\u0648\u0642 \u062a\u062e\u0635\u0635",
+                        value: "\u0641\u0648\u0642 \u062a\u062e\u0635\u0635",
+                        count: 4
+                      },
+                      {
+                        title:
+                          "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc",
+                        value:
+                          "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc",
+                        count: 134
+                      },
+                      {
+                        title: "\u0645\u062a\u062e\u0635\u0635",
+                        value: "\u0645\u062a\u062e\u0635\u0635",
+                        count: 8485
+                      },
+                      {
+                        title: "\u062f\u06a9\u062a\u0631\u06cc",
+                        value: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        count: 4209
+                      },
+                      {
+                        title:
+                          "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633 \u0627\u0631\u0634\u062f",
+                        value:
+                          "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633 \u0627\u0631\u0634\u062f",
+                        count: 1529
+                      },
+                      {
+                        title: "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633",
+                        value: "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633",
+                        count: 52080
+                      }
+                    ]
+                  },
+                  {
+                    title: "\u062e\u062f\u0645\u062a",
+                    name: "turn_type",
+                    type: "radio",
+                    items: [
+                      {
+                        title:
+                          "\u0646\u0648\u0628\u062a \u062d\u0636\u0648\u0631\u06cc",
+                        value: "non-consult",
+                        count: 60907
+                      },
+                      {
+                        title:
+                          "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646",
+                        value: "consult",
+                        count: 1884
+                      }
+                    ]
                   },
                   {
                     title:
-                      "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
-                    value:
-                      "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
-                    count: 60907
+                      "\u062e\u0648\u0634 \u0628\u0631\u062e\u0648\u0631\u062f",
+                    name: "good_behave_doctor",
+                    type: "switch"
+                  },
+                  {
+                    title: "\u0645\u062d\u0628\u0648\u0628",
+                    name: "popular_doctor",
+                    type: "switch"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                    name: "less_waiting_time_doctor",
+                    type: "switch"
+                  },
+                  {
+                    title:
+                      "\u0646\u0633\u062e\u0647 \u0646\u0648\u06cc\u0633\u06cc \u0622\u0646\u0644\u0627\u06cc\u0646",
+                    name: "has_prescription",
+                    type: "switch"
+                  },
+                  {
+                    title: "\u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a",
+                    name: "work_time_frames",
+                    type: "multiple_select",
+                    items: [
+                      { title: "\u0634\u0628", value: "night", count: 14734 },
+                      {
+                        title:
+                          "\u0628\u0639\u062f \u0627\u0632 \u0638\u0647\u0631",
+                        value: "afternoon",
+                        count: 11945
+                      },
+                      {
+                        title: "\u0635\u0628\u062d",
+                        value: "morning",
+                        count: 9670
+                      }
+                    ]
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646",
+                    name: "hospital_affiliation",
+                    type: "multiple_select",
+                    items: [
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0636\u0631\u062a \u0632\u06cc\u0646\u0628 \u0634\u06cc\u0631\u0627\u0632",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0636\u0631\u062a \u0632\u06cc\u0646\u0628 \u0634\u06cc\u0631\u0627\u0632",
+                        count: 46
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 \u062f\u0627\u0631\u0627\u0644\u0634\u0641\u0627 \u062d\u0636\u0631\u062a \u0632\u0647\u0631\u0627\u06cc \u0645\u0631\u0636\u06cc\u0647 \u0633",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 \u062f\u0627\u0631\u0627\u0644\u0634\u0641\u0627 \u062d\u0636\u0631\u062a \u0632\u0647\u0631\u0627\u06cc \u0645\u0631\u0636\u06cc\u0647 \u0633",
+                        count: 38
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 38
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0627\u0645",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0627\u0645",
+                        count: 34
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9 \u0634\u0648\u0634\u062a\u0631\u06cc",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9 \u0634\u0648\u0634\u062a\u0631\u06cc",
+                        count: 34
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u062e\u0627\u0646\u0648\u0627\u062f\u0647 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u062e\u0627\u0646\u0648\u0627\u062f\u0647 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 32
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u0631\u0641\u0627\u0646 \u0646\u06cc\u0627\u06cc\u0634",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u0631\u0641\u0627\u0646 \u0646\u06cc\u0627\u06cc\u0634",
+                        count: 31
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646",
+                        count: 30
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0637\u0647\u0631\u06cc \u0645\u0631\u0648\u062f\u0634\u062a",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0637\u0647\u0631\u06cc \u0645\u0631\u0648\u062f\u0634\u062a",
+                        count: 30
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0644\u0627\u0644\u0647",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0644\u0627\u0644\u0647",
+                        count: 30
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0627\u0641\u0638",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0627\u0641\u0638",
+                        count: 27
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u063a\u0631\u0628 \u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u063a\u0631\u0628 \u062a\u0647\u0631\u0627\u0646",
+                        count: 25
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u0648\u0633\u062a\u0627\u0646 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u0648\u0633\u062a\u0627\u0646 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        count: 22
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631\u0627\u0646",
+                        count: 22
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0645\u0646 \u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0645\u0646 \u062a\u0647\u0631\u0627\u0646",
+                        count: 21
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0642\u0648\u06cc \u06a9\u0627\u0634\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0642\u0648\u06cc \u06a9\u0627\u0634\u0627\u0646",
+                        count: 21
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632-\u0634\u0647\u06cc\u062f-\u0645\u0637\u0647\u0631\u06cc-\u0634\u06cc\u0631\u0627\u0632",
+                        value:
+                          "\u0645\u0631\u06a9\u0632-\u0634\u0647\u06cc\u062f-\u0645\u0637\u0647\u0631\u06cc-\u0634\u06cc\u0631\u0627\u0632",
+                        count: 21
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0645\u062d\u0628 \u06a9\u0648\u062b\u0631",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0645\u062d\u0628 \u06a9\u0648\u062b\u0631",
+                        count: 21
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0639\u062a\u0636\u062f\u06cc \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0639\u062a\u0636\u062f\u06cc \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        count: 20
+                      },
+                      {
+                        title:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0645\u063a\u0632\u0648\u0627\u0639\u0635\u0627\u0628)",
+                        value:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0645\u063a\u0632\u0648\u0627\u0639\u0635\u0627\u0628)",
+                        count: 20
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0631\u0636\u0648\u06cc \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0631\u0636\u0648\u06cc \u0645\u0634\u0647\u062f",
+                        count: 20
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
+                        count: 19
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u062a\u0647\u0631\u0627\u0646",
+                        count: 19
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u0631\u062d\u06cc\u0645\u06cc \u062e\u0631\u0645 \u0622\u0628\u0627\u062f",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u0631\u062d\u06cc\u0645\u06cc \u062e\u0631\u0645 \u0622\u0628\u0627\u062f",
+                        count: 18
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u062e\u062a \u062c\u0645\u0634\u06cc\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u062e\u062a \u062c\u0645\u0634\u06cc\u062f",
+                        count: 17
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0642\u0628\u0627\u0644",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0642\u0628\u0627\u0644",
+                        count: 17
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 17
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f\u0627\u0646 \u0645\u0628\u06cc\u0646\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f\u0627\u0646 \u0645\u0628\u06cc\u0646\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
+                        count: 17
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u0633\u067e\u06cc\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u0633\u067e\u06cc\u062f",
+                        count: 16
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                        count: 16
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627\u06cc \u062e\u0644\u06cc\u062c \u0641\u0627\u0631\u0633 \u0628\u0648\u0634\u0647\u0631",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627\u06cc \u062e\u0644\u06cc\u062c \u0641\u0627\u0631\u0633 \u0628\u0648\u0634\u0647\u0631",
+                        count: 16
+                      },
+                      {
+                        title:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0646\u062a \u0627\u0644\u0647\u062f\u06cc",
+                        value:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0646\u062a \u0627\u0644\u0647\u062f\u06cc",
+                        count: 16
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0635\u0637\u0641\u06cc \u062e\u0645\u06cc\u0646\u06cc \u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0635\u0637\u0641\u06cc \u062e\u0645\u06cc\u0646\u06cc \u062a\u0647\u0631\u0627\u0646",
+                        count: 15
+                      },
+                      {
+                        title:
+                          "\u067e\u0644\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0634\u0645\u0627\u0631\u0647 \u062f\u0648 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0633\u0645\u0646\u0627\u0646",
+                        value:
+                          "\u067e\u0644\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0634\u0645\u0627\u0631\u0647 \u062f\u0648 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0633\u0645\u0646\u0627\u0646",
+                        count: 15
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u067e\u0632\u0634\u06a9\u06cc \u0634\u0645\u0633 \u0634\u0631\u0642",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u067e\u0632\u0634\u06a9\u06cc \u0634\u0645\u0633 \u0634\u0631\u0642",
+                        count: 15
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u0631\u06cc\u062a\u0627",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u0631\u06cc\u062a\u0627",
+                        count: 15
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631 \u0645\u0645\u0633\u0646\u06cc",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631 \u0645\u0645\u0633\u0646\u06cc",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0641\u0642\u06cc\u0647\u06cc \u0634\u06cc\u0631\u0627\u0632",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0641\u0642\u06cc\u0647\u06cc \u0634\u06cc\u0631\u0627\u0632",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0645\u0648\u0633\u06cc \u06a9\u0627\u0638\u0645 \u0632\u0631\u06cc\u0646 \u062f\u0634\u062a",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0645\u0648\u0633\u06cc \u06a9\u0627\u0638\u0645 \u0632\u0631\u06cc\u0646 \u062f\u0634\u062a",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0639\u0635\u0631)",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0639\u0635\u0631)",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u0639\u062c \u062c\u063a\u062a\u0627\u06cc",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u0639\u062c \u062c\u063a\u062a\u0627\u06cc",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u062a\u0648\u0631 \u0628\u0645",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u062a\u0648\u0631 \u0628\u0645",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u06cc\u0627\u0633",
+                        value:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u06cc\u0627\u0633",
+                        count: 14
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0639\u0644\u06cc (\u0639) \u062a\u0628\u0631\u06cc\u0632",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0639\u0644\u06cc (\u0639) \u062a\u0628\u0631\u06cc\u0632",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0628\u0648\u0634\u0647\u0631",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0628\u0648\u0634\u0647\u0631",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0646 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0646 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u0621 \u0646\u06cc \u0631\u06cc\u0632",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u0621 \u0646\u06cc \u0631\u06cc\u0632",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0647\u0627\u0631\u0644\u0648",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0647\u0627\u0631\u0644\u0648",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u06cc\u062d\u06cc\u06cc \u0646\u0698\u0627\u062f \u0628\u0627\u0628\u0644",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u06cc\u062d\u06cc\u06cc \u0646\u0698\u0627\u062f \u0628\u0627\u0628\u0644",
+                        count: 13
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0634\u0647\u06cc\u062f \u0645\u0641\u062a\u062d 1 \u062c\u062f\u06cc\u062f \u06af\u0644\u0633\u062a\u0627\u0646 15",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0634\u0647\u06cc\u062f \u0645\u0641\u062a\u062d 1 \u062c\u062f\u06cc\u062f \u06af\u0644\u0633\u062a\u0627\u0646 15",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0631\u062a\u0627\u0636",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0631\u062a\u0627\u0636",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0627\u0631 \u0634\u0627\u0647\u0631\u0648\u062f",
+                        value:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0627\u0631 \u0634\u0627\u0647\u0631\u0648\u062f",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631\u0644\u0627\u0645\u0631\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631\u0644\u0627\u0645\u0631\u062f",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639 ) \u0634\u0647\u0631\u06a9\u0631\u062f",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639 ) \u0634\u0647\u0631\u06a9\u0631\u062f",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u0628\u0648\u0627\u0646\u0627\u062a",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u0628\u0648\u0627\u0646\u0627\u062a",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0641\u0631\u062d",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0641\u0631\u062d",
+                        count: 12
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u062d\u062c\u062a \u0628\u0646 \u0627\u0644\u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u062d\u062c\u062a \u0628\u0646 \u0627\u0644\u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u0634\u0645\u0627\u0631\u0647 2 (\u0630\u06a9\u0631\u06cc\u0627)",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u0634\u0645\u0627\u0631\u0647 2 (\u0630\u06a9\u0631\u06cc\u0627)",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u0647\u06cc\u062e\u062a\u06af\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u0647\u06cc\u062e\u062a\u06af\u0627\u0646",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627(\u0639) - \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627(\u0639) - \u0645\u0634\u0647\u062f",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u062c \u0627\u0644\u0644\u0647 \u0631\u0636\u0627 \u0632\u0627\u062f\u0647 \u0642\u0627\u0626\u0645\u06cc\u0647",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u062c \u0627\u0644\u0644\u0647 \u0631\u0636\u0627 \u0632\u0627\u062f\u0647 \u0642\u0627\u0626\u0645\u06cc\u0647",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0644\u0646\u062c\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0644\u0646\u062c\u0627\u0646",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0635\u0628\u062d)",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0635\u0628\u062d)",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u06cc\u0633\u06cc \u0627\u0628\u0646 \u0645\u0631\u06cc\u0645 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u06cc\u0633\u06cc \u0627\u0628\u0646 \u0645\u0631\u06cc\u0645 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062e\u06cc\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062d\u06a9\u06cc\u0645",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062e\u06cc\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062d\u06a9\u06cc\u0645",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u06a9\u0627\u0634\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u06a9\u0627\u0634\u0627\u0646",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646 (\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0635\u0628\u062d)",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646 (\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0635\u0628\u062d)",
+                        count: 11
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u062a\u062d\u0642\u06cc\u0642\u0627\u062a\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0645\u06cc\u0644\u0627\u062f - \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u062a\u062d\u0642\u06cc\u0642\u0627\u062a\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0645\u06cc\u0644\u0627\u062f - \u0645\u0634\u0647\u062f",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0633\u0645\u0646\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0633\u0645\u0646\u0627\u0646",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0633\u0631\u062f\u0627\u0631 \u0633\u0644\u06cc\u0645\u0627\u0646\u06cc \u0628\u0631\u0648\u062c\u0646",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0633\u0631\u062f\u0627\u0631 \u0633\u0644\u06cc\u0645\u0627\u0646\u06cc \u0628\u0631\u0648\u062c\u0646",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0644\u0632\u0647\u0631\u0627 (\u0633) \u0628\u0645",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0644\u0632\u0647\u0631\u0627 (\u0633) \u0628\u0645",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062b\u0627\u0645\u0646 \u0627\u0644\u062d\u062c\u062c \u0639 \u0622\u0631\u0627\u0646 \u0648 \u0628\u06cc\u062f\u06af\u0644",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062b\u0627\u0645\u0646 \u0627\u0644\u062d\u062c\u062c \u0639 \u0622\u0631\u0627\u0646 \u0648 \u0628\u06cc\u062f\u06af\u0644",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0647\u0641\u062f\u0647 \u0634\u0647\u0631\u06cc\u0648\u0631 \u0628\u0631\u0627\u0632\u062c\u0627\u0646",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0647\u0641\u062f\u0647 \u0634\u0647\u0631\u06cc\u0648\u0631 \u0628\u0631\u0627\u0632\u062c\u0627\u0646",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u06cc\u0644\u0627\u062f \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u06cc\u0644\u0627\u062f \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627 \u0644\u0631\u062f\u06af\u0627\u0646",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627 \u0644\u0631\u062f\u06af\u0627\u0646",
+                        count: 10
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062f\u06a9\u062a\u0631 \u0639\u0644\u06cc \u0634\u0631\u06cc\u0639\u062a\u06cc - \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062f\u06a9\u062a\u0631 \u0639\u0644\u06cc \u0634\u0631\u06cc\u0639\u062a\u06cc - \u0645\u0634\u0647\u062f",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639) \u0631\u0648\u062f\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639) \u0631\u0648\u062f\u0627\u0646",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u0645\u0633\u062a\u0642\u0644 \u0627\u062d\u0645\u062f\u06cc\u0647",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u0645\u0633\u062a\u0642\u0644 \u0627\u062d\u0645\u062f\u06cc\u0647",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u062f\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0646\u06cc\u06a9\u0627\u0646",
+                        value:
+                          "\u062f\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0646\u06cc\u06a9\u0627\u0646",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645 \u0627\u0644\u0628\u0646\u06cc\u0646(\u0633) - \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645 \u0627\u0644\u0628\u0646\u06cc\u0646(\u0633) - \u0645\u0634\u0647\u062f",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u062e\u0631\u0645 \u0628\u06cc\u062f",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u062e\u0631\u0645 \u0628\u06cc\u062f",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0647\u0645 \u062f\u06cc",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0647\u0645 \u062f\u06cc",
+                        count: 9
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0633\u062c\u0627\u062f(\u0639  \u06cc\u0627\u0633\u0648\u062c",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0633\u062c\u0627\u062f(\u0639  \u06cc\u0627\u0633\u0648\u062c",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u062f\u0648",
+                        value:
+                          "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u062f\u0648",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0633\u062a\u063a\u06cc\u0628 \u06cc\u0627\u0633\u0627\u06cc\u06cc",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0633\u062a\u063a\u06cc\u0628 \u06cc\u0627\u0633\u0627\u06cc\u06cc",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646-\u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646-\u062a\u0647\u0631\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u067e\u0698\u0648\u0647\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0642\u0627\u0626\u0645 \u0639\u062c - \u0645\u0634\u0647\u062f",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u067e\u0698\u0648\u0647\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0642\u0627\u0626\u0645 \u0639\u062c - \u0645\u0634\u0647\u062f",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06af\u0644\u062f\u06cc\u0633 \u0634\u0627\u0647\u06cc\u0646 \u0634\u0647\u0631 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06af\u0644\u062f\u06cc\u0633 \u0634\u0627\u0647\u06cc\u0646 \u0634\u0647\u0631 \u0627\u0635\u0641\u0647\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0645\u0647\u062f\u06cc\u0647 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0645\u0647\u062f\u06cc\u0647 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0634\u0628\u0627\u0646\u0647 \u0631\u0648\u0632\u06cc \u0646\u06cc\u0627\u0648\u0631\u0627\u0646",
+                        value:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0634\u0628\u0627\u0646\u0647 \u0631\u0648\u0632\u06cc \u0646\u06cc\u0627\u0648\u0631\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc \u0632\u0631\u0642\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc \u0632\u0631\u0642\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0627\u0632\u0631\u06af\u0627\u0646\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0627\u0632\u0631\u06af\u0627\u0646\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u0627\u0631\u06af\u0627\u062f \u062a\u0647\u0631\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u0627\u0631\u06af\u0627\u062f \u062a\u0647\u0631\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0645\u062c\u062a\u0628\u06cc \u062f\u0627\u0631\u0627\u0628",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0645\u062c\u062a\u0628\u06cc \u062f\u0627\u0631\u0627\u0628",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0622\u06cc\u062a \u0627\u0644\u0644\u0647 \u0628\u0631\u0648\u062c\u0631\u062f\u06cc \u0644\u0631\u0633\u062a\u0627\u0646",
+                        value:
+                          "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0622\u06cc\u062a \u0627\u0644\u0644\u0647 \u0628\u0631\u0648\u062c\u0631\u062f\u06cc \u0644\u0631\u0633\u062a\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0627\u0637\u0645\u06cc\u0647",
+                        value:
+                          "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0627\u0637\u0645\u06cc\u0647",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0641\u0627\u0631\u0633",
+                        value:
+                          "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0641\u0627\u0631\u0633",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0628\u0647\u0627\u0631\u0627\u0646",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0628\u0647\u0627\u0631\u0627\u0646",
+                        count: 8
+                      },
+                      {
+                        title:
+                          "\u0645\u0631\u06a9\u0632 \u0628\u0627\u0631\u0648\u0631\u06cc \u0648 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0627\u0645\u06cc\u0646 \u067e\u0631\u0648\u0631\u0634 \u0631\u0626\u0648\u0641",
+                        value:
+                          "\u0645\u0631\u06a9\u0632 \u0628\u0627\u0631\u0648\u0631\u06cc \u0648 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0627\u0645\u06cc\u0646 \u067e\u0631\u0648\u0631\u0634 \u0631\u0626\u0648\u0641",
+                        count: 8
+                      }
+                    ]
+                  },
+                  {
+                    title:
+                      "\u0642\u06cc\u0645\u062a \u0645\u0634\u0627\u0648\u0631\u0647",
+                    name: "consult_price",
+                    type: "slider_with_count",
+                    items: [
+                      {
+                        title:
+                          "\u0642\u06cc\u0645\u062a \u06a9\u0645\u062a\u0631 \u0627\u0632 50000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "0_50",
+                        count: 21,
+                        from: 0,
+                        to: 50
+                      },
+                      {
+                        title:
+                          "50000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 55000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "50_55",
+                        count: 45,
+                        from: 50,
+                        to: 55
+                      },
+                      {
+                        title:
+                          "55000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 60000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "55_60",
+                        count: 3,
+                        from: 55,
+                        to: 60
+                      },
+                      {
+                        title:
+                          "60000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 65000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "60_65",
+                        count: 19,
+                        from: 60,
+                        to: 65
+                      },
+                      {
+                        title:
+                          "65000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 70000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "65_70",
+                        count: 6,
+                        from: 65,
+                        to: 70
+                      },
+                      {
+                        title:
+                          "70000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 75000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "70_75",
+                        count: 22,
+                        from: 70,
+                        to: 75
+                      },
+                      {
+                        title:
+                          "75000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 80000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "75_80",
+                        count: 9,
+                        from: 75,
+                        to: 80
+                      },
+                      {
+                        title:
+                          "80000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 85000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "80_85",
+                        count: 32,
+                        from: 80,
+                        to: 85
+                      },
+                      {
+                        title:
+                          "85000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 90000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "85_90",
+                        count: 30,
+                        from: 85,
+                        to: 90
+                      },
+                      {
+                        title:
+                          "90000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 95000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "90_95",
+                        count: 39,
+                        from: 90,
+                        to: 95
+                      },
+                      {
+                        title:
+                          "95000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 100000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "95_100",
+                        count: 28,
+                        from: 95,
+                        to: 100
+                      },
+                      {
+                        title:
+                          "100000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 105000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "100_105",
+                        count: 136,
+                        from: 100,
+                        to: 105
+                      },
+                      {
+                        title:
+                          "105000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 110000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "105_110",
+                        count: 3,
+                        from: 105,
+                        to: 110
+                      },
+                      {
+                        title:
+                          "110000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 115000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "110_115",
+                        count: 18,
+                        from: 110,
+                        to: 115
+                      },
+                      {
+                        title:
+                          "115000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 120000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "115_120",
+                        count: 2,
+                        from: 115,
+                        to: 120
+                      },
+                      {
+                        title:
+                          "120000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 125000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "120_125",
+                        count: 66,
+                        from: 120,
+                        to: 125
+                      },
+                      {
+                        title:
+                          "125000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 130000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "125_130",
+                        count: 3,
+                        from: 125,
+                        to: 130
+                      },
+                      {
+                        title:
+                          "130000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 135000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "130_135",
+                        count: 17,
+                        from: 130,
+                        to: 135
+                      },
+                      {
+                        title:
+                          "135000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 140000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "135_140",
+                        count: 5,
+                        from: 135,
+                        to: 140
+                      },
+                      {
+                        title:
+                          "140000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 145000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "140_145",
+                        count: 11,
+                        from: 140,
+                        to: 145
+                      },
+                      {
+                        title:
+                          "145000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 150000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "145_150",
+                        count: 3,
+                        from: 145,
+                        to: 150
+                      },
+                      {
+                        title:
+                          "150000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 155000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "150_155",
+                        count: 176,
+                        from: 150,
+                        to: 155
+                      },
+                      {
+                        title:
+                          "155000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 160000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "155_160",
+                        count: 0,
+                        from: 155,
+                        to: 160
+                      },
+                      {
+                        title:
+                          "160000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 165000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "160_165",
+                        count: 7,
+                        from: 160,
+                        to: 165
+                      },
+                      {
+                        title:
+                          "165000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 170000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "165_170",
+                        count: 3,
+                        from: 165,
+                        to: 170
+                      },
+                      {
+                        title:
+                          "170000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 175000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "170_175",
+                        count: 8,
+                        from: 170,
+                        to: 175
+                      },
+                      {
+                        title:
+                          "175000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 180000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "175_180",
+                        count: 2,
+                        from: 175,
+                        to: 180
+                      },
+                      {
+                        title:
+                          "180000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 185000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "180_185",
+                        count: 22,
+                        from: 180,
+                        to: 185
+                      },
+                      {
+                        title:
+                          "185000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 190000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "185_190",
+                        count: 7,
+                        from: 185,
+                        to: 190
+                      },
+                      {
+                        title:
+                          "190000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 195000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "190_195",
+                        count: 5,
+                        from: 190,
+                        to: 195
+                      },
+                      {
+                        title:
+                          "195000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 200000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "195_200",
+                        count: 3,
+                        from: 195,
+                        to: 200
+                      },
+                      {
+                        title:
+                          "\u0642\u06cc\u0645\u062a \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 200000 \u062a\u0648\u0645\u0627\u0646",
+                        value: "200_inf",
+                        count: 301,
+                        from: 200,
+                        to: "inf"
+                      }
+                    ]
                   }
-                ]
-              },
-              {
-                title:
-                  "\u062c\u0646\u0633\u06cc\u062a \u067e\u0632\u0634\u06a9",
-                name: "gender",
-                type: "radio",
-                items: [
-                  {
-                    title: "\u062e\u0627\u0646\u0645",
-                    value: "female",
-                    count: 2332
-                  },
-                  { title: "\u0622\u0642\u0627", value: "male", count: 130 }
-                ]
-              },
-              {
-                title: "\u062f\u0631\u062c\u0647 \u0639\u0644\u0645\u06cc",
-                name: "degree",
-                type: "radio",
-                items: [
-                  {
-                    title: "\u0641\u0644\u0648\u0634\u06cc\u067e",
-                    value: "\u0641\u0644\u0648\u0634\u06cc\u067e",
-                    count: 652
-                  },
-                  {
-                    title: "\u0641\u0648\u0642 \u062a\u062e\u0635\u0635",
-                    value: "\u0641\u0648\u0642 \u062a\u062e\u0635\u0635",
-                    count: 4
-                  },
-                  {
-                    title:
-                      "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc",
-                    value:
-                      "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc",
-                    count: 134
-                  },
-                  {
-                    title: "\u0645\u062a\u062e\u0635\u0635",
-                    value: "\u0645\u062a\u062e\u0635\u0635",
-                    count: 8485
-                  },
-                  {
-                    title: "\u062f\u06a9\u062a\u0631\u06cc",
-                    value: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
-                    count: 4209
-                  },
-                  {
-                    title:
-                      "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633 \u0627\u0631\u0634\u062f",
-                    value:
-                      "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633 \u0627\u0631\u0634\u062f",
-                    count: 1529
-                  },
-                  {
-                    title: "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633",
-                    value: "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633",
-                    count: 52080
-                  }
-                ]
-              },
-              {
-                title: "\u062e\u062f\u0645\u062a",
-                name: "turn_type",
-                type: "radio",
-                items: [
-                  {
-                    title:
-                      "\u0646\u0648\u0628\u062a \u062d\u0636\u0648\u0631\u06cc",
-                    value: "non-consult",
-                    count: 60907
-                  },
-                  {
-                    title:
-                      "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646",
-                    value: "consult",
-                    count: 1884
-                  }
-                ]
-              },
-              {
-                title:
-                  "\u062e\u0648\u0634 \u0628\u0631\u062e\u0648\u0631\u062f",
-                name: "good_behave_doctor",
-                type: "switch"
-              },
-              {
-                title: "\u0645\u062d\u0628\u0648\u0628",
-                name: "popular_doctor",
-                type: "switch"
-              },
-              {
-                title:
-                  "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
-                name: "less_waiting_time_doctor",
-                type: "switch"
-              },
-              {
-                title:
-                  "\u0646\u0633\u062e\u0647 \u0646\u0648\u06cc\u0633\u06cc \u0622\u0646\u0644\u0627\u06cc\u0646",
-                name: "has_prescription",
-                type: "switch"
-              },
-              {
-                title: "\u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a",
-                name: "work_time_frames",
-                type: "multiple_select",
-                items: [
-                  { title: "\u0634\u0628", value: "night", count: 14734 },
-                  {
-                    title: "\u0628\u0639\u062f \u0627\u0632 \u0638\u0647\u0631",
-                    value: "afternoon",
-                    count: 11945
-                  },
-                  { title: "\u0635\u0628\u062d", value: "morning", count: 9670 }
-                ]
-              },
-              {
-                title: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646",
-                name: "hospital_affiliation",
-                type: "multiple_select",
-                items: [
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0636\u0631\u062a \u0632\u06cc\u0646\u0628 \u0634\u06cc\u0631\u0627\u0632",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0636\u0631\u062a \u0632\u06cc\u0646\u0628 \u0634\u06cc\u0631\u0627\u0632",
-                    count: 46
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 \u062f\u0627\u0631\u0627\u0644\u0634\u0641\u0627 \u062d\u0636\u0631\u062a \u0632\u0647\u0631\u0627\u06cc \u0645\u0631\u0636\u06cc\u0647 \u0633",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 \u062f\u0627\u0631\u0627\u0644\u0634\u0641\u0627 \u062d\u0636\u0631\u062a \u0632\u0647\u0631\u0627\u06cc \u0645\u0631\u0636\u06cc\u0647 \u0633",
-                    count: 38
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 38
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0627\u0645",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0627\u0645",
-                    count: 34
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9 \u0634\u0648\u0634\u062a\u0631\u06cc",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9 \u0634\u0648\u0634\u062a\u0631\u06cc",
-                    count: 34
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u062e\u0627\u0646\u0648\u0627\u062f\u0647 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u062e\u0627\u0646\u0648\u0627\u062f\u0647 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 32
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u0631\u0641\u0627\u0646 \u0646\u06cc\u0627\u06cc\u0634",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u0631\u0641\u0627\u0646 \u0646\u06cc\u0627\u06cc\u0634",
-                    count: 31
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646",
-                    count: 30
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0637\u0647\u0631\u06cc \u0645\u0631\u0648\u062f\u0634\u062a",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0637\u0647\u0631\u06cc \u0645\u0631\u0648\u062f\u0634\u062a",
-                    count: 30
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0644\u0627\u0644\u0647",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0644\u0627\u0644\u0647",
-                    count: 30
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0627\u0641\u0638",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u062d\u0627\u0641\u0638",
-                    count: 27
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u063a\u0631\u0628 \u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u063a\u0631\u0628 \u062a\u0647\u0631\u0627\u0646",
-                    count: 25
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u0648\u0633\u062a\u0627\u0646 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u0648\u0633\u062a\u0627\u0646 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    count: 22
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631\u0627\u0646",
-                    count: 22
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0645\u0646 \u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0645\u0646 \u062a\u0647\u0631\u0627\u0646",
-                    count: 21
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0642\u0648\u06cc \u06a9\u0627\u0634\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0642\u0648\u06cc \u06a9\u0627\u0634\u0627\u0646",
-                    count: 21
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632-\u0634\u0647\u06cc\u062f-\u0645\u0637\u0647\u0631\u06cc-\u0634\u06cc\u0631\u0627\u0632",
-                    value:
-                      "\u0645\u0631\u06a9\u0632-\u0634\u0647\u06cc\u062f-\u0645\u0637\u0647\u0631\u06cc-\u0634\u06cc\u0631\u0627\u0632",
-                    count: 21
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0645\u062d\u0628 \u06a9\u0648\u062b\u0631",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0645\u062d\u0628 \u06a9\u0648\u062b\u0631",
-                    count: 21
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0639\u062a\u0636\u062f\u06cc \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0639\u062a\u0636\u062f\u06cc \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    count: 20
-                  },
-                  {
-                    title:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0645\u063a\u0632\u0648\u0627\u0639\u0635\u0627\u0628)",
-                    value:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0645\u063a\u0632\u0648\u0627\u0639\u0635\u0627\u0628)",
-                    count: 20
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0631\u0636\u0648\u06cc \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0631\u0636\u0648\u06cc \u0645\u0634\u0647\u062f",
-                    count: 20
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
-                    count: 19
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u062a\u0647\u0631\u0627\u0646",
-                    count: 19
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u0631\u062d\u06cc\u0645\u06cc \u062e\u0631\u0645 \u0622\u0628\u0627\u062f",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u0631\u062d\u06cc\u0645\u06cc \u062e\u0631\u0645 \u0622\u0628\u0627\u062f",
-                    count: 18
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u062e\u062a \u062c\u0645\u0634\u06cc\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u062e\u062a \u062c\u0645\u0634\u06cc\u062f",
-                    count: 17
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0642\u0628\u0627\u0644",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0642\u0628\u0627\u0644",
-                    count: 17
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 17
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f\u0627\u0646 \u0645\u0628\u06cc\u0646\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f\u0627\u0646 \u0645\u0628\u06cc\u0646\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
-                    count: 17
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u0633\u067e\u06cc\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u06a9\u0627\u0646 \u0633\u067e\u06cc\u062f",
-                    count: 16
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0631\u06cc\u0639\u062a\u06cc \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
-                    count: 16
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627\u06cc \u062e\u0644\u06cc\u062c \u0641\u0627\u0631\u0633 \u0628\u0648\u0634\u0647\u0631",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627\u06cc \u062e\u0644\u06cc\u062c \u0641\u0627\u0631\u0633 \u0628\u0648\u0634\u0647\u0631",
-                    count: 16
-                  },
-                  {
-                    title:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0646\u062a \u0627\u0644\u0647\u062f\u06cc",
-                    value:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0646\u062a \u0627\u0644\u0647\u062f\u06cc",
-                    count: 16
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0635\u0637\u0641\u06cc \u062e\u0645\u06cc\u0646\u06cc \u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u0635\u0637\u0641\u06cc \u062e\u0645\u06cc\u0646\u06cc \u062a\u0647\u0631\u0627\u0646",
-                    count: 15
-                  },
-                  {
-                    title:
-                      "\u067e\u0644\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0634\u0645\u0627\u0631\u0647 \u062f\u0648 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0633\u0645\u0646\u0627\u0646",
-                    value:
-                      "\u067e\u0644\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0634\u0645\u0627\u0631\u0647 \u062f\u0648 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0633\u0645\u0646\u0627\u0646",
-                    count: 15
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u067e\u0632\u0634\u06a9\u06cc \u0634\u0645\u0633 \u0634\u0631\u0642",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u067e\u0632\u0634\u06a9\u06cc \u0634\u0645\u0633 \u0634\u0631\u0642",
-                    count: 15
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u0631\u06cc\u062a\u0627",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062a\u0631\u06cc\u062a\u0627",
-                    count: 15
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631 \u0645\u0645\u0633\u0646\u06cc",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631 \u0645\u0645\u0633\u0646\u06cc",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0641\u0642\u06cc\u0647\u06cc \u0634\u06cc\u0631\u0627\u0632",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0641\u0642\u06cc\u0647\u06cc \u0634\u06cc\u0631\u0627\u0632",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0645\u0648\u0633\u06cc \u06a9\u0627\u0638\u0645 \u0632\u0631\u06cc\u0646 \u062f\u0634\u062a",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0645\u0648\u0633\u06cc \u06a9\u0627\u0638\u0645 \u0632\u0631\u06cc\u0646 \u062f\u0634\u062a",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0639\u0635\u0631)",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0639\u0635\u0631)",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u0639\u062c \u062c\u063a\u062a\u0627\u06cc",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u0639\u062c \u062c\u063a\u062a\u0627\u06cc",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u062a\u0648\u0631 \u0628\u0645",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u062a\u0648\u0631 \u0628\u0645",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u06cc\u0627\u0633",
-                    value:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u06cc\u0627\u0633",
-                    count: 14
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0639\u0644\u06cc (\u0639) \u062a\u0628\u0631\u06cc\u0632",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0639\u0644\u06cc (\u0639) \u062a\u0628\u0631\u06cc\u0632",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0628\u0648\u0634\u0647\u0631",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0628\u0648\u0634\u0647\u0631",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0633\u0628\u0632\u0648\u0627\u0631",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0646 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0646 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u0621 \u0646\u06cc \u0631\u06cc\u0632",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u0621 \u0646\u06cc \u0631\u06cc\u0632",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0647\u0627\u0631\u0644\u0648",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0628\u0647\u0627\u0631\u0644\u0648",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u06cc\u062d\u06cc\u06cc \u0646\u0698\u0627\u062f \u0628\u0627\u0628\u0644",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0634\u0647\u06cc\u062f \u06cc\u062d\u06cc\u06cc \u0646\u0698\u0627\u062f \u0628\u0627\u0628\u0644",
-                    count: 13
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0634\u0647\u06cc\u062f \u0645\u0641\u062a\u062d 1 \u062c\u062f\u06cc\u062f \u06af\u0644\u0633\u062a\u0627\u0646 15",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0634\u0647\u06cc\u062f \u0645\u0641\u062a\u062d 1 \u062c\u062f\u06cc\u062f \u06af\u0644\u0633\u062a\u0627\u0646 15",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0631\u062a\u0627\u0636",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0631\u062a\u0627\u0636",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0627\u0631 \u0634\u0627\u0647\u0631\u0648\u062f",
-                    value:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0647\u0627\u06cc \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0647\u0627\u0631 \u0634\u0627\u0647\u0631\u0648\u062f",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631\u0644\u0627\u0645\u0631\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc\u0639\u0635\u0631\u0644\u0627\u0645\u0631\u062f",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639 ) \u0634\u0647\u0631\u06a9\u0631\u062f",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639 ) \u0634\u0647\u0631\u06a9\u0631\u062f",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u0628\u0648\u0627\u0646\u0627\u062a",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u0628\u0648\u0627\u0646\u0627\u062a",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0641\u0631\u062d",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u0641\u0631\u062d",
-                    count: 12
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u062d\u062c\u062a \u0628\u0646 \u0627\u0644\u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u062d\u062c\u062a \u0628\u0646 \u0627\u0644\u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u0634\u0645\u0627\u0631\u0647 2 (\u0630\u06a9\u0631\u06cc\u0627)",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u0634\u0645\u0627\u0631\u0647 2 (\u0630\u06a9\u0631\u06cc\u0627)",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u0647\u06cc\u062e\u062a\u06af\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u0647\u06cc\u062e\u062a\u06af\u0627\u0646",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627(\u0639) - \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627(\u0639) - \u0645\u0634\u0647\u062f",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u062c \u0627\u0644\u0644\u0647 \u0631\u0636\u0627 \u0632\u0627\u062f\u0647 \u0642\u0627\u0626\u0645\u06cc\u0647",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0631\u062c \u0627\u0644\u0644\u0647 \u0631\u0636\u0627 \u0632\u0627\u062f\u0647 \u0642\u0627\u0626\u0645\u06cc\u0647",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0644\u0646\u062c\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0644\u0646\u062c\u0627\u0646",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0635\u0628\u062d)",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06a9\u0648\u062b\u0631 \u0642\u0632\u0648\u06cc\u0646 (\u0635\u0628\u062d)",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u06cc\u0633\u06cc \u0627\u0628\u0646 \u0645\u0631\u06cc\u0645 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0639\u06cc\u0633\u06cc \u0627\u0628\u0646 \u0645\u0631\u06cc\u0645 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062e\u06cc\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062d\u06a9\u06cc\u0645",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062e\u06cc\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062d\u06a9\u06cc\u0645",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u06a9\u0627\u0634\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0628\u0647\u0634\u062a\u06cc \u06a9\u0627\u0634\u0627\u0646",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646 (\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0635\u0628\u062d)",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0644\u0632\u0647\u0631\u0627 \u0627\u0635\u0641\u0647\u0627\u0646 (\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0635\u0628\u062d)",
-                    count: 11
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u062a\u062d\u0642\u06cc\u0642\u0627\u062a\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0645\u06cc\u0644\u0627\u062f - \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u062a\u062d\u0642\u06cc\u0642\u0627\u062a\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0645\u06cc\u0644\u0627\u062f - \u0645\u0634\u0647\u062f",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0633\u0645\u0646\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u06cc\u0631\u0627\u0644\u0645\u0648\u0645\u0646\u06cc\u0646 \u0633\u0645\u0646\u0627\u0646",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0633\u0631\u062f\u0627\u0631 \u0633\u0644\u06cc\u0645\u0627\u0646\u06cc \u0628\u0631\u0648\u062c\u0646",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0633\u0631\u062f\u0627\u0631 \u0633\u0644\u06cc\u0645\u0627\u0646\u06cc \u0628\u0631\u0648\u062c\u0646",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0644\u0632\u0647\u0631\u0627 (\u0633) \u0628\u0645",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0627\u0644\u0632\u0647\u0631\u0627 (\u0633) \u0628\u0645",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062b\u0627\u0645\u0646 \u0627\u0644\u062d\u062c\u062c \u0639 \u0622\u0631\u0627\u0646 \u0648 \u0628\u06cc\u062f\u06af\u0644",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062b\u0627\u0645\u0646 \u0627\u0644\u062d\u062c\u062c \u0639 \u0622\u0631\u0627\u0646 \u0648 \u0628\u06cc\u062f\u06af\u0644",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0647\u0641\u062f\u0647 \u0634\u0647\u0631\u06cc\u0648\u0631 \u0628\u0631\u0627\u0632\u062c\u0627\u0646",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0647\u0641\u062f\u0647 \u0634\u0647\u0631\u06cc\u0648\u0631 \u0628\u0631\u0627\u0632\u062c\u0627\u0646",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u06cc\u0644\u0627\u062f \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0645\u06cc\u0644\u0627\u062f \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627 \u0644\u0631\u062f\u06af\u0627\u0646",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0634\u0647\u062f\u0627 \u0644\u0631\u062f\u06af\u0627\u0646",
-                    count: 10
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062f\u06a9\u062a\u0631 \u0639\u0644\u06cc \u0634\u0631\u06cc\u0639\u062a\u06cc - \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062f\u06a9\u062a\u0631 \u0639\u0644\u06cc \u0634\u0631\u06cc\u0639\u062a\u06cc - \u0645\u0634\u0647\u062f",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639) \u0631\u0648\u062f\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0639\u0644\u06cc (\u0639) \u0631\u0648\u062f\u0627\u0646",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u0645\u0633\u062a\u0642\u0644 \u0627\u062d\u0645\u062f\u06cc\u0647",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u0645\u0633\u062a\u0642\u0644 \u0627\u062d\u0645\u062f\u06cc\u0647",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u062f\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0646\u06cc\u06a9\u0627\u0646",
-                    value:
-                      "\u062f\u06cc \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0646\u06cc\u06a9\u0627\u0646",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645 \u0627\u0644\u0628\u0646\u06cc\u0646(\u0633) - \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645 \u0627\u0644\u0628\u0646\u06cc\u0646(\u0633) - \u0645\u0634\u0647\u062f",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u062e\u0631\u0645 \u0628\u06cc\u062f",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0648\u0644\u06cc \u0639\u0635\u0631 \u062e\u0631\u0645 \u0628\u06cc\u062f",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0647\u0645 \u062f\u06cc",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u0647\u0645 \u062f\u06cc",
-                    count: 9
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0633\u062c\u0627\u062f(\u0639  \u06cc\u0627\u0633\u0648\u062c",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u0633\u062c\u0627\u062f(\u0639  \u06cc\u0627\u0633\u0648\u062c",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u062f\u0648",
-                    value:
-                      "\u0645\u062c\u062a\u0645\u0639 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc \u0627\u0645\u0627\u0645 \u062e\u0645\u06cc\u0646\u06cc (\u0631\u0647) \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647\u0647\u0627\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0648\u0644\u06cc\u0639\u0635\u0631 \u062f\u0648",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0633\u062a\u063a\u06cc\u0628 \u06cc\u0627\u0633\u0627\u06cc\u06cc",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0648\u06cc\u0698\u0647 \u062a\u062e\u0635\u0635\u06cc \u0648\u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u062f\u0633\u062a\u063a\u06cc\u0628 \u06cc\u0627\u0633\u0627\u06cc\u06cc",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646-\u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646-\u062a\u0647\u0631\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u067e\u0698\u0648\u0647\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0642\u0627\u0626\u0645 \u0639\u062c - \u0645\u0634\u0647\u062f",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0622\u0645\u0648\u0632\u0634\u06cc \u067e\u0698\u0648\u0647\u0634\u06cc \u0648 \u062f\u0631\u0645\u0627\u0646\u06cc \u0642\u0627\u0626\u0645 \u0639\u062c - \u0645\u0634\u0647\u062f",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06af\u0644\u062f\u06cc\u0633 \u0634\u0627\u0647\u06cc\u0646 \u0634\u0647\u0631 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u06af\u0644\u062f\u06cc\u0633 \u0634\u0627\u0647\u06cc\u0646 \u0634\u0647\u0631 \u0627\u0635\u0641\u0647\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0645\u0647\u062f\u06cc\u0647 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0645\u0647\u062f\u06cc\u0647 \u06a9\u0631\u0645\u0627\u0646\u0634\u0627\u0647",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0634\u0628\u0627\u0646\u0647 \u0631\u0648\u0632\u06cc \u0646\u06cc\u0627\u0648\u0631\u0627\u0646",
-                    value:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0634\u0628\u0627\u0646\u0647 \u0631\u0648\u0632\u06cc \u0646\u06cc\u0627\u0648\u0631\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc \u0632\u0631\u0642\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0639\u0633\u06a9\u0631\u06cc \u0632\u0631\u0642\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0627\u0632\u0631\u06af\u0627\u0646\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062a\u062e\u0635\u0635\u06cc \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0628\u0627\u0632\u0631\u06af\u0627\u0646\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u0627\u0631\u06af\u0627\u062f \u062a\u0647\u0631\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u0627\u0633\u0627\u0631\u06af\u0627\u062f \u062a\u0647\u0631\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0645\u062c\u062a\u0628\u06cc \u062f\u0627\u0631\u0627\u0628",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0627\u0645\u0627\u0645 \u062d\u0633\u0646 \u0645\u062c\u062a\u0628\u06cc \u062f\u0627\u0631\u0627\u0628",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0622\u06cc\u062a \u0627\u0644\u0644\u0647 \u0628\u0631\u0648\u062c\u0631\u062f\u06cc \u0644\u0631\u0633\u062a\u0627\u0646",
-                    value:
-                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0622\u06cc\u062a \u0627\u0644\u0644\u0647 \u0628\u0631\u0648\u062c\u0631\u062f\u06cc \u0644\u0631\u0633\u062a\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0627\u0637\u0645\u06cc\u0647",
-                    value:
-                      "\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0641\u0627\u0637\u0645\u06cc\u0647",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0641\u0627\u0631\u0633",
-                    value:
-                      "\u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0627\u0645\u0627\u0645 \u0631\u0636\u0627 \u062f\u0627\u0646\u0634\u06af\u0627\u0647 \u0639\u0644\u0648\u0645 \u067e\u0632\u0634\u06a9\u06cc \u0641\u0627\u0631\u0633",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0628\u0647\u0627\u0631\u0627\u0646",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0628\u0647\u0627\u0631\u0627\u0646",
-                    count: 8
-                  },
-                  {
-                    title:
-                      "\u0645\u0631\u06a9\u0632 \u0628\u0627\u0631\u0648\u0631\u06cc \u0648 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0627\u0645\u06cc\u0646 \u067e\u0631\u0648\u0631\u0634 \u0631\u0626\u0648\u0641",
-                    value:
-                      "\u0645\u0631\u06a9\u0632 \u0628\u0627\u0631\u0648\u0631\u06cc \u0648 \u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc \u0627\u0645\u06cc\u0646 \u067e\u0631\u0648\u0631\u0634 \u0631\u0626\u0648\u0641",
-                    count: 8
-                  }
-                ]
-              },
-              {
-                title:
-                  "\u0642\u06cc\u0645\u062a \u0645\u0634\u0627\u0648\u0631\u0647",
-                name: "consult_price",
-                type: "slider_with_count",
-                items: [
-                  {
-                    title:
-                      "\u0642\u06cc\u0645\u062a \u06a9\u0645\u062a\u0631 \u0627\u0632 50000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "0_50",
-                    count: 21,
-                    from: 0,
-                    to: 50
-                  },
-                  {
-                    title:
-                      "50000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 55000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "50_55",
-                    count: 45,
-                    from: 50,
-                    to: 55
-                  },
-                  {
-                    title:
-                      "55000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 60000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "55_60",
-                    count: 3,
-                    from: 55,
-                    to: 60
-                  },
-                  {
-                    title:
-                      "60000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 65000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "60_65",
-                    count: 19,
-                    from: 60,
-                    to: 65
-                  },
-                  {
-                    title:
-                      "65000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 70000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "65_70",
-                    count: 6,
-                    from: 65,
-                    to: 70
-                  },
-                  {
-                    title:
-                      "70000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 75000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "70_75",
-                    count: 22,
-                    from: 70,
-                    to: 75
-                  },
-                  {
-                    title:
-                      "75000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 80000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "75_80",
-                    count: 9,
-                    from: 75,
-                    to: 80
-                  },
-                  {
-                    title:
-                      "80000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 85000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "80_85",
-                    count: 32,
-                    from: 80,
-                    to: 85
-                  },
-                  {
-                    title:
-                      "85000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 90000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "85_90",
-                    count: 30,
-                    from: 85,
-                    to: 90
-                  },
-                  {
-                    title:
-                      "90000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 95000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "90_95",
-                    count: 39,
-                    from: 90,
-                    to: 95
-                  },
-                  {
-                    title:
-                      "95000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 100000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "95_100",
-                    count: 28,
-                    from: 95,
-                    to: 100
-                  },
-                  {
-                    title:
-                      "100000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 105000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "100_105",
-                    count: 136,
-                    from: 100,
-                    to: 105
-                  },
-                  {
-                    title:
-                      "105000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 110000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "105_110",
-                    count: 3,
-                    from: 105,
-                    to: 110
-                  },
-                  {
-                    title:
-                      "110000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 115000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "110_115",
-                    count: 18,
-                    from: 110,
-                    to: 115
-                  },
-                  {
-                    title:
-                      "115000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 120000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "115_120",
-                    count: 2,
-                    from: 115,
-                    to: 120
-                  },
-                  {
-                    title:
-                      "120000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 125000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "120_125",
-                    count: 66,
-                    from: 120,
-                    to: 125
-                  },
-                  {
-                    title:
-                      "125000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 130000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "125_130",
-                    count: 3,
-                    from: 125,
-                    to: 130
-                  },
-                  {
-                    title:
-                      "130000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 135000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "130_135",
-                    count: 17,
-                    from: 130,
-                    to: 135
-                  },
-                  {
-                    title:
-                      "135000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 140000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "135_140",
-                    count: 5,
-                    from: 135,
-                    to: 140
-                  },
-                  {
-                    title:
-                      "140000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 145000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "140_145",
-                    count: 11,
-                    from: 140,
-                    to: 145
-                  },
-                  {
-                    title:
-                      "145000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 150000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "145_150",
-                    count: 3,
-                    from: 145,
-                    to: 150
-                  },
-                  {
-                    title:
-                      "150000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 155000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "150_155",
-                    count: 176,
-                    from: 150,
-                    to: 155
-                  },
-                  {
-                    title:
-                      "155000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 160000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "155_160",
-                    count: 0,
-                    from: 155,
-                    to: 160
-                  },
-                  {
-                    title:
-                      "160000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 165000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "160_165",
-                    count: 7,
-                    from: 160,
-                    to: 165
-                  },
-                  {
-                    title:
-                      "165000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 170000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "165_170",
-                    count: 3,
-                    from: 165,
-                    to: 170
-                  },
-                  {
-                    title:
-                      "170000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 175000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "170_175",
-                    count: 8,
-                    from: 170,
-                    to: 175
-                  },
-                  {
-                    title:
-                      "175000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 180000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "175_180",
-                    count: 2,
-                    from: 175,
-                    to: 180
-                  },
-                  {
-                    title:
-                      "180000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 185000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "180_185",
-                    count: 22,
-                    from: 180,
-                    to: 185
-                  },
-                  {
-                    title:
-                      "185000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 190000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "185_190",
-                    count: 7,
-                    from: 185,
-                    to: 190
-                  },
-                  {
-                    title:
-                      "190000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 195000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "190_195",
-                    count: 5,
-                    from: 190,
-                    to: 195
-                  },
-                  {
-                    title:
-                      "195000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 200000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "195_200",
-                    count: 3,
-                    from: 195,
-                    to: 200
-                  },
-                  {
-                    title:
-                      "\u0642\u06cc\u0645\u062a \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 200000 \u062a\u0648\u0645\u0627\u0646",
-                    value: "200_inf",
-                    count: 301,
-                    from: 200,
-                    to: "inf"
-                  }
-                ]
-              }
-            ]}
-            onClick={async (name, value) => {
-              const $steps = {};
+                ]}
+                onClick={async (name, value) => {
+                  const $steps = {};
 
-              $steps["runOnClick"] = true
-                ? (() => {
-                    const actionArgs = {
-                      eventRef: $props["onClick"],
-                      args: [
-                        (() => {
-                          try {
-                            return name;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
+                  $steps["runOnClick"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClick"],
+                          args: [
+                            (() => {
+                              try {
+                                return name;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })(),
+                            (() => {
+                              try {
+                                return value;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClick"] != null &&
+                    typeof $steps["runOnClick"] === "object" &&
+                    typeof $steps["runOnClick"].then === "function"
+                  ) {
+                    $steps["runOnClick"] = await $steps["runOnClick"];
+                  }
+                }}
+                selected={(() => {
+                  try {
+                    return $props.items.selected_filters;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            </div>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__hpRvf)}
+            >
+              <Button
+                children2={
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return `مشاهده ${$props.countOfFilters} نتیجه`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "Button";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                }
+                className={classNames("__wab_instance", sty.button__k6JMe)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["updateFilterListDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["filterListDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
                           }
-                        })(),
-                        (() => {
-                          try {
-                            return value;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return (({ eventRef, args }) => {
-                      return eventRef?.(...(args ?? []));
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runOnClick"] != null &&
-                typeof $steps["runOnClick"] === "object" &&
-                typeof $steps["runOnClick"].then === "function"
-              ) {
-                $steps["runOnClick"] = await $steps["runOnClick"];
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateFilterListDialogOpen"] != null &&
+                    typeof $steps["updateFilterListDialogOpen"] === "object" &&
+                    typeof $steps["updateFilterListDialogOpen"].then ===
+                      "function"
+                  ) {
+                    $steps["updateFilterListDialogOpen"] = await $steps[
+                      "updateFilterListDialogOpen"
+                    ];
+                  }
+                }}
+              />
+
+              <Button
+                children2={
+                  "\u062d\u0630\u0641 \u062a\u0645\u0627\u0645 \u0641\u06cc\u0644\u062a\u0631 \u0647\u0627"
+                }
+                className={classNames("__wab_instance", sty.button__yg7Pb)}
+                color={"text"}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runOnRemoveAllFilters"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onRemoveAllFilters"]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnRemoveAllFilters"] != null &&
+                    typeof $steps["runOnRemoveAllFilters"] === "object" &&
+                    typeof $steps["runOnRemoveAllFilters"].then === "function"
+                  ) {
+                    $steps["runOnRemoveAllFilters"] = await $steps[
+                      "runOnRemoveAllFilters"
+                    ];
+                  }
+                }}
+                outline={true}
+              />
+            </Stack__>
+          </div>
+        }
+        className={classNames("__wab_instance", sty.filterListDialog)}
+        noTrigger={true}
+        onOpenChange={generateStateOnChangeProp($state, [
+          "filterListDialog",
+          "open"
+        ])}
+        open={generateStateValueProp($state, ["filterListDialog", "open"])}
+        title={"\u0641\u06cc\u0644\u062a\u0631 \u0647\u0627"}
+        trigger={null}
+      />
+
+      <Dialog
+        data-plasmic-name={"categoriesDialog"}
+        data-plasmic-override={overrides.categoriesDialog}
+        body={
+          <FilterExpertiseList
+            data-plasmic-name={"filterExpertiseList"}
+            data-plasmic-override={overrides.filterExpertiseList}
+            categories={(() => {
+              try {
+                return $props.items.categories;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
               }
-            }}
-            selected={(() => {
+            })()}
+            className={classNames("__wab_instance", sty.filterExpertiseList)}
+            selectedFlters={(() => {
               try {
                 return $props.items.selected_filters;
               } catch (e) {
@@ -1907,14 +2113,35 @@ function PlasmicFilterRow__RenderFunc(props: {
             })()}
           />
         }
-        className={classNames("__wab_instance", sty.filterListDialog)}
+        className={classNames("__wab_instance", sty.categoriesDialog)}
         noTrigger={true}
         onOpenChange={generateStateOnChangeProp($state, [
-          "filterListDialog",
+          "categoriesDialog",
           "open"
         ])}
-        open={generateStateValueProp($state, ["filterListDialog", "open"])}
-        title={"\u0641\u06cc\u0644\u062a\u0631 \u0647\u0627"}
+        open={generateStateValueProp($state, ["categoriesDialog", "open"])}
+        title={
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.items.selected_filters?.category
+                  ? $props.items.categories.find(
+                      cat =>
+                        cat.value === $props.items.selected_filters.category
+                    ).title
+                  : "تخصص ها";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "\u0641\u06cc\u0644\u062a\u0631 \u0647\u0627";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
+        }
         trigger={null}
       />
 
@@ -2037,18 +2264,20 @@ function PlasmicFilterRow__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "freeBox",
     "filterRowSingle",
     "sortDialog",
     "filterListDialog",
     "filterList",
+    "categoriesDialog",
+    "filterExpertiseList",
     "optionsDialog"
   ],
-  freeBox: ["freeBox", "filterRowSingle"],
   filterRowSingle: ["filterRowSingle"],
   sortDialog: ["sortDialog"],
   filterListDialog: ["filterListDialog", "filterList"],
   filterList: ["filterList"],
+  categoriesDialog: ["categoriesDialog", "filterExpertiseList"],
+  filterExpertiseList: ["filterExpertiseList"],
   optionsDialog: ["optionsDialog"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -2056,11 +2285,12 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
   filterRowSingle: typeof FilterRowSingle;
   sortDialog: typeof Dialog;
   filterListDialog: typeof Dialog;
   filterList: typeof FilterList;
+  categoriesDialog: typeof Dialog;
+  filterExpertiseList: typeof FilterExpertiseList;
   optionsDialog: typeof Dialog;
 };
 
@@ -2124,11 +2354,12 @@ export const PlasmicFilterRow = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
     filterRowSingle: makeNodeComponent("filterRowSingle"),
     sortDialog: makeNodeComponent("sortDialog"),
     filterListDialog: makeNodeComponent("filterListDialog"),
     filterList: makeNodeComponent("filterList"),
+    categoriesDialog: makeNodeComponent("categoriesDialog"),
+    filterExpertiseList: makeNodeComponent("filterExpertiseList"),
     optionsDialog: makeNodeComponent("optionsDialog"),
 
     // Metadata about props expected for PlasmicFilterRow
