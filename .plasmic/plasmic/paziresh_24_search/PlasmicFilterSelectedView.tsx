@@ -144,8 +144,6 @@ function PlasmicFilterSelectedView__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const $globalActions = useGlobalActions?.();
-
   return (
     <div
       data-plasmic-name={"root"}
@@ -196,40 +194,7 @@ function PlasmicFilterSelectedView__RenderFunc(props: {
         onClickRemoveItem={async (name, value) => {
           const $steps = {};
 
-          $steps["invokeGlobalAction"] = true
-            ? (() => {
-                const actionArgs = {
-                  args: [
-                    "success",
-                    (() => {
-                      try {
-                        return `${name}, ${value}`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return $globalActions["Fragment.showToast"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
-            : undefined;
-          if (
-            $steps["invokeGlobalAction"] != null &&
-            typeof $steps["invokeGlobalAction"] === "object" &&
-            typeof $steps["invokeGlobalAction"].then === "function"
-          ) {
-            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
-          }
-
-          $steps["runOnRemoveItem"] = false
+          $steps["runOnRemoveItem"] = true
             ? (() => {
                 const actionArgs = {
                   eventRef: $props["onRemoveItem"],
