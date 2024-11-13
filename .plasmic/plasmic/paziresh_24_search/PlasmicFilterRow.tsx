@@ -2060,6 +2060,43 @@ function PlasmicFilterRow__RenderFunc(props: {
                       "runOnRemoveAllFilters"
                     ];
                   }
+
+                  $steps["updateFilterListDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["filterListDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateFilterListDialogOpen"] != null &&
+                    typeof $steps["updateFilterListDialogOpen"] === "object" &&
+                    typeof $steps["updateFilterListDialogOpen"].then ===
+                      "function"
+                  ) {
+                    $steps["updateFilterListDialogOpen"] = await $steps[
+                      "updateFilterListDialogOpen"
+                    ];
+                  }
                 }}
                 outline={true}
               />
@@ -2098,6 +2135,79 @@ function PlasmicFilterRow__RenderFunc(props: {
               }
             })()}
             className={classNames("__wab_instance", sty.filterExpertiseList)}
+            onClickSubCategory={async (link, value) => {
+              const $steps = {};
+
+              $steps["goToPage"] = true
+                ? (() => {
+                    const actionArgs = {
+                      destination: (() => {
+                        try {
+                          return link;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToPage"] != null &&
+                typeof $steps["goToPage"] === "object" &&
+                typeof $steps["goToPage"].then === "function"
+              ) {
+                $steps["goToPage"] = await $steps["goToPage"];
+              }
+
+              $steps["updateCategoriesDialogOpen"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["categoriesDialog", "open"]
+                      },
+                      operation: 4
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      const oldValue = $stateGet(objRoot, variablePath);
+                      $stateSet(objRoot, variablePath, !oldValue);
+                      return !oldValue;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateCategoriesDialogOpen"] != null &&
+                typeof $steps["updateCategoriesDialogOpen"] === "object" &&
+                typeof $steps["updateCategoriesDialogOpen"].then === "function"
+              ) {
+                $steps["updateCategoriesDialogOpen"] = await $steps[
+                  "updateCategoriesDialogOpen"
+                ];
+              }
+            }}
             selectedFlters={(() => {
               try {
                 return $props.items.selected_filters;

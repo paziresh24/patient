@@ -70,10 +70,16 @@ import sty from "./PlasmicFilterListView.module.css"; // plasmic-import: Z5K_XiJ
 
 createPlasmicElementProxy;
 
-export type PlasmicFilterListView__VariantMembers = {};
-export type PlasmicFilterListView__VariantsArgs = {};
+export type PlasmicFilterListView__VariantMembers = {
+  unnamedVariant: "unnamedVariant";
+};
+export type PlasmicFilterListView__VariantsArgs = {
+  unnamedVariant?: SingleBooleanChoiceArg<"unnamedVariant">;
+};
 type VariantPropType = keyof PlasmicFilterListView__VariantsArgs;
-export const PlasmicFilterListView__VariantProps = new Array<VariantPropType>();
+export const PlasmicFilterListView__VariantProps = new Array<VariantPropType>(
+  "unnamedVariant"
+);
 
 export type PlasmicFilterListView__ArgsType = {
   items?: any;
@@ -96,6 +102,7 @@ export interface DefaultFilterListViewProps {
   items?: any;
   onClick?: (name: string, value: string) => void;
   selected?: any;
+  unnamedVariant?: SingleBooleanChoiceArg<"unnamedVariant">;
   className?: string;
 }
 
@@ -137,6 +144,24 @@ function PlasmicFilterListView__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "unnamedVariant",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.unnamedVariant
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -157,7 +182,13 @@ function PlasmicFilterListView__RenderFunc(props: {
       <FilterList
         data-plasmic-name={"filterList"}
         data-plasmic-override={overrides.filterList}
-        className={classNames("__wab_instance", sty.filterList)}
+        className={classNames("__wab_instance", sty.filterList, {
+          [sty.filterListunnamedVariant]: hasVariant(
+            $state,
+            "unnamedVariant",
+            "unnamedVariant"
+          )
+        })}
         filters={(() => {
           try {
             return $props.items;

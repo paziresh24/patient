@@ -84,11 +84,13 @@ export const PlasmicFilterExpertiseList__VariantProps =
 export type PlasmicFilterExpertiseList__ArgsType = {
   categories?: any;
   selectedFlters?: any;
+  onClickSubCategory?: (link: string, value: string) => void;
 };
 type ArgPropType = keyof PlasmicFilterExpertiseList__ArgsType;
 export const PlasmicFilterExpertiseList__ArgProps = new Array<ArgPropType>(
   "categories",
-  "selectedFlters"
+  "selectedFlters",
+  "onClickSubCategory"
 );
 
 export type PlasmicFilterExpertiseList__OverridesType = {
@@ -100,6 +102,7 @@ export type PlasmicFilterExpertiseList__OverridesType = {
 export interface DefaultFilterExpertiseListProps {
   categories?: any;
   selectedFlters?: any;
+  onClickSubCategory?: (link: string, value: string) => void;
   className?: string;
 }
 
@@ -469,43 +472,54 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                   onClick={async (value, link) => {
                     const $steps = {};
 
-                    $steps["goToPage"] = true
+                    $steps["runOnClickSubCategory"] = true
                       ? (() => {
                           const actionArgs = {
-                            destination: (() => {
-                              try {
-                                return link;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
+                            eventRef: $props["onClickSubCategory"],
+                            args: [
+                              (() => {
+                                try {
+                                  return currentItem.url;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
                                 }
-                                throw e;
-                              }
-                            })()
+                              })(),
+                              (() => {
+                                try {
+                                  return currentItem.value;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
                           };
-                          return (({ destination }) => {
-                            if (
-                              typeof destination === "string" &&
-                              destination.startsWith("#")
-                            ) {
-                              document
-                                .getElementById(destination.substr(1))
-                                .scrollIntoView({ behavior: "smooth" });
-                            } else {
-                              __nextRouter?.push(destination);
-                            }
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
                           })?.apply(null, [actionArgs]);
                         })()
                       : undefined;
                     if (
-                      $steps["goToPage"] != null &&
-                      typeof $steps["goToPage"] === "object" &&
-                      typeof $steps["goToPage"].then === "function"
+                      $steps["runOnClickSubCategory"] != null &&
+                      typeof $steps["runOnClickSubCategory"] === "object" &&
+                      typeof $steps["runOnClickSubCategory"].then === "function"
                     ) {
-                      $steps["goToPage"] = await $steps["goToPage"];
+                      $steps["runOnClickSubCategory"] = await $steps[
+                        "runOnClickSubCategory"
+                      ];
                     }
                   }}
                   title={(() => {

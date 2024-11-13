@@ -1,13 +1,14 @@
 .root {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   position: relative;
-  width: auto;
+  width: 100%;
   height: auto;
   justify-content: flex-start;
   align-items: center;
   overflow: auto;
   justify-self: flex-start;
+  min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .root {
