@@ -905,14 +905,14 @@
         },
         {
           "id": "GKz-Lh1X9Vdq",
-          "name": "FilterExpertiseDialog",
+          "name": "FilterExpertiseList",
           "type": "managed",
           "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseDialog.tsx",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseList.tsx",
           "importSpec": {
-            "modulePath": "FilterExpertiseDialog.tsx"
+            "modulePath": "FilterExpertiseList.tsx"
           },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseDialog.module.css",
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterExpertiseList.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
