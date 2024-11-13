@@ -5,7 +5,7 @@
   width: 100%;
   height: auto;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   overflow: auto;
   justify-self: flex-start;
   min-width: 0;
@@ -77,6 +77,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  padding-bottom: var(--token-QcxRWQfhgyJI);
   min-width: 0;
 }
 .freeBox__mZLm {
@@ -88,7 +89,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  padding-bottom: 4rem;
+  padding-bottom: 5rem;
   min-width: 0;
 }
 .filterList:global(.__wab_instance) {
@@ -97,13 +98,16 @@
 .freeBox__hpRvf {
   display: flex;
   flex-direction: row;
-  position: relative;
-  width: 100%;
+  position: absolute;
+  width: auto;
   height: auto;
   max-width: 100%;
   padding-top: var(--token-vMUQwr5Jto1d);
   padding-bottom: var(--token-vMUQwr5Jto1d);
-  min-width: 0;
+  left: 0;
+  top: auto;
+  right: 0;
+  bottom: 0;
   margin: 0rem;
   border-top: 1px solid var(--token-Y3HOiwZmAcAF);
 }
@@ -111,7 +115,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 0;
   margin-left: calc(0px - var(--token-vMUQwr5Jto1d));
   width: calc(100% + var(--token-vMUQwr5Jto1d));
 }
