@@ -288,26 +288,6 @@ function PlasmicFilterListItem__RenderFunc(props: {
               (async checked => {
                 const $steps = {};
 
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return console.log(checked);
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-
                 $steps["runOnClick"] = true
                   ? (() => {
                       const actionArgs = {
