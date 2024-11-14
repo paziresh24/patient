@@ -66,7 +66,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
       event: {
         element_name: elementName,
         element_content: elementContent,
-        card_data: { ...item },
+        title: item?.title,
         terminal_id: getCookie('terminal_id'),
       },
     });

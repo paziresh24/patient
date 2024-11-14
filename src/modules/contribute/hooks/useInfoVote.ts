@@ -27,7 +27,7 @@ export const useInfoVote = () => {
   };
 
   const like = (value: string | undefined, type: string) => {
-    splunkInstance('doctor-profile').sendEvent({
+    splunkInstance('contribute').sendEvent({
       group: 'contribute',
       type,
       event: {
@@ -51,7 +51,7 @@ export const useInfoVote = () => {
   };
 
   const dislike = (value: string | undefined, type: string) => {
-    splunkInstance('doctor-profile').sendEvent({
+    splunkInstance('contribute').sendEvent({
       group: 'contribute',
       type,
       event: {
@@ -75,7 +75,7 @@ export const useInfoVote = () => {
   };
 
   const submit = (value: string | undefined, type: string) => {
-    splunkInstance('doctor-profile').sendEvent({
+    splunkInstance('contribute').sendEvent({
       group: 'contribute',
       type,
       event: {
