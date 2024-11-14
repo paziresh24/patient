@@ -33,29 +33,6 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    !isLoading &&
-      sendPageViewEvent({
-        group: 'contribute',
-        type: 'choose_center',
-        data: {
-          doctor: {
-            id: profileData.id,
-            server_id: profileData.server_id,
-            name: profileData.name,
-            family: profileData.family,
-            slug: profileData.slug,
-            expertise: profileData.expertises?.[0].expertise?.name,
-            group_expertises: profileData.group_expertises?.[0]?.name,
-          },
-          center: {
-            city: profileData.centers?.map(center => center.city),
-            province: profileData.centers?.map(center => center.province),
-          },
-        },
-      });
-  }, [isLoading]);
-
-  useEffect(() => {
     router.prefetch('/patient/contribute/center/');
   }, []);
 

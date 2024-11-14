@@ -148,7 +148,9 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
         type: 'load_center_profile',
         event: {
           data: {
-            ...profileData,
+            id: profileData?.id,
+            server_id: profileData?.server_id,
+            name: profileData.name,
             terminal_id: getCookie('terminal_id'),
           },
         },
