@@ -75,7 +75,9 @@ export const sections = (data: any) => {
       isShowFallback: !information.biography && editable,
       children: (props: any) => (
         <ProfileGlobalContextsProvider>
-          <Fragment name="ProfileAbout" props={{ ...profileData }} />
+          <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
+            <Fragment name="ProfileAbout" props={{ ...profileData }} />
+          </div>
         </ProfileGlobalContextsProvider>
       ),
       fallback: (props: any) => (
@@ -226,3 +228,4 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
+
