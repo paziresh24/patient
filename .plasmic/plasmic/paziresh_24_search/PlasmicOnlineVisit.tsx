@@ -284,9 +284,11 @@ function PlasmicOnlineVisit__RenderFunc(props: {
                 (() => {
                   try {
                     return (() => {
-                      const random = $$.lodash.random([0, 2]);
-                      return $state.apiRequest.data.search.result.slice(0, 3)?.[
-                        random
+                      const random = $$.lodash.random(0, 2);
+                      return [
+                        $state.apiRequest.data.search.result.slice(0, 3)?.[
+                          random
+                        ]
                       ];
                     })();
                   } catch (e) {
