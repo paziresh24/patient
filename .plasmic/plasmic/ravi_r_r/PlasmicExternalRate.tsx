@@ -85,6 +85,7 @@ export const PlasmicExternalRate__ArgProps = new Array<ArgPropType>(
 export type PlasmicExternalRate__OverridesType = {
   root?: Flex__<"div">;
   apiRequest?: Flex__<typeof ApiRequest>;
+  img?: Flex__<typeof PlasmicImg__>;
 };
 
 export interface DefaultExternalRateProps {
@@ -114,7 +115,7 @@ function PlasmicExternalRate__RenderFunc(props: {
       Object.assign(
         {
           doctorSlug:
-            "\u062f\u06a9\u062a\u0631-\u0641\u0631\u0646\u0627\u0632-\u0635\u062d\u06cc\u062d\u06cc"
+            "\u062f\u06a9\u062a\u0631-\u0641\u0631\u0647\u0627\u062f-\u0635\u0628\u0631\u06cc"
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -226,7 +227,7 @@ function PlasmicExternalRate__RenderFunc(props: {
           onSuccess={generateStateOnChangeProp($state, ["apiRequest", "data"])}
           url={(() => {
             try {
-              return `https://apigw.paziresh24.com/ravi/v2/external_rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
+              return `https://apigw.paziresh24.com/ravi/v3/external_rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -242,7 +243,7 @@ function PlasmicExternalRate__RenderFunc(props: {
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
               (() => {
                 try {
-                  return $state.apiRequest.data.map(item => item);
+                  return $state.apiRequest.data.list[0].rates;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -264,6 +265,33 @@ function PlasmicExternalRate__RenderFunc(props: {
                   <div
                     className={classNames(projectcss.all, sty.freeBox__psyxg)}
                   >
+                    <PlasmicImg__
+                      data-plasmic-name={"img"}
+                      data-plasmic-override={overrides.img}
+                      alt={""}
+                      className={classNames(sty.img)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={(() => {
+                        try {
+                          return currentItem.favicon;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+
                     <div
                       className={classNames(
                         projectcss.all,
@@ -317,15 +345,7 @@ function PlasmicExternalRate__RenderFunc(props: {
                       <React.Fragment>
                         {(() => {
                           try {
-                            return currentItem.name === "doctoreto"
-                              ? "دکترتو"
-                              : currentItem.name === "doctornext"
-                              ? "دکترنکست"
-                              : currentItem.name === "drdr"
-                              ? "دکتردکتر"
-                              : currentItem.name === "nobat"
-                              ? "نوبت دات آی ار"
-                              : "";
+                            return currentItem.source;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -348,7 +368,8 @@ function PlasmicExternalRate__RenderFunc(props: {
                       <React.Fragment>
                         {(() => {
                           try {
-                            return currentItem.rate;
+                            return currentItem.rich_snippet.top
+                              .detected_extensions.rating;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -371,7 +392,7 @@ function PlasmicExternalRate__RenderFunc(props: {
                       <React.Fragment>
                         {(() => {
                           try {
-                            return `(از ${currentItem.count} نظر)`;
+                            return `(از ${currentItem.rich_snippet.top.detected_extensions.reviews} نظر)`;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -396,8 +417,9 @@ function PlasmicExternalRate__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest"],
-  apiRequest: ["apiRequest"]
+  root: ["root", "apiRequest", "img"],
+  apiRequest: ["apiRequest", "img"],
+  img: ["img"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -405,6 +427,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   apiRequest: typeof ApiRequest;
+  img: typeof PlasmicImg__;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -468,6 +491,7 @@ export const PlasmicExternalRate = Object.assign(
   {
     // Helper components rendering sub-elements
     apiRequest: makeNodeComponent("apiRequest"),
+    img: makeNodeComponent("img"),
 
     // Metadata about props expected for PlasmicExternalRate
     internalVariantProps: PlasmicExternalRate__VariantProps,

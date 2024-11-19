@@ -1130,7 +1130,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1643,6 +1644,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "lXDyYoBWbJsu",
+          "name": "RadioFilter",
+          "displayName": "RadioFilter",
+          "componentImportPath": "@/common/fragment/components/radioFilter"
         }
       ],
       "customFunctions": [
@@ -1653,8 +1660,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
