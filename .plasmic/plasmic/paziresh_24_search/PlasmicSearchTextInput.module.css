@@ -5,12 +5,12 @@
   height: auto;
   align-items: center;
   justify-content: flex-start;
-  background: #ffffff;
+  background: none;
   position: sticky;
+  outline-style: none;
+  box-shadow: none;
   min-width: 0;
-  border-radius: 6px;
   padding: 7px 11px;
-  border: 1px solid #dbdbd7;
 }
 .rootcolor_dark {
   background: #232320;
@@ -20,7 +20,7 @@
   border-color: #c8c7c1;
 }
 .root:focus-within {
-  box-shadow: 0px 0px 0px 3px #96c7f2;
+  box-shadow: none;
   border-radius: 6px;
 }
 .root___focusVisibleWithin {
@@ -46,7 +46,7 @@
 .slotTargetStartIconcolor_dark {
   color: #ffffff;
 }
-.svg__fsxw9 {
+.svg__ul14V {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -59,6 +59,7 @@
   background: #ffffff00;
   outline-style: none;
   outline-color: transparent;
+  outline-offset: 0px;
   min-width: 0;
   padding: 0px;
   border-width: 0px;
@@ -94,7 +95,7 @@
 .slotTargetEndIconcolor_dark {
   color: #ffffff;
 }
-.svg__njWlm {
+.svg__sewPu {
   position: relative;
   object-fit: cover;
   width: auto;

@@ -136,6 +136,43 @@
   > img {
   margin-top: var(--token-vMUQwr5Jto1d);
 }
+.resultCardsVerticalStack2isHorizental {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  height: 100%;
+  flex-grow: 0;
+  min-height: 0;
+}
+.resultCardsVerticalStack2isHorizental > :global(.__wab_flex-container) {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  min-height: 0;
+  margin-left: calc(0px - var(--token-vMUQwr5Jto1d));
+  width: calc(100% + var(--token-vMUQwr5Jto1d));
+  margin-top: calc(0px - 0px);
+  height: calc(100% + 0px);
+}
+.resultCardsVerticalStack2isHorizental > :global(.__wab_flex-container) > *,
+.resultCardsVerticalStack2isHorizental
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > *,
+.resultCardsVerticalStack2isHorizental
+  > :global(.__wab_flex-container)
+  > picture
+  > img,
+.resultCardsVerticalStack2isHorizental
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-vMUQwr5Jto1d);
+  margin-top: 0px;
+}
 .freeBox {
   display: flex;
   flex-direction: column;
@@ -147,11 +184,32 @@
   max-width: 100%;
   min-width: 0;
 }
+.freeBoxisHorizental {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 0;
+  flex-shrink: 1;
+  width: 100%;
+  min-width: auto;
+}
 .productCard:global(.__wab_instance) {
-  max-width: 100%;
   width: 100%;
   position: relative;
+  flex-grow: 0;
+  flex-shrink: 1;
+  max-width: 100%;
   min-width: 0;
+}
+.productCardisHorizental:global(.__wab_instance) {
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 1;
+  width: 100%;
+  max-width: auto;
+  min-width: 0;
+  min-height: 0;
 }
 .paginationMoreButton:global(.__wab_instance) {
   max-width: 100%;
