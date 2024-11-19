@@ -85,15 +85,9 @@ export type PlasmicOnlineVisit__VariantsArgs = {};
 type VariantPropType = keyof PlasmicOnlineVisit__VariantsArgs;
 export const PlasmicOnlineVisit__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicOnlineVisit__ArgsType = {
-  data?: any;
-  onClickMoreDoctors?: () => void;
-};
+export type PlasmicOnlineVisit__ArgsType = {};
 type ArgPropType = keyof PlasmicOnlineVisit__ArgsType;
-export const PlasmicOnlineVisit__ArgProps = new Array<ArgPropType>(
-  "data",
-  "onClickMoreDoctors"
-);
+export const PlasmicOnlineVisit__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicOnlineVisit__OverridesType = {
   root?: Flex__<"div">;
@@ -104,8 +98,6 @@ export type PlasmicOnlineVisit__OverridesType = {
 };
 
 export interface DefaultOnlineVisitProps {
-  data?: any;
-  onClickMoreDoctors?: () => void;
   className?: string;
 }
 
@@ -474,7 +466,7 @@ function PlasmicOnlineVisit__RenderFunc(props: {
                         <React.Fragment>
                           {(() => {
                             try {
-                              return `گفتگو با ${$props.data.display_name}`;
+                              return `گفتگو با ${currentItem.display_name}`;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -557,23 +549,43 @@ function PlasmicOnlineVisit__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["runOnClickMoreDoctors"] = true
+                  $steps[
+                    "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
+                  ] = true
                     ? (() => {
                         const actionArgs = {
-                          eventRef: $props["onClickMoreDoctors"]
+                          destination:
+                            "https://www.paziresh24.com/consult?from_recommend_section=1"
                         };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
                   if (
-                    $steps["runOnClickMoreDoctors"] != null &&
-                    typeof $steps["runOnClickMoreDoctors"] === "object" &&
-                    typeof $steps["runOnClickMoreDoctors"].then === "function"
+                    $steps[
+                      "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
+                    ] != null &&
+                    typeof $steps[
+                      "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
+                    ] === "object" &&
+                    typeof $steps[
+                      "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
+                    ].then === "function"
                   ) {
-                    $steps["runOnClickMoreDoctors"] = await $steps[
-                      "runOnClickMoreDoctors"
+                    $steps[
+                      "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
+                    ] = await $steps[
+                      "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
                     ];
                   }
                 }}
