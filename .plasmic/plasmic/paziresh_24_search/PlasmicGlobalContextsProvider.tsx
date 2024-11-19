@@ -12,27 +12,27 @@ import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalConte
 import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: wuGBHXYibkGk/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: -ndasJXDpxzQ/codeComponent
+import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
+  embedCssProps?: Partial<
+    Omit<React.ComponentProps<typeof EmbedCss>, "children">
+  >;
 }
 
 export default function GlobalContextsProvider(
@@ -45,7 +45,8 @@ export default function GlobalContextsProvider(
     growthbookGlobalContextProps,
     antdConfigProviderProps,
     splunkProps,
-    pwaProps
+    pwaProps,
+    embedCssProps
   } = props;
 
   return (
@@ -206,7 +207,18 @@ export default function GlobalContextsProvider(
                   : "1e490c2c-d98b-4777-816d-cf7f09b21888"
               }
             >
-              <PWA {...pwaProps}>{children}</PWA>
+              <PWA {...pwaProps}>
+                <EmbedCss
+                  {...embedCssProps}
+                  css={
+                    embedCssProps && "css" in embedCssProps
+                      ? embedCssProps.css!
+                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}"
+                  }
+                >
+                  {children}
+                </EmbedCss>
+              </PWA>
             </Splunk>
           </AntdConfigProvider>
         </GrowthbookGlobalContext>
