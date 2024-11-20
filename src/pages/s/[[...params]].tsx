@@ -34,6 +34,7 @@ import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
+import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
@@ -49,7 +50,7 @@ const Search = ({ host }: any) => {
     query: { params, lat, lon, ...queries },
   } = useRouter();
 
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, footers, selectedFilters, result, search } = useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -146,13 +147,26 @@ const Search = ({ host }: any) => {
       });
     }
   }, [result, userPending, isLoading, growthbook.ready]);
-
+  console.log(seoInfo);
   return (
     <>
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion key={asPath.toString()} overlay />
+        {/* <Suggestion key={asPath.toString()} overlay /> */}
+        <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem] relative">
+          <SearchGlobalContextsProvider>
+            <Fragment
+              name="SearchInput"
+              props={{
+                onClickCity: (value: any) => console.log(value),
+              }}
+              variants={{
+                hasOverlay: true,
+              }}
+            />
+          </SearchGlobalContextsProvider>
+        </div>
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
@@ -176,10 +190,17 @@ const Search = ({ host }: any) => {
           </div>
         </div>
         <div className="!mb-16">
-          <SearchSeoBox />
+          <Fragment
+            name="SeoBox"
+            props={{
+              seo_info: seoInfo,
+              footer: footers,
+            }}
+          />
+          {/* <SearchSeoBox /> */}
         </div>
       </div>
-      <UnknownCity />
+      <UnknownCity />›
     </>
   );
 };
@@ -248,3 +269,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+

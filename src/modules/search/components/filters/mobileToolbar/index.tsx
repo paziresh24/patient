@@ -1,11 +1,16 @@
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { Fragment } from '@/common/fragment';
+import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 
 export const MobileToolbar = () => {
-  const { orderItems, categories, filters } = useSearch();
+  const { orderItems, categories, filters, total, searchCity } = useSearch();
   const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
+  const { changeRoute } = useSearchRouting();
 
+  const handleRemoveAllFilters = () => {
+    changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true });
+  };
   return (
     <div className="md:hidden w-full">
       <Fragment
@@ -20,6 +25,8 @@ export const MobileToolbar = () => {
           onClick: (name: string, value: string) => handleChange(name, value),
           onDelete: (name: string) => removeFilter(name),
           selectedSort: selectedFilters?.['sortBy'],
+          countOfFilters: total,
+          onRemoveAllFilters: handleRemoveAllFilters,
         }}
       />
     </div>
@@ -27,3 +34,4 @@ export const MobileToolbar = () => {
 };
 
 export default MobileToolbar;
+

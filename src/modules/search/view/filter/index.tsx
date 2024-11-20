@@ -34,7 +34,7 @@ export const Filter = (props: FilterProps) => {
             selected: selectedFilters,
             categories,
             filters,
-            onRemoveItem: (name: string) => removeFilter(name),
+            onRemoveItem: (name: string, value: string) => removeFilter(name),
             onDelete: () => changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true }),
           }}
         />
@@ -83,3 +83,4 @@ export const Filter = (props: FilterProps) => {
 };
 
 export default Filter;
+
