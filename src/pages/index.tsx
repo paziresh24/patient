@@ -10,7 +10,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
-import Suggestion from '@/modules/search/view/suggestion';
+import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
@@ -72,13 +72,26 @@ const Home = () => {
             {customize.partnerSubTitle}
           </Text>
         )}
-        <Suggestion />
+        <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
+          <SearchGlobalContextsProvider>
+            <Fragment
+              name="SearchInput"
+              props={{
+                onClickCity: (value: any) => console.log(value),
+              }}
+              variants={{
+                hasOverlay: false,
+              }}
+            />
+          </SearchGlobalContextsProvider>
+        </div>
+        {/* <Suggestion /> */}
         {recent.length > 0 && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
           </div>
         )}
-        {customize.showConsultServices && <OnlineVisitPromote />}
+        {customize.showConsultServices && <Fragment name="SearchOnlineVisit" />}
         {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
@@ -153,3 +166,4 @@ export const getServerSideProps = withCSR(
 );
 
 export default Home;
+
