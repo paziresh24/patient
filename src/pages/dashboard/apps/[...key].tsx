@@ -40,7 +40,7 @@ export const Dashboard = (props: any) => {
   useEffect(() => {
     sessionStartTime.current = Date.now();
 
-    if (app && selctedMenu && user.id) {
+    if (app?.id && selctedMenu?.id && user?.id) {
       splunkInstance('dashboard').sendEvent({
         group: 'hamdast-insight',
         type: 'active-users',
@@ -50,8 +50,8 @@ export const Dashboard = (props: any) => {
             job_title: user.provider?.job_title ?? 'normal',
             menu_key: menuKey,
             app_key: appKey,
-            menu_id: selctedMenu.id,
-            app_id: app.id,
+            menu_id: selctedMenu?.id,
+            app_id: app?.id,
           },
         },
       });
@@ -60,23 +60,25 @@ export const Dashboard = (props: any) => {
     return () => {
       const sessionEndTime = Date.now();
       const sessionDuration = sessionEndTime - sessionStartTime.current;
-      splunkInstance('dashboard').sendEvent({
-        group: 'hamdast-insight',
-        type: 'session-duration',
-        event: {
-          data: {
-            user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
-            menu_key: menuKey,
-            app_key: appKey,
-            menu_id: selctedMenu.id,
-            app_id: app.id,
-            duration: sessionDuration,
+      if (app?.id && selctedMenu?.id && user?.id) {
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast-insight',
+          type: 'session-duration',
+          event: {
+            data: {
+              user_id: user.id,
+              job_title: user.provider?.job_title ?? 'normal',
+              menu_key: menuKey,
+              app_key: appKey,
+              menu_id: selctedMenu?.id,
+              app_id: app?.id,
+              duration: sessionDuration,
+            },
           },
-        },
-      });
+        });
+      }
     };
-  }, [app, selctedMenu, user.id, isReady]);
+  }, [app, selctedMenu, user?.id, isReady]);
 
   return (
     <LayoutWithHeaderAndFooter {...props.config} shouldShowPromoteApp={false} showFooter={false} showHeader={!isMobile}>
