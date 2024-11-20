@@ -377,12 +377,26 @@ function PlasmicSearch__RenderFunc(props: {
                 $steps["updateSelectCityOpen"] = true
                   ? (() => {
                       const actionArgs = {
-                        customFunction: async () => {
-                          return undefined;
-                        }
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["selectCityDialog", "open"]
+                        },
+                        operation: 4
                       };
-                      return (({ customFunction }) => {
-                        return customFunction();
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
                       })?.apply(null, [actionArgs]);
                     })()
                   : undefined;
@@ -399,7 +413,7 @@ function PlasmicSearch__RenderFunc(props: {
               onClickSearchIcon={async () => {
                 const $steps = {};
 
-                $steps["goToS"] = !!$state.inputValue
+                $steps["goToS"] = true
                   ? (() => {
                       const actionArgs = { destination: "/s" };
                       return (({ destination }) => {

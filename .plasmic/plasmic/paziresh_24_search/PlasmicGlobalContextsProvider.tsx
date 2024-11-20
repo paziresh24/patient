@@ -19,19 +19,15 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
@@ -217,7 +213,7 @@ export default function GlobalContextsProvider(
                   css={
                     embedCssProps && "css" in embedCssProps
                       ? embedCssProps.css!
-                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}"
+                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}"
                   }
                 >
                   {children}

@@ -253,7 +253,7 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
           ]),
           bordered: false,
           className: classNames("__wab_instance", sty.accordion),
-          ghost: false,
+          ghost: true,
           items: (
             <React.Fragment>
               <AntdAccordionItem
@@ -305,7 +305,8 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__oddIb
+                      sty.text__oddIb,
+                      "seo_box_content"
                     )}
                   >
                     <div
@@ -313,7 +314,7 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
                       dangerouslySetInnerHTML={{
                         __html: (() => {
                           try {
-                            return $props.content;
+                            return $props.content.trim();
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

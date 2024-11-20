@@ -69,6 +69,12 @@
   height: auto;
   min-width: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .container {
+    padding-right: var(--token-Fv8-L_kN-2Ma);
+    padding-left: var(--token-Fv8-L_kN-2Ma);
+  }
+}
 .freeBox__fu9VT {
   display: flex;
   flex-direction: row;

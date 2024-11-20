@@ -111,6 +111,12 @@
   height: 3.5rem;
   flex-shrink: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .textInput:global(.__wab_instance) {
+    height: 3rem;
+    flex-shrink: 0;
+  }
+}
 .svg__olKaq {
   position: relative;
   object-fit: cover;
@@ -162,6 +168,11 @@
 }
 .text {
   color: var(--token-u3OudfMChOo3);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .text {
+    font-size: var(--token-6NbVMeD6zQwn);
+  }
 }
 .svg__kCpI {
   position: relative;
