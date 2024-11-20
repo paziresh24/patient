@@ -85,13 +85,13 @@ export const PlasmicSearchContent__VariantProps = new Array<VariantPropType>();
 export type PlasmicSearchContent__ArgsType = {
   suggestion?: any;
   searchQuery?: string;
-  onClickText?: (value: string) => void;
+  onClick?: (value: any) => void;
 };
 type ArgPropType = keyof PlasmicSearchContent__ArgsType;
 export const PlasmicSearchContent__ArgProps = new Array<ArgPropType>(
   "suggestion",
   "searchQuery",
-  "onClickText"
+  "onClick"
 );
 
 export type PlasmicSearchContent__OverridesType = {
@@ -111,7 +111,7 @@ export type PlasmicSearchContent__OverridesType = {
 export interface DefaultSearchContentProps {
   suggestion?: any;
   searchQuery?: string;
-  onClickText?: (value: string) => void;
+  onClick?: (value: any) => void;
   className?: string;
 }
 
@@ -368,51 +368,14 @@ function PlasmicSearchContent__RenderFunc(props: {
                           onClick={async event => {
                             const $steps = {};
 
-                            $steps["runOnClickText"] =
-                              currentItem?.use_suggestion
-                                ? (() => {
-                                    const actionArgs = {
-                                      eventRef: $props["onClickText"],
-                                      args: [
-                                        (() => {
-                                          try {
-                                            return currentItem.name;
-                                          } catch (e) {
-                                            if (
-                                              e instanceof TypeError ||
-                                              e?.plasmicType ===
-                                                "PlasmicUndefinedDataError"
-                                            ) {
-                                              return undefined;
-                                            }
-                                            throw e;
-                                          }
-                                        })()
-                                      ]
-                                    };
-                                    return (({ eventRef, args }) => {
-                                      return eventRef?.(...(args ?? []));
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
-                            if (
-                              $steps["runOnClickText"] != null &&
-                              typeof $steps["runOnClickText"] === "object" &&
-                              typeof $steps["runOnClickText"].then ===
-                                "function"
-                            ) {
-                              $steps["runOnClickText"] = await $steps[
-                                "runOnClickText"
-                              ];
-                            }
-
-                            $steps["goToPage"] =
-                              !!currentItem.url && !currentItem.use_suggestion
-                                ? (() => {
-                                    const actionArgs = {
-                                      destination: (() => {
+                            $steps["runOnClick"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    eventRef: $props["onClick"],
+                                    args: [
+                                      (() => {
                                         try {
-                                          return currentItem.url;
+                                          return currentItem;
                                         } catch (e) {
                                           if (
                                             e instanceof TypeError ||
@@ -424,29 +387,19 @@ function PlasmicSearchContent__RenderFunc(props: {
                                           throw e;
                                         }
                                       })()
-                                    };
-                                    return (({ destination }) => {
-                                      if (
-                                        typeof destination === "string" &&
-                                        destination.startsWith("#")
-                                      ) {
-                                        document
-                                          .getElementById(destination.substr(1))
-                                          .scrollIntoView({
-                                            behavior: "smooth"
-                                          });
-                                      } else {
-                                        __nextRouter?.push(destination);
-                                      }
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
+                                    ]
+                                  };
+                                  return (({ eventRef, args }) => {
+                                    return eventRef?.(...(args ?? []));
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
                             if (
-                              $steps["goToPage"] != null &&
-                              typeof $steps["goToPage"] === "object" &&
-                              typeof $steps["goToPage"].then === "function"
+                              $steps["runOnClick"] != null &&
+                              typeof $steps["runOnClick"] === "object" &&
+                              typeof $steps["runOnClick"].then === "function"
                             ) {
-                              $steps["goToPage"] = await $steps["goToPage"];
+                              $steps["runOnClick"] = await $steps["runOnClick"];
                             }
                           }}
                           size={"compact"}
@@ -632,6 +585,43 @@ function PlasmicSearchContent__RenderFunc(props: {
                         }
                       })()}
                       key={currentIndex}
+                      onClick={async value => {
+                        const $steps = {};
+
+                        $steps["runOnClick"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                eventRef: $props["onClick"],
+                                args: [
+                                  (() => {
+                                    try {
+                                      return value;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return (({ eventRef, args }) => {
+                                return eventRef?.(...(args ?? []));
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runOnClick"] != null &&
+                          typeof $steps["runOnClick"] === "object" &&
+                          typeof $steps["runOnClick"].then === "function"
+                        ) {
+                          $steps["runOnClick"] = await $steps["runOnClick"];
+                        }
+                      }}
                     />
                   );
                 })}
@@ -685,7 +675,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["goToPage"] = true
+                  $steps["goToPage"] = false
                     ? (() => {
                         const actionArgs = {
                           destination: (() => {
@@ -722,6 +712,39 @@ function PlasmicSearchContent__RenderFunc(props: {
                     typeof $steps["goToPage"].then === "function"
                   ) {
                     $steps["goToPage"] = await $steps["goToPage"];
+                  }
+
+                  $steps["runOnClick"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClick"],
+                          args: [
+                            (() => {
+                              try {
+                                return currentItem;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClick"] != null &&
+                    typeof $steps["runOnClick"] === "object" &&
+                    typeof $steps["runOnClick"].then === "function"
+                  ) {
+                    $steps["runOnClick"] = await $steps["runOnClick"];
                   }
                 }}
               >

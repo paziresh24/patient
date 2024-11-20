@@ -76,10 +76,12 @@ export const PlasmicSearchContentTree__VariantProps =
 
 export type PlasmicSearchContentTree__ArgsType = {
   data?: any;
+  onClick?: (value: any) => void;
 };
 type ArgPropType = keyof PlasmicSearchContentTree__ArgsType;
 export const PlasmicSearchContentTree__ArgProps = new Array<ArgPropType>(
-  "data"
+  "data",
+  "onClick"
 );
 
 export type PlasmicSearchContentTree__OverridesType = {
@@ -88,6 +90,7 @@ export type PlasmicSearchContentTree__OverridesType = {
 
 export interface DefaultSearchContentTreeProps {
   data?: any;
+  onClick?: (value: any) => void;
   className?: string;
 }
 
@@ -162,43 +165,41 @@ function PlasmicSearchContentTree__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["goToPage"] = true
+            $steps["runOnClick"] = true
               ? (() => {
                   const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return $props.data.url;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+                    eventRef: $props["onClick"],
+                    args: [
+                      (() => {
+                        try {
+                          return (() => {
+                            const { sub_items, activity, ...otherFields } =
+                              $props.data;
+                            return otherFields;
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
+                      })()
+                    ]
                   };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
                   })?.apply(null, [actionArgs]);
                 })()
               : undefined;
             if (
-              $steps["goToPage"] != null &&
-              typeof $steps["goToPage"] === "object" &&
-              typeof $steps["goToPage"].then === "function"
+              $steps["runOnClick"] != null &&
+              typeof $steps["runOnClick"] === "object" &&
+              typeof $steps["runOnClick"].then === "function"
             ) {
-              $steps["goToPage"] = await $steps["goToPage"];
+              $steps["runOnClick"] = await $steps["runOnClick"];
             }
           }}
         >
@@ -275,43 +276,37 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["goToPage"] = true
+                  $steps["runOnClick"] = true
                     ? (() => {
                         const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return currentItem.url;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                          eventRef: $props["onClick"],
+                          args: [
+                            (() => {
+                              try {
+                                return currentItem;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()
+                            })()
+                          ]
                         };
-                        return (({ destination }) => {
-                          if (
-                            typeof destination === "string" &&
-                            destination.startsWith("#")
-                          ) {
-                            document
-                              .getElementById(destination.substr(1))
-                              .scrollIntoView({ behavior: "smooth" });
-                          } else {
-                            __nextRouter?.push(destination);
-                          }
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
                   if (
-                    $steps["goToPage"] != null &&
-                    typeof $steps["goToPage"] === "object" &&
-                    typeof $steps["goToPage"].then === "function"
+                    $steps["runOnClick"] != null &&
+                    typeof $steps["runOnClick"] === "object" &&
+                    typeof $steps["runOnClick"].then === "function"
                   ) {
-                    $steps["goToPage"] = await $steps["goToPage"];
+                    $steps["runOnClick"] = await $steps["runOnClick"];
                   }
                 }}
               >

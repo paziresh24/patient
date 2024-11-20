@@ -70,8 +70,9 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCru
 import sty from "./PlasmicSearchInput.module.css"; // plasmic-import: qe20xTbxVmkB/css
 
 import Icon12Icon from "./icons/PlasmicIcon__Icon12"; // plasmic-import: IrGZtNznvLs2/icon
+import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: Cfw-VAdl-_5E/icon
 import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: QrVR5pllCw55/icon
-import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: 6y6ixEKeF2Sb/icon
+import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: E9NGWfCxi3aB/icon
 import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNamgvSO/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -91,19 +92,19 @@ export const PlasmicSearchInput__VariantProps = new Array<VariantPropType>(
 export type PlasmicSearchInput__ArgsType = {
   onClickCities?: () => void;
   inputId?: string;
-  onFocus?: (event: string) => void;
   inputValue?: string;
   onChangeInput?: (value: string) => void;
   onClickSearchIcon?: () => void;
+  onFocuse?: (value: boolean) => void;
 };
 type ArgPropType = keyof PlasmicSearchInput__ArgsType;
 export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
   "onClickCities",
   "inputId",
-  "onFocus",
   "inputValue",
   "onChangeInput",
-  "onClickSearchIcon"
+  "onClickSearchIcon",
+  "onFocuse"
 );
 
 export type PlasmicSearchInput__OverridesType = {
@@ -116,10 +117,10 @@ export type PlasmicSearchInput__OverridesType = {
 export interface DefaultSearchInputProps {
   onClickCities?: () => void;
   inputId?: string;
-  onFocus?: (event: string) => void;
   inputValue?: string;
   onChangeInput?: (value: string) => void;
   onClickSearchIcon?: () => void;
+  onFocuse?: (value: boolean) => void;
   isFocused?: SingleBooleanChoiceArg<"isFocused">;
   className?: string;
 }
@@ -184,12 +185,6 @@ function PlasmicSearchInput__RenderFunc(props: {
           })()
       },
       {
-        path: "isInputFocus",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
         path: "isFocused",
         type: "private",
         variableType: "variant",
@@ -234,9 +229,23 @@ function PlasmicSearchInput__RenderFunc(props: {
           )
         })}
       >
-        <div className={classNames(projectcss.all, sty.freeBox__jzSpg)}>
+        <div
+          className={classNames(projectcss.all, sty.freeBox__jzSpg, {
+            [sty.freeBoxisFocused__jzSpgo9DZj]: hasVariant(
+              $state,
+              "isFocused",
+              "isFocused"
+            )
+          })}
+        >
           <Icon12Icon
-            className={classNames(projectcss.all, sty.svg__l3Jw2)}
+            className={classNames(projectcss.all, sty.svg__l3Jw2, {
+              [sty.svgisFocused__l3Jw2O9DZj]: hasVariant(
+                $state,
+                "isFocused",
+                "isFocused"
+              )
+            })}
             onClick={async event => {
               const $steps = {};
 
@@ -263,19 +272,41 @@ function PlasmicSearchInput__RenderFunc(props: {
             role={"img"}
           />
 
-          <div
-            className={classNames(projectcss.all, sty.freeBox__mYtRl)}
+          <IconIcon
+            className={classNames(projectcss.all, sty.svg__wUsh, {
+              [sty.svgisFocused__wUsHo9DZj]: hasVariant(
+                $state,
+                "isFocused",
+                "isFocused"
+              )
+            })}
             onClick={async event => {
               const $steps = {};
 
-              $steps["runOnFocus"] = true
+              $steps["runOnFocuse"] = true
+                ? (() => {
+                    const actionArgs = { eventRef: $props["onFocuse"] };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnFocuse"] != null &&
+                typeof $steps["runOnFocuse"] === "object" &&
+                typeof $steps["runOnFocuse"].then === "function"
+              ) {
+                $steps["runOnFocuse"] = await $steps["runOnFocuse"];
+              }
+
+              $steps["runOnChangeInput"] = true
                 ? (() => {
                     const actionArgs = {
-                      eventRef: $props["onFocus"],
+                      eventRef: $props["onChangeInput"],
                       args: [
                         (() => {
                           try {
-                            return event;
+                            return "";
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -294,35 +325,32 @@ function PlasmicSearchInput__RenderFunc(props: {
                   })()
                 : undefined;
               if (
-                $steps["runOnFocus"] != null &&
-                typeof $steps["runOnFocus"] === "object" &&
-                typeof $steps["runOnFocus"].then === "function"
+                $steps["runOnChangeInput"] != null &&
+                typeof $steps["runOnChangeInput"] === "object" &&
+                typeof $steps["runOnChangeInput"].then === "function"
               ) {
-                $steps["runOnFocus"] = await $steps["runOnFocus"];
+                $steps["runOnChangeInput"] = await $steps["runOnChangeInput"];
               }
             }}
-            onFocus={async event => {
+            role={"img"}
+          />
+
+          <div
+            className={classNames(projectcss.all, sty.freeBox__mYtRl, {
+              [sty.freeBoxisFocused__mYtRlo9DZj]: hasVariant(
+                $state,
+                "isFocused",
+                "isFocused"
+              )
+            })}
+            onClick={async event => {
               const $steps = {};
 
-              $steps["runOnFocus"] = false
+              $steps["runOnFocuse"] = true
                 ? (() => {
                     const actionArgs = {
-                      eventRef: $props["onFocus"],
-                      args: [
-                        (() => {
-                          try {
-                            return event;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
+                      eventRef: $props["onFocuse"],
+                      args: [true]
                     };
                     return (({ eventRef, args }) => {
                       return eventRef?.(...(args ?? []));
@@ -330,11 +358,11 @@ function PlasmicSearchInput__RenderFunc(props: {
                   })()
                 : undefined;
               if (
-                $steps["runOnFocus"] != null &&
-                typeof $steps["runOnFocus"] === "object" &&
-                typeof $steps["runOnFocus"].then === "function"
+                $steps["runOnFocuse"] != null &&
+                typeof $steps["runOnFocuse"] === "object" &&
+                typeof $steps["runOnFocuse"].then === "function"
               ) {
-                $steps["runOnFocus"] = await $steps["runOnFocus"];
+                $steps["runOnFocuse"] = await $steps["runOnFocuse"];
               }
             }}
           >
@@ -350,6 +378,66 @@ function PlasmicSearchInput__RenderFunc(props: {
                   "isFocused"
                 )
               })}
+              endIcon={
+                (() => {
+                  try {
+                    return !!$state.textInput.value;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Icon13Icon
+                    className={classNames(projectcss.all, sty.svg__iia8L)}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["updateTextInputValue"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["textInput", "value"]
+                              },
+                              operation: 0,
+                              value: ""
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateTextInputValue"] != null &&
+                        typeof $steps["updateTextInputValue"] === "object" &&
+                        typeof $steps["updateTextInputValue"].then ===
+                          "function"
+                      ) {
+                        $steps["updateTextInputValue"] = await $steps[
+                          "updateTextInputValue"
+                        ];
+                      }
+                    }}
+                    role={"img"}
+                  />
+                ) : null
+              }
               id={(() => {
                 try {
                   return $props.inputId;
@@ -412,6 +500,19 @@ function PlasmicSearchInput__RenderFunc(props: {
               placeholder={
                 "\u0646\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u062a\u062e\u0635\u0635\u060c \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 ..."
               }
+              showEndIcon={(() => {
+                try {
+                  return !!$state.textInput.value;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "showEndIcon";
+                  }
+                  throw e;
+                }
+              })()}
               value={
                 generateStateValueProp($state, ["textInput", "value"]) ?? ""
               }

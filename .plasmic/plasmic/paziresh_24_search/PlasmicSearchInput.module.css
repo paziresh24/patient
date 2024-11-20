@@ -23,6 +23,12 @@
 .rootisFocused {
   border-radius: var(--token-UIMkdd_bvvx_) var(--token-UIMkdd_bvvx_) 0px 0px;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .rootisFocused {
+    border-radius: 1000px;
+    border-color: var(--token-JDvyxAtm9ONK);
+  }
+}
 .root:hover {
   box-shadow: 0px 10px 15px -3px #0000001a, 0px 4px 6px -4px #0000001a;
 }
@@ -72,6 +78,21 @@
   cursor: pointer;
   flex-shrink: 0;
 }
+.svgisFocused__l3Jw2O9DZj {
+  display: none;
+}
+.svg__wUsh {
+  object-fit: cover;
+  max-width: 100%;
+  width: 20px;
+  cursor: pointer;
+  height: 20px;
+  flex-shrink: 0;
+  display: none;
+}
+.svgisFocused__wUsHo9DZj {
+  display: block;
+}
 .freeBox__mYtRl {
   display: flex;
   flex-direction: column;
@@ -101,6 +122,7 @@
   object-fit: cover;
   width: auto;
   height: 1em;
+  cursor: pointer;
 }
 .freeBox___4GS1M {
   display: flex;
