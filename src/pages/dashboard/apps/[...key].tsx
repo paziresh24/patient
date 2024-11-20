@@ -39,18 +39,23 @@ export const Dashboard = (props: any) => {
 
   useEffect(() => {
     sessionStartTime.current = Date.now();
-    splunkInstance('dashboard').sendEvent({
-      group: 'hamdast-insight',
-      type: 'active-users',
-      event: {
-        data: {
-          user_id: user.id,
-          job_title: user.provider?.job_title ?? 'normal',
-          menu_key: menuKey,
-          app_key: appKey,
+
+    if (app && selctedMenu && user.id) {
+      splunkInstance('dashboard').sendEvent({
+        group: 'hamdast-insight',
+        type: 'active-users',
+        event: {
+          data: {
+            user_id: user.id,
+            job_title: user.provider?.job_title ?? 'normal',
+            menu_key: menuKey,
+            app_key: appKey,
+            menu_id: selctedMenu.id,
+            app_id: app.id,
+          },
         },
-      },
-    });
+      });
+    }
 
     return () => {
       const sessionEndTime = Date.now();
@@ -64,12 +69,14 @@ export const Dashboard = (props: any) => {
             job_title: user.provider?.job_title ?? 'normal',
             menu_key: menuKey,
             app_key: appKey,
+            menu_id: selctedMenu.id,
+            app_id: app.id,
             duration: sessionDuration,
           },
         },
       });
     };
-  }, [keys]);
+  }, [app, selctedMenu, user.id, isReady]);
 
   return (
     <LayoutWithHeaderAndFooter {...props.config} shouldShowPromoteApp={false} showFooter={false} showHeader={!isMobile}>
