@@ -249,9 +249,12 @@ function PlasmicFilterSelected__RenderFunc(props: {
                   .map(filter =>
                     selected?.[filter.name]
                       ? {
-                          title: filter.items.find(
-                            item => item.value === selected?.[filter.name]
-                          ).title,
+                          title:
+                            filter.type == "switch"
+                              ? filter.title
+                              : filter.items.find(
+                                  item => item.value === selected?.[filter.name]
+                                ).title,
                           name: filter.name,
                           value: selected[filter.name]
                         }

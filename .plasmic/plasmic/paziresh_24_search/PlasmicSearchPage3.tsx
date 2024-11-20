@@ -173,6 +173,7 @@ function PlasmicSearchPage3__RenderFunc(props: {
           data-plasmic-name={"search"}
           data-plasmic-override={overrides.search}
           className={classNames("__wab_instance", sty.search)}
+          hasOverlay={true}
         />
       </div>
       <div className={classNames(projectcss.all, sty.freeBox__e94Wt)}>

@@ -62,6 +62,8 @@ import {
 import SearchTextInput from "../../SearchTextInput"; // plasmic-import: wpkArHt5O9Fa/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -198,6 +200,10 @@ function PlasmicSearchInput__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
@@ -560,6 +566,11 @@ function PlasmicSearchInput__RenderFunc(props: {
               }
             }}
             showStartIcon={true}
+            size={
+              hasVariant(globalVariants, "screen", "mobileOnly")
+                ? "compact"
+                : undefined
+            }
             startIcon={
               <Icon21Icon
                 className={classNames(projectcss.all, sty.svg__qSzR)}

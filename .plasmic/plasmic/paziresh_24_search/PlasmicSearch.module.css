@@ -27,6 +27,11 @@
   min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__rWaf {
+    z-index: 99;
+  }
+}
+@media (min-width: 0px) and (max-width: 768px) {
   .freeBoxisFocus__rWafMexBq {
     background: var(--token-BU1JCAY6hntB);
     left: 0;
@@ -198,8 +203,8 @@
   z-index: 10;
   right: 0;
   bottom: 0;
-  background: #0f172a99;
+  background: none;
 }
 .overlayhasOverlay {
-  background: #0f172a00;
+  background: #0f172a99;
 }

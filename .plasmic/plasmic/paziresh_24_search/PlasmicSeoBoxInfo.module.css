@@ -4,6 +4,7 @@
   position: relative;
   width: 100%;
   height: auto;
+  background: none;
   min-width: 0;
 }
 .root > :global(.__wab_flex-container) {
@@ -52,7 +53,7 @@
   max-width: 100%;
   object-fit: cover;
   padding: 0px;
-  margin: var(--token-W6cMLA0AZVBO);
+  margin: var(--token-_c276Gs_1FIE);
   border-width: 0px;
 }
 .freeBox__hoM8C {
@@ -71,7 +72,7 @@
   height: auto;
   max-width: 100%;
   font-weight: 700;
-  font-size: var(--token-6NbVMeD6zQwn);
+  font-size: var(--token-tM2Vh4zTir7U);
   line-height: 1.5em;
   min-width: 0;
 }
@@ -100,10 +101,10 @@
   user-select: none;
   text-transform: none;
   white-space: pre-wrap;
-  line-height: 1.5em;
   letter-spacing: normal;
   width: 100%;
   font-family: "IRANSansXV";
+  line-height: 1rem;
   min-width: 0;
 }
 .freeBox__rZuZx {
