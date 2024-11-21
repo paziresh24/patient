@@ -107,8 +107,8 @@ registerComponent(ApiRequest as any, apiRequestMeta);
 registerComponent(Switch as any, switchMeta);
 registerComponent(RadioFilter as any, radioFilterMeta);
 registerGlobalContext(PWA, fragmentPWAMeta);
-registerGlobalContext(Portal, portalMeta);
-registerGlobalContext(Accordion, accordionMeta);
+registerComponent(Portal, portalMeta);
+registerComponent(Accordion, accordionMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',
