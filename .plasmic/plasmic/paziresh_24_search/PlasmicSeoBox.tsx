@@ -217,7 +217,7 @@ function PlasmicSeoBox__RenderFunc(props: {
         })()}
         title={(() => {
           try {
-            return $props.seoInfo.title;
+            return $props.seoInfo.heading;
           } catch (e) {
             if (
               e instanceof TypeError ||

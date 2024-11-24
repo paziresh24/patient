@@ -101,7 +101,6 @@ export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
 export type PlasmicLocationView__OverridesType = {
   root?: Flex__<"div">;
   textInput?: Flex__<typeof TextInput>;
-  freeBox?: Flex__<"div">;
   userLocation?: Flex__<typeof UserLocation>;
   svg?: Flex__<"svg">;
   locationList?: Flex__<typeof LocationList>;
@@ -240,10 +239,8 @@ function PlasmicLocationView__RenderFunc(props: {
 
       <Stack__
         as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox)}
+        className={classNames(projectcss.all, sty.freeBox___3K4Wv)}
       >
         <Button
           children2={"\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"}
@@ -345,94 +342,95 @@ function PlasmicLocationView__RenderFunc(props: {
           }
         />
       </Stack__>
-      <LocationList
-        data-plasmic-name={"locationList"}
-        data-plasmic-override={overrides.locationList}
-        className={classNames("__wab_instance", sty.locationList)}
-        locations={(() => {
-          try {
-            return $props.locations;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
+      <div className={classNames(projectcss.all, sty.freeBox__hlKod)}>
+        <LocationList
+          data-plasmic-name={"locationList"}
+          data-plasmic-override={overrides.locationList}
+          className={classNames("__wab_instance", sty.locationList)}
+          locations={(() => {
+            try {
+              return $props.locations;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
             }
-            throw e;
-          }
-        })()}
-        onClickCity={async value => {
-          const $steps = {};
+          })()}
+          onClickCity={async value => {
+            const $steps = {};
 
-          $steps["runOnClickCity"] = true
-            ? (() => {
-                const actionArgs = {
-                  eventRef: $props["onClickCity"],
-                  args: [
-                    (() => {
-                      try {
-                        return value;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+            $steps["runOnClickCity"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onClickCity"],
+                    args: [
+                      (() => {
+                        try {
+                          return value;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return (({ eventRef, args }) => {
-                  return eventRef?.(...(args ?? []));
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["runOnClickCity"] != null &&
-            typeof $steps["runOnClickCity"] === "object" &&
-            typeof $steps["runOnClickCity"].then === "function"
-          ) {
-            $steps["runOnClickCity"] = await $steps["runOnClickCity"];
-          }
-        }}
-        searchTerm={(() => {
-          try {
-            return $state.textInput.value;
-          } catch (e) {
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
             if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
+              $steps["runOnClickCity"] != null &&
+              typeof $steps["runOnClickCity"] === "object" &&
+              typeof $steps["runOnClickCity"].then === "function"
             ) {
-              return undefined;
+              $steps["runOnClickCity"] = await $steps["runOnClickCity"];
             }
-            throw e;
-          }
-        })()}
-        selectedProvinceId={(() => {
-          try {
-            return $props.selectedProvinceId;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
+          }}
+          searchTerm={(() => {
+            try {
+              return $state.textInput.value;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
             }
-            throw e;
-          }
-        })()}
-      />
+          })()}
+          selectedProvinceId={(() => {
+            try {
+              return $props.selectedProvinceId;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
+      </div>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "freeBox", "userLocation", "svg", "locationList"],
+  root: ["root", "textInput", "userLocation", "svg", "locationList"],
   textInput: ["textInput"],
-  freeBox: ["freeBox", "userLocation", "svg"],
   userLocation: ["userLocation"],
   svg: ["svg"],
   locationList: ["locationList"]
@@ -443,7 +441,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   textInput: typeof TextInput;
-  freeBox: "div";
   userLocation: typeof UserLocation;
   svg: "svg";
   locationList: typeof LocationList;
@@ -510,7 +507,6 @@ export const PlasmicLocationView = Object.assign(
   {
     // Helper components rendering sub-elements
     textInput: makeNodeComponent("textInput"),
-    freeBox: makeNodeComponent("freeBox"),
     userLocation: makeNodeComponent("userLocation"),
     svg: makeNodeComponent("svg"),
     locationList: makeNodeComponent("locationList"),

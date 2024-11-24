@@ -774,10 +774,6 @@ function PlasmicProductCard__RenderFunc(props: {
                 </DataCtxReader__>
               }
               errorName={"fetchError"}
-              headers={{
-                "Content-Type": "application/json",
-                Accept: "application/json"
-              }}
               loadingDisplay={
                 <DataCtxReader__>
                   {$ctx => (
@@ -1892,10 +1888,6 @@ function PlasmicProductCard__RenderFunc(props: {
             dataName={"search-result-card-ui-fetchedData"}
             errorDisplay={<DataCtxReader__>{$ctx => ""}</DataCtxReader__>}
             errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
             loadingDisplay={<DataCtxReader__>{$ctx => ""}</DataCtxReader__>}
             method={"GET"}
             noLayout={false}

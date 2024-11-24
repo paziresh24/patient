@@ -106,10 +106,10 @@ export type PlasmicSearch__OverridesType = {
   searchInput?: Flex__<typeof SearchInput>;
   suggestionApi?: Flex__<typeof ApiRequest>;
   searchContent?: Flex__<typeof SearchContent>;
+  overlay?: Flex__<"div">;
   selectCityDialog?: Flex__<typeof Dialog>;
   getLocationList?: Flex__<typeof ApiRequest>;
   locationView?: Flex__<typeof LocationView>;
-  overlay?: Flex__<"div">;
 };
 
 export interface DefaultSearchProps {
@@ -261,40 +261,234 @@ function PlasmicSearch__RenderFunc(props: {
         })}
       >
         <div
-          className={classNames(projectcss.all, sty.freeBox__npNu, {
-            [sty.freeBoxisFocus__npNuMexBq]: hasVariant(
+          className={classNames(projectcss.all, sty.freeBox__qeT0, {
+            [sty.freeBoxisFocus__qeT0MexBq]: hasVariant(
               $state,
               "isFocus",
               "isFocus"
             )
           })}
-          onClick={async event => {
-            const $steps = {};
-          }}
         >
+          <SearchInput
+            data-plasmic-name={"searchInput"}
+            data-plasmic-override={overrides.searchInput}
+            className={classNames("__wab_instance", sty.searchInput, {
+              [sty.searchInputisFocus]: hasVariant($state, "isFocus", "isFocus")
+            })}
+            inputId={"searchInput"}
+            inputValue={(() => {
+              try {
+                return $state.inputValue;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            isFocused={
+              hasVariant(globalVariants, "screen", "mobileOnly")
+                ? (() => {
+                    try {
+                      return !!$state.isFocus;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+                : (() => {
+                    try {
+                      return !!$state.isFocus;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+            }
+            onChangeInput={async value => {
+              const $steps = {};
+
+              $steps["updateInputValue"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["inputValue"]
+                      },
+                      operation: 0,
+                      value: value
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateInputValue"] != null &&
+                typeof $steps["updateInputValue"] === "object" &&
+                typeof $steps["updateInputValue"].then === "function"
+              ) {
+                $steps["updateInputValue"] = await $steps["updateInputValue"];
+              }
+            }}
+            onClickCities={async () => {
+              const $steps = {};
+
+              $steps["updateSelectCityOpen"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["selectCityDialog", "open"]
+                      },
+                      operation: 4
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      const oldValue = $stateGet(objRoot, variablePath);
+                      $stateSet(objRoot, variablePath, !oldValue);
+                      return !oldValue;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateSelectCityOpen"] != null &&
+                typeof $steps["updateSelectCityOpen"] === "object" &&
+                typeof $steps["updateSelectCityOpen"].then === "function"
+              ) {
+                $steps["updateSelectCityOpen"] = await $steps[
+                  "updateSelectCityOpen"
+                ];
+              }
+            }}
+            onClickSearchIcon={async () => {
+              const $steps = {};
+
+              $steps["goToS"] = true
+                ? (() => {
+                    const actionArgs = { destination: "/s" };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToS"] != null &&
+                typeof $steps["goToS"] === "object" &&
+                typeof $steps["goToS"].then === "function"
+              ) {
+                $steps["goToS"] = await $steps["goToS"];
+              }
+            }}
+            onFocuse={async value => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return ($state.isFocus = value);
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }}
+          />
+        </div>
+        {(() => {
+          try {
+            return !!$state.isFocus;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
           <div
-            className={classNames(projectcss.all, sty.freeBox__qeT0, {
-              [sty.freeBoxisFocus__qeT0MexBq]: hasVariant(
+            className={classNames(projectcss.all, sty.freeBox__vKSpO, {
+              [sty.freeBoxisFocus__vKSpOmexBq]: hasVariant(
                 $state,
                 "isFocus",
                 "isFocus"
               )
             })}
+            id={"suggestionContent"}
           >
-            <SearchInput
-              data-plasmic-name={"searchInput"}
-              data-plasmic-override={overrides.searchInput}
-              className={classNames("__wab_instance", sty.searchInput, {
-                [sty.searchInputisFocus]: hasVariant(
-                  $state,
-                  "isFocus",
-                  "isFocus"
-                )
-              })}
-              inputId={"searchInput"}
-              inputValue={(() => {
+            <ApiRequest
+              data-plasmic-name={"suggestionApi"}
+              data-plasmic-override={overrides.suggestionApi}
+              className={classNames("__wab_instance", sty.suggestionApi)}
+              errorDisplay={null}
+              loadingDisplay={
+                <div className={classNames(projectcss.all, sty.freeBox__lD73P)}>
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg__ukSyf)}
+                    role={"img"}
+                  />
+                </div>
+              }
+              method={"GET"}
+              onError={generateStateOnChangeProp($state, [
+                "suggestionApi",
+                "error"
+              ])}
+              onLoading={generateStateOnChangeProp($state, [
+                "suggestionApi",
+                "loading"
+              ])}
+              onSuccess={generateStateOnChangeProp($state, [
+                "suggestionApi",
+                "data"
+              ])}
+              url={(() => {
                 try {
-                  return $state.inputValue;
+                  return `https://apigw.paziresh24.com/seapi/v1/suggestion?q=${$state.inputValue}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -305,212 +499,120 @@ function PlasmicSearch__RenderFunc(props: {
                   throw e;
                 }
               })()}
-              isFocused={
-                hasVariant(globalVariants, "screen", "mobileOnly")
-                  ? (() => {
-                      try {
-                        return !!$state.isFocus;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  : (() => {
-                      try {
-                        return !!$state.isFocus;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-              }
-              onChangeInput={async value => {
-                const $steps = {};
-
-                $steps["updateInputValue"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["inputValue"]
-                        },
-                        operation: 0,
-                        value: value
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["updateInputValue"] != null &&
-                  typeof $steps["updateInputValue"] === "object" &&
-                  typeof $steps["updateInputValue"].then === "function"
-                ) {
-                  $steps["updateInputValue"] = await $steps["updateInputValue"];
-                }
-              }}
-              onClickCities={async () => {
-                const $steps = {};
-
-                $steps["updateSelectCityOpen"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["selectCityDialog", "open"]
-                        },
-                        operation: 4
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        const oldValue = $stateGet(objRoot, variablePath);
-                        $stateSet(objRoot, variablePath, !oldValue);
-                        return !oldValue;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["updateSelectCityOpen"] != null &&
-                  typeof $steps["updateSelectCityOpen"] === "object" &&
-                  typeof $steps["updateSelectCityOpen"].then === "function"
-                ) {
-                  $steps["updateSelectCityOpen"] = await $steps[
-                    "updateSelectCityOpen"
-                  ];
-                }
-              }}
-              onClickSearchIcon={async () => {
-                const $steps = {};
-
-                $steps["goToS"] = true
-                  ? (() => {
-                      const actionArgs = { destination: "/s" };
-                      return (({ destination }) => {
-                        if (
-                          typeof destination === "string" &&
-                          destination.startsWith("#")
-                        ) {
-                          document
-                            .getElementById(destination.substr(1))
-                            .scrollIntoView({ behavior: "smooth" });
-                        } else {
-                          __nextRouter?.push(destination);
-                        }
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["goToS"] != null &&
-                  typeof $steps["goToS"] === "object" &&
-                  typeof $steps["goToS"].then === "function"
-                ) {
-                  $steps["goToS"] = await $steps["goToS"];
-                }
-              }}
-              onFocuse={async value => {
-                const $steps = {};
-
-                $steps["runCode"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return ($state.isFocus = value);
-                        }
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-              }}
-            />
-          </div>
-          {(() => {
-            try {
-              return !!$state.isFocus;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <div
-              className={classNames(projectcss.all, sty.freeBox__vKSpO)}
-              id={"suggestionContent"}
             >
-              <ApiRequest
-                data-plasmic-name={"suggestionApi"}
-                data-plasmic-override={overrides.suggestionApi}
-                className={classNames("__wab_instance", sty.suggestionApi)}
-                errorDisplay={null}
-                loadingDisplay={
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__lD73P)}
-                  >
-                    <Icon14Icon
-                      className={classNames(projectcss.all, sty.svg__ukSyf)}
-                      role={"img"}
-                    />
-                  </div>
-                }
-                method={"GET"}
-                onError={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "error"
-                ])}
-                onLoading={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "loading"
-                ])}
-                onSuccess={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "data"
-                ])}
-                url={(() => {
+              <SearchContent
+                data-plasmic-name={"searchContent"}
+                data-plasmic-override={overrides.searchContent}
+                className={classNames("__wab_instance", sty.searchContent, {
+                  [sty.searchContentisFocus]: hasVariant(
+                    $state,
+                    "isFocus",
+                    "isFocus"
+                  )
+                })}
+                onClick={async value => {
+                  const $steps = {};
+
+                  $steps["updateInputValue"] = value.use_suggestion
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["inputValue"]
+                          },
+                          operation: 0,
+                          value: value.name
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateInputValue"] != null &&
+                    typeof $steps["updateInputValue"] === "object" &&
+                    typeof $steps["updateInputValue"].then === "function"
+                  ) {
+                    $steps["updateInputValue"] = await $steps[
+                      "updateInputValue"
+                    ];
+                  }
+
+                  $steps["goToPage"] =
+                    !value?.use_suggestion && !!value?.url
+                      ? (() => {
+                          const actionArgs = {
+                            destination: (() => {
+                              try {
+                                return value?.url;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          };
+                          return (({ destination }) => {
+                            if (
+                              typeof destination === "string" &&
+                              destination.startsWith("#")
+                            ) {
+                              document
+                                .getElementById(destination.substr(1))
+                                .scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              __nextRouter?.push(destination);
+                            }
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["goToPage"] != null &&
+                    typeof $steps["goToPage"] === "object" &&
+                    typeof $steps["goToPage"].then === "function"
+                  ) {
+                    $steps["goToPage"] = await $steps["goToPage"];
+                  }
+
+                  $steps["updateIsFocus"] = !value?.use_suggestion
+                    ? (() => {
+                        const actionArgs = { vgroup: "isFocus", operation: 6 };
+                        return (({ vgroup, value }) => {
+                          if (typeof value === "string") {
+                            value = [value];
+                          }
+
+                          $stateSet($state, vgroup, false);
+                          return false;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateIsFocus"] != null &&
+                    typeof $steps["updateIsFocus"] === "object" &&
+                    typeof $steps["updateIsFocus"].then === "function"
+                  ) {
+                    $steps["updateIsFocus"] = await $steps["updateIsFocus"];
+                  }
+                }}
+                searchQuery={(() => {
                   try {
-                    return `https://apigw.paziresh24.com/seapi/v1/suggestion?q=${$state.inputValue}`;
+                    return $state.inputValue;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -521,303 +623,23 @@ function PlasmicSearch__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-              >
-                <SearchContent
-                  data-plasmic-name={"searchContent"}
-                  data-plasmic-override={overrides.searchContent}
-                  className={classNames("__wab_instance", sty.searchContent, {
-                    [sty.searchContentisFocus]: hasVariant(
-                      $state,
-                      "isFocus",
-                      "isFocus"
-                    )
-                  })}
-                  onClick={async value => {
-                    const $steps = {};
-
-                    $steps["updateInputValue"] = value.use_suggestion
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["inputValue"]
-                            },
-                            operation: 0,
-                            value: value.name
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["updateInputValue"] != null &&
-                      typeof $steps["updateInputValue"] === "object" &&
-                      typeof $steps["updateInputValue"].then === "function"
-                    ) {
-                      $steps["updateInputValue"] = await $steps[
-                        "updateInputValue"
-                      ];
-                    }
-
-                    $steps["goToPage"] =
-                      !value?.use_suggestion && !!value?.url
-                        ? (() => {
-                            const actionArgs = {
-                              destination: (() => {
-                                try {
-                                  return value?.url;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            };
-                            return (({ destination }) => {
-                              if (
-                                typeof destination === "string" &&
-                                destination.startsWith("#")
-                              ) {
-                                document
-                                  .getElementById(destination.substr(1))
-                                  .scrollIntoView({ behavior: "smooth" });
-                              } else {
-                                __nextRouter?.push(destination);
-                              }
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                    if (
-                      $steps["goToPage"] != null &&
-                      typeof $steps["goToPage"] === "object" &&
-                      typeof $steps["goToPage"].then === "function"
-                    ) {
-                      $steps["goToPage"] = await $steps["goToPage"];
-                    }
-
-                    $steps["updateIsFocus"] = !value?.use_suggestion
-                      ? (() => {
-                          const actionArgs = {
-                            vgroup: "isFocus",
-                            operation: 6
-                          };
-                          return (({ vgroup, value }) => {
-                            if (typeof value === "string") {
-                              value = [value];
-                            }
-
-                            $stateSet($state, vgroup, false);
-                            return false;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["updateIsFocus"] != null &&
-                      typeof $steps["updateIsFocus"] === "object" &&
-                      typeof $steps["updateIsFocus"].then === "function"
-                    ) {
-                      $steps["updateIsFocus"] = await $steps["updateIsFocus"];
-                    }
-                  }}
-                  searchQuery={(() => {
-                    try {
-                      return $state.inputValue;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  suggestion={(() => {
-                    try {
-                      return $state.suggestionApi.data;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-              </ApiRequest>
-            </div>
-          ) : null}
-        </div>
-        <Dialog
-          data-plasmic-name={"selectCityDialog"}
-          data-plasmic-override={overrides.selectCityDialog}
-          body={
-            <div className={classNames(projectcss.all, sty.freeBox___8CERd)}>
-              <ApiRequest
-                data-plasmic-name={"getLocationList"}
-                data-plasmic-override={overrides.getLocationList}
-                body={(() => {
+                suggestion={(() => {
                   try {
-                    return (() => {
-                      const formData = new globalThis.FormData();
-                      formData.append(
-                        "table",
-                        JSON.stringify(["city", "province"])
-                      );
-                      return formData;
-                    })();
+                    return $state.suggestionApi.data;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return { table: ["city", "province"] };
+                      return undefined;
                     }
                     throw e;
                   }
                 })()}
-                className={classNames("__wab_instance", sty.getLocationList)}
-                errorDisplay={null}
-                loadingDisplay={
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__iKi06)}
-                  >
-                    <Icon14Icon
-                      className={classNames(projectcss.all, sty.svg__g3HAz)}
-                      role={"img"}
-                    />
-                  </div>
-                }
-                method={"POST"}
-                onError={generateStateOnChangeProp($state, [
-                  "getLocationList",
-                  "error"
-                ])}
-                onLoading={generateStateOnChangeProp($state, [
-                  "getLocationList",
-                  "loading"
-                ])}
-                onSuccess={generateStateOnChangeProp($state, [
-                  "getLocationList",
-                  "data"
-                ])}
-                url={"https://www.paziresh24.com/api/getbaseinfo"}
-              >
-                <LocationView
-                  data-plasmic-name={"locationView"}
-                  data-plasmic-override={overrides.locationView}
-                  className={classNames("__wab_instance", sty.locationView)}
-                  locations={(() => {
-                    try {
-                      return $state.getLocationList.data.result;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  onClickAllCities={async () => {
-                    const $steps = {};
-
-                    $steps["runOnClickCity"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            eventRef: $props["onClickCity"],
-                            args: [
-                              {
-                                id: -1,
-                                name: "\u0647\u0645\u0647 \u0634\u0647\u0631 \u0647\u0627",
-                                en_slug: "ir"
-                              }
-                            ]
-                          };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runOnClickCity"] != null &&
-                      typeof $steps["runOnClickCity"] === "object" &&
-                      typeof $steps["runOnClickCity"].then === "function"
-                    ) {
-                      $steps["runOnClickCity"] = await $steps["runOnClickCity"];
-                    }
-                  }}
-                  onClickCity={async value => {
-                    const $steps = {};
-
-                    $steps["runOnClickCity"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            eventRef: $props["onClickCity"],
-                            args: [
-                              (() => {
-                                try {
-                                  return value;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            ]
-                          };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runOnClickCity"] != null &&
-                      typeof $steps["runOnClickCity"] === "object" &&
-                      typeof $steps["runOnClickCity"].then === "function"
-                    ) {
-                      $steps["runOnClickCity"] = await $steps["runOnClickCity"];
-                    }
-                  }}
-                  selectedProvinceId={"-1"}
-                />
-              </ApiRequest>
-            </div>
-          }
-          className={classNames("__wab_instance", sty.selectCityDialog)}
-          noTrigger={true}
-          onOpenChange={generateStateOnChangeProp($state, [
-            "selectCityDialog",
-            "open"
-          ])}
-          open={generateStateValueProp($state, ["selectCityDialog", "open"])}
-          title={"\u0627\u0646\u062a\u062e\u0627\u0628 \u0634\u0647\u0631"}
-        />
+              />
+            </ApiRequest>
+          </div>
+        ) : null}
       </div>
       {(() => {
         try {
@@ -869,6 +691,160 @@ function PlasmicSearch__RenderFunc(props: {
           }}
         />
       ) : null}
+      <Dialog
+        data-plasmic-name={"selectCityDialog"}
+        data-plasmic-override={overrides.selectCityDialog}
+        body={
+          <div className={classNames(projectcss.all, sty.freeBox___8CERd)}>
+            <ApiRequest
+              data-plasmic-name={"getLocationList"}
+              data-plasmic-override={overrides.getLocationList}
+              body={(() => {
+                try {
+                  return (() => {
+                    const formData = new globalThis.FormData();
+                    formData.append(
+                      "table",
+                      JSON.stringify(["city", "province"])
+                    );
+                    return formData;
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return { table: ["city", "province"] };
+                  }
+                  throw e;
+                }
+              })()}
+              className={classNames("__wab_instance", sty.getLocationList)}
+              errorDisplay={null}
+              loadingDisplay={
+                <div className={classNames(projectcss.all, sty.freeBox__iKi06)}>
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg__g3HAz)}
+                    role={"img"}
+                  />
+                </div>
+              }
+              method={"POST"}
+              onError={generateStateOnChangeProp($state, [
+                "getLocationList",
+                "error"
+              ])}
+              onLoading={generateStateOnChangeProp($state, [
+                "getLocationList",
+                "loading"
+              ])}
+              onSuccess={generateStateOnChangeProp($state, [
+                "getLocationList",
+                "data"
+              ])}
+              url={"https://www.paziresh24.com/api/getbaseinfo"}
+            >
+              <LocationView
+                data-plasmic-name={"locationView"}
+                data-plasmic-override={overrides.locationView}
+                className={classNames("__wab_instance", sty.locationView)}
+                locations={(() => {
+                  try {
+                    return $state.getLocationList.data.result;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                onClickAllCities={async () => {
+                  const $steps = {};
+
+                  $steps["runOnClickCity"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClickCity"],
+                          args: [
+                            {
+                              id: -1,
+                              name: "\u0647\u0645\u0647 \u0634\u0647\u0631 \u0647\u0627",
+                              en_slug: "ir"
+                            }
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClickCity"] != null &&
+                    typeof $steps["runOnClickCity"] === "object" &&
+                    typeof $steps["runOnClickCity"].then === "function"
+                  ) {
+                    $steps["runOnClickCity"] = await $steps["runOnClickCity"];
+                  }
+                }}
+                onClickCity={async value => {
+                  const $steps = {};
+
+                  $steps["runOnClickCity"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClickCity"],
+                          args: [
+                            (() => {
+                              try {
+                                return value;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClickCity"] != null &&
+                    typeof $steps["runOnClickCity"] === "object" &&
+                    typeof $steps["runOnClickCity"].then === "function"
+                  ) {
+                    $steps["runOnClickCity"] = await $steps["runOnClickCity"];
+                  }
+                }}
+                selectedProvinceId={"-1"}
+              />
+            </ApiRequest>
+          </div>
+        }
+        className={classNames("__wab_instance", sty.selectCityDialog, {
+          [sty.selectCityDialogisFocus]: hasVariant(
+            $state,
+            "isFocus",
+            "isFocus"
+          )
+        })}
+        noTrigger={true}
+        onOpenChange={generateStateOnChangeProp($state, [
+          "selectCityDialog",
+          "open"
+        ])}
+        open={generateStateValueProp($state, ["selectCityDialog", "open"])}
+        title={"\u0627\u0646\u062a\u062e\u0627\u0628 \u0634\u0647\u0631"}
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -879,18 +855,18 @@ const PlasmicDescendants = {
     "searchInput",
     "suggestionApi",
     "searchContent",
+    "overlay",
     "selectCityDialog",
     "getLocationList",
-    "locationView",
-    "overlay"
+    "locationView"
   ],
   searchInput: ["searchInput"],
   suggestionApi: ["suggestionApi", "searchContent"],
   searchContent: ["searchContent"],
+  overlay: ["overlay"],
   selectCityDialog: ["selectCityDialog", "getLocationList", "locationView"],
   getLocationList: ["getLocationList", "locationView"],
-  locationView: ["locationView"],
-  overlay: ["overlay"]
+  locationView: ["locationView"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -900,10 +876,10 @@ type NodeDefaultElementType = {
   searchInput: typeof SearchInput;
   suggestionApi: typeof ApiRequest;
   searchContent: typeof SearchContent;
+  overlay: "div";
   selectCityDialog: typeof Dialog;
   getLocationList: typeof ApiRequest;
   locationView: typeof LocationView;
-  overlay: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -969,10 +945,10 @@ export const PlasmicSearch = Object.assign(
     searchInput: makeNodeComponent("searchInput"),
     suggestionApi: makeNodeComponent("suggestionApi"),
     searchContent: makeNodeComponent("searchContent"),
+    overlay: makeNodeComponent("overlay"),
     selectCityDialog: makeNodeComponent("selectCityDialog"),
     getLocationList: makeNodeComponent("getLocationList"),
     locationView: makeNodeComponent("locationView"),
-    overlay: makeNodeComponent("overlay"),
 
     // Metadata about props expected for PlasmicSearch
     internalVariantProps: PlasmicSearch__VariantProps,

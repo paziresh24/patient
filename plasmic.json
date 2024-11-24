@@ -1150,6 +1150,58 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchPage3.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "KmDr0VPQLI2_",
+          "name": "ConsultBanner",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicConsultBanner.tsx",
+          "importSpec": {
+            "modulePath": "ConsultBanner.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicConsultBanner.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "HnQNuSjSSQcZ",
+          "name": "FilterRowSelected",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicFilterRowSelected.tsx",
+          "importSpec": {
+            "modulePath": "FilterRowSelected.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicFilterRowSelected.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "4XueZ64JE9vm",
+          "name": "SubstituteDoctor",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSubstituteDoctor.tsx",
+          "importSpec": {
+            "modulePath": "SubstituteDoctor.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSubstituteDoctor.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "yb2GxUTcIaA5",
+          "name": "SearchMobile",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchMobile.tsx",
+          "importSpec": {
+            "modulePath": "SearchMobile.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchMobile.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1357,6 +1409,11 @@
           "id": "7_jxAV8cTPnZ",
           "name": "Icon36Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon36.tsx"
+        },
+        {
+          "id": "BWwuwLrl9Jmd",
+          "name": "Icon37Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon37.tsx"
         }
       ],
       "images": [
@@ -1440,6 +1497,18 @@
           "name": "RadioFilter",
           "displayName": "RadioFilter",
           "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "4fT4c69Xtkbb",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "07cFwPGsY3xA",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
         }
       ],
       "customFunctions": [
@@ -1450,8 +1519,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1479,8 +1547,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -1980,7 +2047,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
