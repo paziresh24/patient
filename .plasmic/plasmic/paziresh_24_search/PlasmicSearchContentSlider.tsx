@@ -353,7 +353,11 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
           })()}
           url={(() => {
             try {
-              return $props.data.url;
+              return {
+                destination: $props.data.url,
+                title: $props.data.name,
+                openInNewTab: false
+              };
             } catch (e) {
               if (
                 e instanceof TypeError ||
