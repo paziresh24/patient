@@ -1202,6 +1202,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchMobile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "ARWFU9130hug",
+          "name": "RecentSearch",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicRecentSearch.tsx",
+          "importSpec": {
+            "modulePath": "RecentSearch.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicRecentSearch.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1547,7 +1560,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",

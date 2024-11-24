@@ -28,6 +28,7 @@
   height: auto;
   max-width: 100%;
   overflow: auto;
+  margin-bottom: var(--token-vMUQwr5Jto1d);
   min-width: 0;
 }
 .freeBox__yyeat > :global(.__wab_flex-container) {

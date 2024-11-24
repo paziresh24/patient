@@ -112,6 +112,7 @@ export type PlasmicSearchMobile__OverridesType = {
   fragmentPortal?: Flex__<typeof Portal>;
   suggestionApi?: Flex__<typeof ApiRequest>;
   searchContent?: Flex__<typeof SearchContent>;
+  dialog?: Flex__<typeof Dialog>;
   overlay?: Flex__<"div">;
 };
 
@@ -221,6 +222,12 @@ function PlasmicSearchMobile__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isFocus
+      },
+      {
+        path: "dialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -258,7 +265,13 @@ function PlasmicSearchMobile__RenderFunc(props: {
         data-plasmic-name={"selectCityDialog"}
         data-plasmic-override={overrides.selectCityDialog}
         body={
-          <div className={classNames(projectcss.all, sty.freeBox__wax69)}>
+          <div
+            className={classNames(
+              projectcss.all,
+              sty.freeBox__wax69,
+              "no-scroll"
+            )}
+          >
             <ApiRequest
               data-plasmic-name={"getLocationList"}
               data-plasmic-override={overrides.getLocationList}
@@ -987,6 +1000,17 @@ function PlasmicSearchMobile__RenderFunc(props: {
                     }
                   })()}
                 />
+
+                <Dialog
+                  data-plasmic-name={"dialog"}
+                  data-plasmic-override={overrides.dialog}
+                  className={classNames("__wab_instance", sty.dialog)}
+                  onOpenChange={generateStateOnChangeProp($state, [
+                    "dialog",
+                    "open"
+                  ])}
+                  open={generateStateValueProp($state, ["dialog", "open"])}
+                />
               </ApiRequest>
             </div>
           ) : null}
@@ -1055,6 +1079,7 @@ const PlasmicDescendants = {
     "fragmentPortal",
     "suggestionApi",
     "searchContent",
+    "dialog",
     "overlay"
   ],
   selectCityDialog: ["selectCityDialog", "getLocationList", "locationView"],
@@ -1064,10 +1089,12 @@ const PlasmicDescendants = {
     "fragmentPortal",
     "suggestionApi",
     "searchContent",
+    "dialog",
     "overlay"
   ],
-  suggestionApi: ["suggestionApi", "searchContent"],
+  suggestionApi: ["suggestionApi", "searchContent", "dialog"],
   searchContent: ["searchContent"],
+  dialog: ["dialog"],
   overlay: ["overlay"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -1081,6 +1108,7 @@ type NodeDefaultElementType = {
   fragmentPortal: typeof Portal;
   suggestionApi: typeof ApiRequest;
   searchContent: typeof SearchContent;
+  dialog: typeof Dialog;
   overlay: "div";
 };
 
@@ -1150,6 +1178,7 @@ export const PlasmicSearchMobile = Object.assign(
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     suggestionApi: makeNodeComponent("suggestionApi"),
     searchContent: makeNodeComponent("searchContent"),
+    dialog: makeNodeComponent("dialog"),
     overlay: makeNodeComponent("overlay"),
 
     // Metadata about props expected for PlasmicSearchMobile

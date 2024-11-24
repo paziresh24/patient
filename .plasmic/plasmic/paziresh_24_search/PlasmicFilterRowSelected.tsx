@@ -167,7 +167,7 @@ function PlasmicFilterRowSelected__RenderFunc(props: {
       <Stack__
         as={"div"}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__yyeat)}
+        className={classNames(projectcss.all, sty.freeBox__yyeat, "no-scroll")}
       >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
