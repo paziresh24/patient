@@ -12,37 +12,12 @@ import { useGetData } from '@/modules/contribute/hooks/useGetData';
 import finalHero from '@/modules/contribute/images/finalHero.svg';
 import { useProfileDataStore } from '@/modules/contribute/store/profileData';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useEffect } from 'react';
 
 const ThankYouPage = () => {
   const router = useRouter();
   const userData = useUserInfoStore(state => state.info);
   const { isLoading } = useGetData();
   const profileData = useProfileDataStore(state => state.data);
-  const sendPageViewEvent = usePageViewEvent();
-
-  useEffect(() => {
-    !isLoading &&
-      sendPageViewEvent({
-        group: 'contribute',
-        type: 'thankyou',
-        data: {
-          doctor: {
-            id: profileData.id,
-            server_id: profileData.server_id,
-            name: profileData.name,
-            family: profileData.family,
-            slug: profileData.slug,
-            expertise: profileData.expertises?.[0].expertise?.name,
-            group_expertises: profileData.group_expertises?.[0]?.name,
-          },
-          center: {
-            city: profileData.centers?.map(center => center.city),
-            province: profileData.centers?.map(center => center.province),
-          },
-        },
-      });
-  }, [isLoading]);
 
   const handleBackToMenu = () => {
     location.replace(`/dr/${router.query.slug}`);

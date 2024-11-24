@@ -39,37 +39,46 @@ export const Dashboard = (props: any) => {
 
   useEffect(() => {
     sessionStartTime.current = Date.now();
-    splunkInstance('dashboard').sendEvent({
-      group: 'hamdast-insight',
-      type: 'active-users',
-      event: {
-        data: {
-          user_id: user.id,
-          job_title: user.provider?.job_title ?? 'normal',
-          menu_key: menuKey,
-          app_key: appKey,
-        },
-      },
-    });
 
-    return () => {
-      const sessionEndTime = Date.now();
-      const sessionDuration = sessionEndTime - sessionStartTime.current;
+    if (app?.id && selctedMenu?.id && user?.id) {
       splunkInstance('dashboard').sendEvent({
         group: 'hamdast-insight',
-        type: 'session-duration',
+        type: 'active-users',
         event: {
           data: {
             user_id: user.id,
             job_title: user.provider?.job_title ?? 'normal',
             menu_key: menuKey,
             app_key: appKey,
-            duration: sessionDuration,
+            menu_id: selctedMenu?.id,
+            app_id: app?.id,
           },
         },
       });
+    }
+
+    return () => {
+      const sessionEndTime = Date.now();
+      const sessionDuration = sessionEndTime - sessionStartTime.current;
+      if (app?.id && selctedMenu?.id && user?.id) {
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast-insight',
+          type: 'session-duration',
+          event: {
+            data: {
+              user_id: user.id,
+              job_title: user.provider?.job_title ?? 'normal',
+              menu_key: menuKey,
+              app_key: appKey,
+              menu_id: selctedMenu?.id,
+              app_id: app?.id,
+              duration: sessionDuration,
+            },
+          },
+        });
+      }
     };
-  }, [keys]);
+  }, [app, selctedMenu, user?.id, isReady]);
 
   return (
     <LayoutWithHeaderAndFooter {...props.config} shouldShowPromoteApp={false} showFooter={false} showHeader={!isMobile}>

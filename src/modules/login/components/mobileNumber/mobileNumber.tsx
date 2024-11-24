@@ -21,6 +21,7 @@ import GoogleLogo from '../../assets/google.svg';
 
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { splunkInstance } from '@/common/services/splunk';
+import { useRouter } from 'next/router';
 interface MobileNumberProps {
   title?: string;
   description?: string;
@@ -40,6 +41,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const showGoogleLogin = useFeatureIsOn('aaa:google-login-button');
   const showOidcLogin = useFeatureIsOn('aaa:oidc-login-button');
   const university = useCustomize(state => state.customize?.partnerKey);
+  const router = useRouter();
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -114,7 +116,11 @@ export const MobileNumber = (props: MobileNumberProps) => {
                     university ? '?university=true' : ''
                   }&response_type=code&scope=openid&kc_idp_hint=oidc&state=` +
                     encodeURI(
-                      `${window.location?.origin}/login?redirect_url=${encodeURI(`${window.location.pathname}${window.location.search}`)}`,
+                      `${window.location?.origin}/login?redirect_url=${
+                        router.query?.redirect_url
+                          ? encodeURI(router.query?.redirect_url as string)
+                          : encodeURI(`${window.location.pathname}${window.location.search}`)
+                      }`,
                     ),
                 );
               }}
@@ -138,7 +144,11 @@ export const MobileNumber = (props: MobileNumberProps) => {
                     university ? '?university=true' : ''
                   }&response_type=code&scope=openid&kc_idp_hint=google&state=` +
                     encodeURI(
-                      `${window.location?.origin}/login?redirect_url=${encodeURI(`${window.location.pathname}${window.location.search}`)}`,
+                      `${window.location?.origin}/login?redirect_url=${
+                        router.query?.redirect_url
+                          ? encodeURI(router.query?.redirect_url as string)
+                          : encodeURI(`${window.location.pathname}${window.location.search}`)
+                      }`,
                     ),
                 );
               }}

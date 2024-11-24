@@ -12,7 +12,8 @@ type Index =
   | 'booking'
   | 'error'
   | 'dashboard'
-  | 'cwv';
+  | 'cwv'
+  | 'contribute';
 
 export const splunkInstance = (index: Index) => {
   switch (index) {
@@ -20,6 +21,17 @@ export const splunkInstance = (index: Index) => {
       return splunk.create({
         baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
         token: '64bd80f1-14cb-4808-8986-c183013cbc9d',
+        constant: {
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
+          terminal_id: getCookie('terminal_id'),
+          is_application: isPWA(),
+        },
+      });
+    }
+    case 'contribute': {
+      return splunk.create({
+        baseUrl: 'https://hamdast-splunk-hec.paziresh24.com',
+        token: '43820143-5537-4ea8-89c0-c0574cfa649f',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
@@ -51,8 +63,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'center-profile': {
       return splunk.create({
-        baseUrl: 'https://p24splk.paziresh24.com',
-        token: 'a93b23b1-714e-4a0f-a249-a3b0520b9366',
+        baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
+        token: '0ab1caf8-62e9-4e76-a8f0-e41ef7fda125',
         constant: {
           current_url: window.location.href,
           terminal_id: getCookie('terminal_id'),
@@ -63,7 +75,7 @@ export const splunkInstance = (index: Index) => {
     case 'booking': {
       return splunk.create({
         baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
-        token: '64bd80f1-14cb-4808-8986-c183013cbc9d',
+        token: '6a22ae6e-2c46-4c2b-bff1-846b7fcd8b86',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
@@ -95,8 +107,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'dashboard': {
       return splunk.create({
-        baseUrl: 'https://p24splk.paziresh24.com',
-        token: 'f2287603-5e9d-4bdd-a8ef-33344421838b',
+        baseUrl: 'https://hamdast-splunk-hec.paziresh24.com',
+        token: 'c2b3263e-4c92-4cb6-99dc-a5834b7f0773',
         constant: {
           url: {
             href: window.location.href,

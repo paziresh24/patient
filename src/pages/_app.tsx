@@ -142,13 +142,13 @@ function MyApp(props: AppProps) {
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === 'custom' || !publicRuntimeConfig.IS_PRODUCTION) return;
 
-  splunkInstance('cwv').sendEvent({
-    group: 'core_web_vitals',
-    type: `${metric.label}_${metric.name}`,
-    event: {
-      ...metric,
-    },
-  });
+  // splunkInstance('cwv').sendEvent({
+  //   group: 'core_web_vitals',
+  //   type: `${metric.label}_${metric.name}`,
+  //   event: {
+  //     ...metric,
+  //   },
+  // });
 }
 
 export default MyApp;

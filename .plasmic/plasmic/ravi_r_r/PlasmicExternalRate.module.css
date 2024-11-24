@@ -81,6 +81,13 @@
   max-width: 100%;
   min-width: 0;
 }
+.img {
+  object-fit: cover;
+  max-width: 100%;
+}
+.img > picture > img {
+  object-fit: cover;
+}
 .text__cie6B {
   position: relative;
   width: 100%;

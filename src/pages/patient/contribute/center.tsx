@@ -12,7 +12,6 @@ import Text from '@/common/components/atom/text';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { usePageViewEvent } from '@/common/hooks/usePageViewEvent';
 import { Center } from '@/common/types/doctorParams';
 import { AddressSection } from '@/modules/contribute/components/centerSections/address';
 import PhoneNumberSection from '@/modules/contribute/components/centerSections/phoneNumber';
@@ -32,30 +31,8 @@ const Home: NextPage = () => {
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const { like, dislike, submit } = useInfoVote();
 
-  const sendPageViewEvent = usePageViewEvent();
-
   useEffect(() => {
     if (!isLoading && profileData && router.query?.center_id) {
-      sendPageViewEvent({
-        group: 'contribute',
-        type: 'center_report',
-        data: {
-          doctor: {
-            id: profileData.id,
-            server_id: profileData.server_id,
-            name: profileData.name,
-            family: profileData.family,
-            slug: profileData.slug,
-            expertise: profileData.expertises?.[0].expertise?.name,
-            group_expertises: profileData.group_expertises?.[0]?.name,
-          },
-          center: {
-            city: profileData.centers?.map(center => center.city),
-            province: profileData.centers?.map(center => center.province),
-          },
-        },
-      });
-
       const center = profileData.centers?.find(center => center.id === router.query?.center_id);
       setSelectedCenter(center);
       setPhoneNumbers(center?.display_number_array?.map(item => ({ cell: item, default: true })) ?? []);
