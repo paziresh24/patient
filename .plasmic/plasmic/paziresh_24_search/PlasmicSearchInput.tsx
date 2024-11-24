@@ -544,7 +544,13 @@ function PlasmicSearchInput__RenderFunc(props: {
                 {"\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"}
               </div>
             }
-            className={classNames("__wab_instance", sty.button)}
+            className={classNames("__wab_instance", sty.button, {
+              [sty.buttonisFocused]: hasVariant(
+                $state,
+                "isFocused",
+                "isFocused"
+              )
+            })}
             color={"text"}
             onClick={async event => {
               const $steps = {};
