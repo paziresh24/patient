@@ -929,7 +929,15 @@ function PlasmicSearch__RenderFunc(props: {
                 })()
               : (() => {
                   try {
-                    return window.document.getElementsByTagName("body")?.[0];
+                    return (() => {
+                      if (typeof window != "undefined") {
+                        return window.document.getElementsByTagName(
+                          "body"
+                        )?.[0];
+                      } else {
+                        return console.log("no window");
+                      }
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
