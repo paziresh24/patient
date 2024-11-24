@@ -32,9 +32,12 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
+import isEmpty from 'lodash/isEmpty';
+
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
-import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
+import SearchBarPlasmic from '@/modules/search/components/suggestion/searchBarPlasmic';
 
 const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
@@ -43,6 +46,7 @@ const Search = ({ host }: any) => {
   const shouldUseSearchViewEventRoutesList = useFeatureValue<{ routes: Array<string | null> }>('search:use-front-end-search-view-event', {
     routes: [],
   });
+
   const shouldUseRowFilter = useFeatureIsOn('search:use-row-search');
 
   const {
@@ -50,7 +54,9 @@ const Search = ({ host }: any) => {
     query: { params, lat, lon, ...queries },
   } = useRouter();
 
-  const { isLanding, isLoading, total, seoInfo, footers, selectedFilters, result, search } = useSearch();
+  const { removeFilter } = useFilterChange();
+
+  const { isLanding, isLoading, total, seoInfo, footers, selectedFilters, result, search, filters, categories, searchCity } = useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -147,7 +153,7 @@ const Search = ({ host }: any) => {
       });
     }
   }, [result, userPending, isLoading, growthbook.ready]);
-  console.log(seoInfo);
+  console.log({ seoInfo, footers });
   return (
     <>
       <Fragment name="LocationSelectionScript" />
@@ -155,17 +161,7 @@ const Search = ({ host }: any) => {
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
         {/* <Suggestion key={asPath.toString()} overlay /> */}
         <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem] relative">
-          <SearchGlobalContextsProvider>
-            <Fragment
-              name="SearchInput"
-              props={{
-                onClickCity: (value: any) => console.log(value),
-              }}
-              variants={{
-                hasOverlay: true,
-              }}
-            />
-          </SearchGlobalContextsProvider>
+          <SearchBarPlasmic />
         </div>
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
@@ -185,6 +181,19 @@ const Search = ({ host }: any) => {
                 )}
               </div>
             )}
+
+            {(!isEmpty(selectedFilters) || !isLoading) && isMobile && (
+              <Fragment
+                name="FilterRowSelected"
+                props={{
+                  selected: selectedFilters,
+                  categories,
+                  filters,
+                  onRemoveItem: (name: string, value: string) => removeFilter(name),
+                  onDelete: () => changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true }),
+                }}
+              />
+            )}
             {customize.showConsultServices && showConsultBanner && <ConsultBanner />}
             <Result />
           </div>
@@ -193,7 +202,7 @@ const Search = ({ host }: any) => {
           <Fragment
             name="SeoBox"
             props={{
-              seo_info: seoInfo,
+              seoInfo: seoInfo,
               footer: footers,
             }}
           />

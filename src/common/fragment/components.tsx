@@ -39,9 +39,12 @@ import PlasmicFilterSelectedView, {
   PlasmicFilterSelectedView__ArgProps,
 } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterSelectedView';
 import PlasmicFilterRow, { PlasmicFilterRow__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterRow';
+import PlasmicFilterRowSelected, { PlasmicFilterRowSelected__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterRowSelected';
 import PlasmicOnlineVisit, { PlasmicOnlineVisit__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
 import PlasmicSearch, { PlasmicSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+import PlasmicSearchMobile, { PlasmicSearchMobile__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchMobile';
 import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
+// import PlasmicRecentSearch, { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -166,6 +169,12 @@ export const Components = {
     propsAllowed: PlasmicFilterRow__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
+  FilterRowSelected: {
+    Component: PlasmicFilterRowSelected,
+    id: 'HnQNuSjSSQcZ',
+    propsAllowed: PlasmicFilterRowSelected__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
   SearchOnlineVisit: {
     Component: PlasmicOnlineVisit,
     id: 'kiuZ6fZVjKcZ',
@@ -178,6 +187,18 @@ export const Components = {
     propsAllowed: PlasmicSearch__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
+  SearchInputMobile: {
+    Component: PlasmicSearchMobile,
+    id: 'yb2GxUTcIaA5',
+    propsAllowed: PlasmicSearchMobile__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  // RecentSearch: {
+  //   Component: PlasmicSearchMobile,
+  //   id: 'ARWFU9130hug',
+  //   propsAllowed: PlasmicSearchMobile__ArgProps,
+  //   projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  // },
   SeoBox: {
     Component: PlasmicSeoBox,
     id: 'LCOgDdMa8kxO',

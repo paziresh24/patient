@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Fragment, useMemo } from 'react';
 import { useFilterChange } from '../../../hooks/useFilterChange';
 import { freeturnItems } from '../sort';
+import useResponsive from '@/common/hooks/useResponsive';
 interface CategoriesProps {
   isLoading: boolean;
 }
@@ -17,6 +18,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
   const {
     query: { params },
   } = useRouter();
+  const { isMobile } = useResponsive();
   const { categories, filters, selectedFilters, searchCity } = useSearch();
   const selectedCategory = useMemo(() => categories?.find(item => item.value === selectedFilters?.category), [selectedFilters]);
   const { changeRoute } = useSearchRouting();
@@ -74,6 +76,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
       <div className="flex gap-2 overflow-auto no-scroll md:flex-wrap">
         {isLoading && <Loading />}
         {!isLoading &&
+          !isMobile &&
           Object.entries(selectedFilters).map(([name, value]) => (
             <Fragment key={name}>
               {Array.isArray(value) &&
@@ -113,3 +116,4 @@ const Loading = () => {
 };
 
 export default SelectedFilters;
+

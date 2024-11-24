@@ -21,6 +21,7 @@ const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'),
   loading: () => <div className="h-[68px] md:h-6" />,
 });
 import getConfig from 'next/config';
+import SearchBarPlasmic from '@/modules/search/components/suggestion/searchBarPlasmic';
 const { publicRuntimeConfig } = getConfig();
 
 const Home = () => {
@@ -73,19 +74,8 @@ const Home = () => {
           </Text>
         )}
         <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
-          <SearchGlobalContextsProvider>
-            <Fragment
-              name="SearchInput"
-              props={{
-                onClickCity: (value: any) => console.log(value),
-              }}
-              variants={{
-                hasOverlay: false,
-              }}
-            />
-          </SearchGlobalContextsProvider>
+          <SearchBarPlasmic />
         </div>
-        {/* <Suggestion /> */}
         {recent.length > 0 && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
