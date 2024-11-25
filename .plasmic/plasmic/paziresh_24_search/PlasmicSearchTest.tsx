@@ -166,7 +166,7 @@ function PlasmicSearchTest__RenderFunc(props: {
         data-plasmic-override={overrides.search}
         className={classNames("__wab_instance", sty.search)}
         inputValue={generateStateValueProp($state, ["search", "inputValue"])}
-        onInputValueChange={generateStateOnChangeProp($state, [
+        onInputValueChange2={generateStateOnChangeProp($state, [
           "search",
           "inputValue"
         ])}
