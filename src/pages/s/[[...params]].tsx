@@ -160,9 +160,9 @@ const Search = ({ host }: any) => {
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
         {/* <Suggestion key={asPath.toString()} overlay /> */}
-        <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem] relative">
-          <SearchBarPlasmic />
-        </div>
+
+        <SearchBarPlasmic />
+
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
@@ -182,7 +182,7 @@ const Search = ({ host }: any) => {
               </div>
             )}
 
-            {(!isEmpty(selectedFilters) || !isLoading) && isMobile && (
+            {/* {(!isEmpty(selectedFilters) || !isLoading) && isMobile && (
               <Fragment
                 name="FilterRowSelected"
                 props={{
@@ -193,7 +193,7 @@ const Search = ({ host }: any) => {
                   onDelete: () => changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true }),
                 }}
               />
-            )}
+            )} */}
             {customize.showConsultServices && showConsultBanner && <ConsultBanner />}
             <Result />
           </div>

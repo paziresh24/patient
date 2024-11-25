@@ -28,12 +28,14 @@ export const SearchBarPlasmic = () => {
   const customize = useCustomize(state => state.customize);
 
   return (
-    <div className="">
+    <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem] relative">
       <SearchGlobalContextsProvider>
         <Fragment
-          name="SearchInputMobile"
+          name="SearchInput"
           props={{
             onClickCity: (value: any) => console.log(value),
+            onChangeInput: (value: string) => setUserSearchValue(value),
+            value: userSearchValue,
           }}
           variants={{
             hasOverlay: true,

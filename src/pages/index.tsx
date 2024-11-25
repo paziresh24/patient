@@ -78,7 +78,14 @@ const Home = () => {
         </div>
         {recent.length > 0 && (
           <div className="lg:w-[50rem] w-full">
-            <RecentSearch />
+            {/* <RecentSearch /> */}
+            <Fragment
+              name="RecentSearch"
+              props={{
+                onClick: (value: string) => console.log(value),
+                recent: recent.map(item => item?.name),
+              }}
+            />
           </div>
         )}
         {customize.showConsultServices && <Fragment name="SearchOnlineVisit" />}

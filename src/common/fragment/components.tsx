@@ -44,7 +44,7 @@ import PlasmicOnlineVisit, { PlasmicOnlineVisit__ArgProps } from '.plasmic/plasm
 import PlasmicSearch, { PlasmicSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
 import PlasmicSearchMobile, { PlasmicSearchMobile__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchMobile';
 import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
-// import PlasmicRecentSearch, { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
+import PlasmicRecentSearch, { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -193,12 +193,12 @@ export const Components = {
     propsAllowed: PlasmicSearchMobile__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
-  // RecentSearch: {
-  //   Component: PlasmicSearchMobile,
-  //   id: 'ARWFU9130hug',
-  //   propsAllowed: PlasmicSearchMobile__ArgProps,
-  //   projectId: 'sMdpLWyxbzDCruwMRffW2m',
-  // },
+  RecentSearch: {
+    Component: PlasmicRecentSearch,
+    id: 'ARWFU9130hug',
+    propsAllowed: PlasmicRecentSearch__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
   SeoBox: {
     Component: PlasmicSeoBox,
     id: 'LCOgDdMa8kxO',
