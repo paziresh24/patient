@@ -277,7 +277,7 @@
   bottom: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .freeBox__vDoMn {
+  .freeBoxisFocus__vDoMnMexBq {
     display: flex;
   }
 }
