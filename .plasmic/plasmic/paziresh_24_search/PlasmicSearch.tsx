@@ -1103,7 +1103,12 @@ function PlasmicSearch__RenderFunc(props: {
           }
         >
           {(
-            hasVariant(globalVariants, "screen", "mobileOnly") ? true : false
+            hasVariant($state, "isFocus", "isFocus") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? true
+              : hasVariant(globalVariants, "screen", "mobileOnly")
+              ? false
+              : false
           ) ? (
             <div
               className={classNames(projectcss.all, sty.freeBox__vDoMn, {
