@@ -367,20 +367,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
             data-plasmic-name={"substituteDoctor"}
             data-plasmic-override={overrides.substituteDoctor}
             className={classNames("__wab_instance", sty.substituteDoctor)}
-            expertise={(() => {
-              try {
-                return $props.categoryValue;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            turnType={"consult"}
+            turnType={``}
           />
         }
         className={classNames("__wab_instance", sty.dialog)}

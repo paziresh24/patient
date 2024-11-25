@@ -75,7 +75,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -215,7 +216,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
@@ -305,7 +307,8 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -415,6 +418,19 @@
           "cssFilePath": "plasmic/fragment_design_system/PlasmicMultilineTextInput.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "kYXN54tCkD2S",
+          "name": "Collapsible",
+          "type": "managed",
+          "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
+          "renderModuleFilePath": "plasmic/fragment_design_system/PlasmicCollapsible.tsx",
+          "importSpec": {
+            "modulePath": "Collapsible.tsx"
+          },
+          "cssFilePath": "plasmic/fragment_design_system/PlasmicCollapsible.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -485,7 +501,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -1024,7 +1041,8 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -2295,7 +2313,8 @@
           "componentImportPath": "@plasmicpkgs/antd5/skinny/registerBreadcrumb"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "jkU633o1Cz7HrJdwdxhVHk",
@@ -2632,7 +2651,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-embed-css"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
