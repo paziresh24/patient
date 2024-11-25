@@ -31,13 +31,6 @@
   object-fit: cover;
   position: relative;
 }
-.text__e5Hic {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-}
 .showMySearchPerformance {
   position: relative;
   text-align: right;

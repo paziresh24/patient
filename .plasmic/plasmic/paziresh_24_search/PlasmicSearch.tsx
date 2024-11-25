@@ -98,13 +98,13 @@ export const PlasmicSearch__VariantProps = new Array<VariantPropType>(
 
 export type PlasmicSearch__ArgsType = {
   inputValue?: string;
-  onInputValueChange2?: (val: string) => void;
+  onInputValueChange?: (val: string) => void;
   onClickCity?: (value: any) => void;
 };
 type ArgPropType = keyof PlasmicSearch__ArgsType;
 export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
   "inputValue",
-  "onInputValueChange2",
+  "onInputValueChange",
   "onClickCity"
 );
 
@@ -121,7 +121,7 @@ export type PlasmicSearch__OverridesType = {
 
 export interface DefaultSearchProps {
   inputValue?: string;
-  onInputValueChange2?: (val: string) => void;
+  onInputValueChange?: (val: string) => void;
   onClickCity?: (value: any) => void;
   hasOverlay?: SingleBooleanChoiceArg<"hasOverlay">;
   isFocus?: SingleBooleanChoiceArg<"isFocus">;
@@ -180,7 +180,7 @@ function PlasmicSearch__RenderFunc(props: {
         variableType: "text",
 
         valueProp: "inputValue",
-        onChangeProp: "onInputValueChange2"
+        onChangeProp: "onInputValueChange"
       },
       {
         path: "suggestionApi.data",
