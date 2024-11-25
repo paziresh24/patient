@@ -1,0 +1,20 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 0px 7px 25px 0px #98a1a933;
+  min-width: 0;
+  border-radius: var(--token-_c276Gs_1FIE);
+  padding: var(--token-Fv8-L_kN-2Ma);
+}
+.roothideBackground {
+  background: none;
+}
+.filterList:global(.__wab_instance) {
+  max-width: 100%;
+}

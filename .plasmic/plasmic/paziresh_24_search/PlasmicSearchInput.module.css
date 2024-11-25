@@ -1,0 +1,182 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  height: auto;
+  justify-self: flex-start;
+  width: 100%;
+  transition-property: box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  min-width: 0;
+  -webkit-transition-property: box-shadow;
+  -webkit-transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 0.2s;
+  border-radius: 1000px;
+  padding: var(--token-fhaz6q6bl-fW) var(--token-vMUQwr5Jto1d)
+    var(--token-fhaz6q6bl-fW) var(--token-_c276Gs_1FIE);
+  border: 1px solid var(--token-Y3HOiwZmAcAF);
+}
+.rootisFocused {
+  border-radius: var(--token-UIMkdd_bvvx_) var(--token-UIMkdd_bvvx_) 0px 0px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .rootisFocused {
+    border-radius: 1000px;
+    border-color: var(--token-JDvyxAtm9ONK);
+  }
+}
+.root:hover {
+  box-shadow: 0px 10px 15px -3px #0000001a, 0px 4px 6px -4px #0000001a;
+}
+.freeBox__xcgrP {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__xcgrP > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-fhaz6q6bl-fW));
+  width: calc(100% + var(--token-fhaz6q6bl-fW));
+}
+.freeBox__xcgrP > :global(.__wab_flex-container) > *,
+.freeBox__xcgrP > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__xcgrP > :global(.__wab_flex-container) > picture > img,
+.freeBox__xcgrP
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-fhaz6q6bl-fW);
+}
+.freeBox__jzSpg {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.svg__l3Jw2 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.svgisFocused__l3Jw2O9DZj {
+  display: none;
+}
+.svg__wUsh {
+  object-fit: cover;
+  max-width: 100%;
+  width: 20px;
+  cursor: pointer;
+  height: 20px;
+  flex-shrink: 0;
+  display: none;
+}
+.svgisFocused__wUsHo9DZj {
+  display: block;
+}
+.freeBox__mYtRl {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  outline-style: none;
+  box-shadow: 0px 4px 16px 0px transparent;
+  min-width: 0;
+}
+.textInput:global(.__wab_instance) {
+  max-width: 100%;
+  height: 3.5rem;
+  flex-shrink: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .textInput:global(.__wab_instance) {
+    height: 3rem;
+    flex-shrink: 0;
+  }
+}
+.svg__olKaq {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__iia8L {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+  cursor: pointer;
+}
+.freeBox___4GS1M {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 1px;
+  height: 100%;
+  max-width: 100%;
+  background: var(--token-Y3HOiwZmAcAF);
+  flex-shrink: 0;
+  min-height: 0;
+}
+.freeBox__bgbpW {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  overflow: hidden;
+  border-bottom-left-radius: 1000px;
+  border-top-left-radius: 1000px;
+}
+.button:global(.__wab_instance) {
+  max-width: 100%;
+}
+.svg__qSzR {
+  position: relative;
+  object-fit: cover;
+  width: 20px;
+  height: 20px;
+  color: var(--token-u3OudfMChOo3);
+}
+.text {
+  color: var(--token-u3OudfMChOo3);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .text {
+    font-size: var(--token-6NbVMeD6zQwn);
+  }
+}
+.svg__kCpI {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
