@@ -82,10 +82,16 @@ import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-
 
 createPlasmicElementProxy;
 
-export type PlasmicSearchResults__VariantMembers = {};
-export type PlasmicSearchResults__VariantsArgs = {};
+export type PlasmicSearchResults__VariantMembers = {
+  isHorizental: "isHorizental";
+};
+export type PlasmicSearchResults__VariantsArgs = {
+  isHorizental?: SingleBooleanChoiceArg<"isHorizental">;
+};
 type VariantPropType = keyof PlasmicSearchResults__VariantsArgs;
-export const PlasmicSearchResults__VariantProps = new Array<VariantPropType>();
+export const PlasmicSearchResults__VariantProps = new Array<VariantPropType>(
+  "isHorizental"
+);
 
 export type PlasmicSearchResults__ArgsType = {
   searchResultResponse?: any;
@@ -142,6 +148,7 @@ export interface DefaultSearchResultsProps {
   showMyPerformanceMetricsBox?: any;
   topSuggestedCardFeature?: any;
   onlineVisitButtonsCustomDestination?: any;
+  isHorizental?: SingleBooleanChoiceArg<"isHorizental">;
   className?: string;
 }
 
@@ -215,6 +222,12 @@ function PlasmicSearchResults__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "isHorizental",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isHorizental
       }
     ],
     [$props, $ctx, $refs]
@@ -242,7 +255,14 @@ function PlasmicSearchResults__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        {
+          [sty.rootisHorizental]: hasVariant(
+            $state,
+            "isHorizental",
+            "isHorizental"
+          )
+        }
       )}
     >
       <SideEffect
@@ -303,32 +323,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         }}
       />
 
-      {false ? (
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__e5Hic
-          )}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return JSON.stringify($ctx.Growthbook.features["theme-config"])
-                  .length;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </div>
-      ) : null}
       {(() => {
         try {
           return (
@@ -1060,7 +1054,13 @@ function PlasmicSearchResults__RenderFunc(props: {
           data-plasmic-name={"resultCardsVerticalStack2"}
           data-plasmic-override={overrides.resultCardsVerticalStack2}
           hasGap={true}
-          className={classNames(projectcss.all, sty.resultCardsVerticalStack2)}
+          className={classNames(projectcss.all, sty.resultCardsVerticalStack2, {
+            [sty.resultCardsVerticalStack2isHorizental]: hasVariant(
+              $state,
+              "isHorizental",
+              "isHorizental"
+            )
+          })}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
@@ -1098,7 +1098,13 @@ function PlasmicSearchResults__RenderFunc(props: {
               <div
                 data-plasmic-name={"freeBox"}
                 data-plasmic-override={overrides.freeBox}
-                className={classNames(projectcss.all, sty.freeBox)}
+                className={classNames(projectcss.all, sty.freeBox, {
+                  [sty.freeBoxisHorizental]: hasVariant(
+                    $state,
+                    "isHorizental",
+                    "isHorizental"
+                  )
+                })}
                 key={(() => {
                   try {
                     return currentItem._id;
@@ -1283,7 +1289,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
-                  className={classNames("__wab_instance", sty.productCard)}
+                  className={classNames("__wab_instance", sty.productCard, {
+                    [sty.productCardisHorizental]: hasVariant(
+                      $state,
+                      "isHorizental",
+                      "isHorizental"
+                    )
+                  })}
                   classificationTitleApi={`https://apigw.paziresh24.com/v1/jahannama/classifications/${currentItem._id}`}
                   debugModeResult={(() => {
                     try {
@@ -1462,110 +1474,6 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["runCodeSv2CtrRequest"] = await $steps[
                         "runCodeSv2CtrRequest"
-                      ];
-                    }
-
-                    $steps["runCodeSplunkEvent"] = false
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return $$.splunkEvent({
-                                token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                                group: "search_metrics",
-                                type: "search_click_position",
-                                data: {
-                                  card_data: {
-                                    action: currentItem.actions?.map?.(item =>
-                                      JSON.stringify({
-                                        outline: item.outline,
-                                        title: item.title,
-                                        top_title: item.top_title.replace(
-                                          /(<([^>]+)>)/gi,
-                                          ""
-                                        )
-                                      })
-                                    ),
-                                    online_visit_buttons_custom_destination:
-                                      $props.onlineVisitButtonsCustomDestination &&
-                                      $props.onlineVisitButtonsCustomDestination
-                                        .enable
-                                        ? $props
-                                            .onlineVisitButtonsCustomDestination
-                                            .url_template
-                                        : undefined,
-                                    _id: currentItem._id,
-                                    position: currentItem.position,
-                                    server_id: currentItem.server_id,
-                                    title: currentItem.title,
-                                    type: currentItem.type,
-                                    url: currentItem.url,
-                                    rates_count: currentItem.rates_count,
-                                    satisfaction: currentItem.satisfaction
-                                  },
-                                  filters:
-                                    $props.searchResultResponse
-                                      .selected_filters,
-                                  result_count:
-                                    $props.searchResultResponse.lent,
-                                  location: $props.location.city_name,
-                                  city_id: $props.location.city_id,
-                                  lat: $props.location.lat,
-                                  lon: $props.location.lon,
-                                  query_id:
-                                    $props.searchResultResponse.search.query_id
-                                }
-                              });
-                            }
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runCodeSplunkEvent"] != null &&
-                      typeof $steps["runCodeSplunkEvent"] === "object" &&
-                      typeof $steps["runCodeSplunkEvent"].then === "function"
-                    ) {
-                      $steps["runCodeSplunkEvent"] = await $steps[
-                        "runCodeSplunkEvent"
-                      ];
-                    }
-
-                    $steps["invokeGlobalAction"] = false
-                      ? (() => {
-                          const actionArgs = {
-                            args: [
-                              undefined,
-                              (() => {
-                                try {
-                                  return elementName;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            ]
-                          };
-                          return $globalActions["Fragment.showToast"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
-                      : undefined;
-                    if (
-                      $steps["invokeGlobalAction"] != null &&
-                      typeof $steps["invokeGlobalAction"] === "object" &&
-                      typeof $steps["invokeGlobalAction"].then === "function"
-                    ) {
-                      $steps["invokeGlobalAction"] = await $steps[
-                        "invokeGlobalAction"
                       ];
                     }
                   }}

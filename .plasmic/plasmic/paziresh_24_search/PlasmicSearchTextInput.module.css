@@ -1,0 +1,103 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  align-items: center;
+  justify-content: flex-start;
+  background: none;
+  position: sticky;
+  outline-style: none;
+  box-shadow: none;
+  min-width: 0;
+  padding: 7px 11px;
+}
+.rootcolor_dark {
+  background: #232320;
+  border-color: #717069;
+}
+.root:hover {
+  border-color: #c8c7c1;
+}
+.root:focus-within {
+  box-shadow: none;
+  border-radius: 6px;
+}
+.root___focusVisibleWithin {
+  box-shadow: 0px 0px 0px 3px #96c7f2;
+  border-radius: 6px;
+}
+.startIconContainer {
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  left: auto;
+  top: auto;
+  margin-right: 8px;
+  display: none;
+}
+.startIconContainershowStartIcon {
+  display: flex;
+}
+.slotTargetStartIconshowStartIcon {
+  color: #90908c;
+}
+.slotTargetStartIconcolor_dark {
+  color: #ffffff;
+}
+.svg__ul14V {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.input {
+  width: 100%;
+  left: auto;
+  top: auto;
+  background: #ffffff00;
+  outline-style: none;
+  outline-color: transparent;
+  outline-offset: 0px;
+  min-width: 0;
+  padding: 0px;
+  border-width: 0px;
+}
+.inputisDisabled {
+  cursor: not-allowed;
+}
+.inputcolor_dark {
+  color: #ffffff;
+}
+.root .input::placeholder {
+  color: #706f6c;
+}
+.rootcolor_dark .inputcolor_dark::placeholder {
+  color: #c8c7c1;
+}
+.endIconContainer {
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  left: auto;
+  top: auto;
+  margin-left: 8px;
+  display: none;
+}
+.endIconContainershowEndIcon {
+  display: flex;
+}
+.slotTargetEndIconshowEndIcon {
+  color: #90908c;
+}
+.slotTargetEndIconcolor_dark {
+  color: #ffffff;
+}
+.svg__sewPu {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
