@@ -34,8 +34,8 @@ export const SearchBarPlasmic = () => {
           name="SearchInput"
           props={{
             onClickCity: (value: any) => console.log(value),
-            onChangeInput: (value: string) => setUserSearchValue(value),
-            value: userSearchValue,
+            OnInputValueChange: (value: string) => setUserSearchValue(value),
+            inputValue: userSearchValue,
           }}
           variants={{
             hasOverlay: true,
