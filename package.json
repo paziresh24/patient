@@ -33,6 +33,7 @@
     "@plasmicapp/react-web-runtime": "0.0.42",
     "@plasmicpkgs/antd5": "0.0.239",
     "@plasmicpkgs/plasmic-basic-components": "0.0.207",
+    "@plasmicpkgs/plasmic-embed-css": "0.1.192",
     "@plasmicpkgs/plasmic-link-preview": "1.0.87",
     "@plasmicpkgs/plasmic-query": "0.0.206",
     "@plasmicpkgs/plasmic-rich-components": "1.0.189",

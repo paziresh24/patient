@@ -57,6 +57,8 @@
   left: auto;
   top: auto;
   background: #ffffff00;
+  outline-style: none;
+  outline-color: transparent;
   min-width: 0;
   padding: 0px;
   border-width: 0px;

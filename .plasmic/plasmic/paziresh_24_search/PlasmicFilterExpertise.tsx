@@ -287,7 +287,20 @@ function PlasmicFilterExpertise__RenderFunc(props: {
                 }
               })()}
               key={currentIndex}
-              onClick={async value => {
+              link={(() => {
+                try {
+                  return currentItem.url;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              onClick={async (value, link) => {
                 const $steps = {};
 
                 $steps["goToPage"] = true
@@ -295,7 +308,7 @@ function PlasmicFilterExpertise__RenderFunc(props: {
                       const actionArgs = {
                         destination: (() => {
                           try {
-                            return undefined;
+                            return link;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

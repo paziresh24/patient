@@ -4,8 +4,7 @@ import * as React from "react";
 import {
   PlasmicSubstituteDoctor,
   DefaultSubstituteDoctorProps
-} from "./plasmic/paziresh_24/PlasmicSubstituteDoctor";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
+} from "./plasmic/paziresh_24_search/PlasmicSubstituteDoctor";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -22,10 +21,7 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface SubstituteDoctorProps extends DefaultSubstituteDoctorProps {}
 
-function SubstituteDoctor_(
-  props: SubstituteDoctorProps,
-  ref: HTMLElementRefOf<"div">
-) {
+function SubstituteDoctor(props: SubstituteDoctorProps) {
   // Use PlasmicSubstituteDoctor to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -41,8 +37,7 @@ function SubstituteDoctor_(
   // By default, we are just piping all SubstituteDoctorProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicSubstituteDoctor root={{ ref }} {...props} />;
+  return <PlasmicSubstituteDoctor {...props} />;
 }
 
-const SubstituteDoctor = React.forwardRef(SubstituteDoctor_);
 export default SubstituteDoctor;

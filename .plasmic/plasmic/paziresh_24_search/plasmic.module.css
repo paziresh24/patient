@@ -7,6 +7,8 @@
   --plasmic-token-system-bg-spotlight: var(--token-5x7axv4RdCvL);
   --token-LDegABTF5Rf8: var(--antd-colorBgElevated);
   --plasmic-token-system-bg-elevated: var(--token-LDegABTF5Rf8);
+  --token-3MEZLoGo8fz7: 100%;
+  --plasmic-token-unnamed-style-token: var(--token-3MEZLoGo8fz7);
 }
 
 .plasmic_default_styles {

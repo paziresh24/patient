@@ -87,13 +87,15 @@ export type PlasmicUserLocation__ArgsType = {
   requestGeolocationAccess?: boolean;
   givLocationButtonLoadingStatus?: boolean;
   onUserCityChange?: (val: string) => void;
+  isOpen?: boolean;
 };
 type ArgPropType = keyof PlasmicUserLocation__ArgsType;
 export const PlasmicUserLocation__ArgProps = new Array<ArgPropType>(
   "setCityByUsersIp",
   "requestGeolocationAccess",
   "givLocationButtonLoadingStatus",
-  "onUserCityChange"
+  "onUserCityChange",
+  "isOpen"
 );
 
 export type PlasmicUserLocation__OverridesType = {
@@ -112,6 +114,7 @@ export interface DefaultUserLocationProps {
   requestGeolocationAccess?: boolean;
   givLocationButtonLoadingStatus?: boolean;
   onUserCityChange?: (val: string) => void;
+  isOpen?: boolean;
   className?: string;
 }
 
@@ -138,7 +141,8 @@ function PlasmicUserLocation__RenderFunc(props: {
         {
           setCityByUsersIp: false,
           requestGeolocationAccess: false,
-          givLocationButtonLoadingStatus: false
+          givLocationButtonLoadingStatus: false,
+          isOpen: false
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -163,7 +167,20 @@ function PlasmicUserLocation__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $props.isOpen;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()
       },
       {
         path: "variable",
