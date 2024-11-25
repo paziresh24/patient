@@ -193,7 +193,7 @@ function PlasmicSearchPage3__RenderFunc(props: {
           className={classNames("__wab_instance", sty.search)}
           hasOverlay={true}
           inputValue={generateStateValueProp($state, ["search", "inputValue"])}
-          onInputValueChange2={generateStateOnChangeProp($state, [
+          onInputValueChange={generateStateOnChangeProp($state, [
             "search",
             "inputValue"
           ])}
