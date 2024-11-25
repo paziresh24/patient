@@ -69,11 +69,11 @@ import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: xYtO5aWYRBv
 createPlasmicElementProxy;
 
 export type PlasmicAvatar__VariantMembers = {
-  ring: "blue" | "green";
+  ring: "blue" | "green" | "slate";
   badge: "check";
 };
 export type PlasmicAvatar__VariantsArgs = {
-  ring?: SingleChoiceArg<"blue" | "green">;
+  ring?: SingleChoiceArg<"blue" | "green" | "slate">;
   badge?: SingleChoiceArg<"check">;
 };
 type VariantPropType = keyof PlasmicAvatar__VariantsArgs;
@@ -106,7 +106,7 @@ export interface DefaultAvatarProps {
   src?: string;
   name?: string;
   alt?: string;
-  ring?: SingleChoiceArg<"blue" | "green">;
+  ring?: SingleChoiceArg<"blue" | "green" | "slate">;
   badge?: SingleChoiceArg<"check">;
   className?: string;
 }
@@ -187,7 +187,11 @@ function PlasmicAvatar__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        sty.root
+        sty.root,
+        {
+          [sty.rootring_green]: hasVariant($state, "ring", "green"),
+          [sty.rootring_slate]: hasVariant($state, "ring", "slate")
+        }
       )}
     >
       {(() => {
@@ -221,7 +225,8 @@ function PlasmicAvatar__RenderFunc(props: {
           })()}
           className={classNames(sty.img, {
             [sty.imgring_blue]: hasVariant($state, "ring", "blue"),
-            [sty.imgring_green]: hasVariant($state, "ring", "green")
+            [sty.imgring_green]: hasVariant($state, "ring", "green"),
+            [sty.imgring_slate]: hasVariant($state, "ring", "slate")
           })}
           displayHeight={"100%"}
           displayMaxHeight={"none"}
@@ -263,7 +268,8 @@ function PlasmicAvatar__RenderFunc(props: {
           data-plasmic-override={overrides.freeBox}
           className={classNames(projectcss.all, sty.freeBox, {
             [sty.freeBoxring_blue]: hasVariant($state, "ring", "blue"),
-            [sty.freeBoxring_green]: hasVariant($state, "ring", "green")
+            [sty.freeBoxring_green]: hasVariant($state, "ring", "green"),
+            [sty.freeBoxring_slate]: hasVariant($state, "ring", "slate")
           })}
           style={(() => {
             try {
@@ -327,7 +333,8 @@ function PlasmicAvatar__RenderFunc(props: {
         data-plasmic-name={"svg"}
         data-plasmic-override={overrides.svg}
         className={classNames(projectcss.all, sty.svg, {
-          [sty.svgbadge_check]: hasVariant($state, "badge", "check")
+          [sty.svgbadge_check]: hasVariant($state, "badge", "check"),
+          [sty.svgring_slate]: hasVariant($state, "ring", "slate")
         })}
         role={"img"}
       />
