@@ -8,10 +8,6 @@
   align-items: center;
   justify-self: flex-start;
 }
-.rootring_slate {
-  min-width: 55px;
-  min-height: 55px;
-}
 .img {
   position: relative;
   object-fit: cover;
@@ -30,9 +26,6 @@
 }
 .imgring_green {
   border: 2px solid #2fc75e;
-}
-.imgring_slate {
-  border: 2px solid var(--token-Y3HOiwZmAcAF);
 }
 .freeBox {
   display: flex;
