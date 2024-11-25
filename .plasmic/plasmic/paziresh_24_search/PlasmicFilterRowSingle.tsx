@@ -99,7 +99,6 @@ export const PlasmicFilterRowSingle__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicFilterRowSingle__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   sortIcon?: Flex__<"svg">;
   text?: Flex__<"div">;
   _delete?: Flex__<"div">;
@@ -171,11 +170,13 @@ function PlasmicFilterRowSingle__RenderFunc(props: {
   });
 
   return (
-    <div
+    <Stack__
+      as={"div"}
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
+      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -187,109 +188,194 @@ function PlasmicFilterRowSingle__RenderFunc(props: {
         sty.root,
         { [sty.rootisSelected]: hasVariant($state, "isSelected", "isSelected") }
       )}
+      onClick={async event => {
+        const $steps = {};
+
+        $steps["runOnClick"] = true
+          ? (() => {
+              const actionArgs = {
+                eventRef: $props["onClick"],
+                args: [
+                  (() => {
+                    try {
+                      return $props.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return (({ eventRef, args }) => {
+                return eventRef?.(...(args ?? []));
+              })?.apply(null, [actionArgs]);
+            })()
+          : undefined;
+        if (
+          $steps["runOnClick"] != null &&
+          typeof $steps["runOnClick"] === "object" &&
+          typeof $steps["runOnClick"].then === "function"
+        ) {
+          $steps["runOnClick"] = await $steps["runOnClick"];
+        }
+      }}
       style={{ minWidth: "max-content" }}
     >
-      <Stack__
-        as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox, {
-          [sty.freeBoxisSelected]: hasVariant(
-            $state,
-            "isSelected",
-            "isSelected"
-          )
-        })}
-      >
-        {(
-          hasVariant($state, "isSelected", "isSelected")
-            ? (() => {
-                try {
-                  return $props.name === "order_items";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+      {(
+        hasVariant($state, "isSelected", "isSelected")
+          ? (() => {
+              try {
+                return $props.name === "order_items";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
                 }
-              })()
-            : (() => {
-                try {
-                  return $props.name === "order_items";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+                throw e;
+              }
+            })()
+          : (() => {
+              try {
+                return $props.name === "order_items";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
                 }
-              })()
-        ) ? (
-          <Icon18Icon
-            data-plasmic-name={"sortIcon"}
-            data-plasmic-override={overrides.sortIcon}
-            className={classNames(projectcss.all, sty.sortIcon, {
-              [sty.sortIconisSelected]: hasVariant(
-                $state,
-                "isSelected",
-                "isSelected"
-              )
-            })}
-            role={"img"}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return $props.name === "filters";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
+                throw e;
+              }
+            })()
+      ) ? (
+        <Icon18Icon
+          data-plasmic-name={"sortIcon"}
+          data-plasmic-override={overrides.sortIcon}
+          className={classNames(projectcss.all, sty.sortIcon, {
+            [sty.sortIconisSelected]: hasVariant(
+              $state,
+              "isSelected",
+              "isSelected"
+            )
+          })}
+          role={"img"}
+        />
+      ) : null}
+      {(() => {
+        try {
+          return $props.name === "filters";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
           }
-        })() ? (
-          <Icon19Icon
-            className={classNames(projectcss.all, sty.svg__zaOfU, {
-              [sty.svgisSelected__zaOfUjXAqb]: hasVariant(
-                $state,
-                "isSelected",
-                "isSelected"
-              )
-            })}
-            role={"img"}
-          />
-        ) : null}
-        <div
-          data-plasmic-name={"text"}
-          data-plasmic-override={overrides.text}
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text,
-            {
-              [sty.textisSelected]: hasVariant(
-                $state,
-                "isSelected",
-                "isSelected"
-              )
+          throw e;
+        }
+      })() ? (
+        <Icon19Icon
+          className={classNames(projectcss.all, sty.svg__zaOfU, {
+            [sty.svgisSelected__zaOfUjXAqb]: hasVariant(
+              $state,
+              "isSelected",
+              "isSelected"
+            )
+          })}
+          role={"img"}
+        />
+      ) : null}
+      <div
+        data-plasmic-name={"text"}
+        data-plasmic-override={overrides.text}
+        className={classNames(projectcss.all, projectcss.__wab_text, sty.text, {
+          [sty.textisSelected]: hasVariant($state, "isSelected", "isSelected")
+        })}
+        onClick={async event => {
+          const $steps = {};
+        }}
+      >
+        <React.Fragment>
+          {(() => {
+            try {
+              return $props.label;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return "";
+              }
+              throw e;
             }
-          )}
+          })()}
+        </React.Fragment>
+      </div>
+      {(
+        hasVariant($state, "isSelected", "isSelected")
+          ? (() => {
+              try {
+                return (
+                  $props.name !== "filters" &&
+                  $props.name !== "order_items" &&
+                  $props.name !== "category"
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })()
+          : true
+      ) ? (
+        <div
+          data-plasmic-name={"_delete"}
+          data-plasmic-override={overrides._delete}
+          className={classNames(projectcss.all, sty._delete, {
+            [sty._deleteisSelected]: hasVariant(
+              $state,
+              "isSelected",
+              "isSelected"
+            )
+          })}
           onClick={async event => {
             const $steps = {};
 
-            $steps["runOnClick"] = true
+            $steps["runCode"] = true
               ? (() => {
                   const actionArgs = {
-                    eventRef: $props["onClick"],
+                    customFunction: async () => {
+                      return event.stopPropagation();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+
+            $steps["runOnDelete"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onDelete"],
                     args: [
                       (() => {
                         try {
@@ -312,118 +398,32 @@ function PlasmicFilterRowSingle__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["runOnClick"] != null &&
-              typeof $steps["runOnClick"] === "object" &&
-              typeof $steps["runOnClick"].then === "function"
+              $steps["runOnDelete"] != null &&
+              typeof $steps["runOnDelete"] === "object" &&
+              typeof $steps["runOnDelete"].then === "function"
             ) {
-              $steps["runOnClick"] = await $steps["runOnClick"];
+              $steps["runOnDelete"] = await $steps["runOnDelete"];
             }
           }}
         >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.label;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </div>
-        {(
-          hasVariant($state, "isSelected", "isSelected")
-            ? (() => {
-                try {
-                  return (
-                    $props.name !== "filters" &&
-                    $props.name !== "order_items" &&
-                    $props.name !== "category"
-                  );
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })()
-            : true
-        ) ? (
-          <div
-            data-plasmic-name={"_delete"}
-            data-plasmic-override={overrides._delete}
-            className={classNames(projectcss.all, sty._delete, {
-              [sty._deleteisSelected]: hasVariant(
+          <Icon13Icon
+            className={classNames(projectcss.all, sty.svg__vXxbX, {
+              [sty.svgisSelected__vXxbXjXAqb]: hasVariant(
                 $state,
                 "isSelected",
                 "isSelected"
               )
             })}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["runOnDelete"] = true
-                ? (() => {
-                    const actionArgs = {
-                      eventRef: $props["onDelete"],
-                      args: [
-                        (() => {
-                          try {
-                            return $props.name;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return (({ eventRef, args }) => {
-                      return eventRef?.(...(args ?? []));
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runOnDelete"] != null &&
-                typeof $steps["runOnDelete"] === "object" &&
-                typeof $steps["runOnDelete"].then === "function"
-              ) {
-                $steps["runOnDelete"] = await $steps["runOnDelete"];
-              }
-            }}
-          >
-            <Icon13Icon
-              className={classNames(projectcss.all, sty.svg__vXxbX, {
-                [sty.svgisSelected__vXxbXjXAqb]: hasVariant(
-                  $state,
-                  "isSelected",
-                  "isSelected"
-                )
-              })}
-              role={"img"}
-            />
-          </div>
-        ) : null}
-      </Stack__>
-    </div>
+            role={"img"}
+          />
+        </div>
+      ) : null}
+    </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "sortIcon", "text", "_delete"],
-  freeBox: ["freeBox", "sortIcon", "text", "_delete"],
+  root: ["root", "sortIcon", "text", "_delete"],
   sortIcon: ["sortIcon"],
   text: ["text"],
   _delete: ["_delete"]
@@ -433,7 +433,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
   sortIcon: "svg";
   text: "div";
   _delete: "div";
@@ -499,7 +498,6 @@ export const PlasmicFilterRowSingle = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
     sortIcon: makeNodeComponent("sortIcon"),
     text: makeNodeComponent("text"),
     _delete: makeNodeComponent("_delete"),
