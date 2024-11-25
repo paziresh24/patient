@@ -73,9 +73,7 @@ const Home = () => {
             {customize.partnerSubTitle}
           </Text>
         )}
-        <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
-          <SearchBarPlasmic />
-        </div>
+        <SearchBarPlasmic />
         {recent.length > 0 && (
           <div className="lg:w-[50rem] w-full">
             {/* <RecentSearch /> */}
