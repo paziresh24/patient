@@ -126,6 +126,24 @@ function PlasmicSearchTest__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "search.inputValue",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -147,6 +165,11 @@ function PlasmicSearchTest__RenderFunc(props: {
         data-plasmic-name={"search"}
         data-plasmic-override={overrides.search}
         className={classNames("__wab_instance", sty.search)}
+        inputValue={generateStateValueProp($state, ["search", "inputValue"])}
+        onInputValueChange={generateStateOnChangeProp($state, [
+          "search",
+          "inputValue"
+        ])}
       />
     </div>
   ) as React.ReactElement | null;
