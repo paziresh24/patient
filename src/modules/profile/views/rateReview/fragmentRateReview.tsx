@@ -88,32 +88,32 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
               props={{
                 ...profileData,
                 rate: (
-                  (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                    +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                    +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                  (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                    +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                    +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
                   3
                 ).toFixed(1),
-                rateCount: profileData.feedbacks.details?.count_of_feedbacks,
-                hideRates: profileData.feedbacks?.details?.hide_rates,
+                rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
+                hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
             <Fragment
               name="RateProgressBar"
               props={{
                 ...profileData,
-                averageQualityOfTreatment: profileData.feedbacks.details.average_rates.average_quality_of_treatment,
-                averageDoctorEncounter: profileData.feedbacks.details.average_rates.average_doctor_encounter,
-                averageExplanationOfIssue: profileData.feedbacks.details.average_rates.average_explanation_of_issue,
-                hideRates: profileData.feedbacks?.details?.hide_rates,
+                averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
+                averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
+                averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+                hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
           </div>
         )}
         {shouldShowDoctorTags && (
           <DoctorTags
-            symptomes={profileData.symptomes?.slice?.(0, 5) ?? []}
-            doctorId={profileData.information.id}
-            serverId={profileData.information.server_id}
+            symptomes={profileData?.symptomes?.slice?.(0, 5) ?? []}
+            doctorId={profileData?.information?.id}
+            serverId={profileData?.information?.server_id}
           />
         )}
         <Fragment
