@@ -210,7 +210,7 @@ function PlasmicProgressBar__RenderFunc(props: {
           <React.Fragment>
             {(() => {
               try {
-                return $props.value;
+                return $props.value?.toFixed(1);
               } catch (e) {
                 if (
                   e instanceof TypeError ||

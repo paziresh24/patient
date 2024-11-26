@@ -185,10 +185,6 @@ function PlasmicReplyCard__RenderFunc(props: {
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
-        headers={{
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }}
         loadingDisplay={null}
         method={"GET"}
         noLayout={false}
@@ -301,10 +297,6 @@ function PlasmicReplyCard__RenderFunc(props: {
                   </DataCtxReader__>
                 }
                 errorName={"fetchError"}
-                headers={{
-                  "Content-Type": "application/json",
-                  Accept: "application/json"
-                }}
                 loadingDisplay={
                   <DataCtxReader__>
                     {$ctx => (
