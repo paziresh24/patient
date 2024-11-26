@@ -99,10 +99,10 @@ export const sections = (data: any) => {
     {
       title: 'گالری',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
-      isShow: customize.showGalleryProfile && media.gallery.length > 0,
+      isShow: customize.showGalleryProfile && media.gallery?.length > 0,
       isShowFallback: editable,
       function: () => {
-        const items = media.gallery;
+        const items = media?.gallery;
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
         return {
           items: reformattedItems,
@@ -228,4 +228,3 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
-
