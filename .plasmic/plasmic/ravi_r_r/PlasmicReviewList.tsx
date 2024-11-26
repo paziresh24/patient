@@ -1596,10 +1596,6 @@ function PlasmicReviewList__RenderFunc(props: {
                 </DataCtxReader__>
               }
               errorName={"fetchError"}
-              headers={{
-                "Content-Type": "application/json",
-                Accept: "application/json"
-              }}
               loadingDisplay={
                 <DataCtxReader__>
                   {$ctx => (

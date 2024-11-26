@@ -420,10 +420,6 @@ function PlasmicReviewCard__RenderFunc(props: {
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
-        headers={{
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }}
         loadingDisplay={null}
         method={"GET"}
         noLayout={false}
@@ -680,10 +676,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                     </DataCtxReader__>
                   }
                   errorName={"fetchError"}
-                  headers={{
-                    "Content-Type": "application/json",
-                    Accept: "application/json"
-                  }}
                   loadingDisplay={
                     <DataCtxReader__>
                       {$ctx => (
@@ -1440,10 +1432,6 @@ function PlasmicReviewCard__RenderFunc(props: {
           dataName={"fetchedData"}
           errorDisplay={null}
           errorName={"fetchError"}
-          headers={{
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          }}
           loadingDisplay={null}
           method={"GET"}
           noLayout={false}
@@ -2181,10 +2169,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                   dataName={"fetchedData"}
                   errorDisplay={null}
                   errorName={"fetchError"}
-                  headers={{
-                    "Content-Type": "application/json",
-                    Accept: "application/json"
-                  }}
                   loadingDisplay={
                     <DataCtxReader__>
                       {$ctx => (
@@ -2990,10 +2974,6 @@ function PlasmicReviewCard__RenderFunc(props: {
         dataName={"fetchedData"}
         errorDisplay={null}
         errorName={"fetchError"}
-        headers={{
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }}
         loadingDisplay={null}
         method={"GET"}
         noLayout={false}

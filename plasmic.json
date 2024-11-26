@@ -1532,7 +1532,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1560,7 +1561,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -1846,6 +1848,32 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicExternalRate.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "wEZ_gicob_AK",
+          "name": "NewRatingBox",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicNewRatingBox.tsx",
+          "importSpec": {
+            "modulePath": "NewRatingBox.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicNewRatingBox.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "XaRCJPYGaC31",
+          "name": "StarRate2",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicStarRate2.tsx",
+          "importSpec": {
+            "modulePath": "StarRate2.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicStarRate2.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1978,9 +2006,70 @@
           "id": "BAtt58GWyi8d",
           "name": "Icon21Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon21.tsx"
+        },
+        {
+          "id": "g-w_MlJJPmrs",
+          "name": "Icon22Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon22.tsx"
+        },
+        {
+          "id": "_5i9GqoCVaiv",
+          "name": "Logo5E03Fe79SvgIcon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Logo5E03Fe79Svg.tsx"
+        },
+        {
+          "id": "jYG8ZhVocK2S",
+          "name": "Icon23Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon23.tsx"
+        },
+        {
+          "id": "IEsYKS2W7QnA",
+          "name": "Icon25Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon25.tsx"
+        },
+        {
+          "id": "1xT9nrQ-SKoC",
+          "name": "Icon26Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon26.tsx"
+        },
+        {
+          "id": "yTqbbBJJjjHv",
+          "name": "Icon27Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon27.tsx"
+        },
+        {
+          "id": "Wdkh9W7OENwz",
+          "name": "Icon28Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon28.tsx"
+        },
+        {
+          "id": "IoeAvP4DtBEU",
+          "name": "Icon29Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon29.tsx"
+        },
+        {
+          "id": "gfizOXjAEdC3",
+          "name": "Icon30Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon30.tsx"
+        },
+        {
+          "id": "7LGrDRQSghPi",
+          "name": "Icon24Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon24.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "gSLGwaSTkbzy",
+          "name": "image",
+          "filePath": "plasmic/ravi_r_r/images/image.svg"
+        },
+        {
+          "id": "y-dFPWR8O0ko",
+          "name": "logo-p24.png",
+          "filePath": "plasmic/ravi_r_r/images/logoP24Png.png"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "plasmic/ravi_r_r/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
@@ -2050,6 +2139,18 @@
           "name": "RadioFilter",
           "displayName": "RadioFilter",
           "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "zzXiq8jj5BBd",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "Sg8CNEmK2R9y",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
         }
       ],
       "customFunctions": [
@@ -2060,8 +2161,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -3722,7 +3822,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-embed-css"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {
