@@ -97,16 +97,10 @@ export const PlasmicSearch__VariantProps = new Array<VariantPropType>(
 );
 
 export type PlasmicSearch__ArgsType = {
-  inputValue?: string;
-  onInputValueChange?: (val: string) => void;
   onClickCity?: (value: any) => void;
 };
 type ArgPropType = keyof PlasmicSearch__ArgsType;
-export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
-  "inputValue",
-  "onInputValueChange",
-  "onClickCity"
-);
+export const PlasmicSearch__ArgProps = new Array<ArgPropType>("onClickCity");
 
 export type PlasmicSearch__OverridesType = {
   root?: Flex__<"div">;
@@ -120,8 +114,6 @@ export type PlasmicSearch__OverridesType = {
 };
 
 export interface DefaultSearchProps {
-  inputValue?: string;
-  onInputValueChange?: (val: string) => void;
   onClickCity?: (value: any) => void;
   hasOverlay?: SingleBooleanChoiceArg<"hasOverlay">;
   isFocus?: SingleBooleanChoiceArg<"isFocus">;
@@ -176,11 +168,9 @@ function PlasmicSearch__RenderFunc(props: {
       },
       {
         path: "inputValue",
-        type: "writable",
+        type: "private",
         variableType: "text",
-
-        valueProp: "inputValue",
-        onChangeProp: "onInputValueChange"
+        initFunc: ({ $props, $state, $queries, $ctx }) => ``
       },
       {
         path: "suggestionApi.data",
@@ -325,7 +315,7 @@ function PlasmicSearch__RenderFunc(props: {
                     })()
                   : (() => {
                       try {
-                        return $props.value;
+                        return $state.inputValue;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -366,6 +356,43 @@ function PlasmicSearch__RenderFunc(props: {
                       }
                     })()
               }
+              onChangeInput={async value => {
+                const $steps = {};
+
+                $steps["updateInputValue"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["inputValue"]
+                        },
+                        operation: 0,
+                        value: value
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateInputValue"] != null &&
+                  typeof $steps["updateInputValue"] === "object" &&
+                  typeof $steps["updateInputValue"].then === "function"
+                ) {
+                  $steps["updateInputValue"] = await $steps["updateInputValue"];
+                }
+              }}
               onClickCities={async () => {
                 const $steps = {};
 
