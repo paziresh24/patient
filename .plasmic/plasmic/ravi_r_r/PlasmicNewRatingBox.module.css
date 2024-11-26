@@ -23,8 +23,8 @@
 .svg {
   object-fit: cover;
   max-width: 100%;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
 }
 .svgcompact {
@@ -82,7 +82,7 @@
   height: auto;
   max-width: 100%;
   text-align: center;
-  font-size: var(--token-6NbVMeD6zQwn);
+  font-size: var(--token-VrIY9r5RDQZ_);
   font-weight: 500;
   text-decoration-line: underline;
   min-width: 0;
@@ -123,7 +123,7 @@
 }
 .starRate2:global(.__wab_instance) {
   max-width: 100%;
-  width: 30px;
+  width: 25px;
   height: 30px;
   flex-shrink: 0;
 }
@@ -133,7 +133,7 @@
   height: auto;
   max-width: 100%;
   text-align: center;
-  font-size: var(--token-6NbVMeD6zQwn);
+  font-size: var(--token-VrIY9r5RDQZ_);
   color: var(--token-sMH6_tUwTYlv);
   min-width: 0;
 }
