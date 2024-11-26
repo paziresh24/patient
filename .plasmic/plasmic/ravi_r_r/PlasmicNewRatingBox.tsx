@@ -266,7 +266,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
             displayMinHeight={"0"}
             displayMinWidth={"0"}
             displayWidth={"auto"}
-            height={"40"}
+            height={"35"}
             loading={"lazy"}
             src={(() => {
               try {
@@ -281,7 +281,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
                 throw e;
               }
             })()}
-            width={"40"}
+            width={"35"}
           />
         ) : null}
         <div
