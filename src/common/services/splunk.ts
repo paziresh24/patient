@@ -142,7 +142,7 @@ export const splunkInstance = (index: Index) => {
     case 'gozargah': {
       return splunk.create({
         baseUrl: 'https://gozargah-splunk.paziresh24.com',
-        token: '319fa7e9-15e9-4bda-87d0-f0e746caeeed',
+        token: 'cd46b97e-bf0d-46e4-ba7e-111c2f88291f',
         constant: {
           url: {
             href: window.location.href,
