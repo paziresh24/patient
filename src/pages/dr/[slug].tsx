@@ -40,6 +40,8 @@ import moment from 'jalali-moment';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import { Fragment } from '@/common/fragment';
+import { useSearchStore } from '@/modules/search/store/search';
+import useLockScroll from '@/common/hooks/useLockScroll';
 
 const { publicRuntimeConfig } = config();
 
@@ -80,6 +82,13 @@ const DoctorProfile = ({
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
   const setProfileData = useProfileDataStore(state => state.setData);
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+  const { openScroll } = useLockScroll();
+
+  useEffect(() => {
+    setIsOpenSuggestion(false);
+    openScroll();
+  }, [slug]);
 
   useEffect(() => {
     growthbook.setAttributes({

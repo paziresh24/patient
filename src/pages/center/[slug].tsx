@@ -27,6 +27,8 @@ import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { growthbook } from '../_app';
 import { usePageView } from '@/common/apis/services/profile/pageView';
+import { useSearchStore } from '@/modules/search/store/search';
+import useLockScroll from '@/common/hooks/useLockScroll';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -37,6 +39,13 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
   const { customize } = useCustomize();
   const slug = query.slug as string;
   const addPageView = usePageView();
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+  const { openScroll } = useLockScroll();
+
+  useEffect(() => {
+    setIsOpenSuggestion(false);
+    openScroll();
+  }, [slug]);
 
   const [searchQuery, setSearchQuery] = useState(text ?? '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(text ?? '');
