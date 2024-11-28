@@ -247,49 +247,50 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     return {
                       search: {
                         query_id: "",
-                        total: $ctx.fetchedData?.entity?.totalHits,
+                        total: $ctx.fetchedData?.entity?.totalHits ?? 0, // default to 0 if undefined
                         is_landing: false,
                         pagination: {
                           limit: $props.suggestionExecutionSource ? 0 : 10,
                           page: 1
                         },
                         result: $ctx.fetchedData?.entity?.results?.map(item => {
-                          if (item.source.record_type === "doctor") {
+                          if (item.source?.record_type === "doctor") {
                             return {
                               _id: item.documentId,
-                              id: item.source.doctor_id,
-                              server_id: item.source.server_id,
+                              id: item.source?.doctor_id ?? "",
+                              server_id: item.source?.server_id ?? "",
                               type: "doctor",
-                              title: item.source.display_name,
-                              prefix: item.source.prefix || "",
+                              title: item.source?.display_name ?? "نامشخص",
+                              prefix: item.source?.prefix ?? "",
                               image: `/getImage/p24/search-${
-                                item.source.gender ? "men" : "women"
+                                item.source?.gender ? "men" : "women"
                               }/${
                                 item?.source?.image ?? "noimage.png"
                               }?size=150`,
-                              view: item.source.number_of_visits,
-                              display_expertise: item.source.expertises
-                                .map(
-                                  expertise =>
-                                    expertise.alias_title ||
-                                    expertise.expertise.name
-                                )
-                                .join(", "),
-                              satisfaction: item.source.satisfaction || 0,
-                              rates_count: item.source.rates_count || 0,
+                              view: item.source?.number_of_visits ?? 0,
+                              display_expertise:
+                                item.source?.expertises
+                                  ?.map(
+                                    expertise =>
+                                      expertise?.alias_title ||
+                                      expertise?.expertise?.name
+                                  )
+                                  .join(", ") ?? "",
+                              satisfaction: item.source?.satisfaction ?? 0,
+                              rates_count: item.source?.rates_count ?? 0,
                               price: (() => {
                                 const consultServices =
-                                  item.source.consult_services;
+                                  item.source?.consult_services;
                                 if (
                                   consultServices &&
                                   consultServices.length > 0
                                 ) {
                                   const freePrice =
-                                    consultServices[0].free_price;
+                                    consultServices[0]?.free_price;
                                   if (freePrice && freePrice > 1000) {
                                     const priceValue = Math.floor(
                                       freePrice / 10
-                                    ); // Remove one zero
+                                    );
                                     const formattedPrice = priceValue
                                       .toString()
                                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -298,70 +299,70 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 }
                                 return null;
                               })(),
-                              centers: item.source.centers.map(center => ({
-                                id: center.id,
-                                status: center.status,
-                                user_center_id: center.user_center_id,
-                                server_id: center.server_id,
-                                name: center.name,
-                                display_number: center.display_number,
-                                address: center.address,
-                                province_name: center.province_name,
-                                city_name: center.city_name,
-                                center_type: center.center_type,
-                                map: {
-                                  lat: center.map ? center.map.lat : null,
-                                  lon: center.map ? center.map.lon : null
-                                },
-                                active_booking: center.active_booking
-                              })),
-                              display_address_full: `${item.source.city_name}, ${item.source.centers[0].address}`,
+                              centers:
+                                item.source?.centers?.map(center => ({
+                                  id: center?.id ?? "",
+                                  status: center?.status ?? "",
+                                  user_center_id: center?.user_center_id ?? "",
+                                  server_id: center?.server_id ?? "",
+                                  name: center?.name ?? "",
+                                  display_number: center?.display_number ?? "",
+                                  address: center?.address ?? "",
+                                  province_name: center?.province_name ?? "",
+                                  city_name: center?.city_name ?? "",
+                                  center_type: center?.center_type ?? "",
+                                  map: {
+                                    lat: center?.map?.lat ?? null,
+                                    lon: center?.map?.lon ?? null
+                                  },
+                                  active_booking:
+                                    center?.active_booking ?? false
+                                })) ?? [],
+                              display_address_full: `${
+                                item.source?.city_name ?? ""
+                              }, ${item.source?.centers?.[0]?.address ?? ""}`,
                               display_address: (() => {
-                                const validCenters = item.source.centers.filter(
-                                  center =>
-                                    center.id != "5532" && center.city_name
-                                );
-
+                                const validCenters =
+                                  item.source?.centers?.filter(
+                                    center =>
+                                      center?.id !== "5532" && center?.city_name
+                                  );
                                 const cityNames = [
                                   ...new Set(
-                                    validCenters.map(center => center.city_name)
+                                    validCenters?.map(
+                                      center => center?.city_name
+                                    )
                                   )
                                 ].join(" و ");
-
                                 if (!cityNames) {
                                   return null;
                                 }
-
                                 const centerNamesArray = validCenters
-                                  .filter(center => center.center_type != 1)
-                                  .map(center => center.name);
-
-                                // Add "مطب" if any center has center_type == 1
+                                  ?.filter(center => center?.center_type !== 1)
+                                  .map(center => center?.name);
                                 if (
-                                  validCenters.some(
-                                    center => center.center_type == 1
+                                  validCenters?.some(
+                                    center => center?.center_type === 1
                                   )
                                 ) {
                                   centerNamesArray.push("مطب");
                                 }
-
                                 const centerNames =
-                                  centerNamesArray.join(" و ");
+                                  centerNamesArray?.join(" و ");
                                 return centerNames
                                   ? `${cityNames} 🏥 ${centerNames}`
                                   : cityNames;
                               })(),
-
                               waiting_time: null,
                               badges: [],
-                              is_bulk: !item.source.centers.some(
-                                center => Number(center.status) === 1
+                              is_bulk: !item.source?.centers?.some(
+                                center => Number(center?.status) === 1
                               ),
                               consult_active_booking:
-                                item.source.consult_active_booking,
+                                item.source?.consult_active_booking ?? false,
                               presence_active_booking:
-                                item.source.presence_active_booking,
-                              url: `/dr/${item.source.slug}`,
+                                item.source?.presence_active_booking ?? false,
+                              url: `/dr/${item.source?.slug ?? ""}`,
                               actions: (() => {
                                 const actions = [];
                                 const now = Math.floor(Date.now() / 1000);
@@ -384,11 +385,11 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   }
                                 };
                                 const hasOnlineCenter =
-                                  item.source.centers.some(
-                                    center => center.id === "5532"
+                                  item.source?.centers?.some(
+                                    center => center?.id === "5532"
                                   );
                                 const consult_freeturn =
-                                  item.source.consult_freeturn;
+                                  item.source?.consult_freeturn;
                                 const consultTimeValid =
                                   consult_freeturn &&
                                   consult_freeturn >= now - 24 * 3600;
@@ -396,7 +397,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   const isImmediateConsult =
                                     consult_freeturn >= now - 90 * 60 &&
                                     consult_freeturn <= now + 60 * 60;
-                                  const outline = false;
                                   let top_title = "";
                                   if (isImmediateConsult) {
                                     top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
@@ -406,28 +406,26 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                     top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
                                   }
                                   const consultServiceId =
-                                    item.source.consult_services &&
-                                    item.source.consult_services.length > 0
-                                      ? item.source.consult_services[0].id
-                                      : "";
-                                  const url = `/booking/${item.source.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
+                                    item.source?.consult_services?.[0]?.id ??
+                                    "";
+                                  const url = `/booking/${item.source?.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
                                   actions.push({
                                     title: "ویزیت آنلاین",
-                                    outline: outline,
+                                    outline: false,
                                     top_title: top_title,
                                     url: url
                                   });
                                 }
                                 const presence_freeturn =
-                                  item.source.presence_freeturn;
+                                  item.source?.presence_freeturn;
                                 const presenceTimeValid =
                                   presence_freeturn &&
                                   presence_freeturn >= now - 24 * 3600;
                                 const hasActiveBookingCenter =
-                                  item.source.centers.some(
+                                  item.source?.centers?.some(
                                     center =>
-                                      center.id !== "5532" &&
-                                      center.active_booking
+                                      center?.id !== "5532" &&
+                                      center?.active_booking
                                   );
                                 let inPersonTitle = "";
                                 if (
@@ -445,7 +443,9 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                     formatTimeToFarsi(presence_freeturn);
                                   inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
                                 }
-                                const inPersonUrl = `/dr/${item.source.slug}`;
+                                const inPersonUrl = `/dr/${
+                                  item.source?.slug ?? ""
+                                }`;
                                 actions.push({
                                   title: inPersonTitle,
                                   outline: inPersonOutline,
@@ -454,57 +454,64 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 });
                                 return actions;
                               })(),
-                              experience: item.source.experience,
-                              position: item.beforePersonalizationPosition,
+                              experience: item.source?.experience ?? "",
+                              position: item.beforePersonalizationPosition ?? 0,
                               has_presciption: false,
-                              insurances: item.source.insurances,
+                              insurances: item.source?.insurances ?? [],
                               experiment_details: {
                                 search_index: "slim_clinic",
                                 consult_search_index: "slim_clinic_online_visit"
                               },
-                              expertises: item.source.expertises,
-                              gender: item.source.gender,
-                              expertise: item.source.expertise,
-                              rate_info: item.source.rate_info,
-                              consult_services: item.source.consult_services,
-                              doctor_id: item.source.doctor_id,
-                              number_of_visits: item.source.number_of_visits,
-                              waiting_time_info: item.source.waiting_time_info,
-                              slug: item.source.slug,
-                              graduation_date: item.source.graduation_date,
-                              star: item.source.star,
-                              services: item.source.services.map(service => ({
-                                workhours: service.workhours,
-                                center_id: service.center_id,
-                                id: service.id
-                              })),
-                              university_name: item.source.university_name,
-                              display_name: item.source.display_name,
-                              record_type: item.source.record_type,
-                              center_id: item.source.center_id,
-                              name: item.source.name,
-                              medical_code: item.source.medical_code,
-                              calculated_rate: item.source.calculated_rate
+                              expertises: item.source?.expertises ?? [],
+                              gender: item.source?.gender ?? null,
+                              expertise: item.source?.expertise ?? [],
+                              rate_info: item.source?.rate_info ?? {},
+                              consult_services:
+                                item.source?.consult_services ?? [],
+                              doctor_id: item.source?.doctor_id ?? "",
+                              number_of_visits:
+                                item.source?.number_of_visits ?? 0,
+                              waiting_time_info:
+                                item.source?.waiting_time_info ?? null,
+                              slug: item.source?.slug ?? "",
+                              graduation_date:
+                                item.source?.graduation_date ?? null,
+                              star: item.source?.star ?? 0,
+                              services:
+                                item.source?.services?.map(service => ({
+                                  workhours: service?.workhours ?? null,
+                                  center_id: service?.center_id ?? "",
+                                  id: service?.id ?? ""
+                                })) ?? [],
+                              university_name:
+                                item.source?.university_name ?? "",
+                              display_name: item.source?.display_name ?? "",
+                              record_type: item.source?.record_type ?? "",
+                              center_id: item.source?.center_id ?? [],
+                              name: item.source?.name ?? "",
+                              medical_code: item.source?.medical_code ?? "",
+                              calculated_rate: item.source?.calculated_rate ?? 0
                             };
-                          } else if (item.source.record_type === "center") {
+                          } else if (item.source?.record_type === "center") {
                             return {
                               _id: item.documentId,
-                              id: item.source.center_id,
-                              server_id: item.source.server_id,
+                              id: item.source?.center_id ?? "",
+                              server_id: item.source?.server_id ?? "",
                               type: "center",
-                              title: item.source.display_name,
+                              title: item.source?.display_name ?? "نامشخص",
                               image: `/getImage/p24/search-hospitalclinic/${
-                                item.source.image ?? "noimage.png"
+                                item.source?.image ?? "noimage.png"
                               }?size=150`,
-                              view: item.source.number_of_visits,
-                              address: item.source.address,
-                              city_id: item.source.city_id,
-                              slug: item.source.slug,
-                              url: `/center/${item.source.slug}`,
-                              university_name: item.source.university_name,
-                              name: item.source.name,
-                              record_type: item.source.record_type,
-                              status: item.source.status
+                              view: item.source?.number_of_visits ?? 0,
+                              address: item.source?.address ?? "",
+                              city_id: item.source?.city_id ?? "",
+                              slug: item.source?.slug ?? "",
+                              url: `/center/${item.source?.slug ?? ""}`,
+                              university_name:
+                                item.source?.university_name ?? "",
+                              name: item.source?.name ?? "",
+                              record_type: item.source?.record_type ?? "",
+                              status: item.source?.status ?? ""
                             };
                           } else {
                             return {

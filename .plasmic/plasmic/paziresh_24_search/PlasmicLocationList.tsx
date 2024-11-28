@@ -81,14 +81,14 @@ export type PlasmicLocationList__ArgsType = {
   locations?: any;
   selectedProvinceId?: string;
   searchTerm?: string;
-  onClickCity?: (value: any) => void;
+  onClick?: (value: any) => void;
 };
 type ArgPropType = keyof PlasmicLocationList__ArgsType;
 export const PlasmicLocationList__ArgProps = new Array<ArgPropType>(
   "locations",
   "selectedProvinceId",
   "searchTerm",
-  "onClickCity"
+  "onClick"
 );
 
 export type PlasmicLocationList__OverridesType = {
@@ -101,7 +101,7 @@ export interface DefaultLocationListProps {
   locations?: any;
   selectedProvinceId?: string;
   searchTerm?: string;
-  onClickCity?: (value: any) => void;
+  onClick?: (value: any) => void;
   className?: string;
 }
 
@@ -435,6 +435,42 @@ function PlasmicLocationList__RenderFunc(props: {
                   }
                 })()}
                 key={currentIndex}
+                onClick={async value => {
+                  const $steps = {};
+
+                  $steps["runOnClick"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClick"],
+                          args: [
+                            (() => {
+                              try {
+                                return currentItem;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClick"] != null &&
+                    typeof $steps["runOnClick"] === "object" &&
+                    typeof $steps["runOnClick"].then === "function"
+                  ) {
+                    $steps["runOnClick"] = await $steps["runOnClick"];
+                  }
+                }}
                 title={(() => {
                   try {
                     return currentItem.name;
@@ -507,10 +543,10 @@ function PlasmicLocationList__RenderFunc(props: {
                 onClick={async value => {
                   const $steps = {};
 
-                  $steps["runOnClickCity"] = true
+                  $steps["runOnClick"] = true
                     ? (() => {
                         const actionArgs = {
-                          eventRef: $props["onClickCity"],
+                          eventRef: $props["onClick"],
                           args: [
                             (() => {
                               try {
@@ -533,11 +569,11 @@ function PlasmicLocationList__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["runOnClickCity"] != null &&
-                    typeof $steps["runOnClickCity"] === "object" &&
-                    typeof $steps["runOnClickCity"].then === "function"
+                    $steps["runOnClick"] != null &&
+                    typeof $steps["runOnClick"] === "object" &&
+                    typeof $steps["runOnClick"].then === "function"
                   ) {
-                    $steps["runOnClickCity"] = await $steps["runOnClickCity"];
+                    $steps["runOnClick"] = await $steps["runOnClick"];
                   }
                 }}
                 title={(() => {

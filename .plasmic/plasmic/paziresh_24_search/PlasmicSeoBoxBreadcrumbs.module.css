@@ -1,12 +1,13 @@
 .root {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   position: relative;
-  width: auto;
+  width: 100%;
   height: auto;
   justify-content: flex-start;
   align-items: center;
   justify-self: flex-start;
+  min-width: 0;
 }
 .freeBox {
   display: flex;
@@ -15,6 +16,8 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
   min-width: 0;
 }
 .freeBox > :global(.__wab_flex-container) {
@@ -55,9 +58,9 @@
   width: auto;
   height: 1em;
   transition-property: all;
-  transition-duration: 1s;
+  transition-duration: 0.3s;
   -webkit-transition-property: all;
-  -webkit-transition-duration: 1s;
+  -webkit-transition-duration: 0.3s;
 }
 .root:hover .svg {
   transform: rotateX(0deg) rotateY(0deg) rotateZ(180deg);
