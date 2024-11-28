@@ -2324,6 +2324,37 @@ function PlasmicFilterRow__RenderFunc(props: {
               ) {
                 $steps["runOnClick"] = await $steps["runOnClick"];
               }
+
+              $steps["updateOptionsDialogOpen"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["optionsDialog", "open"]
+                      },
+                      operation: 0,
+                      value: false
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateOptionsDialogOpen"] != null &&
+                typeof $steps["updateOptionsDialogOpen"] === "object" &&
+                typeof $steps["updateOptionsDialogOpen"].then === "function"
+              ) {
+                $steps["updateOptionsDialogOpen"] = await $steps[
+                  "updateOptionsDialogOpen"
+                ];
+              }
             }}
             selected={(() => {
               try {
