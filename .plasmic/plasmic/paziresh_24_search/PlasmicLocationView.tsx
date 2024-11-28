@@ -360,7 +360,7 @@ function PlasmicLocationView__RenderFunc(props: {
               throw e;
             }
           })()}
-          onClickCity={async value => {
+          onClick={async value => {
             const $steps = {};
 
             $steps["runOnClickCity"] = true
