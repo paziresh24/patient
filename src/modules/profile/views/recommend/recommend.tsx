@@ -6,11 +6,13 @@ interface RecommendWrapperProps {
   city: any;
   doctorId: string;
   groupExpertise: any;
+  expertises?: any[];
   clickRecommendEvent: any;
 }
 
-export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommendEvent }: RecommendWrapperProps) => {
+export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommendEvent, expertises }: RecommendWrapperProps) => {
   const useVisitOnlineDoctorSubstitute = useFeatureIsOn('profile.use-visit-online-doctor-substitute');
+  console.log(expertises);
 
   return (
     <div className="flex flex-col space-y-3 md:hidden">
@@ -32,7 +34,7 @@ export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommen
       <Recommend
         className="pr-4 md:pr-0"
         doctorId={doctorId}
-        category={groupExpertise.en_slug}
+        category={expertises?.map((expertise: any) => expertise.expertise_name)[0]}
         city={city.en_slug}
         clickRecommendEvent={clickRecommendEvent}
         limit={3}
