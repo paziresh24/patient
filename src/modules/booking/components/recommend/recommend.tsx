@@ -27,9 +27,10 @@ export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: R
 
   const searchDoctor = useSearch(
     {
-      route: decodeURIComponent(`ir/${props.category}`),
+      route: decodeURIComponent(`ir`),
       query: {
         turn_type: 'consult',
+        text: props.category,
       },
     },
     { enabled: growthbook.ready && useVisitOnlineDoctorSubstitute },
@@ -84,7 +85,7 @@ export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: R
           }
           showMore={{
             text: 'نمایش نتایج بیشتر',
-            url: `/s/${props.city}/${props.category}/?turn_type=consult`,
+            url: `/s/ir/?turn_type=consult&text=${props.category}`,
           }}
         />
       )}

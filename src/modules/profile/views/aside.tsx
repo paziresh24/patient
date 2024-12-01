@@ -86,6 +86,7 @@ export const aside = (data: any) => {
           doctorId: information.id,
           city: { name: centers[0].city, en_slug: information.city_en_slug },
           groupExpertise: expertises.group_expertises[0],
+          expertises: expertises.expertises,
           clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
             splunkInstance('doctor-profile').sendEvent({
               group: 'recommend',
