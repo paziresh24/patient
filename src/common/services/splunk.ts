@@ -41,8 +41,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'booking-v2': {
       return splunk.create({
-        baseUrl: 'https://booking-splunk-hec.paziresh24.com',
-        token: '6605bd5e-79c4-413e-bab9-159fc20b9bf7',
+        baseUrl: 'https://p24-shelter-splunk-hec.paziresh24.com',
+        token: '49a5600c-e81d-4b55-8e32-c668f0faf4f0',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
@@ -74,8 +74,8 @@ export const splunkInstance = (index: Index) => {
     }
     case 'booking': {
       return splunk.create({
-        baseUrl: 'https://splunk-ravi-hec.paziresh24.com',
-        token: '6a22ae6e-2c46-4c2b-bff1-846b7fcd8b86',
+        baseUrl: 'https://p24-shelter-splunk-hec.paziresh24.com',
+        token: '49a5600c-e81d-4b55-8e32-c668f0faf4f0',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
