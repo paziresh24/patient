@@ -12,7 +12,6 @@ interface RecommendWrapperProps {
 
 export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommendEvent, expertises }: RecommendWrapperProps) => {
   const useVisitOnlineDoctorSubstitute = useFeatureIsOn('profile.use-visit-online-doctor-substitute');
-  console.log(expertises);
 
   return (
     <div className="flex flex-col space-y-3 md:hidden">
