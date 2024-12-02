@@ -14,6 +14,7 @@ export const pageViewEvent = async ({
   history,
   isWebView,
   isBulk,
+  features,
 }: {
   centers: any;
   information: any;
@@ -22,6 +23,7 @@ export const pageViewEvent = async ({
   history: any;
   isWebView: boolean;
   isBulk: boolean;
+  features?: any;
 }) => {
   await setTerminal();
   if (centers.every((center: any) => !center.is_active)) {
@@ -83,6 +85,9 @@ export const pageViewEvent = async ({
         server_id: information.server_id,
         center_id: centers.map((center: any) => center.id),
         center_status_main_name: centers.map((center: any) => center.status)?.includes(1) ? 'غیربالک' : 'بالک',
+        features: {
+          ...features,
+        },
       },
     },
   });

@@ -42,6 +42,7 @@ import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24
 import { Fragment } from '@/common/fragment';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 const { publicRuntimeConfig } = config();
 
@@ -84,6 +85,7 @@ const DoctorProfile = ({
   const setProfileData = useProfileDataStore(state => state.setData);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll } = useLockScroll();
+  const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -105,15 +107,25 @@ const DoctorProfile = ({
 
   useEffect(() => {
     if (information) {
-      pageViewEvent({
-        information,
-        centers,
-        expertises,
-        history,
-        feedbacks,
-        isBulk,
-        isWebView: !!isWebView || !!isApplication,
-      });
+      if (growthbook.ready && growthbook.getAttributes().slug === slug) {
+        pageViewEvent({
+          information,
+          centers,
+          expertises,
+          history,
+          feedbacks,
+          isBulk,
+          isWebView: !!isWebView || !!isApplication,
+          features: {
+            ravi_show_external_rate: dontShowRateDetails,
+          },
+        });
+      }
+    }
+  }, [dontShowRateDetails, information, slug]);
+
+  useEffect(() => {
+    if (information) {
       if (shouldUseIncrementPageView) {
         incrementPageView.mutate({
           provider_id: information.provider_id,
