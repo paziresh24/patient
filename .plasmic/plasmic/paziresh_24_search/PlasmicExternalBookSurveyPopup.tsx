@@ -163,104 +163,106 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
                   customFunction: async () => {
                     return (() => {
                       return (function () {
-                        var createFullScreenPopup = function (url) {
-                          var overlay = document.createElement("div");
-                          overlay.id = "fullscreen-overlay";
-                          overlay.style.position = "fixed";
-                          overlay.style.top = "0";
-                          overlay.style.left = "0";
-                          overlay.style.width = "100%";
-                          overlay.style.height = "100%";
-                          overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-                          overlay.style.zIndex = "9999";
-                          overlay.style.display = "flex";
-                          overlay.style.justifyContent = "center";
-                          overlay.style.alignItems = "center";
-                          var iframe = document.createElement("iframe");
-                          iframe.src = url;
-                          iframe.style.width = "95%";
-                          iframe.style.height = "95%";
-                          iframe.style.border = "none";
-                          iframe.style.borderRadius = "5px";
-                          iframe.style.boxShadow =
-                            "0 0 10px rgba(0, 0, 0, 0.5)";
-                          iframe.style.zIndex = "10000";
-                          var closeButton = document.createElement("div");
-                          closeButton.textContent = "[X]";
-                          closeButton.style.position = "fixed";
-                          closeButton.style.top = "20px";
-                          closeButton.style.right = "30px";
-                          closeButton.style.fontSize = "24px";
-                          closeButton.style.color = "#333";
-                          closeButton.style.cursor = "pointer";
-                          closeButton.style.zIndex = "10001";
-                          closeButton.onclick = function () {
-                            deleteTransitionDataCookie();
-                            document.body.removeChild(overlay);
-                          };
-                          var closeTextButton =
-                            document.createElement("button");
-                          closeTextButton.textContent = "بستن";
-                          closeTextButton.style.position = "fixed";
-                          closeTextButton.style.bottom = "20px";
-                          closeTextButton.style.left = "30px";
-                          closeTextButton.style.fontSize = "14px";
-                          closeTextButton.style.padding = "10px 20px";
-                          closeTextButton.style.backgroundColor = "#ddd";
-                          closeTextButton.style.color = "#000";
-                          closeTextButton.style.border = "none";
-                          closeTextButton.style.borderRadius = "5px";
-                          closeTextButton.style.cursor = "pointer";
-                          closeTextButton.style.zIndex = "10001";
-                          closeTextButton.onclick = function () {
-                            deleteTransitionDataCookie();
-                            document.body.removeChild(overlay);
-                          };
-                          overlay.appendChild(iframe);
-                          overlay.appendChild(closeButton);
-                          overlay.appendChild(closeTextButton);
-                          document.body.appendChild(overlay);
-                        };
-                        var getTransitionData = function () {
-                          var name = "transitionData=";
-                          var decodedCookie = decodeURIComponent(
-                            document.cookie
-                          );
-                          var ca = decodedCookie.split(";");
-                          for (var i = 0; i < ca.length; i++) {
-                            var c = ca[i];
-                            while (c.charAt(0) == " ") {
-                              c = c.substring(1);
-                            }
-                            if (c.indexOf(name) == 0) {
-                              return JSON.parse(
-                                c.substring(name.length, c.length)
+                        function getTransitionData() {
+                          const name = "transitionData=";
+                          const cookies = document.cookie.split(";");
+                          for (let i = 0; i < cookies.length; i++) {
+                            let c = cookies[i].trim();
+                            if (c.indexOf(name) === 0) {
+                              const cookieValue = c.substring(
+                                name.length,
+                                c.length
                               );
+                              try {
+                                const decodedValue =
+                                  decodeURIComponent(cookieValue);
+                                return JSON.parse(decodedValue);
+                              } catch (e) {
+                                console.error(
+                                  "Error parsing transitionData cookie:",
+                                  e
+                                );
+                                return null;
+                              }
                             }
                           }
                           return null;
-                        };
-                        var deleteTransitionDataCookie = function () {
-                          document.cookie =
-                            "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.paziresh24.com;";
-                          document.cookie =
-                            "transitionData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=www.paziresh24.com;";
-                        };
-                        var transitionData = getTransitionData();
+                        }
+                        function deleteTransitionDataCookie() {
+                          const domains = [
+                            "paziresh24.com",
+                            "www.paziresh24.com"
+                          ];
+
+                          const expires = "Thu, 01 Jan 1970 00:00:00 GMT";
+                          domains.forEach(domain => {
+                            document.cookie = `transitionData=; expires=${expires}; domain=${domain}; path=/`;
+                          });
+                        }
+                        const transitionData = getTransitionData();
                         if (transitionData) {
-                          var terminalId = encodeURIComponent(
+                          const terminalId = encodeURIComponent(
                             transitionData.terminalId || ""
                           );
-                          var siteTitle = encodeURIComponent(
+                          const siteTitle = encodeURIComponent(
                             transitionData.destinationHost || ""
                           );
-                          var drName = encodeURIComponent(
+                          const drName = encodeURIComponent(
                             transitionData.destinationDoctorName || ""
                           );
-                          var surveyURL = `https://survey.porsline.ir/s/CA0z9O8?ac=0&ns=1&terminal-id=${terminalId}&site-title=${siteTitle}&dr-name=${drName}`;
-                          createFullScreenPopup(surveyURL);
+                          const surveyURL = `https://survey.porsline.ir/s/CA0z9O8?ac=1&ns=0&terminal-id=${terminalId}&site-title=${siteTitle}&dr-name=${drName}#/?ac=1&ns=0&terminal-id=${terminalId}&site-title=${siteTitle}&dr-name=${drName}`;
+                          (function () {
+                            var js,
+                              q,
+                              d = document,
+                              gi = d.getElementById,
+                              ifid = "porsline-popup-iframe",
+                              ce = d.createElement,
+                              gt = d.getElementsByTagName,
+                              id = "porsline-share",
+                              b =
+                                "https://cdn.porsline.ir/static/panel/v2/statics/";
+                            if (!gi.call(d, id)) {
+                              js = ce.call(d, "script");
+                              js.id = id;
+                              js.src = b + "popup.js";
+                              q = gt.call(d, "script")[0];
+                              q.parentNode.insertBefore(js, q);
+                            }
+                          })();
+                          var clCA0z9O8 = function (ifid) {
+                            var iframe = document.getElementById(ifid);
+                            if (iframe) {
+                              iframe.fetchPriority = "high";
+                              iframe.src = surveyURL;
+                              iframe.style.position = "fixed";
+                              iframe.style.top = "0";
+                              iframe.style.left = "0";
+                              iframe.style.width = "100%";
+                              iframe.style.height = "100%";
+                              iframe.style.zIndex = "2147483647";
+                              iframe.style.border = "none";
+                              iframe.style.boxSizing = "border-box";
+                              iframe.style.pointerEvents = "auto";
+                            } else {
+                              console.error(
+                                `Iframe with id '${ifid}' not found.`
+                              );
+                            }
+                          };
+                          setTimeout(function () {
+                            clCA0z9O8("porsline-popup-iframe");
+                            if (typeof showPopUp === "function") {
+                              showPopUp();
+                            } else {
+                              console.error(
+                                "showPopUp function is not defined."
+                              );
+                            }
+                          }, 200);
+                          deleteTransitionDataCookie();
                         } else {
-                          console.error("transitionData cookie not found.");
+                          console.error("No transitionData cookie found.");
                         }
                       })();
                     })();

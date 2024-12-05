@@ -267,7 +267,10 @@ function PlasmicSearch__RenderFunc(props: {
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root,
-        { [sty.rootisFocus]: hasVariant($state, "isFocus", "isFocus") }
+        {
+          [sty.roothasOverlay]: hasVariant($state, "hasOverlay", "hasOverlay"),
+          [sty.rootisFocus]: hasVariant($state, "isFocus", "isFocus")
+        }
       )}
     >
       {(hasVariant(globalVariants, "screen", "mobileOnly") ? false : true) ? (
