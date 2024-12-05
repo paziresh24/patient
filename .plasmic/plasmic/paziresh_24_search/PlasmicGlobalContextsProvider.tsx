@@ -19,19 +19,15 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
@@ -183,11 +179,11 @@ export default function GlobalContextsProvider(
                 ? antdConfigProviderProps.themeStyles!
                 : true
                 ? {
-                    fontFamily: "initial",
-                    fontSize: "1rem",
+                    fontFamily: "Inter",
+                    fontSize: "16px",
                     fontWeight: "400",
                     lineHeight: "1.5",
-                    color: "#2B2F33",
+                    color: "#535353",
                     letterSpacing: "normal"
                   }
                 : undefined
