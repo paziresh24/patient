@@ -6,12 +6,24 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useSearch } from '../../hooks/useSearch';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { Fragment } from '@/common/fragment';
 
 export const SearchSeoBox = () => {
   const showSeoBox = useFeatureIsOn('search::seobox');
   const customize = useCustomize(state => state.customize);
   const { seoInfo, footers } = useSearch();
 
+  if (showSeoBox) {
+    return (
+      <Fragment
+        name="SeoBox"
+        props={{
+          seoInfo,
+          footer: footers,
+        }}
+      />
+    );
+  }
   return (
     <>
       {!!seoInfo?.breadcrumbs && (

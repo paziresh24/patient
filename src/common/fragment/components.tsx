@@ -39,6 +39,8 @@ import PlasmicFilterSelectedView, {
   PlasmicFilterSelectedView__ArgProps,
 } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterSelectedView';
 import PlasmicFilterRow, { PlasmicFilterRow__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterRow';
+import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
+import PlasmicRecentSearch, { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -163,4 +165,17 @@ export const Components = {
     propsAllowed: PlasmicFilterRow__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
+  RecentSearch: {
+    Component: PlasmicRecentSearch,
+    id: 'ARWFU9130hug',
+    propsAllowed: PlasmicRecentSearch__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  SeoBox: {
+    Component: PlasmicSeoBox,
+    id: 'LCOgDdMa8kxO',
+    propsAllowed: PlasmicSeoBox__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
 };
+
