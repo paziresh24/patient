@@ -5,8 +5,10 @@ import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useSearch } from '../../hooks/useSearch';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 export const SearchSeoBox = () => {
+  const showSeoBox = useFeatureIsOn('search::seobox');
   const customize = useCustomize(state => state.customize);
   const { seoInfo, footers } = useSearch();
 
@@ -47,3 +49,4 @@ export const SearchSeoBox = () => {
 };
 
 export default SearchSeoBox;
+
