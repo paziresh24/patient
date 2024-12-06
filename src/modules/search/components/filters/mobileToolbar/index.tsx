@@ -1,9 +1,10 @@
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { Fragment } from '@/common/fragment';
+import { addCommas } from '@persian-tools/persian-tools';
 
 export const MobileToolbar = () => {
-  const { orderItems, categories, filters } = useSearch();
+  const { orderItems, categories, filters, total } = useSearch();
   const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
 
   return (
@@ -20,6 +21,7 @@ export const MobileToolbar = () => {
           onClick: (name: string, value: string) => handleChange(name, value),
           onDelete: (name: string) => removeFilter(name),
           selectedSort: selectedFilters?.['sortBy'],
+          countOfFilters: addCommas(total),
         }}
       />
     </div>
@@ -27,3 +29,4 @@ export const MobileToolbar = () => {
 };
 
 export default MobileToolbar;
+

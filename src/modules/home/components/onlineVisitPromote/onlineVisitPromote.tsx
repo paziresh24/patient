@@ -4,14 +4,17 @@ import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import ChevronIcon from '@/common/components/icons/chevron';
+import { Fragment } from '@/common/fragment';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import random from 'lodash/random';
 import { useMemo } from 'react';
 
 export const OnlineVisitPromote = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
+  const showOnlineVisitPromote = useFeatureIsOn('search::onlineVisitPromote');
 
   const searchData = useSearch(
     {
@@ -54,6 +57,10 @@ export const OnlineVisitPromote = () => {
     handleClose();
     location.assign('/consult?from_recommend_section=1');
   };
+
+  if (showOnlineVisitPromote) {
+    return <Fragment name="SearchOnlineVisit" />;
+  }
 
   return (
     <>
@@ -123,3 +130,4 @@ export const OnlineVisitPromote = () => {
 };
 
 export default OnlineVisitPromote;
+

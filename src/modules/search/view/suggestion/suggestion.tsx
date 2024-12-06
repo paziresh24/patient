@@ -14,6 +14,8 @@ import { useSearchRouting } from '../../hooks/useSearchRouting';
 import { useSearchStore } from '../../store/search';
 import { Section } from '../../types/suggestion';
 import classNames from '@/common/utils/classNames';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { Fragment } from '@/common/fragment';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
@@ -33,6 +35,8 @@ export const Suggestion = (props: SuggestionProps) => {
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
+  const showSearchInput = useFeatureIsOn('search::search-input');
+
   const searchSuggestion = useSearchSuggestion(
     {
       query: userSearchValue,
@@ -158,6 +162,29 @@ export const Suggestion = (props: SuggestionProps) => {
       });
   };
 
+  if (showSearchInput) {
+    return (
+      <div className="w-full p-2 lg:w-[50rem]">
+        <Fragment
+          name="SearchInput"
+          props={{
+            onClickCity: (value: any) =>
+              console.log({
+                ...value,
+                // name: value?.name,
+                // id: value?.id,
+                // en_slug: value?.en_slug,
+                // province_id: value?.province_id,
+              }),
+          }}
+          variants={{
+            hasOverlay: overlay,
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem] relative" ref={ref}>
       {isOpenSuggestion && overlay && (
@@ -203,3 +230,4 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
+
