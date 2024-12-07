@@ -61,7 +61,7 @@ import {
 
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import SubstituteDoctor from "../../SubstituteDoctor"; // plasmic-import: 4XueZ64JE9vm/component
+import SuggestedDoctor from "../../SuggestedDoctor"; // plasmic-import: 4XueZ64JE9vm/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -89,7 +89,7 @@ export type PlasmicOnlineVisit__OverridesType = {
   button?: Flex__<typeof Button>;
   dialog?: Flex__<typeof Dialog>;
   text?: Flex__<"div">;
-  substituteDoctor?: Flex__<typeof SubstituteDoctor>;
+  suggestedDoctor?: Flex__<typeof SuggestedDoctor>;
 };
 
 export interface DefaultOnlineVisitProps {
@@ -216,10 +216,10 @@ function PlasmicOnlineVisit__RenderFunc(props: {
         data-plasmic-name={"dialog"}
         data-plasmic-override={overrides.dialog}
         body={
-          <SubstituteDoctor
-            data-plasmic-name={"substituteDoctor"}
-            data-plasmic-override={overrides.substituteDoctor}
-            className={classNames("__wab_instance", sty.substituteDoctor)}
+          <SuggestedDoctor
+            data-plasmic-name={"suggestedDoctor"}
+            data-plasmic-override={overrides.suggestedDoctor}
+            className={classNames("__wab_instance", sty.suggestedDoctor)}
           />
         }
         className={classNames("__wab_instance", sty.dialog)}
@@ -246,11 +246,11 @@ function PlasmicOnlineVisit__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "button", "dialog", "text", "substituteDoctor"],
+  root: ["root", "button", "dialog", "text", "suggestedDoctor"],
   button: ["button"],
-  dialog: ["dialog", "text", "substituteDoctor"],
+  dialog: ["dialog", "text", "suggestedDoctor"],
   text: ["text"],
-  substituteDoctor: ["substituteDoctor"]
+  suggestedDoctor: ["suggestedDoctor"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -260,7 +260,7 @@ type NodeDefaultElementType = {
   button: typeof Button;
   dialog: typeof Dialog;
   text: "div";
-  substituteDoctor: typeof SubstituteDoctor;
+  suggestedDoctor: typeof SuggestedDoctor;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -326,7 +326,7 @@ export const PlasmicOnlineVisit = Object.assign(
     button: makeNodeComponent("button"),
     dialog: makeNodeComponent("dialog"),
     text: makeNodeComponent("text"),
-    substituteDoctor: makeNodeComponent("substituteDoctor"),
+    suggestedDoctor: makeNodeComponent("suggestedDoctor"),
 
     // Metadata about props expected for PlasmicOnlineVisit
     internalVariantProps: PlasmicOnlineVisit__VariantProps,
