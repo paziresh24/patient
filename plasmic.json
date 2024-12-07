@@ -1178,19 +1178,6 @@
           "componentType": "component"
         },
         {
-          "id": "4XueZ64JE9vm",
-          "name": "SubstituteDoctor",
-          "type": "managed",
-          "projectId": "sMdpLWyxbzDCruwMRffW2m",
-          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSubstituteDoctor.tsx",
-          "importSpec": {
-            "modulePath": "SubstituteDoctor.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSubstituteDoctor.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "yb2GxUTcIaA5",
           "name": "SearchMobile",
           "type": "managed",
@@ -1213,6 +1200,19 @@
             "modulePath": "RecentSearch.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicRecentSearch.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "4XueZ64JE9vm",
+          "name": "SuggestedDoctor",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSuggestedDoctor.tsx",
+          "importSpec": {
+            "modulePath": "SuggestedDoctor.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSuggestedDoctor.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }

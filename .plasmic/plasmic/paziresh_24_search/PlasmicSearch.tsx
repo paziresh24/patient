@@ -897,6 +897,11 @@ function PlasmicSearch__RenderFunc(props: {
           </div>
         }
         className={classNames("__wab_instance", sty.selectCityDialog, {
+          [sty.selectCityDialoghasOverlay]: hasVariant(
+            $state,
+            "hasOverlay",
+            "hasOverlay"
+          ),
           [sty.selectCityDialogisFocus]: hasVariant(
             $state,
             "isFocus",
