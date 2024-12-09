@@ -93,6 +93,7 @@ export type PlasmicServices__ArgsType = {
   waitingTimeInfo?: any;
   expertises?: any;
   seo?: any;
+  onEvent?: () => void;
 };
 type ArgPropType = keyof PlasmicServices__ArgsType;
 export const PlasmicServices__ArgProps = new Array<ArgPropType>(
@@ -101,7 +102,8 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
   "onlineVisit",
   "waitingTimeInfo",
   "expertises",
-  "seo"
+  "seo",
+  "onEvent"
 );
 
 export type PlasmicServices__OverridesType = {
@@ -116,6 +118,7 @@ export interface DefaultServicesProps {
   waitingTimeInfo?: any;
   expertises?: any;
   seo?: any;
+  onEvent?: () => void;
   type?: SingleChoiceArg<"onlineVisit">;
   className?: string;
 }
@@ -739,6 +742,22 @@ function PlasmicServices__RenderFunc(props: {
           }
           onClick={async event => {
             const $steps = {};
+
+            $steps["runOnEvent"] = true
+              ? (() => {
+                  const actionArgs = { eventRef: $props["onEvent"] };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runOnEvent"] != null &&
+              typeof $steps["runOnEvent"] === "object" &&
+              typeof $steps["runOnEvent"].then === "function"
+            ) {
+              $steps["runOnEvent"] = await $steps["runOnEvent"];
+            }
 
             $steps["goToPage"] = true
               ? (() => {
