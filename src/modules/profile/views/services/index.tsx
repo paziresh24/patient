@@ -17,6 +17,7 @@ import { useAvailabilityStatus } from '@/common/apis/services/booking/availabili
 import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
 import { sortBy } from 'lodash';
+import { splunkInstance } from '@/common/services/splunk';
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -62,6 +63,24 @@ export const Services = ({
   );
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
+  const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
+
+  const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'booking-widget-doctor-profile',
+      type: 'book-button-click',
+      event: {
+        data: {
+          slug: slug,
+          center_id: centerId,
+          service_id: serviceId,
+          features: {
+            ravi_show_external_rate: dontShowRateDetails,
+          },
+        },
+      },
+    });
+  };
 
   const handleOpenBookingPage = (
     slug: string,
@@ -82,6 +101,8 @@ export const Services = ({
       ...(provider_id && user_id && { providerId: provider_id, userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
+
+    onEvent({ centerId, serviceId });
 
     if (isNativeWebView()) {
       if (isBookRequest) return location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
@@ -125,7 +146,12 @@ export const Services = ({
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => (
-              <Fragment key={index} name="Services" props={{ ...profileData, service }} variants={{ type: 'onlineVisit' }} />
+              <Fragment
+                key={index}
+                name="Services"
+                props={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
+                variants={{ type: 'onlineVisit' }}
+              />
             ))}
         {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
