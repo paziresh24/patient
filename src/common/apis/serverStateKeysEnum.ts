@@ -22,4 +22,5 @@ export enum ServerStateKeysEnum {
   DoctorTags = 'doctorTags',
   Rate = 'rate',
   AvailabilityStatus = 'availabilityStatus',
+  Services = 'services',
 }

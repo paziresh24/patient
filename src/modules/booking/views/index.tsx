@@ -4,7 +4,6 @@ import { toast } from 'react-hot-toast';
 // Apis
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
 import { useSymptoms } from '@/common/apis/services/booking/symptoms';
-import { useTermsAndConditions } from '@/common/apis/services/booking/termsAndConditions';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
@@ -78,6 +77,7 @@ import { Symptoms } from '../types/selectSymptoms';
 import { growthbook } from 'src/pages/_app';
 import { template, templateSettings } from 'lodash';
 import { useProviders } from '@/modules/profile/apis/providers';
+import { useGetServices } from '@/common/apis/services/profile/services';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -143,7 +143,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [selectedTime, setSelectedTime] = useState(0);
   const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
-  const termsAndConditions = useTermsAndConditions();
   const getTurnTimeout = useRef<any>();
   const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
   const shouldUseInquiryIdentityInformation = useFeatureValue<{ ids: string[] }>('booking:inquiry-identity-information|center-list', {
@@ -194,7 +193,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   });
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
-  const useNewFactorPage = useFeatureIsOn('use-new-factor-page');
+  const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -424,14 +423,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   ) => {
     setStep(key);
 
-    if (key === 'BOOK_REQUEST') {
-      termsAndConditions.mutate({
-        center_id: center.id,
-        service_id: service.id,
-        user_center_id: center.user_center_id,
-      });
-    }
-
     const action = options?.replaceUrl ? 'replace' : 'push';
 
     payload &&
@@ -598,17 +589,27 @@ const BookingSteps = (props: BookingStepsProps) => {
           title={center?.id === CENTERS.CONSULT ? 'انتخاب زمان گفتگو' : 'انتخاب زمان نوبت'}
           Component={SelectTimeWrapper}
           TopComponent={
-            profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
-            customize.showRateAndReviews && (
-              <>
-                <Text fontSize="sm" fontWeight="medium" className="text-orange-700">
-                  <InfoIcon className="inline ml-1" />
-                  با توجه به گزارشات مراجعین اخیر پزشک، احتمال عدم موفقیت شما در ویزیت (به دلایلی مثل شلوغی مرکز، عدم حضور پزشک، برخورد منشی
-                  و ...) وجود دارد.
-                </Text>
-                <Divider />
-              </>
-            )
+            <>
+              {profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
+                customize.showRateAndReviews && (
+                  <>
+                    <Text fontSize="sm" fontWeight="medium" className="text-orange-700">
+                      <InfoIcon className="inline ml-1" />
+                      با توجه به گزارشات مراجعین اخیر پزشک، احتمال عدم موفقیت شما در ویزیت (به دلایلی مثل شلوغی مرکز، عدم حضور پزشک، برخورد
+                      منشی و ...) وجود دارد.
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+              {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description && (
+                <div className="p-3 mb-5 rounded-lg bg-slate-100">
+                  <InfoIcon className="inline ml-1 w-6 h-6" />
+                  <Text fontSize="sm" fontWeight="semiBold">
+                    {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description}
+                  </Text>
+                </div>
+              )}
+            </>
           }
           data={{
             loading: isLoading || !center || !service || !profile,
@@ -796,6 +797,18 @@ const BookingSteps = (props: BookingStepsProps) => {
       {step === 'BOOK_REQUEST' && (
         <Wrapper
           Component={TurnRequest}
+          TopComponent={
+            <>
+              {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description && (
+                <div className="p-3 mb-5 rounded-lg bg-slate-100">
+                  <InfoIcon className="inline ml-1 w-6 h-6" />
+                  <Text fontSize="sm" fontWeight="semiBold">
+                    {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description}
+                  </Text>
+                </div>
+              )}
+            </>
+          }
           data={{
             descriptionTitle: 'لطفا توضیحات مورد نیاز خود را وارد کنید',
             checkboxText: 'قوانین را مطالعه کردم و پذیرفتم.',
@@ -804,7 +817,6 @@ const BookingSteps = (props: BookingStepsProps) => {
             rulesBoxTitle: 'شرایط دریافت نوبت از پذیرش24',
             uploadRequired: true,
             getData: () => {},
-            rules: termsAndConditions.data?.data?.result,
             loading: bookRequest.isLoading,
           }}
           nextStep={(data: TurnRequestInformation) => {
