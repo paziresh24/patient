@@ -821,7 +821,6 @@ const BookingSteps = (props: BookingStepsProps) => {
           }}
           nextStep={(data: TurnRequestInformation) => {
             if (!data.description) return toast.error('لطفا توضیحات را تکمیل کنید.');
-            if (!data.checkedRules) return toast.error('لطفا قوانین را بپذیرید.');
             handleBookRequest(data);
           }}
         />

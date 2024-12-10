@@ -10,6 +10,7 @@ interface Window {
   paziresh24: any;
   user: any;
   najvaUserSubscribed: any;
+  clarity: any;
 }
 
 declare const window: Window;
