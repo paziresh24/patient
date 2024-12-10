@@ -1,4 +1,4 @@
-import { paziresh24AppClient } from '@/common/apis/client';
+import { apiGatewayClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +9,7 @@ export interface Params {
 }
 
 export const getProfileData = async ({ slug, ...params }: Params) => {
-  const { data } = await paziresh24AppClient.get(`/doctor/v1/full-profile/${slug}/`, { params, timeout: 2000 });
+  const { data } = await apiGatewayClient.get(`/v1/full-profile/${slug}/`, { params, timeout: 2000 });
   return data;
 };
 
