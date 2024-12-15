@@ -91,8 +91,8 @@ export const PlasmicExternalRate__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicExternalRate__OverridesType = {
   root?: Flex__<"div">;
-  getPaziresh24Rate?: Flex__<typeof ApiRequest>;
   apiRequest?: Flex__<typeof ApiRequest>;
+  getPaziresh24Rate?: Flex__<typeof ApiRequest>;
   button?: Flex__<typeof Button>;
   rateProgressBar?: Flex__<typeof RateProgressBar>;
 };
@@ -219,75 +219,6 @@ function PlasmicExternalRate__RenderFunc(props: {
         className={classNames(projectcss.all, sty.freeBox__iiGlz)}
       >
         <ApiRequest
-          data-plasmic-name={"getPaziresh24Rate"}
-          data-plasmic-override={overrides.getPaziresh24Rate}
-          className={classNames("__wab_instance", sty.getPaziresh24Rate)}
-          errorDisplay={null}
-          loadingDisplay={null}
-          method={"GET"}
-          onError={generateStateOnChangeProp($state, [
-            "getPaziresh24Rate",
-            "error"
-          ])}
-          onLoading={generateStateOnChangeProp($state, [
-            "getPaziresh24Rate",
-            "loading"
-          ])}
-          onSuccess={generateStateOnChangeProp($state, [
-            "getPaziresh24Rate",
-            "data"
-          ])}
-          url={(() => {
-            try {
-              return `https://apigw.paziresh24.com/ravi/v1/rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        >
-          <NewRatingBox
-            className={classNames("__wab_instance", sty.newRatingBox__r1Rip)}
-            commentCount={(() => {
-              try {
-                return $state.getPaziresh24Rate.data.list[0].count_rates;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            rate={(() => {
-              try {
-                return (
-                  ($state.getPaziresh24Rate.data.list[0].doctor_encounter +
-                    $state.getPaziresh24Rate.data.list[0].quality_of_treatment +
-                    $state.getPaziresh24Rate.data.list[0]
-                      .explanation_of_issue) /
-                  3
-                ).toFixed(1);
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          />
-        </ApiRequest>
-        <ApiRequest
           data-plasmic-name={"apiRequest"}
           data-plasmic-override={overrides.apiRequest}
           className={classNames("__wab_instance", sty.apiRequest)}
@@ -413,6 +344,76 @@ function PlasmicExternalRate__RenderFunc(props: {
               );
             })}
           </div>
+        </ApiRequest>
+        <ApiRequest
+          data-plasmic-name={"getPaziresh24Rate"}
+          data-plasmic-override={overrides.getPaziresh24Rate}
+          className={classNames("__wab_instance", sty.getPaziresh24Rate)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={generateStateOnChangeProp($state, [
+            "getPaziresh24Rate",
+            "error"
+          ])}
+          onLoading={generateStateOnChangeProp($state, [
+            "getPaziresh24Rate",
+            "loading"
+          ])}
+          onSuccess={generateStateOnChangeProp($state, [
+            "getPaziresh24Rate",
+            "data"
+          ])}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/ravi/v1/rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          <NewRatingBox
+            className={classNames("__wab_instance", sty.newRatingBox__r1Rip)}
+            commentCount={(() => {
+              try {
+                return $state.getPaziresh24Rate.data.list[0].count_rates;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            isLikeRate={true}
+            rate={(() => {
+              try {
+                return (
+                  ($state.getPaziresh24Rate.data.list[0].doctor_encounter +
+                    $state.getPaziresh24Rate.data.list[0].quality_of_treatment +
+                    $state.getPaziresh24Rate.data.list[0]
+                      .explanation_of_issue) /
+                  3
+                ).toFixed(1);
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          />
         </ApiRequest>
       </Stack__>
       {(() => {
@@ -624,13 +625,13 @@ function PlasmicExternalRate__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "getPaziresh24Rate",
     "apiRequest",
+    "getPaziresh24Rate",
     "button",
     "rateProgressBar"
   ],
-  getPaziresh24Rate: ["getPaziresh24Rate"],
   apiRequest: ["apiRequest"],
+  getPaziresh24Rate: ["getPaziresh24Rate"],
   button: ["button"],
   rateProgressBar: ["rateProgressBar"]
 } as const;
@@ -639,8 +640,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  getPaziresh24Rate: typeof ApiRequest;
   apiRequest: typeof ApiRequest;
+  getPaziresh24Rate: typeof ApiRequest;
   button: typeof Button;
   rateProgressBar: typeof RateProgressBar;
 };
@@ -705,8 +706,8 @@ export const PlasmicExternalRate = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    getPaziresh24Rate: makeNodeComponent("getPaziresh24Rate"),
     apiRequest: makeNodeComponent("apiRequest"),
+    getPaziresh24Rate: makeNodeComponent("getPaziresh24Rate"),
     button: makeNodeComponent("button"),
     rateProgressBar: makeNodeComponent("rateProgressBar"),
 
