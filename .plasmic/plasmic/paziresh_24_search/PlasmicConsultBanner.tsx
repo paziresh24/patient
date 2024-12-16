@@ -61,7 +61,7 @@ import {
 
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import SubstituteDoctor from "../../SubstituteDoctor"; // plasmic-import: 4XueZ64JE9vm/component
+import SuggestedDoctor from "../../SuggestedDoctor"; // plasmic-import: 4XueZ64JE9vm/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -98,7 +98,7 @@ export type PlasmicConsultBanner__OverridesType = {
   img?: Flex__<typeof PlasmicImg__>;
   button?: Flex__<typeof Button>;
   dialog?: Flex__<typeof Dialog>;
-  substituteDoctor?: Flex__<typeof SubstituteDoctor>;
+  suggestedDoctor?: Flex__<typeof SuggestedDoctor>;
 };
 
 export interface DefaultConsultBannerProps {
@@ -363,11 +363,10 @@ function PlasmicConsultBanner__RenderFunc(props: {
         data-plasmic-name={"dialog"}
         data-plasmic-override={overrides.dialog}
         body={
-          <SubstituteDoctor
-            data-plasmic-name={"substituteDoctor"}
-            data-plasmic-override={overrides.substituteDoctor}
-            className={classNames("__wab_instance", sty.substituteDoctor)}
-            turnType={``}
+          <SuggestedDoctor
+            data-plasmic-name={"suggestedDoctor"}
+            data-plasmic-override={overrides.suggestedDoctor}
+            className={classNames("__wab_instance", sty.suggestedDoctor)}
           />
         }
         className={classNames("__wab_instance", sty.dialog)}
@@ -381,13 +380,13 @@ function PlasmicConsultBanner__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "svg", "text", "img", "button", "dialog", "substituteDoctor"],
+  root: ["root", "svg", "text", "img", "button", "dialog", "suggestedDoctor"],
   svg: ["svg"],
   text: ["text"],
   img: ["img"],
   button: ["button"],
-  dialog: ["dialog", "substituteDoctor"],
-  substituteDoctor: ["substituteDoctor"]
+  dialog: ["dialog", "suggestedDoctor"],
+  suggestedDoctor: ["suggestedDoctor"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -399,7 +398,7 @@ type NodeDefaultElementType = {
   img: typeof PlasmicImg__;
   button: typeof Button;
   dialog: typeof Dialog;
-  substituteDoctor: typeof SubstituteDoctor;
+  suggestedDoctor: typeof SuggestedDoctor;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -467,7 +466,7 @@ export const PlasmicConsultBanner = Object.assign(
     img: makeNodeComponent("img"),
     button: makeNodeComponent("button"),
     dialog: makeNodeComponent("dialog"),
-    substituteDoctor: makeNodeComponent("substituteDoctor"),
+    suggestedDoctor: makeNodeComponent("suggestedDoctor"),
 
     // Metadata about props expected for PlasmicConsultBanner
     internalVariantProps: PlasmicConsultBanner__VariantProps,

@@ -101,8 +101,8 @@ export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
 export type PlasmicLocationView__OverridesType = {
   root?: Flex__<"div">;
   textInput?: Flex__<typeof TextInput>;
-  userLocation?: Flex__<typeof UserLocation>;
   svg?: Flex__<"svg">;
+  userLocation?: Flex__<typeof UserLocation>;
   locationList?: Flex__<typeof LocationList>;
 };
 
@@ -270,29 +270,6 @@ function PlasmicLocationView__RenderFunc(props: {
           size={"compact"}
         />
 
-        <UserLocation
-          data-plasmic-name={"userLocation"}
-          data-plasmic-override={overrides.userLocation}
-          className={classNames("__wab_instance", sty.userLocation)}
-          isOpen={(() => {
-            try {
-              return $state.isUserLocationOpen;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })()}
-          onUserCityChange={generateStateOnChangeProp($state, [
-            "userLocation",
-            "userCity"
-          ])}
-        />
-
         <Button
           children2={"\u0627\u0637\u0631\u0627\u0641 \u0645\u0646"}
           className={classNames("__wab_instance", sty.button___8Waxp)}
@@ -340,6 +317,29 @@ function PlasmicLocationView__RenderFunc(props: {
               role={"img"}
             />
           }
+        />
+
+        <UserLocation
+          data-plasmic-name={"userLocation"}
+          data-plasmic-override={overrides.userLocation}
+          className={classNames("__wab_instance", sty.userLocation)}
+          isOpen={(() => {
+            try {
+              return $state.isUserLocationOpen;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })()}
+          onUserCityChange={generateStateOnChangeProp($state, [
+            "userLocation",
+            "userCity"
+          ])}
         />
       </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__hlKod)}>
@@ -429,10 +429,10 @@ function PlasmicLocationView__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "userLocation", "svg", "locationList"],
+  root: ["root", "textInput", "svg", "userLocation", "locationList"],
   textInput: ["textInput"],
-  userLocation: ["userLocation"],
   svg: ["svg"],
+  userLocation: ["userLocation"],
   locationList: ["locationList"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -441,8 +441,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   textInput: typeof TextInput;
-  userLocation: typeof UserLocation;
   svg: "svg";
+  userLocation: typeof UserLocation;
   locationList: typeof LocationList;
 };
 
@@ -507,8 +507,8 @@ export const PlasmicLocationView = Object.assign(
   {
     // Helper components rendering sub-elements
     textInput: makeNodeComponent("textInput"),
-    userLocation: makeNodeComponent("userLocation"),
     svg: makeNodeComponent("svg"),
+    userLocation: makeNodeComponent("userLocation"),
     locationList: makeNodeComponent("locationList"),
 
     // Metadata about props expected for PlasmicLocationView
