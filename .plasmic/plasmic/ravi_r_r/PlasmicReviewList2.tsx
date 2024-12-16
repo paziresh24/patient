@@ -524,15 +524,15 @@ function PlasmicReviewList2__RenderFunc(props: {
                   return [
                     {
                       label: "مرتبط ترین",
-                      value: "-default_order"
+                      value: "default_order"
                     },
                     {
                       label: "محبوب ترین",
-                      value: "-count_like"
+                      value: "count_like"
                     },
                     {
                       label: "جدید ترین",
-                      value: "-created_at"
+                      value: "created_at"
                     }
                   ];
                 } catch (e) {

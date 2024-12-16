@@ -451,7 +451,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
             data-plasmic-override={overrides.card}
             avatarUrl={(() => {
               try {
-                return $state.userApi.data.users[0].image;
+                return `https://apigw.paziresh24.com/doctors/images/${$state.userApi.data.users[0].image}`;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -784,7 +784,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
               }
 
               $steps["fi10Character"] =
-                $ctx.auth.isLogin && value <= 10
+                $ctx.auth.isLogin && value.length <= 10
                   ? (() => {
                       const actionArgs = {
                         args: [
