@@ -505,7 +505,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
                 '@type': 'Review',
                 'author': {
                   '@type': 'Person',
-                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? '',
+                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
                 },
                 'reviewRating': {
                   '@type': 'Rating',
