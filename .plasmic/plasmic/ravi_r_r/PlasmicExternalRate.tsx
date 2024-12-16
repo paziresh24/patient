@@ -67,6 +67,8 @@ import RateProgressBar from "../../RateProgressBar"; // plasmic-import: YorKPsj5
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicExternalRate.module.css"; // plasmic-import: q0EXGV78MZIZ/css
 
@@ -124,7 +126,7 @@ function PlasmicExternalRate__RenderFunc(props: {
       Object.assign(
         {
           doctorSlug:
-            "\u062f\u06a9\u062a\u0631-\u0641\u0631\u0647\u0627\u062f-\u0635\u0628\u0631\u06cc"
+            "\u062f\u06a9\u062a\u0631-\u0645\u0647\u062f\u06cc-\u0637\u06cc\u0628\u06cc"
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -210,6 +212,8 @@ function PlasmicExternalRate__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
     >

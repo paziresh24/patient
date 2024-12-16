@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicSelect__Overlay,
   DefaultSelect__OverlayProps
-} from "./plasmic/paziresh_24/PlasmicSelect__Overlay";
+} from "./plasmic/ravi_design_system/PlasmicSelect__Overlay";
 
 import { TriggeredOverlayRef } from "@plasmicapp/react-web";
 

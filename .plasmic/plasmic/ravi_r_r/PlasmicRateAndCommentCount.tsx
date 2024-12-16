@@ -65,6 +65,8 @@ import { Popover } from "@plasmicpkgs/radix-ui";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicRateAndCommentCount.module.css"; // plasmic-import: u3Jgb_UfiULc/css
 
@@ -190,6 +192,8 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
           plasmic_fragment_design_system_css.plasmic_tokens,
+          plasmic_ravi_design_system_css.plasmic_tokens,
+          plasmic_paziresh_24_design_system_css.plasmic_tokens,
           sty.root
         )}
         dir={"rtl"}
@@ -357,7 +361,9 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
                 projectcss.plasmic_tokens,
-                plasmic_fragment_design_system_css.plasmic_tokens
+                plasmic_fragment_design_system_css.plasmic_tokens,
+                plasmic_ravi_design_system_css.plasmic_tokens,
+                plasmic_paziresh_24_design_system_css.plasmic_tokens
               )}
             >
               <div
