@@ -6,8 +6,8 @@ import { getCookie } from 'cookies-next';
 import debounce from 'lodash/debounce';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useClickAway } from 'react-use';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useClickAway, useDebounce } from 'react-use';
 import SearchBar from '../../components/suggestion/searchBar';
 import suggestionEvents from '../../functions/suggestionEvents';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
@@ -33,9 +33,17 @@ export const Suggestion = (props: SuggestionProps) => {
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(userSearchValue ?? '');
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(userSearchValue);
+    },
+    350,
+    [userSearchValue],
+  );
   const searchSuggestion = useSearchSuggestion(
     {
-      query: userSearchValue,
+      query: debouncedSearchTerm,
       ...(city?.id !== '-1' && { city_id: city?.id }),
     },
     {
