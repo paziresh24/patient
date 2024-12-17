@@ -150,6 +150,12 @@ function PlasmicReviewOptions__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "raviReviewOptions.paziresh24DialogOpen",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -466,7 +472,54 @@ function PlasmicReviewOptions__RenderFunc(props: {
           ) {
             $steps["splunk"] = await $steps["splunk"];
           }
+
+          $steps["closeDialog"] =
+            $steps.request.status == 200
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: [
+                        "raviReviewOptions",
+                        "paziresh24DialogOpen"
+                      ]
+                    },
+                    operation: 0,
+                    value: false
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["closeDialog"] != null &&
+            typeof $steps["closeDialog"] === "object" &&
+            typeof $steps["closeDialog"].then === "function"
+          ) {
+            $steps["closeDialog"] = await $steps["closeDialog"];
+          }
         }}
+        onPaziresh24DialogOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "raviReviewOptions",
+            "paziresh24DialogOpen"
+          ]).apply(null, eventArgs);
+
+          if (eventArgs.length > 1 && eventArgs[1]) {
+            return;
+          }
+        }}
+        paziresh24DialogOpen={generateStateValueProp($state, [
+          "raviReviewOptions",
+          "paziresh24DialogOpen"
+        ])}
       />
     </div>
   ) as React.ReactElement | null;
