@@ -83,11 +83,15 @@ export const PlasmicRaviReviewOptions__VariantProps =
   new Array<VariantPropType>();
 
 export type PlasmicRaviReviewOptions__ArgsType = {
+  paziresh24DialogOpen?: boolean;
+  onPaziresh24DialogOpenChange?: (val: boolean) => void;
   onClickSendReport?: (value: string) => void;
   isLoading?: boolean;
 };
 type ArgPropType = keyof PlasmicRaviReviewOptions__ArgsType;
 export const PlasmicRaviReviewOptions__ArgProps = new Array<ArgPropType>(
+  "paziresh24DialogOpen",
+  "onPaziresh24DialogOpenChange",
   "onClickSendReport",
   "isLoading"
 );
@@ -102,6 +106,8 @@ export type PlasmicRaviReviewOptions__OverridesType = {
 };
 
 export interface DefaultRaviReviewOptionsProps {
+  paziresh24DialogOpen?: boolean;
+  onPaziresh24DialogOpenChange?: (val: boolean) => void;
   onClickSendReport?: (value: string) => void;
   isLoading?: boolean;
   className?: string;
@@ -157,9 +163,11 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
       },
       {
         path: "reportDialog.open",
-        type: "private",
+        type: "writable",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+
+        valueProp: "paziresh24DialogOpen",
+        onChangeProp: "onPaziresh24DialogOpenChange"
       },
       {
         path: "textarea.value",

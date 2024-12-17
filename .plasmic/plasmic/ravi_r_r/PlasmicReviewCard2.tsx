@@ -684,7 +684,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
                             const likedComment = {
                               user_id: $ctx.auth.info.id,
                               id: $props.feedbackId,
-                              rate: $state.likeRate
+                              rate: value
                             };
                             const likedCommentsList =
                               JSON.parse(
