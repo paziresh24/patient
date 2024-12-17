@@ -1,0 +1,209 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.freeBox___8UK9 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0px;
+}
+.link {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-end;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  cursor: pointer;
+  padding: 0px;
+}
+.paziresh24Avatar:global(.__wab_instance) {
+  max-width: 100%;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+}
+.freeBox___3QZhk {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: flex-end;
+  min-width: 0;
+  padding: 6px;
+}
+.freeBox__yKFgb {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0px;
+}
+.freeBox__yKFgb > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-omrXvBNBcWTN));
+  width: calc(100% + var(--token-omrXvBNBcWTN));
+}
+.freeBox__yKFgb > :global(.__wab_flex-container) > *,
+.freeBox__yKFgb > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__yKFgb > :global(.__wab_flex-container) > picture > img,
+.freeBox__yKFgb
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-omrXvBNBcWTN);
+}
+.text__n2L5R {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-KUiXUfHPkqkm);
+  font-weight: 700;
+}
+.paziresh24Chip__e9B9S:global(.__wab_instance) {
+  max-width: 100%;
+  width: auto;
+}
+.svg__ihvo2 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 13px;
+  height: 13px;
+  color: var(--token-GigJJXFlebPW);
+}
+.svg__aotMh {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: #15803d;
+}
+.paziresh24Chip__hZtW1:global(.__wab_instance) {
+  max-width: 100%;
+  width: auto;
+}
+.svg__ae4S8 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 13px;
+  height: 13px;
+  color: var(--token-GigJJXFlebPW);
+}
+.svg__hwCb6 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: #15803d;
+}
+.paziresh24Chip__ymlF7:global(.__wab_instance) {
+  max-width: 100%;
+  width: auto;
+}
+.svg___7Vhfz {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 13px;
+  height: 13px;
+  color: var(--token-GigJJXFlebPW);
+}
+.svg__raAo0 {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: #15803d;
+}
+.freeBox__io37I {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__io37I > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-omrXvBNBcWTN));
+  width: calc(100% + var(--token-omrXvBNBcWTN));
+}
+.freeBox__io37I > :global(.__wab_flex-container) > *,
+.freeBox__io37I > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__io37I > :global(.__wab_flex-container) > picture > img,
+.freeBox__io37I
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-omrXvBNBcWTN);
+}
+.text__l6LFh {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-P2saABvfDCPH);
+}
+.text__wv5Dg {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  opacity: 0.3;
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 400;
+  font-style: normal;
+  color: var(--token-GigJJXFlebPW);
+  text-align: right;
+  text-transform: none;
+  line-height: 1.5;
+  letter-spacing: normal;
+  white-space: pre-wrap;
+  user-select: text;
+  text-decoration-line: none;
+  text-overflow: clip;
+  font-family: "IRANSansXV";
+}
+.text__tPEgh {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-P2saABvfDCPH);
+}

@@ -74,6 +74,8 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZV/css
 
@@ -402,6 +404,8 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.کاردنمایشنظر,
         {
           [sty.کاردنمایشنظرraviExpFroDrakam]: hasVariant(
@@ -1087,10 +1091,12 @@ function PlasmicReviewCard__RenderFunc(props: {
                   projectcss.textarea,
                   sty.reportText
                 )}
-                onChange={e => {
-                  generateStateOnChangeProp($state, ["reportText", "value"])(
-                    e.target.value
-                  );
+                onChange={async (...eventArgs: any) => {
+                  (e => {
+                    generateStateOnChangeProp($state, ["reportText", "value"])(
+                      e.target.value
+                    );
+                  }).apply(null, eventArgs);
                 }}
                 placeholder={
                   "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
@@ -1391,7 +1397,16 @@ function PlasmicReviewCard__RenderFunc(props: {
               "raviExpFroDrakam"
             )
           })}
-          onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+          onOpenChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+              null,
+              eventArgs
+            );
+
+            if (eventArgs.length > 1 && eventArgs[1]) {
+              return;
+            }
+          }}
           open={generateStateValueProp($state, ["dialog", "open"])}
           title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
           trigger={
@@ -1546,10 +1561,16 @@ function PlasmicReviewCard__RenderFunc(props: {
                     </Stack__>
                   }
                   className={classNames("__wab_instance", sty.dialog2)}
-                  onOpenChange={generateStateOnChangeProp($state, [
-                    "dialog2",
-                    "open"
-                  ])}
+                  onOpenChange={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "dialog2",
+                      "open"
+                    ]).apply(null, eventArgs);
+
+                    if (eventArgs.length > 1 && eventArgs[1]) {
+                      return;
+                    }
+                  }}
                   open={generateStateValueProp($state, ["dialog2", "open"])}
                   title={"\u067e\u0627\u0633\u062e \u0647\u0627 "}
                   trigger={
@@ -1614,10 +1635,16 @@ function PlasmicReviewCard__RenderFunc(props: {
             className={classNames("__wab_instance", sty.popoverCore)}
             defaultOpen={false}
             modal={true}
-            onOpenChange={generateStateOnChangeProp($state, [
-              "popoverCore",
-              "open"
-            ])}
+            onOpenChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["popoverCore", "open"]).apply(
+                null,
+                eventArgs
+              );
+
+              if (eventArgs.length > 1 && eventArgs[1]) {
+                return;
+              }
+            }}
             open={generateStateValueProp($state, ["popoverCore", "open"])}
             overlay={
               <div className={classNames(projectcss.all, sty.freeBox__gJfpv)}>
@@ -1896,7 +1923,9 @@ function PlasmicReviewCard__RenderFunc(props: {
               projectcss.plasmic_default_styles,
               projectcss.plasmic_mixins,
               projectcss.plasmic_tokens,
-              plasmic_fragment_design_system_css.plasmic_tokens
+              plasmic_fragment_design_system_css.plasmic_tokens,
+              plasmic_ravi_design_system_css.plasmic_tokens,
+              plasmic_paziresh_24_design_system_css.plasmic_tokens
             )}
             trigger={false}
           >
@@ -2670,10 +2699,16 @@ function PlasmicReviewCard__RenderFunc(props: {
                 </DataFetcher>
               }
               className={classNames("__wab_instance", sty.dialog6)}
-              onOpenChange={generateStateOnChangeProp($state, [
-                "dialog6",
-                "open"
-              ])}
+              onOpenChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["dialog6", "open"]).apply(
+                  null,
+                  eventArgs
+                );
+
+                if (eventArgs.length > 1 && eventArgs[1]) {
+                  return;
+                }
+              }}
               open={generateStateValueProp($state, ["dialog6", "open"])}
               title={
                 "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
@@ -2736,10 +2771,12 @@ function PlasmicReviewCard__RenderFunc(props: {
               projectcss.textarea,
               sty.replyText
             )}
-            onChange={e => {
-              generateStateOnChangeProp($state, ["replyText", "value"])(
-                e.target.value
-              );
+            onChange={async (...eventArgs: any) => {
+              (e => {
+                generateStateOnChangeProp($state, ["replyText", "value"])(
+                  e.target.value
+                );
+              }).apply(null, eventArgs);
             }}
             placeholder={
               "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
@@ -2761,10 +2798,16 @@ function PlasmicReviewCard__RenderFunc(props: {
                 "raviExpFroDrakam"
               )
             })}
-            onValueChange={generateStateOnChangeProp($state, [
-              "multilineTextInput",
-              "value"
-            ])}
+            onValueChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "multilineTextInput",
+                "value"
+              ]).apply(null, eventArgs);
+
+              if (eventArgs.length > 1 && eventArgs[1]) {
+                return;
+              }
+            }}
             placeholder={
               "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ..."
             }

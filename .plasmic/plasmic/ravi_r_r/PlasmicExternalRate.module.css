@@ -62,7 +62,7 @@
   max-width: 100%;
   width: auto;
   flex-shrink: 1;
-  align-self: flex-end;
+  align-self: flex-start;
   margin-right: 7px;
   margin-bottom: 30px;
   margin-left: 7px;

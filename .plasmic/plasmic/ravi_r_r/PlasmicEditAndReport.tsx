@@ -66,6 +66,8 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicEditAndReport.module.css"; // plasmic-import: 48DkFQMlhcuA/css
 
@@ -300,6 +302,8 @@ function PlasmicEditAndReport__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.editAndReportStack,
         {
           [sty.editAndReportStackraviExpFroDrakam]: hasVariant(
@@ -322,7 +326,16 @@ function PlasmicEditAndReport__RenderFunc(props: {
             "raviExpFroDrakam"
           )
         })}
-        onOpenChange={generateStateOnChangeProp($state, ["threeDots", "open"])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["threeDots", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (eventArgs.length > 1 && eventArgs[1]) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["threeDots", "open"])}
         overlay={
           <div className={classNames(projectcss.all, sty.freeBox__uHoTc)}>
@@ -352,11 +365,13 @@ function PlasmicEditAndReport__RenderFunc(props: {
                         projectcss.textarea,
                         sty.edditTextBox
                       )}
-                      onChange={e => {
-                        generateStateOnChangeProp($state, [
-                          "edditTextBox",
-                          "value"
-                        ])(e.target.value);
+                      onChange={async (...eventArgs: any) => {
+                        (e => {
+                          generateStateOnChangeProp($state, [
+                            "edditTextBox",
+                            "value"
+                          ])(e.target.value);
+                        }).apply(null, eventArgs);
                       }}
                       placeholder={``}
                       ref={ref => {
@@ -600,10 +615,16 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   </React.Fragment>
                 }
                 className={classNames("__wab_instance", sty.dialog3)}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "dialog3",
-                  "open"
-                ])}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["dialog3", "open"]).apply(
+                    null,
+                    eventArgs
+                  );
+
+                  if (eventArgs.length > 1 && eventArgs[1]) {
+                    return;
+                  }
+                }}
                 open={generateStateValueProp($state, ["dialog3", "open"])}
                 title={
                   "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
@@ -961,10 +982,16 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   </Stack__>
                 }
                 className={classNames("__wab_instance", sty.dialog4)}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "dialog4",
-                  "open"
-                ])}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["dialog4", "open"]).apply(
+                    null,
+                    eventArgs
+                  );
+
+                  if (eventArgs.length > 1 && eventArgs[1]) {
+                    return;
+                  }
+                }}
                 open={generateStateValueProp($state, ["dialog4", "open"])}
                 title={
                   <div
@@ -1016,11 +1043,13 @@ function PlasmicEditAndReport__RenderFunc(props: {
                       projectcss.textarea,
                       sty.reportText2
                     )}
-                    onChange={e => {
-                      generateStateOnChangeProp($state, [
-                        "reportText2",
-                        "value"
-                      ])(e.target.value);
+                    onChange={async (...eventArgs: any) => {
+                      (e => {
+                        generateStateOnChangeProp($state, [
+                          "reportText2",
+                          "value"
+                        ])(e.target.value);
+                      }).apply(null, eventArgs);
                     }}
                     placeholder={
                       "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
@@ -1361,10 +1390,16 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   "raviExpFroDrakam"
                 )
               })}
-              onOpenChange={generateStateOnChangeProp($state, [
-                "dialog5",
-                "open"
-              ])}
+              onOpenChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["dialog5", "open"]).apply(
+                  null,
+                  eventArgs
+                );
+
+                if (eventArgs.length > 1 && eventArgs[1]) {
+                  return;
+                }
+              }}
               open={generateStateValueProp($state, ["dialog5", "open"])}
               title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
               trigger={
@@ -1405,7 +1440,9 @@ function PlasmicEditAndReport__RenderFunc(props: {
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          plasmic_ravi_design_system_css.plasmic_tokens,
+          plasmic_paziresh_24_design_system_css.plasmic_tokens
         )}
       >
         <div className={classNames(projectcss.all, sty.freeBox__lVzH8)}>

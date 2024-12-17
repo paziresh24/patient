@@ -1,0 +1,24 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.userApi:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.avatarApi:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.raviReviewReply:global(.__wab_instance) {
+  max-width: 100%;
+}
+.reviewOptions:global(.__wab_instance) {
+  max-width: 100%;
+}

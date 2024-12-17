@@ -64,6 +64,8 @@ import StarRate2 from "../../StarRate2"; // plasmic-import: XaRCJPYGaC31/compone
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicNewRatingBox.module.css"; // plasmic-import: wEZ_gicob_AK/css
 
@@ -101,8 +103,8 @@ export const PlasmicNewRatingBox__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicNewRatingBox__OverridesType = {
   root?: Flex__<"div">;
-  span?: Flex__<"span">;
   starRate2?: Flex__<typeof StarRate2>;
+  span?: Flex__<"span">;
 };
 
 export interface DefaultNewRatingBoxProps {
@@ -193,6 +195,8 @@ function PlasmicNewRatingBox__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root,
         {
           [sty.rootcompact]: hasVariant($state, "compact", "compact"),
@@ -203,22 +207,6 @@ function PlasmicNewRatingBox__RenderFunc(props: {
         }
       )}
     >
-      <div
-        className={classNames(
-          projectcss.all,
-          projectcss.__wab_text,
-          sty.text__zkbaK,
-          {
-            [sty.textisLikeRate__zkbaKlvHcy]: hasVariant(
-              $state,
-              "isLikeRate",
-              "isLikeRate"
-            )
-          }
-        )}
-      >
-        {"\u067e\u0630\u06cc\u0631\u063424"}
-      </div>
       <div
         className={classNames(
           projectcss.all,
@@ -268,6 +256,137 @@ function PlasmicNewRatingBox__RenderFunc(props: {
           )
         })}
       >
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__zkbaK,
+            {
+              [sty.textisLikeRate__zkbaKlvHcy]: hasVariant(
+                $state,
+                "isLikeRate",
+                "isLikeRate"
+              )
+            }
+          )}
+        >
+          {"\u067e\u0630\u06cc\u0631\u063424 : "}
+        </div>
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__t95VZ,
+            {
+              [sty.textisLikeRate__t95VZlvHcy]: hasVariant(
+                $state,
+                "isLikeRate",
+                "isLikeRate"
+              )
+            }
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.rate;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
+        </div>
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__uVqwL, {
+            [sty.freeBoxcompact__uVqwLrBwm9]: hasVariant(
+              $state,
+              "compact",
+              "compact"
+            ),
+            [sty.freeBoxisLikeRate__uVqwLlvHcy]: hasVariant(
+              $state,
+              "isLikeRate",
+              "isLikeRate"
+            )
+          })}
+          dir={(() => {
+            try {
+              return undefined;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return [0, 1, 2, 3, 4];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
+                }
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <StarRate2
+                data-plasmic-name={"starRate2"}
+                data-plasmic-override={overrides.starRate2}
+                className={classNames("__wab_instance", sty.starRate2, {
+                  [sty.starRate2compact]: hasVariant(
+                    $state,
+                    "compact",
+                    "compact"
+                  ),
+                  [sty.starRate2isLikeRate]: hasVariant(
+                    $state,
+                    "isLikeRate",
+                    "isLikeRate"
+                  )
+                })}
+                key={currentIndex}
+                rate={(() => {
+                  try {
+                    return Math.floor($props.rate) > currentItem
+                      ? "_1"
+                      : "_" +
+                          ($props.rate - currentItem)
+                            .toFixed(1)
+                            .replace(".", "");
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "_0";
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            );
+          })}
+        </Stack__>
         <div
           className={classNames(
             projectcss.all,
@@ -381,121 +500,6 @@ function PlasmicNewRatingBox__RenderFunc(props: {
             </React.Fragment>
           )}
         </div>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__uVqwL, {
-            [sty.freeBoxcompact__uVqwLrBwm9]: hasVariant(
-              $state,
-              "compact",
-              "compact"
-            ),
-            [sty.freeBoxisLikeRate__uVqwLlvHcy]: hasVariant(
-              $state,
-              "isLikeRate",
-              "isLikeRate"
-            )
-          })}
-          dir={(() => {
-            try {
-              return undefined;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        >
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return [0, 1, 2, 3, 4];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <StarRate2
-                data-plasmic-name={"starRate2"}
-                data-plasmic-override={overrides.starRate2}
-                className={classNames("__wab_instance", sty.starRate2, {
-                  [sty.starRate2compact]: hasVariant(
-                    $state,
-                    "compact",
-                    "compact"
-                  ),
-                  [sty.starRate2isLikeRate]: hasVariant(
-                    $state,
-                    "isLikeRate",
-                    "isLikeRate"
-                  )
-                })}
-                key={currentIndex}
-                rate={(() => {
-                  try {
-                    return Math.floor($props.rate) > currentItem
-                      ? "_1"
-                      : "_" +
-                          ($props.rate - currentItem)
-                            .toFixed(1)
-                            .replace(".", "");
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "_0";
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-            );
-          })}
-        </Stack__>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__t95VZ,
-            {
-              [sty.textisLikeRate__t95VZlvHcy]: hasVariant(
-                $state,
-                "isLikeRate",
-                "isLikeRate"
-              )
-            }
-          )}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.rate;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
-                }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
-        </div>
       </div>
       <Stack__
         as={"div"}
@@ -591,17 +595,17 @@ function PlasmicNewRatingBox__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "span", "starRate2"],
-  span: ["span"],
-  starRate2: ["starRate2"]
+  root: ["root", "starRate2", "span"],
+  starRate2: ["starRate2"],
+  span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  span: "span";
   starRate2: typeof StarRate2;
+  span: "span";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -664,8 +668,8 @@ export const PlasmicNewRatingBox = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    span: makeNodeComponent("span"),
     starRate2: makeNodeComponent("starRate2"),
+    span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicNewRatingBox
     internalVariantProps: PlasmicNewRatingBox__VariantProps,
