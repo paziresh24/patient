@@ -4102,6 +4102,11 @@
           "id": "EEdf86PDs5c6",
           "name": "CheckSvgIcon",
           "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "rwy2JSXIoIh2",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
       "images": [],
@@ -4122,8 +4127,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
