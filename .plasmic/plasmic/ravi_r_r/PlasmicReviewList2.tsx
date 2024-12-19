@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import RaviSummery from "../../RaviSummery"; // plasmic-import: n51CDSNkGtxF/component
+import ReviewExternalRate from "../../ReviewExternalRate"; // plasmic-import: iUNfhq3ES5BC/component
 import RaviFilters from "../../RaviFilters"; // plasmic-import: G0AKBMWLNTrM/component
 import ReviewCard2 from "../../ReviewCard2"; // plasmic-import: fh6BVdoIxXpv/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
@@ -117,6 +118,7 @@ export const PlasmicReviewList2__ArgProps = new Array<ArgPropType>(
 export type PlasmicReviewList2__OverridesType = {
   root?: Flex__<"div">;
   raviSummery?: Flex__<typeof RaviSummery>;
+  reviewExternalRate?: Flex__<typeof ReviewExternalRate>;
   raviFilters?: Flex__<typeof RaviFilters>;
   reviewCard2?: Flex__<typeof ReviewCard2>;
   text?: Flex__<"div">;
@@ -457,8 +459,27 @@ function PlasmicReviewList2__RenderFunc(props: {
               <div className={classNames(projectcss.all, sty.freeBox__kSizI)} />
             </Stack__>
           ) : null}
-          <div className={classNames(projectcss.all, sty.freeBox__mKaeR)} />
-
+          {(() => {
+            try {
+              return $ctx.Growthbook.features.ravi_show_external_rate;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__mKaeR)}>
+              <ReviewExternalRate
+                data-plasmic-name={"reviewExternalRate"}
+                data-plasmic-override={overrides.reviewExternalRate}
+                className={classNames("__wab_instance", sty.reviewExternalRate)}
+              />
+            </div>
+          ) : null}
           <div className={classNames(projectcss.all, sty.freeBox__gHhth)}>
             <RaviFilters
               data-plasmic-name={"raviFilters"}
@@ -1381,6 +1402,7 @@ const PlasmicDescendants = {
   root: [
     "root",
     "raviSummery",
+    "reviewExternalRate",
     "raviFilters",
     "reviewCard2",
     "text",
@@ -1389,6 +1411,7 @@ const PlasmicDescendants = {
     "sideEffect"
   ],
   raviSummery: ["raviSummery"],
+  reviewExternalRate: ["reviewExternalRate"],
   raviFilters: ["raviFilters"],
   reviewCard2: ["reviewCard2"],
   text: ["text"],
@@ -1402,6 +1425,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   raviSummery: typeof RaviSummery;
+  reviewExternalRate: typeof ReviewExternalRate;
   raviFilters: typeof RaviFilters;
   reviewCard2: typeof ReviewCard2;
   text: "div";
@@ -1471,6 +1495,7 @@ export const PlasmicReviewList2 = Object.assign(
   {
     // Helper components rendering sub-elements
     raviSummery: makeNodeComponent("raviSummery"),
+    reviewExternalRate: makeNodeComponent("reviewExternalRate"),
     raviFilters: makeNodeComponent("raviFilters"),
     reviewCard2: makeNodeComponent("reviewCard2"),
     text: makeNodeComponent("text"),

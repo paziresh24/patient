@@ -61,7 +61,6 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: rQxw_Usvf1CS/codeComponent
 import RaviExternalRate from "../../RaviExternalRate"; // plasmic-import: 1RWEAe1WAk7-/component
-import NewRatingBox from "../../NewRatingBox"; // plasmic-import: wEZ_gicob_AK/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import RateProgressBar from "../../RateProgressBar"; // plasmic-import: YorKPsj5-KCA/component
 
@@ -98,8 +97,6 @@ export type PlasmicReviewExternalRate__OverridesType = {
   root?: Flex__<"div">;
   externalApi?: Flex__<typeof ApiRequest>;
   paziresh24Api?: Flex__<typeof ApiRequest>;
-  apiRequest?: Flex__<typeof ApiRequest>;
-  getPaziresh24Rate?: Flex__<typeof ApiRequest>;
   button?: Flex__<typeof Button>;
   rateProgressBar?: Flex__<typeof RateProgressBar>;
 };
@@ -152,42 +149,6 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "getPaziresh24Rate.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "getPaziresh24Rate.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "getPaziresh24Rate.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
       {
         path: "showMore",
         type: "private",
@@ -504,447 +465,206 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
           </ApiRequest>
         </ApiRequest>
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__dPhqc)}
-      >
-        <ApiRequest
-          data-plasmic-name={"apiRequest"}
-          data-plasmic-override={overrides.apiRequest}
-          className={classNames("__wab_instance", sty.apiRequest)}
-          errorDisplay={null}
-          loadingDisplay={null}
-          method={"GET"}
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          url={(() => {
-            try {
-              return `https://apigw.paziresh24.com/ravi/v3/external_rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        >
-          <div className={classNames(projectcss.all, sty.freeBox__xLzdA)}>
-            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-              (() => {
-                try {
-                  return $state.apiRequest.data.list[0].rates?.filter(
-                    item => !item.link.includes("paziresh24")
-                  );
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
+      <div className={classNames(projectcss.all, sty.freeBox__owTrf)}>
+        <div className={classNames(projectcss.all, sty.freeBox___7Q9CH)}>
+          <Button
+            data-plasmic-name={"button"}
+            data-plasmic-override={overrides.button}
+            children2={
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $state.showMore;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()
-            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-              const currentItem = __plasmic_item_0;
-              const currentIndex = __plasmic_idx_0;
-              return (
-                <NewRatingBox
-                  className={classNames(
-                    "__wab_instance",
-                    sty.newRatingBox__ds6K
-                  )}
-                  commentCount={(() => {
-                    try {
-                      return currentItem.rich_snippet.top.detected_extensions
-                        .reviews;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__mwiTn
+                    )}
+                  >
+                    {"\u06a9\u0645\u062a\u0631"}
+                  </div>
+                ) : null}
+                {(() => {
+                  try {
+                    return !$state.showMore;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
-                  })()}
-                  compact={true}
-                  key={currentIndex}
-                  link={(() => {
-                    try {
-                      return currentItem.link;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  logo={(() => {
-                    try {
-                      return currentItem.favicon;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  name={(() => {
-                    try {
-                      return currentItem.source;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  rate={(() => {
-                    try {
-                      return currentItem.rich_snippet.top.detected_extensions
-                        .rating;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-              );
-            })}
-          </div>
-        </ApiRequest>
-        <ApiRequest
-          data-plasmic-name={"getPaziresh24Rate"}
-          data-plasmic-override={overrides.getPaziresh24Rate}
-          className={classNames("__wab_instance", sty.getPaziresh24Rate)}
-          errorDisplay={null}
-          loadingDisplay={null}
-          method={"GET"}
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "getPaziresh24Rate",
-              "error"
-            ]).apply(null, eventArgs);
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "getPaziresh24Rate",
-              "loading"
-            ]).apply(null, eventArgs);
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "getPaziresh24Rate",
-              "data"
-            ]).apply(null, eventArgs);
-          }}
-          url={(() => {
-            try {
-              return `https://apigw.paziresh24.com/ravi/v1/rate?where=(doctor_slug,eq,${$props.doctorSlug})`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___2JoCl
+                    )}
+                  >
+                    {"\u0628\u06cc\u0634\u062a\u0631"}
+                  </div>
+                ) : null}
+              </React.Fragment>
             }
-          })()}
-        >
-          <NewRatingBox
-            className={classNames("__wab_instance", sty.newRatingBox__aoy0R)}
-            commentCount={(() => {
-              try {
-                return $state.getPaziresh24Rate.data.list[0].count_rates;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
+            className={classNames("__wab_instance", sty.button)}
+            color={"text"}
+            endIcon={
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return !$state.showMore;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <ChevronDownIcon
+                    className={classNames(projectcss.all, sty.svg__yeGel)}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.showMore;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <ChevronUpIcon
+                    className={classNames(projectcss.all, sty.svg__rtVB)}
+                    role={"img"}
+                  />
+                ) : null}
+              </React.Fragment>
+            }
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["updateShowMore"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["showMore"]
+                      },
+                      operation: 4
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      const oldValue = $stateGet(objRoot, variablePath);
+                      $stateSet(objRoot, variablePath, !oldValue);
+                      return !oldValue;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateShowMore"] != null &&
+                typeof $steps["updateShowMore"] === "object" &&
+                typeof $steps["updateShowMore"].then === "function"
+              ) {
+                $steps["updateShowMore"] = await $steps["updateShowMore"];
               }
-            })()}
-            isLikeRate={true}
-            rate={(() => {
-              try {
-                return (
-                  ($state.getPaziresh24Rate.data.list[0].doctor_encounter +
-                    $state.getPaziresh24Rate.data.list[0].quality_of_treatment +
-                    $state.getPaziresh24Rate.data.list[0]
-                      .explanation_of_issue) /
-                  3
-                ).toFixed(1);
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
+            }}
+            showEndIcon={true}
+            size={"compact"}
           />
-        </ApiRequest>
-      </Stack__>
-      {(() => {
-        try {
-          return $state.getPaziresh24Rate?.data?.list?.length > 0;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
-          }
-          throw e;
-        }
-      })() ? (
-        <Button
-          data-plasmic-name={"button"}
-          data-plasmic-override={overrides.button}
-          children2={
-            <React.Fragment>
-              {(() => {
-                try {
-                  return $state.showMore;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__mwiTn
-                  )}
-                >
-                  {"\u06a9\u0645\u062a\u0631"}
-                </div>
-              ) : null}
-              {(() => {
-                try {
-                  return !$state.showMore;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___2JoCl
-                  )}
-                >
-                  {"\u0628\u06cc\u0634\u062a\u0631"}
-                </div>
-              ) : null}
-            </React.Fragment>
-          }
-          className={classNames("__wab_instance", sty.button)}
-          color={"text"}
-          endIcon={
-            <React.Fragment>
-              {(() => {
-                try {
-                  return !$state.showMore;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <ChevronDownIcon
-                  className={classNames(projectcss.all, sty.svg__yeGel)}
-                  role={"img"}
-                />
-              ) : null}
-              {(() => {
-                try {
-                  return $state.showMore;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <ChevronUpIcon
-                  className={classNames(projectcss.all, sty.svg__rtVB)}
-                  role={"img"}
-                />
-              ) : null}
-            </React.Fragment>
-          }
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["updateShowMore"] = true
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["showMore"]
-                    },
-                    operation: 4
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    const oldValue = $stateGet(objRoot, variablePath);
-                    $stateSet(objRoot, variablePath, !oldValue);
-                    return !oldValue;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+        </div>
+        {(() => {
+          try {
+            return $state.showMore;
+          } catch (e) {
             if (
-              $steps["updateShowMore"] != null &&
-              typeof $steps["updateShowMore"] === "object" &&
-              typeof $steps["updateShowMore"].then === "function"
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
             ) {
-              $steps["updateShowMore"] = await $steps["updateShowMore"];
+              return true;
             }
-          }}
-          showEndIcon={true}
-          size={"compact"}
-        />
-      ) : null}
-      {(() => {
-        try {
-          return $state.showMore;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
+            throw e;
           }
-          throw e;
-        }
-      })() ? (
-        <RateProgressBar
-          data-plasmic-name={"rateProgressBar"}
-          data-plasmic-override={overrides.rateProgressBar}
-          averageDoctorEncounter={(() => {
-            try {
-              return $state.getPaziresh24Rate.data.list[0].doctor_encounter;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
+        })() ? (
+          <RateProgressBar
+            data-plasmic-name={"rateProgressBar"}
+            data-plasmic-override={overrides.rateProgressBar}
+            averageDoctorEncounter={(() => {
+              try {
+                return $state.paziresh24Api.data.list[0].doctor_encounter;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-          averageExplanationOfIssue={(() => {
-            try {
-              return $state.getPaziresh24Rate.data.list[0].explanation_of_issue;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
+            })()}
+            averageExplanationOfIssue={(() => {
+              try {
+                return $state.paziresh24Api.data.list[0].explanation_of_issue;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-          averageQualityOfTreatment={(() => {
-            try {
-              return $state.getPaziresh24Rate.data.list[0].quality_of_treatment;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
+            })()}
+            averageQualityOfTreatment={(() => {
+              try {
+                return $state.paziresh24Api.data.list[0].quality_of_treatment;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-          className={classNames("__wab_instance", sty.rateProgressBar)}
-        />
-      ) : null}
+            })()}
+            className={classNames("__wab_instance", sty.rateProgressBar)}
+          />
+        ) : null}
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "externalApi",
-    "paziresh24Api",
-    "apiRequest",
-    "getPaziresh24Rate",
-    "button",
-    "rateProgressBar"
-  ],
+  root: ["root", "externalApi", "paziresh24Api", "button", "rateProgressBar"],
   externalApi: ["externalApi", "paziresh24Api"],
   paziresh24Api: ["paziresh24Api"],
-  apiRequest: ["apiRequest"],
-  getPaziresh24Rate: ["getPaziresh24Rate"],
   button: ["button"],
   rateProgressBar: ["rateProgressBar"]
 } as const;
@@ -955,8 +675,6 @@ type NodeDefaultElementType = {
   root: "div";
   externalApi: typeof ApiRequest;
   paziresh24Api: typeof ApiRequest;
-  apiRequest: typeof ApiRequest;
-  getPaziresh24Rate: typeof ApiRequest;
   button: typeof Button;
   rateProgressBar: typeof RateProgressBar;
 };
@@ -1023,8 +741,6 @@ export const PlasmicReviewExternalRate = Object.assign(
     // Helper components rendering sub-elements
     externalApi: makeNodeComponent("externalApi"),
     paziresh24Api: makeNodeComponent("paziresh24Api"),
-    apiRequest: makeNodeComponent("apiRequest"),
-    getPaziresh24Rate: makeNodeComponent("getPaziresh24Rate"),
     button: makeNodeComponent("button"),
     rateProgressBar: makeNodeComponent("rateProgressBar"),
 
