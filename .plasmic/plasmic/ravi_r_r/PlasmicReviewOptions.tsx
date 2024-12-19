@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import RaviReviewOptions from "../../RaviReviewOptions"; // plasmic-import: WPpw5PhLSljG/component
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -146,13 +147,7 @@ function PlasmicReviewOptions__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "isLoading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
-        path: "raviReviewOptions.paziresh24DialogOpen",
+        path: "raviReviewOptions.isOther",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
@@ -189,19 +184,10 @@ function PlasmicReviewOptions__RenderFunc(props: {
         data-plasmic-name={"raviReviewOptions"}
         data-plasmic-override={overrides.raviReviewOptions}
         className={classNames("__wab_instance", sty.raviReviewOptions)}
-        isLoading={(() => {
-          try {
-            return $state.isLoading;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })()}
+        isOther={generateStateValueProp($state, [
+          "raviReviewOptions",
+          "isOther"
+        ])}
         onClickSendReport={async value => {
           const $steps = {};
 
@@ -223,37 +209,10 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["login"] = await $steps["login"];
           }
 
-          $steps["updateIsLoading"] = true
-            ? (() => {
-                const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["isLoading"]
-                  },
-                  operation: 0,
-                  value: true
-                };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["updateIsLoading"] != null &&
-            typeof $steps["updateIsLoading"] === "object" &&
-            typeof $steps["updateIsLoading"].then === "function"
-          ) {
-            $steps["updateIsLoading"] = await $steps["updateIsLoading"];
-          }
-
           $steps["if10Character"] =
-            $ctx.auth.isLogin && value.length < 10
+            $ctx.auth.isLogin &&
+            value.length < 10 &&
+            $state.raviReviewOptions.isOther
               ? (() => {
                   const actionArgs = {
                     args: [
@@ -276,49 +235,56 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["if10Character"] = await $steps["if10Character"];
           }
 
-          $steps["request"] =
-            value.length >= 10 && $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      "POST",
-                      (() => {
-                        try {
-                          return `https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id=${$props.feedbackId}`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+          $steps["request"] = (() => {
+            if (!$ctx.auth.isLogin) {
+              return false;
+            } else if (value.length >= 10 && $state.raviReviewOptions.isOther) {
+              return true;
+            } else if (!$state.raviReviewOptions.isOther) {
+              return true;
+            }
+          })()
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "POST",
+                    (() => {
+                      try {
+                        return `https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id=${$props.feedbackId}`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })(),
-                      undefined,
-                      (() => {
-                        try {
-                          return {
-                            feedback_id: $props.feedbackId,
-                            report_text: value
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                        throw e;
+                      }
+                    })(),
+                    undefined,
+                    (() => {
+                      try {
+                        return {
+                          feedback_id: $props.feedbackId,
+                          report_text: value
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
           if (
             $steps["request"] != null &&
             typeof $steps["request"] === "object" &&
@@ -327,7 +293,15 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["request"] = await $steps["request"];
           }
 
-          $steps["n8N"] = true
+          $steps["n8N"] = (() => {
+            if (!$ctx.auth.isLogin) {
+              return false;
+            } else if (value.length >= 10 && $state.raviReviewOptions.isOther) {
+              return true;
+            } else if (!$state.raviReviewOptions.isOther) {
+              return true;
+            }
+          })()
             ? (() => {
                 const actionArgs = {
                   args: [
@@ -379,51 +353,29 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["n8N"] = await $steps["n8N"];
           }
 
-          $steps["updateIsLoading2"] = true
+          $steps["toast"] = (() => {
+            if (!$ctx.auth.isLogin) {
+              return false;
+            } else if (value.length >= 10 && $state.raviReviewOptions.isOther) {
+              return true;
+            } else if (!$state.raviReviewOptions.isOther) {
+              return true;
+            }
+          })()
             ? (() => {
                 const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["isLoading"]
-                  },
-                  operation: 0,
-                  value: false
+                  args: [
+                    undefined,
+                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                    undefined,
+                    5000
+                  ]
                 };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
               })()
             : undefined;
-          if (
-            $steps["updateIsLoading2"] != null &&
-            typeof $steps["updateIsLoading2"] === "object" &&
-            typeof $steps["updateIsLoading2"].then === "function"
-          ) {
-            $steps["updateIsLoading2"] = await $steps["updateIsLoading2"];
-          }
-
-          $steps["toast"] =
-            value.length >= 10 && $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      undefined,
-                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                      undefined,
-                      5000
-                    ]
-                  };
-                  return $globalActions["Fragment.showToast"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
           if (
             $steps["toast"] != null &&
             typeof $steps["toast"] === "object" &&
@@ -432,39 +384,46 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["toast"] = await $steps["toast"];
           }
 
-          $steps["splunk"] =
-            value.length >= 10 && $ctx.auth.isLogin
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return {
-                            group: "feedback",
-                            data: {
-                              doctor_id: $props.doctorUserId,
-                              comment_id: $props.feedbackId,
-                              report_text: value
-                            },
-                            type: "report_comment"
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+          $steps["splunk"] = (() => {
+            if (!$ctx.auth.isLogin) {
+              return false;
+            } else if (value.length >= 10 && $state.raviReviewOptions.isOther) {
+              return true;
+            } else if (!$state.raviReviewOptions.isOther) {
+              return true;
+            }
+          })()
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorUserId,
+                            comment_id: $props.feedbackId,
+                            report_text: value
+                          },
+                          type: "report_comment"
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Splunk.sendLog"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
           if (
             $steps["splunk"] != null &&
             typeof $steps["splunk"] === "object" &&
@@ -472,54 +431,21 @@ function PlasmicReviewOptions__RenderFunc(props: {
           ) {
             $steps["splunk"] = await $steps["splunk"];
           }
-
-          $steps["closeDialog"] =
-            $steps.request.status == 200
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: [
-                        "raviReviewOptions",
-                        "paziresh24DialogOpen"
-                      ]
-                    },
-                    operation: 0,
-                    value: false
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-          if (
-            $steps["closeDialog"] != null &&
-            typeof $steps["closeDialog"] === "object" &&
-            typeof $steps["closeDialog"].then === "function"
-          ) {
-            $steps["closeDialog"] = await $steps["closeDialog"];
-          }
         }}
-        onPaziresh24DialogOpenChange={async (...eventArgs: any) => {
+        onIsOtherChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, [
             "raviReviewOptions",
-            "paziresh24DialogOpen"
+            "isOther"
           ]).apply(null, eventArgs);
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
         }}
-        paziresh24DialogOpen={generateStateValueProp($state, [
-          "raviReviewOptions",
-          "paziresh24DialogOpen"
-        ])}
       />
     </div>
   ) as React.ReactElement | null;

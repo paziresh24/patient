@@ -61,6 +61,7 @@ import {
 
 import { Popover } from "@plasmicpkgs/radix-ui";
 import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyEBPJSmH/component
+import RaviOption from "../../RaviOption"; // plasmic-import: 7P-1fooJZx0C/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -83,33 +84,29 @@ export const PlasmicRaviReviewOptions__VariantProps =
   new Array<VariantPropType>();
 
 export type PlasmicRaviReviewOptions__ArgsType = {
-  paziresh24DialogOpen?: boolean;
-  onPaziresh24DialogOpenChange?: (val: boolean) => void;
   onClickSendReport?: (value: string) => void;
-  isLoading?: boolean;
+  isOther?: boolean;
+  onIsOtherChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicRaviReviewOptions__ArgsType;
 export const PlasmicRaviReviewOptions__ArgProps = new Array<ArgPropType>(
-  "paziresh24DialogOpen",
-  "onPaziresh24DialogOpenChange",
   "onClickSendReport",
-  "isLoading"
+  "isOther",
+  "onIsOtherChange"
 );
 
 export type PlasmicRaviReviewOptions__OverridesType = {
   root?: Flex__<"div">;
   popoverCore?: Flex__<typeof Popover>;
-  text?: Flex__<"div">;
   reportDialog?: Flex__<typeof Paziresh24Dialog>;
+  raviOption?: Flex__<typeof RaviOption>;
   textarea?: Flex__<"textarea">;
-  paziresh24Button?: Flex__<typeof Paziresh24Button>;
 };
 
 export interface DefaultRaviReviewOptionsProps {
-  paziresh24DialogOpen?: boolean;
-  onPaziresh24DialogOpenChange?: (val: boolean) => void;
   onClickSendReport?: (value: string) => void;
-  isLoading?: boolean;
+  isOther?: boolean;
+  onIsOtherChange?: (val: string) => void;
   className?: string;
 }
 
@@ -133,9 +130,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {
-          isLoading: false
-        },
+        {},
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -163,17 +158,69 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
       },
       {
         path: "reportDialog.open",
-        type: "writable",
+        type: "private",
         variableType: "boolean",
-
-        valueProp: "paziresh24DialogOpen",
-        onChangeProp: "onPaziresh24DialogOpenChange"
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
         path: "textarea.value",
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => ``
+      },
+      {
+        path: "isOther",
+        type: "writable",
+        variableType: "boolean",
+
+        valueProp: "isOther",
+        onChangeProp: "onIsOtherChange"
+      },
+      {
+        path: "reports",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => [
+          {
+            title: "\u0646\u0627\u0645\u0631\u062a\u0628\u0637",
+            description:
+              "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0645\u0631\u0628\u0648\u0637 \u0628\u0647 \u0627\u06cc\u0646 \u067e\u0632\u0634\u06a9 \u06cc\u0627 \u062d\u0648\u0632\u0647 \u0645\u0631\u0628\u0648\u0637\u0647 \u0646\u0645\u06cc \u0628\u0627\u0634\u062f"
+          },
+          {
+            title: "\u063a\u06cc\u0631\u0648\u0627\u0642\u0639\u06cc",
+            description:
+              "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0628\u0627 \u0647\u062f\u0641 \u062a\u062e\u0631\u06cc\u0628 \u06cc\u0627 \u062a\u0648\u0635\u06cc\u0647 \u0628\u062f\u0648\u0646 \u0639\u0644\u062a \u062f\u0631\u062c \u0634\u062f\u0647 \u0627\u0633\u062a"
+          },
+          {
+            title: "\u062a\u0636\u0627\u062f \u0645\u0646\u0627\u0641\u0639",
+            description:
+              "\u0646\u0638\u0631 \u0627\u0632 \u0637\u0631\u0641 \u0631\u0642\u0628\u0627 \u06cc\u0627 \u06a9\u0633\u0628 \u0648 \u06a9\u0627\u0631\u0647\u0627\u06cc \u0631\u0642\u06cc\u0628 \u062f\u0631\u062c \u0634\u062f\u0647 \u0627\u0633\u062a"
+          },
+          {
+            title:
+              "\u062a\u0648\u0647\u06cc\u0646 \u06cc\u0627 \u0641\u062d\u0627\u0634\u06cc",
+            description:
+              "\u062d\u0627\u0648\u06cc \u0627\u0644\u0641\u0627\u0638 \u0631\u06a9\u06cc\u06a9\u060c \u062e\u0634\u0648\u0646\u062a \u06cc\u0627 \u0627\u0644\u0641\u0627\u0638 \u062c\u0646\u0633\u06cc \u0645\u06cc \u0628\u0627\u0634\u062f"
+          },
+          {
+            title:
+              "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0634\u062e\u0635\u06cc",
+            description:
+              "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u062f\u0627\u0631\u0627\u06cc \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0634\u062e\u0635\u06cc \u0645\u062b\u0644 \u0627\u062f\u0631\u0633 \u06cc\u0627 \u0634\u0645\u0627\u0631\u0647 \u062a\u0644\u0641\u0646 \u0645\u06cc \u0628\u0627\u0634\u062f"
+          }
+        ]
+      },
+      {
+        path: "selectedReport",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "isLoading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -200,6 +247,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
+      dir={"rtl"}
     >
       <Popover
         data-plasmic-name={"popoverCore"}
@@ -210,10 +258,6 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
             null,
             eventArgs
           );
-
-          if (eventArgs.length > 1 && eventArgs[1]) {
-            return;
-          }
         }}
         open={generateStateValueProp($state, ["popoverCore", "open"])}
         overlay={
@@ -263,12 +307,10 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               }}
             >
               <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
                 className={classNames(
                   projectcss.all,
                   projectcss.__wab_text,
-                  sty.text
+                  sty.text__pw57K
                 )}
               >
                 {"\u06af\u0632\u0627\u0631\u0634"}
@@ -300,42 +342,377 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         data-plasmic-override={overrides.reportDialog}
         body={
           <React.Fragment>
-            <textarea
-              data-plasmic-name={"textarea"}
-              data-plasmic-override={overrides.textarea}
-              className={classNames(
-                projectcss.all,
-                projectcss.textarea,
-                sty.textarea
-              )}
-              onChange={async (...eventArgs: any) => {
-                (e => {
-                  generateStateOnChangeProp($state, ["textarea", "value"])(
-                    e.target.value
-                  );
-                }).apply(null, eventArgs);
-              }}
-              placeholder={
-                "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
-              }
-              ref={ref => {
-                $refs["textarea"] = ref;
-              }}
-              value={
-                generateStateValueProp($state, ["textarea", "value"]) ?? ""
-              }
-            />
+            <div className={classNames(projectcss.all, sty.freeBox__rBBuf)}>
+              {(() => {
+                try {
+                  return !$state.isOther;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__sFqba)}
+                >
+                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return $state.reports;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                    const currentItem = __plasmic_item_0;
+                    const currentIndex = __plasmic_idx_0;
+                    return (
+                      <RaviOption
+                        data-plasmic-name={"raviOption"}
+                        data-plasmic-override={overrides.raviOption}
+                        className={classNames("__wab_instance", sty.raviOption)}
+                        description={(() => {
+                          try {
+                            return currentItem.description;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        isSelected={(() => {
+                          try {
+                            return currentItem.title == $state.selectedReport;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                        key={currentIndex}
+                        onClick={async () => {
+                          const $steps = {};
 
+                          $steps["updateSelectedReport"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["selectedReport"]
+                                  },
+                                  operation: 0,
+                                  value: currentItem.title
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["updateSelectedReport"] != null &&
+                            typeof $steps["updateSelectedReport"] ===
+                              "object" &&
+                            typeof $steps["updateSelectedReport"].then ===
+                              "function"
+                          ) {
+                            $steps["updateSelectedReport"] = await $steps[
+                              "updateSelectedReport"
+                            ];
+                          }
+                        }}
+                        title={(() => {
+                          try {
+                            return currentItem.title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    );
+                  })}
+                </Stack__>
+              ) : null}
+              {(() => {
+                try {
+                  return $state.isOther;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <textarea
+                  data-plasmic-name={"textarea"}
+                  data-plasmic-override={overrides.textarea}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.textarea,
+                    sty.textarea
+                  )}
+                  onChange={async (...eventArgs: any) => {
+                    (e => {
+                      generateStateOnChangeProp($state, ["textarea", "value"])(
+                        e.target.value
+                      );
+                    }).apply(null, eventArgs);
+                  }}
+                  placeholder={
+                    "\u0644\u0637\u0641\u0627 \u0639\u0644\u062a \u0648 \u0634\u0631\u062d \u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631 \u0627\u06cc\u0646 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646\u06cc\u062f \u062a\u0627 \u062a\u06cc\u0645 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u063424 \u0628\u0631 \u0627\u0633\u0627\u0633 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627\u060c \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631 \u0631\u0627 \u0645\u062c\u062f\u062f\u0627 \u0628\u0631\u0631\u0633\u06cc \u0646\u0645\u0627\u06cc\u062f."
+                  }
+                  ref={ref => {
+                    $refs["textarea"] = ref;
+                  }}
+                  value={
+                    generateStateValueProp($state, ["textarea", "value"]) ?? ""
+                  }
+                />
+              ) : null}
+              <div className={classNames(projectcss.all, sty.freeBox__triVb)}>
+                <Paziresh24Button
+                  children2={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__tqZsV
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $state.isOther ? "بازگشت" : "سایر";
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "\u0633\u0627\u06cc\u0631";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.paziresh24Button___71Rt3
+                  )}
+                  color={"clear"}
+                  endIcon={
+                    <ChevronLeftIcon
+                      className={classNames(projectcss.all, sty.svg__qLK)}
+                      role={"img"}
+                    />
+                  }
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateIsOther"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["isOther"]
+                            },
+                            operation: 4,
+                            value: true
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            const oldValue = $stateGet(objRoot, variablePath);
+                            $stateSet(objRoot, variablePath, !oldValue);
+                            return !oldValue;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateIsOther"] != null &&
+                      typeof $steps["updateIsOther"] === "object" &&
+                      typeof $steps["updateIsOther"].then === "function"
+                    ) {
+                      $steps["updateIsOther"] = await $steps["updateIsOther"];
+                    }
+
+                    $steps["updateTextareaValue"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["textarea", "value"]
+                            },
+                            operation: 1
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, undefined);
+                            return undefined;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateTextareaValue"] != null &&
+                      typeof $steps["updateTextareaValue"] === "object" &&
+                      typeof $steps["updateTextareaValue"].then === "function"
+                    ) {
+                      $steps["updateTextareaValue"] = await $steps[
+                        "updateTextareaValue"
+                      ];
+                    }
+
+                    $steps["updateSelectedReport"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["selectedReport"]
+                            },
+                            operation: 1
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, undefined);
+                            return undefined;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateSelectedReport"] != null &&
+                      typeof $steps["updateSelectedReport"] === "object" &&
+                      typeof $steps["updateSelectedReport"].then === "function"
+                    ) {
+                      $steps["updateSelectedReport"] = await $steps[
+                        "updateSelectedReport"
+                      ];
+                    }
+                  }}
+                  showEndIcon={(() => {
+                    try {
+                      return !$state.isOther;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "showEndIcon";
+                      }
+                      throw e;
+                    }
+                  })()}
+                  showStartIcon={(() => {
+                    try {
+                      return $state.isOther;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()}
+                  startIcon={
+                    <ChevronRightIcon
+                      className={classNames(projectcss.all, sty.svg__rq61N)}
+                      role={"img"}
+                    />
+                  }
+                />
+              </div>
+            </div>
             <Paziresh24Button
-              data-plasmic-name={"paziresh24Button"}
-              data-plasmic-override={overrides.paziresh24Button}
               children2={
                 "\u0627\u0631\u0633\u0627\u0644 \u06af\u0632\u0627\u0631\u0634"
               }
-              className={classNames("__wab_instance", sty.paziresh24Button)}
+              className={classNames(
+                "__wab_instance",
+                sty.paziresh24Button__oU0Ku
+              )}
+              isDisabled={(() => {
+                try {
+                  return !$state.selectedReport && !$state.textarea.value;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
               loading={(() => {
                 try {
-                  return $props.isLoading;
+                  return $state.isLoading;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -349,6 +726,40 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               onClick={async event => {
                 const $steps = {};
 
+                $steps["startLoading"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoading"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["startLoading"] != null &&
+                  typeof $steps["startLoading"] === "object" &&
+                  typeof $steps["startLoading"].then === "function"
+                ) {
+                  $steps["startLoading"] = await $steps["startLoading"];
+                }
+
                 $steps["runOnClickSendReport"] = true
                   ? (() => {
                       const actionArgs = {
@@ -356,7 +767,9 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                         args: [
                           (() => {
                             try {
-                              return $state.textarea.value;
+                              return $state.isOther
+                                ? $state.textarea.value
+                                : $state.selectedReport;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -383,6 +796,80 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                     "runOnClickSendReport"
                   ];
                 }
+
+                $steps["endLoading"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoading"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["endLoading"] != null &&
+                  typeof $steps["endLoading"] === "object" &&
+                  typeof $steps["endLoading"].then === "function"
+                ) {
+                  $steps["endLoading"] = await $steps["endLoading"];
+                }
+
+                $steps["updateReportDialogOpen"] = (() => {
+                  return $state.isOther
+                    ? $state.textarea.value?.length > 10
+                    : true;
+                })()
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["reportDialog", "open"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateReportDialogOpen"] != null &&
+                  typeof $steps["updateReportDialogOpen"] === "object" &&
+                  typeof $steps["updateReportDialogOpen"].then === "function"
+                ) {
+                  $steps["updateReportDialogOpen"] = await $steps[
+                    "updateReportDialogOpen"
+                  ];
+                }
               }}
             />
           </React.Fragment>
@@ -395,7 +882,11 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
             eventArgs
           );
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
         }}
@@ -408,19 +899,11 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "popoverCore",
-    "text",
-    "reportDialog",
-    "textarea",
-    "paziresh24Button"
-  ],
-  popoverCore: ["popoverCore", "text"],
-  text: ["text"],
-  reportDialog: ["reportDialog", "textarea", "paziresh24Button"],
-  textarea: ["textarea"],
-  paziresh24Button: ["paziresh24Button"]
+  root: ["root", "popoverCore", "reportDialog", "raviOption", "textarea"],
+  popoverCore: ["popoverCore"],
+  reportDialog: ["reportDialog", "raviOption", "textarea"],
+  raviOption: ["raviOption"],
+  textarea: ["textarea"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -428,10 +911,9 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   popoverCore: typeof Popover;
-  text: "div";
   reportDialog: typeof Paziresh24Dialog;
+  raviOption: typeof RaviOption;
   textarea: "textarea";
-  paziresh24Button: typeof Paziresh24Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -495,10 +977,9 @@ export const PlasmicRaviReviewOptions = Object.assign(
   {
     // Helper components rendering sub-elements
     popoverCore: makeNodeComponent("popoverCore"),
-    text: makeNodeComponent("text"),
     reportDialog: makeNodeComponent("reportDialog"),
+    raviOption: makeNodeComponent("raviOption"),
     textarea: makeNodeComponent("textarea"),
-    paziresh24Button: makeNodeComponent("paziresh24Button"),
 
     // Metadata about props expected for PlasmicRaviReviewOptions
     internalVariantProps: PlasmicRaviReviewOptions__VariantProps,

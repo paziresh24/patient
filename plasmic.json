@@ -75,8 +75,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -307,8 +306,7 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -1561,8 +1559,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -1926,6 +1923,45 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewOptions.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "elu6YJ3_KoYo",
+          "name": "Share",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicShare.tsx",
+          "importSpec": {
+            "modulePath": "Share.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicShare.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "etOCIhcu_Yx5",
+          "name": "ReviewRateAndCommentCount",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount.tsx",
+          "importSpec": {
+            "modulePath": "ReviewRateAndCommentCount.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "xpGRRNKB86D2",
+          "name": "ReviewProgressList",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewProgressList.tsx",
+          "importSpec": {
+            "modulePath": "ReviewProgressList.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewProgressList.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -2108,6 +2144,11 @@
           "id": "7LGrDRQSghPi",
           "name": "Icon24Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon24.tsx"
+        },
+        {
+          "id": "70OAewzCU8kD",
+          "name": "Icon34Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon34.tsx"
         }
       ],
       "images": [
@@ -4248,6 +4289,58 @@
           "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviAlert.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "n51CDSNkGtxF",
+          "name": "RaviSummery",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviSummery.tsx",
+          "importSpec": {
+            "modulePath": "RaviSummery.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviSummery.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "sq-hoyjtWZlg",
+          "name": "RaviRateAndCommentCount",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviRateAndCommentCount.tsx",
+          "importSpec": {
+            "modulePath": "RaviRateAndCommentCount.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviRateAndCommentCount.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "TkOtksyueyFt",
+          "name": "RaviShare",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviShare.tsx",
+          "importSpec": {
+            "modulePath": "RaviShare.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviShare.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "7P-1fooJZx0C",
+          "name": "RaviOption",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviOption.tsx",
+          "importSpec": {
+            "modulePath": "RaviOption.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviOption.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -4280,6 +4373,36 @@
           "id": "H_mGbG9dNFMm",
           "name": "CheckSvgIcon",
           "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "3-8JABhvj3fe",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon2.tsx"
+        },
+        {
+          "id": "xTYazYoaptk0",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "SIg-07GJeTGn",
+          "name": "Icon16Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon16.tsx"
+        },
+        {
+          "id": "PThHSf9f7Uhv",
+          "name": "Icon13Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon13.tsx"
+        },
+        {
+          "id": "eY1DBpTFd9o5",
+          "name": "Icon17Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon17.tsx"
+        },
+        {
+          "id": "y07O1zQfCwYo",
+          "name": "Icon15Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon15.tsx"
         }
       ],
       "images": [],

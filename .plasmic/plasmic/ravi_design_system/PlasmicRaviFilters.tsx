@@ -80,6 +80,8 @@ export const PlasmicRaviFilters__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicRaviFilters__ArgsType = {
   filterList?: any;
+  textInputValue?: string;
+  onTextInputValueChange?: (val: string) => void;
   onSelectFilter?: (value: string) => void;
   sortList?: any;
   onSelectSort?: (value: string) => void;
@@ -88,6 +90,8 @@ export type PlasmicRaviFilters__ArgsType = {
 type ArgPropType = keyof PlasmicRaviFilters__ArgsType;
 export const PlasmicRaviFilters__ArgProps = new Array<ArgPropType>(
   "filterList",
+  "textInputValue",
+  "onTextInputValueChange",
   "onSelectFilter",
   "sortList",
   "onSelectSort",
@@ -104,6 +108,8 @@ export type PlasmicRaviFilters__OverridesType = {
 
 export interface DefaultRaviFiltersProps {
   filterList?: any;
+  textInputValue?: string;
+  onTextInputValueChange?: (val: string) => void;
   onSelectFilter?: (value: string) => void;
   sortList?: any;
   onSelectSort?: (value: string) => void;
@@ -191,9 +197,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
       },
       {
         path: "textInput.value",
-        type: "private",
+        type: "writable",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+
+        valueProp: "textInputValue",
+        onChangeProp: "onTextInputValueChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -243,7 +251,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
               );
             }).apply(null, eventArgs);
 
-            if (eventArgs.length > 1 && eventArgs[1]) {
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
               return;
             }
 
@@ -314,7 +326,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
               );
             }).apply(null, eventArgs);
 
-            if (eventArgs.length > 1 && eventArgs[1]) {
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
               return;
             }
 
@@ -385,7 +401,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
             );
           }).apply(null, eventArgs);
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
 

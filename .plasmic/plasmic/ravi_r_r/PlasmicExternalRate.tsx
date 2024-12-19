@@ -234,30 +234,18 @@ function PlasmicExternalRate__RenderFunc(props: {
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onLoading={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onSuccess={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           url={(() => {
             try {
@@ -385,30 +373,18 @@ function PlasmicExternalRate__RenderFunc(props: {
               "getPaziresh24Rate",
               "error"
             ]).apply(null, eventArgs);
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onLoading={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, [
               "getPaziresh24Rate",
               "loading"
             ]).apply(null, eventArgs);
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onSuccess={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, [
               "getPaziresh24Rate",
               "data"
             ]).apply(null, eventArgs);
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           url={(() => {
             try {

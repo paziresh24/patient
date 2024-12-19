@@ -187,10 +187,6 @@ function PlasmicNoReview__RenderFunc(props: {
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           open={generateStateValueProp($state, ["popoverCore", "open"])}
           overlay={
