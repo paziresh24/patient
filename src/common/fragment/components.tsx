@@ -1,8 +1,11 @@
 import dynamic from 'next/dynamic';
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const PlasmicReviewList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList'));
+const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
 const PlasmicRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount'));
+const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
 const PlasmicRateProgressBar = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateProgressBar'));
+const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
 const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicServices'));
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
@@ -15,6 +18,7 @@ import { PlasmicClaim__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicClai
 import { PlasmicReviewList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList';
 import { PlasmicRateAndCommentCount__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 import { PlasmicRateProgressBar__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicRateProgressBar';
+import { PlasmicReviewProgressList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList';
 
 import { PlasmicServices__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicServices';
 import { PlasmicActivity__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicActivity';
@@ -43,14 +47,14 @@ import PlasmicFilterRow, { PlasmicFilterRow__ArgProps } from '.plasmic/plasmic/p
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
   ReviewList: {
-    Component: PlasmicReviewList,
-    id: 'Bx6gxTOoja9k',
+    Component: PlasmicReviewList2,
+    id: 'Kz2u6VAJ02yE',
     propsAllowed: PlasmicReviewList__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   RateAndCommentCount: {
-    Component: PlasmicRateAndCommentCount,
-    id: 'u3Jgb_UfiULc',
+    Component: PlasmicReviewRateAndCommentCount,
+    id: 'etOCIhcu_Yx5',
     propsAllowed: PlasmicRateAndCommentCount__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
@@ -58,6 +62,12 @@ export const Components = {
     Component: PlasmicRateProgressBar,
     id: 'YorKPsj5-KCA',
     propsAllowed: PlasmicRateProgressBar__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateProgressList: {
+    Component: PlasmicProgressList,
+    id: 'xpGRRNKB86D2',
+    propsAllowed: PlasmicReviewProgressList__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   ReceiptActionButtons: {
@@ -164,3 +174,4 @@ export const Components = {
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };
+

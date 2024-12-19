@@ -77,6 +77,20 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     setPage(1);
     setSort(value);
   }, []);
+  const items = [
+    {
+      label: 'برخورد مناسب پزشک',
+      value: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
+    },
+    {
+      label: 'توضیح پزشک در هنگام ویزیت',
+      value: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+    },
+    {
+      label: 'مهارت و تخصص پزشک',
+      value: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
+    },
+  ];
 
   return (
     <RaviGlobalContextsProvider>
@@ -98,12 +112,10 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
               }}
             />
             <Fragment
-              name="RateProgressBar"
+              name="RateProgressList"
               props={{
                 ...profileData,
-                averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
-                averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
-                averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+                items: items,
                 hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
@@ -137,3 +149,4 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     </RaviGlobalContextsProvider>
   );
 };
+
