@@ -11,23 +11,24 @@ import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasm
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: lWTHKw5gCzCj/codeComponent
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: fAahHOA889lI/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: GVjCCx3Y_il9/codeComponent
+import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
+  antdConfigProviderProps?: Partial<
+    Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
+  >;
 }
 
 export default function GlobalContextsProvider(
@@ -39,7 +40,8 @@ export default function GlobalContextsProvider(
     fragmentProps,
     growthbookGlobalContextProps,
     splunkProps,
-    pwaProps
+    pwaProps,
+    antdConfigProviderProps
   } = props;
 
   return (
@@ -98,7 +100,118 @@ export default function GlobalContextsProvider(
                 : "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d"
             }
           >
-            <PWA {...pwaProps}>{children}</PWA>
+            <PWA {...pwaProps}>
+              <AntdConfigProvider
+                {...antdConfigProviderProps}
+                borderRadius={
+                  antdConfigProviderProps &&
+                  "borderRadius" in antdConfigProviderProps
+                    ? antdConfigProviderProps.borderRadius!
+                    : 6
+                }
+                colorBgBase={
+                  antdConfigProviderProps &&
+                  "colorBgBase" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorBgBase!
+                    : "#ffffff"
+                }
+                colorError={
+                  antdConfigProviderProps &&
+                  "colorError" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorError!
+                    : "#ff4d4f"
+                }
+                colorInfo={
+                  antdConfigProviderProps &&
+                  "colorInfo" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorInfo!
+                    : "#1677ff"
+                }
+                colorPrimary={
+                  antdConfigProviderProps &&
+                  "colorPrimary" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorPrimary!
+                    : "#1677ff"
+                }
+                colorSuccess={
+                  antdConfigProviderProps &&
+                  "colorSuccess" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorSuccess!
+                    : "#52c41a"
+                }
+                colorWarning={
+                  antdConfigProviderProps &&
+                  "colorWarning" in antdConfigProviderProps
+                    ? antdConfigProviderProps.colorWarning!
+                    : "#faad14"
+                }
+                controlHeight={
+                  antdConfigProviderProps &&
+                  "controlHeight" in antdConfigProviderProps
+                    ? antdConfigProviderProps.controlHeight!
+                    : 32
+                }
+                defaultDark={
+                  antdConfigProviderProps &&
+                  "defaultDark" in antdConfigProviderProps
+                    ? antdConfigProviderProps.defaultDark!
+                    : false
+                }
+                lineWidth={
+                  antdConfigProviderProps &&
+                  "lineWidth" in antdConfigProviderProps
+                    ? antdConfigProviderProps.lineWidth!
+                    : 1
+                }
+                loadingText={
+                  antdConfigProviderProps &&
+                  "loadingText" in antdConfigProviderProps
+                    ? antdConfigProviderProps.loadingText!
+                    : undefined
+                }
+                removeLoading={
+                  antdConfigProviderProps &&
+                  "removeLoading" in antdConfigProviderProps
+                    ? antdConfigProviderProps.removeLoading!
+                    : undefined
+                }
+                sizeStep={
+                  antdConfigProviderProps &&
+                  "sizeStep" in antdConfigProviderProps
+                    ? antdConfigProviderProps.sizeStep!
+                    : 4
+                }
+                sizeUnit={
+                  antdConfigProviderProps &&
+                  "sizeUnit" in antdConfigProviderProps
+                    ? antdConfigProviderProps.sizeUnit!
+                    : 4
+                }
+                themeStyles={
+                  antdConfigProviderProps &&
+                  "themeStyles" in antdConfigProviderProps
+                    ? antdConfigProviderProps.themeStyles!
+                    : true
+                    ? {
+                        fontFamily: "initial",
+                        fontSize: "1rem",
+                        fontWeight: "400",
+                        lineHeight: "1.5",
+                        color: "#2B2F33",
+                        letterSpacing: "normal"
+                      }
+                    : undefined
+                }
+                wireframe={
+                  antdConfigProviderProps &&
+                  "wireframe" in antdConfigProviderProps
+                    ? antdConfigProviderProps.wireframe!
+                    : false
+                }
+              >
+                {children}
+              </AntdConfigProvider>
+            </PWA>
           </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>

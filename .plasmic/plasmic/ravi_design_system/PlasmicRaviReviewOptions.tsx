@@ -67,10 +67,13 @@ import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5f
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewOptions.module.css"; // plasmic-import: WPpw5PhLSljG/css
 
 import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
+import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: 2uzLLHig1Vpp/icon
+import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: EZeYNol_o3Nk/icon
 import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
@@ -87,12 +90,20 @@ export type PlasmicRaviReviewOptions__ArgsType = {
   onClickSendReport?: (value: string) => void;
   isOther?: boolean;
   onIsOtherChange?: (val: string) => void;
+  isUserComment?: boolean;
+  commentText?: string;
+  onClickEdit?: (value: string) => void;
+  onClickDelete?: () => void;
 };
 type ArgPropType = keyof PlasmicRaviReviewOptions__ArgsType;
 export const PlasmicRaviReviewOptions__ArgProps = new Array<ArgPropType>(
   "onClickSendReport",
   "isOther",
-  "onIsOtherChange"
+  "onIsOtherChange",
+  "isUserComment",
+  "commentText",
+  "onClickEdit",
+  "onClickDelete"
 );
 
 export type PlasmicRaviReviewOptions__OverridesType = {
@@ -101,12 +112,19 @@ export type PlasmicRaviReviewOptions__OverridesType = {
   reportDialog?: Flex__<typeof Paziresh24Dialog>;
   raviOption?: Flex__<typeof RaviOption>;
   textarea?: Flex__<"textarea">;
+  deleteDialog?: Flex__<typeof Paziresh24Dialog>;
+  editDialog?: Flex__<typeof Paziresh24Dialog>;
+  editComment?: Flex__<"textarea">;
 };
 
 export interface DefaultRaviReviewOptionsProps {
   onClickSendReport?: (value: string) => void;
   isOther?: boolean;
   onIsOtherChange?: (val: string) => void;
+  isUserComment?: boolean;
+  commentText?: string;
+  onClickEdit?: (value: string) => void;
+  onClickDelete?: () => void;
   className?: string;
 }
 
@@ -130,7 +148,9 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          isUserComment: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -221,6 +241,49 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "deleteDialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "editDialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "editComment.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $props.commentText;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()
+      },
+      {
+        path: "isLoadingEdit",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "isLoadingDelete",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -245,6 +308,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
       dir={"rtl"}
@@ -266,6 +330,122 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               as={"div"}
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__rnAqM)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateEditDialogOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["editDialog", "open"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateEditDialogOpen"] != null &&
+                  typeof $steps["updateEditDialogOpen"] === "object" &&
+                  typeof $steps["updateEditDialogOpen"].then === "function"
+                ) {
+                  $steps["updateEditDialogOpen"] = await $steps[
+                    "updateEditDialogOpen"
+                  ];
+                }
+              }}
+            >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__pw57K
+                )}
+              >
+                {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+              </div>
+              <IconIcon
+                className={classNames(projectcss.all, sty.svg__yzaqe)}
+                role={"img"}
+              />
+            </Stack__>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__i4Lgq)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateDeleteDialogOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["deleteDialog", "open"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateDeleteDialogOpen"] != null &&
+                  typeof $steps["updateDeleteDialogOpen"] === "object" &&
+                  typeof $steps["updateDeleteDialogOpen"].then === "function"
+                ) {
+                  $steps["updateDeleteDialogOpen"] = await $steps[
+                    "updateDeleteDialogOpen"
+                  ];
+                }
+              }}
+            >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__yzRwT
+                )}
+              >
+                {"\u062d\u0630\u0641"}
+              </div>
+              <Icon3Icon
+                className={classNames(projectcss.all, sty.svg__pNEbA)}
+                role={"img"}
+              />
+            </Stack__>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__gwNoZ)}
               onClick={async event => {
                 const $steps = {};
 
@@ -310,13 +490,13 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.__wab_text,
-                  sty.text__pw57K
+                  sty.text__zAnF9
                 )}
               >
                 {"\u06af\u0632\u0627\u0631\u0634"}
               </div>
               <InfoIcon
-                className={classNames(projectcss.all, sty.svg__pNEbA)}
+                className={classNames(projectcss.all, sty.svg___28Cxz)}
                 role={"img"}
               />
             </Stack__>
@@ -327,7 +507,8 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
           projectcss.plasmic_tokens,
-          plasmic_paziresh_24_design_system_css.plasmic_tokens
+          plasmic_paziresh_24_design_system_css.plasmic_tokens,
+          plasmic_antd_5_hostless_css.plasmic_tokens
         )}
       >
         <div className={classNames(projectcss.all, sty.freeBox__jp5SJ)}>
@@ -894,16 +1075,496 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
         trigger={null}
       />
+
+      <Paziresh24Dialog
+        data-plasmic-name={"deleteDialog"}
+        data-plasmic-override={overrides.deleteDialog}
+        body={
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__kondS)}
+          >
+            <Paziresh24Button
+              children2={"\u062d\u0630\u0641"}
+              className={classNames(
+                "__wab_instance",
+                sty.paziresh24Button__fbvq8
+              )}
+              color={"red"}
+              loading={(() => {
+                try {
+                  return $state.isLoadingDelete;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateIsLoadingDelete"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingDelete"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingDelete"] != null &&
+                  typeof $steps["updateIsLoadingDelete"] === "object" &&
+                  typeof $steps["updateIsLoadingDelete"].then === "function"
+                ) {
+                  $steps["updateIsLoadingDelete"] = await $steps[
+                    "updateIsLoadingDelete"
+                  ];
+                }
+
+                $steps["runOnClickDelete"] = true
+                  ? (() => {
+                      const actionArgs = { eventRef: $props["onClickDelete"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnClickDelete"] != null &&
+                  typeof $steps["runOnClickDelete"] === "object" &&
+                  typeof $steps["runOnClickDelete"].then === "function"
+                ) {
+                  $steps["runOnClickDelete"] = await $steps["runOnClickDelete"];
+                }
+
+                $steps["updateIsLoadingDelete2"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingDelete"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingDelete2"] != null &&
+                  typeof $steps["updateIsLoadingDelete2"] === "object" &&
+                  typeof $steps["updateIsLoadingDelete2"].then === "function"
+                ) {
+                  $steps["updateIsLoadingDelete2"] = await $steps[
+                    "updateIsLoadingDelete2"
+                  ];
+                }
+
+                $steps["updateDeleteDialogOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["deleteDialog", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateDeleteDialogOpen"] != null &&
+                  typeof $steps["updateDeleteDialogOpen"] === "object" &&
+                  typeof $steps["updateDeleteDialogOpen"].then === "function"
+                ) {
+                  $steps["updateDeleteDialogOpen"] = await $steps[
+                    "updateDeleteDialogOpen"
+                  ];
+                }
+              }}
+            />
+
+            <Paziresh24Button
+              children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
+              className={classNames(
+                "__wab_instance",
+                sty.paziresh24Button___0Hy1
+              )}
+              color={"red"}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateDeleteDialogOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["deleteDialog", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateDeleteDialogOpen"] != null &&
+                  typeof $steps["updateDeleteDialogOpen"] === "object" &&
+                  typeof $steps["updateDeleteDialogOpen"].then === "function"
+                ) {
+                  $steps["updateDeleteDialogOpen"] = await $steps[
+                    "updateDeleteDialogOpen"
+                  ];
+                }
+              }}
+              outline={true}
+            />
+          </Stack__>
+        }
+        className={classNames("__wab_instance", sty.deleteDialog)}
+        noTrigger={true}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["deleteDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        open={generateStateValueProp($state, ["deleteDialog", "open"])}
+        title={
+          "\u0622\u06cc\u0627 \u0627\u0632 \u062d\u0630\u0641 \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0647\u0633\u062a\u06cc\u062f\u061f"
+        }
+        trigger={null}
+      />
+
+      <Paziresh24Dialog
+        data-plasmic-name={"editDialog"}
+        data-plasmic-override={overrides.editDialog}
+        body={
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox___0HOhi)}
+          >
+            <textarea
+              data-plasmic-name={"editComment"}
+              data-plasmic-override={overrides.editComment}
+              className={classNames(
+                projectcss.all,
+                projectcss.textarea,
+                sty.editComment
+              )}
+              onChange={async (...eventArgs: any) => {
+                (e => {
+                  generateStateOnChangeProp($state, ["editComment", "value"])(
+                    e.target.value
+                  );
+                }).apply(null, eventArgs);
+              }}
+              placeholder={
+                "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631..."
+              }
+              ref={ref => {
+                $refs["editComment"] = ref;
+              }}
+              value={
+                generateStateValueProp($state, ["editComment", "value"]) ?? ""
+              }
+            />
+
+            <Paziresh24Button
+              children2={"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+              className={classNames(
+                "__wab_instance",
+                sty.paziresh24Button__i1ZQh
+              )}
+              isDisabled={(() => {
+                try {
+                  return $state.editComment.value.length < 10;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
+              loading={(() => {
+                try {
+                  return $state.isLoadingEdit;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["updateIsLoadingEdit"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingEdit"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingEdit"] != null &&
+                  typeof $steps["updateIsLoadingEdit"] === "object" &&
+                  typeof $steps["updateIsLoadingEdit"].then === "function"
+                ) {
+                  $steps["updateIsLoadingEdit"] = await $steps[
+                    "updateIsLoadingEdit"
+                  ];
+                }
+
+                $steps["runOnClickEdit"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onClickEdit"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.editComment.value;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnClickEdit"] != null &&
+                  typeof $steps["runOnClickEdit"] === "object" &&
+                  typeof $steps["runOnClickEdit"].then === "function"
+                ) {
+                  $steps["runOnClickEdit"] = await $steps["runOnClickEdit"];
+                }
+
+                $steps["updateIsLoadingEdit2"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingEdit"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingEdit2"] != null &&
+                  typeof $steps["updateIsLoadingEdit2"] === "object" &&
+                  typeof $steps["updateIsLoadingEdit2"].then === "function"
+                ) {
+                  $steps["updateIsLoadingEdit2"] = await $steps[
+                    "updateIsLoadingEdit2"
+                  ];
+                }
+
+                $steps["updateEditDialogOpen"] = (
+                  $state.editComment.value.length < 10 ? true : false
+                )
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["editDialog", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateEditDialogOpen"] != null &&
+                  typeof $steps["updateEditDialogOpen"] === "object" &&
+                  typeof $steps["updateEditDialogOpen"].then === "function"
+                ) {
+                  $steps["updateEditDialogOpen"] = await $steps[
+                    "updateEditDialogOpen"
+                  ];
+                }
+              }}
+            />
+          </Stack__>
+        }
+        className={classNames("__wab_instance", sty.editDialog)}
+        noTrigger={true}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["editDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        open={generateStateValueProp($state, ["editDialog", "open"])}
+        title={"\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"}
+        trigger={null}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "popoverCore", "reportDialog", "raviOption", "textarea"],
+  root: [
+    "root",
+    "popoverCore",
+    "reportDialog",
+    "raviOption",
+    "textarea",
+    "deleteDialog",
+    "editDialog",
+    "editComment"
+  ],
   popoverCore: ["popoverCore"],
   reportDialog: ["reportDialog", "raviOption", "textarea"],
   raviOption: ["raviOption"],
-  textarea: ["textarea"]
+  textarea: ["textarea"],
+  deleteDialog: ["deleteDialog"],
+  editDialog: ["editDialog", "editComment"],
+  editComment: ["editComment"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -914,6 +1575,9 @@ type NodeDefaultElementType = {
   reportDialog: typeof Paziresh24Dialog;
   raviOption: typeof RaviOption;
   textarea: "textarea";
+  deleteDialog: typeof Paziresh24Dialog;
+  editDialog: typeof Paziresh24Dialog;
+  editComment: "textarea";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -980,6 +1644,9 @@ export const PlasmicRaviReviewOptions = Object.assign(
     reportDialog: makeNodeComponent("reportDialog"),
     raviOption: makeNodeComponent("raviOption"),
     textarea: makeNodeComponent("textarea"),
+    deleteDialog: makeNodeComponent("deleteDialog"),
+    editDialog: makeNodeComponent("editDialog"),
+    editComment: makeNodeComponent("editComment"),
 
     // Metadata about props expected for PlasmicRaviReviewOptions
     internalVariantProps: PlasmicRaviReviewOptions__VariantProps,

@@ -66,6 +66,7 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewOptions.module.css"; // plasmic-import: NKhK0RyiR4qB/css
@@ -82,13 +83,15 @@ export type PlasmicReviewOptions__ArgsType = {
   commentText?: string;
   doctorUserId?: string;
   feedbackId?: string;
+  isUserComment?: boolean;
 };
 type ArgPropType = keyof PlasmicReviewOptions__ArgsType;
 export const PlasmicReviewOptions__ArgProps = new Array<ArgPropType>(
   "doctorSlug",
   "commentText",
   "doctorUserId",
-  "feedbackId"
+  "feedbackId",
+  "isUserComment"
 );
 
 export type PlasmicReviewOptions__OverridesType = {
@@ -101,6 +104,7 @@ export interface DefaultReviewOptionsProps {
   commentText?: string;
   doctorUserId?: string;
   feedbackId?: string;
+  isUserComment?: boolean;
   className?: string;
 }
 
@@ -124,7 +128,9 @@ function PlasmicReviewOptions__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          isUserComment: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -176,18 +182,279 @@ function PlasmicReviewOptions__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
+      dir={"rtl"}
     >
       <RaviReviewOptions
         data-plasmic-name={"raviReviewOptions"}
         data-plasmic-override={overrides.raviReviewOptions}
         className={classNames("__wab_instance", sty.raviReviewOptions)}
+        commentText={(() => {
+          try {
+            return $props.commentText;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         isOther={generateStateValueProp($state, [
           "raviReviewOptions",
           "isOther"
         ])}
+        isUserComment={args.isUserComment}
+        onClickDelete={async () => {
+          const $steps = {};
+
+          $steps["request"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "DELETE",
+                    (() => {
+                      try {
+                        return "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })(),
+                    undefined,
+                    (() => {
+                      try {
+                        return { Id: $props.feedbackId };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["request"] != null &&
+            typeof $steps["request"] === "object" &&
+            typeof $steps["request"].then === "function"
+          ) {
+            $steps["request"] = await $steps["request"];
+          }
+
+          $steps["toast"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    undefined,
+                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f."
+                  ]
+                };
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["toast"] != null &&
+            typeof $steps["toast"] === "object" &&
+            typeof $steps["toast"].then === "function"
+          ) {
+            $steps["toast"] = await $steps["toast"];
+          }
+
+          $steps["splunk"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorUserId,
+                            comment_id: $props.feedbackId
+                          },
+                          type: "delete_comment"
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["splunk"] != null &&
+            typeof $steps["splunk"] === "object" &&
+            typeof $steps["splunk"].then === "function"
+          ) {
+            $steps["splunk"] = await $steps["splunk"];
+          }
+        }}
+        onClickEdit={async value => {
+          const $steps = {};
+
+          $steps["request"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "PATCH",
+                    (() => {
+                      try {
+                        return (
+                          "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
+                          $props.feedbackId
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })(),
+                    undefined,
+                    (() => {
+                      try {
+                        return { description: value };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["request"] != null &&
+            typeof $steps["request"] === "object" &&
+            typeof $steps["request"].then === "function"
+          ) {
+            $steps["request"] = await $steps["request"];
+          }
+
+          $steps["invokeGlobalAction"] =
+            $steps.request.status == 200
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      undefined,
+                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
+                    ]
+                  };
+                  return $globalActions["Fragment.showToast"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+          }
+
+          $steps["splunk"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorUserId,
+                            comment_id: $props.feedbackId,
+                            edit_text: value
+                          },
+                          type: "edit_comment"
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["splunk"] != null &&
+            typeof $steps["splunk"] === "object" &&
+            typeof $steps["splunk"].then === "function"
+          ) {
+            $steps["splunk"] = await $steps["splunk"];
+          }
+
+          $steps["runCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return console.log($steps.request);
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+        }}
         onClickSendReport={async value => {
           const $steps = {};
 
