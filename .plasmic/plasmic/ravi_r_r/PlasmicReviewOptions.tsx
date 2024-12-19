@@ -373,20 +373,19 @@ function PlasmicReviewOptions__RenderFunc(props: {
             $steps["request"] = await $steps["request"];
           }
 
-          $steps["invokeGlobalAction"] =
-            $steps.request.status == 200
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      undefined,
-                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
-                    ]
-                  };
-                  return $globalActions["Fragment.showToast"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
+          $steps["invokeGlobalAction"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    undefined,
+                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
+                  ]
+                };
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
           if (
             $steps["invokeGlobalAction"] != null &&
             typeof $steps["invokeGlobalAction"] === "object" &&
