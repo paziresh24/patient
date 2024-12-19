@@ -325,123 +325,156 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         }}
         open={generateStateValueProp($state, ["popoverCore", "open"])}
         overlay={
-          <div className={classNames(projectcss.all, sty.freeBox__gYjii)}>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__rnAqM)}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["updateEditDialogOpen"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["editDialog", "open"]
-                        },
-                        operation: 4
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        const oldValue = $stateGet(objRoot, variablePath);
-                        $stateSet(objRoot, variablePath, !oldValue);
-                        return !oldValue;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
+          <div
+            className={classNames(projectcss.all, sty.freeBox__gYjii)}
+            dir={"rtl"}
+          >
+            {(() => {
+              try {
+                return $props.isUserComment;
+              } catch (e) {
                 if (
-                  $steps["updateEditDialogOpen"] != null &&
-                  typeof $steps["updateEditDialogOpen"] === "object" &&
-                  typeof $steps["updateEditDialogOpen"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["updateEditDialogOpen"] = await $steps[
-                    "updateEditDialogOpen"
-                  ];
+                  return true;
                 }
-              }}
-            >
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__pw57K
-                )}
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__rnAqM)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["updateEditDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["editDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateEditDialogOpen"] != null &&
+                    typeof $steps["updateEditDialogOpen"] === "object" &&
+                    typeof $steps["updateEditDialogOpen"].then === "function"
+                  ) {
+                    $steps["updateEditDialogOpen"] = await $steps[
+                      "updateEditDialogOpen"
+                    ];
+                  }
+                }}
               >
-                {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
-              </div>
-              <IconIcon
-                className={classNames(projectcss.all, sty.svg__yzaqe)}
-                role={"img"}
-              />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__i4Lgq)}
-              onClick={async event => {
-                const $steps = {};
+                <IconIcon
+                  className={classNames(projectcss.all, sty.svg__yzaqe)}
+                  role={"img"}
+                />
 
-                $steps["updateDeleteDialogOpen"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["deleteDialog", "open"]
-                        },
-                        operation: 4
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        const oldValue = $stateGet(objRoot, variablePath);
-                        $stateSet(objRoot, variablePath, !oldValue);
-                        return !oldValue;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__pw57K
+                  )}
+                >
+                  {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
+                </div>
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return $props.isUserComment;
+              } catch (e) {
                 if (
-                  $steps["updateDeleteDialogOpen"] != null &&
-                  typeof $steps["updateDeleteDialogOpen"] === "object" &&
-                  typeof $steps["updateDeleteDialogOpen"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["updateDeleteDialogOpen"] = await $steps[
-                    "updateDeleteDialogOpen"
-                  ];
+                  return true;
                 }
-              }}
-            >
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__yzRwT
-                )}
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__i4Lgq)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["updateDeleteDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["deleteDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateDeleteDialogOpen"] != null &&
+                    typeof $steps["updateDeleteDialogOpen"] === "object" &&
+                    typeof $steps["updateDeleteDialogOpen"].then === "function"
+                  ) {
+                    $steps["updateDeleteDialogOpen"] = await $steps[
+                      "updateDeleteDialogOpen"
+                    ];
+                  }
+                }}
               >
-                {"\u062d\u0630\u0641"}
-              </div>
-              <Icon3Icon
-                className={classNames(projectcss.all, sty.svg__pNEbA)}
-                role={"img"}
-              />
-            </Stack__>
+                <Icon3Icon
+                  className={classNames(projectcss.all, sty.svg__pNEbA)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__yzRwT
+                  )}
+                >
+                  {"\u062d\u0630\u0641"}
+                </div>
+              </Stack__>
+            ) : null}
             <Stack__
               as={"div"}
               hasGap={true}
@@ -486,6 +519,11 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 }
               }}
             >
+              <InfoIcon
+                className={classNames(projectcss.all, sty.svg___28Cxz)}
+                role={"img"}
+              />
+
               <div
                 className={classNames(
                   projectcss.all,
@@ -495,10 +533,6 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               >
                 {"\u06af\u0632\u0627\u0631\u0634"}
               </div>
-              <InfoIcon
-                className={classNames(projectcss.all, sty.svg___28Cxz)}
-                role={"img"}
-              />
             </Stack__>
           </div>
         }
@@ -1483,7 +1517,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 }
 
                 $steps["updateEditDialogOpen"] = (
-                  $state.editComment.value.length < 10 ? true : false
+                  $state.editComment.value.length < 10 ? false : true
                 )
                   ? (() => {
                       const actionArgs = {

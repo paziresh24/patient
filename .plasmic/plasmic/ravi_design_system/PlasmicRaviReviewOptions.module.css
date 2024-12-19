@@ -60,7 +60,7 @@
 .freeBox__rnAqM > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   min-width: 0;
   margin-left: calc(0px - var(--token-omrXvBNBcWTN));
   width: calc(100% + var(--token-omrXvBNBcWTN));
@@ -96,7 +96,7 @@
 .freeBox__i4Lgq > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   min-width: 0;
   margin-left: calc(0px - var(--token-omrXvBNBcWTN));
   width: calc(100% + var(--token-omrXvBNBcWTN));
@@ -132,7 +132,7 @@
 .freeBox__gwNoZ > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   min-width: 0;
   margin-left: calc(0px - var(--token-omrXvBNBcWTN));
   width: calc(100% + var(--token-omrXvBNBcWTN));
