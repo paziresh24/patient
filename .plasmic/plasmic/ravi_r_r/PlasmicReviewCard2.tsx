@@ -63,15 +63,18 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import RaviReviewCard from "../../RaviReviewCard"; // plasmic-import: mdyuGePDb8Fy/component
 import ReviewOptions from "../../ReviewOptions"; // plasmic-import: NKhK0RyiR4qB/component
 import ReviewReply from "../../ReviewReply"; // plasmic-import: lIT823qV81pb/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
+import RaviShare from "../../RaviShare"; // plasmic-import: TkOtksyueyFt/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard2.module.css"; // plasmic-import: fh6BVdoIxXpv/css
+
+import Icon34Icon from "./icons/PlasmicIcon__Icon34"; // plasmic-import: 70OAewzCU8kD/icon
 
 createPlasmicElementProxy;
 
@@ -90,7 +93,6 @@ export type PlasmicReviewCard2__ArgsType = {
   visitedTag?: boolean;
   setTime?: string;
   docCenter?: string;
-  recommended?: boolean;
   commentText?: string;
   like?: number;
   feedbackId?: string;
@@ -99,13 +101,14 @@ export type PlasmicReviewCard2__ArgsType = {
   doctorId?: string;
   isShowReplyInput?: boolean;
   avgRateValue?: number;
+  searchTerm?: string;
+  isDoctor?: boolean;
 };
 type ArgPropType = keyof PlasmicReviewCard2__ArgsType;
 export const PlasmicReviewCard2__ArgProps = new Array<ArgPropType>(
   "visitedTag",
   "setTime",
   "docCenter",
-  "recommended",
   "commentText",
   "like",
   "feedbackId",
@@ -113,23 +116,27 @@ export const PlasmicReviewCard2__ArgProps = new Array<ArgPropType>(
   "doctorSlug",
   "doctorId",
   "isShowReplyInput",
-  "avgRateValue"
+  "avgRateValue",
+  "searchTerm",
+  "isDoctor"
 );
 
 export type PlasmicReviewCard2__OverridesType = {
   verticalStack?: Flex__<"div">;
   userApi?: Flex__<typeof ApiRequest>;
-  text?: Flex__<"div">;
   repliesApi?: Flex__<typeof ApiRequest>;
+  avatarApi?: Flex__<typeof ApiRequest>;
   card?: Flex__<typeof RaviReviewCard>;
   reviewOptions?: Flex__<typeof ReviewOptions>;
+  shareApi?: Flex__<typeof ApiRequest>;
+  svg?: Flex__<"svg">;
+  raviShare?: Flex__<typeof RaviShare>;
 };
 
 export interface DefaultReviewCard2Props {
   visitedTag?: boolean;
   setTime?: string;
   docCenter?: string;
-  recommended?: boolean;
   commentText?: string;
   like?: number;
   feedbackId?: string;
@@ -138,6 +145,8 @@ export interface DefaultReviewCard2Props {
   doctorId?: string;
   isShowReplyInput?: boolean;
   avgRateValue?: number;
+  searchTerm?: string;
+  isDoctor?: boolean;
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
   className?: string;
 }
@@ -164,9 +173,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
       Object.assign(
         {
           visitedTag: false,
-          recommended: false,
           isShowReplyInput: false,
-          avgRateValue: 2
+          avgRateValue: 2,
+          isDoctor: false
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -243,53 +252,6 @@ function PlasmicReviewCard2__RenderFunc(props: {
           $props.raviExpFroDrakam
       },
       {
-        path: "likeRate",
-        type: "private",
-        variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return (() => {
-                if (typeof window === "undefined") return 0;
-                return window.localStorage.getItem("likedComments")
-                  ? JSON.parse(localStorage.getItem("likedComments")).find(
-                      item =>
-                        item.id === $props.feedbackId &&
-                        item.user_id === $ctx.auth.info.id
-                    )?.rate
-                  : 0;
-              })();
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return 0;
-              }
-              throw e;
-            }
-          })()
-      },
-      {
-        path: "card.liked",
-        type: "private",
-        variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return $state.likeRate;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return 0;
-              }
-              throw e;
-            }
-          })()
-      },
-      {
         path: "userApi.data",
         type: "private",
         variableType: "object",
@@ -330,6 +292,72 @@ function PlasmicReviewCard2__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "shareApi.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "shareApi.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "shareApi.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "card.rate",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return (() => {
+                if (typeof window !== "undefined") {
+                  const likedCommentsList =
+                    JSON.parse(localStorage.getItem("likedComments")) || [];
+                  const commentRate = likedCommentsList.find(
+                    comment =>
+                      comment.id === $props.feedbackId &&
+                      comment.user_id === $ctx.auth.info.id
+                  );
+                  return commentRate?.rate ?? 0;
+                }
+              })();
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return 0;
+              }
+              throw e;
+            }
+          })()
+      },
+      {
+        path: "avatarApi.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "avatarApi.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "avatarApi.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -357,6 +385,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.verticalStack,
         {
@@ -375,12 +404,10 @@ function PlasmicReviewCard2__RenderFunc(props: {
         className={classNames("__wab_instance", sty.userApi)}
         errorDisplay={
           <div
-            data-plasmic-name={"text"}
-            data-plasmic-override={overrides.text}
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text
+              sty.text__i3DGb
             )}
           >
             {
@@ -395,30 +422,18 @@ function PlasmicReviewCard2__RenderFunc(props: {
             null,
             eventArgs
           );
-
-          if (eventArgs.length > 1 && eventArgs[1]) {
-            return;
-          }
         }}
         onLoading={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["userApi", "loading"]).apply(
             null,
             eventArgs
           );
-
-          if (eventArgs.length > 1 && eventArgs[1]) {
-            return;
-          }
         }}
         onSuccess={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["userApi", "data"]).apply(
             null,
             eventArgs
           );
-
-          if (eventArgs.length > 1 && eventArgs[1]) {
-            return;
-          }
         }}
         url={(() => {
           try {
@@ -446,30 +461,18 @@ function PlasmicReviewCard2__RenderFunc(props: {
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onLoading={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, ["repliesApi", "loading"]).apply(
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           onSuccess={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, ["repliesApi", "data"]).apply(
               null,
               eventArgs
             );
-
-            if (eventArgs.length > 1 && eventArgs[1]) {
-              return;
-            }
           }}
           url={(() => {
             try {
@@ -485,377 +488,34 @@ function PlasmicReviewCard2__RenderFunc(props: {
             }
           })()}
         >
-          <RaviReviewCard
-            data-plasmic-name={"card"}
-            data-plasmic-override={overrides.card}
-            avatarUrl={(() => {
-              try {
-                return (
-                  $state.userApi.data.users[0].image &&
-                  `https://apigw.paziresh24.com/doctors/images/${$state.userApi.data.users[0].image}`
-                );
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            avgRateValue={(() => {
-              try {
-                return $props.avgRateValue;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            className={classNames("__wab_instance", sty.card)}
-            commentText={(() => {
-              try {
-                return $props.commentText;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            date={(() => {
-              try {
-                return $props.setTime;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            feedBackId={(() => {
-              try {
-                return $props.feedbackId;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            isLoadingSendReport={(() => {
-              try {
-                return $state.isLoadingSendReport;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })()}
-            isVisited={(() => {
-              try {
-                return $props.visitedTag;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })()}
-            likeCount={(() => {
-              try {
-                return $state.isLike ? Number($props.like) + 1 : $props.like;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            liked={generateStateValueProp($state, ["card", "liked"])}
-            onClickLike={async value => {
-              const $steps = {};
-
-              $steps["login"] = !$ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = { args: [] };
-                    return $globalActions["AuthGlobalContext.login"]?.apply(
-                      null,
-                      [...actionArgs.args]
-                    );
-                  })()
-                : undefined;
-              if (
-                $steps["login"] != null &&
-                typeof $steps["login"] === "object" &&
-                typeof $steps["login"].then === "function"
-              ) {
-                $steps["login"] = await $steps["login"];
-              }
-
-              $steps["updateCardLiked"] = !$ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["card", "liked"]
-                      },
-                      operation: 0,
-                      value: 0
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateCardLiked"] != null &&
-                typeof $steps["updateCardLiked"] === "object" &&
-                typeof $steps["updateCardLiked"].then === "function"
-              ) {
-                $steps["updateCardLiked"] = await $steps["updateCardLiked"];
-              }
-
-              $steps["updateIsLike"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["isLike"]
-                      },
-                      operation: 0,
-                      value: true
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateIsLike"] != null &&
-                typeof $steps["updateIsLike"] === "object" &&
-                typeof $steps["updateIsLike"].then === "function"
-              ) {
-                $steps["updateIsLike"] = await $steps["updateIsLike"];
-              }
-
-              $steps["localStorage"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return (() => {
-                          if ($state.isLike) {
-                            const likedComment = {
-                              user_id: $ctx.auth.info.id,
-                              id: $props.feedbackId,
-                              rate: value
-                            };
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            likedCommentsList.push(likedComment);
-                            localStorage.setItem(
-                              "likedComments",
-                              JSON.stringify(likedCommentsList)
-                            );
-                          }
-                          if (!$state.isLike) {
-                            const likedCommentsList =
-                              JSON.parse(
-                                localStorage.getItem("likedComments")
-                              ) || [];
-                            const index = likedCommentsList.findIndex(
-                              comment =>
-                                comment.id === $props.feedbackId &&
-                                comment.user_id === $ctx.auth.info.id
-                            );
-                            if (index !== -1) {
-                              likedCommentsList.splice(index, 1);
-                              return localStorage.setItem(
-                                "likedComments",
-                                JSON.stringify(likedCommentsList)
-                              );
-                            }
-                          }
-                        })();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["localStorage"] != null &&
-                typeof $steps["localStorage"] === "object" &&
-                typeof $steps["localStorage"].then === "function"
-              ) {
-                $steps["localStorage"] = await $steps["localStorage"];
-              }
-
-              $steps["request"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        "POST",
-                        "https://ir-ravi-n8n.darkube.app/webhook/like_rate",
-                        undefined,
-                        (() => {
-                          try {
-                            return {
-                              feedback_id: $props.feedbackId,
-                              rate: value,
-                              user_id: $ctx.auth.info.id
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["request"] != null &&
-                typeof $steps["request"] === "object" &&
-                typeof $steps["request"].then === "function"
-              ) {
-                $steps["request"] = await $steps["request"];
-              }
-            }}
-            onLikedChange2={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["card", "liked"]).apply(
+          <ApiRequest
+            data-plasmic-name={"avatarApi"}
+            data-plasmic-override={overrides.avatarApi}
+            className={classNames("__wab_instance", sty.avatarApi)}
+            errorDisplay={null}
+            loadingDisplay={null}
+            method={"GET"}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["avatarApi", "error"]).apply(
                 null,
                 eventArgs
               );
-
-              if (eventArgs.length > 1 && eventArgs[1]) {
-                return;
-              }
             }}
-            onlyDoctor={(() => {
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["avatarApi", "loading"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["avatarApi", "data"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            url={(() => {
               try {
-                return (
-                  $props.avgRateValue <= 3.5 && $props.avgRateValue !== null
-                );
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })()}
-            options={
-              <ReviewOptions
-                data-plasmic-name={"reviewOptions"}
-                data-plasmic-override={overrides.reviewOptions}
-                className={classNames("__wab_instance", sty.reviewOptions)}
-                commentText={(() => {
-                  try {
-                    return $props.commentText;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                doctorSlug={(() => {
-                  try {
-                    return $props.doctorSlug;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                doctorUserId={(() => {
-                  try {
-                    return $props.doctorId;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                feedbackId={(() => {
-                  try {
-                    return $props.feedbackId;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-            }
-            replies={(() => {
-              try {
-                return $state.repliesApi.data.list;
+                return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -866,129 +526,507 @@ function PlasmicReviewCard2__RenderFunc(props: {
                 throw e;
               }
             })()}
-            replies2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__qg4Xk)}
-              >
-                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                  (() => {
-                    try {
-                      return $state.repliesApi.data.list;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return [];
-                      }
-                      throw e;
-                    }
-                  })()
-                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                  const currentItem = __plasmic_item_0;
-                  const currentIndex = __plasmic_idx_0;
-                  return (
-                    <ReviewReply
-                      className={classNames(
-                        "__wab_instance",
-                        sty.reviewReply__agS
-                      )}
-                      commentText={(() => {
-                        try {
-                          return currentItem.description || "";
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      doctorId={(() => {
-                        try {
-                          return $props.doctorId;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      doctorSlug={(() => {
-                        try {
-                          return currentItem.doctor_slug;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      key={currentIndex}
-                      userId={(() => {
-                        try {
-                          return currentItem.user_id;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                    />
-                  );
-                })}
-              </Stack__>
-            }
-            replyCard={
-              <div className={classNames(projectcss.all, sty.freeBox__jOxz)}>
-                {(() => {
+          >
+            {(() => {
+              const child$Props = {
+                avatarUrl: (() => {
                   try {
-                    return $state.repliesApi.data.list.length > 0;
+                    return $state.avatarApi.data.data.image_url;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return true;
+                      return undefined;
                     }
                     throw e;
                   }
-                })() ? (
-                  <ReviewReply
-                    className={classNames(
-                      "__wab_instance",
-                      sty.reviewReply__ploLv
-                    )}
+                })(),
+                avgRateValue: (() => {
+                  try {
+                    return $props.avgRateValue;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                className: classNames("__wab_instance", sty.card),
+                commentText: (() => {
+                  try {
+                    return (() => {
+                      function getHighlightedText(text, highlight) {
+                        if (!highlight || !highlight.trim()) {
+                          return text;
+                        }
+                        const escapedHighlight = highlight.replace(
+                          /[.*+?^${}()|[\]\\]/g,
+                          "\\$&"
+                        );
+                        const regex = new RegExp(`(${escapedHighlight})`, "gi");
+                        return text
+                          .split(regex)
+                          .map((part, index) =>
+                            regex.test(part)
+                              ? `<span key={${index}} style="color:#3861FB;border-radius:2px;margin-left:1px;font-weight:bold;">
+        ${part}
+      </span>`
+                              : part
+                          )
+                          .join("");
+                      }
+                      const highlightedText = getHighlightedText(
+                        $props.commentText,
+                        $props.searchTerm
+                      );
+                      return highlightedText;
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                date: (() => {
+                  try {
+                    return $props.setTime;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                isDoctor: (() => {
+                  try {
+                    return $props.isDoctor;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })(),
+                isLoadingSendReport: (() => {
+                  try {
+                    return $state.isLoadingSendReport;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })(),
+                isVisited: (() => {
+                  try {
+                    return $props.visitedTag;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })(),
+                likeCount: (() => {
+                  try {
+                    return $state.card.rate
+                      ? Number($props.like) + 1
+                      : $props.like;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                onRate: async value => {
+                  const $steps = {};
+
+                  $steps["login"] = !$ctx.auth.isLogin
+                    ? (() => {
+                        const actionArgs = { args: [] };
+                        return $globalActions["AuthGlobalContext.login"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["login"] != null &&
+                    typeof $steps["login"] === "object" &&
+                    typeof $steps["login"].then === "function"
+                  ) {
+                    $steps["login"] = await $steps["login"];
+                  }
+
+                  $steps["request"] = $ctx.auth.isLogin
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            "POST",
+                            "https://apigw.paziresh24.com/ravi/v1/like_rate",
+                            undefined,
+                            (() => {
+                              try {
+                                return {
+                                  feedback_id: $props.feedbackId,
+                                  rate: value,
+                                  user_id: $ctx.auth.info.id
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["request"] != null &&
+                    typeof $steps["request"] === "object" &&
+                    typeof $steps["request"].then === "function"
+                  ) {
+                    $steps["request"] = await $steps["request"];
+                  }
+
+                  $steps["localStorage"] =
+                    $steps.request?.status == 200
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                const likedComment = {
+                                  user_id: $ctx.auth.info.id,
+                                  id: $props.feedbackId,
+                                  rate: value
+                                };
+                                const likedCommentsList =
+                                  JSON.parse(
+                                    localStorage.getItem("likedComments")
+                                  ) || [];
+                                const prevComment = likedCommentsList.find(
+                                  comment =>
+                                    comment.id === $props.feedbackId &&
+                                    comment.user_id === $ctx.auth.info.id
+                                );
+                                if (prevComment) {
+                                  localStorage.setItem(
+                                    "likedComments",
+                                    JSON.stringify(
+                                      likedCommentsList.map(item =>
+                                        item.id === prevComment.id
+                                          ? likedComment
+                                          : item
+                                      )
+                                    )
+                                  );
+                                  return true;
+                                }
+                                likedCommentsList.push(likedComment);
+                                localStorage.setItem(
+                                  "likedComments",
+                                  JSON.stringify(likedCommentsList)
+                                );
+                                return true;
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["localStorage"] != null &&
+                    typeof $steps["localStorage"] === "object" &&
+                    typeof $steps["localStorage"].then === "function"
+                  ) {
+                    $steps["localStorage"] = await $steps["localStorage"];
+                  }
+
+                  $steps["updateCardRate"] =
+                    $steps.request?.status == 200
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["card", "rate"]
+                            },
+                            operation: 0,
+                            value: value
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                  if (
+                    $steps["updateCardRate"] != null &&
+                    typeof $steps["updateCardRate"] === "object" &&
+                    typeof $steps["updateCardRate"].then === "function"
+                  ) {
+                    $steps["updateCardRate"] = await $steps["updateCardRate"];
+                  }
+                },
+                onRateChange: async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["card", "rate"]).apply(
+                    null,
+                    eventArgs
+                  );
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                },
+                onReplySend: async value => {
+                  const $steps = {};
+
+                  $steps["sendMutation"] =
+                    value.length > 5
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              "POST",
+                              (() => {
+                                try {
+                                  return (
+                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                                    $props.feedbackId
+                                  );
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                              undefined,
+                              (() => {
+                                try {
+                                  return {
+                                    feedback_id: $props.feedbackId,
+                                    description: value
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.apiRequest"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                  if (
+                    $steps["sendMutation"] != null &&
+                    typeof $steps["sendMutation"] === "object" &&
+                    typeof $steps["sendMutation"].then === "function"
+                  ) {
+                    $steps["sendMutation"] = await $steps["sendMutation"];
+                  }
+
+                  $steps["n8N"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            "POST",
+                            (() => {
+                              try {
+                                return (
+                                  "https://apigw.paziresh24.com/ravi/v1/reply-webhook?id=" +
+                                  $props.feedbackId
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })(),
+                            undefined,
+                            (() => {
+                              try {
+                                return {
+                                  doctor_id: $props.doctorId,
+                                  comment_id: $props.feedbackId,
+                                  reply_text: value
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["n8N"] != null &&
+                    typeof $steps["n8N"] === "object" &&
+                    typeof $steps["n8N"].then === "function"
+                  ) {
+                    $steps["n8N"] = await $steps["n8N"];
+                  }
+
+                  $steps["toast"] =
+                    $steps.sendMutation.status == 200
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f."
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                  if (
+                    $steps["toast"] != null &&
+                    typeof $steps["toast"] === "object" &&
+                    typeof $steps["toast"].then === "function"
+                  ) {
+                    $steps["toast"] = await $steps["toast"];
+                  }
+
+                  $steps["splunk"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.doctorId,
+                                    comment_id: $props.feedbackId,
+                                    reply_text: value
+                                  },
+                                  type: "reply_comment"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["splunk"] != null &&
+                    typeof $steps["splunk"] === "object" &&
+                    typeof $steps["splunk"].then === "function"
+                  ) {
+                    $steps["splunk"] = await $steps["splunk"];
+                  }
+                },
+                onlyDoctor: (() => {
+                  try {
+                    return (
+                      $props.avgRateValue <= 3.5 && $props.avgRateValue !== null
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })(),
+                options: (
+                  <ReviewOptions
+                    data-plasmic-name={"reviewOptions"}
+                    data-plasmic-override={overrides.reviewOptions}
+                    className={classNames("__wab_instance", sty.reviewOptions)}
                     commentText={(() => {
                       try {
-                        return $state.repliesApi.data.list[0].description || "";
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    doctorId={(() => {
-                      try {
-                        return $props.doctorId;
+                        return $props.commentText;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1012,9 +1050,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
                         throw e;
                       }
                     })()}
-                    feedbackId={(() => {
+                    doctorUserId={(() => {
                       try {
-                        return $state.repliesApi.data.list[0].Id;
+                        return $props.doctorId;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1025,76 +1063,823 @@ function PlasmicReviewCard2__RenderFunc(props: {
                         throw e;
                       }
                     })()}
-                    userId={(() => {
+                    feedbackId={(() => {
                       try {
-                        return $state.repliesApi.data.list[0].user_id;
+                        return $props.feedbackId;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
                           return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    isUserComment={(() => {
+                      try {
+                        return (
+                          $ctx.auth.isLogin &&
+                          $ctx.auth.info.id == $props.userId
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
                         }
                         throw e;
                       }
                     })()}
                   />
-                ) : null}
-              </div>
-            }
-            showReplies={(() => {
-              try {
-                return $state.repliesApi.data.list.length > 1;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
+                ),
+
+                rate: generateStateValueProp($state, ["card", "rate"]),
+                replies: (() => {
+                  try {
+                    return $state.repliesApi.data.list;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                replies2: (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__qg4Xk)}
+                  >
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return $state.repliesApi.data.list;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
+                        <ReviewReply
+                          className={classNames(
+                            "__wab_instance",
+                            sty.reviewReply__agS
+                          )}
+                          commentText={(() => {
+                            try {
+                              return currentItem.description || "";
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          doctorId={(() => {
+                            try {
+                              return $props.doctorId;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          doctorSlug={(() => {
+                            try {
+                              return currentItem.doctor_slug;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          key={currentIndex}
+                          userId={(() => {
+                            try {
+                              return currentItem.user_id;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                        />
+                      );
+                    })}
+                  </Stack__>
+                ),
+                replyCard: (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__jOxz)}
+                  >
+                    {(() => {
+                      try {
+                        return $state.repliesApi.data.list.length > 0;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <ReviewReply
+                        className={classNames(
+                          "__wab_instance",
+                          sty.reviewReply__ploLv
+                        )}
+                        commentText={(() => {
+                          try {
+                            return (
+                              $state.repliesApi.data.list[0].description || ""
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        doctorId={(() => {
+                          try {
+                            return $props.doctorId;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        doctorSlug={(() => {
+                          try {
+                            return $props.doctorSlug;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        feedbackId={(() => {
+                          try {
+                            return $state.repliesApi.data.list[0].Id;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        userId={(() => {
+                          try {
+                            return $state.repliesApi.data.list[0].user_id;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    ) : null}
+                  </div>
+                ),
+                share: (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox___7Yq6T)}
+                  >
+                    <ApiRequest
+                      data-plasmic-name={"shareApi"}
+                      data-plasmic-override={overrides.shareApi}
+                      className={classNames("__wab_instance", sty.shareApi)}
+                      errorDisplay={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__kwhxf
+                          )}
+                        >
+                          {"Error fetching data"}
+                        </div>
+                      }
+                      loadingDisplay={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__fLps9
+                          )}
+                        >
+                          <Icon34Icon
+                            data-plasmic-name={"svg"}
+                            data-plasmic-override={overrides.svg}
+                            className={classNames(projectcss.all, sty.svg)}
+                            role={"img"}
+                          />
+                        </div>
+                      }
+                      method={"GET"}
+                      onError={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "shareApi",
+                          "error"
+                        ]).apply(null, eventArgs);
+                      }}
+                      onLoading={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "shareApi",
+                          "loading"
+                        ]).apply(null, eventArgs);
+                      }}
+                      onSuccess={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "shareApi",
+                          "data"
+                        ]).apply(null, eventArgs);
+                      }}
+                      url={(() => {
+                        try {
+                          return `https://apigw.paziresh24.com/ravi/v1/share_comment?slug=${$props.doctorSlug}&id=${$props.feedbackId}`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    >
+                      <RaviShare
+                        data-plasmic-name={"raviShare"}
+                        data-plasmic-override={overrides.raviShare}
+                        className={classNames("__wab_instance", sty.raviShare)}
+                        onClickCopy={async () => {
+                          const $steps = {};
+
+                          $steps["runCode"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  customFunction: async () => {
+                                    return navigator.share({
+                                      url: $state.shareApi.data.url,
+                                      text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
+                                    });
+                                  }
+                                };
+                                return (({ customFunction }) => {
+                                  return customFunction();
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runCode"] != null &&
+                            typeof $steps["runCode"] === "object" &&
+                            typeof $steps["runCode"].then === "function"
+                          ) {
+                            $steps["runCode"] = await $steps["runCode"];
+                          }
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-copy"
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+                        }}
+                        onClickEitaa={async () => {
+                          const $steps = {};
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-eeta"
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+
+                          $steps["goToPage"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  destination: (() => {
+                                    try {
+                                      return `https://eitaa.com/share/url?url=${$state.shareApi.data.url}`;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                };
+                                return (({ destination }) => {
+                                  if (
+                                    typeof destination === "string" &&
+                                    destination.startsWith("#")
+                                  ) {
+                                    document
+                                      .getElementById(destination.substr(1))
+                                      .scrollIntoView({ behavior: "smooth" });
+                                  } else {
+                                    __nextRouter?.push(destination);
+                                  }
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["goToPage"] != null &&
+                            typeof $steps["goToPage"] === "object" &&
+                            typeof $steps["goToPage"].then === "function"
+                          ) {
+                            $steps["goToPage"] = await $steps["goToPage"];
+                          }
+                        }}
+                        onClickTelegram={async () => {
+                          const $steps = {};
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-telegram"
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+
+                          $steps["goToPage"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  destination: (() => {
+                                    try {
+                                      return `https://telegram.me/share/url?url=${$state.shareApi.data.url}`;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                };
+                                return (({ destination }) => {
+                                  if (
+                                    typeof destination === "string" &&
+                                    destination.startsWith("#")
+                                  ) {
+                                    document
+                                      .getElementById(destination.substr(1))
+                                      .scrollIntoView({ behavior: "smooth" });
+                                  } else {
+                                    __nextRouter?.push(destination);
+                                  }
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["goToPage"] != null &&
+                            typeof $steps["goToPage"] === "object" &&
+                            typeof $steps["goToPage"].then === "function"
+                          ) {
+                            $steps["goToPage"] = await $steps["goToPage"];
+                          }
+                        }}
+                        onClickTwitter={async () => {
+                          const $steps = {};
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-tweeter"
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+
+                          $steps["goToPage"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  destination: (() => {
+                                    try {
+                                      return `https://twitter.com/intent/tweet/?url=${$state.shareApi.data.url}`;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                };
+                                return (({ destination }) => {
+                                  if (
+                                    typeof destination === "string" &&
+                                    destination.startsWith("#")
+                                  ) {
+                                    document
+                                      .getElementById(destination.substr(1))
+                                      .scrollIntoView({ behavior: "smooth" });
+                                  } else {
+                                    __nextRouter?.push(destination);
+                                  }
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["goToPage"] != null &&
+                            typeof $steps["goToPage"] === "object" &&
+                            typeof $steps["goToPage"].then === "function"
+                          ) {
+                            $steps["goToPage"] = await $steps["goToPage"];
+                          }
+                        }}
+                        onClickWhatsup={async () => {
+                          const $steps = {};
+
+                          $steps["splunk"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          group: "feedback",
+                                          data: {
+                                            doctor_id: $props.doctorId,
+                                            comment_id: $props.feedbackId
+                                          },
+                                          type: "share_comment-whatsapp"
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["splunk"] != null &&
+                            typeof $steps["splunk"] === "object" &&
+                            typeof $steps["splunk"].then === "function"
+                          ) {
+                            $steps["splunk"] = await $steps["splunk"];
+                          }
+
+                          $steps["goToPage"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  destination: (() => {
+                                    try {
+                                      return `https://wa.me/?text=${$state.shareApi.data.url}`;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                };
+                                return (({ destination }) => {
+                                  if (
+                                    typeof destination === "string" &&
+                                    destination.startsWith("#")
+                                  ) {
+                                    document
+                                      .getElementById(destination.substr(1))
+                                      .scrollIntoView({ behavior: "smooth" });
+                                  } else {
+                                    __nextRouter?.push(destination);
+                                  }
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["goToPage"] != null &&
+                            typeof $steps["goToPage"] === "object" &&
+                            typeof $steps["goToPage"].then === "function"
+                          ) {
+                            $steps["goToPage"] = await $steps["goToPage"];
+                          }
+                        }}
+                        shareUrl={(() => {
+                          try {
+                            return $state.shareApi.data.url;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    </ApiRequest>
+                  </div>
+                ),
+                showReplies: (() => {
+                  try {
+                    return $state.repliesApi.data.list.length > 1;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })(),
+                subTitle: (() => {
+                  try {
+                    return $props.docCenter;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                userId: (() => {
+                  try {
+                    return $props.userId;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })(),
+                userName: (() => {
+                  try {
+                    return $state.userApi.data.users[0].name || "کاربر بی نام";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()
+              };
+
+              initializePlasmicStates(
+                $state,
+                [
+                  {
+                    name: "card.rate",
+                    initFunc: ({ $props, $state, $queries }) =>
+                      (() => {
+                        try {
+                          return (() => {
+                            if (typeof window !== "undefined") {
+                              const likedCommentsList =
+                                JSON.parse(
+                                  localStorage.getItem("likedComments")
+                                ) || [];
+                              const commentRate = likedCommentsList.find(
+                                comment =>
+                                  comment.id === $props.feedbackId &&
+                                  comment.user_id === $ctx.auth.info.id
+                              );
+                              return commentRate?.rate ?? 0;
+                            }
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return 0;
+                          }
+                          throw e;
+                        }
+                      })()
+                  }
+                ],
+                []
+              );
+              return (
+                <RaviReviewCard
+                  data-plasmic-name={"card"}
+                  data-plasmic-override={overrides.card}
+                  {...child$Props}
+                />
+              );
             })()}
-            subTitle={(() => {
-              try {
-                return $props.docCenter;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            userId={(() => {
-              try {
-                return $props.userId;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            userName={(() => {
-              try {
-                return $state.userApi.data.users[0].name || "کاربر بی نام";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          />
+          </ApiRequest>
         </ApiRequest>
       </ApiRequest>
     </Stack__>
@@ -1105,16 +1890,46 @@ const PlasmicDescendants = {
   verticalStack: [
     "verticalStack",
     "userApi",
-    "text",
     "repliesApi",
+    "avatarApi",
     "card",
-    "reviewOptions"
+    "reviewOptions",
+    "shareApi",
+    "svg",
+    "raviShare"
   ],
-  userApi: ["userApi", "text", "repliesApi", "card", "reviewOptions"],
-  text: ["text"],
-  repliesApi: ["repliesApi", "card", "reviewOptions"],
-  card: ["card", "reviewOptions"],
-  reviewOptions: ["reviewOptions"]
+  userApi: [
+    "userApi",
+    "repliesApi",
+    "avatarApi",
+    "card",
+    "reviewOptions",
+    "shareApi",
+    "svg",
+    "raviShare"
+  ],
+  repliesApi: [
+    "repliesApi",
+    "avatarApi",
+    "card",
+    "reviewOptions",
+    "shareApi",
+    "svg",
+    "raviShare"
+  ],
+  avatarApi: [
+    "avatarApi",
+    "card",
+    "reviewOptions",
+    "shareApi",
+    "svg",
+    "raviShare"
+  ],
+  card: ["card", "reviewOptions", "shareApi", "svg", "raviShare"],
+  reviewOptions: ["reviewOptions"],
+  shareApi: ["shareApi", "svg", "raviShare"],
+  svg: ["svg"],
+  raviShare: ["raviShare"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1122,10 +1937,13 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   verticalStack: "div";
   userApi: typeof ApiRequest;
-  text: "div";
   repliesApi: typeof ApiRequest;
+  avatarApi: typeof ApiRequest;
   card: typeof RaviReviewCard;
   reviewOptions: typeof ReviewOptions;
+  shareApi: typeof ApiRequest;
+  svg: "svg";
+  raviShare: typeof RaviShare;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1189,10 +2007,13 @@ export const PlasmicReviewCard2 = Object.assign(
   {
     // Helper components rendering sub-elements
     userApi: makeNodeComponent("userApi"),
-    text: makeNodeComponent("text"),
     repliesApi: makeNodeComponent("repliesApi"),
+    avatarApi: makeNodeComponent("avatarApi"),
     card: makeNodeComponent("card"),
     reviewOptions: makeNodeComponent("reviewOptions"),
+    shareApi: makeNodeComponent("shareApi"),
+    svg: makeNodeComponent("svg"),
+    raviShare: makeNodeComponent("raviShare"),
 
     // Metadata about props expected for PlasmicReviewCard2
     internalVariantProps: PlasmicReviewCard2__VariantProps,

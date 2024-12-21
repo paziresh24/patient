@@ -615,10 +615,20 @@
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
+.freeBox__wm16O {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--token-_c276Gs_1FIE);
+  min-width: 0;
+}
 .replyCard__sQuYr:global(.__wab_instance) {
   max-width: 100%;
-  position: relative;
-  margin-bottom: var(--token-_c276Gs_1FIE);
 }
 .freeBox__o8WyD {
   display: flex;
@@ -699,7 +709,7 @@
   position: relative;
   object-fit: cover;
   max-width: 100%;
-  color: var(--token-kpM4b4mG4f2d);
+  color: #16a34a;
   width: 16px;
   height: 20px;
   flex-shrink: 0;
@@ -844,7 +854,7 @@
   max-width: 100%;
   margin: var(--token-_c276Gs_1FIE);
 }
-.svg__tivy {
+.svg__a1Sok {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -861,7 +871,7 @@
 .text__j9D5J {
   padding-top: 0px;
 }
-.svg__fly5 {
+.svg__t2KBg {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -870,7 +880,7 @@
 .ایتا:global(.__wab_instance) {
   margin: var(--token-_c276Gs_1FIE);
 }
-.svg__aLait {
+.svg__dRMi {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -888,7 +898,7 @@
 .text__mNgXb {
   padding-top: 0px;
 }
-.svg__ubbUy {
+.svg__ilm9V {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -898,7 +908,7 @@
   max-width: 100%;
   margin: var(--token-_c276Gs_1FIE);
 }
-.svg__vt1C0 {
+.svg__lrUO {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -912,7 +922,7 @@
   width: var(--token-Fv8-L_kN-2Ma);
   height: 1em;
 }
-.svg__xe4Eu {
+.svg___2Lz2S {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -926,7 +936,7 @@
   -webkit-transition-duration: 1s;
   margin: var(--token-_c276Gs_1FIE);
 }
-.svg___3OEf {
+.svg__z3EG0 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -940,7 +950,7 @@
   width: var(--token-Fv8-L_kN-2Ma);
   height: 1em;
 }
-.svg__vutwu {
+.svg__pmjJt {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -983,7 +993,7 @@
   max-width: 100%;
   width: auto;
 }
-.svg__cvcIj {
+.svg__o9Vi {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -1001,7 +1011,7 @@
 .text__rmbH3 {
   padding-top: 0px;
 }
-.svg__ri3Rd {
+.svg__okfpf {
   position: relative;
   object-fit: cover;
   width: auto;

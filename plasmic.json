@@ -457,7 +457,7 @@
       ],
       "images": [],
       "indirect": true,
-      "globalContextsFilePath": "",
+      "globalContextsFilePath": "plasmic/fragment_design_system/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
       "codeComponents": [
         {
@@ -473,8 +473,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -1545,7 +1544,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -1938,6 +1938,71 @@
           "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewOptions.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "elu6YJ3_KoYo",
+          "name": "Share",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicShare.tsx",
+          "importSpec": {
+            "modulePath": "Share.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicShare.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "etOCIhcu_Yx5",
+          "name": "ReviewRateAndCommentCount",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount.tsx",
+          "importSpec": {
+            "modulePath": "ReviewRateAndCommentCount.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "xpGRRNKB86D2",
+          "name": "ReviewProgressList",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewProgressList.tsx",
+          "importSpec": {
+            "modulePath": "ReviewProgressList.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewProgressList.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "iUNfhq3ES5BC",
+          "name": "ReviewExternalRate",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewExternalRate.tsx",
+          "importSpec": {
+            "modulePath": "ReviewExternalRate.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewExternalRate.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "D9wOnIMjhmFJ",
+          "name": "ReviewFeedback",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewFeedback.tsx",
+          "importSpec": {
+            "modulePath": "ReviewFeedback.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewFeedback.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -2120,6 +2185,11 @@
           "id": "7LGrDRQSghPi",
           "name": "Icon24Icon",
           "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon24.tsx"
+        },
+        {
+          "id": "70OAewzCU8kD",
+          "name": "Icon34Icon",
+          "moduleFilePath": "plasmic/ravi_r_r/icons/PlasmicIcon__Icon34.tsx"
         }
       ],
       "images": [
@@ -2225,8 +2295,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -4058,6 +4127,11 @@
           "id": "EEdf86PDs5c6",
           "name": "CheckSvgIcon",
           "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "rwy2JSXIoIh2",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
       "images": [],
@@ -4078,8 +4152,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
@@ -4261,6 +4334,97 @@
           "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviAlert.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "n51CDSNkGtxF",
+          "name": "RaviSummery",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviSummery.tsx",
+          "importSpec": {
+            "modulePath": "RaviSummery.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviSummery.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "sq-hoyjtWZlg",
+          "name": "RaviRateAndCommentCount",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviRateAndCommentCount.tsx",
+          "importSpec": {
+            "modulePath": "RaviRateAndCommentCount.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviRateAndCommentCount.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "TkOtksyueyFt",
+          "name": "RaviShare",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviShare.tsx",
+          "importSpec": {
+            "modulePath": "RaviShare.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviShare.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "7P-1fooJZx0C",
+          "name": "RaviOption",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviOption.tsx",
+          "importSpec": {
+            "modulePath": "RaviOption.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviOption.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "lZJoIJWYs8o9",
+          "name": "RaviReviewFeedback",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviReviewFeedback.tsx",
+          "importSpec": {
+            "modulePath": "RaviReviewFeedback.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviReviewFeedback.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "1RWEAe1WAk7-",
+          "name": "RaviExternalRate",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviExternalRate.tsx",
+          "importSpec": {
+            "modulePath": "RaviExternalRate.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviExternalRate.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "eIcAmCTlZ2yT",
+          "name": "RaviTabs",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicRaviTabs.tsx",
+          "importSpec": {
+            "modulePath": "RaviTabs.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicRaviTabs.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -4293,11 +4457,51 @@
           "id": "H_mGbG9dNFMm",
           "name": "CheckSvgIcon",
           "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "3-8JABhvj3fe",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon2.tsx"
+        },
+        {
+          "id": "xTYazYoaptk0",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "SIg-07GJeTGn",
+          "name": "Icon16Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon16.tsx"
+        },
+        {
+          "id": "PThHSf9f7Uhv",
+          "name": "Icon13Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon13.tsx"
+        },
+        {
+          "id": "eY1DBpTFd9o5",
+          "name": "Icon17Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon17.tsx"
+        },
+        {
+          "id": "y07O1zQfCwYo",
+          "name": "Icon15Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon15.tsx"
+        },
+        {
+          "id": "2uzLLHig1Vpp",
+          "name": "IconIcon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon.tsx"
+        },
+        {
+          "id": "EZeYNol_o3Nk",
+          "name": "Icon3Icon",
+          "moduleFilePath": "plasmic/ravi_design_system/icons/PlasmicIcon__Icon3.tsx"
         }
       ],
       "images": [],
       "indirect": true,
-      "globalContextsFilePath": "",
+      "globalContextsFilePath": "plasmic/ravi_design_system/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
       "codeComponents": [
         {
@@ -4313,8 +4517,73 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
+    },
+    {
+      "projectId": "gLnoj82AzKVVT7qXiqAbHD",
+      "projectApiToken": "30Q6Vm3wLmLUouXUphjiHN1eerUuQNmjcIHNiu6sFoeK8pIoi3LRDH2gMh9txlrZGCbOh9s0VaoZHqtvs3hQ",
+      "projectName": "plasmic-tabs",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/plasmic_tabs/plasmic.module.css",
+      "components": [
+        {
+          "id": "lBHNzts6tFyj",
+          "name": "Button",
+          "type": "managed",
+          "projectId": "gLnoj82AzKVVT7qXiqAbHD",
+          "renderModuleFilePath": "plasmic/plasmic_tabs/PlasmicButton.tsx",
+          "importSpec": {
+            "modulePath": "Button.tsx"
+          },
+          "cssFilePath": "plasmic/plasmic_tabs/PlasmicButton.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "button"
+        }
+      ],
+      "icons": [
+        {
+          "id": "zq2s7N0xWucT",
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/plasmic_tabs/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "8K40faRNhuCj",
+          "name": "IconIcon",
+          "moduleFilePath": "plasmic/plasmic_tabs/icons/PlasmicIcon__Icon.tsx"
+        }
+      ],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "qT-BBamUwNg",
+          "name": "TabsContainer",
+          "displayName": "hostless-tabs-container",
+          "componentImportPath": "@plasmicpkgs/plasmic-tabs"
+        },
+        {
+          "id": "7uvxnLIBlo3",
+          "name": "TabUnderline",
+          "displayName": "hostless-tab-underline",
+          "componentImportPath": "@plasmicpkgs/plasmic-tabs"
+        },
+        {
+          "id": "5jaBI7A4_ak",
+          "name": "TabButton",
+          "displayName": "hostless-tab-button",
+          "componentImportPath": "@plasmicpkgs/plasmic-tabs"
+        },
+        {
+          "id": "KyRr6GQ_tPI",
+          "name": "TabContent",
+          "displayName": "hostless-tab-content",
+          "componentImportPath": "@plasmicpkgs/plasmic-tabs"
+        }
+      ],
+      "customFunctions": []
     }
   ],
   "globalVariants": {

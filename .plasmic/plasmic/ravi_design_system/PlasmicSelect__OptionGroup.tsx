@@ -65,6 +65,7 @@ import Select__Option from "../../Select__Option"; // plasmic-import: aMYhgsV1eA
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicSelect__OptionGroup.module.css"; // plasmic-import: 1a9LJZTYyJSj/css
 
@@ -186,6 +187,7 @@ function PlasmicSelect__OptionGroup__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >

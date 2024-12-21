@@ -213,6 +213,7 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
               e.target.value
             );
           }).apply(null, eventArgs);
+
           (async event => {
             const $steps = {};
 

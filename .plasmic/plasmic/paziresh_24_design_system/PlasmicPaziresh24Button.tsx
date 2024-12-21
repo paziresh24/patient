@@ -68,6 +68,7 @@ import sty from "./PlasmicPaziresh24Button.module.css"; // plasmic-import: YOhw5
 
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: K0KrVjcOVNaS/icon
+import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: rwy2JSXIoIh2/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
@@ -139,21 +140,21 @@ export const PlasmicPaziresh24Button__VariantProps = new Array<VariantPropType>(
 );
 
 export type PlasmicPaziresh24Button__ArgsType = {
-  children2?: React.ReactNode;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
   link?: string;
   submitsForm?: boolean;
   target?: boolean;
+  startIcon?: React.ReactNode;
+  children2?: React.ReactNode;
+  endIcon?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicPaziresh24Button__ArgsType;
 export const PlasmicPaziresh24Button__ArgProps = new Array<ArgPropType>(
-  "children2",
-  "startIcon",
-  "endIcon",
   "link",
   "submitsForm",
-  "target"
+  "target",
+  "startIcon",
+  "children2",
+  "endIcon"
 );
 
 export type PlasmicPaziresh24Button__OverridesType = {
@@ -165,9 +166,9 @@ export type PlasmicPaziresh24Button__OverridesType = {
 };
 
 export interface DefaultPaziresh24ButtonProps extends pp.BaseButtonProps {
-  children2?: React.ReactNode;
   submitsForm?: boolean;
   target?: boolean;
+  children2?: React.ReactNode;
   outline?: SingleBooleanChoiceArg<"outline">;
   shape?: SingleChoiceArg<"rounded" | "round" | "sharp">;
   size?: SingleChoiceArg<"compact" | "minimal">;
@@ -582,9 +583,12 @@ function PlasmicPaziresh24Button__RenderFunc(props: {
             )
           })}
         >
-          <Icon17Icon
+          <PlasmicIcon__
             data-plasmic-name={"svg"}
             data-plasmic-override={overrides.svg}
+            PlasmicIconType={
+              hasVariant($state, "loading", "loading") ? Icon2Icon : Icon17Icon
+            }
             className={classNames(projectcss.all, sty.svg, "loader", {
               [sty.svgcolor_clear]: hasVariant($state, "color", "clear"),
               [sty.svgcolor_red_outline_loading]:

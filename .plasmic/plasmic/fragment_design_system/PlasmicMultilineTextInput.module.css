@@ -22,6 +22,7 @@
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
 .root .textarea:focus {
+  outline: none;
   border-color: var(--token-JDvyxAtm9ONK);
 }
 .root .textarea::placeholder {

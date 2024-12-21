@@ -207,7 +207,13 @@ function PlasmicDialog__RenderFunc(props: {
         sty.dialog,
         { [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger") }
       )}
-      onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+      modal={true}
+      onOpenChange={async (...eventArgs: any) => {
+        generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+          null,
+          eventArgs
+        );
+      }}
       open={generateStateValueProp($state, ["dialog", "open"])}
       overlayClassName={classNames({
         [sty["pcls_PPgMZnImy2Ka"]]: hasVariant(
@@ -215,7 +221,7 @@ function PlasmicDialog__RenderFunc(props: {
           "screen",
           "mobileOnly"
         ),
-        [sty["pcls_ukY8bLVH2ml5"]]: true
+        [sty["pcls_W-THuxFZxtZl"]]: true
       })}
       themeResetClass={classNames(
         projectcss.root_reset,
