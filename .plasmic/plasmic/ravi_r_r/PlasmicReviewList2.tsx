@@ -59,15 +59,20 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import RaviSummery from "../../RaviSummery"; // plasmic-import: n51CDSNkGtxF/component
+import ReviewExternalRate from "../../ReviewExternalRate"; // plasmic-import: iUNfhq3ES5BC/component
 import RaviFilters from "../../RaviFilters"; // plasmic-import: G0AKBMWLNTrM/component
 import ReviewCard2 from "../../ReviewCard2"; // plasmic-import: fh6BVdoIxXpv/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import RaviAlert from "../../RaviAlert"; // plasmic-import: 22UkaHSSFOEU/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList2.module.css"; // plasmic-import: Kz2u6VAJ02yE/css
@@ -93,6 +98,7 @@ export type PlasmicReviewList2__ArgsType = {
   hideRates?: boolean;
   information?: any;
   centers?: any;
+  seo?: any;
 };
 type ArgPropType = keyof PlasmicReviewList2__ArgsType;
 export const PlasmicReviewList2__ArgProps = new Array<ArgPropType>(
@@ -105,15 +111,20 @@ export const PlasmicReviewList2__ArgProps = new Array<ArgPropType>(
   "onSort",
   "hideRates",
   "information",
-  "centers"
+  "centers",
+  "seo"
 );
 
 export type PlasmicReviewList2__OverridesType = {
   root?: Flex__<"div">;
+  raviSummery?: Flex__<typeof RaviSummery>;
+  reviewExternalRate?: Flex__<typeof ReviewExternalRate>;
   raviFilters?: Flex__<typeof RaviFilters>;
   reviewCard2?: Flex__<typeof ReviewCard2>;
+  text?: Flex__<"div">;
   button?: Flex__<typeof Button>;
   raviAlert?: Flex__<typeof RaviAlert>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultReviewList2Props {
@@ -127,6 +138,7 @@ export interface DefaultReviewList2Props {
   hideRates?: boolean;
   information?: any;
   centers?: any;
+  seo?: any;
   className?: string;
 }
 
@@ -173,6 +185,24 @@ function PlasmicReviewList2__RenderFunc(props: {
 
   const $globalActions = useGlobalActions?.();
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "raviFilters.textInputValue",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -187,6 +217,7 @@ function PlasmicReviewList2__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
@@ -205,6 +236,250 @@ function PlasmicReviewList2__RenderFunc(props: {
         }
       })() ? (
         <div className={classNames(projectcss.all, sty.freeBox__ryKs)}>
+          {(() => {
+            try {
+              return $ctx.Growthbook.features["ravi-exp-fro-drakam"];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__icLaA)}
+            >
+              <RaviSummery
+                data-plasmic-name={"raviSummery"}
+                data-plasmic-override={overrides.raviSummery}
+                className={classNames("__wab_instance", sty.raviSummery)}
+                items={(() => {
+                  try {
+                    return [
+                      {
+                        button_text: "رفتار منشی",
+                        search_text: "منشی"
+                      },
+                      {
+                        button_text: "هزینه درمان",
+                        search_text: "هزینه"
+                      },
+                      {
+                        button_text: "توضیح پزشک",
+                        search_text: "توضیح"
+                      },
+                      {
+                        button_text: "اثربخشی دارو",
+                        search_text: "دارو"
+                      },
+                      {
+                        button_text: "ریزش مو",
+                        search_text: "ریزش مو"
+                      },
+                      {
+                        button_text: "اگزمای پوستی",
+                        search_text: "اگزما"
+                      },
+                      {
+                        button_text: "پیسی",
+                        search_text: "پیسی"
+                      },
+                      {
+                        button_text: "بیماری پوست",
+                        search_text: "پوست"
+                      }
+                    ];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                onClick={async value => {
+                  const $steps = {};
+
+                  $steps["updateRaviFiltersTextInputValue2"] = true
+                    ? (() => {
+                        const actionArgs = { destination: "#comments" };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateRaviFiltersTextInputValue2"] != null &&
+                    typeof $steps["updateRaviFiltersTextInputValue2"] ===
+                      "object" &&
+                    typeof $steps["updateRaviFiltersTextInputValue2"].then ===
+                      "function"
+                  ) {
+                    $steps["updateRaviFiltersTextInputValue2"] = await $steps[
+                      "updateRaviFiltersTextInputValue2"
+                    ];
+                  }
+
+                  $steps["updateRaviFiltersTextInputValue"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["raviFilters", "textInputValue"]
+                          },
+                          operation: 0,
+                          value: value
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateRaviFiltersTextInputValue"] != null &&
+                    typeof $steps["updateRaviFiltersTextInputValue"] ===
+                      "object" &&
+                    typeof $steps["updateRaviFiltersTextInputValue"].then ===
+                      "function"
+                  ) {
+                    $steps["updateRaviFiltersTextInputValue"] = await $steps[
+                      "updateRaviFiltersTextInputValue"
+                    ];
+                  }
+
+                  $steps["updateRaviFiltersTextInputValue3"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onSearch"],
+                          args: [
+                            (() => {
+                              try {
+                                return value;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateRaviFiltersTextInputValue3"] != null &&
+                    typeof $steps["updateRaviFiltersTextInputValue3"] ===
+                      "object" &&
+                    typeof $steps["updateRaviFiltersTextInputValue3"].then ===
+                      "function"
+                  ) {
+                    $steps["updateRaviFiltersTextInputValue3"] = await $steps[
+                      "updateRaviFiltersTextInputValue3"
+                    ];
+                  }
+
+                  $steps["updateRaviFiltersTextInputValue4"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.information.id,
+                                    summery: value
+                                  },
+                                  type: "select_summery"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateRaviFiltersTextInputValue4"] != null &&
+                    typeof $steps["updateRaviFiltersTextInputValue4"] ===
+                      "object" &&
+                    typeof $steps["updateRaviFiltersTextInputValue4"].then ===
+                      "function"
+                  ) {
+                    $steps["updateRaviFiltersTextInputValue4"] = await $steps[
+                      "updateRaviFiltersTextInputValue4"
+                    ];
+                  }
+                }}
+              />
+
+              <div className={classNames(projectcss.all, sty.freeBox__kSizI)} />
+            </Stack__>
+          ) : null}
+          {(() => {
+            try {
+              return $ctx.Growthbook.features.ravi_show_external_rate;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__mKaeR)}>
+              <ReviewExternalRate
+                data-plasmic-name={"reviewExternalRate"}
+                data-plasmic-override={overrides.reviewExternalRate}
+                className={classNames("__wab_instance", sty.reviewExternalRate)}
+              />
+            </div>
+          ) : null}
           <div className={classNames(projectcss.all, sty.freeBox__gHhth)}>
             <RaviFilters
               data-plasmic-name={"raviFilters"}
@@ -519,6 +794,20 @@ function PlasmicReviewList2__RenderFunc(props: {
                   $steps["splunk"] = await $steps["splunk"];
                 }
               }}
+              onTextInputValueChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "raviFilters",
+                  "textInputValue"
+                ]).apply(null, eventArgs);
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+              }}
               sortList={(() => {
                 try {
                   return [
@@ -545,295 +834,22 @@ function PlasmicReviewList2__RenderFunc(props: {
                   throw e;
                 }
               })()}
+              textInputValue={generateStateValueProp($state, [
+                "raviFilters",
+                "textInputValue"
+              ])}
             />
           </div>
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return $props.reviewResponse;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__n1Ldu)}
-                key={currentIndex}
-              >
-                <ReviewCard2
-                  data-plasmic-name={"reviewCard2"}
-                  data-plasmic-override={overrides.reviewCard2}
-                  avgRateValue={(() => {
-                    try {
-                      return currentItem.avg_rate_value;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return 0;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  className={classNames("__wab_instance", sty.reviewCard2)}
-                  commentText={(() => {
-                    try {
-                      return currentItem.description;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  docCenter={(() => {
-                    try {
-                      return currentItem.center_name;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  doctorId={(() => {
-                    try {
-                      return $props.information.user_id;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  doctorSlug={(() => {
-                    try {
-                      return currentItem.doctor_slug;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  feedbackId={(() => {
-                    try {
-                      return currentItem.Id;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  like={(() => {
-                    try {
-                      return currentItem.count_like;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  setTime={(() => {
-                    try {
-                      return (() => {
-                        return (() => {
-                          const createdDate = new Date(currentItem.created_at);
-                          const currentDate = new Date();
-                          const timeDiff = Math.abs(currentDate - createdDate);
-                          const daysDiff = Math.ceil(
-                            timeDiff / (1000 * 60 * 60 * 24)
-                          );
-                          const numbers = [
-                            "صفر",
-                            "یک",
-                            "دو",
-                            "سه",
-                            "چهار",
-                            "پنج",
-                            "شش",
-                            "هفت",
-                            "هشت",
-                            "نه",
-                            "ده"
-                          ];
+          <div className={classNames(projectcss.all, sty.freeBox__crgXx)} />
 
-                          const numToPersian = num => {
-                            const units = [
-                              "",
-                              "یک",
-                              "دو",
-                              "سه",
-                              "چهار",
-                              "پنج",
-                              "شش",
-                              "هفت",
-                              "هشت",
-                              "نه"
-                            ];
-
-                            const teens = [
-                              "ده",
-                              "یازده",
-                              "دوازده",
-                              "سیزده",
-                              "چهارده",
-                              "پانزده",
-                              "شانزده",
-                              "هفده",
-                              "هجده",
-                              "نوزده"
-                            ];
-
-                            const tens = [
-                              "",
-                              "ده",
-                              "بیست",
-                              "سی",
-                              "چهل",
-                              "پنجاه",
-                              "شصت",
-                              "هفتاد",
-                              "هشتاد",
-                              "نود"
-                            ];
-
-                            if (num < 10) return units[num];
-                            if (num < 20) return teens[num - 10];
-                            if (num < 100) {
-                              const ten = Math.floor(num / 10);
-                              const unit = num % 10;
-                              return `${tens[ten]}${
-                                unit > 0 ? ` و ${units[unit]}` : ""
-                              }`;
-                            }
-                            if (num < 1000) {
-                              const hundred = Math.floor(num / 100);
-                              const remainder = num % 100;
-                              return `${units[hundred]}صد${
-                                remainder > 0
-                                  ? ` و ${numToPersian(remainder)}`
-                                  : ""
-                              }`;
-                            }
-                          };
-                          if (daysDiff === 0) {
-                            return "امروز";
-                          } else if (daysDiff === 1) {
-                            return "دیروز";
-                          } else if (daysDiff < 7) {
-                            return `${numbers[daysDiff]} روز پیش`;
-                          } else if (daysDiff < 30) {
-                            const weeksDiff = Math.floor(daysDiff / 7);
-                            if (weeksDiff === 1) {
-                              return "یک هفته پیش";
-                            }
-                            return `${numbers[weeksDiff]} هفته پیش`;
-                          } else if (daysDiff < 365) {
-                            const monthsDiff = Math.floor(daysDiff / 30);
-                            if (monthsDiff === 1) {
-                              return "یک ماه پیش";
-                            }
-                            return `${numToPersian(monthsDiff)} ماه پیش`;
-                          } else {
-                            const yearsDiff = Math.floor(daysDiff / 365);
-                            if (yearsDiff === 1) {
-                              return "یک سال پیش";
-                            } else if (yearsDiff === 2) {
-                              return "دو سال پیش";
-                            } else {
-                              return `${numToPersian(yearsDiff)} سال پیش`;
-                            }
-                          }
-                        })();
-                      })();
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  userId={(() => {
-                    try {
-                      return currentItem.user_id;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  visitedTag={(() => {
-                    try {
-                      return currentItem.visit_status === "visited";
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return false;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-
-                <div
-                  className={classNames(projectcss.all, sty.freeBox__oRu6)}
-                />
-              </Stack__>
-            );
-          })}
-          <div className={classNames(projectcss.all, sty.freeBox__d7Bcd)}>
-            <Button
-              data-plasmic-name={"button"}
-              data-plasmic-override={overrides.button}
-              children2={
-                "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
-              }
-              className={classNames("__wab_instance", sty.button)}
-              loading={(() => {
+          <div
+            className={classNames(projectcss.all, sty.freeBox__ohpgk)}
+            id={"comments"}
+          >
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
                 try {
-                  return $props.paginationLoadingStatus;
+                  return $props.reviewResponse;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -843,101 +859,460 @@ function PlasmicReviewList2__RenderFunc(props: {
                   }
                   throw e;
                 }
-              })()}
-              onClick={async event => {
-                const $steps = {};
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__n1Ldu)}
+                  key={currentIndex}
+                >
+                  <ReviewCard2
+                    data-plasmic-name={"reviewCard2"}
+                    data-plasmic-override={overrides.reviewCard2}
+                    avgRateValue={(() => {
+                      try {
+                        return currentItem.avg_rate_value;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return 0;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    className={classNames("__wab_instance", sty.reviewCard2)}
+                    commentText={(() => {
+                      try {
+                        return currentItem.description;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    docCenter={(() => {
+                      try {
+                        return currentItem.center_name;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    doctorId={(() => {
+                      try {
+                        return $props.information.user_id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    doctorSlug={(() => {
+                      try {
+                        return currentItem.doctor_slug;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    feedbackId={(() => {
+                      try {
+                        return currentItem.Id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    isDoctor={(() => {
+                      try {
+                        return $props.information.user_id == $ctx.auth.info.id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    like={(() => {
+                      try {
+                        return currentItem.count_like;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    searchTerm={(() => {
+                      try {
+                        return $state.raviFilters.textInputValue;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    setTime={(() => {
+                      try {
+                        return (() => {
+                          return (() => {
+                            const createdDate = new Date(
+                              currentItem.created_at
+                            );
+                            const currentDate = new Date();
+                            const timeDiff = Math.abs(
+                              currentDate - createdDate
+                            );
+                            const daysDiff = Math.ceil(
+                              timeDiff / (1000 * 60 * 60 * 24)
+                            );
+                            const numbers = [
+                              "صفر",
+                              "یک",
+                              "دو",
+                              "سه",
+                              "چهار",
+                              "پنج",
+                              "شش",
+                              "هفت",
+                              "هشت",
+                              "نه",
+                              "ده"
+                            ];
 
-                $steps["runNextPageTrigger"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        eventRef: $props["nextPageTrigger"],
-                        args: [
-                          (() => {
-                            try {
-                              return $props.pageInfo.page + 1;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        ]
-                      };
-                      return (({ eventRef, args }) => {
-                        return eventRef?.(...(args ?? []));
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runNextPageTrigger"] != null &&
-                  typeof $steps["runNextPageTrigger"] === "object" &&
-                  typeof $steps["runNextPageTrigger"].then === "function"
-                ) {
-                  $steps["runNextPageTrigger"] = await $steps[
-                    "runNextPageTrigger"
-                  ];
-                }
+                            const numToPersian = num => {
+                              const units = [
+                                "",
+                                "یک",
+                                "دو",
+                                "سه",
+                                "چهار",
+                                "پنج",
+                                "شش",
+                                "هفت",
+                                "هشت",
+                                "نه"
+                              ];
 
-                $steps["splunk"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        args: [
-                          (() => {
-                            try {
-                              return {
-                                group: "feedback",
-                                data: {
-                                  doctor_id: $props.information.id,
-                                  page: $props.pageInfo.page + 1
-                                },
-                                type: "show_more_button"
-                              };
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                              const teens = [
+                                "ده",
+                                "یازده",
+                                "دوازده",
+                                "سیزده",
+                                "چهارده",
+                                "پانزده",
+                                "شانزده",
+                                "هفده",
+                                "هجده",
+                                "نوزده"
+                              ];
+
+                              const tens = [
+                                "",
+                                "ده",
+                                "بیست",
+                                "سی",
+                                "چهل",
+                                "پنجاه",
+                                "شصت",
+                                "هفتاد",
+                                "هشتاد",
+                                "نود"
+                              ];
+
+                              if (num < 10) return units[num];
+                              if (num < 20) return teens[num - 10];
+                              if (num < 100) {
+                                const ten = Math.floor(num / 10);
+                                const unit = num % 10;
+                                return `${tens[ten]}${
+                                  unit > 0 ? ` و ${units[unit]}` : ""
+                                }`;
                               }
-                              throw e;
-                            }
-                          })(),
-                          undefined,
-                          (() => {
-                            try {
-                              return "f4fd4b50-fe90-48f3-a1ab-5a5070140318";
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                              if (num < 1000) {
+                                const hundred = Math.floor(num / 100);
+                                const remainder = num % 100;
+                                return `${units[hundred]}صد${
+                                  remainder > 0
+                                    ? ` و ${numToPersian(remainder)}`
+                                    : ""
+                                }`;
                               }
-                              throw e;
+                            };
+                            if (daysDiff === 0) {
+                              return "امروز";
+                            } else if (daysDiff === 1) {
+                              return "دیروز";
+                            } else if (daysDiff < 7) {
+                              return `${numbers[daysDiff]} روز پیش`;
+                            } else if (daysDiff < 30) {
+                              const weeksDiff = Math.floor(daysDiff / 7);
+                              if (weeksDiff === 1) {
+                                return "یک هفته پیش";
+                              }
+                              return `${numbers[weeksDiff]} هفته پیش`;
+                            } else if (daysDiff < 365) {
+                              const monthsDiff = Math.floor(daysDiff / 30);
+                              if (monthsDiff === 1) {
+                                return "یک ماه پیش";
+                              }
+                              return `${numToPersian(monthsDiff)} ماه پیش`;
+                            } else {
+                              const yearsDiff = Math.floor(daysDiff / 365);
+                              if (yearsDiff === 1) {
+                                return "یک سال پیش";
+                              } else if (yearsDiff === 2) {
+                                return "دو سال پیش";
+                              } else {
+                                return `${numToPersian(yearsDiff)} سال پیش`;
+                              }
                             }
-                          })()
-                        ]
-                      };
-                      return $globalActions["Splunk.sendLog"]?.apply(null, [
-                        ...actionArgs.args
-                      ]);
-                    })()
-                  : undefined;
+                          })();
+                        })();
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    userId={(() => {
+                      try {
+                        return currentItem.user_id;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    visitedTag={(() => {
+                      try {
+                        return currentItem.visit_status === "visited";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()}
+                  />
+
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__oRu6)}
+                  />
+                </Stack__>
+              );
+            })}
+            {(() => {
+              try {
+                return $props.reviewResponse.length === 0;
+              } catch (e) {
                 if (
-                  $steps["splunk"] != null &&
-                  typeof $steps["splunk"] === "object" &&
-                  typeof $steps["splunk"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["splunk"] = await $steps["splunk"];
+                  return true;
                 }
-              }}
-              outline={true}
-            />
+                throw e;
+              }
+            })() ? (
+              <div className={classNames(projectcss.all, sty.freeBox__dt6P7)}>
+                <div
+                  data-plasmic-name={"text"}
+                  data-plasmic-override={overrides.text}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text
+                  )}
+                >
+                  {
+                    "\u0645\u0648\u0631\u062f\u06cc \u06cc\u0627\u0641\u062a \u0646\u0634\u062f!"
+                  }
+                </div>
+              </div>
+            ) : null}
           </div>
+          {(() => {
+            try {
+              return (
+                $props.paginationLoadingStatus || !$props.pageInfo.isLastPage
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__d7Bcd)}>
+              <Button
+                data-plasmic-name={"button"}
+                data-plasmic-override={overrides.button}
+                children2={
+                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
+                }
+                className={classNames("__wab_instance", sty.button)}
+                loading={(() => {
+                  try {
+                    return $props.paginationLoadingStatus;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runNextPageTrigger"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["nextPageTrigger"],
+                          args: [
+                            (() => {
+                              try {
+                                return $props.pageInfo.page + 1;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runNextPageTrigger"] != null &&
+                    typeof $steps["runNextPageTrigger"] === "object" &&
+                    typeof $steps["runNextPageTrigger"].then === "function"
+                  ) {
+                    $steps["runNextPageTrigger"] = await $steps[
+                      "runNextPageTrigger"
+                    ];
+                  }
+
+                  $steps["splunk"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.information.id,
+                                    page: $props.pageInfo.page + 1
+                                  },
+                                  type: "show_more_button"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })(),
+                            undefined,
+                            (() => {
+                              try {
+                                return "f4fd4b50-fe90-48f3-a1ab-5a5070140318";
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["splunk"] != null &&
+                    typeof $steps["splunk"] === "object" &&
+                    typeof $steps["splunk"].then === "function"
+                  ) {
+                    $steps["splunk"] = await $steps["splunk"];
+                  }
+                }}
+                outline={true}
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
       {(() => {
@@ -964,26 +1339,99 @@ function PlasmicReviewList2__RenderFunc(props: {
           />
         </div>
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setGrowthbookAttr"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          slug: $props.seo.slug
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttr"] != null &&
+            typeof $steps["setGrowthbookAttr"] === "object" &&
+            typeof $steps["setGrowthbookAttr"].then === "function"
+          ) {
+            $steps["setGrowthbookAttr"] = await $steps["setGrowthbookAttr"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "raviFilters", "reviewCard2", "button", "raviAlert"],
+  root: [
+    "root",
+    "raviSummery",
+    "reviewExternalRate",
+    "raviFilters",
+    "reviewCard2",
+    "text",
+    "button",
+    "raviAlert",
+    "sideEffect"
+  ],
+  raviSummery: ["raviSummery"],
+  reviewExternalRate: ["reviewExternalRate"],
   raviFilters: ["raviFilters"],
   reviewCard2: ["reviewCard2"],
+  text: ["text"],
   button: ["button"],
-  raviAlert: ["raviAlert"]
+  raviAlert: ["raviAlert"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  raviSummery: typeof RaviSummery;
+  reviewExternalRate: typeof ReviewExternalRate;
   raviFilters: typeof RaviFilters;
   reviewCard2: typeof ReviewCard2;
+  text: "div";
   button: typeof Button;
   raviAlert: typeof RaviAlert;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1046,10 +1494,14 @@ export const PlasmicReviewList2 = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    raviSummery: makeNodeComponent("raviSummery"),
+    reviewExternalRate: makeNodeComponent("reviewExternalRate"),
     raviFilters: makeNodeComponent("raviFilters"),
     reviewCard2: makeNodeComponent("reviewCard2"),
+    text: makeNodeComponent("text"),
     button: makeNodeComponent("button"),
     raviAlert: makeNodeComponent("raviAlert"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicReviewList2
     internalVariantProps: PlasmicReviewList2__VariantProps,
