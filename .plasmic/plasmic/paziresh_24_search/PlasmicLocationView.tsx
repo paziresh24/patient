@@ -225,10 +225,20 @@ function PlasmicLocationView__RenderFunc(props: {
         data-plasmic-override={overrides.textInput}
         className={classNames("__wab_instance", sty.textInput)}
         name={"search"}
-        onChange={(...eventArgs) => {
-          generateStateOnChangeProp($state, ["textInput", "value"])(
-            (e => e.target?.value).apply(null, eventArgs)
-          );
+        onChange={async (...eventArgs: any) => {
+          ((...eventArgs) => {
+            generateStateOnChangeProp($state, ["textInput", "value"])(
+              (e => e.target?.value).apply(null, eventArgs)
+            );
+          }).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
         }}
         placeholder={
           "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0634\u0647\u0631 \u0647\u0627"
@@ -336,10 +346,20 @@ function PlasmicLocationView__RenderFunc(props: {
               throw e;
             }
           })()}
-          onUserCityChange={generateStateOnChangeProp($state, [
-            "userLocation",
-            "userCity"
-          ])}
+          onUserCityChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, [
+              "userLocation",
+              "userCity"
+            ]).apply(null, eventArgs);
+
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
+              return;
+            }
+          }}
         />
       </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__hlKod)}>
