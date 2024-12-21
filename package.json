@@ -37,6 +37,7 @@
     "@plasmicpkgs/plasmic-link-preview": "1.0.87",
     "@plasmicpkgs/plasmic-query": "0.0.206",
     "@plasmicpkgs/plasmic-rich-components": "1.0.189",
+    "@plasmicpkgs/plasmic-tabs": "0.0.49",
     "@plasmicpkgs/radix-ui": "0.0.41",
     "@plasmicpkgs/react-awesome-reveal": "3.8.189",
     "@plasmicpkgs/react-chartjs-2": "1.0.92",
