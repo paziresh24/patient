@@ -224,7 +224,7 @@ const DoctorProfile = ({
   };
 
   return (
-    <div className="lg:min-w-[320px] lg:max-w-[1160px] mx-auto">
+    <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
       <main key={information.id} className="grid grid-cols-1 lg:grid-cols-[2fr_470px] gap-x-5 md:py-10 pwa:pb-24">
         <section className="flex flex-col w-full space-y-3 max-w-full overflow-hidden">
           {editable && (

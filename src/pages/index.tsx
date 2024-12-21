@@ -22,6 +22,7 @@ const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'),
 });
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
+import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 const Home = () => {
   const { isMobile } = useResponsive();
@@ -79,6 +80,9 @@ const Home = () => {
           </div>
         )}
         {customize.showConsultServices && <OnlineVisitPromote />}
+        <SearchGlobalContextsProvider>
+          <Fragment name="HomePageShortcuts" />
+        </SearchGlobalContextsProvider>
         {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
