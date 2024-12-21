@@ -63,12 +63,13 @@ import RaviUser from "../../RaviUser"; // plasmic-import: LGI_uX8bDUNt/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Popover } from "@plasmicpkgs/radix-ui";
 import RaviRateStar from "../../RaviRateStar"; // plasmic-import: e1uyHZLgwx11/component
+import Paziresh24MultilineTextInput from "../../Paziresh24MultilineTextInput"; // plasmic-import: 5O8XqcSJJk6J/component
 import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyEBPJSmH/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewCard.module.css"; // plasmic-import: mdyuGePDb8Fy/css
 
@@ -76,7 +77,7 @@ import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasm
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import Icon17Icon from "../paziresh_24_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: K0KrVjcOVNaS/icon
 
 createPlasmicElementProxy;
 
@@ -94,19 +95,21 @@ export type PlasmicRaviReviewCard__ArgsType = {
   subTitle?: string;
   avgRateValue?: number;
   commentText?: string;
-  feedBackId?: string;
   replies?: any;
-  onClickLike?: (value: string) => void;
-  liked?: number;
-  onLikedChange2?: (val: string) => void;
+  onRate?: (value: string) => void;
   userId?: string;
-  likeCount?: number;
   isLoadingSendReport?: boolean;
   isDoctor?: boolean;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
   options?: React.ReactNode;
   showReplies?: boolean;
+  share?: React.ReactNode;
+  onReplySend?: (value: string) => void;
+  rate?: number;
+  onRateChange?: (val: string) => void;
+  feedbackId?: string;
+  likeCount?: number;
 };
 type ArgPropType = keyof PlasmicRaviReviewCard__ArgsType;
 export const PlasmicRaviReviewCard__ArgProps = new Array<ArgPropType>(
@@ -118,19 +121,21 @@ export const PlasmicRaviReviewCard__ArgProps = new Array<ArgPropType>(
   "subTitle",
   "avgRateValue",
   "commentText",
-  "feedBackId",
   "replies",
-  "onClickLike",
-  "liked",
-  "onLikedChange2",
+  "onRate",
   "userId",
-  "likeCount",
   "isLoadingSendReport",
   "isDoctor",
   "replyCard",
   "replies2",
   "options",
-  "showReplies"
+  "showReplies",
+  "share",
+  "onReplySend",
+  "rate",
+  "onRateChange",
+  "feedbackId",
+  "likeCount"
 );
 
 export type PlasmicRaviReviewCard__OverridesType = {
@@ -138,6 +143,7 @@ export type PlasmicRaviReviewCard__OverridesType = {
   raviUser?: Flex__<typeof RaviUser>;
   popoverCore?: Flex__<typeof Popover>;
   raviRateStar?: Flex__<typeof RaviRateStar>;
+  multilineTextInput?: Flex__<typeof Paziresh24MultilineTextInput>;
   repliesDialog?: Flex__<typeof Paziresh24Dialog>;
   shareDialog?: Flex__<typeof Paziresh24Dialog>;
 };
@@ -151,19 +157,21 @@ export interface DefaultRaviReviewCardProps {
   subTitle?: string;
   avgRateValue?: number;
   commentText?: string;
-  feedBackId?: string;
   replies?: any;
-  onClickLike?: (value: string) => void;
-  liked?: number;
-  onLikedChange2?: (val: string) => void;
+  onRate?: (value: string) => void;
   userId?: string;
-  likeCount?: number;
   isLoadingSendReport?: boolean;
   isDoctor?: boolean;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
   options?: React.ReactNode;
   showReplies?: boolean;
+  share?: React.ReactNode;
+  onReplySend?: (value: string) => void;
+  rate?: number;
+  onRateChange?: (val: string) => void;
+  feedbackId?: string;
+  likeCount?: number;
   className?: string;
 }
 
@@ -232,15 +240,27 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "liked",
+        path: "isOpenReportDialog",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "multilineTextInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "rate",
         type: "writable",
         variableType: "number",
 
-        valueProp: "liked",
-        onChangeProp: "onLikedChange2"
+        valueProp: "rate",
+        onChangeProp: "onRateChange"
       },
       {
-        path: "isOpenReportDialog",
+        path: "isLoadingReply",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
@@ -268,6 +288,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -432,23 +453,31 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
             sty.text__lTjcn
           )}
         >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.commentText;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
+          <div
+            className={projectcss.__wab_expr_html_text}
+            dangerouslySetInnerHTML={{
+              __html: (() => {
+                try {
+                  return $props.commentText;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "";
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
+              })()
+            }}
+          />
         </div>
-        <div className={classNames(projectcss.all, sty.freeBox__b7MAv)}>
+        <div
+          className={classNames(projectcss.all, sty.freeBox__b7MAv)}
+          onClick={async event => {
+            const $steps = {};
+          }}
+        >
           <div className={classNames(projectcss.all, sty.freeBox__lbidY)}>
             {(() => {
               try {
@@ -545,10 +574,6 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                   "popoverCore",
                   "open"
                 ]).apply(null, eventArgs);
-
-                if (eventArgs.length > 1 && eventArgs[1]) {
-                  return;
-                }
               }}
               open={generateStateValueProp($state, ["popoverCore", "open"])}
               overlay={
@@ -588,7 +613,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                           $steps["runOnClickLike"] = true
                             ? (() => {
                                 const actionArgs = {
-                                  eventRef: $props["onClickLike"],
+                                  eventRef: $props["onRate"],
                                   args: [
                                     (() => {
                                       try {
@@ -620,40 +645,6 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                               "runOnClickLike"
                             ];
                           }
-
-                          $steps["updateLiked"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ["liked"]
-                                  },
-                                  operation: 0,
-                                  value: currentItem
-                                };
-                                return (({
-                                  variable,
-                                  value,
-                                  startIndex,
-                                  deleteCount
-                                }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
-
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["updateLiked"] != null &&
-                            typeof $steps["updateLiked"] === "object" &&
-                            typeof $steps["updateLiked"].then === "function"
-                          ) {
-                            $steps["updateLiked"] = await $steps["updateLiked"];
-                          }
                         }}
                       >
                         <RaviRateStar
@@ -665,7 +656,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                           )}
                           isSelected={(() => {
                             try {
-                              return currentItem <= $state.liked;
+                              return currentItem <= $state.rate;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -687,7 +678,8 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
                 projectcss.plasmic_tokens,
-                plasmic_paziresh_24_design_system_css.plasmic_tokens
+                plasmic_paziresh_24_design_system_css.plasmic_tokens,
+                plasmic_antd_5_hostless_css.plasmic_tokens
               )}
             >
               <Stack__
@@ -697,13 +689,13 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
               >
                 {(() => {
                   try {
-                    return $props.likeCount >= 1;
+                    return $props.likeCount > 0;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return true;
+                      return false;
                     }
                     throw e;
                   }
@@ -732,11 +724,42 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                     </React.Fragment>
                   </div>
                 ) : null}
-                <ThumbUpIcon
-                  className={classNames(projectcss.all, sty.svg__qxVr8)}
-                  role={"img"}
-                />
-
+                {(() => {
+                  try {
+                    return $state.rate == 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <ThumbUpIcon
+                    className={classNames(projectcss.all, sty.svg__qxVr8)}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.rate > 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <ThumbUpIcon
+                    className={classNames(projectcss.all, sty.svg__uc4Ku)}
+                    role={"img"}
+                  />
+                ) : null}
                 <div
                   className={classNames(
                     projectcss.all,
@@ -816,6 +839,238 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
             />
           </Stack__>
         </div>
+        {(() => {
+          try {
+            return $props.isDoctor;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <div className={classNames(projectcss.all, sty.freeBox__oYtt5)}>
+            <Paziresh24MultilineTextInput
+              data-plasmic-name={"multilineTextInput"}
+              data-plasmic-override={overrides.multilineTextInput}
+              className={classNames("__wab_instance", sty.multilineTextInput)}
+              onValueChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "multilineTextInput",
+                  "value"
+                ]).apply(null, eventArgs);
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+              }}
+              placeholder={
+                "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f..."
+              }
+              value={generateStateValueProp($state, [
+                "multilineTextInput",
+                "value"
+              ])}
+            />
+
+            <div className={classNames(projectcss.all, sty.freeBox__mM6Pz)}>
+              {(() => {
+                try {
+                  return !$state.isLoadingReply;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__zoEu
+                  )}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateIsLoadingReply"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["isLoadingReply"]
+                            },
+                            operation: 0,
+                            value: true
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateIsLoadingReply"] != null &&
+                      typeof $steps["updateIsLoadingReply"] === "object" &&
+                      typeof $steps["updateIsLoadingReply"].then === "function"
+                    ) {
+                      $steps["updateIsLoadingReply"] = await $steps[
+                        "updateIsLoadingReply"
+                      ];
+                    }
+
+                    $steps["runOnReplySend"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            eventRef: $props["onReplySend"],
+                            args: [
+                              (() => {
+                                try {
+                                  return $state.multilineTextInput.value;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnReplySend"] != null &&
+                      typeof $steps["runOnReplySend"] === "object" &&
+                      typeof $steps["runOnReplySend"].then === "function"
+                    ) {
+                      $steps["runOnReplySend"] = await $steps["runOnReplySend"];
+                    }
+
+                    $steps["updateIsLoadingReply2"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["isLoadingReply"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateIsLoadingReply2"] != null &&
+                      typeof $steps["updateIsLoadingReply2"] === "object" &&
+                      typeof $steps["updateIsLoadingReply2"].then === "function"
+                    ) {
+                      $steps["updateIsLoadingReply2"] = await $steps[
+                        "updateIsLoadingReply2"
+                      ];
+                    }
+
+                    $steps["updateMultilineTextInputValue"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["multilineTextInput", "value"]
+                            },
+                            operation: 1
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, undefined);
+                            return undefined;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateMultilineTextInputValue"] != null &&
+                      typeof $steps["updateMultilineTextInputValue"] ===
+                        "object" &&
+                      typeof $steps["updateMultilineTextInputValue"].then ===
+                        "function"
+                    ) {
+                      $steps["updateMultilineTextInputValue"] = await $steps[
+                        "updateMultilineTextInputValue"
+                      ];
+                    }
+                  }}
+                >
+                  {"\u0627\u0631\u0633\u0627\u0644"}
+                </div>
+              ) : null}
+              {(() => {
+                try {
+                  return $state.isLoadingReply;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <Icon17Icon
+                  className={classNames(projectcss.all, sty.svg___0HioH)}
+                  role={"img"}
+                />
+              ) : null}
+            </div>
+          </div>
+        ) : null}
       </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__yzxqQ)}>
         {renderPlasmicSlot({
@@ -826,10 +1081,14 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
       <Paziresh24Dialog
         data-plasmic-name={"repliesDialog"}
         data-plasmic-override={overrides.repliesDialog}
-        body={renderPlasmicSlot({
-          defaultContents: null,
-          value: args.replies2
-        })}
+        body={
+          <div className={classNames(projectcss.all, sty.freeBox__kDd2H)}>
+            {renderPlasmicSlot({
+              defaultContents: null,
+              value: args.replies2
+            })}
+          </div>
+        }
         className={classNames("__wab_instance", sty.repliesDialog)}
         noTrigger={true}
         onOpenChange={async (...eventArgs: any) => {
@@ -838,7 +1097,11 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
             eventArgs
           );
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
         }}
@@ -850,17 +1113,13 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
       <Paziresh24Dialog
         data-plasmic-name={"shareDialog"}
         data-plasmic-override={overrides.shareDialog}
-        body={
-          <Paziresh24Button
-            children2={
-              "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
-            }
-            className={classNames(
-              "__wab_instance",
-              sty.paziresh24Button__nFehK
-            )}
-          />
-        }
+        body={renderPlasmicSlot({
+          defaultContents: (
+            <div className={classNames(projectcss.all, sty.freeBox__ragMz)} />
+          ),
+
+          value: args.share
+        })}
         className={classNames("__wab_instance", sty.shareDialog)}
         noTrigger={true}
         onOpenChange={async (...eventArgs: any) => {
@@ -869,7 +1128,11 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
             eventArgs
           );
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
         }}
@@ -889,12 +1152,14 @@ const PlasmicDescendants = {
     "raviUser",
     "popoverCore",
     "raviRateStar",
+    "multilineTextInput",
     "repliesDialog",
     "shareDialog"
   ],
   raviUser: ["raviUser"],
   popoverCore: ["popoverCore", "raviRateStar"],
   raviRateStar: ["raviRateStar"],
+  multilineTextInput: ["multilineTextInput"],
   repliesDialog: ["repliesDialog"],
   shareDialog: ["shareDialog"]
 } as const;
@@ -906,6 +1171,7 @@ type NodeDefaultElementType = {
   raviUser: typeof RaviUser;
   popoverCore: typeof Popover;
   raviRateStar: typeof RaviRateStar;
+  multilineTextInput: typeof Paziresh24MultilineTextInput;
   repliesDialog: typeof Paziresh24Dialog;
   shareDialog: typeof Paziresh24Dialog;
 };
@@ -973,6 +1239,7 @@ export const PlasmicRaviReviewCard = Object.assign(
     raviUser: makeNodeComponent("raviUser"),
     popoverCore: makeNodeComponent("popoverCore"),
     raviRateStar: makeNodeComponent("raviRateStar"),
+    multilineTextInput: makeNodeComponent("multilineTextInput"),
     repliesDialog: makeNodeComponent("repliesDialog"),
     shareDialog: makeNodeComponent("shareDialog"),
 

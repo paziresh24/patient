@@ -615,10 +615,20 @@
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
+.freeBox__wm16O {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--token-_c276Gs_1FIE);
+  min-width: 0;
+}
 .replyCard__sQuYr:global(.__wab_instance) {
   max-width: 100%;
-  position: relative;
-  margin-bottom: var(--token-_c276Gs_1FIE);
 }
 .freeBox__o8WyD {
   display: flex;
@@ -699,7 +709,7 @@
   position: relative;
   object-fit: cover;
   max-width: 100%;
-  color: var(--token-kpM4b4mG4f2d);
+  color: #16a34a;
   width: 16px;
   height: 20px;
   flex-shrink: 0;
