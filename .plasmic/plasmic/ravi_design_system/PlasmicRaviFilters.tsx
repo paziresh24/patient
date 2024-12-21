@@ -65,6 +65,7 @@ import TextInput from "../../TextInput"; // plasmic-import: OSr_35iNKRP7/compone
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviFilters.module.css"; // plasmic-import: G0AKBMWLNTrM/css
 
@@ -80,6 +81,8 @@ export const PlasmicRaviFilters__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicRaviFilters__ArgsType = {
   filterList?: any;
+  textInputValue?: string;
+  onTextInputValueChange?: (val: string) => void;
   onSelectFilter?: (value: string) => void;
   sortList?: any;
   onSelectSort?: (value: string) => void;
@@ -88,6 +91,8 @@ export type PlasmicRaviFilters__ArgsType = {
 type ArgPropType = keyof PlasmicRaviFilters__ArgsType;
 export const PlasmicRaviFilters__ArgProps = new Array<ArgPropType>(
   "filterList",
+  "textInputValue",
+  "onTextInputValueChange",
   "onSelectFilter",
   "sortList",
   "onSelectSort",
@@ -104,6 +109,8 @@ export type PlasmicRaviFilters__OverridesType = {
 
 export interface DefaultRaviFiltersProps {
   filterList?: any;
+  textInputValue?: string;
+  onTextInputValueChange?: (val: string) => void;
   onSelectFilter?: (value: string) => void;
   sortList?: any;
   onSelectSort?: (value: string) => void;
@@ -191,9 +198,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
       },
       {
         path: "textInput.value",
-        type: "private",
+        type: "writable",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+
+        valueProp: "textInputValue",
+        onChangeProp: "onTextInputValueChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -220,6 +229,7 @@ function PlasmicRaviFilters__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
       dir={"rtl"}
@@ -243,7 +253,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
               );
             }).apply(null, eventArgs);
 
-            if (eventArgs.length > 1 && eventArgs[1]) {
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
               return;
             }
 
@@ -314,7 +328,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
               );
             }).apply(null, eventArgs);
 
-            if (eventArgs.length > 1 && eventArgs[1]) {
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
               return;
             }
 
@@ -385,7 +403,11 @@ function PlasmicRaviFilters__RenderFunc(props: {
             );
           }).apply(null, eventArgs);
 
-          if (eventArgs.length > 1 && eventArgs[1]) {
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
             return;
           }
 

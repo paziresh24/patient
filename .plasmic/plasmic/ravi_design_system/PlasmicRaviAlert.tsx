@@ -62,6 +62,7 @@ import {
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviAlert.module.css"; // plasmic-import: 22UkaHSSFOEU/css
 
@@ -69,10 +70,16 @@ import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-imp
 
 createPlasmicElementProxy;
 
-export type PlasmicRaviAlert__VariantMembers = {};
-export type PlasmicRaviAlert__VariantsArgs = {};
+export type PlasmicRaviAlert__VariantMembers = {
+  isSmall: "isSmall";
+};
+export type PlasmicRaviAlert__VariantsArgs = {
+  isSmall?: SingleBooleanChoiceArg<"isSmall">;
+};
 type VariantPropType = keyof PlasmicRaviAlert__VariantsArgs;
-export const PlasmicRaviAlert__VariantProps = new Array<VariantPropType>();
+export const PlasmicRaviAlert__VariantProps = new Array<VariantPropType>(
+  "isSmall"
+);
 
 export type PlasmicRaviAlert__ArgsType = {
   content?: string;
@@ -83,12 +90,13 @@ export const PlasmicRaviAlert__ArgProps = new Array<ArgPropType>("content");
 export type PlasmicRaviAlert__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
-  svg?: Flex__<"svg">;
   text?: Flex__<"div">;
+  svg?: Flex__<"svg">;
 };
 
 export interface DefaultRaviAlertProps {
   content?: string;
+  isSmall?: SingleBooleanChoiceArg<"isSmall">;
   className?: string;
 }
 
@@ -130,6 +138,24 @@ function PlasmicRaviAlert__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "isSmall",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSmall
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -143,7 +169,9 @@ function PlasmicRaviAlert__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        sty.root
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        sty.root,
+        { [sty.rootisSmall]: hasVariant($state, "isSmall", "isSmall") }
       )}
     >
       <Stack__
@@ -151,23 +179,19 @@ function PlasmicRaviAlert__RenderFunc(props: {
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox)}
+        className={classNames(projectcss.all, sty.freeBox, {
+          [sty.freeBoxisSmall]: hasVariant($state, "isSmall", "isSmall")
+        })}
         dir={"rtl"}
       >
-        <InfoIcon
-          data-plasmic-name={"svg"}
-          data-plasmic-override={overrides.svg}
-          className={classNames(projectcss.all, sty.svg)}
-          role={"img"}
-        />
-
         <div
           data-plasmic-name={"text"}
           data-plasmic-override={overrides.text}
           className={classNames(
             projectcss.all,
             projectcss.__wab_text,
-            sty.text
+            sty.text,
+            { [sty.textisSmall]: hasVariant($state, "isSmall", "isSmall") }
           )}
         >
           <React.Fragment>
@@ -186,16 +210,24 @@ function PlasmicRaviAlert__RenderFunc(props: {
             })()}
           </React.Fragment>
         </div>
+        <InfoIcon
+          data-plasmic-name={"svg"}
+          data-plasmic-override={overrides.svg}
+          className={classNames(projectcss.all, sty.svg, {
+            [sty.svgisSmall]: hasVariant($state, "isSmall", "isSmall")
+          })}
+          role={"img"}
+        />
       </Stack__>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "svg", "text"],
-  freeBox: ["freeBox", "svg", "text"],
-  svg: ["svg"],
-  text: ["text"]
+  root: ["root", "freeBox", "text", "svg"],
+  freeBox: ["freeBox", "text", "svg"],
+  text: ["text"],
+  svg: ["svg"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -203,8 +235,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
-  svg: "svg";
   text: "div";
+  svg: "svg";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -268,8 +300,8 @@ export const PlasmicRaviAlert = Object.assign(
   {
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
-    svg: makeNodeComponent("svg"),
     text: makeNodeComponent("text"),
+    svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicRaviAlert
     internalVariantProps: PlasmicRaviAlert__VariantProps,
