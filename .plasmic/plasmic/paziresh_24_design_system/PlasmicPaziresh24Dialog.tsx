@@ -212,10 +212,6 @@ function PlasmicPaziresh24Dialog__RenderFunc(props: {
           null,
           eventArgs
         );
-
-        if (eventArgs.length > 1 && eventArgs[1]) {
-          return;
-        }
       }}
       open={generateStateValueProp($state, ["dialog", "open"])}
       overlayClassName={classNames({

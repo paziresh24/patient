@@ -62,6 +62,7 @@ import {
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviRateStar.module.css"; // plasmic-import: e1uyHZLgwx11/css
 
@@ -72,13 +73,16 @@ createPlasmicElementProxy;
 
 export type PlasmicRaviRateStar__VariantMembers = {
   isSelected: "isSelected";
+  isLarge: "isLarge";
 };
 export type PlasmicRaviRateStar__VariantsArgs = {
   isSelected?: SingleBooleanChoiceArg<"isSelected">;
+  isLarge?: SingleBooleanChoiceArg<"isLarge">;
 };
 type VariantPropType = keyof PlasmicRaviRateStar__VariantsArgs;
 export const PlasmicRaviRateStar__VariantProps = new Array<VariantPropType>(
-  "isSelected"
+  "isSelected",
+  "isLarge"
 );
 
 export type PlasmicRaviRateStar__ArgsType = {};
@@ -91,6 +95,7 @@ export type PlasmicRaviRateStar__OverridesType = {
 
 export interface DefaultRaviRateStarProps {
   isSelected?: SingleBooleanChoiceArg<"isSelected">;
+  isLarge?: SingleBooleanChoiceArg<"isLarge">;
   className?: string;
 }
 
@@ -139,6 +144,12 @@ function PlasmicRaviRateStar__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSelected
+      },
+      {
+        path: "isLarge",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isLarge
       }
     ],
     [$props, $ctx, $refs]
@@ -163,12 +174,21 @@ function PlasmicRaviRateStar__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root,
-        { [sty.rootisSelected]: hasVariant($state, "isSelected", "isSelected") }
+        {
+          [sty.rootisLarge]: hasVariant($state, "isLarge", "isLarge"),
+          [sty.rootisSelected]: hasVariant($state, "isSelected", "isSelected")
+        }
       )}
     >
       <Icon20Icon
         className={classNames(projectcss.all, sty.svg__thGRo, {
+          [sty.svgisLarge__thGRocjGnA]: hasVariant(
+            $state,
+            "isLarge",
+            "isLarge"
+          ),
           [sty.svgisSelected__thGRoD4OS]: hasVariant(
             $state,
             "isSelected",
@@ -181,6 +201,11 @@ function PlasmicRaviRateStar__RenderFunc(props: {
       {(hasVariant($state, "isSelected", "isSelected") ? true : false) ? (
         <Icon19Icon
           className={classNames(projectcss.all, sty.svg__elWvz, {
+            [sty.svgisLarge__elWvzcjGnA]: hasVariant(
+              $state,
+              "isLarge",
+              "isLarge"
+            ),
             [sty.svgisSelected__elWvzD4OS]: hasVariant(
               $state,
               "isSelected",

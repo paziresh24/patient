@@ -75,6 +75,7 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard.module.css"; // plasmic-import: hjUuvN6lhrZV/css
@@ -405,6 +406,7 @@ function PlasmicReviewCard__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_ravi_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.کاردنمایشنظر,
         {
@@ -1403,7 +1405,11 @@ function PlasmicReviewCard__RenderFunc(props: {
               eventArgs
             );
 
-            if (eventArgs.length > 1 && eventArgs[1]) {
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
               return;
             }
           }}
@@ -1508,54 +1514,81 @@ function PlasmicReviewCard__RenderFunc(props: {
                         const currentItem = __plasmic_item_0;
                         const currentIndex = __plasmic_idx_0;
                         return (
-                          <ReplyCard
+                          <div
                             className={classNames(
-                              "__wab_instance",
-                              sty.replyCard__sQuYr
+                              projectcss.all,
+                              sty.freeBox__wm16O
                             )}
-                            isDoctor={(() => {
+                            key={currentIndex}
+                          >
+                            {(() => {
                               try {
                                 return (
-                                  currentItem.user_id == $props.doctorUserId
+                                  currentItem.description != "undefined" &&
+                                  !!currentItem.description
                                 );
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||
                                   e?.plasmicType === "PlasmicUndefinedDataError"
                                 ) {
-                                  return false;
+                                  return true;
                                 }
                                 throw e;
                               }
-                            })()}
-                            key={currentIndex}
-                            replyText={(() => {
-                              try {
-                                return currentItem.description;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                            userId={(() => {
-                              try {
-                                return currentItem.user_id;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                          />
+                            })() ? (
+                              <ReplyCard
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.replyCard__sQuYr
+                                )}
+                                isDoctor={(() => {
+                                  try {
+                                    return (
+                                      currentItem.user_id == $props.doctorUserId
+                                    );
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return false;
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                                replyText={(() => {
+                                  try {
+                                    return currentItem.description;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                                userId={(() => {
+                                  try {
+                                    return currentItem.user_id;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              />
+                            ) : null}
+                          </div>
                         );
                       })}
                     </Stack__>
@@ -1567,7 +1600,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                       "open"
                     ]).apply(null, eventArgs);
 
-                    if (eventArgs.length > 1 && eventArgs[1]) {
+                    if (
+                      eventArgs.length > 1 &&
+                      eventArgs[1] &&
+                      eventArgs[1]._plasmic_state_init_
+                    ) {
                       return;
                     }
                   }}
@@ -1640,10 +1677,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                 null,
                 eventArgs
               );
-
-              if (eventArgs.length > 1 && eventArgs[1]) {
-                return;
-              }
             }}
             open={generateStateValueProp($state, ["popoverCore", "open"])}
             overlay={
@@ -1925,6 +1958,7 @@ function PlasmicReviewCard__RenderFunc(props: {
               projectcss.plasmic_tokens,
               plasmic_fragment_design_system_css.plasmic_tokens,
               plasmic_ravi_design_system_css.plasmic_tokens,
+              plasmic_antd_5_hostless_css.plasmic_tokens,
               plasmic_paziresh_24_design_system_css.plasmic_tokens
             )}
             trigger={false}
@@ -2705,7 +2739,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                   eventArgs
                 );
 
-                if (eventArgs.length > 1 && eventArgs[1]) {
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
                   return;
                 }
               }}
@@ -2804,7 +2842,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                 "value"
               ]).apply(null, eventArgs);
 
-              if (eventArgs.length > 1 && eventArgs[1]) {
+              if (
+                eventArgs.length > 1 &&
+                eventArgs[1] &&
+                eventArgs[1]._plasmic_state_init_
+              ) {
                 return;
               }
             }}
