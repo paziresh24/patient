@@ -285,6 +285,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
                 "switchButton",
                 "checked"
               ]).apply(null, eventArgs);
+
               (async checked => {
                 const $steps = {};
 
@@ -394,6 +395,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
                 "radioFilter",
                 "selected"
               ]).apply(null, eventArgs);
+
               (async selected => {
                 const $steps = {};
 

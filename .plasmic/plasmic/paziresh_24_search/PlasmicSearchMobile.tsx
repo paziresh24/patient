@@ -306,18 +306,24 @@ function PlasmicSearchMobile__RenderFunc(props: {
                 </div>
               }
               method={"POST"}
-              onError={generateStateOnChangeProp($state, [
-                "getLocationList",
-                "error"
-              ])}
-              onLoading={generateStateOnChangeProp($state, [
-                "getLocationList",
-                "loading"
-              ])}
-              onSuccess={generateStateOnChangeProp($state, [
-                "getLocationList",
-                "data"
-              ])}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "getLocationList",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "getLocationList",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "getLocationList",
+                  "data"
+                ]).apply(null, eventArgs);
+              }}
               url={"https://www.paziresh24.com/api/getbaseinfo"}
             >
               <LocationView
@@ -414,10 +420,20 @@ function PlasmicSearchMobile__RenderFunc(props: {
           )
         })}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "selectCityDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["selectCityDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["selectCityDialog", "open"])}
         title={"\u0627\u0646\u062a\u062e\u0627\u0628 \u0634\u0647\u0631"}
       />
@@ -833,18 +849,24 @@ function PlasmicSearchMobile__RenderFunc(props: {
                   </div>
                 }
                 method={"GET"}
-                onError={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "error"
-                ])}
-                onLoading={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "loading"
-                ])}
-                onSuccess={generateStateOnChangeProp($state, [
-                  "suggestionApi",
-                  "data"
-                ])}
+                onError={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "suggestionApi",
+                    "error"
+                  ]).apply(null, eventArgs);
+                }}
+                onLoading={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "suggestionApi",
+                    "loading"
+                  ]).apply(null, eventArgs);
+                }}
+                onSuccess={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "suggestionApi",
+                    "data"
+                  ]).apply(null, eventArgs);
+                }}
                 url={(() => {
                   try {
                     return `https://apigw.paziresh24.com/seapi/v1/suggestion?q=${$state.inputValue}`;
@@ -1005,10 +1027,20 @@ function PlasmicSearchMobile__RenderFunc(props: {
                   data-plasmic-name={"dialog"}
                   data-plasmic-override={overrides.dialog}
                   className={classNames("__wab_instance", sty.dialog)}
-                  onOpenChange={generateStateOnChangeProp($state, [
-                    "dialog",
-                    "open"
-                  ])}
+                  onOpenChange={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+                      null,
+                      eventArgs
+                    );
+
+                    if (
+                      eventArgs.length > 1 &&
+                      eventArgs[1] &&
+                      eventArgs[1]._plasmic_state_init_
+                    ) {
+                      return;
+                    }
+                  }}
                   open={generateStateValueProp($state, ["dialog", "open"])}
                 />
               </ApiRequest>

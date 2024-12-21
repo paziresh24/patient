@@ -445,16 +445,24 @@ function PlasmicSearchResults__RenderFunc(props: {
               </div>
             }
             method={"GET"}
-            onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
-            onLoading={generateStateOnChangeProp($state, [
-              "apiRequest",
-              "loading"
-            ])}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "apiRequest",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
             onSuccess={async (...eventArgs: any) => {
               generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
                 null,
                 eventArgs
               );
+
               (async data => {
                 const $steps = {};
 

@@ -1270,11 +1270,21 @@ function PlasmicProductCard__RenderFunc(props: {
                   ),
                   className: classNames("__wab_instance", sty.dialog),
                   key: currentIndex,
-                  onOpenChange: generateStateOnChangeProp($state, [
-                    "dialog",
-                    __plasmic_idx_0,
-                    "open"
-                  ]),
+                  onOpenChange: async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "dialog",
+                      __plasmic_idx_0,
+                      "open"
+                    ]).apply(null, eventArgs);
+
+                    if (
+                      eventArgs.length > 1 &&
+                      eventArgs[1] &&
+                      eventArgs[1]._plasmic_state_init_
+                    ) {
+                      return;
+                    }
+                  },
                   open: generateStateValueProp($state, [
                     "dialog",
                     __plasmic_idx_0,
@@ -1521,19 +1531,24 @@ function PlasmicProductCard__RenderFunc(props: {
               </div>
             }
             method={"GET"}
-            onError={generateStateOnChangeProp($state, [
-              "cardActionSduiV2UiRequest",
-              "error"
-            ])}
-            onLoading={generateStateOnChangeProp($state, [
-              "cardActionSduiV2UiRequest",
-              "loading"
-            ])}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "cardActionSduiV2UiRequest",
+                "error"
+              ]).apply(null, eventArgs);
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "cardActionSduiV2UiRequest",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
             onSuccess={async (...eventArgs: any) => {
               generateStateOnChangeProp($state, [
                 "cardActionSduiV2UiRequest",
                 "data"
               ]).apply(null, eventArgs);
+
               (async data => {
                 const $steps = {};
               }).apply(null, eventArgs);
@@ -1961,21 +1976,27 @@ function PlasmicProductCard__RenderFunc(props: {
                           </div>
                         }
                         method={"GET"}
-                        onError={generateStateOnChangeProp($state, [
-                          "getProviderFromSlugApiRequest",
-                          __plasmic_idx_0,
-                          "error"
-                        ])}
-                        onLoading={generateStateOnChangeProp($state, [
-                          "getProviderFromSlugApiRequest",
-                          __plasmic_idx_0,
-                          "loading"
-                        ])}
-                        onSuccess={generateStateOnChangeProp($state, [
-                          "getProviderFromSlugApiRequest",
-                          __plasmic_idx_0,
-                          "data"
-                        ])}
+                        onError={async (...eventArgs: any) => {
+                          generateStateOnChangeProp($state, [
+                            "getProviderFromSlugApiRequest",
+                            __plasmic_idx_0,
+                            "error"
+                          ]).apply(null, eventArgs);
+                        }}
+                        onLoading={async (...eventArgs: any) => {
+                          generateStateOnChangeProp($state, [
+                            "getProviderFromSlugApiRequest",
+                            __plasmic_idx_0,
+                            "loading"
+                          ]).apply(null, eventArgs);
+                        }}
+                        onSuccess={async (...eventArgs: any) => {
+                          generateStateOnChangeProp($state, [
+                            "getProviderFromSlugApiRequest",
+                            __plasmic_idx_0,
+                            "data"
+                          ]).apply(null, eventArgs);
+                        }}
                         url={(() => {
                           try {
                             return (
@@ -2023,21 +2044,27 @@ function PlasmicProductCard__RenderFunc(props: {
                             </div>
                           }
                           method={"GET"}
-                          onError={generateStateOnChangeProp($state, [
-                            "availabilityStatus",
-                            __plasmic_idx_0,
-                            "error"
-                          ])}
-                          onLoading={generateStateOnChangeProp($state, [
-                            "availabilityStatus",
-                            __plasmic_idx_0,
-                            "loading"
-                          ])}
-                          onSuccess={generateStateOnChangeProp($state, [
-                            "availabilityStatus",
-                            __plasmic_idx_0,
-                            "data"
-                          ])}
+                          onError={async (...eventArgs: any) => {
+                            generateStateOnChangeProp($state, [
+                              "availabilityStatus",
+                              __plasmic_idx_0,
+                              "error"
+                            ]).apply(null, eventArgs);
+                          }}
+                          onLoading={async (...eventArgs: any) => {
+                            generateStateOnChangeProp($state, [
+                              "availabilityStatus",
+                              __plasmic_idx_0,
+                              "loading"
+                            ]).apply(null, eventArgs);
+                          }}
+                          onSuccess={async (...eventArgs: any) => {
+                            generateStateOnChangeProp($state, [
+                              "availabilityStatus",
+                              __plasmic_idx_0,
+                              "data"
+                            ]).apply(null, eventArgs);
+                          }}
                           url={(() => {
                             try {
                               return (
