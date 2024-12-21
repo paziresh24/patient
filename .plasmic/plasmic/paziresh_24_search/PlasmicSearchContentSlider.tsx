@@ -208,12 +208,24 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
           </div>
         }
         method={"GET"}
-        onError={generateStateOnChangeProp($state, ["getDoctorRate", "error"])}
-        onLoading={generateStateOnChangeProp($state, [
-          "getDoctorRate",
-          "loading"
-        ])}
-        onSuccess={generateStateOnChangeProp($state, ["getDoctorRate", "data"])}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getDoctorRate", "error"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getDoctorRate", "loading"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getDoctorRate", "data"]).apply(
+            null,
+            eventArgs
+          );
+        }}
         params={undefined}
         url={(() => {
           try {

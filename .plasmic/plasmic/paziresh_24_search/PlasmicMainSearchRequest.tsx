@@ -278,19 +278,24 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
           ) : null
         }
         method={"GET"}
-        onError={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "error"
-        ])}
-        onLoading={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "loading"
-        ])}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "error"
+          ]).apply(null, eventArgs);
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "loading"
+          ]).apply(null, eventArgs);
+        }}
         onSuccess={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, [
             "fragmentApiRequest",
             "data"
           ]).apply(null, eventArgs);
+
           (async data => {
             const $steps = {};
 

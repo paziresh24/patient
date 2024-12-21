@@ -200,9 +200,24 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
         </div>
       }
       method={"GET"}
-      onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
-      onLoading={generateStateOnChangeProp($state, ["apiRequest", "loading"])}
-      onSuccess={generateStateOnChangeProp($state, ["apiRequest", "data"])}
+      onError={async (...eventArgs: any) => {
+        generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+          null,
+          eventArgs
+        );
+      }}
+      onLoading={async (...eventArgs: any) => {
+        generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
+          null,
+          eventArgs
+        );
+      }}
+      onSuccess={async (...eventArgs: any) => {
+        generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+          null,
+          eventArgs
+        );
+      }}
       url={(() => {
         try {
           return `https://apigw.paziresh24.com/seapi/v1/search/ir/general-practitioner?turn_type=consult}`;
