@@ -17,6 +17,12 @@
 .root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
   margin-left: 4px;
 }
+.root___focusVisibleWithin {
+  outline: none;
+}
+.root:focus-within {
+  outline: none;
+}
 .freeBox {
   display: flex;
   position: relative;
@@ -30,9 +36,11 @@
 }
 .root .freeBox___focusVisibleWithin {
   box-shadow: 0px 0px 0px 3px #96c7f2;
+  outline: none;
 }
 .root:focus-within .freeBox {
   box-shadow: 0px 0px 0px 3px #96c7f2;
+  outline: none;
 }
 .svg {
   position: relative;
@@ -47,6 +55,12 @@
 }
 .svgisIndeterminate {
   color: #0091ff;
+}
+.root .svg___focusVisibleWithin {
+  outline: none;
+}
+.root:focus-within .svg {
+  outline: none;
 }
 .root:hover .svg {
   color: #c8c7c1;
@@ -66,6 +80,12 @@
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
+}
+.root .labelContainer___focusVisibleWithin {
+  outline: none;
+}
+.root:focus-within .labelContainer {
+  outline: none;
 }
 .slotTargetChildren {
   white-space: pre;
@@ -129,4 +149,68 @@
   > picture
   > img {
   overflow: hidden;
+}
+.root .slotTargetChildren___focusVisibleWithin > *,
+.root .slotTargetChildren___focusVisibleWithin > :global(.__wab_slot) > *,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root .slotTargetChildren___focusVisibleWithin > picture > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root
+  .slotTargetChildren___focusVisibleWithin
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  outline: none;
+}
+.root:focus-within .slotTargetChildren > *,
+.root:focus-within .slotTargetChildren > :global(.__wab_slot) > *,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > *,
+.root:focus-within .slotTargetChildren > picture > img,
+.root:focus-within .slotTargetChildren > :global(.__wab_slot) > picture > img,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img,
+.root:focus-within
+  .slotTargetChildren
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  outline: none;
 }

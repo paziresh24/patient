@@ -795,7 +795,20 @@ function PlasmicFilterRow__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.sortDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, ["sortDialog", "open"])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["sortDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["sortDialog", "open"])}
         title={"\u0645\u0631\u062a\u0628 \u0633\u0627\u0632\u06cc"}
         trigger={null}
@@ -2137,10 +2150,20 @@ function PlasmicFilterRow__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.filterListDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "filterListDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["filterListDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["filterListDialog", "open"])}
         title={"\u0641\u06cc\u0644\u062a\u0631 \u0647\u0627"}
         trigger={null}
@@ -2257,10 +2280,20 @@ function PlasmicFilterRow__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.categoriesDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "categoriesDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["categoriesDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["categoriesDialog", "open"])}
         title={
           <React.Fragment>
@@ -2406,10 +2439,20 @@ function PlasmicFilterRow__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.optionsDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "optionsDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["optionsDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["optionsDialog", "open"])}
         title={
           <React.Fragment>

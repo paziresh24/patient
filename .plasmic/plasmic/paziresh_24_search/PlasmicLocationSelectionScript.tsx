@@ -529,7 +529,20 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
           </React.Fragment>
         }
         className={classNames("__wab_instance", sty.dialog)}
-        onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["dialog", "open"])}
         title={
           "\u0645\u06cc\u200c\u062e\u0648\u0627\u0647\u06cc\u062f \u067e\u0632\u0634\u06a9\u0627\u0646 \u0646\u0632\u062f\u06cc\u06a9 \u062e\u0648\u062f \u0631\u0627 \u0628\u0628\u06cc\u0646\u06cc\u062f\u061f"

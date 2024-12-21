@@ -1215,6 +1215,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSuggestedDoctor.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "pfHDjmK7Jo_j",
+          "name": "HomePageShortcuts",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicHomePageShortcuts.tsx",
+          "importSpec": {
+            "modulePath": "HomePageShortcuts.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicHomePageShortcuts.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1532,8 +1545,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -2270,7 +2282,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -2308,8 +2321,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -3979,8 +3991,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-embed-css"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
@@ -4127,7 +4138,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
@@ -4479,7 +4491,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "gLnoj82AzKVVT7qXiqAbHD",
