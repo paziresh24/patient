@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -126,22 +128,44 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
+  });
+
   return (
-    (() => {
-      try {
-        return !!$ctx.Growthbook.features?.[
-          `theme-config:${globalThis.location.hostname}`
-        ]?.["homePageShortcuts"];
-      } catch (e) {
-        if (
-          e instanceof TypeError ||
-          e?.plasmicType === "PlasmicUndefinedDataError"
-        ) {
-          return false;
-        }
-        throw e;
-      }
-    })() ? (
+    (
+      hasVariant(globalVariants, "screen", "mobileOnly")
+        ? (() => {
+            try {
+              return !!$ctx.Growthbook.features?.[
+                `theme-config:${globalThis.location.host}`
+              ]?.["homePageShortcuts"];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })()
+        : (() => {
+            try {
+              return !!$ctx.Growthbook.features?.[
+                `theme-config:${globalThis.location.host}`
+              ]?.["homePageShortcuts"];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })()
+    ) ? (
       <Stack__
         as={"div"}
         data-plasmic-name={"root"}
@@ -174,7 +198,7 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
             (() => {
               try {
                 return $ctx.Growthbook.features?.[
-                  `theme-config:${globalThis.location.hostname}`
+                  `theme-config:${globalThis.location.host}`
                 ]?.["shortcuts"];
               } catch (e) {
                 if (
