@@ -436,14 +436,38 @@ function PlasmicSearchPage2__RenderFunc(props: {
                     ];
                   }
                 }}
-                onSuggestionInputInputQueryTextChange={generateStateOnChangeProp(
-                  $state,
-                  ["suggestion", "suggestionInputInputQueryText"]
-                )}
-                onSuggestionInputTextInputValueChange={generateStateOnChangeProp(
-                  $state,
-                  ["suggestion", "suggestionInputTextInputValue"]
-                )}
+                onSuggestionInputInputQueryTextChange={async (
+                  ...eventArgs: any
+                ) => {
+                  generateStateOnChangeProp($state, [
+                    "suggestion",
+                    "suggestionInputInputQueryText"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                onSuggestionInputTextInputValueChange={async (
+                  ...eventArgs: any
+                ) => {
+                  generateStateOnChangeProp($state, [
+                    "suggestion",
+                    "suggestionInputTextInputValue"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
                 suggestionInputInputQueryText={generateStateValueProp($state, [
                   "suggestion",
                   "suggestionInputInputQueryText"
@@ -472,6 +496,15 @@ function PlasmicSearchPage2__RenderFunc(props: {
                       "searchFilters",
                       "selected"
                     ]).apply(null, eventArgs);
+
+                    if (
+                      eventArgs.length > 1 &&
+                      eventArgs[1] &&
+                      eventArgs[1]._plasmic_state_init_
+                    ) {
+                      return;
+                    }
+
                     (async val => {
                       const $steps = {};
 
@@ -653,25 +686,54 @@ function PlasmicSearchPage2__RenderFunc(props: {
                 data-plasmic-name={"userLocation"}
                 data-plasmic-override={overrides.userLocation}
                 className={classNames("__wab_instance", sty.userLocation)}
-                onUserCityChange={generateStateOnChangeProp($state, [
-                  "userLocation",
-                  "userCity"
-                ])}
+                onUserCityChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "userLocation",
+                    "userCity"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
               />
 
               <MainSearchRequest
                 data-plasmic-name={"mainSearchRequest"}
                 data-plasmic-override={overrides.mainSearchRequest}
                 className={classNames("__wab_instance", sty.mainSearchRequest)}
-                onApiRequestDataChange={generateStateOnChangeProp($state, [
-                  "mainSearchRequest",
-                  "apiRequestData"
-                ])}
+                onApiRequestDataChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "mainSearchRequest",
+                    "apiRequestData"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
                 onPageChange2={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
                     "mainSearchRequest",
                     "page"
                   ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+
                   (async val => {
                     const $steps = {};
 
@@ -724,10 +786,20 @@ function PlasmicSearchPage2__RenderFunc(props: {
                     }
                   }).apply(null, eventArgs);
                 }}
-                onResultChange2={generateStateOnChangeProp($state, [
-                  "mainSearchRequest",
-                  "result"
-                ])}
+                onResultChange2={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "mainSearchRequest",
+                    "result"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
                 page={generateStateValueProp($state, [
                   "mainSearchRequest",
                   "page"

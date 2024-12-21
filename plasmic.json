@@ -1215,6 +1215,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSuggestedDoctor.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "pfHDjmK7Jo_j",
+          "name": "HomePageShortcuts",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicHomePageShortcuts.tsx",
+          "importSpec": {
+            "modulePath": "HomePageShortcuts.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicHomePageShortcuts.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1532,8 +1545,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -2270,7 +2282,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -4479,7 +4492,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "gLnoj82AzKVVT7qXiqAbHD",
@@ -4615,3 +4629,4 @@
   "packageManager": "npm",
   "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.327/dist/plasmic.schema.json"
 }
+

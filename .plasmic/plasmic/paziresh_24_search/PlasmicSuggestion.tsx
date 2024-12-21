@@ -243,10 +243,20 @@ function PlasmicSuggestion__RenderFunc(props: {
           "suggestionInput",
           "inputQueryText"
         ])}
-        onInputQueryTextChange={generateStateOnChangeProp($state, [
-          "suggestionInput",
-          "inputQueryText"
-        ])}
+        onInputQueryTextChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "suggestionInput",
+            "inputQueryText"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         onSelect={async option => {
           const $steps = {};
 
@@ -322,18 +332,48 @@ function PlasmicSuggestion__RenderFunc(props: {
             ];
           }
         }}
-        onSelectedOptionChange={generateStateOnChangeProp($state, [
-          "suggestionInput",
-          "selectedOption"
-        ])}
-        onSuggestedContentVisibilityChange={generateStateOnChangeProp($state, [
-          "suggestionInput",
-          "suggestedContentVisibility"
-        ])}
-        onSuggestionTextInputValueChange={generateStateOnChangeProp($state, [
-          "suggestionInput",
-          "suggestionTextInputValue"
-        ])}
+        onSelectedOptionChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "suggestionInput",
+            "selectedOption"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        onSuggestedContentVisibilityChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "suggestionInput",
+            "suggestedContentVisibility"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        onSuggestionTextInputValueChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "suggestionInput",
+            "suggestionTextInputValue"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         optionsLength={(() => {
           try {
             return (
@@ -651,18 +691,24 @@ function PlasmicSuggestion__RenderFunc(props: {
         errorDisplay={null}
         loadingDisplay={null}
         method={"GET"}
-        onError={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "error"
-        ])}
-        onLoading={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "loading"
-        ])}
-        onSuccess={generateStateOnChangeProp($state, [
-          "fragmentApiRequest",
-          "data"
-        ])}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "error"
+          ]).apply(null, eventArgs);
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "loading"
+          ]).apply(null, eventArgs);
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "fragmentApiRequest",
+            "data"
+          ]).apply(null, eventArgs);
+        }}
         params={(() => {
           try {
             return {

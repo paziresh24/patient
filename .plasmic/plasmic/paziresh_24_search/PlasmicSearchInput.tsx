@@ -464,6 +464,15 @@ function PlasmicSearchInput__RenderFunc(props: {
                     (e => e.target?.value).apply(null, eventArgs)
                   );
                 }).apply(null, eventArgs);
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+
                 (async event => {
                   const $steps = {};
 
