@@ -8,6 +8,7 @@ import classNames from '@/common/utils/classNames';
 import { oneApp, useOneApp } from '@/modules/dashboard/apis/one-app';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -27,6 +28,9 @@ function replaceKeysInString(template: string, keys: string[], values: string[])
 }
 function constructUrlWithQuery(template: string, queryParams: any) {
   const [_, queryPart] = template.split('?');
+
+  if (isEmpty(queryParams)) return template;
+
   const queryString = new URLSearchParams(queryParams).toString();
   if (queryPart) {
     const existingQueryParams = new URLSearchParams(queryPart);
