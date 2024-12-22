@@ -21,6 +21,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const newReviewList = useFeatureIsOn('ravi_show_new_Review_list');
   const newProgressList = useFeatureIsOn('ravi_show_new_progress_list');
+  const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const getFeedbacks = useGetReview(
     {
       slug: profileData.seo.slug,
@@ -80,34 +81,64 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     setSort(value);
   }, []);
 
+  const items = [
+    {
+      label: 'برخورد مناسب پزشک',
+      value: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
+    },
+    {
+      label: 'توضیح پزشک در هنگام ویزیت',
+      value: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+    },
+    {
+      label: 'مهارت و تخصص پزشک',
+      value: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
+    },
+  ];
+
   return (
     <RaviGlobalContextsProvider>
       <div className="flex flex-col space-y-1">
         {!dontShowRateDetails && (
           <div className="w-full space-y-3 p-4 bg-white md:rounded-t-lg flex flex-col justify-center items-center">
-            <Fragment
-              name="RateAndCommentCount"
-              props={{
-                ...profileData,
-                rate: (
-                  (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                    +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                    +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                  3
-                ).toFixed(1),
-                rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
-                hideRates: profileData?.feedbacks?.details?.hide_rates,
-              }}
-            />
-            {newProgressList ? (
+            {newRateAndCommentCount ? (
               <Fragment
-                name="RateProgressBar"
+                name="RateAndCommentCount2"
                 props={{
                   ...profileData,
-                  averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
-                  averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
-                  averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+                  rate: (
+                    (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                      +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                      +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                    3
+                  ).toFixed(1),
+                  rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
                   hideRates: profileData?.feedbacks?.details?.hide_rates,
+                }}
+              />
+            ) : (
+              <Fragment
+                name="RateAndCommentCount"
+                props={{
+                  ...profileData,
+                  rate: (
+                    (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                      +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                      +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                    3
+                  ).toFixed(1),
+                  rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
+                  hideRates: profileData?.feedbacks?.details?.hide_rates,
+                }}
+              />
+            )}
+            {newProgressList ? (
+              <Fragment
+                name="RateProgressList"
+                props={{
+                  ...profileData,
+                  hideRates: profileData?.feedbacks?.details?.hide_rates,
+                  items: items,
                 }}
               />
             ) : (
