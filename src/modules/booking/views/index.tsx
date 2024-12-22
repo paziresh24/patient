@@ -799,12 +799,16 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={TurnRequest}
           TopComponent={
             <>
-              {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description && (
+              {services?.find((item: any) => item.service_id === service.id)?.description && (
                 <div className="p-3 mb-5 rounded-lg bg-slate-100">
                   <InfoIcon className="inline ml-1 w-6 h-6" />
-                  <Text fontSize="sm" fontWeight="semiBold">
-                    {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description}
-                  </Text>
+                  <Text
+                    fontSize="sm"
+                    fontWeight="semiBold"
+                    dangerouslySetInnerHTML={{
+                      __html: services?.find((item: any) => item.service_id === service.id)?.description?.replace(/\n/g, '<br/>'),
+                    }}
+                  />
                 </div>
               )}
             </>
@@ -813,9 +817,9 @@ const BookingSteps = (props: BookingStepsProps) => {
             descriptionTitle: 'لطفا توضیحات مورد نیاز خود را وارد کنید',
             checkboxText: 'قوانین را مطالعه کردم و پذیرفتم.',
             placeholder: 'توضیحات ...',
-            uploaderTitle: 'لطفا مدارک مورد نیاز خود را بارگذاری کنید',
+            uploaderTitle: 'مدارک مورد نیاز خود را بارگذاری کنید',
             rulesBoxTitle: 'شرایط دریافت نوبت از پذیرش24',
-            uploadRequired: true,
+            uploadRequired: services.find((item: any) => item.service_id === service.id)?.upload_required,
             getData: () => {},
             loading: bookRequest.isLoading,
           }}

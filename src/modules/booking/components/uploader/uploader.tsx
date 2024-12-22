@@ -8,10 +8,11 @@ interface FileUploaderProp {
   files: any[];
   setFiles: Dispatch<SetStateAction<any[]>>;
   title?: string;
+  required?: boolean;
 }
 
 export const Uploader = (props: FileUploaderProp) => {
-  const { files, setFiles, title } = props;
+  const { files, setFiles, title, required } = props;
 
   const handleFileChange = (file: any) => {
     if (!file.target.files) return;
@@ -30,6 +31,9 @@ export const Uploader = (props: FileUploaderProp) => {
       {!!title && (
         <Text fontSize="sm" fontWeight="medium" className="text-black -mb-1 block">
           {title}
+          <span className={classNames('text-red-500 font-medium text-xs mr-1', { 'text-black': !required })}>
+            ({required ? 'الزامی' : 'اختیاری'})
+          </span>
         </Text>
       )}
       <div className={classNames('bg-none', { ' bg-[#f8fafb] border rounded-lg !border-solid border-slate-300': !!files.length })}>
