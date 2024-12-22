@@ -7,7 +7,11 @@ const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/Plasm
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
 const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript'));
+const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
+const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
+const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
 
+import { PlasmicReviewProgressList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList';
 import PlasmicReceiptActionButtons, {
   PlasmicReceiptActionButtons__ArgProps,
 } from '.plasmic/plasmic/paziresh_24/PlasmicReceiptActionButtons';
@@ -43,24 +47,24 @@ import PlasmicHomePageShortcuts, { PlasmicHomePageShortcuts__ArgProps } from '.p
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
-  // ReviewList2: {
-  //   Component: PlasmicReviewList2,
-  //   id: 'Kz2u6VAJ02yE',
-  //   propsAllowed: PlasmicReviewList__ArgProps,
-  //   projectId: 'qQzsBf58SqzNJX45iggq96',
-  // },
-  // RateAndCommentCount2: {
-  //   Component: PlasmicReviewRateAndCommentCount,
-  //   id: 'etOCIhcu_Yx5',
-  //   propsAllowed: PlasmicRateAndCommentCount__ArgProps,
-  //   projectId: 'qQzsBf58SqzNJX45iggq96',
-  // },
-  // RateProgressList: {
-  //   Component: PlasmicProgressList,
-  //   id: 'xpGRRNKB86D2',
-  //   propsAllowed: PlasmicReviewProgressList__ArgProps,
-  //   projectId: 'qQzsBf58SqzNJX45iggq96',
-  // },
+  ReviewList2: {
+    Component: PlasmicReviewList2,
+    id: 'Kz2u6VAJ02yE',
+    propsAllowed: PlasmicReviewList__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateAndCommentCount2: {
+    Component: PlasmicReviewRateAndCommentCount,
+    id: 'etOCIhcu_Yx5',
+    propsAllowed: PlasmicRateAndCommentCount__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateProgressList: {
+    Component: PlasmicProgressList,
+    id: 'xpGRRNKB86D2',
+    propsAllowed: PlasmicReviewProgressList__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
   ReviewList: {
     Component: PlasmicReviewList,
     id: 'Bx6gxTOoja9k',

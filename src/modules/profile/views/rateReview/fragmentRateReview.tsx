@@ -19,6 +19,8 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const listOfShowDoctorTags = useFeatureValue('profile:doctor-tags|enabled', { slugs: [] });
   const shouldShowDoctorTags = newApiFeatureFlaggingCondition(listOfShowDoctorTags?.slugs, profileData.seo.slug);
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
+  const newReviewList = useFeatureIsOn('ravi_show_new_Review_list');
+  const newProgressList = useFeatureIsOn('ravi_show_new_progress_list');
   const getFeedbacks = useGetReview(
     {
       slug: profileData.seo.slug,
@@ -97,16 +99,29 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
                 hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
-            <Fragment
-              name="RateProgressBar"
-              props={{
-                ...profileData,
-                averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
-                averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
-                averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
-                hideRates: profileData?.feedbacks?.details?.hide_rates,
-              }}
-            />
+            {newProgressList ? (
+              <Fragment
+                name="RateProgressBar"
+                props={{
+                  ...profileData,
+                  averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
+                  averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
+                  averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+                  hideRates: profileData?.feedbacks?.details?.hide_rates,
+                }}
+              />
+            ) : (
+              <Fragment
+                name="RateProgressBar"
+                props={{
+                  ...profileData,
+                  averageQualityOfTreatment: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
+                  averageDoctorEncounter: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
+                  averageExplanationOfIssue: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
+                  hideRates: profileData?.feedbacks?.details?.hide_rates,
+                }}
+              />
+            )}
           </div>
         )}
         {shouldShowDoctorTags && (
@@ -116,24 +131,45 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
             serverId={profileData?.information?.server_id}
           />
         )}
-        <Fragment
-          name="ReviewList"
-          props={{
-            ...profileData,
-            dontShow: false,
-            reviewResponse: response,
-            pageInfo: pageInfo,
-            nextPageTrigger: () => {
-              setPage(prev => prev + 1);
-            },
-            paginationLoadingStatus: page > 1 && getFeedbacks.isLoading,
-            onSearch,
-            onFilter,
-            onSort,
-            hideRates: profileData.feedbacks?.details?.hide_rates,
-          }}
-        />
+        {newReviewList ? (
+          <Fragment
+            name="ReviewList2"
+            props={{
+              ...profileData,
+              dontShow: false,
+              reviewResponse: response,
+              pageInfo: pageInfo,
+              nextPageTrigger: () => {
+                setPage(prev => prev + 1);
+              },
+              paginationLoadingStatus: page > 1 && getFeedbacks.isLoading,
+              onSearch,
+              onFilter,
+              onSort,
+              hideRates: profileData.feedbacks?.details?.hide_rates,
+            }}
+          />
+        ) : (
+          <Fragment
+            name="ReviewList"
+            props={{
+              ...profileData,
+              dontShow: false,
+              reviewResponse: response,
+              pageInfo: pageInfo,
+              nextPageTrigger: () => {
+                setPage(prev => prev + 1);
+              },
+              paginationLoadingStatus: page > 1 && getFeedbacks.isLoading,
+              onSearch,
+              onFilter,
+              onSort,
+              hideRates: profileData.feedbacks?.details?.hide_rates,
+            }}
+          />
+        )}
       </div>
     </RaviGlobalContextsProvider>
   );
 };
+
