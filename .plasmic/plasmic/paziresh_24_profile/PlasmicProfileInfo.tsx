@@ -339,7 +339,11 @@ function PlasmicProfileInfo__RenderFunc(props: {
           <Stack__
             as={"div"}
             hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__qjWEy)}
+            className={classNames(
+              projectcss.all,
+              sty.freeBox__qjWEy,
+              "no-scroll"
+            )}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
               (() => {
