@@ -63,13 +63,13 @@ import RaviRateStar from "../../RaviRateStar"; // plasmic-import: e1uyHZLgwx11/c
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import RaviTabs from "../../RaviTabs"; // plasmic-import: eIcAmCTlZ2yT/component
 import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyEBPJSmH/component
-import { AntdTextArea } from "@plasmicpkgs/antd5/skinny/registerInput";
-import { inputHelpers as AntdTextArea_Helpers } from "@plasmicpkgs/antd5/skinny/registerInput";
+import Checkbox from "../../Checkbox"; // plasmic-import: 3y7pc6cf4L1a/component
+
+import { useScreenVariants as useScreenVariantsqiBuxNlixBgQ } from "../paziresh_24_design_system/PlasmicGlobalVariant__Screen"; // plasmic-import: QiBUXNlixBgQ/globalVariant
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewFeedback.module.css"; // plasmic-import: lZJoIJWYs8o9/css
 
@@ -88,12 +88,14 @@ export const PlasmicRaviReviewFeedback__VariantProps =
 export type PlasmicRaviReviewFeedback__ArgsType = {
   positiveList?: any;
   negativeList?: any;
-  onSubmit?: (rate: string, comments: string, commentText: string) => void;
+  timeList?: any;
+  onSubmit?: (values: string) => void;
 };
 type ArgPropType = keyof PlasmicRaviReviewFeedback__ArgsType;
 export const PlasmicRaviReviewFeedback__ArgProps = new Array<ArgPropType>(
   "positiveList",
   "negativeList",
+  "timeList",
   "onSubmit"
 );
 
@@ -103,13 +105,14 @@ export type PlasmicRaviReviewFeedback__OverridesType = {
   raviTabs?: Flex__<typeof RaviTabs>;
   svg?: Flex__<"svg">;
   commentDialog?: Flex__<typeof Paziresh24Dialog>;
-  textArea?: Flex__<typeof AntdTextArea>;
+  checkbox?: Flex__<typeof Checkbox>;
 };
 
 export interface DefaultRaviReviewFeedbackProps {
   positiveList?: any;
   negativeList?: any;
-  onSubmit?: (rate: string, comments: string, commentText: string) => void;
+  timeList?: any;
+  onSubmit?: (values: string) => void;
   className?: string;
 }
 
@@ -178,12 +181,16 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "textArea.value",
+        path: "selectedTime",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        onMutate: generateOnMutateForSpec("value", AntdTextArea_Helpers)
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "checkbox.isSelected",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -193,6 +200,10 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsqiBuxNlixBgQ()
   });
 
   return (
@@ -208,7 +219,6 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -341,6 +351,8 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                       return "خوب";
                     } else if ($state.rate == 5) {
                       return "خیلی خوب";
+                    } else {
+                      return " ";
                     }
                   })();
                 } catch (e) {
@@ -692,6 +704,177 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
               </Stack__>
             </div>
           </Stack__>
+          <div className={classNames(projectcss.all, sty.freeBox__aMz0P)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__qrSj
+              )}
+            >
+              {
+                "\ufb7c\ufed8\ufeaa\ufead \ufea9\ufead \ufee3\ufec4\ufe90 \ufee3\ufee8\ufe98\ufec8\ufeae \ufee3\ufe8e\ufee7\ufeaa\ufbfe\ufeaa\u061f"
+              }
+            </div>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox___2JhQn)}
+            >
+              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                (() => {
+                  try {
+                    return $props.timeList;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()
+              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                const currentItem = __plasmic_item_0;
+                const currentIndex = __plasmic_idx_0;
+                return (
+                  <Paziresh24Button
+                    children2={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__r0Gau
+                        )}
+                      >
+                        {hasVariant(globalVariants, "screen", "mobileOnly") ? (
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return currentItem.title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "Button";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return currentItem.title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "Button";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        )}
+                      </div>
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__sgucu
+                    )}
+                    color={(() => {
+                      try {
+                        return (() => {
+                          if ($state.selectedTime == currentItem.value) {
+                            return "softGreen";
+                          } else {
+                            return "sand";
+                          }
+                        })();
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "softBlue";
+                        }
+                        throw e;
+                      }
+                    })()}
+                    key={currentIndex}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["updateSelectedTime"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["selectedTime"]
+                              },
+                              operation: 0,
+                              value: currentItem.value
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateSelectedTime"] != null &&
+                        typeof $steps["updateSelectedTime"] === "object" &&
+                        typeof $steps["updateSelectedTime"].then === "function"
+                      ) {
+                        $steps["updateSelectedTime"] = await $steps[
+                          "updateSelectedTime"
+                        ];
+                      }
+                    }}
+                    outline={(() => {
+                      try {
+                        return (() => {
+                          const exist = $state.selected.some(
+                            item => item == currentItem.value
+                          );
+                          if (exist && !$state.isPositiveTab) {
+                            return false;
+                          } else {
+                            return "outline";
+                          }
+                        })();
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "outline";
+                        }
+                        throw e;
+                      }
+                    })()}
+                    shape={"rounded"}
+                    size={"compact"}
+                  />
+                );
+              })}
+            </Stack__>
+          </div>
           <Stack__
             as={"div"}
             hasGap={true}
@@ -768,7 +951,6 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                   ];
                 }
               }}
-              size={"compact"}
             />
 
             <Paziresh24Button
@@ -800,33 +982,7 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                         args: [
                           (() => {
                             try {
-                              return $state.rate;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })(),
-                          (() => {
-                            try {
-                              return $state.selected;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })(),
-                          (() => {
-                            try {
-                              return $state.textArea.value;
+                              return undefined;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -865,41 +1021,38 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
             hasGap={true}
             className={classNames(projectcss.all, sty.freeBox___4HpLt)}
           >
-            {(() => {
-              const child$Props = {
-                className: classNames("__wab_instance", sty.textArea),
-                onChange: async (...eventArgs: any) => {
-                  generateStateOnChangePropForCodeComponents(
-                    $state,
-                    "value",
-                    ["textArea", "value"],
-                    AntdTextArea_Helpers
-                  ).apply(null, eventArgs);
-                },
-                placeholder: "\u0646\u0638\u0631 \u0634\u0645\u0627...",
-                value: generateStateValueProp($state, ["textArea", "value"])
-              };
-              initializeCodeComponentStates(
-                $state,
-                [
-                  {
-                    name: "value",
-                    plasmicStateName: "textArea.value"
-                  }
-                ],
-                [],
-                AntdTextArea_Helpers ?? {},
-                child$Props
-              );
+            <div className={classNames(projectcss.all, sty.freeBox__fzD7)}>
+              <Checkbox
+                data-plasmic-name={"checkbox"}
+                data-plasmic-override={overrides.checkbox}
+                className={classNames("__wab_instance", sty.checkbox)}
+                label={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___9PFwN
+                    )}
+                  >
+                    {"\u062e\u0635\u0648\u0635\u06cc"}
+                  </div>
+                }
+                onChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "checkbox",
+                    "isSelected"
+                  ]).apply(null, eventArgs);
 
-              return (
-                <AntdTextArea
-                  data-plasmic-name={"textArea"}
-                  data-plasmic-override={overrides.textArea}
-                  {...child$Props}
-                />
-              );
-            })()}
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+              />
+            </div>
             <Paziresh24Button
               children2={"\u062b\u0628\u062a"}
               className={classNames(
@@ -981,13 +1134,13 @@ const PlasmicDescendants = {
     "raviTabs",
     "svg",
     "commentDialog",
-    "textArea"
+    "checkbox"
   ],
   raviRateStar: ["raviRateStar"],
   raviTabs: ["raviTabs"],
   svg: ["svg"],
-  commentDialog: ["commentDialog", "textArea"],
-  textArea: ["textArea"]
+  commentDialog: ["commentDialog", "checkbox"],
+  checkbox: ["checkbox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -998,7 +1151,7 @@ type NodeDefaultElementType = {
   raviTabs: typeof RaviTabs;
   svg: "svg";
   commentDialog: typeof Paziresh24Dialog;
-  textArea: typeof AntdTextArea;
+  checkbox: typeof Checkbox;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1065,7 +1218,7 @@ export const PlasmicRaviReviewFeedback = Object.assign(
     raviTabs: makeNodeComponent("raviTabs"),
     svg: makeNodeComponent("svg"),
     commentDialog: makeNodeComponent("commentDialog"),
-    textArea: makeNodeComponent("textArea"),
+    checkbox: makeNodeComponent("checkbox"),
 
     // Metadata about props expected for PlasmicRaviReviewFeedback
     internalVariantProps: PlasmicRaviReviewFeedback__VariantProps,
