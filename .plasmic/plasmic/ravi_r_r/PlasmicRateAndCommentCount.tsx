@@ -169,7 +169,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
     (() => {
       try {
         return (
-          !$props.hideRates || !$ctx.Growthbook.features.ravi_show_external_rate
+          !$props.hideRates && !$ctx.Growthbook.features.ravi_show_external_rate
         );
       } catch (e) {
         if (
