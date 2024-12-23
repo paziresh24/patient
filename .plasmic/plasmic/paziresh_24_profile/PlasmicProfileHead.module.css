@@ -97,7 +97,6 @@
   max-width: 100%;
 }
 .freeBox__ekp4F {
-  display: flex;
   flex-direction: row;
   position: relative;
   width: 100%;
@@ -107,6 +106,7 @@
   padding-right: var(--token-fhaz6q6bl-fW);
   padding-left: var(--token-fhaz6q6bl-fW);
   min-width: 0;
+  display: none;
 }
 .freeBox__ekp4F > :global(.__wab_flex-container) {
   flex-direction: row;
