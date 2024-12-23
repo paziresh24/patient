@@ -288,19 +288,24 @@ function PlasmicProfileActions__RenderFunc(props: {
             />
           }
           method={"POST"}
-          onError={generateStateOnChangeProp($state, [
-            "getIsBookedMark",
-            "error"
-          ])}
-          onLoading={generateStateOnChangeProp($state, [
-            "getIsBookedMark",
-            "loading"
-          ])}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, [
+              "getIsBookedMark",
+              "error"
+            ]).apply(null, eventArgs);
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, [
+              "getIsBookedMark",
+              "loading"
+            ]).apply(null, eventArgs);
+          }}
           onSuccess={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, [
               "getIsBookedMark",
               "data"
             ]).apply(null, eventArgs);
+
             (async data => {
               const $steps = {};
 

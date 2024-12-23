@@ -2541,6 +2541,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token",
+      "type": "fontsize",
+      "value": "16px",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "7r312uiqyadpVPdnRoAggk",
+        "id": "dSr2BAJ6_kGS"
+      }
+    },
+    {
       "name": "Unnamed Style Token 2",
       "type": "color",
       "value": "#F3FB03",
