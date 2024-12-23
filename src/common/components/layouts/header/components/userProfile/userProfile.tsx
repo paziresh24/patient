@@ -1,3 +1,5 @@
+import { useGetUser } from '@/common/apis/services/auth/getUser';
+import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
@@ -23,10 +25,12 @@ import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFea
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
@@ -134,6 +138,27 @@ export const UserProfile = () => {
     });
   };
 
+  const getMe = useGetMe();
+  const getUser = useGetUser();
+  const getProvider = useProviders();
+  const setUserInfo = useUserInfoStore(state => state.setUserInfo);
+  const setPending = useUserInfoStore(state => state.setPending);
+
+  const handlePostLogin = async () => {
+    setPending(true);
+    const userData = await getMe.mutateAsync();
+    const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+    const { data: imageData } = await getUser.mutateAsync();
+    console.log('post login');
+
+    setUserInfo({
+      image: imageData?.result?.image,
+      provider: providerData,
+      ...userData,
+    });
+    setPending(false);
+  };
+
   const handleGetTurnsCount = async () => {
     const { data } = await getUserActiveTurnsCount.mutateAsync();
     setTurnsCount({
@@ -218,7 +243,18 @@ export const UserProfile = () => {
             </Transition>
           </div>
         ) : (
-          <Button className="!px-2 !text-xs md:!text-sm md:!px-4" size="sm" variant="secondary" onClick={handleLogin}>
+          <Button
+            className="!px-2 !text-xs md:!text-sm md:!px-4"
+            size="sm"
+            variant="secondary"
+            onClick={() =>
+              window.gozarLogin({
+                clientId: 'p24',
+                redirectId: 'https://gozargah.paziresh24.com/callback.php',
+                postLogin: handlePostLogin,
+              })
+            }
+          >
             {t('common:header.userProfile.useNotloggedIn')}
           </Button>
         ))}
