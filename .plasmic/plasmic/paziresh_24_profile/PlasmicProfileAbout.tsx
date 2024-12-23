@@ -214,31 +214,34 @@ function PlasmicProfileAbout__RenderFunc(props: {
                 </div>
               }
               slot2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__jIy7H
-                  )}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__gbXzy)}>
                   <div
-                    className={projectcss.__wab_expr_html_text}
-                    dangerouslySetInnerHTML={{
-                      __html: (() => {
-                        try {
-                          return $props.information.biography;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "";
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__jIy7H,
+                      "small-text"
+                    )}
+                  >
+                    <div
+                      className={projectcss.__wab_expr_html_text}
+                      dangerouslySetInnerHTML={{
+                        __html: (() => {
+                          try {
+                            return $props.information.biography;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
                           }
-                          throw e;
-                        }
-                      })()
-                    }}
-                  />
+                        })()
+                      }}
+                    />
+                  </div>
                 </div>
               }
             >
