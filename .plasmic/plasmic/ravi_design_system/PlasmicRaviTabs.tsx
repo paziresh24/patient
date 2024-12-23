@@ -62,7 +62,6 @@ import {
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviTabs.module.css"; // plasmic-import: eIcAmCTlZ2yT/css
 
@@ -164,12 +163,13 @@ function PlasmicRaviTabs__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root,
         { [sty.rootisNegative]: hasVariant($state, "isNegative", "isNegative") }
       )}
     >
-      <div
+      <Stack__
+        as={"div"}
+        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox__nvBGv)}
         dir={"rtl"}
       >
@@ -240,6 +240,8 @@ function PlasmicRaviTabs__RenderFunc(props: {
             }
           </div>
         </div>
+        <div className={classNames(projectcss.all, sty.freeBox__jtfgz)} />
+
         <div
           className={classNames(projectcss.all, sty.freeBox__gCRwe, {
             [sty.freeBoxisNegative__gCRwe01K8K]: hasVariant(
@@ -300,7 +302,7 @@ function PlasmicRaviTabs__RenderFunc(props: {
             }
           </div>
         </div>
-      </div>
+      </Stack__>
     </div>
   ) as React.ReactElement | null;
 }

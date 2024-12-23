@@ -38,6 +38,7 @@
     "@plasmicpkgs/plasmic-query": "0.0.206",
     "@plasmicpkgs/plasmic-rich-components": "1.0.189",
     "@plasmicpkgs/radix-ui": "0.0.41",
+    "@plasmicpkgs/react-aria": "0.0.96",
     "@plasmicpkgs/react-awesome-reveal": "3.8.189",
     "@plasmicpkgs/react-chartjs-2": "1.0.92",
     "@sentry/nextjs": "7.64.0",
