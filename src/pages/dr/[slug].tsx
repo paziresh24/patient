@@ -224,112 +224,112 @@ const DoctorProfile = ({
   };
 
   return (
-    <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
-      <main key={information.id} className="grid grid-cols-1 lg:grid-cols-[2fr_470px] gap-x-5 md:py-10 pwa:pb-24">
-        <section className="flex flex-col w-full space-y-3 max-w-full overflow-hidden">
-          {editable && (
-            <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
-              <InfoIcon className="min-w-6" />
-              <Text fontSize="sm" fontWeight="medium">
-                پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
-              </Text>
-            </div>
-          )}
-          {fragmentComponents?.headInfo?.hide && (
-            <Head
-              pageViewCount={profileData.history?.count_of_page_view}
-              displayName={profileData.information.display_name}
-              image={
-                getOnlyHasuraProfileData
-                  ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
-                  : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-              }
-              imageAlt={`${information.prefix} ${information.display_name}`}
-              title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
-              subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
-              serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
-              toolBarItems={toolBarItems as ToolBarItems}
-              className="w-full shadow-card md:rounded-lg"
-              satisfaction={
-                customize.showRateAndReviews &&
-                !dontShowRateAndReviewMessage &&
-                (fragmentComponents.reviewCard
-                  ? (
-                      (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                        +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                        +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                      3
-                    ).toFixed(1)
-                  : profileData.feedbacks?.details?.satisfaction_percent)
-              }
-              hideRates={profileData.feedbacks?.details?.hide_rates}
-              rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
-              editable={editable}
-              servicesEditAction={() => handleViewAs('services')}
-              infoEditAction={() => handleViewAs('information')}
-              shouldUseFragmentReviewCard={fragmentComponents.reviewCard}
-              profileData={pick(profileData, [
-                'information',
-                'centers',
-                'expertises',
-                'feedbacks',
-                'media',
-                'history',
-                'symptomes',
-                'onlineVisit',
-                'seo',
-              ])}
-            >
-              {editable && (
-                <div className="flex mx-4 space-s-2">
-                  <Button
-                    size="sm"
-                    icon={<ReceiptIcon className="w-6 h-6" />}
-                    onClick={() => {
-                      window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
-                      splunkInstance('doctor-profile').sendEvent({
-                        group: 'profile',
-                        type: 'view-as',
-                        event: {
-                          action: `click-list`,
-                          doctor: information.display_name,
-                          slug,
-                          terminal_id: getCookie('terminal_id'),
-                        },
-                      });
-                    }}
-                  >
-                    لیست مراجعین
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    icon={<CalenderIcon className="w-6 h-6" />}
-                    onClick={() => handleViewAs('workHours')}
-                  >
-                    ساعت کاری
-                  </Button>
-                </div>
-              )}
-            </Head>
-          )}
-          {!fragmentComponents?.headInfo?.hide && (
-            <ProfileGlobalContextsProvider>
-              <Fragment
-                name="ProfileHead"
-                props={{
-                  pageViewCount: profileData.history?.count_of_page_view,
-                  serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
-                  displayName: profileData.information.display_name,
-                  title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                  subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                  imageUrl: getOnlyHasuraProfileData
+    <RaviGlobalContextsProvider>
+      <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
+        <main key={information.id} className="grid grid-cols-1 lg:grid-cols-[2fr_470px] gap-x-5 md:py-10 pwa:pb-24">
+          <section className="flex flex-col w-full space-y-3 max-w-full overflow-hidden">
+            {editable && (
+              <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
+                <InfoIcon className="min-w-6" />
+                <Text fontSize="sm" fontWeight="medium">
+                  پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
+                </Text>
+              </div>
+            )}
+            {fragmentComponents?.headInfo?.hide && (
+              <Head
+                pageViewCount={profileData.history?.count_of_page_view}
+                displayName={profileData.information.display_name}
+                image={
+                  getOnlyHasuraProfileData
                     ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
-                    : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
-                  slug: slug,
-                  children: (
-                    <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                      <RaviGlobalContextsProvider>
+                    : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
+                }
+                imageAlt={`${information.prefix} ${information.display_name}`}
+                title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
+                subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
+                serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
+                toolBarItems={toolBarItems as ToolBarItems}
+                className="w-full shadow-card md:rounded-lg"
+                satisfaction={
+                  customize.showRateAndReviews &&
+                  !dontShowRateAndReviewMessage &&
+                  (fragmentComponents.reviewCard
+                    ? (
+                        (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                          +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                          +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                        3
+                      ).toFixed(1)
+                    : profileData.feedbacks?.details?.satisfaction_percent)
+                }
+                hideRates={profileData.feedbacks?.details?.hide_rates}
+                rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
+                editable={editable}
+                servicesEditAction={() => handleViewAs('services')}
+                infoEditAction={() => handleViewAs('information')}
+                shouldUseFragmentReviewCard={fragmentComponents.reviewCard}
+                profileData={pick(profileData, [
+                  'information',
+                  'centers',
+                  'expertises',
+                  'feedbacks',
+                  'media',
+                  'history',
+                  'symptomes',
+                  'onlineVisit',
+                  'seo',
+                ])}
+              >
+                {editable && (
+                  <div className="flex mx-4 space-s-2">
+                    <Button
+                      size="sm"
+                      icon={<ReceiptIcon className="w-6 h-6" />}
+                      onClick={() => {
+                        window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
+                        splunkInstance('doctor-profile').sendEvent({
+                          group: 'profile',
+                          type: 'view-as',
+                          event: {
+                            action: `click-list`,
+                            doctor: information.display_name,
+                            slug,
+                            terminal_id: getCookie('terminal_id'),
+                          },
+                        });
+                      }}
+                    >
+                      لیست مراجعین
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      icon={<CalenderIcon className="w-6 h-6" />}
+                      onClick={() => handleViewAs('workHours')}
+                    >
+                      ساعت کاری
+                    </Button>
+                  </div>
+                )}
+              </Head>
+            )}
+            {!fragmentComponents?.headInfo?.hide && (
+              <ProfileGlobalContextsProvider>
+                <Fragment
+                  name="ProfileHead"
+                  props={{
+                    pageViewCount: profileData.history?.count_of_page_view,
+                    serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
+                    displayName: profileData.information.display_name,
+                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
+                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
+                    imageUrl: getOnlyHasuraProfileData
+                      ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
+                      : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
+                    slug: slug,
+                    children: (
+                      <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
                         <Fragment
                           name="RateAndCommentCount"
                           props={{
@@ -349,73 +349,91 @@ const DoctorProfile = ({
                             hideRates: profileData.feedbacks?.details?.hide_rates,
                           }}
                         />
-                      </RaviGlobalContextsProvider>
-                    </div>
-                  ),
-                }}
-              />
-            </ProfileGlobalContextsProvider>
-          )}
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-10 !mt-0 bg-white">
-            <ul className="flex justify-around">
-              <li>
-                <a
-                  href="#book-me"
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollIntoViewWithOffset('#book-me', 90);
+                      </div>
+                    ),
                   }}
-                  title="دریافت نوبت"
-                  className="text-sm font-medium"
-                >
-                  دریافت نوبت
-                </a>
-              </li>
-              {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+                />
+              </ProfileGlobalContextsProvider>
+            )}
+            <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-10 !mt-0 bg-white">
+              <ul className="flex justify-around">
                 <li>
                   <a
-                    href="#phone-and-address"
+                    href="#book-me"
                     onClick={e => {
                       e.preventDefault();
-                      scrollIntoViewWithOffset('#phone-and-address', 90);
+                      scrollIntoViewWithOffset('#book-me', 90);
                     }}
-                    title="آدرس و تلفن"
+                    title="دریافت نوبت"
                     className="text-sm font-medium"
                   >
-                    آدرس و تلفن
+                    دریافت نوبت
                   </a>
                 </li>
-              )}
-              <li>
-                <a
-                  href="#about-me"
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollIntoViewWithOffset('#about-me', 90);
-                  }}
-                  title="درباره من"
-                  className="text-sm font-medium"
-                >
-                  درباره من
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#reviews"
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollIntoViewWithOffset('#reviews', 90);
-                  }}
-                  title="نظرات"
-                  className="text-sm font-medium"
-                >
-                  نظرات
-                </a>
-              </li>
-            </ul>
-          </nav>
+                {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
+                  <li>
+                    <a
+                      href="#phone-and-address"
+                      onClick={e => {
+                        e.preventDefault();
+                        scrollIntoViewWithOffset('#phone-and-address', 90);
+                      }}
+                      title="آدرس و تلفن"
+                      className="text-sm font-medium"
+                    >
+                      آدرس و تلفن
+                    </a>
+                  </li>
+                )}
+                <li>
+                  <a
+                    href="#about-me"
+                    onClick={e => {
+                      e.preventDefault();
+                      scrollIntoViewWithOffset('#about-me', 90);
+                    }}
+                    title="درباره من"
+                    className="text-sm font-medium"
+                  >
+                    درباره من
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#reviews"
+                    onClick={e => {
+                      e.preventDefault();
+                      scrollIntoViewWithOffset('#reviews', 90);
+                    }}
+                    title="نظرات"
+                    className="text-sm font-medium"
+                  >
+                    نظرات
+                  </a>
+                </li>
+              </ul>
+            </nav>
 
-          <div className="flex flex-col w-full space-y-3 md:hidden">
+            <div className="flex flex-col w-full space-y-3 md:hidden">
+              {aside({ ...profileData, fragmentComponents })
+                .filter(({ isShow }: any) => Boolean(isShow))
+                .map((section: any, index: number) => (
+                  <Section key={index} {...section}>
+                    {section.children(section?.function?.())}
+                  </Section>
+                ))}
+            </div>
+
+            {sections({ ...profileData, fragmentComponents })
+              .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
+              .map((section: any, index: number) => (
+                <Section key={index} {...section}>
+                  {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
+                </Section>
+              ))}
+          </section>
+
+          <aside className="flex-col hidden space-y-3 md:flex">
             {aside({ ...profileData, fragmentComponents })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
@@ -423,31 +441,13 @@ const DoctorProfile = ({
                   {section.children(section?.function?.())}
                 </Section>
               ))}
-          </div>
-
-          {sections({ ...profileData, fragmentComponents })
-            .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
-            .map((section: any, index: number) => (
-              <Section key={index} {...section}>
-                {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
-              </Section>
-            ))}
-        </section>
-
-        <aside className="flex-col hidden space-y-3 md:flex">
-          {aside({ ...profileData, fragmentComponents })
-            .filter(({ isShow }: any) => Boolean(isShow))
-            .map((section: any, index: number) => (
-              <Section key={index} {...section}>
-                {section.children(section?.function?.())}
-              </Section>
-            ))}
-        </aside>
-      </main>
-      <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
-        <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
-      </Modal>
-    </div>
+          </aside>
+        </main>
+        <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
+          <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
+        </Modal>
+      </div>
+    </RaviGlobalContextsProvider>
   );
 };
 

@@ -128,17 +128,15 @@ export const Head = (props: HeadProps) => {
             />
           )}
           {shouldUseFragmentReviewCard && (
-            <RaviGlobalContextsProvider>
-              <Fragment
-                name="RateAndCommentCount"
-                props={{
-                  ...profileData,
-                  rateCount: rateCount,
-                  rate: satisfaction,
-                  hideRates: hideRates,
-                }}
-              />
-            </RaviGlobalContextsProvider>
+            <Fragment
+              name="RateAndCommentCount"
+              props={{
+                ...profileData,
+                rateCount: rateCount,
+                rate: satisfaction,
+                hideRates: hideRates,
+              }}
+            />
           )}
         </div>
       )}
