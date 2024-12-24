@@ -329,27 +329,29 @@ const DoctorProfile = ({
                       : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
                     slug: slug,
                     children: (
-                      <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                        <Fragment
-                          name="RateAndCommentCount"
-                          props={{
-                            ...profileData,
-                            rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                            rate:
-                              customize.showRateAndReviews &&
-                              !dontShowRateAndReviewMessage &&
-                              (fragmentComponents.reviewCard
-                                ? (
-                                    (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                    3
-                                  ).toFixed(1)
-                                : profileData.feedbacks?.details?.satisfaction_percent),
-                            hideRates: profileData.feedbacks?.details?.hide_rates,
-                          }}
-                        />
-                      </div>
+                      <RaviGlobalContextsProvider>
+                        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
+                          <Fragment
+                            name="RateAndCommentCount"
+                            props={{
+                              ...profileData,
+                              rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
+                              rate:
+                                customize.showRateAndReviews &&
+                                !dontShowRateAndReviewMessage &&
+                                (fragmentComponents.reviewCard
+                                  ? (
+                                      (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                                        +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                                        +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                                      3
+                                    ).toFixed(1)
+                                  : profileData.feedbacks?.details?.satisfaction_percent),
+                              hideRates: profileData.feedbacks?.details?.hide_rates,
+                            }}
+                          />
+                        </div>
+                      </RaviGlobalContextsProvider>
                     ),
                   }}
                 />
