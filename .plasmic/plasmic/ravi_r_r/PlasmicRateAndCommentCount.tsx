@@ -61,6 +61,7 @@ import {
 
 import NoReview from "../../NoReview"; // plasmic-import: ZU8LNETTLz6R/component
 import { Popover } from "@plasmicpkgs/radix-ui";
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -85,24 +86,28 @@ export type PlasmicRateAndCommentCount__ArgsType = {
   rateCount?: string;
   rate?: number;
   hideRates?: boolean;
+  seo?: any;
 };
 type ArgPropType = keyof PlasmicRateAndCommentCount__ArgsType;
 export const PlasmicRateAndCommentCount__ArgProps = new Array<ArgPropType>(
   "rateCount",
   "rate",
-  "hideRates"
+  "hideRates",
+  "seo"
 );
 
 export type PlasmicRateAndCommentCount__OverridesType = {
   root?: Flex__<"div">;
   noReview?: Flex__<typeof NoReview>;
   popoverCore?: Flex__<typeof Popover>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultRateAndCommentCountProps {
   rateCount?: string;
   rate?: number;
   hideRates?: boolean;
+  seo?: any;
   className?: string;
 }
 
@@ -145,6 +150,8 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -404,15 +411,71 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
             </Popover>
           </Stack__>
         ) : null}
+        <SideEffect
+          data-plasmic-name={"sideEffect"}
+          data-plasmic-override={overrides.sideEffect}
+          className={classNames("__wab_instance", sty.sideEffect)}
+          deps={(() => {
+            try {
+              return [$ctx.Growthbook.isReady];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          onMount={async () => {
+            const $steps = {};
+
+            $steps["invokeGlobalAction"] = $ctx.Growthbook.isReady
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            slug: $props.seo.slug
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions[
+                    "GrowthbookGlobalContext.setAttributes"
+                  ]?.apply(null, [...actionArgs.args]);
+                })()
+              : undefined;
+            if (
+              $steps["invokeGlobalAction"] != null &&
+              typeof $steps["invokeGlobalAction"] === "object" &&
+              typeof $steps["invokeGlobalAction"].then === "function"
+            ) {
+              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+            }
+          }}
+        />
       </Stack__>
     ) : null
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "noReview", "popoverCore"],
+  root: ["root", "noReview", "popoverCore", "sideEffect"],
   noReview: ["noReview"],
-  popoverCore: ["popoverCore"]
+  popoverCore: ["popoverCore"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -421,6 +484,7 @@ type NodeDefaultElementType = {
   root: "div";
   noReview: typeof NoReview;
   popoverCore: typeof Popover;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -485,6 +549,7 @@ export const PlasmicRateAndCommentCount = Object.assign(
     // Helper components rendering sub-elements
     noReview: makeNodeComponent("noReview"),
     popoverCore: makeNodeComponent("popoverCore"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicRateAndCommentCount
     internalVariantProps: PlasmicRateAndCommentCount__VariantProps,
