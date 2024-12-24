@@ -81,13 +81,15 @@ export type PlasmicProfileInfo__ArgsType = {
   title?: string;
   subTitle?: string;
   imageUrl?: string;
+  serviceList?: any;
 };
 type ArgPropType = keyof PlasmicProfileInfo__ArgsType;
 export const PlasmicProfileInfo__ArgProps = new Array<ArgPropType>(
   "displayName",
   "title",
   "subTitle",
-  "imageUrl"
+  "imageUrl",
+  "serviceList"
 );
 
 export type PlasmicProfileInfo__OverridesType = {
@@ -95,6 +97,7 @@ export type PlasmicProfileInfo__OverridesType = {
   avatar?: Flex__<typeof Avatar>;
   h1?: Flex__<"h1">;
   svg?: Flex__<"svg">;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultProfileInfoProps {
@@ -102,6 +105,7 @@ export interface DefaultProfileInfoProps {
   title?: string;
   subTitle?: string;
   imageUrl?: string;
+  serviceList?: any;
   className?: string;
 }
 
@@ -306,19 +310,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
               </span>
             </Stack__>
           ) : null}
-          {(() => {
-            try {
-              return !!$props.subTitle;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
+          {false ? (
             <span
               className={classNames(
                 projectcss.all,
@@ -344,6 +336,63 @@ function PlasmicProfileInfo__RenderFunc(props: {
               </React.Fragment>
             </span>
           ) : null}
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(
+              projectcss.all,
+              sty.freeBox__qjWEy,
+              "no-scroll"
+            )}
+          >
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $props.serviceList;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <div
+                  data-plasmic-name={"text"}
+                  data-plasmic-override={overrides.text}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text
+                  )}
+                  key={currentIndex}
+                  style={{ width: "max-content", minWidth: "fit-content" }}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return currentItem;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "\\u06a9\\u0645\\u0631\\u062f\\u0631\\u062f";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              );
+            })}
+          </Stack__>
         </Stack__>
       </Stack__>
     </div>
@@ -351,10 +400,11 @@ function PlasmicProfileInfo__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "avatar", "h1", "svg"],
+  root: ["root", "avatar", "h1", "svg", "text"],
   avatar: ["avatar"],
   h1: ["h1"],
-  svg: ["svg"]
+  svg: ["svg"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -364,6 +414,7 @@ type NodeDefaultElementType = {
   avatar: typeof Avatar;
   h1: "h1";
   svg: "svg";
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -429,6 +480,7 @@ export const PlasmicProfileInfo = Object.assign(
     avatar: makeNodeComponent("avatar"),
     h1: makeNodeComponent("h1"),
     svg: makeNodeComponent("svg"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicProfileInfo
     internalVariantProps: PlasmicProfileInfo__VariantProps,

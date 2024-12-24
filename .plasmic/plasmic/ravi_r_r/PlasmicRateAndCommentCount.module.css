@@ -155,3 +155,7 @@
   font-size: var(--token-6NbVMeD6zQwn);
   text-align: right;
 }
+.sideEffect:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}

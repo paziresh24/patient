@@ -274,6 +274,19 @@ function PlasmicProfileHead__RenderFunc(props: {
             throw e;
           }
         })()}
+        serviceList={(() => {
+          try {
+            return $props.serviceList;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         subTitle={(() => {
           try {
             return $props.subTitle;

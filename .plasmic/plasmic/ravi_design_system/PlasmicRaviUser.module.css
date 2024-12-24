@@ -20,7 +20,7 @@
   min-width: 0;
   padding: 0px;
 }
-.link {
+.link__tY3G {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -157,7 +157,7 @@
 }
 .freeBox__io37I > :global(.__wab_flex-container) {
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   min-width: 0;
   margin-left: calc(0px - var(--token-omrXvBNBcWTN));
@@ -216,4 +216,9 @@
   .text__tPEgh {
     font-size: 0.65rem;
   }
+}
+.link__xAgss {
+  text-align: center;
+  font-size: 0.65rem;
+  align-self: flex-end;
 }

@@ -259,18 +259,24 @@ function PlasmicProfileActivity__RenderFunc(props: {
             errorDisplay={null}
             loadingDisplay={null}
             method={"GET"}
-            onError={generateStateOnChangeProp($state, [
-              "removedVisitOnlineCountBook",
-              "error"
-            ])}
-            onLoading={generateStateOnChangeProp($state, [
-              "removedVisitOnlineCountBook",
-              "loading"
-            ])}
-            onSuccess={generateStateOnChangeProp($state, [
-              "removedVisitOnlineCountBook",
-              "data"
-            ])}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "removedVisitOnlineCountBook",
+                "error"
+              ]).apply(null, eventArgs);
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "removedVisitOnlineCountBook",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "removedVisitOnlineCountBook",
+                "data"
+              ]).apply(null, eventArgs);
+            }}
             params={(() => {
               try {
                 return {
@@ -317,18 +323,24 @@ function PlasmicProfileActivity__RenderFunc(props: {
             errorDisplay={null}
             loadingDisplay={null}
             method={"GET"}
-            onError={generateStateOnChangeProp($state, [
-              "allVisitOnlineCountBook",
-              "error"
-            ])}
-            onLoading={generateStateOnChangeProp($state, [
-              "allVisitOnlineCountBook",
-              "loading"
-            ])}
-            onSuccess={generateStateOnChangeProp($state, [
-              "allVisitOnlineCountBook",
-              "data"
-            ])}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "allVisitOnlineCountBook",
+                "error"
+              ]).apply(null, eventArgs);
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "allVisitOnlineCountBook",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "allVisitOnlineCountBook",
+                "data"
+              ]).apply(null, eventArgs);
+            }}
             params={(() => {
               try {
                 return {
@@ -547,10 +559,12 @@ function PlasmicProfileActivity__RenderFunc(props: {
                   data-plasmic-name={"popoverCore"}
                   data-plasmic-override={overrides.popoverCore}
                   className={classNames("__wab_instance", sty.popoverCore)}
-                  onOpenChange={generateStateOnChangeProp($state, [
-                    "popoverCore",
-                    "open"
-                  ])}
+                  onOpenChange={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "popoverCore",
+                      "open"
+                    ]).apply(null, eventArgs);
+                  }}
                   open={generateStateValueProp($state, ["popoverCore", "open"])}
                   overlay={
                     <div

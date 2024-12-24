@@ -99,16 +99,32 @@
 .collapsible:global(.__wab_instance) {
   max-width: 100%;
 }
-.text__jIy7H {
+.freeBox__gbXzy {
+  display: flex;
+  flex-direction: column;
   position: relative;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   height: auto;
   max-width: 100%;
-  font-size: var(--token-KeHe2fFUQ6pK);
-  line-height: 2rem;
+  min-width: 0;
+}
+.text__jIy7H {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-tM2Vh4zTir7U);
+  line-height: 2em;
   font-family: "IRANSansXV";
-  font-weight: 400;
+  font-weight: 100;
+  text-transform: uppercase;
+  text-align: right;
+  white-space: pre-wrap;
+  user-select: text;
   letter-spacing: normal;
+  text-decoration-line: none;
+  font-style: normal;
   min-width: 0;
 }
 .freeBox__pz6Dy {

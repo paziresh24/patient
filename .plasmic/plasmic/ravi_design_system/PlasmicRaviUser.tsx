@@ -65,7 +65,6 @@ import Paziresh24Chip from "../../Paziresh24Chip"; // plasmic-import: df-BFL5jhi
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviUser.module.css"; // plasmic-import: LGI_uX8bDUNt/css
 
@@ -88,6 +87,7 @@ export type PlasmicRaviUser__ArgsType = {
   onlyDoctor?: boolean;
   isDoctor?: boolean;
   userId?: string;
+  doctorLink?: any;
 };
 type ArgPropType = keyof PlasmicRaviUser__ArgsType;
 export const PlasmicRaviUser__ArgProps = new Array<ArgPropType>(
@@ -98,12 +98,12 @@ export const PlasmicRaviUser__ArgProps = new Array<ArgPropType>(
   "isVisited",
   "onlyDoctor",
   "isDoctor",
-  "userId"
+  "userId",
+  "doctorLink"
 );
 
 export type PlasmicRaviUser__OverridesType = {
   root?: Flex__<"div">;
-  link?: Flex__<"a"> & Partial<LinkProps>;
   paziresh24Avatar?: Flex__<typeof Paziresh24Avatar>;
 };
 
@@ -116,6 +116,7 @@ export interface DefaultRaviUserProps {
   onlyDoctor?: boolean;
   isDoctor?: boolean;
   userId?: string;
+  doctorLink?: any;
   className?: string;
 }
 
@@ -140,6 +141,8 @@ function PlasmicRaviUser__RenderFunc(props: {
     () =>
       Object.assign(
         {
+          userName:
+            "\u06a9\u0627\u0631\u0628\u0631 \u0628\u062f\u0648\u0646 \u0646\u0627\u0645",
           isVisited: false,
           onlyDoctor: false,
           isDoctor: false
@@ -174,7 +177,6 @@ function PlasmicRaviUser__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -183,9 +185,7 @@ function PlasmicRaviUser__RenderFunc(props: {
         dir={"rtl"}
       >
         <PlasmicLink__
-          data-plasmic-name={"link"}
-          data-plasmic-override={overrides.link}
-          className={classNames(projectcss.all, projectcss.a, sty.link)}
+          className={classNames(projectcss.all, projectcss.a, sty.link__tY3G)}
           component={Link}
           href={undefined}
           onClick={async event => {
@@ -238,7 +238,7 @@ function PlasmicRaviUser__RenderFunc(props: {
             className={classNames("__wab_instance", sty.paziresh24Avatar)}
             name={(() => {
               try {
-                return $props.userName;
+                return $props.userName || "کابر بدون نام";
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -280,7 +280,7 @@ function PlasmicRaviUser__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return $props.userName;
+                    return $props.userName || "کابر بدون نام";
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -419,29 +419,96 @@ function PlasmicRaviUser__RenderFunc(props: {
                 {"|"}
               </div>
             ) : null}
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__tPEgh
-              )}
-            >
-              <React.Fragment>
-                {(() => {
+            {(() => {
+              try {
+                return !$props.doctorLink.url;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__tPEgh
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.subTitle;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            ) : null}
+            {(() => {
+              try {
+                return !!$props?.doctorLink?.url;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <PlasmicLink__
+                className={classNames(
+                  projectcss.all,
+                  projectcss.a,
+                  projectcss.__wab_text,
+                  sty.link__xAgss
+                )}
+                component={Link}
+                href={(() => {
                   try {
-                    return $props.subTitle;
+                    return $props.doctorLink.url;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "";
+                      return "/";
                     }
                     throw e;
                   }
                 })()}
-              </React.Fragment>
-            </div>
+                platform={"nextjs"}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.doctorLink.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "Some link text";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </PlasmicLink__>
+            ) : null}
           </Stack__>
         </div>
       </div>
@@ -450,8 +517,7 @@ function PlasmicRaviUser__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "link", "paziresh24Avatar"],
-  link: ["link", "paziresh24Avatar"],
+  root: ["root", "paziresh24Avatar"],
   paziresh24Avatar: ["paziresh24Avatar"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -459,7 +525,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  link: "a";
   paziresh24Avatar: typeof Paziresh24Avatar;
 };
 
@@ -523,7 +588,6 @@ export const PlasmicRaviUser = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    link: makeNodeComponent("link"),
     paziresh24Avatar: makeNodeComponent("paziresh24Avatar"),
 
     // Metadata about props expected for PlasmicRaviUser

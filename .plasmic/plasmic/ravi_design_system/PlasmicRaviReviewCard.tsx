@@ -69,7 +69,6 @@ import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyE
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewCard.module.css"; // plasmic-import: mdyuGePDb8Fy/css
 
@@ -106,6 +105,7 @@ export type PlasmicRaviReviewCard__ArgsType = {
   onRateChange?: (val: string) => void;
   feedbackId?: string;
   likeCount?: number;
+  doctorLink?: any;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -132,6 +132,7 @@ export const PlasmicRaviReviewCard__ArgProps = new Array<ArgPropType>(
   "onRateChange",
   "feedbackId",
   "likeCount",
+  "doctorLink",
   "options",
   "replyCard",
   "replies2",
@@ -168,6 +169,7 @@ export interface DefaultRaviReviewCardProps {
   onRateChange?: (val: string) => void;
   feedbackId?: string;
   likeCount?: number;
+  doctorLink?: any;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -200,7 +202,8 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
           isVisited: false,
           isLoadingSendReport: false,
           isDoctor: false,
-          showReplies: false
+          showReplies: false,
+          doctorLink: {}
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -288,7 +291,6 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -333,6 +335,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                 throw e;
               }
             })()}
+            doctorLink={args.doctorLink}
             isVisited={(() => {
               try {
                 return $props.isVisited;
@@ -678,8 +681,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
                 projectcss.plasmic_tokens,
-                plasmic_paziresh_24_design_system_css.plasmic_tokens,
-                plasmic_antd_5_hostless_css.plasmic_tokens
+                plasmic_paziresh_24_design_system_css.plasmic_tokens
               )}
             >
               <Stack__
