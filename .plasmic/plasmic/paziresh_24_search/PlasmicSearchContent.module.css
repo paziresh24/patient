@@ -8,6 +8,7 @@
   align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
+  background: none;
   min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
@@ -74,7 +75,7 @@
   width: 100%;
   min-width: 0;
 }
-.svg__zsvv3 {
+.svg__u155S {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -88,9 +89,8 @@
   height: auto;
   max-width: 100%;
   overflow: auto;
-  padding-bottom: var(--token-_c276Gs_1FIE);
-  padding-top: var(--token-_c276Gs_1FIE);
   min-width: 0;
+  padding: var(--token-_c276Gs_1FIE);
 }
 .slider > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -124,6 +124,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  background: var(--token-BU1JCAY6hntB);
   min-width: 0;
 }
 .searchRequest:global(.__wab_instance) {

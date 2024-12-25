@@ -576,6 +576,21 @@ function PlasmicLocationList__RenderFunc(props: {
                     $steps["runOnClick"] = await $steps["runOnClick"];
                   }
                 }}
+                subtitle={(() => {
+                  try {
+                    return $props.locations.province.find(
+                      item => item.id == currentItem.province_id
+                    ).name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 title={(() => {
                   try {
                     return currentItem.name;

@@ -156,8 +156,26 @@
   border-bottom-left-radius: 1000px;
   border-top-left-radius: 1000px;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__bgbpW {
+    width: auto;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+}
 .button:global(.__wab_instance) {
   max-width: 100%;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .button:global(.__wab_instance) {
+    position: relative;
+    left: auto;
+    top: auto;
+  }
 }
 .svg__qSzR {
   position: relative;
@@ -174,9 +192,13 @@
     font-size: var(--token-6NbVMeD6zQwn);
   }
 }
-.svg__bfRow {
+.svg__m8Ol {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
+}
+.sideEffect:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
 }

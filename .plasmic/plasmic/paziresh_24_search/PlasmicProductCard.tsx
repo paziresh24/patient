@@ -90,15 +90,18 @@ createPlasmicElementProxy;
 export type PlasmicProductCard__VariantMembers = {
   _5StarRatingMode3: "_5StarA";
   externalBookDesign: "externalBookDesign";
+  isSingleCard: "isSingleCard";
 };
 export type PlasmicProductCard__VariantsArgs = {
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
+  isSingleCard?: SingleBooleanChoiceArg<"isSingleCard">;
 };
 type VariantPropType = keyof PlasmicProductCard__VariantsArgs;
 export const PlasmicProductCard__VariantProps = new Array<VariantPropType>(
   "_5StarRatingMode3",
-  "externalBookDesign"
+  "externalBookDesign",
+  "isSingleCard"
 );
 
 export type PlasmicProductCard__ArgsType = {
@@ -193,6 +196,7 @@ export interface DefaultProductCardProps {
   centers?: any;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
+  isSingleCard?: SingleBooleanChoiceArg<"isSingleCard">;
   className?: string;
 }
 
@@ -310,6 +314,12 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "availabilityStatus[].loading",
         type: "private",
         variableType: "boolean"
+      },
+      {
+        path: "isSingleCard",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSingleCard
       }
     ],
     [$props, $ctx, $refs]
@@ -361,6 +371,11 @@ function PlasmicProductCard__RenderFunc(props: {
               $state,
               "externalBookDesign",
               "externalBookDesign"
+            ),
+            [sty.rootisSingleCard]: hasVariant(
+              $state,
+              "isSingleCard",
+              "isSingleCard"
             )
           }
         )}
@@ -382,7 +397,13 @@ function PlasmicProductCard__RenderFunc(props: {
           <Stack__
             as={"div"}
             hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__bcNgL)}
+            className={classNames(projectcss.all, sty.freeBox__bcNgL, {
+              [sty.freeBoxisSingleCard__bcNgL5YIx5]: hasVariant(
+                $state,
+                "isSingleCard",
+                "isSingleCard"
+              )
+            })}
           >
             {(() => {
               try {
@@ -454,13 +475,24 @@ function PlasmicProductCard__RenderFunc(props: {
               $state,
               "externalBookDesign",
               "externalBookDesign"
+            ),
+            [sty.freeBoxisSingleCard__wJlKm5YIx5]: hasVariant(
+              $state,
+              "isSingleCard",
+              "isSingleCard"
             )
           })}
         >
           <Stack__
             as={"div"}
             hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__vbw0E)}
+            className={classNames(projectcss.all, sty.freeBox__vbw0E, {
+              [sty.freeBoxisSingleCard__vbw0E5YIx5]: hasVariant(
+                $state,
+                "isSingleCard",
+                "isSingleCard"
+              )
+            })}
           >
             {(() => {
               try {
@@ -837,32 +869,46 @@ function PlasmicProductCard__RenderFunc(props: {
                   }
                 })()}
               >
-                <h2
-                  data-plasmic-name={"cardTitle"}
-                  data-plasmic-override={overrides.cardTitle}
+                <LineClamp
                   className={classNames(
-                    projectcss.all,
-                    projectcss.h2,
-                    projectcss.__wab_text,
-                    sty.cardTitle
+                    "__wab_instance",
+                    sty.lineClamp___342Ax
                   )}
                 >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $props.title;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "\u0639\u0646\u0648\u0627\u0646 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u0646\u0627\u0645 \u06a9\u0627\u0631\u0628\u0631 \u06cc\u0627 \u0646\u062a\u06cc\u062c\u0647";
-                        }
-                        throw e;
+                  <h2
+                    data-plasmic-name={"cardTitle"}
+                    data-plasmic-override={overrides.cardTitle}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.h2,
+                      projectcss.__wab_text,
+                      sty.cardTitle,
+                      {
+                        [sty.cardTitleisSingleCard]: hasVariant(
+                          $state,
+                          "isSingleCard",
+                          "isSingleCard"
+                        )
                       }
-                    })()}
-                  </React.Fragment>
-                </h2>
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $props.title;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0639\u0646\u0648\u0627\u0646 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u0646\u0627\u0645 \u06a9\u0627\u0631\u0628\u0631 \u06cc\u0627 \u0646\u062a\u06cc\u062c\u0647";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </h2>
+                </LineClamp>
               </PlasmicLink__>
             ) : null}
             {(() => {

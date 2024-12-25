@@ -95,8 +95,6 @@ export const PlasmicTextInput__VariantProps = new Array<VariantPropType>(
 
 export type PlasmicTextInput__ArgsType = {
   placeholder?: string;
-  endIcon?: React.ReactNode;
-  startIcon?: React.ReactNode;
   value?: string;
   name?: string;
   required?: boolean;
@@ -114,12 +112,12 @@ export type PlasmicTextInput__ArgsType = {
     | "email"
     | "tel";
   autoFocus?: boolean;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicTextInput__ArgsType;
 export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
   "placeholder",
-  "endIcon",
-  "startIcon",
   "value",
   "name",
   "required",
@@ -127,7 +125,9 @@ export const PlasmicTextInput__ArgProps = new Array<ArgPropType>(
   "aria-labelledby",
   "onChange",
   "type",
-  "autoFocus"
+  "autoFocus",
+  "startIcon",
+  "endIcon"
 );
 
 export type PlasmicTextInput__OverridesType = {
@@ -274,7 +274,13 @@ function PlasmicTextInput__RenderFunc(props: {
             $state,
             "showStartIcon",
             "showStartIcon"
-          )
+          ),
+          [sty.rootshowStartIcon____focusVisibleWithin]:
+            hasVariant($state, "showStartIcon", "showStartIcon") &&
+            triggers.focusVisibleWithin_root,
+          [sty.rootshowStartIcon_showEndIcon]:
+            hasVariant($state, "showStartIcon", "showStartIcon") &&
+            hasVariant($state, "showEndIcon", "showEndIcon")
         }
       )}
       data-plasmic-trigger-props={[triggerRootFocusVisibleWithinProps]}
@@ -330,6 +336,7 @@ function PlasmicTextInput__RenderFunc(props: {
         data-plasmic-override={overrides.input}
         aria-label={args["aria-label"]}
         aria-labelledby={args["aria-labelledby"]}
+        autoComplete={"off"}
         autoFocus={args.autoFocus}
         className={classNames(projectcss.all, projectcss.input, sty.input, {
           [sty.input___focusVisibleWithin]: triggers.focusVisibleWithin_root,

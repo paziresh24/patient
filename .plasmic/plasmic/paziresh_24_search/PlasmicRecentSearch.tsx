@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -74,22 +76,17 @@ type VariantPropType = keyof PlasmicRecentSearch__VariantsArgs;
 export const PlasmicRecentSearch__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicRecentSearch__ArgsType = {
-  recent?: any;
   onClick?: (value: string) => void;
 };
 type ArgPropType = keyof PlasmicRecentSearch__ArgsType;
-export const PlasmicRecentSearch__ArgProps = new Array<ArgPropType>(
-  "recent",
-  "onClick"
-);
+export const PlasmicRecentSearch__ArgProps = new Array<ArgPropType>("onClick");
 
 export type PlasmicRecentSearch__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultRecentSearchProps {
-  recent?: any;
   onClick?: (value: string) => void;
   className?: string;
 }
@@ -132,6 +129,37 @@ function PlasmicRecentSearch__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "history",
+        type: "private",
+        variableType: "array",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return [];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <Stack__
       as={"div"}
@@ -151,119 +179,187 @@ function PlasmicRecentSearch__RenderFunc(props: {
         sty.root
       )}
     >
-      <div
-        className={classNames(
-          projectcss.all,
-          projectcss.__wab_text,
-          sty.text__rdKqN
-        )}
-      >
-        {
-          "\u0622\u062e\u0631\u06cc\u0646 \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u0634\u0645\u0627"
+      {(() => {
+        try {
+          return $state.history.length != 0;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
         }
-      </div>
-      <Stack__
-        as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox, "no-scroll")}
-      >
-        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-          (() => {
-            try {
-              return $props.recent;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
+      })() ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__dNlbb)}
+        >
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__rdKqN
+            )}
+          >
+            {
+              "\u0622\u062e\u0631\u06cc\u0646 \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u0634\u0645\u0627"
             }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__z0Kzw
-              )}
-              key={currentIndex}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["runOnClick"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        eventRef: $props["onClick"],
-                        args: [
-                          (() => {
-                            try {
-                              return currentItem;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        ]
-                      };
-                      return (({ eventRef, args }) => {
-                        return eventRef?.(...(args ?? []));
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["runOnClick"] != null &&
-                  typeof $steps["runOnClick"] === "object" &&
-                  typeof $steps["runOnClick"].then === "function"
-                ) {
-                  $steps["runOnClick"] = await $steps["runOnClick"];
-                }
-              }}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return currentItem;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "";
-                    }
-                    throw e;
+          </div>
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(
+              projectcss.all,
+              sty.freeBox__syfQn,
+              "no-scroll"
+            )}
+          >
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $state.history.slice(-4);
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
                   }
-                })()}
-              </React.Fragment>
-            </div>
-          );
-        })}
-      </Stack__>
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__z0Kzw
+                  )}
+                  key={currentIndex}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runOnClick"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            eventRef: $props["onClick"],
+                            args: [
+                              (() => {
+                                try {
+                                  return currentItem;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnClick"] != null &&
+                      typeof $steps["runOnClick"] === "object" &&
+                      typeof $steps["runOnClick"].then === "function"
+                    ) {
+                      $steps["runOnClick"] = await $steps["runOnClick"];
+                    }
+                  }}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return currentItem.name || currentItem.title;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              );
+            })}
+          </Stack__>
+        </Stack__>
+      ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["updateHistory"] = true
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["history"]
+                  },
+                  operation: 0,
+                  value: (() => {
+                    if (typeof window != "undefined") {
+                      const history =
+                        JSON.parse(localStorage.getItem("recentSearch")) || [];
+                      return history;
+                    } else {
+                      return [];
+                    }
+                  })()
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateHistory"] != null &&
+            typeof $steps["updateHistory"] === "object" &&
+            typeof $steps["updateHistory"].then === "function"
+          ) {
+            $steps["updateHistory"] = await $steps["updateHistory"];
+          }
+        }}
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox"],
-  freeBox: ["freeBox"]
+  root: ["root", "sideEffect"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -326,7 +422,7 @@ export const PlasmicRecentSearch = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicRecentSearch
     internalVariantProps: PlasmicRecentSearch__VariantProps,

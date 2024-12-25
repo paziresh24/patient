@@ -66,6 +66,8 @@ import SearchContentSlider from "../../SearchContentSlider"; // plasmic-import: 
 import SearchRequest from "../../SearchRequest"; // plasmic-import: 35vwUOYdUX87/component
 import SearchContentTree from "../../SearchContentTree"; // plasmic-import: _bc7j5YswB_4/component
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -153,6 +155,10 @@ function PlasmicSearchContent__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -168,7 +174,19 @@ function PlasmicSearchContent__RenderFunc(props: {
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root,
-        "suggestion_content"
+        (() => {
+          try {
+            return "suggestion_content no-scroll";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()
       )}
     >
       {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -252,7 +270,13 @@ function PlasmicSearchContent__RenderFunc(props: {
               <div
                 data-plasmic-name={"text"}
                 data-plasmic-override={overrides.text}
-                className={classNames(projectcss.all, sty.text)}
+                className={classNames(
+                  projectcss.all,
+                  sty.text,
+                  hasVariant(globalVariants, "screen", "mobileOnly")
+                    ? "default-styles"
+                    : undefined
+                )}
               >
                 {(() => {
                   try {
@@ -523,7 +547,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                         throw e;
                       }
                     })()}
-                    suggestionExecutionSource={false}
+                    suggestionExecutionSource={true}
                   />
                 ) : null}
               </div>

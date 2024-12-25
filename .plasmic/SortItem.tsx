@@ -2,9 +2,10 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import {
-  PlasmicDescription,
-  DefaultDescriptionProps
-} from "./plasmic/paziresh_24_search/PlasmicDescription";
+  PlasmicSortItem,
+  DefaultSortItemProps
+} from "./plasmic/paziresh_24_search/PlasmicSortItem";
+import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -13,31 +14,32 @@ import {
 // If you don't want to expose certain variants or slots as a prop, you can use
 // Omit to hide them:
 //
-// interface DescriptionProps extends Omit<DefaultDescriptionProps, "hideProps1"|"hideProp2"> {
+// interface SortItemProps extends Omit<DefaultSortItemProps, "hideProps1"|"hideProp2"> {
 //   // etc.
 // }
 //
-// You can also stop extending from DefaultDescriptionProps altogether and have
+// You can also stop extending from DefaultSortItemProps altogether and have
 // total control over the props for your component.
-export interface DescriptionProps extends DefaultDescriptionProps {}
+export interface SortItemProps extends DefaultSortItemProps {}
 
-function Description(props: DescriptionProps) {
-  // Use PlasmicDescription to render this component as it was
+function SortItem_(props: SortItemProps, ref: HTMLElementRefOf<"div">) {
+  // Use PlasmicSortItem to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
   // can also install whatever React hooks you need here to manage state or
   // fetch data.
   //
-  // Props you can pass into PlasmicDescription are:
+  // Props you can pass into PlasmicSortItem are:
   // 1. Variants you want to activate,
   // 2. Contents for slots you want to fill,
   // 3. Overrides for any named node in the component to attach behavior and data,
   // 4. Props to set on the root node.
   //
-  // By default, we are just piping all DescriptionProps here, but feel free
+  // By default, we are just piping all SortItemProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicDescription {...props} />;
+  return <PlasmicSortItem root={{ ref }} {...props} />;
 }
 
-export default Description;
+const SortItem = React.forwardRef(SortItem_);
+export default SortItem;
