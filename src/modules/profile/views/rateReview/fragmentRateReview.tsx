@@ -161,7 +161,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
           serverId={profileData?.information?.server_id}
         />
       )}
-      {newReviewList ? (
+      {newProgressList ? (
         <Fragment
           name="ReviewList2"
           props={{
