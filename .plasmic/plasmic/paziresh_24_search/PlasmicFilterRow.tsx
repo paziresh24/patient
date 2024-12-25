@@ -62,6 +62,7 @@ import {
 import FilterRowSingle from "../../FilterRowSingle"; // plasmic-import: OC23iWRW1Dia/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import FilterListItem from "../../FilterListItem"; // plasmic-import: SBcorS0J8ajp/component
+import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
 import FilterList from "../../FilterList"; // plasmic-import: qU4-tv66hXdh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import FilterExpertiseList from "../../FilterExpertiseList"; // plasmic-import: GKz-Lh1X9Vdq/component
@@ -90,6 +91,7 @@ export type PlasmicFilterRow__ArgsType = {
   onDelete?: (name: string, value: string) => void;
   countOfFilters?: string;
   onRemoveAllFilters?: () => void;
+  isLoadingFilters?: boolean;
 };
 type ArgPropType = keyof PlasmicFilterRow__ArgsType;
 export const PlasmicFilterRow__ArgProps = new Array<ArgPropType>(
@@ -98,7 +100,8 @@ export const PlasmicFilterRow__ArgProps = new Array<ArgPropType>(
   "selectedSort",
   "onDelete",
   "countOfFilters",
-  "onRemoveAllFilters"
+  "onRemoveAllFilters",
+  "isLoadingFilters"
 );
 
 export type PlasmicFilterRow__OverridesType = {
@@ -106,6 +109,7 @@ export type PlasmicFilterRow__OverridesType = {
   filterRowSingle?: Flex__<typeof FilterRowSingle>;
   sortDialog?: Flex__<typeof Dialog>;
   filterListDialog?: Flex__<typeof Dialog>;
+  lineClamp?: Flex__<typeof LineClamp>;
   filterList?: Flex__<typeof FilterList>;
   categoriesDialog?: Flex__<typeof Dialog>;
   filterExpertiseList?: Flex__<typeof FilterExpertiseList>;
@@ -119,6 +123,7 @@ export interface DefaultFilterRowProps {
   onDelete?: (name: string, value: string) => void;
   countOfFilters?: string;
   onRemoveAllFilters?: () => void;
+  isLoadingFilters?: boolean;
   className?: string;
 }
 
@@ -142,7 +147,9 @@ function PlasmicFilterRow__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          isLoadingFilters: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -820,6 +827,109 @@ function PlasmicFilterRow__RenderFunc(props: {
         body={
           <div className={classNames(projectcss.all, sty.freeBox__psYtf)}>
             <div className={classNames(projectcss.all, sty.freeBox__mZLm)}>
+              <div
+                className={classNames(projectcss.all, sty.freeBox__n8D9U)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["updateCategoriesDialogOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["categoriesDialog", "open"]
+                          },
+                          operation: 0,
+                          value: true
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateCategoriesDialogOpen"] != null &&
+                    typeof $steps["updateCategoriesDialogOpen"] === "object" &&
+                    typeof $steps["updateCategoriesDialogOpen"].then ===
+                      "function"
+                  ) {
+                    $steps["updateCategoriesDialogOpen"] = await $steps[
+                      "updateCategoriesDialogOpen"
+                    ];
+                  }
+                }}
+              >
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__uefUm
+                  )}
+                >
+                  {"\u062a\u062e\u0635\u0635 \u0647\u0627"}
+                </div>
+                <LineClamp
+                  data-plasmic-name={"lineClamp"}
+                  data-plasmic-override={overrides.lineClamp}
+                  className={classNames("__wab_instance", sty.lineClamp)}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__wnBxJ
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (() => {
+                            function findCategoryName(value) {
+                              return $props.items.categories.find(
+                                item => item.value == value
+                              );
+                            }
+                            return $props.items.selected_filters?.sub_category
+                              ? $props.items.categories
+                                  .find(
+                                    item =>
+                                      item.value ==
+                                      $props.items.selected_filters?.category
+                                  )
+                                  .sub_categories.find(
+                                    cat =>
+                                      cat.value ==
+                                      $props.items.selected_filters.sub_category
+                                  ).title
+                              : findCategoryName(
+                                  $props.items.selected_filters?.category
+                                ).title;
+                          })();
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                </LineClamp>
+              </div>
               <FilterList
                 data-plasmic-name={"filterList"}
                 data-plasmic-override={overrides.filterList}
@@ -2035,6 +2145,19 @@ function PlasmicFilterRow__RenderFunc(props: {
                   </React.Fragment>
                 }
                 className={classNames("__wab_instance", sty.button__k6JMe)}
+                loading={(() => {
+                  try {
+                    return $props.isLoadingFilters;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
                 onClick={async event => {
                   const $steps = {};
 
@@ -2483,6 +2606,7 @@ const PlasmicDescendants = {
     "filterRowSingle",
     "sortDialog",
     "filterListDialog",
+    "lineClamp",
     "filterList",
     "categoriesDialog",
     "filterExpertiseList",
@@ -2490,7 +2614,8 @@ const PlasmicDescendants = {
   ],
   filterRowSingle: ["filterRowSingle"],
   sortDialog: ["sortDialog"],
-  filterListDialog: ["filterListDialog", "filterList"],
+  filterListDialog: ["filterListDialog", "lineClamp", "filterList"],
+  lineClamp: ["lineClamp"],
   filterList: ["filterList"],
   categoriesDialog: ["categoriesDialog", "filterExpertiseList"],
   filterExpertiseList: ["filterExpertiseList"],
@@ -2504,6 +2629,7 @@ type NodeDefaultElementType = {
   filterRowSingle: typeof FilterRowSingle;
   sortDialog: typeof Dialog;
   filterListDialog: typeof Dialog;
+  lineClamp: typeof LineClamp;
   filterList: typeof FilterList;
   categoriesDialog: typeof Dialog;
   filterExpertiseList: typeof FilterExpertiseList;
@@ -2573,6 +2699,7 @@ export const PlasmicFilterRow = Object.assign(
     filterRowSingle: makeNodeComponent("filterRowSingle"),
     sortDialog: makeNodeComponent("sortDialog"),
     filterListDialog: makeNodeComponent("filterListDialog"),
+    lineClamp: makeNodeComponent("lineClamp"),
     filterList: makeNodeComponent("filterList"),
     categoriesDialog: makeNodeComponent("categoriesDialog"),
     filterExpertiseList: makeNodeComponent("filterExpertiseList"),

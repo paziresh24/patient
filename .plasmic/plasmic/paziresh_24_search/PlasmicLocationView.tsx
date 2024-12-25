@@ -73,9 +73,8 @@ import sty from "./PlasmicLocationView.module.css"; // plasmic-import: p2ixA7V1v
 
 import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: QrVR5pllCw55/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: 6y6ixEKeF2Sb/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNamgvSO/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -101,6 +100,8 @@ export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
 export type PlasmicLocationView__OverridesType = {
   root?: Flex__<"div">;
   textInput?: Flex__<typeof TextInput>;
+  text?: Flex__<"div">;
+  button?: Flex__<typeof Button>;
   svg?: Flex__<"svg">;
   userLocation?: Flex__<typeof UserLocation>;
   locationList?: Flex__<typeof LocationList>;
@@ -217,7 +218,8 @@ function PlasmicLocationView__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        "locations-container"
       )}
     >
       <TextInput
@@ -252,10 +254,8 @@ function PlasmicLocationView__RenderFunc(props: {
         hasGap={true}
         className={classNames(projectcss.all, sty.freeBox___3K4Wv)}
       >
-        <Button
-          children2={"\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"}
-          className={classNames("__wab_instance", sty.button__gaSM)}
-          color={"text"}
+        <div
+          className={classNames(projectcss.all, sty.freeBox__urbAk)}
           onClick={async event => {
             const $steps = {};
 
@@ -277,45 +277,64 @@ function PlasmicLocationView__RenderFunc(props: {
               ];
             }
           }}
-          size={"compact"}
-        />
-
+        >
+          <div
+            data-plasmic-name={"text"}
+            data-plasmic-override={overrides.text}
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text
+            )}
+          >
+            {"\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"}
+          </div>
+        </div>
         <Button
+          data-plasmic-name={"button"}
+          data-plasmic-override={overrides.button}
           children2={"\u0627\u0637\u0631\u0627\u0641 \u0645\u0646"}
-          className={classNames("__wab_instance", sty.button___8Waxp)}
+          className={classNames("__wab_instance", sty.button)}
           color={"text"}
           onClick={async event => {
             const $steps = {};
 
-            $steps["updateIsUserLocationOpen"] = true
+            $steps["runOnClickCity"] = true
               ? (() => {
                   const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["isUserLocationOpen"]
-                    },
-                    operation: 4
+                    eventRef: $props["onClickCity"],
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            id: -1,
+                            name: "همه شهر ها",
+                            en_slug: "ir",
+                            is_aroundme: true
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
                   };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    const oldValue = $stateGet(objRoot, variablePath);
-                    $stateSet(objRoot, variablePath, !oldValue);
-                    return !oldValue;
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
                   })?.apply(null, [actionArgs]);
                 })()
               : undefined;
             if (
-              $steps["updateIsUserLocationOpen"] != null &&
-              typeof $steps["updateIsUserLocationOpen"] === "object" &&
-              typeof $steps["updateIsUserLocationOpen"].then === "function"
+              $steps["runOnClickCity"] != null &&
+              typeof $steps["runOnClickCity"] === "object" &&
+              typeof $steps["runOnClickCity"].then === "function"
             ) {
-              $steps["updateIsUserLocationOpen"] = await $steps[
-                "updateIsUserLocationOpen"
-              ];
+              $steps["runOnClickCity"] = await $steps["runOnClickCity"];
             }
           }}
           showStartIcon={true}
@@ -329,38 +348,40 @@ function PlasmicLocationView__RenderFunc(props: {
           }
         />
 
-        <UserLocation
-          data-plasmic-name={"userLocation"}
-          data-plasmic-override={overrides.userLocation}
-          className={classNames("__wab_instance", sty.userLocation)}
-          isOpen={(() => {
-            try {
-              return $state.isUserLocationOpen;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
+        {false ? (
+          <UserLocation
+            data-plasmic-name={"userLocation"}
+            data-plasmic-override={overrides.userLocation}
+            className={classNames("__wab_instance", sty.userLocation)}
+            isOpen={(() => {
+              try {
+                return $state.isUserLocationOpen;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-          onUserCityChange={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "userLocation",
-              "userCity"
-            ]).apply(null, eventArgs);
+            })()}
+            onUserCityChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "userLocation",
+                "userCity"
+              ]).apply(null, eventArgs);
 
-            if (
-              eventArgs.length > 1 &&
-              eventArgs[1] &&
-              eventArgs[1]._plasmic_state_init_
-            ) {
-              return;
-            }
-          }}
-        />
+              if (
+                eventArgs.length > 1 &&
+                eventArgs[1] &&
+                eventArgs[1]._plasmic_state_init_
+              ) {
+                return;
+              }
+            }}
+          />
+        ) : null}
       </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__hlKod)}>
         <LocationList
@@ -449,8 +470,18 @@ function PlasmicLocationView__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "svg", "userLocation", "locationList"],
+  root: [
+    "root",
+    "textInput",
+    "text",
+    "button",
+    "svg",
+    "userLocation",
+    "locationList"
+  ],
   textInput: ["textInput"],
+  text: ["text"],
+  button: ["button", "svg"],
   svg: ["svg"],
   userLocation: ["userLocation"],
   locationList: ["locationList"]
@@ -461,6 +492,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   textInput: typeof TextInput;
+  text: "div";
+  button: typeof Button;
   svg: "svg";
   userLocation: typeof UserLocation;
   locationList: typeof LocationList;
@@ -527,6 +560,8 @@ export const PlasmicLocationView = Object.assign(
   {
     // Helper components rendering sub-elements
     textInput: makeNodeComponent("textInput"),
+    text: makeNodeComponent("text"),
+    button: makeNodeComponent("button"),
     svg: makeNodeComponent("svg"),
     userLocation: makeNodeComponent("userLocation"),
     locationList: makeNodeComponent("locationList"),

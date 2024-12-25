@@ -61,6 +61,7 @@ import {
 
 import SearchTextInput from "../../SearchTextInput"; // plasmic-import: wpkArHt5O9Fa/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
@@ -98,6 +99,7 @@ export type PlasmicSearchInput__ArgsType = {
   onChangeInput?: (value: string) => void;
   onClickSearchIcon?: () => void;
   onFocuse?: (value: boolean) => void;
+  cityName?: string;
 };
 type ArgPropType = keyof PlasmicSearchInput__ArgsType;
 export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
@@ -106,7 +108,8 @@ export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
   "inputValue",
   "onChangeInput",
   "onClickSearchIcon",
-  "onFocuse"
+  "onFocuse",
+  "cityName"
 );
 
 export type PlasmicSearchInput__OverridesType = {
@@ -114,6 +117,7 @@ export type PlasmicSearchInput__OverridesType = {
   textInput?: Flex__<typeof SearchTextInput>;
   button?: Flex__<typeof Button>;
   text?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchInputProps {
@@ -123,6 +127,7 @@ export interface DefaultSearchInputProps {
   onChangeInput?: (value: string) => void;
   onClickSearchIcon?: () => void;
   onFocuse?: (value: boolean) => void;
+  cityName?: string;
   isFocused?: SingleBooleanChoiceArg<"isFocused">;
   className?: string;
 }
@@ -147,7 +152,9 @@ function PlasmicSearchInput__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          cityName: "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -191,6 +198,12 @@ function PlasmicSearchInput__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isFocused
+      },
+      {
+        path: "enterPress",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -376,7 +389,35 @@ function PlasmicSearchInput__RenderFunc(props: {
               data-plasmic-name={"textInput"}
               data-plasmic-override={overrides.textInput}
               autoComplete={"off"}
-              autoFocus={false}
+              autoFocus={
+                hasVariant(globalVariants, "screen", "mobileOnly")
+                  ? (() => {
+                      try {
+                        return !!$state.isFocused;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : (() => {
+                      try {
+                        return !!$state.isFocused;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()
+              }
               className={classNames("__wab_instance", sty.textInput, {
                 [sty.textInputisFocused]: hasVariant(
                   $state,
@@ -437,6 +478,43 @@ function PlasmicSearchInput__RenderFunc(props: {
                       ) {
                         $steps["updateTextInputValue"] = await $steps[
                           "updateTextInputValue"
+                        ];
+                      }
+
+                      $steps["updateTextInputValue2"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              eventRef: $props["onChangeInput"],
+                              args: [
+                                (() => {
+                                  try {
+                                    return "";
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              ]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateTextInputValue2"] != null &&
+                        typeof $steps["updateTextInputValue2"] === "object" &&
+                        typeof $steps["updateTextInputValue2"].then ===
+                          "function"
+                      ) {
+                        $steps["updateTextInputValue2"] = await $steps[
+                          "updateTextInputValue2"
                         ];
                       }
                     }}
@@ -550,7 +628,21 @@ function PlasmicSearchInput__RenderFunc(props: {
                   sty.text
                 )}
               >
-                {"\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"}
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $props.cityName;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
               </div>
             }
             className={classNames("__wab_instance", sty.button, {
@@ -595,15 +687,117 @@ function PlasmicSearchInput__RenderFunc(props: {
           />
         </div>
       </Stack__>
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect, {
+          [sty.sideEffectisFocused]: hasVariant(
+            $state,
+            "isFocused",
+            "isFocused"
+          )
+        })}
+        deps={(() => {
+          try {
+            return [$state.enterPress];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["runCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      const input = globalThis.window.document.getElementById(
+                        $props.inputId
+                      );
+                      if (typeof window != "undefined" && input) {
+                        return input.addEventListener("keypress", event => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            return ($state.enterPress = `/s/?text=${$state.textInput.value}`);
+                          }
+                        });
+                      }
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+
+          $steps["goTo"] = !!$state.enterPress
+            ? (() => {
+                const actionArgs = {
+                  destination: (() => {
+                    try {
+                      return $state.enterPress;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
+                  }
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["goTo"] != null &&
+            typeof $steps["goTo"] === "object" &&
+            typeof $steps["goTo"].then === "function"
+          ) {
+            $steps["goTo"] = await $steps["goTo"];
+          }
+        }}
+        onUnmount={async () => {
+          const $steps = {};
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "button", "text"],
+  root: ["root", "textInput", "button", "text", "sideEffect"],
   textInput: ["textInput"],
   button: ["button", "text"],
-  text: ["text"]
+  text: ["text"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -613,6 +807,7 @@ type NodeDefaultElementType = {
   textInput: typeof SearchTextInput;
   button: typeof Button;
   text: "div";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -678,6 +873,7 @@ export const PlasmicSearchInput = Object.assign(
     textInput: makeNodeComponent("textInput"),
     button: makeNodeComponent("button"),
     text: makeNodeComponent("text"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicSearchInput
     internalVariantProps: PlasmicSearchInput__VariantProps,

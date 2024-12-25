@@ -94,18 +94,18 @@ export type PlasmicListItem__ArgsType = {
   title?: string;
   value?: string;
   onClick?: (value: string) => void;
+  subtitle?: string;
 };
 type ArgPropType = keyof PlasmicListItem__ArgsType;
 export const PlasmicListItem__ArgProps = new Array<ArgPropType>(
   "title",
   "value",
-  "onClick"
+  "onClick",
+  "subtitle"
 );
 
 export type PlasmicListItem__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
-  text?: Flex__<"div">;
   svg?: Flex__<"svg">;
 };
 
@@ -113,6 +113,7 @@ export interface DefaultListItemProps {
   title?: string;
   value?: string;
   onClick?: (value: string) => void;
+  subtitle?: string;
   isSelected?: SingleBooleanChoiceArg<"isSelected">;
   hasIcon?: SingleBooleanChoiceArg<"hasIcon">;
   hasBorder?: SingleBooleanChoiceArg<"hasBorder">;
@@ -217,11 +218,13 @@ function PlasmicListItem__RenderFunc(props: {
       )}
     >
       <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox, {
-          [sty.freeBoxhasIcon]: hasVariant($state, "hasIcon", "hasIcon"),
-          [sty.freeBoxisSelected]: hasVariant(
+        className={classNames(projectcss.all, sty.freeBox__lz0M0, {
+          [sty.freeBoxhasIcon__lz0M0Gmzs6]: hasVariant(
+            $state,
+            "hasIcon",
+            "hasIcon"
+          ),
+          [sty.freeBoxisSelected__lz0M0McItP]: hasVariant(
             $state,
             "isSelected",
             "isSelected"
@@ -264,38 +267,91 @@ function PlasmicListItem__RenderFunc(props: {
           }
         }}
       >
-        <div
-          data-plasmic-name={"text"}
-          data-plasmic-override={overrides.text}
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text,
-            {
-              [sty.textisBold]: hasVariant($state, "isBold", "isBold"),
-              [sty.textisSelected]: hasVariant(
-                $state,
-                "isSelected",
-                "isSelected"
-              )
-            }
-          )}
-        >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.title;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "";
-                }
-                throw e;
+        <div className={classNames(projectcss.all, sty.freeBox__gDtgE)}>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__v4Lld,
+              {
+                [sty.textisBold__v4LldyzQl6]: hasVariant(
+                  $state,
+                  "isBold",
+                  "isBold"
+                ),
+                [sty.textisSelected__v4LldmcItP]: hasVariant(
+                  $state,
+                  "isSelected",
+                  "isSelected"
+                )
               }
-            })()}
-          </React.Fragment>
+            )}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </div>
+          {(() => {
+            try {
+              return !!$props.subtitle;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__uvmar,
+                {
+                  [sty.textisBold__uvmaRyzQl6]: hasVariant(
+                    $state,
+                    "isBold",
+                    "isBold"
+                  ),
+                  [sty.textisSelected__uvmaRmcItP]: hasVariant(
+                    $state,
+                    "isSelected",
+                    "isSelected"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.subtitle;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
+          ) : null}
         </div>
         <ChevronLeftIcon
           data-plasmic-name={"svg"}
@@ -311,9 +367,7 @@ function PlasmicListItem__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "text", "svg"],
-  freeBox: ["freeBox", "text", "svg"],
-  text: ["text"],
+  root: ["root", "svg"],
   svg: ["svg"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -321,8 +375,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
-  text: "div";
   svg: "svg";
 };
 
@@ -386,8 +438,6 @@ export const PlasmicListItem = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
-    text: makeNodeComponent("text"),
     svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicListItem

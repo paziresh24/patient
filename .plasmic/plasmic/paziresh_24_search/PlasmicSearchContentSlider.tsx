@@ -185,28 +185,8 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
         data-plasmic-name={"getDoctorRate"}
         data-plasmic-override={overrides.getDoctorRate}
         className={classNames("__wab_instance", sty.getDoctorRate)}
-        errorDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__dpeWf
-            )}
-          >
-            {"Error fetching data"}
-          </div>
-        }
-        loadingDisplay={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__xb9Jg
-            )}
-          >
-            {"Loading..."}
-          </div>
-        }
+        errorDisplay={null}
+        loadingDisplay={null}
         method={"GET"}
         onError={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["getDoctorRate", "error"]).apply(
@@ -288,6 +268,7 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
           })()}
           avatarVerifiedTick={false}
           className={classNames("__wab_instance", sty.productCard)}
+          isSingleCard={true}
           rateCount={(() => {
             try {
               return $state.getDoctorRate.data.list[0].count_rates;
