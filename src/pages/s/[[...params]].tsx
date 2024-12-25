@@ -32,6 +32,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
+import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
@@ -49,7 +50,8 @@ const Search = ({ host }: any) => {
     query: { params, lat, lon, ...queries },
   } = useRouter();
 
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search } = useSearch();
+  const { handleChange, filters } = useFilterChange();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems } = useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -59,6 +61,7 @@ const Search = ({ host }: any) => {
   const customize = useCustomize(state => state.customize);
   const showDesktopFiltersRow = useFeatureIsOn('search::desktop-filters-row');
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
+  const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -161,13 +164,30 @@ const Search = ({ host }: any) => {
           <div className="flex flex-col w-full">
             {!isLanding && !isMobile && (
               <div className="items-center justify-between hidden mb-3 md:flex">
-                <Sort />
-                {isLoading ? (
-                  <Skeleton w="5rem" h="1rem" rounded="full" />
+                {showPlasmicSort ? (
+                  <Fragment
+                    name="Sort"
+                    props={{
+                      orderItems: orderItems,
+                      selectedSort: filters['sortBy'],
+                      selectedTurn: filters['freeturn'],
+                      total: addCommas(total),
+                      isLoading: isLoading,
+                      onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
+                      onChangeSort: (value: any) => handleChange('sortBy', value),
+                    }}
+                  />
                 ) : (
-                  <Text fontSize="sm" fontWeight="semiBold">
-                    {addCommas(total)} نتیجه
-                  </Text>
+                  <>
+                    <Sort />
+                    {isLoading ? (
+                      <Skeleton w="5rem" h="1rem" rounded="full" />
+                    ) : (
+                      <Text fontSize="sm" fontWeight="semiBold">
+                        {addCommas(total)} نتیجه
+                      </Text>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -248,3 +268,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+

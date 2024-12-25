@@ -99,13 +99,14 @@ const Home = () => {
             <RecentSearch />
           </div>
         )}
-        {customize.showConsultServices && showPlasmicOnlineVisit ? (
-          <div>
-            <Fragment name="OnlineVisit" />
-          </div>
-        ) : (
-          <OnlineVisitPromote />
-        )}
+        {customize.showConsultServices &&
+          (showPlasmicOnlineVisit ? (
+            <div>
+              <Fragment name="OnlineVisit" />
+            </div>
+          ) : (
+            <OnlineVisitPromote />
+          ))}
         <SearchGlobalContextsProvider>
           <Fragment name="HomePageShortcuts" />
         </SearchGlobalContextsProvider>

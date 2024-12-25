@@ -49,7 +49,7 @@ import PlasmicOnlineVisit, { PlasmicOnlineVisit__ArgProps } from '.plasmic/plasm
 import PlasmicSearch, { PlasmicSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
 import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
 import { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
-// import PlasmicSort, { PlasmicSort__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSort';
+import PlasmicSort, { PlasmicSort__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSort';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -222,11 +222,11 @@ export const Components = {
     propsAllowed: PlasmicSeoBox__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
-  // Sort: {
-  //   Component: PlasmicSort,
-  //   id: 's-wlX7BnSeTl',
-  //   propsAllowed: PlasmicSort__ArgProps,
-  //   projectId: 'sMdpLWyxbzDCruwMRffW2m',
-  // },
+  Sort: {
+    Component: PlasmicSort,
+    id: 's-wlX7BnSeTl',
+    propsAllowed: PlasmicSort__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
 };
 
