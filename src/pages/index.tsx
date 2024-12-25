@@ -14,7 +14,7 @@ import Suggestion from '@/modules/search/view/suggestion';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'), {
@@ -23,13 +23,18 @@ const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'),
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { useSearchStore } from '@/modules/search/store/search';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 const Home = () => {
   const { isMobile } = useResponsive();
   const router = useRouter();
   const { recent } = useRecentSearch();
-
+  const [defaultInputValue, setDefaultInputValue] = useState('');
+  const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
+  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
 
   useEffect(() => {
     // Prefetch the search page
@@ -73,13 +78,34 @@ const Home = () => {
             {customize.partnerSubTitle}
           </Text>
         )}
-        <Suggestion />
-        {recent.length > 0 && (
+        <Suggestion defaultInputValue={defaultInputValue} setDefaultInputValue={setDefaultInputValue} />
+
+        {showPlasmicRecentSearch && (
+          <div className="lg:w-[50rem] w-full">
+            <Fragment
+              name="RecentSearch"
+              props={{
+                onClick: (value: any) => {
+                  setDefaultInputValue(value?.name || '');
+                  setIsOpenSuggestion(true);
+                },
+              }}
+            />
+          </div>
+        )}
+
+        {recent.length > 0 && !showPlasmicRecentSearch && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
           </div>
         )}
-        {customize.showConsultServices && <OnlineVisitPromote />}
+        {customize.showConsultServices && showPlasmicOnlineVisit ? (
+          <div>
+            <Fragment name="OnlineVisit" />
+          </div>
+        ) : (
+          <OnlineVisitPromote />
+        )}
         <SearchGlobalContextsProvider>
           <Fragment name="HomePageShortcuts" />
         </SearchGlobalContextsProvider>
@@ -157,3 +183,4 @@ export const getServerSideProps = withCSR(
 );
 
 export default Home;
+

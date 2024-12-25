@@ -10,6 +10,7 @@ const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/pa
 const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
 const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
 const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
+const PlasmicRecentSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch'));
 
 import { PlasmicReviewProgressList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList';
 import PlasmicReceiptActionButtons, {
@@ -44,6 +45,11 @@ import PlasmicFilterSelectedView, {
 } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterSelectedView';
 import PlasmicFilterRow, { PlasmicFilterRow__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterRow';
 import PlasmicHomePageShortcuts, { PlasmicHomePageShortcuts__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicHomePageShortcuts';
+import PlasmicOnlineVisit, { PlasmicOnlineVisit__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
+import PlasmicSearch, { PlasmicSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
+import { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
+// import PlasmicSort, { PlasmicSort__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSort';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -192,5 +198,35 @@ export const Components = {
     propsAllowed: PlasmicHomePageShortcuts__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
+  OnlineVisit: {
+    Component: PlasmicOnlineVisit,
+    id: 'kiuZ6fZVjKcZ',
+    propsAllowed: PlasmicOnlineVisit__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  SearchInput: {
+    Component: PlasmicSearch,
+    id: 'd_qMEJ14UZf0',
+    propsAllowed: PlasmicSearch__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  RecentSearch: {
+    Component: PlasmicRecentSearch,
+    id: 'ARWFU9130hug',
+    propsAllowed: PlasmicRecentSearch__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  SeoBox: {
+    Component: PlasmicSeoBox,
+    id: 'LCOgDdMa8kxO',
+    propsAllowed: PlasmicSeoBox__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  // Sort: {
+  //   Component: PlasmicSort,
+  //   id: 's-wlX7BnSeTl',
+  //   propsAllowed: PlasmicSort__ArgProps,
+  //   projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  // },
 };
 
