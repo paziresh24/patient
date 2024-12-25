@@ -86,6 +86,7 @@ const DoctorProfile = ({
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
+  const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -331,25 +332,47 @@ const DoctorProfile = ({
                     children: (
                       <RaviGlobalContextsProvider>
                         <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                          <Fragment
-                            name="RateAndCommentCount"
-                            props={{
-                              ...profileData,
-                              rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                              rate:
-                                customize.showRateAndReviews &&
-                                !dontShowRateAndReviewMessage &&
-                                (fragmentComponents.reviewCard
-                                  ? (
-                                      (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                        +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                        +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                      3
-                                    ).toFixed(1)
-                                  : profileData.feedbacks?.details?.satisfaction_percent),
-                              hideRates: profileData.feedbacks?.details?.hide_rates,
-                            }}
-                          />
+                          {newRateAndCommentCount ? (
+                            <Fragment
+                              name="RateAndCommentCount2"
+                              props={{
+                                ...profileData,
+                                rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
+                                rate:
+                                  customize.showRateAndReviews &&
+                                  !dontShowRateAndReviewMessage &&
+                                  (fragmentComponents.reviewCard
+                                    ? (
+                                        (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                                          +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                                          +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                                        3
+                                      ).toFixed(1)
+                                    : profileData.feedbacks?.details?.satisfaction_percent),
+                                hideRates: profileData.feedbacks?.details?.hide_rates,
+                              }}
+                            />
+                          ) : (
+                            <Fragment
+                              name="RateAndCommentCount"
+                              props={{
+                                ...profileData,
+                                rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
+                                rate:
+                                  customize.showRateAndReviews &&
+                                  !dontShowRateAndReviewMessage &&
+                                  (fragmentComponents.reviewCard
+                                    ? (
+                                        (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                                          +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                                          +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                                        3
+                                      ).toFixed(1)
+                                    : profileData.feedbacks?.details?.satisfaction_percent),
+                                hideRates: profileData.feedbacks?.details?.hide_rates,
+                              }}
+                            />
+                          )}
                         </div>
                       </RaviGlobalContextsProvider>
                     ),
@@ -587,3 +610,4 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
+

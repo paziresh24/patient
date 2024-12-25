@@ -16,6 +16,7 @@ import { Fragment } from '@/common/fragment';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 interface HeadProps {
   image: string;
@@ -65,6 +66,7 @@ export const Head = (props: HeadProps) => {
     userInfo: state.info,
   }));
   const { handleOpenLoginModal } = useLoginModalContext();
+  const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
 
   return (
     <section className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
@@ -127,17 +129,28 @@ export const Head = (props: HeadProps) => {
               caption={`رضایت (${rateCount} نظر)`}
             />
           )}
-          {shouldUseFragmentReviewCard && (
-            <Fragment
-              name="RateAndCommentCount"
-              props={{
-                ...profileData,
-                rateCount: rateCount,
-                rate: satisfaction,
-                hideRates: hideRates,
-              }}
-            />
-          )}
+          {shouldUseFragmentReviewCard &&
+            (newRateAndCommentCount ? (
+              <Fragment
+                name="RateAndCommentCount2"
+                props={{
+                  ...profileData,
+                  rateCount: rateCount,
+                  rate: satisfaction,
+                  hideRates: hideRates,
+                }}
+              />
+            ) : (
+              <Fragment
+                name="RateAndCommentCount"
+                props={{
+                  ...profileData,
+                  rateCount: rateCount,
+                  rate: satisfaction,
+                  hideRates: hideRates,
+                }}
+              />
+            ))}
         </div>
       )}
       {children}
@@ -146,3 +159,4 @@ export const Head = (props: HeadProps) => {
 };
 
 export default Head;
+

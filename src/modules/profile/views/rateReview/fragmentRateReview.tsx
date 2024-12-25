@@ -19,9 +19,9 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const listOfShowDoctorTags = useFeatureValue('profile:doctor-tags|enabled', { slugs: [] });
   const shouldShowDoctorTags = newApiFeatureFlaggingCondition(listOfShowDoctorTags?.slugs, profileData.seo.slug);
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
-  const newReviewList = useFeatureIsOn('ravi_show_new_Review_list');
   const newProgressList = useFeatureIsOn('ravi_show_new_progress_list');
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
+  const newReviewList = useFeatureIsOn('ravi_show_new_Review_comments_list');
   const getFeedbacks = useGetReview(
     {
       slug: profileData.seo.slug,
@@ -201,3 +201,4 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     </div>
   );
 };
+
