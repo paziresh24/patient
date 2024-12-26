@@ -63,7 +63,7 @@ import Summery from "../../Summery"; // plasmic-import: JoYR24nI9z66/component
 import ExternalRate from "../../ExternalRate"; // plasmic-import: q0EXGV78MZIZ/component
 import RateDetail from "../../RateDetail"; // plasmic-import: 5Lu5manJiJCz/component
 import SetNweReview from "../../SetNweReview"; // plasmic-import: ZewL2B_Ktxrj/component
-import Select from "../../Select"; // plasmic-import: zIWWWwAA3-2B/component
+import CustomSelect from "../../CustomSelect"; // plasmic-import: zIWWWwAA3-2B/component
 import TextInput from "../../TextInput"; // plasmic-import: iKLtt-X_YZoa/component
 import ReviewCard from "../../ReviewCard"; // plasmic-import: hjUuvN6lhrZV/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
@@ -131,8 +131,8 @@ export type PlasmicReviewList__OverridesType = {
   externalRate?: Flex__<typeof ExternalRate>;
   rateDetail?: Flex__<typeof RateDetail>;
   setNweReview?: Flex__<typeof SetNweReview>;
-  filterInput?: Flex__<typeof Select>;
-  sortInput?: Flex__<typeof Select>;
+  filterInput?: Flex__<typeof CustomSelect>;
+  sortInput?: Flex__<typeof CustomSelect>;
   searchInput?: Flex__<typeof TextInput>;
   commentsContainer?: Flex__<"div">;
   cardLine?: Flex__<"div">;
@@ -563,7 +563,7 @@ function PlasmicReviewList__RenderFunc(props: {
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__alcob)}
             >
-              <Select
+              <CustomSelect
                 data-plasmic-name={"filterInput"}
                 data-plasmic-override={overrides.filterInput}
                 className={classNames("__wab_instance", sty.filterInput)}
@@ -694,7 +694,7 @@ function PlasmicReviewList__RenderFunc(props: {
                 value={generateStateValueProp($state, ["filterInput", "value"])}
               />
 
-              <Select
+              <CustomSelect
                 data-plasmic-name={"sortInput"}
                 data-plasmic-override={overrides.sortInput}
                 className={classNames("__wab_instance", sty.sortInput)}
@@ -2037,8 +2037,8 @@ type NodeDefaultElementType = {
   externalRate: typeof ExternalRate;
   rateDetail: typeof RateDetail;
   setNweReview: typeof SetNweReview;
-  filterInput: typeof Select;
-  sortInput: typeof Select;
+  filterInput: typeof CustomSelect;
+  sortInput: typeof CustomSelect;
   searchInput: typeof TextInput;
   commentsContainer: "div";
   cardLine: "div";

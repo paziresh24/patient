@@ -406,6 +406,21 @@ function PlasmicReviewReply__RenderFunc(props: {
                   throw e;
                 }
               })()}
+              isUserComment={(() => {
+                try {
+                  return (
+                    $ctx.auth.isLogin && $ctx.auth.info.id == $props.userId
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })()}
             />
           </RaviReviewReply>
         </ApiRequest>

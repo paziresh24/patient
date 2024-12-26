@@ -240,13 +240,19 @@
   display: flex;
   flex-direction: row;
   position: relative;
-  align-items: stretch;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: auto;
   max-width: 100%;
   min-width: 0;
   padding: 0px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__kfRmr {
+    justify-content: center;
+    align-items: center;
+  }
 }
 .svg__jrS9V {
   object-fit: cover;
