@@ -548,6 +548,24 @@ function PlasmicSearch__RenderFunc(props: {
                 ) {
                   $steps["runCode"] = await $steps["runCode"];
                 }
+
+                $steps["runOnClickOverlay"] = true
+                  ? (() => {
+                      const actionArgs = { eventRef: $props["onClickOverlay"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnClickOverlay"] != null &&
+                  typeof $steps["runOnClickOverlay"] === "object" &&
+                  typeof $steps["runOnClickOverlay"].then === "function"
+                ) {
+                  $steps["runOnClickOverlay"] = await $steps[
+                    "runOnClickOverlay"
+                  ];
+                }
               }}
             />
           </div>
@@ -662,7 +680,7 @@ function PlasmicSearch__RenderFunc(props: {
                               return (() => {
                                 const history = $$.lodash.uniqBy(
                                   JSON.parse(
-                                    localStorage.getItem("recentSearch") ?? "[]"
+                                    localStorage.getItem("history") ?? "[]"
                                   ),
                                   "name"
                                 );
@@ -670,7 +688,7 @@ function PlasmicSearch__RenderFunc(props: {
                                   historyItem => historyItem.name !== value.name
                                 );
                                 return localStorage.setItem(
-                                  "recentSearch",
+                                  "history",
                                   JSON.stringify([...newHistory, value])
                                 );
                               })();
@@ -1865,8 +1883,7 @@ function PlasmicSearch__RenderFunc(props: {
                                   return (() => {
                                     const history = $$.lodash.uniqBy(
                                       JSON.parse(
-                                        localStorage.getItem("recentSearch") ??
-                                          "[]"
+                                        localStorage.getItem("history") ?? "[]"
                                       ),
                                       "name"
                                     );
@@ -1875,7 +1892,7 @@ function PlasmicSearch__RenderFunc(props: {
                                         historyItem.name !== value.name
                                     );
                                     return localStorage.setItem(
-                                      "recentSearch",
+                                      "history",
                                       JSON.stringify([...newHistory, value])
                                     );
                                   })();

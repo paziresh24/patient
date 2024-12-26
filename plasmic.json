@@ -1549,6 +1549,11 @@
           "id": "mZKfwqg-9kSF",
           "name": "ChevronDownIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__ChevronDown.tsx"
+        },
+        {
+          "id": "_ON92WS_7m-A",
+          "name": "ChevronDownSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__ChevronDownSvg.tsx"
         }
       ],
       "images": [
@@ -1654,8 +1659,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -2418,7 +2422,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -4708,7 +4713,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",

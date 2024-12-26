@@ -319,7 +319,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
                   value: (() => {
                     if (typeof window != "undefined") {
                       const history =
-                        JSON.parse(localStorage.getItem("recentSearch")) || [];
+                        JSON.parse(localStorage.getItem("history")) || [];
                       return history;
                     } else {
                       return [];

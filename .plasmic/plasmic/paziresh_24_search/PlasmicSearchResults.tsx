@@ -2288,7 +2288,14 @@ function PlasmicSearchResults__RenderFunc(props: {
           data-plasmic-override={overrides.searchFooterSecondaryTasks}
           className={classNames(
             "__wab_instance",
-            sty.searchFooterSecondaryTasks
+            sty.searchFooterSecondaryTasks,
+            {
+              [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
+                $state,
+                "isHorizental",
+                "isHorizental"
+              )
+            }
           )}
           taskObject={(() => {
             try {
