@@ -246,6 +246,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   min-width: 0;
+  padding: var(--token-Fv8-L_kN-2Ma);
 }
 .freeBox__nGtd4 > :global(.__wab_flex-container) {
   flex-direction: row;

@@ -1554,6 +1554,11 @@
           "id": "_ON92WS_7m-A",
           "name": "ChevronDownSvgIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__ChevronDownSvg.tsx"
+        },
+        {
+          "id": "__Q2-_MsbqBL",
+          "name": "Icon38Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon38.tsx"
         }
       ],
       "images": [

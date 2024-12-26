@@ -74,7 +74,7 @@
   height: 24px;
   flex-shrink: 0;
 }
-.text {
+.text__dLnM {
   position: relative;
   width: 100%;
   height: auto;
@@ -95,9 +95,55 @@
   max-width: 100%;
   min-width: 0;
 }
+.freeBox__i5ZAb {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.text___4Ow8D {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.text___3Ue9 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__yeOpF {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  padding-right: var(--token-W6cMLA0AZVBO);
+  min-width: 0;
+}
 .img {
   object-fit: cover;
   max-width: 100%;
+  width: 55px;
+  height: 55px;
+  margin-right: -16px;
+  box-shadow: 0px 4px 19px 0px #00000038;
+  flex-shrink: 0;
+  border-radius: 1000px;
 }
 .img > picture > img {
   object-fit: cover;
@@ -105,13 +151,16 @@
 .button:global(.__wab_instance) {
   max-width: 100%;
 }
-.svg__jMxrz {
+.svg__eDrte {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__uJ56T {
+.text__wYCy {
+  padding-bottom: 0px;
+}
+.svg__yg21I {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -120,24 +169,16 @@
 .dialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
-.text__zlZz {
+.freeBox__koV5N {
+  display: flex;
+  flex-direction: column;
   position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
   min-width: 0;
-}
-.svg__z8AR3 {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.svg__kpfE0 {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
 }
 .suggestedDoctor:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
