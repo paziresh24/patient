@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import SuggestedDoctor from "../../SuggestedDoctor"; // plasmic-import: 4XueZ64JE9vm/component
@@ -70,7 +71,7 @@ import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicConsultBanner.module.css"; // plasmic-import: KmDr0VPQLI2_/css
 
-import Icon37Icon from "./icons/PlasmicIcon__Icon37"; // plasmic-import: BWwuwLrl9Jmd/icon
+import Icon38Icon from "./icons/PlasmicIcon__Icon38"; // plasmic-import: __Q2-_MsbqBL/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -94,7 +95,7 @@ export const PlasmicConsultBanner__ArgProps = new Array<ArgPropType>(
 export type PlasmicConsultBanner__OverridesType = {
   root?: Flex__<"div">;
   svg?: Flex__<"svg">;
-  text?: Flex__<"div">;
+  apiRequest?: Flex__<typeof ApiRequest>;
   img?: Flex__<typeof PlasmicImg__>;
   button?: Flex__<typeof Button>;
   dialog?: Flex__<typeof Dialog>;
@@ -152,6 +153,24 @@ function PlasmicConsultBanner__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -187,35 +206,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
         onClick={async event => {
           const $steps = {};
 
-          $steps["updateDialogOpen"] = !!$props.categoryValue
-            ? (() => {
-                const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["dialog", "open"]
-                  },
-                  operation: 0
-                };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["updateDialogOpen"] != null &&
-            typeof $steps["updateDialogOpen"] === "object" &&
-            typeof $steps["updateDialogOpen"].then === "function"
-          ) {
-            $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
-          }
-
-          $steps["updateDialogOpen2"] = !$props.categoryValue
+          $steps["goTo"] = !$props.categoryValue
             ? (() => {
                 const actionArgs = { destination: "/s/?turn_type=consult" };
                 return (({ destination }) => {
@@ -233,11 +224,11 @@ function PlasmicConsultBanner__RenderFunc(props: {
               })()
             : undefined;
           if (
-            $steps["updateDialogOpen2"] != null &&
-            typeof $steps["updateDialogOpen2"] === "object" &&
-            typeof $steps["updateDialogOpen2"].then === "function"
+            $steps["goTo"] != null &&
+            typeof $steps["goTo"] === "object" &&
+            typeof $steps["goTo"].then === "function"
           ) {
-            $steps["updateDialogOpen2"] = await $steps["updateDialogOpen2"];
+            $steps["goTo"] = await $steps["goTo"];
           }
         }}
       >
@@ -245,8 +236,40 @@ function PlasmicConsultBanner__RenderFunc(props: {
           as={"div"}
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox__hopQe)}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["updateDialogOpen"] = !!$props.categoryValue
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["dialog", "open"]
+                    },
+                    operation: 4
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    const oldValue = $stateGet(objRoot, variablePath);
+                    $stateSet(objRoot, variablePath, !oldValue);
+                    return !oldValue;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateDialogOpen"] != null &&
+              typeof $steps["updateDialogOpen"] === "object" &&
+              typeof $steps["updateDialogOpen"].then === "function"
+            ) {
+              $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+            }
+          }}
         >
-          <Icon37Icon
+          <Icon38Icon
             data-plasmic-name={"svg"}
             data-plasmic-override={overrides.svg}
             className={classNames(projectcss.all, sty.svg)}
@@ -254,12 +277,10 @@ function PlasmicConsultBanner__RenderFunc(props: {
           />
 
           <div
-            data-plasmic-name={"text"}
-            data-plasmic-override={overrides.text}
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text
+              sty.text__dLnM
             )}
           >
             <React.Fragment>
@@ -295,26 +316,140 @@ function PlasmicConsultBanner__RenderFunc(props: {
           }
         })() ? (
           <div className={classNames(projectcss.all, sty.freeBox__ooR52)}>
-            <PlasmicImg__
-              data-plasmic-name={"img"}
-              data-plasmic-override={overrides.img}
-              alt={""}
-              className={classNames(sty.img)}
-              displayHeight={"auto"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"100%"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"auto"}
-              loading={"lazy"}
-              src={"https://www.paziresh24.com/cp/img/doctor-group.svg"}
-            />
-
+            <div className={classNames(projectcss.all, sty.freeBox__i5ZAb)}>
+              <ApiRequest
+                data-plasmic-name={"apiRequest"}
+                data-plasmic-override={overrides.apiRequest}
+                className={classNames("__wab_instance", sty.apiRequest)}
+                errorDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___3Ue9
+                    )}
+                  >
+                    {"Error fetching data"}
+                  </div>
+                }
+                loadingDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___4Ow8D
+                    )}
+                  >
+                    {"Loading..."}
+                  </div>
+                }
+                method={"GET"}
+                onError={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "error"
+                  ]).apply(null, eventArgs);
+                }}
+                onLoading={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "loading"
+                  ]).apply(null, eventArgs);
+                }}
+                onSuccess={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "data"
+                  ]).apply(null, eventArgs);
+                }}
+                url={(() => {
+                  try {
+                    return (() => {
+                      const category = !!$props.categoryValue
+                        ? $props.categoryValue
+                        : "general-practitioner";
+                      return `https://apigw.paziresh24.com/seapi/v1/search/ir/${category}?turn_type=consult`;
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              >
+                <div className={classNames(projectcss.all, sty.freeBox__yeOpF)}>
+                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return $state.apiRequest.data.search.result?.slice(
+                          0,
+                          4
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                    const currentItem = __plasmic_item_0;
+                    const currentIndex = __plasmic_idx_0;
+                    return (
+                      <PlasmicImg__
+                        data-plasmic-name={"img"}
+                        data-plasmic-override={overrides.img}
+                        alt={""}
+                        className={classNames(sty.img)}
+                        displayHeight={"55px"}
+                        displayMaxHeight={"none"}
+                        displayMaxWidth={"100%"}
+                        displayMinHeight={"0"}
+                        displayMinWidth={"0"}
+                        displayWidth={"55px"}
+                        key={currentIndex}
+                        loading={"lazy"}
+                        src={(() => {
+                          try {
+                            return `https://cdn.paziresh24.com${currentItem.image}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    );
+                  })}
+                </div>
+              </ApiRequest>
+            </div>
             <Button
               data-plasmic-name={"button"}
               data-plasmic-override={overrides.button}
               children2={
-                "\u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9"
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__wYCy
+                  )}
+                >
+                  {
+                    "\u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9"
+                  }
+                </div>
               }
               className={classNames("__wab_instance", sty.button)}
               onClick={async event => {
@@ -358,44 +493,81 @@ function PlasmicConsultBanner__RenderFunc(props: {
             />
           </div>
         ) : null}
-      </Stack__>
-      <Dialog
-        data-plasmic-name={"dialog"}
-        data-plasmic-override={overrides.dialog}
-        body={
-          <SuggestedDoctor
-            data-plasmic-name={"suggestedDoctor"}
-            data-plasmic-override={overrides.suggestedDoctor}
-            className={classNames("__wab_instance", sty.suggestedDoctor)}
-          />
-        }
-        className={classNames("__wab_instance", sty.dialog)}
-        noTrigger={true}
-        onOpenChange={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["dialog", "open"]).apply(
-            null,
-            eventArgs
-          );
-
-          if (
-            eventArgs.length > 1 &&
-            eventArgs[1] &&
-            eventArgs[1]._plasmic_state_init_
-          ) {
-            return;
+        <Dialog
+          data-plasmic-name={"dialog"}
+          data-plasmic-override={overrides.dialog}
+          body={
+            <div className={classNames(projectcss.all, sty.freeBox__koV5N)}>
+              <SuggestedDoctor
+                data-plasmic-name={"suggestedDoctor"}
+                data-plasmic-override={overrides.suggestedDoctor}
+                categoryTitle={(() => {
+                  try {
+                    return $props.categoryTitle;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                categoryValue={(() => {
+                  try {
+                    return $props.categoryValue;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                className={classNames("__wab_instance", sty.suggestedDoctor)}
+              />
+            </div>
           }
-        }}
-        open={generateStateValueProp($state, ["dialog", "open"])}
-        title={" "}
-      />
+          className={classNames("__wab_instance", sty.dialog)}
+          noTrigger={true}
+          onOpenChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+              null,
+              eventArgs
+            );
+
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
+              return;
+            }
+          }}
+          open={generateStateValueProp($state, ["dialog", "open"])}
+          title={" "}
+          trigger={null}
+        />
+      </Stack__>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "svg", "text", "img", "button", "dialog", "suggestedDoctor"],
+  root: [
+    "root",
+    "svg",
+    "apiRequest",
+    "img",
+    "button",
+    "dialog",
+    "suggestedDoctor"
+  ],
   svg: ["svg"],
-  text: ["text"],
+  apiRequest: ["apiRequest", "img"],
   img: ["img"],
   button: ["button"],
   dialog: ["dialog", "suggestedDoctor"],
@@ -407,7 +579,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   svg: "svg";
-  text: "div";
+  apiRequest: typeof ApiRequest;
   img: typeof PlasmicImg__;
   button: typeof Button;
   dialog: typeof Dialog;
@@ -475,7 +647,7 @@ export const PlasmicConsultBanner = Object.assign(
   {
     // Helper components rendering sub-elements
     svg: makeNodeComponent("svg"),
-    text: makeNodeComponent("text"),
+    apiRequest: makeNodeComponent("apiRequest"),
     img: makeNodeComponent("img"),
     button: makeNodeComponent("button"),
     dialog: makeNodeComponent("dialog"),
