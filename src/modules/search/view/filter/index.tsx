@@ -7,6 +7,7 @@ import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '../../hooks/useFilterChange';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
+import { useRouter } from 'next/router';
 const AdvancedSearch = dynamic(() => import('../../components/filters/advancedSearch'));
 const Categories = dynamic(() => import('../../components/filters/categories'));
 const SelectedFilters = dynamic(() => import('../../components/filters/selectedFilters'));
@@ -21,9 +22,33 @@ export const Filter = (props: FilterProps) => {
   const { filters, categories, selectedCategory, selectedSubCategory, searchCity } = useSearch();
   const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
   const { changeRoute } = useSearchRouting();
+  const {
+    query: { params },
+  } = useRouter();
   const showDesktopFilters = useFeatureIsOn('search::desktop-filters');
   const showDesktopCategories = useFeatureIsOn('search::desktop-categories');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
+
+  const handleRemoveFilter = (name: string, value: string) => {
+    console.log('filter removing', name, value);
+    if (
+      (name === 'sub_category' && value?.startsWith('exp-')) ||
+      name === 'category' ||
+      (name === 'text' && (params as string[])?.[1]?.startsWith('q-')) ||
+      (name === 'result_type' && ['center', 'doctor'].includes((params as string[])?.[1]))
+    ) {
+      return handleRemoveAllFilters();
+    }
+    if (name === 'sub_category') {
+      return removeFilter('expertise');
+    }
+
+    removeFilter(name);
+  };
+
+  const handleRemoveAllFilters = () => {
+    changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true });
+  };
 
   return (
     <div className="md:w-[23rem] md:min-w-[23rem] flex flex-col space-y-3">
@@ -34,12 +59,12 @@ export const Filter = (props: FilterProps) => {
             selected: selectedFilters,
             categories,
             filters,
-            onRemoveItem: (name: string) => removeFilter(name),
-            onDelete: () => changeRoute({ params: { city: searchCity?.en_slug }, overWrite: true }),
+            onRemoveItem: (name: string, value: any) => handleRemoveFilter(name, value),
+            onDelete: handleRemoveAllFilters,
           }}
         />
       ) : (
-        <SelectedFilters isLoading={isLoading} />
+        (!isEmpty(selectedFilters) || isLoading) && !isMobile && !showDesktopSelectedFilters && <SelectedFilters isLoading={isLoading} />
       )}
 
       {!isMobile && isEmpty(selectedFilters) && isEmpty(filters) && (
@@ -83,3 +108,4 @@ export const Filter = (props: FilterProps) => {
 };
 
 export default Filter;
+
