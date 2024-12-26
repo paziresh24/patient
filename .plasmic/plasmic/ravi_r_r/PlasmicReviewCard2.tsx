@@ -827,55 +827,52 @@ function PlasmicReviewCard2__RenderFunc(props: {
                 onReplySend: async value => {
                   const $steps = {};
 
-                  $steps["sendMutation"] =
-                    value.length > 5
-                      ? (() => {
-                          const actionArgs = {
-                            args: [
-                              "POST",
-                              (() => {
-                                try {
-                                  return (
-                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
-                                    $props.feedbackId
-                                  );
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
+                  $steps["sendMutation"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            "POST",
+                            (() => {
+                              try {
+                                return (
+                                  "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                                  $props.feedbackId
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
                                 }
-                              })(),
-                              undefined,
-                              (() => {
-                                try {
-                                  return {
-                                    feedback_id: $props.feedbackId,
-                                    description: value
-                                  };
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
+                                throw e;
+                              }
+                            })(),
+                            undefined,
+                            (() => {
+                              try {
+                                return {
+                                  feedback_id: $props.feedbackId,
+                                  description: value
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
                                 }
-                              })()
-                            ]
-                          };
-                          return $globalActions["Fragment.apiRequest"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
-                      : undefined;
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
                   if (
                     $steps["sendMutation"] != null &&
                     typeof $steps["sendMutation"] === "object" &&
@@ -1000,6 +997,54 @@ function PlasmicReviewCard2__RenderFunc(props: {
                     typeof $steps["splunk"].then === "function"
                   ) {
                     $steps["splunk"] = await $steps["splunk"];
+                  }
+
+                  $steps["toast2"] = !!$steps.sendMutation.data.message
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return $steps.sendMutation.status == 200
+                                  ? "success"
+                                  : "error";
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })(),
+                            (() => {
+                              try {
+                                return $steps.sendMutation.data.message;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.showToast"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["toast2"] != null &&
+                    typeof $steps["toast2"] === "object" &&
+                    typeof $steps["toast2"].then === "function"
+                  ) {
+                    $steps["toast2"] = await $steps["toast2"];
                   }
                 },
                 onlyDoctor: (() => {

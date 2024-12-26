@@ -120,19 +120,7 @@ function PlasmicReviewRateAndCommentCount__RenderFunc(props: {
       Object.assign(
         {
           hideRates: false,
-          rateCount: (() => {
-            try {
-              return undefined;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })(),
+          rateCount: ``,
           rate: ``
         },
         Object.fromEntries(
@@ -153,32 +141,48 @@ function PlasmicReviewRateAndCommentCount__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <div
-      data-plasmic-name={"root"}
-      data-plasmic-override={overrides.root}
-      data-plasmic-root={true}
-      data-plasmic-for-node={forNode}
-      className={classNames(
-        projectcss.all,
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        sty.root
-      )}
-    >
-      <RaviRateAndCommentCount
-        data-plasmic-name={"raviRateAndCommentCount"}
-        data-plasmic-override={overrides.raviRateAndCommentCount}
-        className={classNames("__wab_instance", sty.raviRateAndCommentCount)}
-        hideRates={args.hideRates}
-        rate={args.rate}
-        rateCount={args.rateCount}
-      />
-    </div>
+    (() => {
+      try {
+        return (
+          !$props.hideRates && !$ctx.Growthbook.features.ravi_show_external_rate
+        );
+      } catch (e) {
+        if (
+          e instanceof TypeError ||
+          e?.plasmicType === "PlasmicUndefinedDataError"
+        ) {
+          return true;
+        }
+        throw e;
+      }
+    })() ? (
+      <div
+        data-plasmic-name={"root"}
+        data-plasmic-override={overrides.root}
+        data-plasmic-root={true}
+        data-plasmic-for-node={forNode}
+        className={classNames(
+          projectcss.all,
+          projectcss.root_reset,
+          projectcss.plasmic_default_styles,
+          projectcss.plasmic_mixins,
+          projectcss.plasmic_tokens,
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          plasmic_ravi_design_system_css.plasmic_tokens,
+          plasmic_paziresh_24_design_system_css.plasmic_tokens,
+          sty.root
+        )}
+      >
+        <RaviRateAndCommentCount
+          data-plasmic-name={"raviRateAndCommentCount"}
+          data-plasmic-override={overrides.raviRateAndCommentCount}
+          className={classNames("__wab_instance", sty.raviRateAndCommentCount)}
+          hideRates={args.hideRates}
+          rate={args.rate}
+          rateCount={args.rateCount}
+        />
+      </div>
+    ) : null
   ) as React.ReactElement | null;
 }
 
