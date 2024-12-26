@@ -138,8 +138,8 @@
 .img {
   object-fit: cover;
   max-width: 100%;
-  width: 55px;
-  height: 55px;
+  width: 44px;
+  height: 44px;
   margin-right: -16px;
   box-shadow: 0px 4px 19px 0px #00000038;
   flex-shrink: 0;

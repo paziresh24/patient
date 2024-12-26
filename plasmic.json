@@ -1332,6 +1332,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSort.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "Cf7MAesKvnvP",
+          "name": "UnknownCityDialog",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicUnknownCityDialog.tsx",
+          "importSpec": {
+            "modulePath": "UnknownCityDialog.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicUnknownCityDialog.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
