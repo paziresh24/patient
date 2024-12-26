@@ -226,7 +226,7 @@ function PlasmicRaviExternalRate__RenderFunc(props: {
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return "https://www.plasmic.app/";
+                return "/";
               }
               throw e;
             }

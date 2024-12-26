@@ -326,6 +326,9 @@
   position: relative;
   margin-top: calc(24px + var(--token-Fv8-L_kN-2Ma)) !important;
 }
+.searchFooterSecondaryTasksisHorizental:global(.__wab_instance) {
+  margin-top: calc(24px + var(--token-Fv8-L_kN-2Ma)) !important;
+}
 .externalBookSurveyPopup:global(.__wab_instance) {
   max-width: 100%;
 }

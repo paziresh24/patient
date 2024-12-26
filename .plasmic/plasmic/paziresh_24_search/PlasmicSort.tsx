@@ -375,7 +375,7 @@ function PlasmicSort__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return `نتیجه ${$props.total}`;
+                    return ` ${$props.total} نتیجه`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||

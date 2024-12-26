@@ -1636,7 +1636,13 @@ function PlasmicProductCard__RenderFunc(props: {
               <Stack__
                 as={"div"}
                 hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__ybVvU)}
+                className={classNames(projectcss.all, sty.freeBox__ybVvU, {
+                  [sty.freeBox_5StarRatingMode3__5StarA__ybVvUfZd0]: hasVariant(
+                    $state,
+                    "_5StarRatingMode3",
+                    "_5StarA"
+                  )
+                })}
               >
                 {(() => {
                   try {
