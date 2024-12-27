@@ -51,7 +51,7 @@ const Search = ({ host }: any) => {
   } = useRouter();
 
   const { handleChange, filters } = useFilterChange();
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems, selectedCategory, isConsult } = useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -62,6 +62,7 @@ const Search = ({ host }: any) => {
   const showDesktopFiltersRow = useFeatureIsOn('search::desktop-filters-row');
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
   const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
+  const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -191,7 +192,22 @@ const Search = ({ host }: any) => {
                 )}
               </div>
             )}
-            {customize.showConsultServices && showConsultBanner && <ConsultBanner />}
+            {customize.showConsultServices &&
+              showConsultBanner &&
+              (showPlasmicConsultBanner ? (
+                <div className="mb-3 md:hidden">
+                  <Fragment
+                    name="ConsultBanner"
+                    props={{
+                      categoryValue: selectedCategory?.value,
+                      categoryTitle: selectedCategory?.title,
+                      isHide: isConsult,
+                    }}
+                  />
+                </div>
+              ) : (
+                <ConsultBanner />
+              ))}
             <Result />
           </div>
         </div>

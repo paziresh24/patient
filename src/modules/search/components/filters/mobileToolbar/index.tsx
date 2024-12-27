@@ -5,7 +5,7 @@ import { addCommas } from '@persian-tools/persian-tools';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 
 export const MobileToolbar = () => {
-  const { orderItems, categories, filters, total, searchCity, isLoading } = useSearch();
+  const { orderItems, categories, filters, total, searchCity, isLoading, isLanding } = useSearch();
   const { handleChange, removeFilter, filters: selectedFilters } = useFilterChange();
   const { changeRoute } = useSearchRouting();
 
@@ -29,6 +29,8 @@ export const MobileToolbar = () => {
           countOfFilters: addCommas(total),
           onRemoveAllFilters: () => handleRemoveAllFilters(),
           isLoadingFilters: isLoading,
+          searchCity: searchCity,
+          isLanding: isLanding,
         }}
       />
     </div>
@@ -36,3 +38,4 @@ export const MobileToolbar = () => {
 };
 
 export default MobileToolbar;
+

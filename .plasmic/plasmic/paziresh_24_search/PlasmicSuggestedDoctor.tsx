@@ -85,9 +85,15 @@ type VariantPropType = keyof PlasmicSuggestedDoctor__VariantsArgs;
 export const PlasmicSuggestedDoctor__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicSuggestedDoctor__ArgsType = {};
+export type PlasmicSuggestedDoctor__ArgsType = {
+  categoryTitle?: string;
+  categoryValue?: string;
+};
 type ArgPropType = keyof PlasmicSuggestedDoctor__ArgsType;
-export const PlasmicSuggestedDoctor__ArgProps = new Array<ArgPropType>();
+export const PlasmicSuggestedDoctor__ArgProps = new Array<ArgPropType>(
+  "categoryTitle",
+  "categoryValue"
+);
 
 export type PlasmicSuggestedDoctor__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
@@ -97,6 +103,8 @@ export type PlasmicSuggestedDoctor__OverridesType = {
 };
 
 export interface DefaultSuggestedDoctorProps {
+  categoryTitle?: string;
+  categoryValue?: string;
   className?: string;
 }
 
@@ -218,19 +226,12 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
           eventArgs
         );
       }}
-      url={(() => {
-        try {
-          return `https://apigw.paziresh24.com/seapi/v1/search/ir/general-practitioner?turn_type=consult}`;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return undefined;
-          }
-          throw e;
-        }
-      })()}
+      url={` ${(() => {
+        const category = !!$props.categoryValue
+          ? $props.categoryValue
+          : "general-practitioner";
+        return `https://apigw.paziresh24.com/seapi/v1/search/ir/${category}?turn_type=consult`;
+      })()}`}
     >
       <div className={classNames(projectcss.all, sty.freeBox__azUh)}>
         <Alert
@@ -495,9 +496,23 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
                 sty.text
               )}
             >
-              {
-                "\u0645\u0634\u0627\u0647\u062f\u0647 \u0633\u0627\u06cc\u0631 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0622\u0646\u0644\u0627\u06cc\u0646"
-              }
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return `مشاهده سایر پزشکان آنلاین ${
+                      $props?.categoryTitle || ""
+                    }`;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0645\u0634\u0627\u0647\u062f\u0647 \u0633\u0627\u06cc\u0631 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0622\u0646\u0644\u0627\u06cc\u0646";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
             </div>
           }
           className={classNames("__wab_instance", sty.button__xa6At)}
@@ -506,7 +521,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
             const $steps = {};
 
             $steps["goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"] =
-              true
+              !$props.categoryValue
                 ? (() => {
                     const actionArgs = {
                       destination:
@@ -540,6 +555,45 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
                 await $steps[
                   "goToHttpsWwwPaziresh24ComConsultFromRecommendSection1"
                 ];
+            }
+
+            $steps["goToPage"] = !!$props.categoryValue
+              ? (() => {
+                  const actionArgs = {
+                    destination: (() => {
+                      try {
+                        return `/s/ir/${$props.categoryValue}?turn_type=consult`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["goToPage"] != null &&
+              typeof $steps["goToPage"] === "object" &&
+              typeof $steps["goToPage"].then === "function"
+            ) {
+              $steps["goToPage"] = await $steps["goToPage"];
             }
           }}
         />

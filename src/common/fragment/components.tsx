@@ -50,6 +50,7 @@ import PlasmicSearch, { PlasmicSearch__ArgProps } from '.plasmic/plasmic/pazires
 import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSeoBox';
 import { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 import PlasmicSort, { PlasmicSort__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSort';
+import PlasmicConsultBanner, { PlasmicConsultBanner__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicConsultBanner';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -226,6 +227,12 @@ export const Components = {
     Component: PlasmicSort,
     id: 's-wlX7BnSeTl',
     propsAllowed: PlasmicSort__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
+  ConsultBanner: {
+    Component: PlasmicConsultBanner,
+    id: 'KmDr0VPQLI2_',
+    propsAllowed: PlasmicConsultBanner__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };
