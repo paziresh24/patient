@@ -51,6 +51,7 @@
   font-size: var(--token-KeHe2fFUQ6pK);
   color: var(--token-rjAIDXsTjJqJ);
   font-weight: 500;
+  white-space: pre;
   min-width: 0;
 }
 .svg {
