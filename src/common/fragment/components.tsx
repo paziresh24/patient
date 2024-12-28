@@ -36,6 +36,7 @@ import PlasmicBookingServiceList, {
 import PlasmicProfileHead, { PlasmicProfileHead__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicProfileAbout, { PlasmicProfileAbout__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
 import PlasmicProfileActivity, { PlasmicProfileActivity__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileActivity';
+import PlasmicProfileSeo, { PlasmicProfileSeo__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo';
 import PlasmicFilterListView, { PlasmicFilterListView__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterListView';
 import PlasmicFilterExpertiseView, {
   PlasmicFilterExpertiseView__ArgProps,
@@ -167,6 +168,12 @@ export const Components = {
     Component: PlasmicProfileActivity,
     id: 'LIHtK_X7GpDY',
     propsAllowed: PlasmicProfileActivity__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
+  },
+  ProfileSeo: {
+    Component: PlasmicProfileSeo,
+    id: 'AyZkzO0Ld0SI',
+    propsAllowed: PlasmicProfileSeo__ArgProps,
     projectId: '7r312uiqyadpVPdnRoAggk',
   },
   FilterListView: {

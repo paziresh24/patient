@@ -224,7 +224,29 @@ export const sections = (data: any) => {
           breadcrumbs: seo.breadcrumbs,
         };
       },
-      children: (props: any) => <ProfileSeoBox {...props} />,
+      children: (props: any) => {
+        const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
+        const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
+        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
+        return (
+          <Fragment
+            name="ProfileSeo"
+            props={{
+              information,
+              feedbacks,
+              center,
+              isOnlineVisitCenter,
+              doctorExpertise,
+              countOfPageView: convertLongToCompactNumber(history?.count_of_page_view),
+              bredcrumbs: seo.breadcrumbs,
+              similarLinks,
+              expertises,
+            }}
+          />
+        );
+        // <ProfileSeoBox {...props} />
+      },
     },
   ] as const;
 };
+
