@@ -344,6 +344,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
               sty.freeBox__qjWEy,
               "no-scroll"
             )}
+            style={{ width: "100%" }}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
               (() => {

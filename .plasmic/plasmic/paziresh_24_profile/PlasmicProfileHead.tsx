@@ -61,6 +61,9 @@ import {
 
 import ProfileActions from "../../ProfileActions"; // plasmic-import: VtINgkEb27Pn/component
 import ProfileInfo from "../../ProfileInfo"; // plasmic-import: rFaRrp2J8jq8/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -69,6 +72,8 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVP
 import sty from "./PlasmicProfileHead.module.css"; // plasmic-import: fKBGdItR62E2/css
 
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: YUYx96s4ZKDV/icon
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -106,7 +111,6 @@ export type PlasmicProfileHead__OverridesType = {
   span?: Flex__<"span">;
   svg?: Flex__<"svg">;
   profileInfo?: Flex__<typeof ProfileInfo>;
-  text?: Flex__<"div">;
 };
 
 export interface DefaultProfileHeadProps {
@@ -158,6 +162,10 @@ function PlasmicProfileHead__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
+  });
 
   return (
     <Stack__
@@ -339,12 +347,10 @@ function PlasmicProfileHead__RenderFunc(props: {
           const currentIndex = __plasmic_idx_0;
           return (
             <div
-              data-plasmic-name={"text"}
-              data-plasmic-override={overrides.text}
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text
+                sty.text__yflB8
               )}
               key={currentIndex}
               style={{ width: "max-content", minWidth: "fit-content" }}
@@ -374,26 +380,135 @@ function PlasmicProfileHead__RenderFunc(props: {
           value: args.children
         })}
       </div>
+      <div className={classNames(projectcss.all, sty.freeBox__dtZp8)}>
+        <PlasmicLink__
+          className={classNames(
+            projectcss.all,
+            projectcss.a,
+            projectcss.__wab_text,
+            sty.link___2R2W
+          )}
+          component={Link}
+          href={""}
+          platform={"nextjs"}
+        >
+          {"\u0622\u062f\u0631\u0633 \u0648 \u062a\u0644\u0641\u0646"}
+        </PlasmicLink__>
+        <Button
+          children2={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__xcsi
+              )}
+            >
+              {"\u0622\u062f\u0631\u0633 \u0648 \u062a\u0644\u0641\u0646"}
+            </div>
+          }
+          className={classNames("__wab_instance", sty.button__rgvju)}
+          color={"clear"}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["goToPhoneAndAddress"] = true
+              ? (() => {
+                  const actionArgs = { destination: "#phone-and-address" };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["goToPhoneAndAddress"] != null &&
+              typeof $steps["goToPhoneAndAddress"] === "object" &&
+              typeof $steps["goToPhoneAndAddress"].then === "function"
+            ) {
+              $steps["goToPhoneAndAddress"] = await $steps[
+                "goToPhoneAndAddress"
+              ];
+            }
+          }}
+        />
+
+        <Button
+          children2={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__zfeLn
+              )}
+            >
+              {"\u0646\u0638\u0631\u0627\u062a"}
+            </div>
+          }
+          className={classNames("__wab_instance", sty.button__dq1R5)}
+          color={"clear"}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["goToReviews"] = true
+              ? (() => {
+                  const actionArgs = { destination: "#reviews" };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["goToReviews"] != null &&
+              typeof $steps["goToReviews"] === "object" &&
+              typeof $steps["goToReviews"].then === "function"
+            ) {
+              $steps["goToReviews"] = await $steps["goToReviews"];
+            }
+          }}
+        />
+
+        <PlasmicLink__
+          className={classNames(
+            projectcss.all,
+            projectcss.a,
+            projectcss.__wab_text,
+            sty.link__zYrqf
+          )}
+          component={Link}
+          href={"#reviews"}
+          platform={"nextjs"}
+        >
+          {"\u0646\u0638\u0631\u0627\u062a"}
+        </PlasmicLink__>
+      </div>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "profileActions",
-    "viewCount",
-    "span",
-    "svg",
-    "profileInfo",
-    "text"
-  ],
+  root: ["root", "profileActions", "viewCount", "span", "svg", "profileInfo"],
   profileActions: ["profileActions"],
   viewCount: ["viewCount", "span", "svg"],
   span: ["span"],
   svg: ["svg"],
-  profileInfo: ["profileInfo"],
-  text: ["text"]
+  profileInfo: ["profileInfo"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -405,7 +520,6 @@ type NodeDefaultElementType = {
   span: "span";
   svg: "svg";
   profileInfo: typeof ProfileInfo;
-  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -473,7 +587,6 @@ export const PlasmicProfileHead = Object.assign(
     span: makeNodeComponent("span"),
     svg: makeNodeComponent("svg"),
     profileInfo: makeNodeComponent("profileInfo"),
-    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicProfileHead
     internalVariantProps: PlasmicProfileHead__VariantProps,
