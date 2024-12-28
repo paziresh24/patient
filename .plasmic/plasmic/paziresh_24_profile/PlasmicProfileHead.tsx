@@ -397,6 +397,50 @@ function PlasmicProfileHead__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
+                sty.text__zfeLn
+              )}
+            >
+              {"\u0646\u0638\u0631\u0627\u062a"}
+            </div>
+          }
+          className={classNames("__wab_instance", sty.button__dq1R5)}
+          color={"clear"}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["goToReviews"] = true
+              ? (() => {
+                  const actionArgs = { destination: "#reviews" };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["goToReviews"] != null &&
+              typeof $steps["goToReviews"] === "object" &&
+              typeof $steps["goToReviews"].then === "function"
+            ) {
+              $steps["goToReviews"] = await $steps["goToReviews"];
+            }
+          }}
+        />
+
+        <Button
+          children2={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
                 sty.text__xcsi
               )}
             >
@@ -433,50 +477,6 @@ function PlasmicProfileHead__RenderFunc(props: {
               $steps["goToPhoneAndAddress"] = await $steps[
                 "goToPhoneAndAddress"
               ];
-            }
-          }}
-        />
-
-        <Button
-          children2={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__zfeLn
-              )}
-            >
-              {"\u0646\u0638\u0631\u0627\u062a"}
-            </div>
-          }
-          className={classNames("__wab_instance", sty.button__dq1R5)}
-          color={"clear"}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["goToReviews"] = true
-              ? (() => {
-                  const actionArgs = { destination: "#reviews" };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["goToReviews"] != null &&
-              typeof $steps["goToReviews"] === "object" &&
-              typeof $steps["goToReviews"].then === "function"
-            ) {
-              $steps["goToReviews"] = await $steps["goToReviews"];
             }
           }}
         />
