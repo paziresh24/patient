@@ -65,6 +65,8 @@ import { Accordion } from "@/common/fragment/components/accordion"; // plasmic-i
 import ProfileSeoSimilarLinks from "../../ProfileSeoSimilarLinks"; // plasmic-import: t9YD5mtJ9Hq-/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -167,6 +169,10 @@ function PlasmicProfileSeo__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
+  });
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -183,25 +189,26 @@ function PlasmicProfileSeo__RenderFunc(props: {
         sty.root
       )}
     >
-      <ProfileBreadcrumbs
-        data-plasmic-name={"profileBreadcrumbs"}
-        data-plasmic-override={overrides.profileBreadcrumbs}
-        breadcrumbs={(() => {
-          try {
-            return $props.bredcrumbs;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
+      <div className={classNames(projectcss.all, sty.freeBox__zdzqO)}>
+        <ProfileBreadcrumbs
+          data-plasmic-name={"profileBreadcrumbs"}
+          data-plasmic-override={overrides.profileBreadcrumbs}
+          breadcrumbs={(() => {
+            try {
+              return $props.bredcrumbs;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
             }
-            throw e;
-          }
-        })()}
-        className={classNames("__wab_instance", sty.profileBreadcrumbs)}
-      />
-
+          })()}
+          className={classNames("__wab_instance", sty.profileBreadcrumbs)}
+        />
+      </div>
       <div className={classNames(projectcss.all, sty.freeBox__ql5Ki)}>
         <Collapsible
           data-plasmic-name={"collapsible"}
