@@ -88,7 +88,6 @@ export type PlasmicProfileSeo__ArgsType = {
   isOnlineVisitCenter?: boolean;
   expertises?: any;
   similarLinks?: any;
-  seo?: any;
   center?: any;
   doctorExpertise?: string;
   countOfPageView?: string;
@@ -101,7 +100,6 @@ export const PlasmicProfileSeo__ArgProps = new Array<ArgPropType>(
   "isOnlineVisitCenter",
   "expertises",
   "similarLinks",
-  "seo",
   "center",
   "doctorExpertise",
   "countOfPageView",
@@ -122,7 +120,6 @@ export interface DefaultProfileSeoProps {
   isOnlineVisitCenter?: boolean;
   expertises?: any;
   similarLinks?: any;
-  seo?: any;
   center?: any;
   doctorExpertise?: string;
   countOfPageView?: string;
@@ -205,110 +202,112 @@ function PlasmicProfileSeo__RenderFunc(props: {
         className={classNames("__wab_instance", sty.profileBreadcrumbs)}
       />
 
-      <Collapsible
-        data-plasmic-name={"collapsible"}
-        data-plasmic-override={overrides.collapsible}
-        className={classNames("__wab_instance", sty.collapsible)}
-        defaultMaxHeight={"100px"}
-        slot={
-          <div className={classNames(projectcss.all, sty.freeBox___3Oxqh)}>
-            <Button
-              children2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__xaxc6
-                  )}
-                >
-                  {
-                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
-                  }
-                </div>
-              }
-              className={classNames("__wab_instance", sty.button__wSPyY)}
-              color={"softBlue"}
-              showStartIcon={true}
-              size={"compact"}
-              startIcon={
-                <ChevronUpIcon
-                  className={classNames(projectcss.all, sty.svg__slO1)}
-                  role={"img"}
-                />
-              }
-            />
-          </div>
-        }
-        slot2={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__psc85)}
-          >
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__yN06V
-              )}
+      <div className={classNames(projectcss.all, sty.freeBox__ql5Ki)}>
+        <Collapsible
+          data-plasmic-name={"collapsible"}
+          data-plasmic-override={overrides.collapsible}
+          className={classNames("__wab_instance", sty.collapsible)}
+          defaultMaxHeight={"100px"}
+          slot={
+            <div className={classNames(projectcss.all, sty.freeBox___3Oxqh)}>
+              <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__xaxc6
+                    )}
+                  >
+                    {
+                      "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
+                    }
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.button__wSPyY)}
+                color={"softBlue"}
+                showStartIcon={true}
+                size={"compact"}
+                startIcon={
+                  <ChevronUpIcon
+                    className={classNames(projectcss.all, sty.svg__slO1)}
+                    role={"img"}
+                  />
+                }
+              />
+            </div>
+          }
+          slot2={
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__psc85)}
             >
               <div
-                className={projectcss.__wab_expr_html_text}
-                dangerouslySetInnerHTML={{
-                  __html: (() => {
-                    try {
-                      return (() => {
-                        const center = $props.center;
-                        const information = $props.information;
-                        const doctorExpertise = $props.doctorExpertise;
-                        const feedbacks = $props.feedbacks;
-                        const expertises = $props.expertises;
-                        const isOnlineVisitCenter = $props.isOnlineVisitCenter;
-                        return `<p>${information.prefix} ${
-                          information.display_name
-                        }، ${doctorExpertise ?? "سایر"} در شهر ${
-                          center?.city ?? "(ثبت نشده)"
-                        } است. مطب ${information.prefix} ${
-                          information.display_name
-                        } در ${
-                          center?.address ?? "(ثبت نشده)"
-                        } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
-                          !isOnlineVisitCenter &&
-                          !!center?.display_number_array[0]
-                            ? center?.display_number_array[0]
-                            : "(ثبت نشده)"
-                        }</span> تماس بگیرید.</p>
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__yN06V
+                )}
+              >
+                <div
+                  className={projectcss.__wab_expr_html_text}
+                  dangerouslySetInnerHTML={{
+                    __html: (() => {
+                      try {
+                        return (() => {
+                          const center = $props.center;
+                          const information = $props.information;
+                          const doctorExpertise = $props.doctorExpertise;
+                          const feedbacks = $props.feedbacks;
+                          const expertises = $props.expertises;
+                          const isOnlineVisitCenter =
+                            $props.isOnlineVisitCenter;
+                          return `<p>${information.prefix} ${
+                            information.display_name
+                          }، ${doctorExpertise ?? "سایر"} در شهر ${
+                            center?.city ?? "(ثبت نشده)"
+                          } است. مطب ${information.prefix} ${
+                            information.display_name
+                          } در ${
+                            center?.address ?? "(ثبت نشده)"
+                          } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
+                            !isOnlineVisitCenter &&
+                            !!center?.display_number_array[0]
+                              ? center?.display_number_array[0]
+                              : "(ثبت نشده)"
+                          }</span> تماس بگیرید.</p>
         <p>تاکنون   ${$props.countOfPageView ?? 0} نفر از پروفایل ${
-                          information.prefix
-                        } ${information.display_name}، ${
-                          doctorExpertise ?? "سایر"
-                        }  بازدید کرده‌اند؛ ${
-                          !feedbacks?.details?.hide_rates
-                            ? `همچنین ${
-                                +(
-                                  (+(
-                                    feedbacks?.details?.average_rates
-                                      ?.average_quality_of_treatment ?? 0
-                                  ) +
-                                    +(
+                            information.prefix
+                          } ${information.display_name}، ${
+                            doctorExpertise ?? "سایر"
+                          }  بازدید کرده‌اند؛ ${
+                            !feedbacks?.details?.hide_rates
+                              ? `همچنین ${
+                                  +(
+                                    (+(
                                       feedbacks?.details?.average_rates
-                                        ?.average_doctor_encounter ?? 0
+                                        ?.average_quality_of_treatment ?? 0
                                     ) +
-                                    +(
-                                      feedbacks?.details?.average_rates
-                                        ?.average_explanation_of_issue ?? 0
-                                    )) /
-                                  3
-                                )?.toFixed(1) * 20
-                              }٪ مراجعین (${
-                                feedbacks?.details?.count_of_feedbacks ?? 0
-                              } نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${
-                                information.prefix
-                              } ${
-                                information.display_name
-                              }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
-                            : ""
-                        }
+                                      +(
+                                        feedbacks?.details?.average_rates
+                                          ?.average_doctor_encounter ?? 0
+                                      ) +
+                                      +(
+                                        feedbacks?.details?.average_rates
+                                          ?.average_explanation_of_issue ?? 0
+                                      )) /
+                                    3
+                                  )?.toFixed(1) * 20
+                                }٪ مراجعین (${
+                                  feedbacks?.details?.count_of_feedbacks ?? 0
+                                } نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${
+                                  information.prefix
+                                } ${
+                                  information.display_name
+                                }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
+                              : ""
+                          }
         ${
           center?.freeturn_text
             ? `<p>زودترین زمان رزرو نوبت از مطب ${information.prefix} ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
@@ -320,145 +319,146 @@ function PlasmicProfileSeo__RenderFunc(props: {
         <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${
           information.prefix
         } ${
-                          information.display_name
-                        }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
+                            information.display_name
+                          }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
         <li>آدرس مطب ${information.prefix} ${information.display_name}: ${
-                          isOnlineVisitCenter ||
-                          (!center?.address && !center?.city)
-                            ? "ثبت نشده"
-                            : `${center?.city}، ${center?.address}`
-                        }</li>
+                            isOnlineVisitCenter ||
+                            (!center?.address && !center?.city)
+                              ? "ثبت نشده"
+                              : `${center?.city}، ${center?.address}`
+                          }</li>
         <li>تلفن مطب ${information.prefix} ${
-                          information.display_name
-                        }: <span class="inline-block">${
-                          isOnlineVisitCenter ||
-                          !center?.display_number_array[0]
-                            ? "ثبت نشده"
-                            : center?.display_number_array[0] ?? ""
-                        }</span></li>
+                            information.display_name
+                          }: <span class="inline-block">${
+                            isOnlineVisitCenter ||
+                            !center?.display_number_array[0]
+                              ? "ثبت نشده"
+                              : center?.display_number_array[0] ?? ""
+                          }</span></li>
         <li>تخصص ${information.prefix} ${information.display_name}: ${
-                          expertises?.expertises
-                            ?.map?.(item => item?.alias_title)
-                            ?.join("/ ") ?? expertises?.expertises?.[0]?.name
-                        }</li>
+                            expertises?.expertises
+                              ?.map?.(item => item?.alias_title)
+                              ?.join("/ ") ?? expertises?.expertises?.[0]?.name
+                          }</li>
         </ui>
         `;
-                      })();
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "";
-                      }
-                      throw e;
-                    }
-                  })()
-                }}
-              />
-            </div>
-            <Accordion
-              data-plasmic-name={"fragmentAccordion"}
-              data-plasmic-override={overrides.fragmentAccordion}
-              className={classNames("__wab_instance", sty.fragmentAccordion)}
-              title={
-                "\u062a\u062e\u0635\u0635 \u0647\u0627\u06cc \u0645\u0631\u062a\u0628\u0637"
-              }
-            >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__wprRi)}
-              >
-                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                  (() => {
-                    try {
-                      return $props.similarLinks;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return [];
-                      }
-                      throw e;
-                    }
-                  })()
-                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                  const currentItem = __plasmic_item_0;
-                  const currentIndex = __plasmic_idx_0;
-                  return (
-                    <ProfileSeoSimilarLinks
-                      data-plasmic-name={"profileSeoSimilarLinks"}
-                      data-plasmic-override={overrides.profileSeoSimilarLinks}
-                      className={classNames(
-                        "__wab_instance",
-                        sty.profileSeoSimilarLinks
-                      )}
-                      key={currentIndex}
-                      title={(() => {
-                        try {
-                          return currentItem.caption;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                        })();
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "";
                         }
-                      })()}
-                      url={(() => {
-                        try {
-                          return currentItem.link;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                    />
-                  );
-                })}
-              </Stack__>
-            </Accordion>
-          </Stack__>
-        }
-      >
-        <div className={classNames(projectcss.all, sty.freeBox__zoS6D)}>
-          <Button
-            children2={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__au9Xq
-                )}
-              >
-                {
-                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
-                }
+                        throw e;
+                      }
+                    })()
+                  }}
+                />
               </div>
-            }
-            className={classNames("__wab_instance", sty.button__miWji)}
-            color={"softBlue"}
-            showStartIcon={true}
-            size={"compact"}
-            startIcon={
-              <ChevronDownIcon
-                className={classNames(projectcss.all, sty.svg__yLk)}
-                role={"img"}
-              />
-            }
-          />
-        </div>
-      </Collapsible>
+              <Accordion
+                data-plasmic-name={"fragmentAccordion"}
+                data-plasmic-override={overrides.fragmentAccordion}
+                className={classNames("__wab_instance", sty.fragmentAccordion)}
+                title={
+                  "\u062a\u062e\u0635\u0635 \u0647\u0627\u06cc \u0645\u0631\u062a\u0628\u0637"
+                }
+              >
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__wprRi)}
+                >
+                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return $props.similarLinks;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                    const currentItem = __plasmic_item_0;
+                    const currentIndex = __plasmic_idx_0;
+                    return (
+                      <ProfileSeoSimilarLinks
+                        data-plasmic-name={"profileSeoSimilarLinks"}
+                        data-plasmic-override={overrides.profileSeoSimilarLinks}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.profileSeoSimilarLinks
+                        )}
+                        key={currentIndex}
+                        title={(() => {
+                          try {
+                            return currentItem.caption;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        url={(() => {
+                          try {
+                            return currentItem.link;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    );
+                  })}
+                </Stack__>
+              </Accordion>
+            </Stack__>
+          }
+        >
+          <div className={classNames(projectcss.all, sty.freeBox__zoS6D)}>
+            <Button
+              children2={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__au9Xq
+                  )}
+                >
+                  {
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
+                  }
+                </div>
+              }
+              className={classNames("__wab_instance", sty.button__miWji)}
+              color={"softBlue"}
+              showStartIcon={true}
+              size={"compact"}
+              startIcon={
+                <ChevronDownIcon
+                  className={classNames(projectcss.all, sty.svg__yLk)}
+                  role={"img"}
+                />
+              }
+            />
+          </div>
+        </Collapsible>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
