@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import RaviRateAndCommentCount from "../../RaviRateAndCommentCount"; // plasmic-import: sq-hoyjtWZlg/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -81,20 +82,23 @@ export type PlasmicReviewRateAndCommentCount__ArgsType = {
   hideRates?: boolean;
   rateCount?: string;
   rate?: string;
+  seo?: any;
 };
 type ArgPropType = keyof PlasmicReviewRateAndCommentCount__ArgsType;
 export const PlasmicReviewRateAndCommentCount__ArgProps =
-  new Array<ArgPropType>("hideRates", "rateCount", "rate");
+  new Array<ArgPropType>("hideRates", "rateCount", "rate", "seo");
 
 export type PlasmicReviewRateAndCommentCount__OverridesType = {
   root?: Flex__<"div">;
   raviRateAndCommentCount?: Flex__<typeof RaviRateAndCommentCount>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultReviewRateAndCommentCountProps {
   hideRates?: boolean;
   rateCount?: string;
   rate?: string;
+  seo?: any;
   className?: string;
 }
 
@@ -140,6 +144,8 @@ function PlasmicReviewRateAndCommentCount__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     (() => {
       try {
@@ -181,14 +187,71 @@ function PlasmicReviewRateAndCommentCount__RenderFunc(props: {
           rate={args.rate}
           rateCount={args.rateCount}
         />
+
+        <SideEffect
+          data-plasmic-name={"sideEffect"}
+          data-plasmic-override={overrides.sideEffect}
+          className={classNames("__wab_instance", sty.sideEffect)}
+          deps={(() => {
+            try {
+              return [$ctx.Growthbook.isReady];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          onMount={async () => {
+            const $steps = {};
+
+            $steps["invokeGlobalAction"] = $ctx.Growthbook.isReady
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            slug: $props.seo.slug
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions[
+                    "GrowthbookGlobalContext.setAttributes"
+                  ]?.apply(null, [...actionArgs.args]);
+                })()
+              : undefined;
+            if (
+              $steps["invokeGlobalAction"] != null &&
+              typeof $steps["invokeGlobalAction"] === "object" &&
+              typeof $steps["invokeGlobalAction"].then === "function"
+            ) {
+              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+            }
+          }}
+        />
       </div>
     ) : null
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "raviRateAndCommentCount"],
-  raviRateAndCommentCount: ["raviRateAndCommentCount"]
+  root: ["root", "raviRateAndCommentCount", "sideEffect"],
+  raviRateAndCommentCount: ["raviRateAndCommentCount"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -196,6 +259,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   raviRateAndCommentCount: typeof RaviRateAndCommentCount;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -260,6 +324,7 @@ export const PlasmicReviewRateAndCommentCount = Object.assign(
   {
     // Helper components rendering sub-elements
     raviRateAndCommentCount: makeNodeComponent("raviRateAndCommentCount"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicReviewRateAndCommentCount
     internalVariantProps: PlasmicReviewRateAndCommentCount__VariantProps,
