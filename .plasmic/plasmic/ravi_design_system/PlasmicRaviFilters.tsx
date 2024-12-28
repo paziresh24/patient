@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import Select from "../../Select"; // plasmic-import: _-4ghU5Xu-FB/component
+import CustomSelect from "../../CustomSelect"; // plasmic-import: _-4ghU5Xu-FB/component
 import TextInput from "../../TextInput"; // plasmic-import: OSr_35iNKRP7/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -101,8 +101,8 @@ export const PlasmicRaviFilters__ArgProps = new Array<ArgPropType>(
 export type PlasmicRaviFilters__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
-  filters?: Flex__<typeof Select>;
-  select?: Flex__<typeof Select>;
+  filters?: Flex__<typeof CustomSelect>;
+  select?: Flex__<typeof CustomSelect>;
   textInput?: Flex__<typeof TextInput>;
 };
 
@@ -240,7 +240,7 @@ function PlasmicRaviFilters__RenderFunc(props: {
         className={classNames(projectcss.all, sty.freeBox)}
         dir={"rtl"}
       >
-        <Select
+        <CustomSelect
           data-plasmic-name={"filters"}
           data-plasmic-override={overrides.filters}
           className={classNames("__wab_instance", sty.filters)}
@@ -315,7 +315,7 @@ function PlasmicRaviFilters__RenderFunc(props: {
           value={generateStateValueProp($state, ["filters", "value"])}
         />
 
-        <Select
+        <CustomSelect
           data-plasmic-name={"select"}
           data-plasmic-override={overrides.select}
           className={classNames("__wab_instance", sty.select)}
@@ -468,8 +468,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
-  filters: typeof Select;
-  select: typeof Select;
+  filters: typeof CustomSelect;
+  select: typeof CustomSelect;
   textInput: typeof TextInput;
 };
 
