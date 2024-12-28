@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicCustomSelect__OptionGroup,
   DefaultCustomSelect__OptionGroupProps
-} from "./plasmic/ravi_r_r/PlasmicCustomSelect__OptionGroup";
+} from "./plasmic/ravi_design_system/PlasmicCustomSelect__OptionGroup";
 
 export interface CustomSelect__OptionGroupProps
   extends DefaultCustomSelect__OptionGroupProps {

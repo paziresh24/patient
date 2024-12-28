@@ -1677,7 +1677,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -2135,19 +2136,6 @@
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "triggered-overlay"
-        },
-        {
-          "id": "Uf01_sq9GR0d",
-          "name": "Test2",
-          "type": "managed",
-          "projectId": "qQzsBf58SqzNJX45iggq96",
-          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicTest2.tsx",
-          "importSpec": {
-            "modulePath": "Test2.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_r_r/PlasmicTest2.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
         }
       ],
       "icons": [
@@ -2440,8 +2428,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -4145,7 +4132,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",
@@ -4417,62 +4405,6 @@
           "componentType": "component"
         },
         {
-          "id": "_-4ghU5Xu-FB",
-          "name": "Select",
-          "type": "managed",
-          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
-          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicSelect.tsx",
-          "importSpec": {
-            "modulePath": "Select.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_design_system/PlasmicSelect.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "select"
-        },
-        {
-          "id": "aMYhgsV1eA0k",
-          "name": "Select__Option",
-          "type": "managed",
-          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
-          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicSelect__Option.tsx",
-          "importSpec": {
-            "modulePath": "Select__Option.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_design_system/PlasmicSelect__Option.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "select-option"
-        },
-        {
-          "id": "1a9LJZTYyJSj",
-          "name": "Select__OptionGroup",
-          "type": "managed",
-          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
-          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicSelect__OptionGroup.tsx",
-          "importSpec": {
-            "modulePath": "Select__OptionGroup.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_design_system/PlasmicSelect__OptionGroup.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "select-option-group"
-        },
-        {
-          "id": "ieGcNb-pMGjg",
-          "name": "Select__Overlay",
-          "type": "managed",
-          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
-          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicSelect__Overlay.tsx",
-          "importSpec": {
-            "modulePath": "Select__Overlay.tsx"
-          },
-          "cssFilePath": "plasmic/ravi_design_system/PlasmicSelect__Overlay.module.css",
-          "scheme": "blackbox",
-          "componentType": "component",
-          "plumeType": "triggered-overlay"
-        },
-        {
           "id": "OSr_35iNKRP7",
           "name": "TextInput",
           "type": "managed",
@@ -4628,6 +4560,62 @@
           "cssFilePath": "plasmic/ravi_design_system/PlasmicCheckbox.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "_-4ghU5Xu-FB",
+          "name": "CustomSelect",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect.tsx",
+          "importSpec": {
+            "modulePath": "CustomSelect.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "select"
+        },
+        {
+          "id": "aMYhgsV1eA0k",
+          "name": "CustomSelect__Option",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__Option.tsx",
+          "importSpec": {
+            "modulePath": "CustomSelect__Option.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__Option.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "select-option"
+        },
+        {
+          "id": "1a9LJZTYyJSj",
+          "name": "CustomSelect__OptionGroup",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__OptionGroup.tsx",
+          "importSpec": {
+            "modulePath": "CustomSelect__OptionGroup.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__OptionGroup.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "select-option-group"
+        },
+        {
+          "id": "ieGcNb-pMGjg",
+          "name": "CustomSelect__Overlay",
+          "type": "managed",
+          "projectId": "pkMLinFwM9pzwv5S5KpiAu",
+          "renderModuleFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__Overlay.tsx",
+          "importSpec": {
+            "modulePath": "CustomSelect__Overlay.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_design_system/PlasmicCustomSelect__Overlay.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "triggered-overlay"
         }
       ],
       "icons": [
@@ -4730,8 +4718,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",
