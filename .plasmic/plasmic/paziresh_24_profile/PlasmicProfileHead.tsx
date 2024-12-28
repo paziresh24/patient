@@ -185,7 +185,11 @@ function PlasmicProfileHead__RenderFunc(props: {
         sty.root
       )}
     >
-      <div className={classNames(projectcss.all, sty.freeBox__zmn0Z)}>
+      <Stack__
+        as={"div"}
+        hasGap={true}
+        className={classNames(projectcss.all, sty.freeBox__zmn0Z)}
+      >
         <Stack__
           as={"div"}
           hasGap={true}
@@ -385,7 +389,7 @@ function PlasmicProfileHead__RenderFunc(props: {
             value: args.children
           })}
         </div>
-      </div>
+      </Stack__>
       <div className={classNames(projectcss.all, sty.freeBox__dtZp8)}>
         <Button
           children2={
