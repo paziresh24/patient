@@ -35,8 +35,8 @@
   .root > :global(.__wab_flex-container) {
     margin-left: calc(0px - 0px);
     width: calc(100% + 0px);
-    margin-top: calc(0px - var(--token-fhaz6q6bl-fW));
-    height: calc(100% + var(--token-fhaz6q6bl-fW));
+    margin-top: calc(0px - 0px);
+    height: calc(100% + 0px);
   }
 }
 @media (min-width: 0px) and (max-width: 768px) {
@@ -49,7 +49,7 @@
     > picture
     > img {
     margin-left: 0px;
-    margin-top: var(--token-fhaz6q6bl-fW);
+    margin-top: 0px;
   }
 }
 .freeBox__zmn0Z {
@@ -66,6 +66,7 @@
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox__zmn0Z {
     background: #ffffff;
+    border-radius: var(--token-_c276Gs_1FIE);
     padding: var(--token-Fv8-L_kN-2Ma);
   }
 }
@@ -204,12 +205,14 @@
   height: auto;
   max-width: 100%;
   background: #ffffff;
+  margin-top: calc(1px + var(--token-vMUQwr5Jto1d)) !important;
   min-width: 0;
   display: none;
   padding: var(--token-Fv8-L_kN-2Ma);
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox__dtZp8 {
+    margin-top: calc(1px + 0px) !important;
     display: flex;
   }
 }
