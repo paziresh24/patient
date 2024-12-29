@@ -913,69 +913,175 @@ function PlasmicProductCard__RenderFunc(props: {
             ) : null}
             {(() => {
               try {
-                return !!$props.subTitle;
+                return $props.title ? true : false;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return false;
+                  return true;
                 }
                 throw e;
               }
             })() ? (
-              <LineClamp
-                className={classNames("__wab_instance", sty.lineClamp__lmqY, {
-                  [sty.lineClampexternalBookDesign__lmqYHqYe]: hasVariant(
-                    $state,
-                    "externalBookDesign",
-                    "externalBookDesign"
-                  )
-                })}
-                numberOfLines={1}
-              >
-                <span
-                  data-plasmic-name={"cardSubtitle"}
-                  data-plasmic-override={overrides.cardSubtitle}
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.span,
-                    projectcss.__wab_text,
-                    sty.cardSubtitle,
-                    {
-                      [sty.cardSubtitle_5StarRatingMode3__5StarA]: hasVariant(
-                        $state,
-                        "_5StarRatingMode3",
-                        "_5StarA"
-                      ),
-                      [sty.cardSubtitleexternalBookDesign]: hasVariant(
-                        $state,
-                        "externalBookDesign",
-                        "externalBookDesign"
-                      )
+              <PlasmicLink__
+                className={classNames(
+                  projectcss.all,
+                  projectcss.a,
+                  sty.link__xjBwH
+                )}
+                component={Link}
+                href={(() => {
+                  try {
+                    return $props.url?.destination.startsWith("/center/https")
+                      ? $props.url?.destination.slice(8, -1)
+                      : $props.url?.destination;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $props.subTitle.replace(
-                          /([^،])،([^،])/g,
-                          "$1، $2"
-                        );
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627";
-                        }
-                        throw e;
+                    throw e;
+                  }
+                })()}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runEventTrigger"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["eventTrigger"],
+                          args: [
+                            "subTitle",
+                            (() => {
+                              try {
+                                return $props.subTitle.replace(
+                                  /([^،])،([^،])/g,
+                                  "$1، $2"
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runEventTrigger"] != null &&
+                    typeof $steps["runEventTrigger"] === "object" &&
+                    typeof $steps["runEventTrigger"].then === "function"
+                  ) {
+                    $steps["runEventTrigger"] = await $steps["runEventTrigger"];
+                  }
+                }}
+                platform={"nextjs"}
+                target={(() => {
+                  try {
+                    return $props.url?.openInNewTab;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                title={(() => {
+                  try {
+                    return $props.url?.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              >
+                {(() => {
+                  try {
+                    return !!$props.subTitle;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <LineClamp
+                    className={classNames(
+                      "__wab_instance",
+                      sty.lineClamp__lmqY,
+                      {
+                        [sty.lineClampexternalBookDesign__lmqYHqYe]: hasVariant(
+                          $state,
+                          "externalBookDesign",
+                          "externalBookDesign"
+                        )
                       }
-                    })()}
-                  </React.Fragment>
-                </span>
-              </LineClamp>
+                    )}
+                    numberOfLines={1}
+                  >
+                    <span
+                      data-plasmic-name={"cardSubtitle"}
+                      data-plasmic-override={overrides.cardSubtitle}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.span,
+                        projectcss.__wab_text,
+                        sty.cardSubtitle,
+                        {
+                          [sty.cardSubtitle_5StarRatingMode3__5StarA]:
+                            hasVariant($state, "_5StarRatingMode3", "_5StarA"),
+                          [sty.cardSubtitleexternalBookDesign]: hasVariant(
+                            $state,
+                            "externalBookDesign",
+                            "externalBookDesign"
+                          )
+                        }
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $props.subTitle.replace(
+                              /([^،])،([^،])/g,
+                              "$1، $2"
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627\u0633\u0627\u0628 \u062a\u0627\u06cc\u062a\u06cc\u0644 \u067e\u06cc\u0634 \u0641\u0631\u0636 \u062a\u062e\u0635\u0635 \u060c \u0639\u0646\u0648\u0627\u0646 \u0645\u0633\u062a\u0639\u0627\u0631 \u0648 \u062f\u0631\u0645\u0627\u0646 \u0647\u0627";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </span>
+                  </LineClamp>
+                ) : null}
+              </PlasmicLink__>
             ) : null}
             {(() => {
               try {
