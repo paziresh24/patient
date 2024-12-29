@@ -12,6 +12,7 @@ import { PWA, fragmentPWAMeta } from '@/common/fragment/pwa';
 import { RadioFilter, radioFilterMeta } from '@/common/fragment/components/radioFilter';
 import { Portal, portalMeta } from '@/common/fragment/components/portal';
 import { Accordion, accordionMeta } from '@/common/fragment/components/accordion';
+import { Gallery, galleryMeta } from '@/common/fragment/components/gallery';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -106,6 +107,7 @@ registerGlobalContext(Splunk, splunkMeta);
 registerComponent(ApiRequest as any, apiRequestMeta);
 registerComponent(Switch as any, switchMeta);
 registerComponent(RadioFilter as any, radioFilterMeta);
+registerComponent(Gallery as any, galleryMeta);
 registerGlobalContext(PWA, fragmentPWAMeta);
 registerComponent(Portal, portalMeta);
 registerComponent(Accordion, accordionMeta);
@@ -152,3 +154,4 @@ registerComponent(LayoutWithHeaderAndFooter, {
     width: 'stretch',
   },
 });
+
