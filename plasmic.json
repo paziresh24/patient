@@ -3951,6 +3951,58 @@
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileAbout.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "AyZkzO0Ld0SI",
+          "name": "ProfileSeo",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileSeo.tsx",
+          "importSpec": {
+            "modulePath": "ProfileSeo.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileSeo.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "t9YD5mtJ9Hq-",
+          "name": "ProfileSeoSimilarLinks",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileSeoSimilarLinks.tsx",
+          "importSpec": {
+            "modulePath": "ProfileSeoSimilarLinks.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileSeoSimilarLinks.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "a5gwmBZCRoof",
+          "name": "ProfileBreadcrumbs",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbs.tsx",
+          "importSpec": {
+            "modulePath": "ProfileBreadcrumbs.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbs.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "Rd-drOCrz_N9",
+          "name": "ProfileBreadcrumbsItems",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbsItems.tsx",
+          "importSpec": {
+            "modulePath": "ProfileBreadcrumbsItems.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbsItems.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
