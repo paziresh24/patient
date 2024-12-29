@@ -53,5 +53,5 @@
 .profileBreadcrumbsItems:global(.__wab_instance) {
   width: auto;
   max-width: auto;
-  min-width: auto;
+  flex-shrink: 0;
 }
