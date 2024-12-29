@@ -4003,6 +4003,19 @@
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbsItems.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "-M0f8W0T-8eT",
+          "name": "ProfileGallery",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileGallery.tsx",
+          "importSpec": {
+            "modulePath": "ProfileGallery.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileGallery.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -4174,6 +4187,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "bNZsEb_qQE7u",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -4184,8 +4203,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",

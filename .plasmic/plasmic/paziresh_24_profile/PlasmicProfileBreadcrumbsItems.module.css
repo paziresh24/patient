@@ -1,24 +1,27 @@
 .root {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   position: relative;
-  width: auto;
+  width: 100%;
   height: auto;
   max-width: 100%;
   justify-content: flex-start;
   align-items: center;
   justify-self: flex-start;
+  min-width: 0;
 }
 .freeBox {
   display: flex;
   flex-direction: row;
-  width: auto;
+  width: 100%;
   height: auto;
   max-width: 100%;
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   cursor: pointer;
+  flex-shrink: 0;
+  min-width: 0;
   -webkit-transition-property: all;
   -webkit-transition-timing-function: ease-in-out;
   -webkit-transition-duration: 0.2s;
@@ -27,8 +30,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
-  width: calc(100% + var(--token-_c276Gs_1FIE));
+  min-width: 0;
+  margin-left: calc(0px - 0px);
+  width: calc(100% + 0px);
 }
 .freeBox > :global(.__wab_flex-container) > *,
 .freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
@@ -38,7 +42,28 @@
   > :global(.__wab_slot)
   > picture
   > img {
-  margin-left: var(--token-_c276Gs_1FIE);
+  margin-left: 0px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox > :global(.__wab_flex-container) {
+    margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+    width: calc(100% + var(--token-_c276Gs_1FIE));
+    margin-top: calc(0px - 0px);
+    height: calc(100% + 0px);
+  }
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox > :global(.__wab_flex-container) > *,
+  .freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+  .freeBox > :global(.__wab_flex-container) > picture > img,
+  .freeBox
+    > :global(.__wab_flex-container)
+    > :global(.__wab_slot)
+    > picture
+    > img {
+    margin-left: var(--token-_c276Gs_1FIE);
+    margin-top: 0px;
+  }
 }
 .root:hover .freeBox {
   transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
@@ -61,6 +86,7 @@
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   color: var(--token-rjAIDXsTjJqJ);
+  margin-right: var(--token-_c276Gs_1FIE);
   height: 1em;
   -webkit-transition-property: all;
   -webkit-transition-timing-function: ease-in-out;
