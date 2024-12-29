@@ -11,6 +11,7 @@ interface Window {
   user: any;
   najvaUserSubscribed: any;
   clarity: any;
+  gozarLogin: any;
 }
 
 declare const window: Window;
