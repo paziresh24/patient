@@ -2136,6 +2136,19 @@
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "triggered-overlay"
+        },
+        {
+          "id": "qb59XTke1gWO",
+          "name": "ReviewRateAndReviews",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndReviews.tsx",
+          "importSpec": {
+            "modulePath": "ReviewRateAndReviews.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndReviews.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -2418,6 +2431,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "UCtGIfv1QcnE",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -2428,8 +2447,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -4204,7 +4222,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",
