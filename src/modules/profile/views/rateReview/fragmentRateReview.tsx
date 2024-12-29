@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 
-export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
+export const FragmentRateReview = ({ profileData, fragmentComponents }: { profileData: any; fragmentComponents: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
   const userInfo = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -95,43 +95,30 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
       value: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
     },
   ];
+
   return (
     <div className="flex flex-col space-y-1">
-      <Fragment
-        name="RateAndReviews"
-        props={{
-          ...profileData,
-          displayName: profileData?.information?.display_name,
-          items,
-          rate: (
-            (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
-          rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
-          hideRates: profileData?.feedbacks?.details?.hide_rates,
-          hideProgressList: profileData?.feedbacks?.details?.hide_rates,
-        }}
-      />
-      {/* {!dontShowRateDetails && (
-        <div className="w-full space-y-3 p-4 bg-white md:rounded-t-lg flex flex-col justify-center items-center">
-          {newRateAndCommentCount ? (
-            <Fragment
-              name="RateAndCommentCount2"
-              props={{
-                ...profileData,
-                rate: (
-                  (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                    +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                    +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                  3
-                ).toFixed(1),
-                rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
-                hideRates: profileData?.feedbacks?.details?.hide_rates,
-              }}
-            />
-          ) : (
+      {!dontShowRateDetails &&
+        (fragmentComponents?.rateAndReviews ? (
+          <Fragment
+            name="RateAndReviews"
+            props={{
+              ...profileData,
+              displayName: profileData?.information?.display_name,
+              items,
+              rate: (
+                (+(profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                  +(profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                  +(profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                3
+              ).toFixed(1),
+              rateCount: profileData?.feedbacks?.details?.count_of_feedbacks,
+              hideRates: profileData?.feedbacks?.details?.hide_rates,
+              hideProgressList: profileData?.feedbacks?.details?.hide_rates,
+            }}
+          />
+        ) : (
+          <div className="w-full space-y-3 p-4 bg-white md:rounded-t-lg flex flex-col justify-center items-center">
             <Fragment
               name="RateAndCommentCount"
               props={{
@@ -146,17 +133,6 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
                 hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
-          )}
-          {newProgressList ? (
-            <Fragment
-              name="RateProgressList"
-              props={{
-                ...profileData,
-                hideRates: profileData?.feedbacks?.details?.hide_rates,
-                items: items,
-              }}
-            />
-          ) : (
             <Fragment
               name="RateProgressBar"
               props={{
@@ -167,9 +143,9 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
                 hideRates: profileData?.feedbacks?.details?.hide_rates,
               }}
             />
-          )}
-        </div>
-      )} */}
+          </div>
+        ))}
+
       {shouldShowDoctorTags && (
         <DoctorTags
           symptomes={profileData?.symptomes?.slice?.(0, 5) ?? []}
