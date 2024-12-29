@@ -37,6 +37,7 @@ import PlasmicProfileHead, { PlasmicProfileHead__ArgProps } from '.plasmic/plasm
 import PlasmicProfileAbout, { PlasmicProfileAbout__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
 import PlasmicProfileActivity, { PlasmicProfileActivity__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileActivity';
 import PlasmicProfileSeo, { PlasmicProfileSeo__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo';
+import PlasmicProfileGallery, { PlasmicProfileGallery__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery';
 import PlasmicFilterListView, { PlasmicFilterListView__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterListView';
 import PlasmicFilterExpertiseView, {
   PlasmicFilterExpertiseView__ArgProps,
@@ -174,6 +175,12 @@ export const Components = {
     Component: PlasmicProfileSeo,
     id: 'AyZkzO0Ld0SI',
     propsAllowed: PlasmicProfileSeo__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
+  },
+  ProfileGallery: {
+    Component: PlasmicProfileGallery,
+    id: '-M0f8W0T-8eT',
+    propsAllowed: PlasmicProfileGallery__ArgProps,
     projectId: '7r312uiqyadpVPdnRoAggk',
   },
   FilterListView: {

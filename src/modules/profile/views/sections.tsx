@@ -97,7 +97,7 @@ export const sections = (data: any) => {
     },
     // Gallery
     {
-      title: 'گالری',
+      // title: 'گالری',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
       isShow: customize.showGalleryProfile && media.gallery?.length > 0,
       isShowFallback: editable,
@@ -108,7 +108,18 @@ export const sections = (data: any) => {
           items: reformattedItems,
         };
       },
-      children: (props: any) => <Gallery className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) => {
+        const items = media?.gallery;
+        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+
+        <Fragment
+          name="ProfileGallery"
+          props={{
+            gallery: reformattedItems,
+          }}
+        />;
+        // <Gallery className="bg-white md:rounded-lg" {...props} />
+      },
       fallback: (props: any) => (
         <div
           onClick={() => handleViewAs('gallery')}
@@ -228,3 +239,4 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
+
