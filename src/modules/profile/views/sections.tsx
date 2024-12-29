@@ -97,7 +97,7 @@ export const sections = (data: any) => {
     },
     // Gallery
     {
-      title: 'گالری',
+      // title: 'گالری',
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
       isShow: customize.showGalleryProfile && media.gallery?.length > 0,
       isShowFallback: editable,
@@ -108,7 +108,19 @@ export const sections = (data: any) => {
           items: reformattedItems,
         };
       },
-      children: (props: any) => <Gallery className="bg-white md:rounded-lg" {...props} />,
+      children: (props: any) => {
+        const items = media?.gallery;
+        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        return (
+          <Fragment
+            name="ProfileGallery"
+            props={{
+              gallery: reformattedItems,
+            }}
+          />
+        );
+        // <Gallery className="bg-white md:rounded-lg" {...props} />
+      },
       fallback: (props: any) => (
         <div
           onClick={() => handleViewAs('gallery')}
@@ -159,7 +171,7 @@ export const sections = (data: any) => {
             '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
           })}
         >
-          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
+          {/* <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2> */}
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
