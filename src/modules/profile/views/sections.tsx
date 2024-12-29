@@ -111,13 +111,14 @@ export const sections = (data: any) => {
       children: (props: any) => {
         const items = media?.gallery;
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
-
-        <Fragment
-          name="ProfileGallery"
-          props={{
-            gallery: reformattedItems,
-          }}
-        />;
+        return (
+          <Fragment
+            name="ProfileGallery"
+            props={{
+              gallery: reformattedItems,
+            }}
+          />
+        );
         // <Gallery className="bg-white md:rounded-lg" {...props} />
       },
       fallback: (props: any) => (
@@ -170,7 +171,7 @@ export const sections = (data: any) => {
             '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
           })}
         >
-          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
+          {/* <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2> */}
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
@@ -235,7 +236,28 @@ export const sections = (data: any) => {
           breadcrumbs: seo.breadcrumbs,
         };
       },
-      children: (props: any) => <ProfileSeoBox {...props} />,
+      children: (props: any) => {
+        const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
+        const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
+        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
+        return (
+          <Fragment
+            name="ProfileSeo"
+            props={{
+              information,
+              feedbacks,
+              center,
+              isOnlineVisitCenter,
+              doctorExpertise,
+              countOfPageView: convertLongToCompactNumber(history?.count_of_page_view),
+              bredcrumbs: seo.breadcrumbs,
+              similarLinks,
+              expertises,
+            }}
+          />
+        );
+        // <ProfileSeoBox {...props} />
+      },
     },
   ] as const;
 };

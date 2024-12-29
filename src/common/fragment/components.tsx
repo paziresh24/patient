@@ -10,8 +10,10 @@ const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/pa
 const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
 const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
 const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
+const PlasmicReviewRateAndReviews = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews'));
 const PlasmicRecentSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch'));
 
+import { PlasmicReviewRateAndReviews__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
 import { PlasmicReviewProgressList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList';
 import PlasmicReceiptActionButtons, {
   PlasmicReceiptActionButtons__ArgProps,
@@ -72,6 +74,12 @@ export const Components = {
     Component: PlasmicProgressList,
     id: 'xpGRRNKB86D2',
     propsAllowed: PlasmicReviewProgressList__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateAndReviews: {
+    Component: PlasmicReviewRateAndReviews,
+    id: 'qb59XTke1gWO',
+    propsAllowed: PlasmicReviewRateAndReviews__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   ReviewList: {
