@@ -8,6 +8,13 @@
   align-items: center;
   min-width: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .root {
+    width: 100%;
+    justify-self: flex-start;
+    min-width: 0;
+  }
+}
 .freeBox {
   display: flex;
   flex-direction: row;
@@ -42,4 +49,9 @@
     overflow-x: auto;
     overflow-y: visible;
   }
+}
+.profileBreadcrumbsItems:global(.__wab_instance) {
+  width: auto;
+  max-width: auto;
+  flex-shrink: 0;
 }
