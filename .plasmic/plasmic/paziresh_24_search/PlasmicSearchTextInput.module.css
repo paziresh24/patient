@@ -10,7 +10,7 @@
   outline-style: none;
   box-shadow: none;
   min-width: 0;
-  padding: 7px 11px;
+  padding: 0px var(--token-_c276Gs_1FIE) 0px 0px;
 }
 .rootcolor_dark {
   background: #232320;
@@ -65,7 +65,9 @@
   outline-style: none;
   outline-color: transparent;
   outline-offset: 0px;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
   padding: 0px;
   border-width: 0px;
 }

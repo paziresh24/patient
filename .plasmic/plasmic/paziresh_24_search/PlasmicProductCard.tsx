@@ -1039,7 +1039,22 @@ function PlasmicProductCard__RenderFunc(props: {
                         )
                       }
                     )}
-                    numberOfLines={1}
+                    numberOfLines={(() => {
+                      try {
+                        return $props.rateCount === undefined ||
+                          $props.rateCount === 0
+                          ? 2
+                          : 1;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return 1;
+                        }
+                        throw e;
+                      }
+                    })()}
                   >
                     <span
                       data-plasmic-name={"cardSubtitle"}

@@ -95,8 +95,6 @@ export const PlasmicSearchTextInput__VariantProps = new Array<VariantPropType>(
 
 export type PlasmicSearchTextInput__ArgsType = {
   placeholder?: string;
-  endIcon?: React.ReactNode;
-  startIcon?: React.ReactNode;
   value?: string;
   name?: string;
   required?: boolean;
@@ -116,12 +114,12 @@ export type PlasmicSearchTextInput__ArgsType = {
   autoFocus?: boolean;
   id?: string;
   autoComplete?: string;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicSearchTextInput__ArgsType;
 export const PlasmicSearchTextInput__ArgProps = new Array<ArgPropType>(
   "placeholder",
-  "endIcon",
-  "startIcon",
   "value",
   "name",
   "required",
@@ -131,7 +129,9 @@ export const PlasmicSearchTextInput__ArgProps = new Array<ArgPropType>(
   "type",
   "autoFocus",
   "id",
-  "autoComplete"
+  "autoComplete",
+  "startIcon",
+  "endIcon"
 );
 
 export type PlasmicSearchTextInput__OverridesType = {

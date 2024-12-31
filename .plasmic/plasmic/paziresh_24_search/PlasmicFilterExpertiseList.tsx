@@ -581,7 +581,7 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
-              $steps["goToPage"] = true
+              $steps["goToPage"] = false
                 ? (() => {
                     const actionArgs = {
                       destination: (() => {
@@ -620,6 +620,58 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                 typeof $steps["goToPage"].then === "function"
               ) {
                 $steps["goToPage"] = await $steps["goToPage"];
+              }
+
+              $steps["runOnClickSubCategory"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onClickSubCategory"],
+                      args: [
+                        (() => {
+                          try {
+                            return $props.categories.find(
+                              cat => cat.value === $state.selectedCategory
+                            ).url;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })(),
+                        (() => {
+                          try {
+                            return $props.categories.find(
+                              cat => cat.value === $state.selectedCategory
+                            ).value;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnClickSubCategory"] != null &&
+                typeof $steps["runOnClickSubCategory"] === "object" &&
+                typeof $steps["runOnClickSubCategory"].then === "function"
+              ) {
+                $steps["runOnClickSubCategory"] = await $steps[
+                  "runOnClickSubCategory"
+                ];
               }
             }}
             showStartIcon={true}

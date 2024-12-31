@@ -1667,6 +1667,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "uv6x89TFSBmh",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -2446,7 +2452,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
