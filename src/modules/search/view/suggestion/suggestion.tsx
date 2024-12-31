@@ -16,6 +16,7 @@ import { Section } from '../../types/suggestion';
 import classNames from '@/common/utils/classNames';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { Fragment } from '@/common/fragment';
+import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 interface SuggestionProps {
   overlay?: boolean;
@@ -28,6 +29,7 @@ interface SuggestionProps {
 export const Suggestion = (props: SuggestionProps) => {
   const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue } = props;
   const router = useRouter();
+  const { selectedFilters } = useSearch();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
@@ -174,9 +176,10 @@ export const Suggestion = (props: SuggestionProps) => {
   const handleClickOverlay = () => {
     if (setDefaultInputValue && !!defaultInputValue) {
       setDefaultInputValue('');
-      setIsOpenSuggestion(false);
     }
+    setIsOpenSuggestion(false);
   };
+
   if (showPlasmicSuggestion) {
     return (
       <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
@@ -187,7 +190,7 @@ export const Suggestion = (props: SuggestionProps) => {
               onChangeCity({ ...val });
             },
             selectedCity: city,
-            defaultValue: defaultInputValue || '',
+            defaultValue: defaultInputValue || selectedFilters?.text || '',
             onClickOverlay: handleClickOverlay,
             inputVal: debouncedSearchTerm,
             onChangeInputVal: setUserSearchValue,

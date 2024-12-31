@@ -29,10 +29,11 @@ import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
+import classNames from '@/common/utils/classNames';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 
@@ -63,6 +64,7 @@ const Search = ({ host }: any) => {
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
   const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
+  const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -160,7 +162,7 @@ const Search = ({ host }: any) => {
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
-        <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-s-5">
+        <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
           {!isLanding && <Filter isLoading={isLoading} />}
           <div className="flex flex-col w-full">
             {!isLanding && !isMobile && (
