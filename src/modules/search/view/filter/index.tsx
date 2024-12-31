@@ -30,7 +30,6 @@ export const Filter = (props: FilterProps) => {
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
 
   const handleRemoveFilter = (name: string, value: string) => {
-    console.log('filter removing', name, value);
     if (
       (name === 'sub_category' && value?.startsWith('exp-')) ||
       name === 'category' ||
