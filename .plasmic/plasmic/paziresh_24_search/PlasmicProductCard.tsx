@@ -1041,10 +1041,7 @@ function PlasmicProductCard__RenderFunc(props: {
                     )}
                     numberOfLines={(() => {
                       try {
-                        return $props.rateCount === undefined ||
-                          $props.rateCount === 0
-                          ? 2
-                          : 1;
+                        return !$props.rateCount ? 2 : 1;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1999,7 +1996,7 @@ function PlasmicProductCard__RenderFunc(props: {
               e instanceof TypeError ||
               e?.plasmicType === "PlasmicUndefinedDataError"
             ) {
-              return true;
+              return false;
             }
             throw e;
           }
