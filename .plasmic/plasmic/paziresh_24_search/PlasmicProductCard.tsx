@@ -1039,7 +1039,19 @@ function PlasmicProductCard__RenderFunc(props: {
                         )
                       }
                     )}
-                    numberOfLines={1}
+                    numberOfLines={(() => {
+                      try {
+                        return !$props.rateCount ? 2 : 1;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return 1;
+                        }
+                        throw e;
+                      }
+                    })()}
                   >
                     <span
                       data-plasmic-name={"cardSubtitle"}
@@ -1984,7 +1996,7 @@ function PlasmicProductCard__RenderFunc(props: {
               e instanceof TypeError ||
               e?.plasmicType === "PlasmicUndefinedDataError"
             ) {
-              return true;
+              return false;
             }
             throw e;
           }

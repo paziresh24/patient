@@ -286,6 +286,12 @@ function PlasmicSearch__RenderFunc(props: {
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "isCityInputFocused",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -1168,6 +1174,27 @@ function PlasmicSearch__RenderFunc(props: {
                 sty.freeBox___8CERd,
                 "no-scroll"
               )}
+              style={
+                hasVariant(globalVariants, "screen", "mobileOnly")
+                  ? (() => {
+                      try {
+                        return {
+                          ...($state.isCityInputFocused
+                            ? { height: "100%" }
+                            : { height: "450px" })
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : undefined
+              }
             >
               <ApiRequest
                 data-plasmic-name={"getLocationList"}
@@ -1386,6 +1413,46 @@ function PlasmicSearch__RenderFunc(props: {
                     ) {
                       $steps["updateSelectCityDialogOpen"] = await $steps[
                         "updateSelectCityDialogOpen"
+                      ];
+                    }
+                  }}
+                  onFocusInput={async value => {
+                    const $steps = {};
+
+                    $steps["updateIsCityInputFocused"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["isCityInputFocused"]
+                            },
+                            operation: 0,
+                            value: value
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateIsCityInputFocused"] != null &&
+                      typeof $steps["updateIsCityInputFocused"] === "object" &&
+                      typeof $steps["updateIsCityInputFocused"].then ===
+                        "function"
+                    ) {
+                      $steps["updateIsCityInputFocused"] = await $steps[
+                        "updateIsCityInputFocused"
                       ];
                     }
                   }}
@@ -1826,6 +1893,10 @@ function PlasmicSearch__RenderFunc(props: {
                                 updateTerms();
                                 return `https://apigw.paziresh24.com/seapi/v1/suggestion?q=${
                                   $state.terms || ""
+                                }${
+                                  $props.selectedCity.id >= 0
+                                    ? `&city_id=${$props.selectedCity.id}`
+                                    : ""
                                 }`;
                               })();
                             } catch (e) {
