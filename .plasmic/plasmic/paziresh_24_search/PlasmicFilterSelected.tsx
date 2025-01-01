@@ -261,11 +261,11 @@ function PlasmicFilterSelected__RenderFunc(props: {
                       : null
                   )
                   .filter(Boolean);
-                const freeTurn = selected?.freeturn
+                const freeturn = selected?.freeturn
                   ? {
                       title: freeturnItems[selected.freeturn],
                       value: selected.freeturn,
-                      name: "freeTurn"
+                      name: "freeturn"
                     }
                   : null;
                 const selectedCategory = selected?.category
@@ -291,11 +291,19 @@ function PlasmicFilterSelected__RenderFunc(props: {
                 const allSelectedFilters = [
                   selectedCategory,
                   selectedSubcategory,
-                  freeTurn,
+                  freeturn,
                   text,
                   ...selectedFilters
                 ].filter(Boolean);
-                return allSelectedFilters;
+                const sortedArray = allSelectedFilters.sort((a, b) => {
+                  const keys = Object.keys(selected);
+                  const indexA = keys.indexOf(a.name);
+                  const indexB = keys.indexOf(b.name);
+                  if (indexA === -1) return 1;
+                  if (indexB === -1) return -1;
+                  return indexA - indexB;
+                });
+                return sortedArray;
               })();
             } catch (e) {
               if (

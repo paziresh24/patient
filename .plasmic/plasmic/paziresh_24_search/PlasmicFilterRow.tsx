@@ -326,6 +326,14 @@ function PlasmicFilterRow__RenderFunc(props: {
                     const order_items = $props.items.order_items;
                     const allFilters = $props.items.filters;
                     const categories = $props.items.categories;
+                    const freeturnItems = {
+                      all: "هر زمان",
+                      today: "امروز",
+                      tomorrow: "تا فردا",
+                      nextThreeDays: "تا سه روز آینده",
+                      nextFiveDays: "تا پنج روز آینده",
+                      nextSevenDays: "تا هفت روز آینده"
+                    };
                     const additionalItems = [
                       {
                         title: "فیلتر ها",
@@ -353,6 +361,19 @@ function PlasmicFilterRow__RenderFunc(props: {
                           : "تخصص",
                         name: "category",
                         type: "category"
+                      },
+                      {
+                        title: !!selected?.freeturn
+                          ? freeturnItems[selected.freeturn]
+                          : "زمان نوبت",
+                        name: "freeturn",
+                        type: "radio",
+                        items: Object.entries(freeturnItems).map(
+                          ([value, label]) => ({
+                            title: label,
+                            value
+                          })
+                        )
                       }
                     ];
 
@@ -400,8 +421,9 @@ function PlasmicFilterRow__RenderFunc(props: {
                     try {
                       return (
                         !!$props.items.selected_filters?.[currentItem.name] ||
-                        (Object.keys($props.items.selected_filters).length >
-                          0 &&
+                        ((Object.keys($props.items.selected_filters).length >
+                          0 ||
+                          !!$props.selectedSort) &&
                           currentItem.name === "filters") ||
                         (!!$props.selectedSort &&
                           currentItem.name === "order_items")
@@ -483,7 +505,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                       ];
                     }
 
-                    $steps["updateCategoriesDialogOpen"] =
+                    $steps["openCategory"] =
                       name === "category"
                         ? (() => {
                             const actionArgs = {
@@ -511,15 +533,11 @@ function PlasmicFilterRow__RenderFunc(props: {
                           })()
                         : undefined;
                     if (
-                      $steps["updateCategoriesDialogOpen"] != null &&
-                      typeof $steps["updateCategoriesDialogOpen"] ===
-                        "object" &&
-                      typeof $steps["updateCategoriesDialogOpen"].then ===
-                        "function"
+                      $steps["openCategory"] != null &&
+                      typeof $steps["openCategory"] === "object" &&
+                      typeof $steps["openCategory"].then === "function"
                     ) {
-                      $steps["updateCategoriesDialogOpen"] = await $steps[
-                        "updateCategoriesDialogOpen"
-                      ];
+                      $steps["openCategory"] = await $steps["openCategory"];
                     }
 
                     $steps["openSortDialog"] =
@@ -611,7 +629,7 @@ function PlasmicFilterRow__RenderFunc(props: {
 
                     $steps["setSelectedObject"] =
                       $props.items.filters?.find(filter => filter.name === name)
-                        ?.type === "radio"
+                        ?.type === "radio" || name == "freeturn"
                         ? (() => {
                             const actionArgs = {
                               variable: {
@@ -619,9 +637,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                                 variablePath: ["selectedFilterObject"]
                               },
                               operation: 0,
-                              value: $props.items.filters.find(
-                                filter => filter.name === name
-                              )
+                              value: currentItem
                             };
                             return (({
                               variable,
@@ -651,7 +667,7 @@ function PlasmicFilterRow__RenderFunc(props: {
 
                     $steps["updateOptionsDialogOpen"] =
                       $props.items.filters?.find(filter => filter.name === name)
-                        ?.type === "radio"
+                        ?.type === "radio" || name == "freeturn"
                         ? (() => {
                             const actionArgs = {
                               variable: {
