@@ -957,10 +957,7 @@ function PlasmicProductCard__RenderFunc(props: {
                             "subTitle",
                             (() => {
                               try {
-                                return $props.subTitle.replace(
-                                  /([^،])،([^،])/g,
-                                  "$1، $2"
-                                );
+                                return $props.subTitle;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||
@@ -1076,7 +1073,7 @@ function PlasmicProductCard__RenderFunc(props: {
                         {(() => {
                           try {
                             return $props.subTitle.replace(
-                              /([^،])،([^،])/g,
+                              /([^،])،(?!\s)([^،])/g,
                               "$1، $2"
                             );
                           } catch (e) {
