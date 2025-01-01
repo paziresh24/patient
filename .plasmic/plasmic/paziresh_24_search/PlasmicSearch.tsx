@@ -109,6 +109,7 @@ export type PlasmicSearch__ArgsType = {
   inputVal?: string;
   onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
+  cityName?: string;
 };
 type ArgPropType = keyof PlasmicSearch__ArgsType;
 export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
@@ -118,7 +119,8 @@ export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
   "onClickOverlay",
   "inputVal",
   "onChangeInputVal",
-  "onFocusChange"
+  "onFocusChange",
+  "cityName"
 );
 
 export type PlasmicSearch__OverridesType = {
@@ -140,6 +142,7 @@ export interface DefaultSearchProps {
   inputVal?: string;
   onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
+  cityName?: string;
   hasOverlay?: SingleBooleanChoiceArg<"hasOverlay">;
   isFocus?: SingleBooleanChoiceArg<"isFocus">;
   className?: string;
@@ -187,6 +190,8 @@ function PlasmicSearch__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -572,6 +577,67 @@ function PlasmicSearch__RenderFunc(props: {
                     "runOnClickOverlay"
                   ];
                 }
+
+                $steps["splunk"] = value
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                event_group: "suggestion_events",
+                                event_type: "suggestion_open",
+                                current_url: globalThis.window.location.href,
+                                terminal_id: (function () {
+                                  try {
+                                    return document.cookie.replace(
+                                      /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                      "$1"
+                                    );
+                                  } catch (e) {
+                                    return null;
+                                  }
+                                })(),
+                                is_application: false,
+                                data: {
+                                  city: $props.cityName,
+                                  current_url: globalThis.window.location.href,
+                                  terminal_id: (function () {
+                                    try {
+                                      return document.cookie.replace(
+                                        /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                        "$1"
+                                      );
+                                    } catch (e) {
+                                      return null;
+                                    }
+                                  })()
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["splunk"] != null &&
+                  typeof $steps["splunk"] === "object" &&
+                  typeof $steps["splunk"].then === "function"
+                ) {
+                  $steps["splunk"] = await $steps["splunk"];
+                }
               }}
             />
           </div>
@@ -665,6 +731,19 @@ function PlasmicSearch__RenderFunc(props: {
                 })()}
               >
                 <SearchContent
+                  cityName={(() => {
+                    try {
+                      return $props.cityName;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   className={classNames(
                     "__wab_instance",
                     sty.searchContent___9SIt,
@@ -678,6 +757,82 @@ function PlasmicSearch__RenderFunc(props: {
                   )}
                   onClick={async value => {
                     const $steps = {};
+
+                    $steps["splunk"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    event_group: "suggestion_events",
+                                    event_type: "record_click",
+                                    current_url:
+                                      globalThis.window.location.href,
+                                    terminal_id: (function () {
+                                      try {
+                                        return document.cookie.replace(
+                                          /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                          "$1"
+                                        );
+                                      } catch (e) {
+                                        return null;
+                                      }
+                                    })(),
+                                    is_application: false,
+                                    data: {
+                                      item: {
+                                        title: value?.title,
+                                        name: value?.name,
+                                        url: value?.url,
+                                        formatted_title: value?.formatted_title,
+                                        type: value?.type,
+                                        use_suggestion: !!value?.use_suggestion,
+                                        position: value?.position,
+                                        section_position:
+                                          value?.section_position
+                                      },
+                                      searched_text: $state.inputValue,
+                                      city: $props.cityName,
+                                      current_url: window.location.href,
+                                      position: value?.position,
+                                      terminal_id: (function () {
+                                        try {
+                                          return document.cookie.replace(
+                                            /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                            "$1"
+                                          );
+                                        } catch (e) {
+                                          return null;
+                                        }
+                                      })()
+                                    }
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["splunk"] != null &&
+                      typeof $steps["splunk"] === "object" &&
+                      typeof $steps["splunk"].then === "function"
+                    ) {
+                      $steps["splunk"] = await $steps["splunk"];
+                    }
 
                     $steps["localstorag"] = true
                       ? (() => {
@@ -834,6 +989,19 @@ function PlasmicSearch__RenderFunc(props: {
                       ];
                     }
                   }}
+                  resultCount={(() => {
+                    try {
+                      return $state.suggestionApi.data.length;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   searchQuery={(() => {
                     try {
                       return (() => {
@@ -1158,6 +1326,67 @@ function PlasmicSearch__RenderFunc(props: {
                 typeof $steps["runCode"].then === "function"
               ) {
                 $steps["runCode"] = await $steps["runCode"];
+              }
+
+              $steps["splunk"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              event_group: "suggestion_events",
+                              event_type: "suggestion_open",
+                              current_url: globalThis.window.location.href,
+                              terminal_id: (function () {
+                                try {
+                                  return document.cookie.replace(
+                                    /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                    "$1"
+                                  );
+                                } catch (e) {
+                                  return null;
+                                }
+                              })(),
+                              is_application: true,
+                              data: {
+                                city: $props.cityName,
+                                current_url: globalThis.window.location.href,
+                                terminal_id: (function () {
+                                  try {
+                                    return document.cookie.replace(
+                                      /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                      "$1"
+                                    );
+                                  } catch (e) {
+                                    return null;
+                                  }
+                                })()
+                              }
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["splunk"] != null &&
+                typeof $steps["splunk"] === "object" &&
+                typeof $steps["splunk"].then === "function"
+              ) {
+                $steps["splunk"] = await $steps["splunk"];
               }
             }}
           />
@@ -1933,6 +2162,23 @@ function PlasmicSearch__RenderFunc(props: {
                     }
                   >
                     <SearchContent
+                      cityName={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return $props.cityName;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : undefined
+                      }
                       className={classNames(
                         "__wab_instance",
                         sty.searchContent__kekcs,
@@ -1980,6 +2226,85 @@ function PlasmicSearch__RenderFunc(props: {
                           typeof $steps["localstorag"].then === "function"
                         ) {
                           $steps["localstorag"] = await $steps["localstorag"];
+                        }
+
+                        $steps["splunk"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  (() => {
+                                    try {
+                                      return {
+                                        event_group: "suggestion_events",
+                                        event_type: "record_click",
+                                        current_url:
+                                          globalThis.window.location.href,
+                                        terminal_id: (function () {
+                                          try {
+                                            return document.cookie.replace(
+                                              /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                              "$1"
+                                            );
+                                          } catch (e) {
+                                            return null;
+                                          }
+                                        })(),
+                                        is_application: false,
+                                        data: {
+                                          item: {
+                                            title: value?.title,
+                                            name: value?.name,
+                                            url: value?.url,
+                                            formatted_title:
+                                              value?.formatted_title,
+                                            type: value?.type,
+                                            use_suggestion:
+                                              !!value?.use_suggestion,
+                                            position: value?.position,
+                                            section_position:
+                                              value?.section_position
+                                          },
+                                          searched_text: $state.inputValue,
+                                          city: $props.cityName,
+                                          current_url: window.location.href,
+                                          position: value?.position,
+                                          terminal_id: (function () {
+                                            try {
+                                              return document.cookie.replace(
+                                                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                                "$1"
+                                              );
+                                            } catch (e) {
+                                              return null;
+                                            }
+                                          })()
+                                        }
+                                      };
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return $globalActions["Splunk.sendLog"]?.apply(
+                                null,
+                                [...actionArgs.args]
+                              );
+                            })()
+                          : undefined;
+                        if (
+                          $steps["splunk"] != null &&
+                          typeof $steps["splunk"] === "object" &&
+                          typeof $steps["splunk"].then === "function"
+                        ) {
+                          $steps["splunk"] = await $steps["splunk"];
                         }
 
                         $steps["updateInputValue"] = value.use_suggestion
@@ -2105,6 +2430,23 @@ function PlasmicSearch__RenderFunc(props: {
                           ];
                         }
                       }}
+                      resultCount={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return $state.suggestionApi2.data.length;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : undefined
+                      }
                       searchQuery={
                         hasVariant(globalVariants, "screen", "mobileOnly")
                           ? (() => {

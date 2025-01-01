@@ -1345,6 +1345,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicUnknownCityDialog.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "NYqLbXm7Qk5C",
+          "name": "ResultView",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicResultView.tsx",
+          "importSpec": {
+            "modulePath": "ResultView.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicResultView.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [

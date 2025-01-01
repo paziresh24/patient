@@ -65,6 +65,7 @@ import SearchContentIcon from "../../SearchContentIcon"; // plasmic-import: TJ3H
 import SearchContentSlider from "../../SearchContentSlider"; // plasmic-import: d6rjYjjJdnoM/component
 import SearchRequest from "../../SearchRequest"; // plasmic-import: 35vwUOYdUX87/component
 import SearchContentTree from "../../SearchContentTree"; // plasmic-import: _bc7j5YswB_4/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
@@ -88,12 +89,16 @@ export type PlasmicSearchContent__ArgsType = {
   suggestion?: any;
   searchQuery?: string;
   onClick?: (value: any) => void;
+  cityName?: string;
+  resultCount?: number;
 };
 type ArgPropType = keyof PlasmicSearchContent__ArgsType;
 export const PlasmicSearchContent__ArgProps = new Array<ArgPropType>(
   "suggestion",
   "searchQuery",
-  "onClick"
+  "onClick",
+  "cityName",
+  "resultCount"
 );
 
 export type PlasmicSearchContent__OverridesType = {
@@ -108,12 +113,15 @@ export type PlasmicSearchContent__OverridesType = {
   tree?: Flex__<"div">;
   searchContentTree?: Flex__<typeof SearchContentTree>;
   search?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchContentProps {
   suggestion?: any;
   searchQuery?: string;
   onClick?: (value: any) => void;
+  cityName?: string;
+  resultCount?: number;
   className?: string;
 }
 
@@ -154,6 +162,8 @@ function PlasmicSearchContent__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const globalVariants = ensureGlobalVariants({
     screen: useScreenVariantsbr2UhI7UlpvR()
@@ -473,28 +483,69 @@ function PlasmicSearchContent__RenderFunc(props: {
                   const currentItem = __plasmic_item_1;
                   const currentIndex = __plasmic_idx_1;
                   return (
-                    <SearchContentSlider
-                      data-plasmic-name={"searchContentSlider"}
-                      data-plasmic-override={overrides.searchContentSlider}
-                      className={classNames(
-                        "__wab_instance",
-                        sty.searchContentSlider
-                      )}
-                      data={(() => {
-                        try {
-                          return currentItem;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__jznMk)}
                       key={currentIndex}
-                    />
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["runOnClick"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                eventRef: $props["onClick"],
+                                args: [
+                                  (() => {
+                                    try {
+                                      return currentItem;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return (({ eventRef, args }) => {
+                                return eventRef?.(...(args ?? []));
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runOnClick"] != null &&
+                          typeof $steps["runOnClick"] === "object" &&
+                          typeof $steps["runOnClick"].then === "function"
+                        ) {
+                          $steps["runOnClick"] = await $steps["runOnClick"];
+                        }
+                      }}
+                    >
+                      <SearchContentSlider
+                        data-plasmic-name={"searchContentSlider"}
+                        data-plasmic-override={overrides.searchContentSlider}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.searchContentSlider
+                        )}
+                        data={(() => {
+                          try {
+                            return currentItem;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    </div>
                   );
                 })}
               </Stack__>
@@ -699,45 +750,6 @@ function PlasmicSearchContent__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["goToPage"] = false
-                    ? (() => {
-                        const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return currentItem.url;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })()
-                        };
-                        return (({ destination }) => {
-                          if (
-                            typeof destination === "string" &&
-                            destination.startsWith("#")
-                          ) {
-                            document
-                              .getElementById(destination.substr(1))
-                              .scrollIntoView({ behavior: "smooth" });
-                          } else {
-                            __nextRouter?.push(destination);
-                          }
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["goToPage"] != null &&
-                    typeof $steps["goToPage"] === "object" &&
-                    typeof $steps["goToPage"].then === "function"
-                  ) {
-                    $steps["goToPage"] = await $steps["goToPage"];
-                  }
-
                   $steps["runOnClick"] = true
                     ? (() => {
                         const actionArgs = {
@@ -811,6 +823,77 @@ function PlasmicSearchContent__RenderFunc(props: {
           })}
         </div>
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["splunk"] = !!$props.searchQuery
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          event_group: "suggestion_events",
+                          event_type: "suggestion_view",
+                          current_url: globalThis.window.location.href,
+                          terminal_id: (function () {
+                            try {
+                              return document.cookie.replace(
+                                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                "$1"
+                              );
+                            } catch (e) {
+                              return null;
+                            }
+                          })(),
+                          is_application: false,
+                          data: {
+                            result_count: $props.resultCount,
+                            city: $props.cityName,
+                            searched_text: $props.searchQuery,
+                            current_url: globalThis.window.location.href,
+                            terminal_id: (function () {
+                              try {
+                                return document.cookie.replace(
+                                  /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                  "$1"
+                                );
+                              } catch (e) {
+                                return null;
+                              }
+                            })()
+                          }
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["splunk"] != null &&
+            typeof $steps["splunk"] === "object" &&
+            typeof $steps["splunk"].then === "function"
+          ) {
+            $steps["splunk"] = await $steps["splunk"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -827,7 +910,8 @@ const PlasmicDescendants = {
     "searchRequest",
     "tree",
     "searchContentTree",
-    "search"
+    "search",
+    "sideEffect"
   ],
   searchContentItem: [
     "searchContentItem",
@@ -848,7 +932,8 @@ const PlasmicDescendants = {
   searchRequest: ["searchRequest"],
   tree: ["tree", "searchContentTree"],
   searchContentTree: ["searchContentTree"],
-  search: ["search"]
+  search: ["search"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -865,6 +950,7 @@ type NodeDefaultElementType = {
   tree: "div";
   searchContentTree: typeof SearchContentTree;
   search: "div";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -937,6 +1023,7 @@ export const PlasmicSearchContent = Object.assign(
     tree: makeNodeComponent("tree"),
     searchContentTree: makeNodeComponent("searchContentTree"),
     search: makeNodeComponent("search"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicSearchContent
     internalVariantProps: PlasmicSearchContent__VariantProps,

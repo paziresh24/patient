@@ -730,10 +730,10 @@ function PlasmicSearchInput__RenderFunc(props: {
                         return input.addEventListener("keypress", event => {
                           if (event.key === "Enter") {
                             event.preventDefault();
+                            params.delete("text");
                             const existingParams = params?.toString() || "";
-                            return ($state.enterPress = `/s/${
-                              !!existingParams ? `?${existingParams}&` : "?"
-                            }text=${$state.textInput.value}`);
+                            params.append("text", $state.textInput.value);
+                            return ($state.enterPress = `/s/?${params.toString()}`);
                           }
                         });
                       }
