@@ -434,59 +434,63 @@ function PlasmicResultView__RenderFunc(props: {
           onMount={async () => {
             const $steps = {};
 
-            $steps["splunk"] = !!$props.searchResultResponse.search
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return (() => {
-                            const params = new globalThis.URLSearchParams(
-                              globalThis.window.location.search
-                            );
-                            return {
-                              group: "search_metrics",
-                              type: "search_view",
-                              event: {
-                                filters:
-                                  $props.searchResultResponse
-                                    ?.selected_filters ?? {},
-                                result_count:
-                                  $props.searchResultResponse.search.total,
-                                location: $props.location.city_name,
-                                city_id: $props.location.city_id,
-                                query_id:
-                                  $props.searchResultResponse.search.query_id,
-                                user_id: $ctx.auth.info?.id ?? null,
-                                user_type:
-                                  $ctx.auth.info.provider?.job_title ??
-                                  "normal-user",
-                                url: {
-                                  href: window.location.href,
-                                  qurey: params?.toString(),
-                                  pathname: window.location.pathname,
-                                  host: window.location.host
+            $steps["splunk"] =
+              !!$props.searchResultResponse.search &&
+              typeof window != "undefined"
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return (() => {
+                              const params = new globalThis.URLSearchParams(
+                                globalThis.window.location.search
+                              );
+                              return {
+                                group: "search_metrics",
+                                type: "search_view",
+                                event: {
+                                  filters:
+                                    $props.searchResultResponse
+                                      ?.selected_filters ?? {},
+                                  result_count:
+                                    $props.searchResultResponse.search.total ??
+                                    "",
+                                  location: $props.location.city_name ?? "",
+                                  city_id: $props.location.city_id ?? "",
+                                  query_id:
+                                    $props.searchResultResponse.search
+                                      .query_id ?? "",
+                                  user_id: $ctx.auth.info?.id ?? null,
+                                  user_type:
+                                    $ctx.auth.info?.provider?.job_title ??
+                                    "normal-user",
+                                  url: {
+                                    href: window.location.href,
+                                    qurey: params?.toString(),
+                                    pathname: window.location.pathname,
+                                    host: window.location.host
+                                  }
                                 }
-                              }
-                            };
-                          })();
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
+                              };
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
                           }
-                          throw e;
-                        }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Splunk.sendLog"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
             if (
               $steps["splunk"] != null &&
               typeof $steps["splunk"] === "object" &&
