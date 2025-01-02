@@ -95,7 +95,6 @@ export type PlasmicResultView__ArgsType = {
   selectedSort?: string;
   selectedTurn?: string;
   totalResult?: string;
-  totalResult2?: string;
   isLoadingResult?: boolean;
   onChangeFreeTurn?: (value: string) => void;
   onChangeSort?: (value: string) => void;
@@ -119,7 +118,6 @@ export const PlasmicResultView__ArgProps = new Array<ArgPropType>(
   "selectedSort",
   "selectedTurn",
   "totalResult",
-  "totalResult2",
   "isLoadingResult",
   "onChangeFreeTurn",
   "onChangeSort",
@@ -152,7 +150,6 @@ export interface DefaultResultViewProps {
   selectedSort?: string;
   selectedTurn?: string;
   totalResult?: string;
-  totalResult2?: string;
   isLoadingResult?: boolean;
   onChangeFreeTurn?: (value: string) => void;
   onChangeSort?: (value: string) => void;
@@ -187,7 +184,6 @@ function PlasmicResultView__RenderFunc(props: {
           paginationLoadingStatus: false,
           selectedSort: ``,
           selectedTurn: ``,
-          totalResult2: ``,
           isLoadingResult: false,
           categoryValue: ``,
           categoryTitle: ``,
@@ -261,7 +257,19 @@ function PlasmicResultView__RenderFunc(props: {
             orderItems={args.orderItems}
             selectedSort={args.selectedSort}
             selectedTurn={args.selectedTurn}
-            total={args.totalResult2}
+            total={(() => {
+              try {
+                return $props.totalResult;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
           />
         ) : null}
         <SearchResults
@@ -410,6 +418,19 @@ function PlasmicResultView__RenderFunc(props: {
           data-plasmic-name={"sideEffect"}
           data-plasmic-override={overrides.sideEffect}
           className={classNames("__wab_instance", sty.sideEffect)}
+          deps={(() => {
+            try {
+              return [$props.searchResultResponse.selected_filters];
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
           onMount={async () => {
             const $steps = {};
 
