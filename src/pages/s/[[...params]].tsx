@@ -34,8 +34,11 @@ import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
+import getConfig from 'next/config';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
+const { publicRuntimeConfig } = getConfig();
+import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 const Search = ({ host }: any) => {
   const { isMobile } = useResponsive();
@@ -52,7 +55,8 @@ const Search = ({ host }: any) => {
   } = useRouter();
 
   const { handleChange, filters } = useFilterChange();
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems, selectedCategory, isConsult } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems, selectedCategory, isConsult, responseData } =
+    useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -65,6 +69,7 @@ const Search = ({ host }: any) => {
   const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
+  const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -87,26 +92,28 @@ const Search = ({ host }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        splunkInstance('search').sendEvent({
-          group: 'search_metrics',
-          type: 'search_view',
-          event: {
-            filters: selectedFilters,
-            result_count: result.length,
-            location: city.en_slug,
-            ...(geoLocation ?? null),
-            city_id: city.id,
-            query_id: search.query_id,
-            user_id: userInfo?.id ?? null,
-            user_type: userInfo.provider?.job_title ?? 'normal-user',
-            url: {
-              href: window.location.href,
-              qurey: { ...queries },
-              pathname: window.location.pathname,
-              host: window.location.host,
+        if (!showPlasmicResult) {
+          splunkInstance('search').sendEvent({
+            group: 'search_metrics',
+            type: 'search_view',
+            event: {
+              filters: selectedFilters,
+              result_count: result.length,
+              location: city.en_slug,
+              ...(geoLocation ?? null),
+              city_id: city.id,
+              query_id: search.query_id,
+              user_id: userInfo?.id ?? null,
+              user_type: userInfo.provider?.job_title ?? 'normal-user',
+              url: {
+                href: window.location.href,
+                qurey: { ...queries },
+                pathname: window.location.pathname,
+                host: window.location.host,
+              },
             },
-          },
-        });
+          });
+        }
 
         splunkInstance('search').sendBatchEvent({
           group: 'search_metrics',
@@ -153,6 +160,16 @@ const Search = ({ host }: any) => {
     }
   }, [result, userPending, isLoading, growthbook.ready]);
 
+  const handleNextPage = () => {
+    const currentPage = (queries?.page as string) ? (queries?.page as string) : 1;
+    changeRoute({
+      query: {
+        page: +currentPage + 1,
+      },
+      scroll: false,
+    });
+  };
+
   return (
     <>
       <Fragment name="LocationSelectionScript" />
@@ -164,54 +181,92 @@ const Search = ({ host }: any) => {
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
         <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
           {!isLanding && <Filter isLoading={isLoading} />}
-          <div className="flex flex-col w-full">
-            {!isLanding && !isMobile && (
-              <div className="items-center justify-between hidden mb-3 md:flex">
-                {showPlasmicSort ? (
-                  <Fragment
-                    name="Sort"
-                    props={{
-                      orderItems: orderItems,
-                      selectedSort: filters['sortBy'],
-                      selectedTurn: filters['freeturn'],
-                      total: addCommas(total),
-                      isLoading: isLoading,
-                      onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
-                      onChangeSort: (value: any) => handleChange('sortBy', value),
-                    }}
-                  />
-                ) : (
-                  <>
-                    <Sort />
-                    {isLoading ? (
-                      <Skeleton w="5rem" h="1rem" rounded="full" />
-                    ) : (
-                      <Text fontSize="sm" fontWeight="semiBold">
-                        {addCommas(total)} نتیجه
-                      </Text>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-            {customize.showConsultServices &&
-              showConsultBanner &&
-              (showPlasmicConsultBanner ? (
-                <div className="mb-3 md:hidden">
-                  <Fragment
-                    name="ConsultBanner"
-                    props={{
-                      categoryValue: selectedCategory?.value,
-                      categoryTitle: selectedCategory?.title,
-                      isHide: isConsult,
-                    }}
-                  />
+          {showPlasmicResult ? (
+            <SearchGlobalContextsProvider>
+              <Fragment
+                name="ResultView"
+                props={{
+                  //banner
+                  categoryValue: selectedCategory?.value,
+                  categoryTitle: selectedCategory?.title,
+                  isHideConsultBanner: isConsult,
+                  // sort
+                  orderItems: orderItems,
+                  selectedSort: filters['sortBy'],
+                  selectedTurn: filters['freeturn'],
+                  isLoadingResult: isLoading,
+                  onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
+                  onChangeSort: (value: any) => handleChange('sortBy', value),
+                  totalResult2: addCommas(total),
+                  // result
+                  searchResultResponse: {
+                    ...responseData,
+                    search: {
+                      ...search,
+                      result,
+                    },
+                  },
+                  nextPageTrigger: handleNextPage,
+                  imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+                  location: {
+                    city_name: city?.en_slug,
+                    city_id: city?.id,
+                    ...geoLocation,
+                  },
+                  paginationLoadingStatus: isLoading,
+                }}
+              />
+            </SearchGlobalContextsProvider>
+          ) : (
+            <div className="flex flex-col w-full">
+              {!isLanding && !isMobile && (
+                <div className="items-center justify-between hidden mb-3 md:flex">
+                  {showPlasmicSort ? (
+                    <Fragment
+                      name="Sort"
+                      props={{
+                        orderItems: orderItems,
+                        selectedSort: filters['sortBy'],
+                        selectedTurn: filters['freeturn'],
+                        total: addCommas(total),
+                        isLoading: isLoading,
+                        onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
+                        onChangeSort: (value: any) => handleChange('sortBy', value),
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <Sort />
+                      {isLoading ? (
+                        <Skeleton w="5rem" h="1rem" rounded="full" />
+                      ) : (
+                        <Text fontSize="sm" fontWeight="semiBold">
+                          {addCommas(total)} نتیجه
+                        </Text>
+                      )}
+                    </>
+                  )}
                 </div>
-              ) : (
-                <ConsultBanner />
-              ))}
-            <Result />
-          </div>
+              )}
+              {customize.showConsultServices &&
+                showConsultBanner &&
+                (showPlasmicConsultBanner ? (
+                  <div className="mb-3 md:hidden">
+                    <Fragment
+                      name="ConsultBanner"
+                      props={{
+                        categoryValue: selectedCategory?.value,
+                        categoryTitle: selectedCategory?.title,
+                        isHide: isConsult,
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <ConsultBanner />
+                ))}
+              <Result />
+            </div>
+          )}
         </div>
         <div className="!mb-16">
           <SearchSeoBox />

@@ -18,6 +18,8 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { Fragment } from '@/common/fragment';
 import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
+import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+
 interface SuggestionProps {
   overlay?: boolean;
   defaultOpen?: boolean;
@@ -183,24 +185,26 @@ export const Suggestion = (props: SuggestionProps) => {
   if (showPlasmicSuggestion) {
     return (
       <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
-        <Fragment
-          name="SearchInput"
-          props={{
-            onClickCity: (val: any) => {
-              onChangeCity({ ...val });
-            },
-            selectedCity: city,
-            defaultValue: defaultInputValue || selectedFilters?.text || '',
-            onClickOverlay: handleClickOverlay,
-            inputVal: debouncedSearchTerm,
-            onChangeInputVal: setUserSearchValue,
-            onFocusChange: (val: any) => setIsOpenSuggestion(val),
-          }}
-          variants={{
-            hasOverlay: overlay,
-            isFocus: isOpenSuggestion,
-          }}
-        />
+        <SearchGlobalContextsProvider>
+          <Fragment
+            name="SearchInput"
+            props={{
+              onClickCity: (val: any) => {
+                onChangeCity({ ...val });
+              },
+              selectedCity: city,
+              defaultValue: defaultInputValue || selectedFilters?.text || '',
+              onClickOverlay: handleClickOverlay,
+              inputVal: debouncedSearchTerm,
+              onChangeInputVal: setUserSearchValue,
+              onFocusChange: (val: any) => setIsOpenSuggestion(val),
+            }}
+            variants={{
+              hasOverlay: overlay,
+              isFocus: isOpenSuggestion,
+            }}
+          />
+        </SearchGlobalContextsProvider>
       </div>
     );
   }
