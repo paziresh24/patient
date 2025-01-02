@@ -498,7 +498,7 @@ function PlasmicResultView__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return console.log("pwa", $ctx.Fragment / PWA.isPWAUser);
+                      return console.log("pwa", $ctx.Fragment.PWA);
                     }
                   };
                   return (({ customFunction }) => {
