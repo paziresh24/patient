@@ -449,7 +449,8 @@ function PlasmicResultView__RenderFunc(props: {
                               type: "search_view",
                               event: {
                                 filters:
-                                  $props.searchResultResponse.selected_filters,
+                                  $props.searchResultResponse
+                                    ?.selected_filters ?? {},
                                 result_count:
                                   $props.searchResultResponse.search.total,
                                 location: $props.location.city_name,
@@ -492,26 +493,6 @@ function PlasmicResultView__RenderFunc(props: {
               typeof $steps["splunk"].then === "function"
             ) {
               $steps["splunk"] = await $steps["splunk"];
-            }
-
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return console.log("pwa", $ctx.Fragment.PWA);
-                    }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
-            ) {
-              $steps["runCode"] = await $steps["runCode"];
             }
           }}
         />

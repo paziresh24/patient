@@ -522,7 +522,7 @@ function PlasmicSearch__RenderFunc(props: {
                                 params.delete("text");
                                 params.append("text", $state.inputValue);
                               }
-                              return `/s/${params.toString()}`;
+                              return `/s?${params.toString()}`;
                             })();
                           } catch (e) {
                             if (
