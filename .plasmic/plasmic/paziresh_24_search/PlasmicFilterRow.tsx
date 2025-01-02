@@ -342,7 +342,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                       },
                       {
                         title: !!$props.selectedSort
-                          ? order_items[$props.selectedSort]
+                          ? order_items?.[$props.selectedSort]
                           : "مرتب سازی",
                         name: "order_items",
                         type: ""
@@ -353,11 +353,11 @@ function PlasmicFilterRow__RenderFunc(props: {
                               .find(cat => cat.value === selected.category)
                               ?.sub_categories.find(
                                 sub => sub.value === selected.sub_category
-                              ).title
+                              )?.title
                           : !!selected?.category
                           ? categories.find(
                               cat => cat.value === selected.category
-                            ).title
+                            )?.title || "تخصص"
                           : "تخصص",
                         name: "category",
                         type: "category"
@@ -387,7 +387,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                           title: selected[item.name]
                             ? item.items?.find(
                                 el => el.value === selected[item.name]
-                              )?.title || item.title
+                              )?.title || item?.title
                             : item.title
                         })) || [];
                     const filterList = [...additionalItems, ...customFilters];
@@ -421,9 +421,10 @@ function PlasmicFilterRow__RenderFunc(props: {
                     try {
                       return (
                         !!$props.items.selected_filters?.[currentItem.name] ||
-                        ((Object.keys($props.items.selected_filters).length >
-                          0 ||
-                          !!$props.selectedSort) &&
+                        (Object.keys($props.items.selected_filters).length >
+                          0 &&
+                          !$props.items.selected_filters?.city &&
+                          !$props.items.selected_filters?.text &&
                           currentItem.name === "filters") ||
                         (!!$props.selectedSort &&
                           currentItem.name === "order_items")

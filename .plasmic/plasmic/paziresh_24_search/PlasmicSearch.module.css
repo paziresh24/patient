@@ -193,6 +193,12 @@
 .selectCityDialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .selectCityDialog:global(.__wab_instance):global(.__wab_instance) {
+    height: 100%;
+    min-height: 100%;
+  }
+}
 .text__y64Ti {
   position: relative;
   width: 100%;
@@ -231,8 +237,9 @@
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox___8CERd {
     overflow-y: auto;
-    height: 450px;
+    height: 100%;
     overflow-x: hidden;
+    min-height: 450px;
   }
 }
 .getLocationList:global(.__wab_instance) {
@@ -259,6 +266,12 @@
 }
 .locationView:global(.__wab_instance) {
   max-width: 100%;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .locationView:global(.__wab_instance) {
+    height: 100%;
+    min-height: 0;
+  }
 }
 .fragmentPortal:global(.__wab_instance) {
   max-width: 100%;

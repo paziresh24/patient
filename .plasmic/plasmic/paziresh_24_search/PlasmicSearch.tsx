@@ -509,9 +509,32 @@ function PlasmicSearch__RenderFunc(props: {
               onClickSearchIcon={async () => {
                 const $steps = {};
 
-                $steps["goToS"] = true
+                $steps["goToPage"] = true
                   ? (() => {
-                      const actionArgs = { destination: "/s" };
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return (() => {
+                              const params = new globalThis.URLSearchParams(
+                                globalThis.window.location.search
+                              );
+                              if ($state.inputValue) {
+                                params.delete("text");
+                                params.append("text", $state.inputValue);
+                              }
+                              return `/s/${params.toString()}`;
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "/s";
+                            }
+                            throw e;
+                          }
+                        })()
+                      };
                       return (({ destination }) => {
                         if (
                           typeof destination === "string" &&
@@ -527,11 +550,11 @@ function PlasmicSearch__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["goToS"] != null &&
-                  typeof $steps["goToS"] === "object" &&
-                  typeof $steps["goToS"].then === "function"
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
                 ) {
-                  $steps["goToS"] = await $steps["goToS"];
+                  $steps["goToPage"] = await $steps["goToPage"];
                 }
               }}
               onFocuse={async value => {
@@ -1452,27 +1475,6 @@ function PlasmicSearch__RenderFunc(props: {
                 sty.freeBox___8CERd,
                 "no-scroll"
               )}
-              style={
-                hasVariant(globalVariants, "screen", "mobileOnly")
-                  ? (() => {
-                      try {
-                        return {
-                          ...($state.isCityInputFocused
-                            ? { height: "100%" }
-                            : { height: "450px" })
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  : undefined
-              }
             >
               <ApiRequest
                 data-plasmic-name={"getLocationList"}

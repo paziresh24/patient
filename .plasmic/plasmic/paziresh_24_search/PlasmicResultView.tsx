@@ -453,11 +453,13 @@ function PlasmicResultView__RenderFunc(props: {
                                 result_count:
                                   $props.searchResultResponse.search.total,
                                 location: $props.location.city_name,
-                                ...($props.location?.geoLocation ?? null),
                                 city_id: $props.location.city_id,
                                 query_id:
                                   $props.searchResultResponse.search.query_id,
                                 user_id: $ctx.auth.info?.id ?? null,
+                                user_type:
+                                  $ctx.auth.info.provider?.job_title ??
+                                  "normal-user",
                                 url: {
                                   href: window.location.href,
                                   qurey: params?.toString(),
@@ -496,10 +498,7 @@ function PlasmicResultView__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
-                      return (() => {
-                        console.log("user info", $ctx.auth);
-                        return console.log("pwa", $ctx.PWA);
-                      })();
+                      return console.log("pwa", $ctx.Fragment / PWA.isPWAUser);
                     }
                   };
                   return (({ customFunction }) => {
