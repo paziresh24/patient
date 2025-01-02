@@ -434,7 +434,7 @@ function PlasmicResultView__RenderFunc(props: {
           onMount={async () => {
             const $steps = {};
 
-            $steps["splunk"] = true
+            $steps["splunk"] = !!$props.searchResultResponse.search
               ? (() => {
                   const actionArgs = {
                     args: [
