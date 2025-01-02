@@ -850,7 +850,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                               return null;
                             }
                           })(),
-                          is_application: $ctx["Fragment/PWA"].isPWAUser,
+                          is_application: !!$ctx["Fragment/PWA"].isPWAUser,
                           data: {
                             result_count: $props.resultCount,
                             city: $props.cityName,

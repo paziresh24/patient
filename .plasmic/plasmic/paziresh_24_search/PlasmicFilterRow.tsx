@@ -419,16 +419,28 @@ function PlasmicFilterRow__RenderFunc(props: {
                   className={classNames("__wab_instance", sty.filterRowSingle)}
                   isSelected={(() => {
                     try {
-                      return (
-                        !!$props.items.selected_filters?.[currentItem.name] ||
-                        (Object.keys($props.items.selected_filters).length >
-                          0 &&
-                          !$props.items.selected_filters?.city &&
-                          !$props.items.selected_filters?.text &&
-                          currentItem.name === "filters") ||
-                        (!!$props.selectedSort &&
-                          currentItem.name === "order_items")
-                      );
+                      return (() => {
+                        const filters = $props.items.selected_filters;
+                        const allowedKeys = ["city", "text"];
+
+                        const filterKeys = Object.keys(filters);
+                        const isAllowed =
+                          (filterKeys.length == 2 &&
+                            !(
+                              filterKeys.includes("text") &&
+                              filterKeys.includes("city")
+                            )) ||
+                          (filterKeys.length == 1 &&
+                            !filterKeys.includes("text") &&
+                            !filterKeys.includes("city")) ||
+                          filterKeys.length >= 3;
+                        const result =
+                          !!filters?.[currentItem.name] ||
+                          (isAllowed && currentItem.name === "filters") ||
+                          (!!$props.selectedSort &&
+                            currentItem.name === "order_items");
+                        return result;
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
