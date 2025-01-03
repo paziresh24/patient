@@ -186,6 +186,7 @@ const Search = ({ host }: any) => {
               <Fragment
                 name="ResultView"
                 props={{
+                  isLanding: isLanding,
                   //banner
                   categoryValue: selectedCategory?.value,
                   categoryTitle: selectedCategory?.title,
