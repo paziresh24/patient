@@ -101,6 +101,7 @@ export type PlasmicResultView__ArgsType = {
   categoryValue?: string;
   categoryTitle?: string;
   isHideConsultBanner?: boolean;
+  isLanding?: string;
 };
 type ArgPropType = keyof PlasmicResultView__ArgsType;
 export const PlasmicResultView__ArgProps = new Array<ArgPropType>(
@@ -123,7 +124,8 @@ export const PlasmicResultView__ArgProps = new Array<ArgPropType>(
   "onChangeSort",
   "categoryValue",
   "categoryTitle",
-  "isHideConsultBanner"
+  "isHideConsultBanner",
+  "isLanding"
 );
 
 export type PlasmicResultView__OverridesType = {
@@ -156,6 +158,7 @@ export interface DefaultResultViewProps {
   categoryValue?: string;
   categoryTitle?: string;
   isHideConsultBanner?: boolean;
+  isLanding?: string;
   className?: string;
 }
 
@@ -246,7 +249,23 @@ function PlasmicResultView__RenderFunc(props: {
             isHide={args.isHideConsultBanner}
           />
         ) : null}
-        {(hasVariant(globalVariants, "screen", "mobileOnly") ? false : true) ? (
+        {(
+          hasVariant(globalVariants, "screen", "mobileOnly")
+            ? false
+            : (() => {
+                try {
+                  return !$props.isLanding;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+        ) ? (
           <Sort
             data-plasmic-name={"sort"}
             data-plasmic-override={overrides.sort}
