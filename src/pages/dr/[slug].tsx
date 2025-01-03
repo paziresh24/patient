@@ -82,6 +82,7 @@ const DoctorProfile = ({
   const [editable, setEditable] = useState(false);
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
+  const userPending = useUserInfoStore(state => state.pending);
   const setProfileData = useProfileDataStore(state => state.setData);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll } = useLockScroll();
@@ -108,7 +109,7 @@ const DoctorProfile = ({
 
   useEffect(() => {
     if (information) {
-      if (growthbook.ready && growthbook.getAttributes().slug === slug) {
+      if (growthbook.ready && growthbook.getAttributes().slug === slug && !userPending) {
         pageViewEvent({
           information,
           centers,
@@ -120,10 +121,11 @@ const DoctorProfile = ({
           features: {
             ravi_show_external_rate: dontShowRateDetails,
           },
+          viewer_user_id: userInfo?.id,
         });
       }
     }
-  }, [dontShowRateDetails, information, slug]);
+  }, [dontShowRateDetails, information, slug, growthbook.getAttributes().slug, slug, growthbook.ready, userPending]);
 
   useEffect(() => {
     if (information) {
@@ -612,4 +614,3 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
-
