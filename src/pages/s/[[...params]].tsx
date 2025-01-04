@@ -22,11 +22,11 @@ import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
-import { useFeatureValue, useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';
@@ -39,8 +39,9 @@ const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
-const Search = ({ host }: any) => {
+const Search = ({ host, fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -66,10 +67,10 @@ const Search = ({ host }: any) => {
   const customize = useCustomize(state => state.customize);
   const showDesktopFiltersRow = useFeatureIsOn('search::desktop-filters-row');
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
-  const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
+  // const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
-  const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
+  // const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -92,7 +93,7 @@ const Search = ({ host }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        if (!showPlasmicResult) {
+        if (!fragmentComponents?.showPlasmicResult) {
           splunkInstance('search').sendEvent({
             group: 'search_metrics',
             type: 'search_view',
@@ -175,13 +176,13 @@ const Search = ({ host }: any) => {
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion key={asPath.toString()} overlay />
+        <Suggestion showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion} key={asPath.toString()} overlay />
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
         <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
           {!isLanding && <Filter isLoading={isLoading} />}
-          {showPlasmicResult ? (
+          {fragmentComponents?.showPlasmicResult ? (
             <SearchGlobalContextsProvider>
               <Fragment
                 name="ResultView"
@@ -222,7 +223,7 @@ const Search = ({ host }: any) => {
             <div className="flex flex-col w-full">
               {!isLanding && !isMobile && (
                 <div className="items-center justify-between hidden mb-3 md:flex">
-                  {showPlasmicSort ? (
+                  {fragmentComponents?.showPlasmicSort ? (
                     <Fragment
                       name="Sort"
                       props={{
@@ -294,6 +295,9 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         },
       };
     }
+    let showPlasmicSuggestion: boolean = false;
+    let showPlasmicResult: boolean = false;
+    let showPlasmicSort: boolean = false;
 
     try {
       const queryClient = new QueryClient();
@@ -323,9 +327,29 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      try {
+        const host = context.req.headers.host;
+        const path = context.resolvedUrl;
+        const url = `https://${host}${path}`;
+        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+        const growthbook = new GrowthBook(growthbookContext);
+        growthbook.setAttributes({ url });
+        await growthbook.loadFeatures({ timeout: 1000 });
+        // Plasmic
+        showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
+        showPlasmicResult = growthbook.isOn('search_plasmic_result');
+        showPlasmicSort = growthbook.isOn('search_plasmic_sort');
+      } catch (error) {
+        console.error(error);
+      }
+
       return {
         props: {
           dehydratedState: dehydrate(queryClient),
+          fragmentComponents: {
+            showPlasmicSuggestion,
+            showPlasmicResult,
+          },
         },
       };
     } catch (error) {

@@ -26,10 +26,11 @@ interface SuggestionProps {
   autoFocus?: boolean;
   defaultInputValue?: string;
   setDefaultInputValue?: (value: string) => void;
+  showPlasmicSuggestion?: boolean;
 }
 
 export const Suggestion = (props: SuggestionProps) => {
-  const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue } = props;
+  const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue, showPlasmicSuggestion } = props;
   const router = useRouter();
   const { selectedFilters } = useSearch();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
@@ -41,7 +42,6 @@ export const Suggestion = (props: SuggestionProps) => {
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
-  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(userSearchValue ?? '');
   useDebounce(
     () => {

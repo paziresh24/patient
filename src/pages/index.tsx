@@ -13,7 +13,7 @@ import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
 import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
-import { GetServerSidePropsContext } from 'next/types';
+import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
@@ -24,17 +24,17 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { useSearchStore } from '@/modules/search/store/search';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
-const Home = () => {
+const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
   const router = useRouter();
   const { recent } = useRecentSearch();
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
-  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
-  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
+  console.log('flags: ', fragmentComponents);
 
   useEffect(() => {
     // Prefetch the search page
@@ -78,9 +78,13 @@ const Home = () => {
             {customize.partnerSubTitle}
           </Text>
         )}
-        <Suggestion defaultInputValue={defaultInputValue} setDefaultInputValue={setDefaultInputValue} />
+        <Suggestion
+          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion}
+          defaultInputValue={defaultInputValue}
+          setDefaultInputValue={setDefaultInputValue}
+        />
 
-        {showPlasmicRecentSearch && (
+        {fragmentComponents?.showPlasmicRecentSearch && (
           <div className="lg:w-[50rem] w-full">
             <Fragment
               name="RecentSearch"
@@ -94,13 +98,13 @@ const Home = () => {
           </div>
         )}
 
-        {recent.length > 0 && !showPlasmicRecentSearch && (
+        {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
           </div>
         )}
         {customize.showConsultServices &&
-          (showPlasmicOnlineVisit ? (
+          (fragmentComponents?.showPlasmicOnlineVisit ? (
             <div>
               <Fragment name="OnlineVisit" />
             </div>
@@ -177,8 +181,33 @@ Home.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
+    let showPlasmicSuggestion: boolean = false;
+    let showPlasmicRecentSearch: boolean = false;
+    let showPlasmicOnlineVisit: boolean = false;
+    try {
+      const host = context.req.headers.host;
+      const path = context.resolvedUrl;
+      const url = `https://${host}${path}`;
+      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+      const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ url });
+      await growthbook.loadFeatures({ timeout: 1000 });
+
+      // Plasmic
+      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
+      showPlasmicRecentSearch = growthbook.isOn('search_plasmic_recent_search');
+      showPlasmicOnlineVisit = growthbook.isOn('search_plasmic_online_visit');
+    } catch (error) {
+      console.error(error);
+    }
     return {
-      props: {},
+      props: {
+        fragmentComponents: {
+          showPlasmicSuggestion,
+          showPlasmicRecentSearch,
+          showPlasmicOnlineVisit,
+        },
+      },
     };
   }),
 );
