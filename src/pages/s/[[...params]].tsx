@@ -42,6 +42,7 @@ import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
 const Search = ({ host, fragmentComponents }: any) => {
+  console.log('features:', fragmentComponents);
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -67,10 +68,11 @@ const Search = ({ host, fragmentComponents }: any) => {
   const customize = useCustomize(state => state.customize);
   const showDesktopFiltersRow = useFeatureIsOn('search::desktop-filters-row');
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
-  // const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
+  const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
-  // const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
+  const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
+  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -93,7 +95,7 @@ const Search = ({ host, fragmentComponents }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        if (!fragmentComponents?.showPlasmicResult) {
+        if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
           splunkInstance('search').sendEvent({
             group: 'search_metrics',
             type: 'search_view',
@@ -176,13 +178,17 @@ const Search = ({ host, fragmentComponents }: any) => {
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion} key={asPath.toString()} overlay />
+        <Suggestion
+          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+          key={asPath.toString()}
+          overlay
+        />
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
         <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
           {!isLanding && <Filter isLoading={isLoading} />}
-          {fragmentComponents?.showPlasmicResult ? (
+          {fragmentComponents?.showPlasmicResult || showPlasmicResult ? (
             <SearchGlobalContextsProvider>
               <Fragment
                 name="ResultView"
@@ -223,7 +229,7 @@ const Search = ({ host, fragmentComponents }: any) => {
             <div className="flex flex-col w-full">
               {!isLanding && !isMobile && (
                 <div className="items-center justify-between hidden mb-3 md:flex">
-                  {fragmentComponents?.showPlasmicSort ? (
+                  {fragmentComponents?.showPlasmicSort || showPlasmicSort ? (
                     <Fragment
                       name="Sort"
                       props={{
@@ -327,10 +333,10 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      const host = context.req.headers.host;
+      const path = context.resolvedUrl;
+      const url = `https://${host}${path}`;
       try {
-        const host = context.req.headers.host;
-        const path = context.resolvedUrl;
-        const url = `https://${host}${path}`;
         const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
         const growthbook = new GrowthBook(growthbookContext);
         growthbook.setAttributes({ url });
@@ -349,6 +355,8 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           fragmentComponents: {
             showPlasmicSuggestion,
             showPlasmicResult,
+            showPlasmicSort,
+            url,
           },
         },
       };

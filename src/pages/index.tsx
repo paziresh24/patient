@@ -34,7 +34,9 @@ const Home = ({ fragmentComponents }: any) => {
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
-  console.log('flags: ', fragmentComponents);
+  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
+  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
+  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
 
   useEffect(() => {
     // Prefetch the search page
@@ -79,32 +81,33 @@ const Home = ({ fragmentComponents }: any) => {
           </Text>
         )}
         <Suggestion
-          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion}
+          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
           defaultInputValue={defaultInputValue}
           setDefaultInputValue={setDefaultInputValue}
         />
 
-        {fragmentComponents?.showPlasmicRecentSearch && (
-          <div className="lg:w-[50rem] w-full">
-            <Fragment
-              name="RecentSearch"
-              props={{
-                onClick: (value: any) => {
-                  setDefaultInputValue(value?.name || '');
-                  setIsOpenSuggestion(true);
-                },
-              }}
-            />
-          </div>
-        )}
+        {fragmentComponents?.showPlasmicRecentSearch ||
+          (showPlasmicRecentSearch && (
+            <div className="lg:w-[50rem] w-full">
+              <Fragment
+                name="RecentSearch"
+                props={{
+                  onClick: (value: any) => {
+                    setDefaultInputValue(value?.name || '');
+                    setIsOpenSuggestion(true);
+                  },
+                }}
+              />
+            </div>
+          ))}
 
-        {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && (
+        {recent.length > 0 && !(fragmentComponents?.showPlasmicRecentSearch && showPlasmicRecentSearch) && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
           </div>
         )}
         {customize.showConsultServices &&
-          (fragmentComponents?.showPlasmicOnlineVisit ? (
+          (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
             <div>
               <Fragment name="OnlineVisit" />
             </div>
