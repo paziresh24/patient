@@ -86,22 +86,21 @@ const Home = ({ fragmentComponents }: any) => {
           setDefaultInputValue={setDefaultInputValue}
         />
 
-        {fragmentComponents?.showPlasmicRecentSearch ||
-          (showPlasmicRecentSearch && (
-            <div className="lg:w-[50rem] w-full">
-              <Fragment
-                name="RecentSearch"
-                props={{
-                  onClick: (value: any) => {
-                    setDefaultInputValue(value?.name || '');
-                    setIsOpenSuggestion(true);
-                  },
-                }}
-              />
-            </div>
-          ))}
+        {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
+          <div className="lg:w-[50rem] w-full">
+            <Fragment
+              name="RecentSearch"
+              props={{
+                onClick: (value: any) => {
+                  setDefaultInputValue(value?.name || '');
+                  setIsOpenSuggestion(true);
+                },
+              }}
+            />
+          </div>
+        )}
 
-        {recent.length > 0 && !(fragmentComponents?.showPlasmicRecentSearch && showPlasmicRecentSearch) && (
+        {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
           <div className="lg:w-[50rem] w-full">
             <RecentSearch />
           </div>
