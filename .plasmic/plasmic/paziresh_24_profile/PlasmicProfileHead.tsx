@@ -485,13 +485,16 @@ function PlasmicProfileHead__RenderFunc(props: {
       </div>
       {(() => {
         try {
-          return $props.slug === "دکتر-سعید-بانان";
+          return (() => {
+            const slugs = $ctx.Growthbook.features["profile::goftino"];
+            return slugs.includes($props.slug);
+          })();
         } catch (e) {
           if (
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
