@@ -25,9 +25,10 @@ export const BulkService = ({ displayName, expertises, availableTime }: BulkServ
   const customize = useCustomize(state => state.customize);
   const searchData = useSearch(
     {
-      route: decodeURIComponent(`ir/${expertises?.group_expertises?.[0]?.en_slug}`),
+      route: decodeURIComponent(`ir`),
       query: {
         turn_type: 'consult',
+        text: expertises?.expertises?.map((expertise: any) => expertise.expertise_name)[0],
       },
     },
     {
@@ -63,10 +64,10 @@ export const BulkService = ({ displayName, expertises, availableTime }: BulkServ
     changeRoute({
       query: {
         turn_type: 'consult',
+        text: expertises?.expertises?.map((expertise: any) => expertise.expertise_name)[0],
       },
       params: {
         city: 'ir',
-        category: expertises.group_expertises[0].en_slug,
       },
       previousQueries: false,
     });
