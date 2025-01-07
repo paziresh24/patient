@@ -127,7 +127,6 @@ export type PlasmicSearchResults__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
@@ -384,18 +383,6461 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return (
-            $props.topSuggestedCardFeature.enable &&
-            !$props.searchResultResponse.search.result[0]?.actions.find(
-              action => action.top_title.includes("آنلاین و آماده مشاوره")
-            ) === true &&
-            (!$props.searchResultResponse.selected_filters.turn_type ||
-              $props.searchResultResponse.selected_filters.turn_type !==
-                "consult") &&
-            !$props.searchResultResponse.selected_filters.result_type &&
-            (!$props.searchResultResponse.search.pagination.page ||
-              $props.searchResultResponse.search.pagination.page === 1)
-          );
+          return {
+            search: {
+              query_id: "840DCC4C55A108E1",
+              total: 14,
+              is_landing: false,
+              pagination: {
+                limit: 20,
+                page: 1
+              },
+              result: [
+                {
+                  _id: "doctor_9c1423dd-eb6f-4691-a5c6-76b980c01070_1",
+                  id: "9c1423dd-eb6f-4691-a5c6-76b980c01070",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0645\u0627\u0647 \u0631\u062e \u0641\u062a\u0648\u0626\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/55ad6c4f91b0b8fba2ed35c75890b9e6.jpeg?size=150",
+                  view: "2K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                  satisfaction: 92,
+                  rates_count: 17,
+                  centers: [
+                    {
+                      id: "9c1423fd-27fd-4478-bac8-2ec0e1f15088",
+                      status: 1,
+                      user_center_id: "9c1423fd-3e74-474f-99bd-61944602d9c2",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0645\u0627\u0647 \u0631\u062e \u0641\u062a\u0648\u0626\u06cc",
+                      display_number: "07633634391|09176841655|09030481655",
+                      address:
+                        "\u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0627\u062a\u0648\u0628\u0648\u0633\u0631\u0627\u0646\u06cc\u060c\u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0627\u0631\u0645 \u060c\u0637\u0628\u0642\u0647 \u067e\u0646\u062c\u0645 \u0648\u0627\u062d\u062f \u06f2\u06f9",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: "27.204516643502",
+                        lon: "56.341264843941"
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0627\u062a\u0648\u0628\u0648\u0633\u0631\u0627\u0646\u06cc\u060c\u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0627\u0631\u0645 \u060c\u0637\u0628\u0642\u0647 \u067e\u0646\u062c\u0645 \u0648\u0627\u062d\u062f \u06f2\u06f9",
+                  waiting_time:
+                    "\u06a9\u0645\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a",
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0627\u0647-\u0631\u062e-\u0641\u062a\u0648\u0626\u06cc-11/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: false,
+                      top_title:
+                        "<span>\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: <b>\u0641\u0631\u062f\u0627 5 \u0639\u0635\u0631</b></span>",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0627\u0647-\u0631\u062e-\u0641\u062a\u0648\u0626\u06cc-11/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 1,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  presence_freeturn: 1735997400,
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    rates_count: 17,
+                    doctor_encounter: 4.69,
+                    explanation_of_issue: 4.35,
+                    quality_of_treatment: 4.76,
+                    waiting_time: 0.59,
+                    comments_count: 16,
+                    waiting_time_count: 17,
+                    rate: 4.6
+                  },
+                  consult_services: null,
+                  doctor_id: "9c1423dd-eb6f-4691-a5c6-76b980c01070",
+                  freeturns_info: [
+                    {
+                      center_id: "9c1423fd-27fd-4478-bac8-2ec0e1f15088",
+                      available_time: "1735849800",
+                      freeturn: "1735997400"
+                    }
+                  ],
+
+                  number_of_visits: 2384,
+                  waiting_time_info: {
+                    center_id: "9c1423fd-27fd-4478-bac8-2ec0e1f15088",
+                    waiting_time: 0.7692307692307693,
+                    average_waiting_time: "00:01:09",
+                    waiting_time_count: 13,
+                    waiting_time_title:
+                      "\u06a9\u0645\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a"
+                  },
+                  slug: "\u062f\u06a9\u062a\u0631-\u0645\u0627\u0647-\u0631\u062e-\u0641\u062a\u0648\u0626\u06cc-11",
+                  graduation_date: null,
+                  star: 4.6,
+                  available_time_status: 0,
+                  services: [
+                    {
+                      id: "9c1423fd-441b-4624-80ee-87be111799e9",
+                      center_id: "9c1423fd-27fd-4478-bac8-2ec0e1f15088",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0645\u0627\u0647 \u0631\u062e \u0641\u062a\u0648\u0626\u06cc",
+                  record_type: "doctor",
+                  center_id: ["9c1423fd-27fd-4478-bac8-2ec0e1f15088"],
+
+                  consult_freeturn: null,
+                  name: "\u0645\u0627\u0647",
+                  medical_code: "133097",
+                  calculated_rate: 92
+                },
+                {
+                  _id: "doctor_9742167f-0e92-4fda-9eea-f2f0516b96e2_1",
+                  id: "9742167f-0e92-4fda-9eea-f2f0516b96e2",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0645\u0631\u06cc\u0645 \u0641\u0631\u062e\u0634\u0627\u0647\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-women/e7c50b052c86f428f5e91461088c1e83.jpeg?size=150",
+                  view: "26K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0648 \u062c\u0631\u0627\u062d \u067e\u0648\u0633\u062a\u060c\u0645\u0648\u060c\u0632\u06cc\u0628\u0627\u06cc\u06cc\u060c\u0644\u06cc\u0632\u0631",
+                  satisfaction: 92,
+                  rates_count: 13,
+                  centers: [
+                    {
+                      id: "9742167f-1772-4787-adb4-4ecc1e95c8c3",
+                      status: 1,
+                      user_center_id: "9742167f-2fa4-40d5-a398-05bf421b89e0",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0645\u0631\u06cc\u0645 \u0641\u0631\u062e\u0634\u0627\u0647\u06cc",
+                      display_number: "09054391390",
+                      address:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633\u060c \u0633\u06cc\u062f\u062c\u0645\u0627\u0644\u200c\u0627\u0644\u062f\u06cc\u0646 \u0627\u0633\u062f\u0622\u0628\u0627\u062f\u06cc\u060c \u0628\u06cc\u0646 \u0634\u0647\u06cc\u062f \u0645\u062c\u06cc\u062f \u0646\u0627\u0635\u0631\u06cc \u0648 \u0634\u0647\u06cc\u062f \u062c\u0648\u0632\u0627",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: "27.1832216",
+                        lon: "56.2666455"
+                      },
+                      active_booking: true
+                    },
+                    {
+                      id: "220",
+                      status: 1,
+                      user_center_id: "66e2d2c3-6fc6-11ee-9e21-005056946af1",
+                      server_id: 12,
+                      name: "\u0645\u062c\u062a\u0645\u0639 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645(\u0635) \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0647\u0631\u0645\u0632",
+                      display_number: null,
+                      address:
+                        "\u0628\u0644\u0648\u0627\u0631 \u062c\u0645\u0647\u0648\u0631\u06cc \u0627\u0633\u0644\u0627\u0645\u06cc \u0645\u062c\u062a\u0645\u0639 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u0627\u0639\u0638\u0645 (\u0635)\u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0647\u0631\u0645\u0632 (\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u062d\u0645\u062f\u06cc)",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 2,
+                      map: {
+                        lat: "27.19362510",
+                        lon: "56.27201960"
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633\u060c \u0633\u06cc\u062f\u062c\u0645\u0627\u0644\u200c\u0627\u0644\u062f\u06cc\u0646 \u0627\u0633\u062f\u0622\u0628\u0627\u062f\u06cc\u060c \u0628\u06cc\u0646 \u0634\u0647\u06cc\u062f \u0645\u062c\u06cc\u062f \u0646\u0627\u0635\u0631\u06cc \u0648 \u0634\u0647\u06cc\u062f \u062c\u0648\u0632\u0627",
+                  waiting_time:
+                    "\u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a",
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0631\u06cc\u0645-\u0641\u0631\u062e\u0634\u0627\u0647\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: false,
+                      top_title:
+                        "<span>\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: <b>\u0641\u0631\u062f\u0627 5 \u0639\u0635\u0631</b></span>",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0631\u06cc\u0645-\u0641\u0631\u062e\u0634\u0627\u0647\u06cc/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 2,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  presence_freeturn: 1735999800,
+                  expertises: [
+                    {
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0648 \u062c\u0631\u0627\u062d \u067e\u0648\u0633\u062a\u060c\u0645\u0648\u060c\u0632\u06cc\u0628\u0627\u06cc\u06cc\u060c\u0644\u06cc\u0632\u0631",
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  gender: 2,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    rates_count: 13,
+                    doctor_encounter: 4.15,
+                    explanation_of_issue: 4.69,
+                    quality_of_treatment: 5,
+                    waiting_time: 1.38,
+                    comments_count: 13,
+                    waiting_time_count: 13,
+                    rate: 4.6
+                  },
+                  consult_services: null,
+                  doctor_id: "9742167f-0e92-4fda-9eea-f2f0516b96e2",
+                  freeturns_info: [
+                    {
+                      center_id: "9742167f-1772-4787-adb4-4ecc1e95c8c3",
+                      available_time: "1735849800",
+                      freeturn: "1735999800"
+                    }
+                  ],
+
+                  number_of_visits: 26609,
+                  waiting_time_info: {
+                    center_id: "9742167f-1772-4787-adb4-4ecc1e95c8c3",
+                    waiting_time: 1.1111111111111112,
+                    average_waiting_time: "01:01:40",
+                    waiting_time_count: 9,
+                    waiting_time_title:
+                      "\u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a"
+                  },
+                  slug: "\u062f\u06a9\u062a\u0631-\u0645\u0631\u06cc\u0645-\u0641\u0631\u062e\u0634\u0627\u0647\u06cc",
+                  graduation_date: null,
+                  star: 4.6,
+                  available_time_status: 0,
+                  university_name: ["hums"],
+
+                  services: [
+                    {
+                      id: "9742167f-b4a6-4da0-ba0c-391b82cee38f",
+                      center_id: "9742167f-1772-4787-adb4-4ecc1e95c8c3",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      id: "30001638-12",
+                      center_id: "220",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "ussd"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "ussd"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "ussd"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+
+                  display_name:
+                    "\u0645\u0631\u06cc\u0645 \u0641\u0631\u062e\u0634\u0627\u0647\u06cc",
+                  record_type: "doctor",
+                  center_id: ["9742167f-1772-4787-adb4-4ecc1e95c8c3", "220"],
+
+                  consult_freeturn: null,
+                  name: "\u0645\u0631\u06cc\u0645",
+                  medical_code: "157364",
+                  calculated_rate: 92
+                },
+                {
+                  _id: "doctor_98b24cf4-499d-45e7-ba74-cf8c3c54961e_1",
+                  id: "98b24cf4-499d-45e7-ba74-cf8c3c54961e",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0634\u0647\u0644\u0627 \u062d\u0633\u064a\u0646 \u067e\u0648\u0631",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/98cc7fa28b79914c88eb73c371c98f35.jpeg?size=150",
+                  view: "1K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                  satisfaction: 83,
+                  rates_count: 2,
+                  centers: [
+                    {
+                      id: "98b24d15-aa83-476e-a16d-b05a699590cc",
+                      status: 1,
+                      user_center_id: "98b24d15-bd7b-4ee8-88b6-1c3e7b309279",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0634\u0647\u0644\u0627 \u062d\u0633\u064a\u0646 \u067e\u0648\u0631",
+                      display_number: "09174341062",
+                      address:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633\u060c \u0634\u0647\u06cc\u062f \u0627\u0635\u063a\u0631 \u0642\u0627\u0633\u0645\u06cc\u060c \u0646\u0648\u0627\u0628 \u0635\u0641\u0648\u06cc\u060c \u0628\u06cc\u0646 \u062c\u0627\u0646\u0628\u0627\u0632\u0627\u0646 7 \u0648 9",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: "27.201797135816",
+                        lon: "56.305167675018"
+                      },
+                      active_booking: true
+                    },
+                    {
+                      id: "5532",
+                      status: 1,
+                      user_center_id: "9d2a9c7f-6b05-4db0-9a69-73f6e24528a2",
+                      server_id: 1,
+                      name: "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u067e\u0630\u06cc\u0631\u063424",
+                      display_number: "02125015555",
+                      address:
+                        "\u0645\u0631\u06a9\u0632 \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u067e\u0630\u06cc\u0631\u063424",
+                      province_name: "\u062a\u0647\u0631\u0627\u0646",
+                      city_name: "\u062a\u0647\u0631\u0627\u0646",
+                      center_type: 3,
+                      map: {
+                        lat: "35.730224",
+                        lon: "51.358404"
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633\u060c \u0634\u0647\u06cc\u062f \u0627\u0635\u063a\u0631 \u0642\u0627\u0633\u0645\u06cc\u060c \u0646\u0648\u0627\u0628 \u0635\u0641\u0648\u06cc\u060c \u0628\u06cc\u0646 \u062c\u0627\u0646\u0628\u0627\u0632\u0627\u0646 7 \u0648 9",
+                  waiting_time: null,
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: true,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0634\u0647\u0644\u0627-\u062d\u0633\u064a\u0646-\u067e\u0648\u0631/",
+                  actions: [
+                    {
+                      title:
+                        "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646",
+                      outline: false,
+                      top_title:
+                        "<span>\u067e\u0627\u0633\u062e: <b>\u0641\u0631\u062f\u0627 \u062d\u062f\u0648\u062f 9 \u0635\u0628\u062d</b></span>",
+                      url: "/booking/\u062f\u06a9\u062a\u0631-\u0634\u0647\u0644\u0627-\u062d\u0633\u064a\u0646-\u067e\u0648\u0631?centerId=5532&serviceId=9d2a9c7f-6dee-4334-8e91-4aa9f8032bca&skipTimeSelectStep=true"
+                    },
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: false,
+                      top_title:
+                        "<span>\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: <b>\u0641\u0631\u062f\u0627 11 \u0635\u0628\u062d</b></span>",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0634\u0647\u0644\u0627-\u062d\u0633\u064a\u0646-\u067e\u0648\u0631/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 3,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  presence_freeturn: 1735976400,
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    rates_count: 2,
+                    doctor_encounter: 4.5,
+                    explanation_of_issue: 4,
+                    quality_of_treatment: 4,
+                    waiting_time: 0,
+                    comments_count: 2,
+                    waiting_time_count: 2,
+                    rate: 4.15
+                  },
+                  consult_services: [
+                    {
+                      free_price: 3000000,
+                      id: "9d2a9c7f-6dee-4334-8e91-4aa9f8032bca"
+                    }
+                  ],
+
+                  doctor_id: "98b24cf4-499d-45e7-ba74-cf8c3c54961e",
+                  freeturns_info: [
+                    {
+                      center_id: "5532",
+                      available_time: "1735849800",
+                      freeturn: "1735968600"
+                    },
+                    {
+                      center_id: "98b24d15-aa83-476e-a16d-b05a699590cc",
+                      available_time: "1735849800",
+                      freeturn: "1735976400"
+                    }
+                  ],
+
+                  number_of_visits: 1023,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0634\u0647\u0644\u0627-\u062d\u0633\u064a\u0646-\u067e\u0648\u0631",
+                  graduation_date: null,
+                  star: 4.15,
+                  available_time_status: 0,
+                  services: [
+                    {
+                      id: "98b24d15-c3d8-47a0-b316-f03faab45554",
+                      center_id: "98b24d15-aa83-476e-a16d-b05a699590cc",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      id: "9d2a9c7f-6dee-4334-8e91-4aa9f8032bca",
+                      center_id: "5532",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0634\u0647\u0644\u0627 \u062d\u0633\u064a\u0646 \u067e\u0648\u0631",
+                  record_type: "doctor",
+                  center_id: ["98b24d15-aa83-476e-a16d-b05a699590cc", "5532"],
+
+                  consult_freeturn: 1735968600,
+                  name: "\u0634\u0647\u0644\u0627",
+                  medical_code: "127633",
+                  calculated_rate: 83
+                },
+                {
+                  _id: "doctor_56f20464-fbed-11ea-ab18-000c2928edeb_108",
+                  id: "56f20464-fbed-11ea-ab18-000c2928edeb",
+                  server_id: 108,
+                  type: "doctor",
+                  title:
+                    "\u0633\u0645\u0627\u0646\u0647 \u0641\u0636\u0644 \u0627\u0644\u0647\u064a",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image: "/getImage/p24/search-women/noimage.png?size=150",
+                  view: "25K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                  satisfaction: 83,
+                  rates_count: 81,
+                  centers: [
+                    {
+                      id: "387",
+                      status: 1,
+                      user_center_id: "56febd59-fbed-11ea-ab18-000c2928edeb",
+                      server_id: 108,
+                      name: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                      display_number: "1824",
+                      address:
+                        "\u0628\u0644\u0648\u0627\u0631 \u0634\u0647\u062f\u0627 - \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0645\u062a\u062e\u0635\u0635\u06cc\u0646 \u0634\u0647\u062f\u0627.",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                      center_type: 2,
+                      map: {
+                        lat: 26.580363,
+                        lon: 54.913661
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647|\u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647,\u0628\u0644\u0648\u0627\u0631 \u0634\u0647\u062f\u0627 - \u062f\u0631\u0645\u0627\u0646\u06af\u0627\u0647 \u0645\u062a\u062e\u0635\u0635\u06cc\u0646 \u0634\u0647\u062f\u0627.",
+                  waiting_time:
+                    "\u06a9\u0645\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a",
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0644\u0647\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: false,
+                      top_title:
+                        "<span>\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: <b>16 \u062f\u06cc 8 \u0635\u0628\u062d</b></span>",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0644\u0647\u06cc/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 4,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  presence_freeturn: 1736051400,
+                  gender: 2,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    rates_count: 81,
+                    doctor_encounter: 4.26,
+                    explanation_of_issue: 4.07,
+                    quality_of_treatment: 4.19,
+                    waiting_time: 0.58,
+                    comments_count: 57,
+                    waiting_time_count: 66,
+                    rate: 4.15
+                  },
+                  consult_services: null,
+                  doctor_id: "56f20464-fbed-11ea-ab18-000c2928edeb",
+                  freeturns_info: [
+                    {
+                      center_id: "387",
+                      available_time: "1735849800",
+                      freeturn: "1736051400"
+                    }
+                  ],
+
+                  number_of_visits: 25192,
+                  waiting_time_info: {
+                    center_id: "387",
+                    waiting_time: 0.6470588235294118,
+                    average_waiting_time: "00:01:49",
+                    waiting_time_count: 51,
+                    waiting_time_title:
+                      "\u06a9\u0645\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a"
+                  },
+                  slug: "\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0644\u0647\u06cc",
+                  graduation_date: null,
+                  star: 4.15,
+                  available_time_status: 1,
+                  services: [
+                    {
+                      id: "c267e234-1017-11ea-93d0-000c2928edeb",
+                      center_id: "387",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: []
+                        }
+                      ]
+                    }
+                  ],
+
+                  university_name: ["hums"],
+
+                  display_name:
+                    "\u0633\u0645\u0627\u0646\u0647 \u0641\u0636\u0644 \u0627\u0644\u0647\u064a",
+                  record_type: "doctor",
+                  center_id: ["387"],
+
+                  consult_freeturn: null,
+                  name: "\u0633\u0645\u0627\u0646\u0647",
+                  medical_code: "156456",
+                  calculated_rate: 83
+                },
+                {
+                  _id: "doctor_78d54bf3-3c08-11ec-8a2e-005056ade667_1",
+                  id: "78d54bf3-3c08-11ec-8a2e-005056ade667",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0645\u0647\u0631\u062f\u0627\u062f \u0631\u062e\u0634\u0627\u0646 \u067e\u0648\u0631",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/c6d17d3222ebf6f2b708cde8f7603eca.png?size=150",
+                  view: "35K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                  satisfaction: 93,
+                  rates_count: 61,
+                  centers: [
+                    {
+                      id: "78d76d2a-3c08-11ec-8a2e-005056ade667",
+                      status: 2,
+                      user_center_id: "7a5dfb4b-3c08-11ec-8a2e-005056ade667",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0645\u0647\u0631\u062f\u0627\u062f \u0631\u062e\u0634\u0627\u0646 \u067e\u0648\u0631 \u062f\u0631 \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      display_number: null,
+                      address:
+                        "\u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u0631\u0648\u06cc \u062f\u0631\u06cc\u0627\u06cc\u06cc \u0627\u0631\u062a\u0634",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0646\u06cc\u0631\u0648\u06cc \u062f\u0631\u06cc\u0627\u06cc\u06cc \u0627\u0631\u062a\u0634",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: true,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0647\u0631\u062f\u0627\u062f-\u0631\u062e\u0634\u0627\u0646-\u067e\u0648\u0631-0/",
+                  actions: [
+                    {
+                      title:
+                        "\u0622\u062f\u0631\u0633 \u0648 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u06cc\u0634\u062a\u0631",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0645\u0647\u0631\u062f\u0627\u062f-\u0631\u062e\u0634\u0627\u0646-\u067e\u0648\u0631-0/"
+                    }
+                  ],
+
+                  experience: 15,
+                  position: 5,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        id: 5
+                      },
+                      expertise: {
+                        name: "\u067e\u0632\u0634\u06a9\u06cc"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc"
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u067e\u0632\u0634\u06a9\u06cc"
+                  ],
+
+                  rate_info: {
+                    rates_count: 61,
+                    doctor_encounter: 4.638297872340425,
+                    explanation_of_issue: 4.531914893617022,
+                    quality_of_treatment: 4.8125,
+                    waiting_time: 0.14754098360655737,
+                    comments_count: 47,
+                    waiting_time_count: 61,
+                    rate: 4.65
+                  },
+                  consult_services: null,
+                  doctor_id: "78d54bf3-3c08-11ec-8a2e-005056ade667",
+                  number_of_visits: 35859,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0645\u0647\u0631\u062f\u0627\u062f-\u0631\u062e\u0634\u0627\u0646-\u067e\u0648\u0631-0",
+                  graduation_date: 1284147000,
+                  star: 4.65,
+                  services: [
+                    {
+                      workhours: null,
+                      center_id: "78d76d2a-3c08-11ec-8a2e-005056ade667",
+                      id: "7a642c14-3c08-11ec-8a2e-005056ade667"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0645\u0647\u0631\u062f\u0627\u062f \u0631\u062e\u0634\u0627\u0646 \u067e\u0648\u0631",
+                  record_type: "doctor",
+                  center_id: ["78d76d2a-3c08-11ec-8a2e-005056ade667"],
+
+                  name: "\u0645\u0647\u0631\u062f\u0627\u062f",
+                  calculated_rate: 93,
+                  medical_code: "127473"
+                },
+                {
+                  _id: "doctor_30a952d9-e6cf-44e1-ab82-e88a0d4c3f91_1",
+                  id: "30a952d9-e6cf-44e1-ab82-e88a0d4c3f91",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0641\u0631\u0648\u063a \u062c\u0645\u0634\u06cc\u062f\u06cc \u0628\u0647\u0645\u0646\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/cfc38b80e498241f2d8b3fe7412c1595.png?size=150",
+                  view: "47K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                  satisfaction: 90,
+                  rates_count: 112,
+                  centers: [
+                    {
+                      id: "1f52a95c-35f4-4f34-8424-e69f848e55b3",
+                      status: 2,
+                      user_center_id: "ead3a8e7-74f4-41f0-b449-6b8104c4aacd",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0641\u0631\u0648\u063a \u062c\u0645\u0634\u06cc\u062f\u06cc \u0628\u0647\u0645\u0646\u06cc \u062f\u0631 \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      display_number: "2234585, 2234656",
+                      address:
+                        "\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u06cc\u0647 \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9 \u0637 \u0686\u0647\u0627\u0631\u0645 | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u06cc\u0647 \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9 \u0637 \u0686\u0647\u0627\u0631\u0645",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    },
+                    {
+                      id: "6ff54f19-9efc-11ea-9877-005056b09c11",
+                      status: 2,
+                      user_center_id: "767eafcd-9efc-11ea-9877-005056b09c11",
+                      server_id: 1,
+                      name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u06a9\u062a\u0631 \u0641\u0631\u0648\u063a \u062c\u0645\u0634\u06cc\u062f\u06cc",
+                      display_number: null,
+                      address:
+                        "\u0627\u0633\u062a\u0627\u0646 \u0647\u0631\u0645\u0632\u06af\u0627\u0646\u060c \u0634\u0647\u0631 \u0628\u0646\u062f\u0631 \u0639\u0628\u0627\u0633\u060c",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u06cc\u0647 \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9 \u0637 \u0686\u0647\u0627\u0631\u0645 | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u06cc\u0647 \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9 \u0637 \u0686\u0647\u0627\u0631\u0645",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: true,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631--\u0641\u0631\u0648\u063a-\u062c\u0645\u0634\u06cc\u062f\u06cc-\u0628\u0647\u0645\u0646\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u062a\u0644\u0641\u0646\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631--\u0641\u0631\u0648\u063a-\u062c\u0645\u0634\u06cc\u062f\u06cc-\u0628\u0647\u0645\u0646\u06cc/"
+                    }
+                  ],
+
+                  experience: 30,
+                  position: 6,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        id: 5
+                      },
+                      expertise: {
+                        name: "\u067e\u0632\u0634\u06a9\u06cc"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc"
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u067e\u0632\u0634\u06a9\u06cc"
+                  ],
+
+                  rate_info: {
+                    rates_count: 112,
+                    doctor_encounter: 4.517241379310345,
+                    explanation_of_issue: 4.365853658536586,
+                    quality_of_treatment: 4.6,
+                    waiting_time: 0.0625,
+                    comments_count: 45,
+                    waiting_time_count: 64,
+                    rate: 4.5
+                  },
+                  consult_services: null,
+                  doctor_id: "30a952d9-e6cf-44e1-ab82-e88a0d4c3f91",
+                  number_of_visits: 47266,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631--\u0641\u0631\u0648\u063a-\u062c\u0645\u0634\u06cc\u062f\u06cc-\u0628\u0647\u0645\u0646\u06cc",
+                  graduation_date: 819577800,
+                  star: 4.5,
+                  services: [
+                    {
+                      workhours: [
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        }
+                      ],
+
+                      center_id: "1f52a95c-35f4-4f34-8424-e69f848e55b3",
+                      id: "4003c9f6-4e35-4602-b78a-02348947d103"
+                    },
+                    {
+                      workhours: null,
+                      center_id: "6ff54f19-9efc-11ea-9877-005056b09c11",
+                      id: "76989e2e-9efc-11ea-9877-005056b09c11"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0641\u0631\u0648\u063a \u062c\u0645\u0634\u06cc\u062f\u06cc \u0628\u0647\u0645\u0646\u06cc",
+                  record_type: "doctor",
+                  center_id: [
+                    "1f52a95c-35f4-4f34-8424-e69f848e55b3",
+                    "6ff54f19-9efc-11ea-9877-005056b09c11"
+                  ],
+
+                  name: "\u0641\u0631\u0648\u063a",
+                  medical_code: "54491",
+                  calculated_rate: 90
+                },
+                {
+                  _id: "doctor_89455b2f-9fdb-11ea-bc60-005056b09c11_1",
+                  id: "89455b2f-9fdb-11ea-bc60-005056b09c11",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc \u0645\u062d\u0628\u0648\u0628\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/5d2ff57e9f8c3ddebc5a528aba76615e.png?size=150",
+                  view: "46K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                  satisfaction: 89,
+                  rates_count: 138,
+                  centers: [
+                    {
+                      id: "8923eb5a-9fdb-11ea-bc60-005056b09c11",
+                      status: 2,
+                      user_center_id: "91032bac-9fdb-11ea-bc60-005056b09c11",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc \u0645\u062d\u0628\u0648\u0628\u06cc \u062f\u0631 \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      display_number: "24775, 31387",
+                      address:
+                        "\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0645\u0631\u0627\u062f\u06cc | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634 \u0645\u062d\u0645\u062f\u06cc",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0645\u0631\u0627\u062f\u06cc | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634 \u0645\u062d\u0645\u062f\u06cc",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: true,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc-\u0645\u062d\u0628\u0648\u0628\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u062a\u0644\u0641\u0646\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc-\u0645\u062d\u0628\u0648\u0628\u06cc/"
+                    }
+                  ],
+
+                  experience: 52,
+                  position: 7,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        id: 5
+                      },
+                      expertise: {
+                        name: "\u067e\u0632\u0634\u06a9\u06cc"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc"
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u067e\u0632\u0634\u06a9\u06cc"
+                  ],
+
+                  rate_info: {
+                    rates_count: 138,
+                    doctor_encounter: 4.518867924528302,
+                    explanation_of_issue: 4.385964912280702,
+                    quality_of_treatment: 4.518518518518518,
+                    waiting_time: 0.26744186046511625,
+                    comments_count: 49,
+                    waiting_time_count: 86,
+                    rate: 4.45
+                  },
+                  consult_services: null,
+                  doctor_id: "89455b2f-9fdb-11ea-bc60-005056b09c11",
+                  number_of_visits: 46467,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc-\u0645\u062d\u0628\u0648\u0628\u06cc",
+                  graduation_date: 125353800,
+                  star: 4.45,
+                  services: [
+                    {
+                      workhours: null,
+                      center_id: "8923eb5a-9fdb-11ea-bc60-005056b09c11",
+                      id: "9118db0f-9fdb-11ea-bc60-005056b09c11"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc \u0645\u062d\u0628\u0648\u0628\u06cc",
+                  record_type: "doctor",
+                  center_id: ["8923eb5a-9fdb-11ea-bc60-005056b09c11"],
+
+                  name: "\u0639\u0628\u062f\u0627\u0644\u0639\u0644\u06cc",
+                  calculated_rate: 89,
+                  medical_code: "19085"
+                },
+                {
+                  _id: "doctor_b24026af-0be4-471d-ab79-e738441733aa_1",
+                  id: "b24026af-0be4-471d-ab79-e738441733aa",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0634\u0647\u0631\u0627\u0645 \u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/3d0507d389915d7dee27e5bbf84aef06.png?size=150",
+                  view: "38K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                  satisfaction: 94,
+                  rates_count: 37,
+                  centers: [
+                    {
+                      id: "a0e64914-3357-4814-ae48-00865220c3a5",
+                      status: 2,
+                      user_center_id: "a2dbca3b-ae3d-4452-b5bc-a8b75d7354f3",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0634\u0647\u0631\u0627\u0645 \u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc \u062f\u0631 \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      display_number: "572566",
+                      address:
+                        "\u0645\u0637\u0628: \u062e \u0633\u06cc\u062f \u062c\u0645\u0627\u0644 \u0627\u0644\u062f\u06cc\u0646 \u0627\u0633\u062f\u0627\u0628\u0627\u062f\u06cc-\u067e\u0627\u0633\u0627\u0698 \u0646\u0627\u0635\u0631-\u0633\u0647 \u0631\u0627\u0647 \u0633\u0627\u0632\u0645\u0627\u0646-\u0637 1 | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u062d\u0645\u062f\u06cc \u0628\u062e\u0634 \u067e\u0648\u0633\u062a",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0645\u0637\u0628: \u062e \u0633\u06cc\u062f \u062c\u0645\u0627\u0644 \u0627\u0644\u062f\u06cc\u0646 \u0627\u0633\u062f\u0627\u0628\u0627\u062f\u06cc-\u067e\u0627\u0633\u0627\u0698 \u0646\u0627\u0635\u0631-\u0633\u0647 \u0631\u0627\u0647 \u0633\u0627\u0632\u0645\u0627\u0646-\u0637 1 | \u0645\u062d\u0644 \u06a9\u0627\u0631: \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u06cc\u062f \u0645\u062d\u0645\u062f\u06cc \u0628\u062e\u0634 \u067e\u0648\u0633\u062a",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: true,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631--\u0634\u0647\u0631\u0627\u0645-\u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u062a\u0644\u0641\u0646\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631--\u0634\u0647\u0631\u0627\u0645-\u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc/"
+                    }
+                  ],
+
+                  experience: 39,
+                  position: 8,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        id: 5
+                      },
+                      expertise: {
+                        name: "\u067e\u0632\u0634\u06a9\u06cc"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc"
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u067e\u0632\u0634\u06a9\u06cc"
+                  ],
+
+                  rate_info: {
+                    rates_count: 37,
+                    doctor_encounter: 4.730769230769231,
+                    explanation_of_issue: 4.730769230769231,
+                    quality_of_treatment: 4.666666666666667,
+                    waiting_time: 0.05555555555555555,
+                    comments_count: 26,
+                    waiting_time_count: 36,
+                    rate: 4.7
+                  },
+                  consult_services: null,
+                  doctor_id: "b24026af-0be4-471d-ab79-e738441733aa",
+                  number_of_visits: 38563,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631--\u0634\u0647\u0631\u0627\u0645-\u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc",
+                  graduation_date: 509229000,
+                  star: 4.7,
+                  services: [
+                    {
+                      workhours: [
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        }
+                      ],
+
+                      center_id: "a0e64914-3357-4814-ae48-00865220c3a5",
+                      id: "bb67bc1e-82cb-4c33-b3f9-7084a777d403"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0634\u0647\u0631\u0627\u0645 \u0628\u0627\u063a\u0633\u062a\u0627\u0646\u06cc",
+                  record_type: "doctor",
+                  center_id: ["a0e64914-3357-4814-ae48-00865220c3a5"],
+
+                  name: "\u0634\u0647\u0631\u0627\u0645",
+                  calculated_rate: 94,
+                  medical_code: "25503"
+                },
+                {
+                  _id: "doctor_edf7b52b-0aa0-11ea-8756-000c29cc3463_31",
+                  id: "edf7b52b-0aa0-11ea-8756-000c29cc3463",
+                  server_id: 31,
+                  type: "doctor",
+                  title:
+                    "\u062d\u0633\u06cc\u0646 \u062d\u0627\u0641\u0638\u06cc",
+                  prefix: "",
+                  image: "/getImage/p24/search-men/noimage.png?size=150",
+                  view: "28K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                  satisfaction: 92,
+                  rates_count: 18,
+                  centers: [
+                    {
+                      id: "413",
+                      status: 1,
+                      user_center_id: "ee018861-0aa0-11ea-8756-000c29cc3463",
+                      server_id: 31,
+                      name: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
+                      display_number: "1824",
+                      address:
+                        "\u0628\u0644\u0648\u0627\u0631 \u0622\u0644 \u0645\u062d\u0645\u062f",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name: "\u0645\u06cc\u0646\u0627\u0628",
+                      center_type: 2,
+                      map: {
+                        lat: "27.11604400",
+                        lon: "57.06592600"
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628|\u0645\u06cc\u0646\u0627\u0628,\u0628\u0644\u0648\u0627\u0631 \u0622\u0644 \u0645\u062d\u0645\u062f",
+                  waiting_time:
+                    "\u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a",
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u062d\u0633\u06cc\u0646-\u062d\u0627\u0641\u0638\u06cc-2/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u062d\u0633\u06cc\u0646-\u062d\u0627\u0641\u0638\u06cc-2/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 9,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  presence_freeturn: null,
+                  expertises: [
+                    {
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  gender: 1,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    rates_count: 18,
+                    doctor_encounter: 4.62,
+                    explanation_of_issue: 4.54,
+                    quality_of_treatment: 4.69,
+                    waiting_time: 1.21,
+                    comments_count: 12,
+                    waiting_time_count: 14,
+                    rate: 4.6
+                  },
+                  consult_services: null,
+                  doctor_id: "edf7b52b-0aa0-11ea-8756-000c29cc3463",
+                  freeturns_info: [
+                    {
+                      center_id: "413",
+                      available_time: null,
+                      freeturn: null
+                    }
+                  ],
+
+                  number_of_visits: 28709,
+                  waiting_time_info: {
+                    center_id: "413",
+                    waiting_time: 1.3076923076923077,
+                    average_waiting_time: "01:01:28",
+                    waiting_time_count: 13,
+                    waiting_time_title:
+                      "\u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u06cc\u06a9 \u0633\u0627\u0639\u062a"
+                  },
+                  slug: "\u062f\u06a9\u062a\u0631-\u062d\u0633\u06cc\u0646-\u062d\u0627\u0641\u0638\u06cc-2",
+                  graduation_date: null,
+                  star: 4.6,
+                  available_time_status: 2,
+                  services: [
+                    {
+                      id: "34003913-31",
+                      center_id: "413",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Referral System"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      id: "34003931-31",
+                      center_id: "413",
+                      workhours: null
+                    }
+                  ],
+
+                  university_name: ["hums"],
+
+                  display_name:
+                    "\u062d\u0633\u06cc\u0646 \u062d\u0627\u0641\u0638\u06cc",
+                  record_type: "doctor",
+                  center_id: ["413"],
+
+                  consult_freeturn: null,
+                  name: "\u062d\u0633\u06cc\u0646",
+                  medical_code: "140558",
+                  calculated_rate: 92
+                },
+                {
+                  _id: "doctor_1724_1",
+                  id: "1724",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0635\u062f\u06cc\u0642\u0647 \u062a\u0648\u06a9\u0644\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image: "/getImage/p24/search-women/noimage.png?size=150",
+                  view: "48K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u0646\u0627\u0645\u0634\u062e\u0635 \u0646\u0627\u0645\u0634\u062e\u0635",
+                  satisfaction: 91,
+                  rates_count: 22,
+                  centers: [
+                    {
+                      id: "994a9ff9-256a-4aae-a00d-03ca8778e52a",
+                      status: 1,
+                      user_center_id: "994a9ff9-3bd8-47d7-902d-108061f1a011",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0635\u062f\u06cc\u0642\u0647 \u062a\u0648\u06a9\u0644\u06cc",
+                      display_number: null,
+                      address:
+                        "\u060c \u062d\u062f \u0641\u0627\u0635\u0644 \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u064a\u0647 \u0648 \u0645\u064a\u062f\u0627\u0646 \u0634\u0627\u0647 \u062d\u0633\u064a\u0646\u0649 \u060c \u062c\u0646\u0628 \u0632\u0645\u064a\u0646 \u0648\u0631\u0632\u0634\u0649 \u0627\u062a\u062d\u0627\u062f . \u0643\u0648\u0686\u0647 \u062c\u0627\u0648\u062f\u0627\u0646 \u0661\u0661 \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0645\u0647\u0631 \u060c \u0637\u0628\u0642\u0647 \u062f\u0648\u0645",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: "27.182773040426",
+                        lon: "56.266656517982"
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u060c \u062d\u062f \u0641\u0627\u0635\u0644 \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0641\u0627\u0637\u0645\u064a\u0647 \u0648 \u0645\u064a\u062f\u0627\u0646 \u0634\u0627\u0647 \u062d\u0633\u064a\u0646\u0649 \u060c \u062c\u0646\u0628 \u0632\u0645\u064a\u0646 \u0648\u0631\u0632\u0634\u0649 \u0627\u062a\u062d\u0627\u062f . \u0643\u0648\u0686\u0647 \u062c\u0627\u0648\u062f\u0627\u0646 \u0661\u0661 \u060c \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u0645\u0647\u0631 \u060c \u0637\u0628\u0642\u0647 \u062f\u0648\u0645",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0635\u062f\u06cc\u0642\u0647-\u062a\u0648\u06a9\u0644\u06cc-1/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0635\u062f\u06cc\u0642\u0647-\u062a\u0648\u06a9\u0644\u06cc-1/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 10,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u0646\u0627\u0645\u0634\u062e\u0635",
+                        id: 14
+                      },
+                      expertise: {
+                        name: "\u0646\u0627\u0645\u0634\u062e\u0635"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u0633\u0627\u06cc\u0631"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0646\u0627\u0645\u0634\u062e\u0635 \u0646\u0627\u0645\u0634\u062e\u0635"
+                    }
+                  ],
+
+                  gender: 2,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u0646\u0627\u0645\u0634\u062e\u0635"
+                  ],
+
+                  rate_info: {
+                    rates_count: 22,
+                    doctor_encounter: 4.6,
+                    explanation_of_issue: 4.55,
+                    quality_of_treatment: 4.55,
+                    waiting_time: 0,
+                    comments_count: 22,
+                    waiting_time_count: 22,
+                    rate: 4.55
+                  },
+                  consult_services: null,
+                  doctor_id: "1724",
+                  number_of_visits: 48329,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0635\u062f\u06cc\u0642\u0647-\u062a\u0648\u06a9\u0644\u06cc-1",
+                  graduation_date: null,
+                  star: 4.55,
+                  services: [
+                    {
+                      id: "994a9ff9-42a8-47ad-b7a5-f53317679608",
+                      center_id: "994a9ff9-256a-4aae-a00d-03ca8778e52a",
+                      workhours: null
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0635\u062f\u06cc\u0642\u0647 \u062a\u0648\u06a9\u0644\u06cc",
+                  record_type: "doctor",
+                  center_id: ["994a9ff9-256a-4aae-a00d-03ca8778e52a"],
+
+                  name: "\u0635\u062f\u06cc\u0642\u0647",
+                  medical_code: "138213",
+                  calculated_rate: 91
+                },
+                {
+                  _id: "doctor_97a87feb-7b6a-44ce-b075-cf978d226cf1_1",
+                  id: "97a87feb-7b6a-44ce-b075-cf978d226cf1",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0633\u06cc\u0645\u0627 \u0627\u0639\u0644\u0645\u06cc \u0647\u0631\u0646\u062f\u06cc",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image:
+                    "/getImage/p24/search-men/2405203a72790f0c7edfc1a06d398508.png?size=150",
+                  view: "17K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc), \u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                  satisfaction: 75,
+                  rates_count: 14,
+                  centers: [
+                    {
+                      id: "53b5105e-8a40-4de7-967f-530fd083fbaa",
+                      status: 2,
+                      user_center_id: "441327e5-c6c5-43e3-b15c-0ee2e373f914",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0633\u06cc\u0645\u0627 \u0627\u0639\u0644\u0645\u06cc \u0647\u0631\u0646\u062f\u06cc \u062f\u0631 \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      display_number: "0761-2233981",
+                      address:
+                        "\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0645\u0631\u0627\u062f\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u067e\u0627\u0631\u0633\u06cc\u0627\u0646 \u0637\u0628\u0642\u0647 6",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                      center_type: 1,
+                      map: {
+                        lat: null,
+                        lon: null
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633,\u0645\u0637\u0628: \u0686\u0647\u0627\u0631\u0631\u0627\u0647 \u0645\u0631\u0627\u062f\u06cc \u0633\u0627\u062e\u062a\u0645\u0627\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u067e\u0627\u0631\u0633\u06cc\u0627\u0646 \u0637\u0628\u0642\u0647 6",
+                  waiting_time: null,
+                  badges: [
+                    {
+                      title:
+                        "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0645\u0639\u0637\u0644\u06cc",
+                      description:
+                        "\u0627\u06a9\u062b\u0631 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 30 \u062f\u0642\u06cc\u0642\u0647 \u062f\u0631 \u0645\u0637\u0628/\u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0631\u0627\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0645\u0646\u062a\u0638\u0631 \u0645\u0627\u0646\u062f\u0647 \u0627\u0646\u062f.",
+                      type: "success",
+                      icon: "clock-icon"
+                    }
+                  ],
+
+                  is_bulk: true,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631--\u0633\u06cc\u0645\u0627-\u0627\u0639\u0644\u0645\u06cc-\u0647\u0631\u0646\u062f\u06cc/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u062a\u0644\u0641\u0646\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631--\u0633\u06cc\u0645\u0627-\u0627\u0639\u0644\u0645\u06cc-\u0647\u0631\u0646\u062f\u06cc/"
+                    }
+                  ],
+
+                  experience: 33,
+                  position: 11,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)"
+                    },
+                    {
+                      degree: {
+                        name: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                        id: 5
+                      },
+                      expertise: {
+                        name: "\u067e\u0632\u0634\u06a9\u06cc"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u062f\u06a9\u062a\u0631\u0627\u06cc \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc"
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    "\u067e\u0632\u0634\u06a9\u06cc"
+                  ],
+
+                  rate_info: {
+                    quality_of_treatment: 3.7,
+                    waiting_time_count: 13,
+                    waiting_time: 0,
+                    rate: 3.75,
+                    comments_count: 6,
+                    rates_count: 14,
+                    doctor_encounter: 4.1,
+                    explanation_of_issue: 3.4,
+                    count_dislike: 2
+                  },
+                  consult_services: null,
+                  doctor_id: "97a87feb-7b6a-44ce-b075-cf978d226cf1",
+                  number_of_visits: 17263,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631--\u0633\u06cc\u0645\u0627-\u0627\u0639\u0644\u0645\u06cc-\u0647\u0631\u0646\u062f\u06cc",
+                  graduation_date: 698531400,
+                  star: 3.75,
+                  services: [
+                    {
+                      workhours: [
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        },
+                        {
+                          types: []
+                        }
+                      ],
+
+                      center_id: "53b5105e-8a40-4de7-967f-530fd083fbaa",
+                      id: "27a41844-5cc9-4665-8166-1c33635462c6"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0633\u06cc\u0645\u0627 \u0627\u0639\u0644\u0645\u06cc \u0647\u0631\u0646\u062f\u06cc",
+                  record_type: "doctor",
+                  center_id: ["53b5105e-8a40-4de7-967f-530fd083fbaa"],
+
+                  name: "\u0633\u06cc\u0645\u0627",
+                  medical_code: "35666",
+                  calculated_rate: 75
+                },
+                {
+                  _id: "doctor_40e7d819-6834-11eb-8e8e-000c29d88d14_43",
+                  id: "40e7d819-6834-11eb-8e8e-000c29d88d14",
+                  server_id: 43,
+                  type: "doctor",
+                  title:
+                    "\u0632\u06cc\u0628\u0627 \u0627\u0645\u06cc\u062f\u0648\u0646\u062f",
+                  prefix: "",
+                  image: "/getImage/p24/search-women/noimage.png?size=150",
+                  view: "8K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                  satisfaction: 100,
+                  rates_count: 3,
+                  centers: [
+                    {
+                      id: "420",
+                      status: 1,
+                      user_center_id: "4145ca55-6834-11eb-8e8e-000c29d88d14",
+                      server_id: 43,
+                      name: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      display_number: null,
+                      address:
+                        "\u0628\u0639\u062f \u0627\u0632 \u0634\u0647\u0631\u06a9 \u0627\u0644\u0647\u06cc\u0647 - \u0631\u0648\u0628\u0631\u0648\u06cc \u062a\u0627\u0633\u06cc\u0633\u0627\u062a \u0622\u0628 \u0634\u06cc\u0631\u06cc\u0646 \u06a9\u0646 \u0645\u0646\u0637\u0642\u0647 \u0622\u0632\u0627\u062f \u0642\u0634\u0645",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name: "\u0642\u0634\u0645",
+                      center_type: 2,
+                      map: {
+                        lon: 56.255045,
+                        lat: 26.953491
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646|\u0642\u0634\u0645,\u0628\u0639\u062f \u0627\u0632 \u0634\u0647\u0631\u06a9 \u0627\u0644\u0647\u06cc\u0647 - \u0631\u0648\u0628\u0631\u0648\u06cc \u062a\u0627\u0633\u06cc\u0633\u0627\u062a \u0622\u0628 \u0634\u06cc\u0631\u06cc\u0646 \u06a9\u0646 \u0645\u0646\u0637\u0642\u0647 \u0622\u0632\u0627\u062f \u0642\u0634\u0645",
+                  waiting_time: null,
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0632\u06cc\u0628\u0627-\u0627\u0645\u06cc\u062f\u0648\u0646\u062f-0/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0632\u06cc\u0628\u0627-\u0627\u0645\u06cc\u062f\u0648\u0646\u062f-0/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 12,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        name: "\u0645\u062a\u062e\u0635\u0635",
+                        id: 7
+                      },
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ],
+
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                    }
+                  ],
+
+                  presence_freeturn: null,
+                  gender: 2,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    quality_of_treatment: 5,
+                    waiting_time_count: 3,
+                    waiting_time: 0,
+                    doctor_encouter: 5,
+                    rate: 5,
+                    comments_count: 2,
+                    rates_count: 3,
+                    doctor_encounter: 5,
+                    explanation_of_issue: 5,
+                    count_dislike: 0
+                  },
+                  consult_services: null,
+                  doctor_id: "40e7d819-6834-11eb-8e8e-000c29d88d14",
+                  freeturns_info: null,
+                  number_of_visits: 8054,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0632\u06cc\u0628\u0627-\u0627\u0645\u06cc\u062f\u0648\u0646\u062f-0",
+                  graduation_date: null,
+                  star: 5,
+                  available_time_status: 2,
+                  services: [
+                    {
+                      workhours: null,
+                      center_id: "420",
+                      id: "3941-43"
+                    },
+                    {
+                      workhours: null,
+                      center_id: "420",
+                      id: "3958-43"
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0632\u06cc\u0628\u0627 \u0627\u0645\u06cc\u062f\u0648\u0646\u062f",
+                  record_type: "doctor",
+                  center_id: ["420"],
+
+                  consult_freeturn: null,
+                  name: "\u0632\u06cc\u0628\u0627",
+                  medical_code: "137785",
+                  calculated_rate: 100
+                },
+                {
+                  _id: "doctor_98597be2-40f3-43d2-b9ad-0c170776439e_1",
+                  id: "98597be2-40f3-43d2-b9ad-0c170776439e",
+                  server_id: 1,
+                  type: "doctor",
+                  title:
+                    "\u0633\u0645\u0627\u0646\u0647 \u0641\u0636\u0644 \u0627\u0644\u0647\u064a",
+                  prefix: "\u062f\u06a9\u062a\u0631",
+                  image: "/getImage/p24/search-men/noimage.png?size=150",
+                  view: "2K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                  satisfaction: 100,
+                  rates_count: 2,
+                  centers: [
+                    {
+                      id: "98597bfa-f7f6-4f76-9d38-371c39f709bb",
+                      status: 1,
+                      user_center_id: "98597bfb-0ad3-45fe-a50e-4f82d1b33705",
+                      server_id: 1,
+                      name: "\u0645\u0637\u0628 \u062f\u06a9\u062a\u0631 \u0633\u0645\u0627\u0646\u0647 \u0641\u0636\u0644 \u0627\u0644\u0647\u064a",
+                      display_number: "09926833268",
+                      address:
+                        "\u0628\u0646\u062f\u0631\u0644\u0646\u06af\u0647\u060c\u0631\u0648\u0628\u0631\u0648\u06cc \u0634\u0647\u0631\u062f\u0627\u0631\u06cc.\u062c\u0646\u0628 \u0628\u0627\u0646\u06a9 \u062a\u0648\u0633\u0639\u0647 \u062a\u0639\u0627\u0648\u0646",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name:
+                        "\u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                      center_type: 1,
+                      map: {
+                        lat: 26.557399345483,
+                        lon: 54.880728442211
+                      },
+                      active_booking: false
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647,\u0628\u0646\u062f\u0631\u0644\u0646\u06af\u0647\u060c\u0631\u0648\u0628\u0631\u0648\u06cc \u0634\u0647\u0631\u062f\u0627\u0631\u06cc.\u062c\u0646\u0628 \u0628\u0627\u0646\u06a9 \u062a\u0648\u0633\u0639\u0647 \u062a\u0639\u0627\u0648\u0646",
+                  waiting_time: null,
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: false,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0647\u064a/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0647\u064a/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 13,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u200c\u0647\u0627\u06cc \u067e\u0648\u0633\u062a (\u062f\u0631\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc)",
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  gender: null,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    waiting_time: 0,
+                    waiting_time_count: 2,
+                    doctor_encounter: 5,
+                    quality_of_treatment: 5,
+                    rate: 5,
+                    comments_count: 2,
+                    rates_count: 2,
+                    count_dislike: 0
+                  },
+                  consult_services: null,
+                  doctor_id: "98597be2-40f3-43d2-b9ad-0c170776439e",
+                  number_of_visits: 2581,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0633\u0645\u0627\u0646\u0647-\u0641\u0636\u0644-\u0627\u0644\u0647\u064a",
+                  graduation_date: null,
+                  star: 5,
+                  services: [
+                    {
+                      id: "98597bfb-0e30-4571-9948-4436a271f9ac",
+                      center_id: "98597bfa-f7f6-4f76-9d38-371c39f709bb",
+                      workhours: null
+                    }
+                  ],
+
+                  university_name: [],
+                  display_name:
+                    "\u0633\u0645\u0627\u0646\u0647 \u0641\u0636\u0644 \u0627\u0644\u0647\u064a",
+                  record_type: "doctor",
+                  center_id: ["98597bfa-f7f6-4f76-9d38-371c39f709bb"],
+
+                  name: "\u0633\u0645\u0627\u0646\u0647",
+                  medical_code: "156456",
+                  calculated_rate: 100
+                },
+                {
+                  _id: "doctor_3c79245a-97cb-11ed-a84f-000c290ac572_43",
+                  id: "3c79245a-97cb-11ed-a84f-000c290ac572",
+                  server_id: 43,
+                  type: "doctor",
+                  title:
+                    "\u0634\u0627\u062f\u0627\u0628 \u0633\u0631\u0627\u062c\u06cc",
+                  prefix: "",
+                  image: "/getImage/p24/search-women/noimage.png?size=150",
+                  view: "5K",
+                  display_expertise:
+                    "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                  satisfaction: 100,
+                  rates_count: 1,
+                  centers: [
+                    {
+                      id: "420",
+                      status: 1,
+                      user_center_id: "3c7e4236-97cb-11ed-a84f-000c290ac572",
+                      server_id: 43,
+                      name: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      display_number: null,
+                      address:
+                        "\u0628\u0639\u062f \u0627\u0632 \u0634\u0647\u0631\u06a9 \u0627\u0644\u0647\u06cc\u0647 - \u0631\u0648\u0628\u0631\u0648\u06cc \u062a\u0627\u0633\u06cc\u0633\u0627\u062a \u0622\u0628 \u0634\u06cc\u0631\u06cc\u0646 \u06a9\u0646 \u0645\u0646\u0637\u0642\u0647 \u0622\u0632\u0627\u062f \u0642\u0634\u0645",
+                      province_name:
+                        "\u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                      city_name: "\u0642\u0634\u0645",
+                      center_type: 2,
+                      map: {
+                        lat: 26.953491,
+                        lon: 56.255045
+                      },
+                      active_booking: true
+                    }
+                  ],
+
+                  display_address:
+                    "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646|\u0642\u0634\u0645,\u0628\u0639\u062f \u0627\u0632 \u0634\u0647\u0631\u06a9 \u0627\u0644\u0647\u06cc\u0647 - \u0631\u0648\u0628\u0631\u0648\u06cc \u062a\u0627\u0633\u06cc\u0633\u0627\u062a \u0622\u0628 \u0634\u06cc\u0631\u06cc\u0646 \u06a9\u0646 \u0645\u0646\u0637\u0642\u0647 \u0622\u0632\u0627\u062f \u0642\u0634\u0645",
+                  waiting_time: null,
+                  badges: [],
+                  is_bulk: false,
+                  consult_active_booking: false,
+                  presence_active_booking: true,
+                  url: "/dr/\u062f\u06a9\u062a\u0631-\u0634\u0627\u062f\u0627\u0628-\u0633\u0631\u0627\u062c\u06cc-1/",
+                  actions: [
+                    {
+                      title:
+                        "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc",
+                      outline: true,
+                      top_title: "",
+                      url: "/dr/\u062f\u06a9\u062a\u0631-\u0634\u0627\u062f\u0627\u0628-\u0633\u0631\u0627\u062c\u06cc-1/"
+                    }
+                  ],
+
+                  experience: null,
+                  position: 14,
+                  has_presciption: false,
+                  insurances: [],
+                  experiment_details: {
+                    search_index: "slim_clinic",
+                    consult_search_index: "slim_clinic_online_visit"
+                  },
+                  expertises: [
+                    {
+                      degree: {
+                        id: 7,
+                        name: "\u0645\u062a\u062e\u0635\u0635"
+                      },
+                      alias_title:
+                        "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                      expertise: {
+                        name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                      },
+                      expertise_groups: [
+                        {
+                          name: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648"
+                        }
+                      ]
+                    }
+                  ],
+
+                  presence_freeturn: null,
+                  gender: 2,
+                  expertise: [
+                    "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                  ],
+
+                  rate_info: {
+                    waiting_time: 0,
+                    waiting_time_count: 1,
+                    doctor_encounter: 5,
+                    quality_of_treatment: 5,
+                    rate: 5,
+                    comments_count: 1,
+                    rates_count: 1,
+                    count_dislike: 0
+                  },
+                  consult_services: null,
+                  doctor_id: "3c79245a-97cb-11ed-a84f-000c290ac572",
+                  freeturns_info: [
+                    {
+                      center_id: "420",
+                      available_time: null,
+                      freeturn: null
+                    }
+                  ],
+
+                  number_of_visits: 5849,
+                  waiting_time_info: null,
+                  slug: "\u062f\u06a9\u062a\u0631-\u0634\u0627\u062f\u0627\u0628-\u0633\u0631\u0627\u062c\u06cc-1",
+                  graduation_date: null,
+                  star: 5,
+                  available_time_status: 2,
+                  services: [
+                    {
+                      id: "3958-43",
+                      center_id: "420",
+                      workhours: [
+                        {
+                          types: [
+                            {
+                              name: "Referral System"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Referral System"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        },
+                        {
+                          types: [
+                            {
+                              name: "Website"
+                            },
+                            {
+                              name: "Tell"
+                            },
+                            {
+                              name: "Calendar"
+                            },
+                            {
+                              name: "APP"
+                            },
+                            {
+                              name: "Telegram"
+                            },
+                            {
+                              name: "Kiosk"
+                            },
+                            {
+                              name: "ussd"
+                            },
+                            {
+                              name: "Clinic APP"
+                            },
+                            {
+                              name: "Clinic TELEGRAM"
+                            },
+                            {
+                              name: "Clinic TELL"
+                            },
+                            {
+                              name: "Clinic WEB"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+
+                  university_name: ["hums"],
+
+                  display_name:
+                    "\u0634\u0627\u062f\u0627\u0628 \u0633\u0631\u0627\u062c\u06cc",
+                  record_type: "doctor",
+                  center_id: ["420"],
+
+                  consult_freeturn: null,
+                  name: "\u0634\u0627\u062f\u0627\u0628",
+                  medical_code: "150331",
+                  calculated_rate: 100
+                }
+              ]
+            },
+            order_items: {
+              clinic: "\u0628\u0647\u062a\u0631\u06cc\u0646",
+              clinic_doctor_popular:
+                "\u0645\u062d\u0628\u0648\u0628\u200c\u062a\u0631\u06cc\u0646",
+              clinic_first_freeturn:
+                "\u0646\u0632\u062f\u06cc\u06a9\u200c\u062a\u0631\u06cc\u0646 \u0646\u0648\u0628\u062a",
+              clinic_less_waiting_time:
+                "\u06a9\u0645\u062a\u0631\u06cc\u0646 \u0632\u0645\u0627\u0646 \u0645\u0639\u0637\u0644\u06cc \u062f\u0631 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc",
+              clinic_doctor_visits:
+                "\u067e\u0631\u0628\u0627\u0632\u062f\u06cc\u062f\u062a\u0631\u06cc\u0646"
+            },
+            categories: [
+              {
+                title:
+                  "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
+                image: "/getImage/icons%2Fgroup_expertise/ostokhan.png",
+                url: "/s/bandar-e-jask/orthopedics/",
+                value: "orthopedics",
+                sub_categories: [
+                  {
+                    title: "\u0627\u0631\u06af\u0648\u0646\u0648\u0645\u06cc",
+                    value: "exp-ergonomics",
+                    url: "/s/bandar-e-jask/exp-ergonomics/"
+                  },
+                  {
+                    title: "\u0627\u0631\u062a\u0648\u067e\u062f\u06cc",
+                    value: "exp-orthopedics",
+                    url: "/s/bandar-e-jask/exp-orthopedics/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-rheumatology",
+                    url: "/s/bandar-e-jask/exp-rheumatology/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-rheumatology",
+                    url: "/s/bandar-e-jask/exp-pediatric-rheumatology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u062e\u062a\u0644\u0627\u0644\u0627\u062a \u06a9\u0641 \u0644\u06af\u0646 \u062f\u0631 \u0632\u0646\u0627\u0646",
+                    value: "exp-pelvic-floor-disorders-in-women",
+                    url: "/s/bandar-e-jask/exp-pelvic-floor-disorders-in-women/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u062a\u0648\u067e\u062f\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-orthopedics",
+                    url: "/s/bandar-e-jask/exp-pediatric-orthopedics/"
+                  },
+                  {
+                    title: "\u062c\u0631\u0627\u062d\u06cc \u062f\u0633\u062a",
+                    value: "exp-hand-surgery",
+                    url: "/s/bandar-e-jask/exp-hand-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0633\u062a\u0648\u0646 \u0641\u0642\u0631\u0627\u062a",
+                    value: "exp-spine-surgery",
+                    url: "/s/bandar-e-jask/exp-spine-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0632\u0627\u0646\u0648",
+                    value: "exp-knee-surgery",
+                    url: "/s/bandar-e-jask/exp-knee-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0634\u0627\u0646\u0647",
+                    value: "exp-shoulder-surgery",
+                    url: "/s/bandar-e-jask/exp-shoulder-surgery/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/zanan.png",
+                url: "/s/bandar-e-jask/obstetrics-gynecology/",
+                value: "obstetrics-gynecology",
+                sub_categories: [
+                  {
+                    title: "\u0645\u0627\u0645\u0627\u06cc\u06cc",
+                    value: "exp-midwifery",
+                    url: "/s/bandar-e-jask/exp-midwifery/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0634\u0627\u0648\u0631\u0647 \u062f\u0631 \u0645\u0627\u0645\u0627\u06cc\u06cc",
+                    value: "exp-counseling-in-midwifery",
+                    url: "/s/bandar-e-jask/exp-counseling-in-midwifery/"
+                  },
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9",
+                    value: "exp-maternal-and-child-health",
+                    url: "/s/bandar-e-jask/exp-maternal-and-child-health/"
+                  },
+                  {
+                    title:
+                      "\u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                    value: "exp-obstetrics-gynecology",
+                    url: "/s/bandar-e-jask/exp-obstetrics-gynecology/"
+                  },
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u0628\u0627\u0631\u0648\u0631\u06cc",
+                    value: "exp-pregnancy-health",
+                    url: "/s/bandar-e-jask/exp-pregnancy-health/"
+                  },
+                  {
+                    title:
+                      "\u0627\u062e\u062a\u0644\u0627\u0644\u0627\u062a \u06a9\u0641 \u0644\u06af\u0646 \u062f\u0631 \u0632\u0646\u0627\u0646",
+                    value: "exp-pelvic-floor-disorders-in-women",
+                    url: "/s/bandar-e-jask/exp-pelvic-floor-disorders-in-women/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0644\u0648\u0698\u06cc \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                    value: "exp-gynecological-urology",
+                    url: "/s/bandar-e-jask/exp-gynecological-urology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc \u0632\u0646\u0627\u0646",
+                    value: "exp-gynecological-oncology",
+                    url: "/s/bandar-e-jask/exp-gynecological-oncology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u06cc\u0646\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-perinatol",
+                    url: "/s/bandar-e-jask/exp-perinatol/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062f\u0631\u0648\u0646 \u0628\u06cc\u0646 \u0632\u0646\u0627\u0646",
+                    value: "exp-internal-surgery-between-women",
+                    url: "/s/bandar-e-jask/exp-internal-surgery-between-women/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0645\u0627\u062f\u0631 \u0648 \u062c\u0646\u06cc\u0646",
+                    value: "exp-maternal-and-fetal-medicine",
+                    url: "/s/bandar-e-jask/exp-maternal-and-fetal-medicine/"
+                  },
+                  {
+                    title: "\u0646\u0627\u0628\u0627\u0631\u0648\u0631\u06cc",
+                    value: "exp-sterility",
+                    url: "/s/bandar-e-jask/exp-sterility/"
+                  },
+                  {
+                    title: "\u0646\u0627\u0632\u0627\u06cc\u06cc- IVF",
+                    value: "exp-ivf",
+                    url: "/s/bandar-e-jask/exp-ivf/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/cheshm.png",
+                url: "/s/bandar-e-jask/ophthalmology/",
+                value: "ophthalmology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0646\u0627\u06cc\u06cc \u0633\u0646\u062c\u06cc",
+                    value: "exp-optometry",
+                    url: "/s/bandar-e-jask/exp-optometry/"
+                  },
+                  {
+                    title: "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-ophthalmology",
+                    url: "/s/bandar-e-jask/exp-ophthalmology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0633\u062a\u0631\u0627\u0628\u06cc\u0633\u0645",
+                    value: "exp-strabismus",
+                    url: "/s/bandar-e-jask/exp-strabismus/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06a9\u0648\u0644\u0648 \u067e\u0644\u0627\u0633\u062a\u06cc\u06a9",
+                    value: "exp-ecolo-plastic",
+                    url: "/s/bandar-e-jask/exp-ecolo-plastic/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0633\u0637\u062d \u0686\u0634\u0645",
+                    value: "exp-ocular-surface-disorders",
+                    url: "/s/bandar-e-jask/exp-ocular-surface-disorders/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0642\u0631\u0646\u06cc\u0647 \u0648 \u062e\u0627\u0631\u062c \u0686\u0634\u0645\u06cc",
+                    value: "exp-corneal-and-extraocular-diseases",
+                    url: "/s/bandar-e-jask/exp-corneal-and-extraocular-diseases/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0686\u0634\u0645",
+                    value: "exp-eye-pathology",
+                    url: "/s/bandar-e-jask/exp-eye-pathology/"
+                  },
+                  {
+                    title: "\u0686\u0634\u0645 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-childrens-eyes",
+                    url: "/s/bandar-e-jask/exp-childrens-eyes/"
+                  },
+                  {
+                    title:
+                      "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646 \u0648 \u0627\u0646\u062d\u0631\u0627\u0641 \u0686\u0634\u0645",
+                    value: "exp-pediatric-ophthalmology-and-eye-aberrations",
+                    url: "/s/bandar-e-jask/exp-pediatric-ophthalmology-and-eye-aberrations/"
+                  },
+                  {
+                    title:
+                      "\u0642\u0631\u0646\u06cc\u0647- \u0633\u06af\u0645\u0627\u0646 \u0642\u062f\u0627\u0645\u06cc",
+                    value: "exp-cornea",
+                    url: "/s/bandar-e-jask/exp-cornea/"
+                  },
+                  {
+                    title: "\u06af\u0644\u0648\u06a9\u0648\u0645",
+                    value: "exp-glaucoma",
+                    url: "/s/bandar-e-jask/exp-glaucoma/"
+                  },
+                  {
+                    title:
+                      "\u0648\u06cc\u062a\u0631\u0647 \u0648\u0631\u062a\u06cc\u0646- \u0633\u06af\u0645\u0627\u0646 \u062e\u0644\u0641\u06cc",
+                    value: "exp-retina",
+                    url: "/s/bandar-e-jask/exp-retina/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u06af\u0648\u0627\u0631\u0634 \u0648 \u0645\u0639\u062f\u0647",
+                image: "/getImage/icons%2Fgroup_expertise/medeh.png",
+                url: "/s/bandar-e-jask/gastroenterology/",
+                value: "gastroenterology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u06af\u0648\u0627\u0631\u0634 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-digestion",
+                    url: "/s/bandar-e-jask/exp-pediatric-digestion/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0648\u0627\u0631\u0634 \u0648 \u06a9\u0628\u062f \u0628\u0627\u0644\u063a\u06cc\u0646",
+                    value: "exp-adult-digestive-and-liver",
+                    url: "/s/bandar-e-jask/exp-adult-digestive-and-liver/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u067e\u06cc\u0648\u0646\u062f \u0627\u0639\u0636\u0627\u0621 \u062f\u0627\u062e\u0644\u06cc \u0634\u06a9\u0645",
+                    value:
+                      "exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen",
+                    url: "/s/bandar-e-jask/exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen/"
+                  },
+                  {
+                    title: "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0628\u062f",
+                    value: "exp-liver-transplant",
+                    url: "/s/bandar-e-jask/exp-liver-transplant/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/kolieh.png",
+                url: "/s/bandar-e-jask/urology/",
+                value: "urology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc \u062a\u0646\u0627\u0633\u0644\u06cc",
+                    value: "exp-kidney-and-genitourinary-surgery",
+                    url: "/s/bandar-e-jask/exp-kidney-and-genitourinary-surgery/"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0644\u06cc\u0647 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-kidney",
+                    url: "/s/bandar-e-jask/exp-pediatric-kidney/"
+                  },
+                  {
+                    title: "\u0646\u0641\u0631\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-nephrology",
+                    url: "/s/bandar-e-jask/exp-nephrology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-arvancology",
+                    url: "/s/bandar-e-jask/exp-arvancology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0644\u0648\u0698\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-urology",
+                    url: "/s/bandar-e-jask/exp-pediatric-urology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0644\u0648\u0698\u06cc \u062a\u0631\u0645\u06cc\u0645\u06cc",
+                    value: "exp-restorative-urology",
+                    url: "/s/bandar-e-jask/exp-restorative-urology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0644\u0648\u0698\u06cc \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                    value: "exp-gynecological-urology",
+                    url: "/s/bandar-e-jask/exp-gynecological-urology/"
+                  },
+                  {
+                    title:
+                      "\u0622\u0646\u062f\u0648\u06cc\u0648\u0631\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-endovirology",
+                    url: "/s/bandar-e-jask/exp-endovirology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0644\u06cc\u0647",
+                    value: "exp-kidney-transplant",
+                    url: "/s/bandar-e-jask/exp-kidney-transplant/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0644\u06cc\u0647 \u0648 \u0627\u0648\u0631\u0648\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-kidney-transplantation-and-urvancology",
+                    url: "/s/bandar-e-jask/exp-kidney-transplantation-and-urvancology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u063a\u062f\u062f \u0648 \u0645\u062a\u0627\u0628\u0648\u0644\u06cc\u0633\u0645",
+                image: "/getImage/icons%2Fgroup_expertise/ghodad.png",
+                url: "/s/bandar-e-jask/endocrinology/",
+                value: "endocrinology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u063a\u062f\u062f \u062f\u0631\u0648\u0646 \u0631\u06cc\u0632 \u0648 \u0645\u062a\u0627\u0628\u0648\u0644\u06cc\u0633\u0645",
+                    value: "exp-endocrinology-and-metabolism",
+                    url: "/s/bandar-e-jask/exp-endocrinology-and-metabolism/"
+                  },
+                  {
+                    title:
+                      "\u063a\u062f\u062f \u062f\u0631\u0648\u0646 \u0631\u06cc\u0632 \u0648 \u0645\u062a\u0627\u0628\u0648\u0644\u06cc\u0633\u0645 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-endocrinology-and-metabolism",
+                    url: "/s/bandar-e-jask/exp-pediatric-endocrinology-and-metabolism/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642",
+                image: "/getImage/icons%2Fgroup_expertise/ghalb.png",
+                url: "/s/bandar-e-jask/cardiovascular/",
+                value: "cardiovascular",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642",
+                    value: "exp-cardiovascular-diseases",
+                    url: "/s/bandar-e-jask/exp-cardiovascular-diseases/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0639\u0631\u0648\u0642",
+                    value: "exp-vascular-surgery",
+                    url: "/s/bandar-e-jask/exp-vascular-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642",
+                    value: "exp-cardiovascular-surgery",
+                    url: "/s/bandar-e-jask/exp-cardiovascular-surgery/"
+                  },
+                  {
+                    title: "\u0642\u0644\u0628 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-cardiovascular",
+                    url: "/s/bandar-e-jask/exp-pediatric-cardiovascular/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0642\u062f\u0627\u0645\u0627\u062a \u0645\u062f\u0627\u062e\u0644\u0647\u200c\u0627\u06cc \u0642\u0644\u0628 \u0628\u0632\u0631\u06af\u0633\u0627\u0644",
+                    value: "exp-adult-heart-heart-disease",
+                    url: "/s/bandar-e-jask/exp-adult-heart-heart-disease/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0642\u062f\u0627\u0645\u0627\u062a \u0645\u062f\u0627\u062e\u0644\u0647\u200c\u0627\u06cc \u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-cardiovascular-1",
+                    url: "/s/bandar-e-jask/exp-pediatric-cardiovascular-1/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06a9\u0648 \u06a9\u0627\u0631\u062f\u06cc\u0648\u06af\u0631\u0627\u0641\u06cc",
+                    value: "exp-eco-cardiography",
+                    url: "/s/bandar-e-jask/exp-eco-cardiography/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06cc\u0646\u062a\u0631\u0648\u0646\u0634\u0646\u0627\u0644 \u06a9\u0627\u0631\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-interventional-cardiology",
+                    url: "/s/bandar-e-jask/exp-interventional-cardiology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06cc\u0646\u062a\u0631\u0648\u0646\u0634\u0646\u0627\u0644 \u06a9\u0627\u0631\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc \u062f\u0631\u06a9\u0648\u062f\u06a9\u0627\u0646 \u0648\u0646\u0648\u062c\u0648\u0627\u0646\u0627\u0646",
+                    value:
+                      "exp-interventional-cardiology-in-children-and-adolescents",
+                    url: "/s/bandar-e-jask/exp-interventional-cardiology-in-children-and-adolescents/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0645\u0627\u062f\u0631\u0632\u0627\u062f\u06cc \u0642\u0644\u0628 \u062f\u0631 \u0628\u0627\u0644\u063a\u06cc\u0646",
+                    value: "exp-congenital-heart-disease-in-adults",
+                    url: "/s/bandar-e-jask/exp-congenital-heart-disease-in-adults/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u0642\u0644\u0628",
+                    value: "exp-cardiac-anesthesia",
+                    url: "/s/bandar-e-jask/exp-cardiac-anesthesia/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0633 \u0645\u06cc\u06a9\u0631\u0648 \u0627\u06cc\u0646\u062a\u0631\u0648\u0646\u0634\u0646\u0627\u0644- \u0627\u0644\u06a9\u062a\u0631\u0648\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-micro-interventional-electrophysiology",
+                    url: "/s/bandar-e-jask/exp-micro-interventional-electrophysiology/"
+                  },
+                  {
+                    title:
+                      "\u0646\u0627\u0631\u0633\u0627\u06cc\u06cc \u0642\u0644\u0628",
+                    value: "exp-heart-failure",
+                    url: "/s/bandar-e-jask/exp-heart-failure/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u062f\u0627\u062e\u0644\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/dakheli.png",
+                url: "/s/bandar-e-jask/internal/",
+                value: "internal",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u062f\u0627\u062e\u0644\u06cc",
+                    value: "exp-internal-diseases",
+                    url: "/s/bandar-e-jask/exp-internal-diseases/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u067e\u06cc\u0648\u0646\u062f \u0627\u0639\u0636\u0627\u0621 \u062f\u0627\u062e\u0644\u06cc \u0634\u06a9\u0645",
+                    value:
+                      "exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen",
+                    url: "/s/bandar-e-jask/exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen/"
+                  },
+                  {
+                    title: "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0628\u062f",
+                    value: "exp-liver-transplant",
+                    url: "/s/bandar-e-jask/exp-liver-transplant/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u062f\u0647\u0627\u0646 \u0648 \u062f\u0646\u062f\u0627\u0646",
+                image: "/getImage/icons%2Fgroup_expertise/dahan.png",
+                url: "/s/bandar-e-jask/dental-oral/",
+                value: "dental-oral",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u062f\u0647\u0627\u0646",
+                    value: "exp-oral-hygiene",
+                    url: "/s/bandar-e-jask/exp-oral-hygiene/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0648\u062a\u0632\u0647\u0627\u06cc \u062f\u0646\u062f\u0627\u0646\u06cc",
+                    value: "exp-dental-prostheses",
+                    url: "/s/bandar-e-jask/exp-dental-prostheses/"
+                  },
+                  {
+                    title:
+                      "\u0633\u0627\u062e\u062a \u067e\u0631\u0648\u062a\u0632\u0647\u0627\u06cc \u062f\u0646\u062f\u0627\u0646\u06cc",
+                    value: "exp-making-dentures",
+                    url: "/s/bandar-e-jask/exp-making-dentures/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-dentistry",
+                    url: "/s/bandar-e-jask/exp-dentistry/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u062a\u0648\u062f\u0627\u0646\u062a\u06cc\u06a9\u0633",
+                    value: "exp-orthodontics",
+                    url: "/s/bandar-e-jask/exp-orthodontics/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0646\u062f\u0648\u062f\u0627\u0646\u062a\u06cc\u06a9\u0633",
+                    value: "exp-endodontics",
+                    url: "/s/bandar-e-jask/exp-endodontics/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u062f\u0647\u0627\u0646 \u0648\u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-diseases",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-diseases/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9- \u0622\u0633\u06cc\u0628 \u0634\u0646\u0627\u0633\u06cc \u062f\u0647\u0627\u0646 \u0648 \u062f\u0646\u062f\u0627\u0646",
+                    value:
+                      "exp-oral-and-maxillofacial-pathology-oral-pathology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-pathology-oral-pathology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u06cc\u0648\u062f\u0627\u0646\u062a\u06cc\u06a9\u0633",
+                    value: "exp-periodontics",
+                    url: "/s/bandar-e-jask/exp-periodontics/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-surgery",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u062a\u0631\u0645\u06cc\u0645\u06cc",
+                    value: "exp-restorative-dentistry",
+                    url: "/s/bandar-e-jask/exp-restorative-dentistry/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-dentistry",
+                    url: "/s/bandar-e-jask/exp-pediatric-dentistry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0627\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-radiology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-radiology/"
+                  },
+                  {
+                    title:
+                      "\u0633\u0644\u0627\u0645\u062a \u062f\u0647\u0627\u0646 \u0648 \u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0627\u062c\u062a\u0645\u0627\u0639\u06cc",
+                    value: "exp-oral-health-and-social-dentistry",
+                    url: "/s/bandar-e-jask/exp-oral-health-and-social-dentistry/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0648\u0627\u062f \u062f\u0646\u062f\u0627\u0646\u06cc",
+                    value: "exp-dental-materials",
+                    url: "/s/bandar-e-jask/exp-dental-materials/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u062a\u0648 \u0633\u0631\u062c\u0631\u06cc",
+                    value: "exp-ortho-surgeon",
+                    url: "/s/bandar-e-jask/exp-ortho-surgeon/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-oncology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-oncology/"
+                  },
+                  {
+                    title: "\u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-implant",
+                    url: "/s/bandar-e-jask/exp-implant/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646",
+                    value: "exp-oral-biology",
+                    url: "/s/bandar-e-jask/exp-oral-biology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0648\u062a\u0632\u0647\u0627\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-prostheses",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-prostheses/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0648\u0633\u062a\u0648 \u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-prosthetic-implant",
+                    url: "/s/bandar-e-jask/exp-prosthetic-implant/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u06cc\u0648- \u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-perio-implant",
+                    url: "/s/bandar-e-jask/exp-perio-implant/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u067e\u06cc\u0634\u0631\u0641\u062a\u0647- \u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-advanced-surgery-implant",
+                    url: "/s/bandar-e-jask/exp-advanced-surgery-implant/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062a\u0631\u0645\u06cc\u0645\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-reconstructive-surgery",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-reconstructive-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a \u06a9\u0631\u0627\u0646\u06cc\u0648\u0641\u0627\u0633\u06cc\u0627\u0644 \u0648 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value:
+                      "exp-craniofacial-maxillofacial-surgery-and-pediatrics",
+                    url: "/s/bandar-e-jask/exp-craniofacial-maxillofacial-surgery-and-pediatrics/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u062f\u0647\u0627\u06cc \u0645\u0632\u0645\u0646 \u062f\u0647\u0627\u0646\u06cc- \u0635\u0648\u0631\u062a\u06cc",
+                    value: "exp-chronic-oral-pain-pink",
+                    url: "/s/bandar-e-jask/exp-chronic-oral-pain-pink/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u0645\u0627\u0646 \u0628\u06cc\u0646 \u0631\u0634\u062a\u0647\u200c\u200c\u0627\u06cc \u062a\u0631\u0645\u06cc\u0645\u200c\u0647\u0627\u06cc \u0632\u06cc\u0628\u0627\u06cc\u06cc \u0645\u0628\u062a\u0646\u06cc \u0628\u0631 \u0628\u0627\u0646\u062f\u06cc\u0646\u06af",
+                    value:
+                      "exp-interdisciplinary-treatment-of-bonding-based-cosmetic-restorations",
+                    url: "/s/bandar-e-jask/exp-interdisciplinary-treatment-of-bonding-based-cosmetic-restorations/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc- \u0639\u0645\u0648\u0645\u06cc",
+                    value: "exp-hospital-general-dentistry",
+                    url: "/s/bandar-e-jask/exp-hospital-general-dentistry/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc- \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-hospital-dentistry-children",
+                    url: "/s/bandar-e-jask/exp-hospital-dentistry-children/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0648\u062a\u0632-\u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-prosthesis-implant",
+                    url: "/s/bandar-e-jask/exp-prosthesis-implant/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u067e\u0648\u0633\u062a \u0648 \u0645\u0648",
+                image: "/getImage/icons%2Fgroup_expertise/post.png",
+                url: "/s/bandar-e-jask/dermatology/",
+                value: "dermatology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                    value: "exp-skin-diseases",
+                    url: "/s/bandar-e-jask/exp-skin-diseases/"
+                  },
+                  {
+                    title:
+                      "\u0622\u0633\u06cc\u0628 \u0634\u0646\u0627\u0633\u06cc \u067e\u0648\u0633\u062a",
+                    value: "exp-skin-pathology",
+                    url: "/s/bandar-e-jask/exp-skin-pathology/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u0645\u0627\u062a\u0648 \u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-dermatological-pathology",
+                    url: "/s/bandar-e-jask/exp-dermatological-pathology/"
+                  },
+                  {
+                    title: "\u0633\u0648\u062e\u062a\u06af\u06cc",
+                    value: "exp-burns",
+                    url: "/s/bandar-e-jask/exp-burns/"
+                  }
+                ],
+
+                count: 14
+              },
+              {
+                title: "\u062c\u0631\u0627\u062d\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/jarahi.png",
+                url: "/s/bandar-e-jask/surgery/",
+                value: "surgery",
+                sub_categories: [
+                  {
+                    title: "\u067e\u0631\u0633\u062a\u0627\u0631\u06cc",
+                    value: "exp-nursing",
+                    url: "/s/bandar-e-jask/exp-nursing/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-surgery",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0639\u0645\u0648\u0645\u06cc",
+                    value: "exp-general-surgery",
+                    url: "/s/bandar-e-jask/exp-general-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc \u062a\u0646\u0627\u0633\u0644\u06cc",
+                    value: "exp-kidney-and-genitourinary-surgery",
+                    url: "/s/bandar-e-jask/exp-kidney-and-genitourinary-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-neurosurgery",
+                    url: "/s/bandar-e-jask/exp-neurosurgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-surgery",
+                    url: "/s/bandar-e-jask/exp-pediatric-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u067e\u0644\u0627\u0633\u062a\u06cc\u06a9\u060c \u062a\u0631\u0645\u06cc\u0645\u06cc \u0648 \u0633\u0648\u062e\u062a\u06af\u06cc",
+                    value: "exp-plastic-reconstructive-and-burn-surgery",
+                    url: "/s/bandar-e-jask/exp-plastic-reconstructive-and-burn-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0639\u0631\u0648\u0642",
+                    value: "exp-vascular-surgery",
+                    url: "/s/bandar-e-jask/exp-vascular-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0642\u0641\u0633\u0647 \u0635\u062f\u0631\u06cc",
+                    value: "exp-chest-surgery",
+                    url: "/s/bandar-e-jask/exp-chest-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642",
+                    value: "exp-cardiovascular-surgery",
+                    url: "/s/bandar-e-jask/exp-cardiovascular-surgery/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u062f\u0631 \u062c\u0631\u0627\u062d\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-anesthesia-in-neurosurgery",
+                    url: "/s/bandar-e-jask/exp-anesthesia-in-neurosurgery/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc \u0648 \u06a9\u0646\u062a\u0631\u0644 \u0639\u0641\u0648\u0646\u062a\u200c\u0647\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                    value:
+                      "exp-prevention-and-control-of-nosocomial-infections",
+                    url: "/s/bandar-e-jask/exp-prevention-and-control-of-nosocomial-infections/"
+                  },
+                  {
+                    title: "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0628\u062f",
+                    value: "exp-liver-transplant",
+                    url: "/s/bandar-e-jask/exp-liver-transplant/"
+                  },
+                  {
+                    title:
+                      "\u062a\u0631\u0648\u0645\u0627\u06cc \u062c\u0631\u0627\u062d\u06cc \u0639\u0645\u0648\u0645\u06cc",
+                    value: "exp-general-surgical-trauma",
+                    url: "/s/bandar-e-jask/exp-general-surgical-trauma/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u067e\u0633\u062a\u0627\u0646",
+                    value: "exp-breast-surgery",
+                    url: "/s/bandar-e-jask/exp-breast-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u067e\u06cc\u0634\u0631\u0641\u062a\u0647- \u0627\u06cc\u0645\u067e\u0644\u0646\u062a",
+                    value: "exp-advanced-surgery-implant",
+                    url: "/s/bandar-e-jask/exp-advanced-surgery-implant/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062a\u0631\u0645\u06cc\u0645\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-reconstructive-surgery",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-reconstructive-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062a\u0631\u0648\u0645\u0627\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-maxillofacial-trauma-surgery",
+                    url: "/s/bandar-e-jask/exp-maxillofacial-trauma-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u062f\u0631\u0648\u0646 \u0628\u06cc\u0646 \u0632\u0646\u0627\u0646",
+                    value: "exp-internal-surgery-between-women",
+                    url: "/s/bandar-e-jask/exp-internal-surgery-between-women/"
+                  },
+                  {
+                    title: "\u062c\u0631\u0627\u062d\u06cc \u062f\u0633\u062a",
+                    value: "exp-hand-surgery",
+                    url: "/s/bandar-e-jask/exp-hand-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0633\u062a\u0648\u0646 \u0641\u0642\u0631\u0627\u062a",
+                    value: "exp-spine-surgery",
+                    url: "/s/bandar-e-jask/exp-spine-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0633\u0631 \u0648 \u06af\u0631\u062f\u0646",
+                    value: "exp-head-and-neck-surgery",
+                    url: "/s/bandar-e-jask/exp-head-and-neck-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0633\u0631\u0637\u0627\u0646",
+                    value: "exp-cancer-surgery",
+                    url: "/s/bandar-e-jask/exp-cancer-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0639\u0645\u0648\u0645\u06cc \u062f\u0631\u0648\u0646 \u0628\u06cc\u0646- \u0644\u0627\u067e\u0627\u0631\u0627\u0633\u06a9\u0648\u067e\u06cc",
+                    value: "exp-general-interoperative-surgery-laparoscopy",
+                    url: "/s/bandar-e-jask/exp-general-interoperative-surgery-laparoscopy/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a \u06a9\u0631\u0627\u0646\u06cc\u0648\u0641\u0627\u0633\u06cc\u0627\u0644 \u0648 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value:
+                      "exp-craniofacial-maxillofacial-surgery-and-pediatrics",
+                    url: "/s/bandar-e-jask/exp-craniofacial-maxillofacial-surgery-and-pediatrics/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u06a9\u0648\u0644\u0648\u0631\u06a9\u062a\u0627\u0644",
+                    value: "exp-colorectal-surgery",
+                    url: "/s/bandar-e-jask/exp-colorectal-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0632\u0627\u0646\u0648",
+                    value: "exp-knee-surgery",
+                    url: "/s/bandar-e-jask/exp-knee-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0634\u0627\u0646\u0647",
+                    value: "exp-shoulder-surgery",
+                    url: "/s/bandar-e-jask/exp-shoulder-surgery/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0627\u0637\u0641\u0627\u0644\u060c \u06a9\u0648\u062f\u06a9\u0627\u0646 \u0648 \u0646\u0648\u0632\u0627\u062f\u0627\u0646",
+                image: "/getImage/icons%2Fgroup_expertise/atfal.png",
+                url: "/s/bandar-e-jask/pediatrics/",
+                value: "pediatrics",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc \u0648\u0622\u0645\u0648\u0632\u0634 \u06a9\u0648\u062f\u06a9\u0627\u0646 \u0627\u0633\u062a\u062b\u0646\u0627\u06cc\u06cc",
+                    value:
+                      "exp-psychology-and-education-of-exceptional-children",
+                    url: "/s/bandar-e-jask/exp-psychology-and-education-of-exceptional-children/"
+                  },
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9",
+                    value: "exp-maternal-and-child-health",
+                    url: "/s/bandar-e-jask/exp-maternal-and-child-health/"
+                  },
+                  {
+                    title: "\u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatrics",
+                    url: "/s/bandar-e-jask/exp-pediatrics/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-surgery",
+                    url: "/s/bandar-e-jask/exp-pediatric-surgery/"
+                  },
+                  {
+                    title:
+                      "\u062e\u0648\u0646 \u0648 \u0633\u0631\u0637\u0627\u0646 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-cancer",
+                    url: "/s/bandar-e-jask/exp-pediatric-cancer/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-psychiatry",
+                    url: "/s/bandar-e-jask/exp-pediatric-psychiatry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u06a9\u0648\u062f\u06a9 \u0648 \u0646\u0648\u062c\u0648\u0627\u0646",
+                    value: "exp-pediatric-and-adolescent-psychiatry",
+                    url: "/s/bandar-e-jask/exp-pediatric-and-adolescent-psychiatry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-rheumatology",
+                    url: "/s/bandar-e-jask/exp-pediatric-rheumatology/"
+                  },
+                  {
+                    title:
+                      "\u0631\u06cc\u0647 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-lungs",
+                    url: "/s/bandar-e-jask/exp-pediatric-lungs/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0646\u0648\u0632\u0627\u062f\u06cc \u0648 \u067e\u06cc\u0631\u0627\u0645\u0648\u0646 \u062a\u0648\u0644\u062f",
+                    value: "exp-neonatal-and-birth-medicine",
+                    url: "/s/bandar-e-jask/exp-neonatal-and-birth-medicine/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0641\u0648\u0646\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-infection",
+                    url: "/s/bandar-e-jask/exp-pediatric-infection/"
+                  },
+                  {
+                    title:
+                      "\u063a\u062f\u062f \u062f\u0631\u0648\u0646 \u0631\u06cc\u0632 \u0648 \u0645\u062a\u0627\u0628\u0648\u0644\u06cc\u0633\u0645 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-endocrinology-and-metabolism",
+                    url: "/s/bandar-e-jask/exp-pediatric-endocrinology-and-metabolism/"
+                  },
+                  {
+                    title: "\u0642\u0644\u0628 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-cardiovascular",
+                    url: "/s/bandar-e-jask/exp-pediatric-cardiovascular/"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0644\u06cc\u0647 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-kidney",
+                    url: "/s/bandar-e-jask/exp-pediatric-kidney/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0648\u0627\u0631\u0634 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-digestion",
+                    url: "/s/bandar-e-jask/exp-pediatric-digestion/"
+                  },
+                  {
+                    title:
+                      "\u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-neurology",
+                    url: "/s/bandar-e-jask/exp-pediatric-neurology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u062a\u0648\u067e\u062f\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-orthopedics",
+                    url: "/s/bandar-e-jask/exp-pediatric-orthopedics/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0644\u0648\u0698\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-urology",
+                    url: "/s/bandar-e-jask/exp-pediatric-urology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0642\u062f\u0627\u0645\u0627\u062a \u0645\u062f\u0627\u062e\u0644\u0647\u200c\u0627\u06cc \u0642\u0644\u0628 \u0648 \u0639\u0631\u0648\u0642 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-cardiovascular-1",
+                    url: "/s/bandar-e-jask/exp-pediatric-cardiovascular-1/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06cc\u0646\u062a\u0631\u0648\u0646\u0634\u0646\u0627\u0644 \u06a9\u0627\u0631\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc \u062f\u0631\u06a9\u0648\u062f\u06a9\u0627\u0646 \u0648\u0646\u0648\u062c\u0648\u0627\u0646\u0627\u0646",
+                    value:
+                      "exp-interventional-cardiology-in-children-and-adolescents",
+                    url: "/s/bandar-e-jask/exp-interventional-cardiology-in-children-and-adolescents/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-anesthesia",
+                    url: "/s/bandar-e-jask/exp-pediatric-anesthesia/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a \u06a9\u0631\u0627\u0646\u06cc\u0648\u0641\u0627\u0633\u06cc\u0627\u0644 \u0648 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value:
+                      "exp-craniofacial-maxillofacial-surgery-and-pediatrics",
+                    url: "/s/bandar-e-jask/exp-craniofacial-maxillofacial-surgery-and-pediatrics/"
+                  },
+                  {
+                    title: "\u0686\u0634\u0645 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-childrens-eyes",
+                    url: "/s/bandar-e-jask/exp-childrens-eyes/"
+                  },
+                  {
+                    title:
+                      "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646 \u0648 \u0627\u0646\u062d\u0631\u0627\u0641 \u0686\u0634\u0645",
+                    value: "exp-pediatric-ophthalmology-and-eye-aberrations",
+                    url: "/s/bandar-e-jask/exp-pediatric-ophthalmology-and-eye-aberrations/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0631\u0627\u0642\u0628\u062a \u0647\u0627\u06cc \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatrics-intensive-care",
+                    url: "/s/bandar-e-jask/exp-pediatrics-intensive-care/"
+                  },
+                  {
+                    title:
+                      "\u0646\u0648\u0631\u0648\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatrics-clinical-neurophysiology",
+                    url: "/s/bandar-e-jask/exp-pediatrics-clinical-neurophysiology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc",
+                image:
+                  "/getImage/icons%2Fgroup_expertise/Custom Size \u2013 19@2x.png",
+                url: "/s/bandar-e-jask/psychiatry/",
+                value: "psychiatry",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u0631\u0648\u0627\u0646",
+                    value: "exp-mental-health",
+                    url: "/s/bandar-e-jask/exp-mental-health/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646 \u067e\u0631\u0633\u062a\u0627\u0631\u06cc",
+                    value: "exp-psychiatric-nursing",
+                    url: "/s/bandar-e-jask/exp-psychiatric-nursing/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-psychiatry",
+                    url: "/s/bandar-e-jask/exp-psychiatry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-psychiatry",
+                    url: "/s/bandar-e-jask/exp-pediatric-psychiatry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u06a9\u0648\u062f\u06a9 \u0648 \u0646\u0648\u062c\u0648\u0627\u0646",
+                    value: "exp-pediatric-and-adolescent-psychiatry",
+                    url: "/s/bandar-e-jask/exp-pediatric-and-adolescent-psychiatry/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0646\u0638\u0627\u0645\u06cc",
+                    value: "exp-military-psychiatry",
+                    url: "/s/bandar-e-jask/exp-military-psychiatry/"
+                  },
+                  {
+                    title: "\u0637\u0628 \u062e\u0648\u0627\u0628",
+                    value: "exp-sleep-medicine",
+                    url: "/s/bandar-e-jask/exp-sleep-medicine/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0631\u0648\u0627\u0646 \u062a\u0646\u06cc",
+                    value: "exp-psychosomatic-medicine",
+                    url: "/s/bandar-e-jask/exp-psychosomatic-medicine/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0631\u06cc\u0647 \u0648 \u062f\u0633\u062a\u06af\u0627\u0647 \u062a\u0646\u0641\u0633\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/alarji.png",
+                url: "/s/bandar-e-jask/pulmonology/",
+                value: "pulmonology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0631\u06cc\u0647",
+                    value: "exp-lung-diseases",
+                    url: "/s/bandar-e-jask/exp-lung-diseases/"
+                  },
+                  {
+                    title:
+                      "\u0631\u06cc\u0647 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-lungs",
+                    url: "/s/bandar-e-jask/exp-pediatric-lungs/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/goosh.png",
+                url: "/s/bandar-e-jask/otorhinolaryngology/",
+                value: "otorhinolaryngology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0634\u0646\u0648\u0627\u06cc\u06cc \u0634\u0646\u0627\u0633\u06cc",
+                    value: "exp-audiology",
+                    url: "/s/bandar-e-jask/exp-audiology/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0648\u0634 \u0648 \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc \u0648 \u062c\u0631\u0627\u062d\u06cc \u0633\u0631 \u0648 \u06af\u0631\u062f\u0646",
+                    value: "exp-ent-head-and-neck-surgery",
+                    url: "/s/bandar-e-jask/exp-ent-head-and-neck-surgery/"
+                  },
+                  {
+                    title:
+                      "\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0648 \u0646\u0648\u0631\u0648\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-autology-and-neurology",
+                    url: "/s/bandar-e-jask/exp-autology-and-neurology/"
+                  },
+                  {
+                    title: "\u0631\u06cc\u0646\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-rhinology",
+                    url: "/s/bandar-e-jask/exp-rhinology/"
+                  },
+                  {
+                    title:
+                      "\u0644\u0627\u0631\u06cc\u0646\u06af\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-laryngology",
+                    url: "/s/bandar-e-jask/exp-laryngology/"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0627\u0634\u062a \u062d\u0644\u0632\u0648\u0646",
+                    value: "exp-cochlear-implantation",
+                    url: "/s/bandar-e-jask/exp-cochlear-implantation/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0628\u06cc\u0647\u0648\u0634\u06cc \u0648 \u0645\u0631\u0627\u0642\u0628\u062a \u0647\u0627\u06cc \u0648\u06cc\u0698\u0647",
+                image: "/getImage/icons%2Fgroup_expertise/bihoshi.png",
+                url: "/s/bandar-e-jask/anesthesia-and-intensive-care/",
+                value: "anesthesia-and-intensive-care",
+                sub_categories: [
+                  {
+                    title: "\u0627\u062a\u0627\u0642 \u0639\u0645\u0644",
+                    value: "exp-operating-room",
+                    url: "/s/bandar-e-jask/exp-operating-room/"
+                  },
+                  {
+                    title: "\u0628\u06cc\u0647\u0648\u0634\u06cc",
+                    value: "exp-anesthesia",
+                    url: "/s/bandar-e-jask/exp-anesthesia/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u067e\u06cc\u0648\u0646\u062f \u0627\u0639\u0636\u0627\u0621 \u062f\u0627\u062e\u0644\u06cc \u0634\u06a9\u0645",
+                    value:
+                      "exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen",
+                    url: "/s/bandar-e-jask/exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u062f\u0631 \u062c\u0631\u0627\u062d\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-anesthesia-in-neurosurgery",
+                    url: "/s/bandar-e-jask/exp-anesthesia-in-neurosurgery/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u0642\u0644\u0628",
+                    value: "exp-cardiac-anesthesia",
+                    url: "/s/bandar-e-jask/exp-cardiac-anesthesia/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-anesthesia",
+                    url: "/s/bandar-e-jask/exp-pediatric-anesthesia/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0631\u0627\u0642\u0628\u062a \u0647\u0627\u06cc \u0648\u06cc\u0698\u0647 \u067e\u0632\u0634\u06a9\u06cc- ICU",
+                    value: "exp-icu",
+                    url: "/s/bandar-e-jask/exp-icu/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0631\u0627\u0642\u0628\u062a \u0647\u0627\u06cc \u0648\u06cc\u0698\u0647 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatrics-intensive-care",
+                    url: "/s/bandar-e-jask/exp-pediatrics-intensive-care/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u062e\u0648\u0646 \u0648 \u0633\u0631\u0637\u0627\u0646",
+                image: "/getImage/icons%2Fgroup_expertise/khone.png",
+                url: "/s/bandar-e-jask/oncology/",
+                value: "oncology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u062a\u06a9\u0646\u0648\u0644\u0648\u0698\u06cc \u067e\u0631\u062a\u0648\u062f\u0631\u0645\u0627\u0646\u06cc- \u0631\u0627\u062f\u06cc\u0648\u062a\u0631\u0627\u067e\u06cc",
+                    value: "exp-radiotherapy-1",
+                    url: "/s/bandar-e-jask/exp-radiotherapy-1/"
+                  },
+                  {
+                    title:
+                      "\u062e\u0648\u0646 \u0634\u0646\u0627\u0633\u06cc \u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647\u06cc \u0648 \u0628\u0627\u0646\u06a9 \u062e\u0648\u0646",
+                    value: "exp-laboratory-hematology-and-blood-bank-1",
+                    url: "/s/bandar-e-jask/exp-laboratory-hematology-and-blood-bank-1/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u062a\u0648\u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-radiotherapy",
+                    url: "/s/bandar-e-jask/exp-radiotherapy/"
+                  },
+                  {
+                    title:
+                      "\u0647\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647\u06cc \u0648 \u0628\u0627\u0646\u06a9 \u062e\u0648\u0646",
+                    value: "exp-laboratory-hematology-and-blood-bank",
+                    url: "/s/bandar-e-jask/exp-laboratory-hematology-and-blood-bank/"
+                  },
+                  {
+                    title:
+                      "\u062e\u0648\u0646 \u0648 \u0633\u0631\u0637\u0627\u0646 \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-cancer",
+                    url: "/s/bandar-e-jask/exp-pediatric-cancer/"
+                  },
+                  {
+                    title:
+                      "\u062e\u0648\u0646 \u0648 \u0633\u0631\u0637\u0627\u0646 \u0628\u0627\u0644\u063a\u06cc\u0646",
+                    value: "exp-adult-cancer",
+                    url: "/s/bandar-e-jask/exp-adult-cancer/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0631\u0648\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-arvancology",
+                    url: "/s/bandar-e-jask/exp-arvancology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc \u0632\u0646\u0627\u0646",
+                    value: "exp-gynecological-oncology",
+                    url: "/s/bandar-e-jask/exp-gynecological-oncology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-oncology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-oncology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0648\u0646\u062f \u06a9\u0644\u06cc\u0647 \u0648 \u0627\u0648\u0631\u0648\u0627\u0646\u06a9\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-kidney-transplantation-and-urvancology",
+                    url: "/s/bandar-e-jask/exp-kidney-transplantation-and-urvancology/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0633\u0631\u0637\u0627\u0646",
+                    value: "exp-cancer-surgery",
+                    url: "/s/bandar-e-jask/exp-cancer-surgery/"
+                  },
+                  {
+                    title:
+                      "\u0633\u0631\u0637\u0627\u0646\u0647\u0627\u06cc \u062f\u0633\u062a\u06af\u0627\u0647 \u0627\u062f\u0631\u0627\u0631\u06cc- \u062a\u0646\u0627\u0633\u0644\u06cc",
+                    value: "exp-genitourinary-cancers",
+                    url: "/s/bandar-e-jask/exp-genitourinary-cancers/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647",
+                image: "/getImage/icons%2Fgroup_expertise/azmayeshgah.png",
+                url: "/s/bandar-e-jask/laboratory-and-imaging/",
+                value: "laboratory-and-imaging",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647\u06cc",
+                    value: "exp-laboratory-sciences",
+                    url: "/s/bandar-e-jask/exp-laboratory-sciences/"
+                  },
+                  {
+                    title:
+                      "\u062a\u06a9\u0646\u0648\u0644\u0648\u0698\u06cc \u067e\u0631\u062a\u0648\u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-radiation-therapy-technology",
+                    url: "/s/bandar-e-jask/exp-radiation-therapy-technology/"
+                  },
+                  {
+                    title:
+                      "\u062e\u0648\u0646 \u0634\u0646\u0627\u0633\u06cc \u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647\u06cc \u0648 \u0628\u0627\u0646\u06a9 \u062e\u0648\u0646",
+                    value: "exp-laboratory-hematology-and-blood-bank-1",
+                    url: "/s/bandar-e-jask/exp-laboratory-hematology-and-blood-bank-1/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0627\u062f\u06cc\u0648\u0628\u06cc\u0648\u0644\u0648\u0698\u06cc \u0648 \u062d\u0641\u0627\u0638\u062a \u067e\u0631\u062a\u0648\u06cc\u06cc",
+                    value: "exp-radiobiology-and-radiation-protection",
+                    url: "/s/bandar-e-jask/exp-radiobiology-and-radiation-protection/"
+                  },
+                  {
+                    title:
+                      "\u0645\u06cc\u06a9\u0631\u0648\u0628\u0634\u0646\u0627\u0633\u06cc",
+                    value: "exp-bacteriology",
+                    url: "/s/bandar-e-jask/exp-bacteriology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9- \u0622\u0633\u06cc\u0628 \u0634\u0646\u0627\u0633\u06cc \u062f\u0647\u0627\u0646 \u0648 \u062f\u0646\u062f\u0627\u0646",
+                    value:
+                      "exp-oral-and-maxillofacial-pathology-oral-pathology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-pathology-oral-pathology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u06cc \u0647\u0633\u062a\u0647 \u0627\u06cc",
+                    value: "exp-nuclear-medicine",
+                    url: "/s/bandar-e-jask/exp-nuclear-medicine/"
+                  },
+                  {
+                    title:
+                      "\u0645\u06cc\u06a9\u0631\u0648\u0628 \u0634\u0646\u0627\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical-microbiology",
+                    url: "/s/bandar-e-jask/exp-medical-microbiology/"
+                  },
+                  {
+                    title:
+                      "\u0647\u0645\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647\u06cc \u0648 \u0628\u0627\u0646\u06a9 \u062e\u0648\u0646",
+                    value: "exp-laboratory-hematology-and-blood-bank",
+                    url: "/s/bandar-e-jask/exp-laboratory-hematology-and-blood-bank/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0686\u0634\u0645",
+                    value: "exp-eye-pathology",
+                    url: "/s/bandar-e-jask/exp-eye-pathology/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0645\u0648\u0644\u06a9\u0648\u0644\u0627\u0631\u0648\u0633\u06cc\u062a\u0648\u0698\u0646\u062a\u06cc\u06a9",
+                    value: "exp-molecular-cytogenetic-pathology",
+                    url: "/s/bandar-e-jask/exp-molecular-cytogenetic-pathology/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u0645\u0627\u062a\u0648 \u067e\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-dermatological-pathology",
+                    url: "/s/bandar-e-jask/exp-dermatological-pathology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u067e\u0632\u0634\u06a9 \u0639\u0645\u0648\u0645\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/pezeshk_omomi.png",
+                url: "/s/bandar-e-jask/general-practitioner/",
+                value: "general-practitioner",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0641\u0648\u0631\u06cc\u062a\u0647\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical-emergency",
+                    url: "/s/bandar-e-jask/exp-medical-emergency/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u06cc \u0648\u0631\u0632\u0634\u06cc",
+                    value: "exp-sports-medicine",
+                    url: "/s/bandar-e-jask/exp-sports-medicine/"
+                  },
+                  {
+                    title: "\u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical",
+                    url: "/s/bandar-e-jask/exp-medical/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u06cc \u0627\u062c\u062a\u0645\u0627\u0639\u06cc",
+                    value: "exp-social-medicine",
+                    url: "/s/bandar-e-jask/exp-social-medicine/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u06cc \u0642\u0627\u0646\u0648\u0646\u06cc",
+                    value: "exp-forensic-medicine",
+                    url: "/s/bandar-e-jask/exp-forensic-medicine/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u06cc \u0645\u0648\u0644\u06a9\u0648\u0644\u06cc",
+                    value: "exp-molecular-medicine",
+                    url: "/s/bandar-e-jask/exp-molecular-medicine/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u062a\u063a\u0630\u06cc\u0647",
+                image: "/getImage/icons%2Fgroup_expertise/taghzeh.png",
+                url: "/s/bandar-e-jask/nutrition/",
+                value: "nutrition",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u062a\u063a\u0630\u06cc\u0647",
+                    value: "exp-nutrition-science",
+                    url: "/s/bandar-e-jask/exp-nutrition-science/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u0648 \u0635\u0646\u0627\u06cc\u0639 \u063a\u0630\u0627\u06cc\u06cc- \u06a9\u0646\u062a\u0631\u0644 \u06a9\u06cc\u0641\u06cc \u0648 \u0628\u0647\u062f\u0627\u0634\u062a\u06cc",
+                    value:
+                      "exp-food-science-and-industry-quality-and-health-control",
+                    url: "/s/bandar-e-jask/exp-food-science-and-industry-quality-and-health-control/"
+                  },
+                  {
+                    title:
+                      "\u0628\u0647\u062f\u0627\u0634\u062a \u0648 \u0627\u06cc\u0645\u0646\u06cc \u0645\u0648\u0627\u062f \u063a\u0630\u0627\u06cc\u06cc",
+                    value: "exp-food-hygiene-and-safety",
+                    url: "/s/bandar-e-jask/exp-food-hygiene-and-safety/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u0628\u0647\u062f\u0627\u0634\u062a\u06cc \u062f\u0631 \u062a\u063a\u0630\u06cc\u0647",
+                    value: "exp-health-sciences-in-nutrition",
+                    url: "/s/bandar-e-jask/exp-health-sciences-in-nutrition/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u062a\u063a\u0630\u06cc\u0647 \u062f\u0631 \u0628\u062d\u0631\u0627\u0646 \u0648 \u062d\u0648\u0627\u062f\u062b \u063a\u06cc\u0631\u0645\u062a\u0631\u0642\u0628\u0647",
+                    value:
+                      "exp-nutrition-science-in-crisis-and-unexpected-events",
+                    url: "/s/bandar-e-jask/exp-nutrition-science-in-crisis-and-unexpected-events/"
+                  },
+                  {
+                    title:
+                      "\u0633\u06cc\u0627\u0633\u062a\u0647\u0627\u06cc \u063a\u0630\u0627 \u0648 \u062a\u063a\u0630\u06cc\u0647",
+                    value: "exp-food-and-nutrition-policies",
+                    url: "/s/bandar-e-jask/exp-food-and-nutrition-policies/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/ravanshenasi.png",
+                url: "/s/bandar-e-jask/psychology/",
+                value: "psychology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc",
+                    value: "exp-clinical-psychology",
+                    url: "/s/bandar-e-jask/exp-clinical-psychology/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc \u0639\u0645\u0648\u0645\u06cc",
+                    value: "exp-general-psychology",
+                    url: "/s/bandar-e-jask/exp-general-psychology/"
+                  },
+                  {
+                    title:
+                      "\u0645\u062f\u062f\u06a9\u0627\u0631\u06cc \u0627\u062c\u062a\u0645\u0627\u0639\u06cc",
+                    value: "exp-social-work",
+                    url: "/s/bandar-e-jask/exp-social-work/"
+                  },
+                  {
+                    title: "\u0645\u0634\u0627\u0648\u0631\u0647",
+                    value: "exp-consulting",
+                    url: "/s/bandar-e-jask/exp-consulting/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc \u0648\u0622\u0645\u0648\u0632\u0634 \u06a9\u0648\u062f\u06a9\u0627\u0646 \u0627\u0633\u062a\u062b\u0646\u0627\u06cc\u06cc",
+                    value:
+                      "exp-psychology-and-education-of-exceptional-children",
+                    url: "/s/bandar-e-jask/exp-psychology-and-education-of-exceptional-children/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0648\u0627\u0646\u0634\u0646\u0627\u0633\u06cc \u0646\u0638\u0627\u0645\u06cc",
+                    value: "exp-military-psychology",
+                    url: "/s/bandar-e-jask/exp-military-psychology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0698\u0646\u062a\u06cc\u06a9",
+                image: "/getImage/icons%2Fgroup_expertise/dna copy-min.png",
+                url: "/s/bandar-e-jask/genetics/",
+                value: "genetics",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0698\u0646\u062a\u06cc\u06a9 \u0627\u0646\u0633\u0627\u0646\u06cc",
+                    value: "exp-human-genetics",
+                    url: "/s/bandar-e-jask/exp-human-genetics/"
+                  },
+                  {
+                    title:
+                      "\u0698\u0646\u062a\u06cc\u06a9 \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical-genetics",
+                    url: "/s/bandar-e-jask/exp-medical-genetics/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0637\u0628 \u0627\u0648\u0631\u0698\u0627\u0646\u0633",
+                image:
+                  "/getImage/icons%2Fgroup_expertise/ambulance copy-min.png",
+                url: "/s/bandar-e-jask/emergency-medicine/",
+                value: "emergency-medicine",
+                sub_categories: [
+                  {
+                    title: "\u0633\u0645 \u0634\u0646\u0627\u0633\u06cc",
+                    value: "exp-toxicology",
+                    url: "/s/bandar-e-jask/exp-toxicology/"
+                  },
+                  {
+                    title:
+                      "\u0633\u0645 \u0634\u0646\u0627\u0633\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc \u0648 \u0645\u0633\u0645\u0648\u0645\u06cc\u062a\u0647\u0627",
+                    value: "exp-clinical-toxicology-and-poisoning",
+                    url: "/s/bandar-e-jask/exp-clinical-toxicology-and-poisoning/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0637\u0628 \u062a\u0633\u06a9\u06cc\u0646\u06cc \u0648 \u062f\u0631\u062f",
+                image: "/getImage/icons%2Fgroup_expertise/teb_taskin.png",
+                url: "/s/bandar-e-jask/palliative-care/",
+                value: "palliative-care",
+                sub_categories: [
+                  {
+                    title: "\u067e\u0631\u0633\u062a\u0627\u0631\u06cc",
+                    value: "exp-nursing",
+                    url: "/s/bandar-e-jask/exp-nursing/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0633\u062a\u0627\u0631\u06cc \u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                    value: "exp-rehabilitation-nursing",
+                    url: "/s/bandar-e-jask/exp-rehabilitation-nursing/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0627\u0648\u0631\u0698\u0627\u0646\u0633",
+                    value: "exp-emergency-medicine",
+                    url: "/s/bandar-e-jask/exp-emergency-medicine/"
+                  },
+                  {
+                    title: "\u062f\u0631\u062f",
+                    value: "exp-the-pain",
+                    url: "/s/bandar-e-jask/exp-the-pain/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u062f\u0647\u0627\u06cc \u0645\u0632\u0645\u0646 \u062f\u0647\u0627\u0646\u06cc- \u0635\u0648\u0631\u062a\u06cc",
+                    value: "exp-chronic-oral-pain-pink",
+                    url: "/s/bandar-e-jask/exp-chronic-oral-pain-pink/"
+                  },
+                  {
+                    title: "\u0637\u0628 \u062a\u0633\u06a9\u06cc\u0646\u06cc",
+                    value: "exp-palliative-medicine",
+                    url: "/s/bandar-e-jask/exp-palliative-medicine/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0639\u0641\u0648\u0646\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/ofoni.png",
+                url: "/s/bandar-e-jask/infectious/",
+                value: "infectious",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0639\u0641\u0648\u0646\u06cc \u0648 \u06af\u0631\u0645\u0633\u06cc\u0631\u06cc",
+                    value: "exp-infectious-and-tropical-diseases",
+                    url: "/s/bandar-e-jask/exp-infectious-and-tropical-diseases/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0641\u0648\u0646\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-infection",
+                    url: "/s/bandar-e-jask/exp-pediatric-infection/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0641\u0648\u0646\u06cc \u0628\u0627\u0644\u063a\u06cc\u0646",
+                    value: "exp-adult-infection",
+                    url: "/s/bandar-e-jask/exp-adult-infection/"
+                  },
+                  {
+                    title: "HIV/AIDS  \u0628\u0627\u0644\u06cc\u0646\u06cc",
+                    value: "exp-clinical-hiv-aids",
+                    url: "/s/bandar-e-jask/exp-clinical-hiv-aids/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0639\u0641\u0648\u0646\u06cc \u062f\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0645\u0628\u062a\u0644\u0627 \u0628\u0647 \u0646\u0642\u0635 \u0627\u06cc\u0645\u0646\u06cc \u0648 \u067e\u06cc\u0648\u0646\u062f",
+                    value:
+                      "exp-infections-in-immunocompromised-hosts-and-organ",
+                    url: "/s/bandar-e-jask/exp-infections-in-immunocompromised-hosts-and-organ/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc \u0648 \u06a9\u0646\u062a\u0631\u0644 \u0639\u0641\u0648\u0646\u062a\u200c\u0647\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                    value:
+                      "exp-prevention-and-control-of-nosocomial-infections",
+                    url: "/s/bandar-e-jask/exp-prevention-and-control-of-nosocomial-infections/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                image: "/getImage/icons%2Fgroup_expertise/maghz.png",
+                url: "/s/bandar-e-jask/neurology/",
+                value: "neurology",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-neurological-diseases",
+                    url: "/s/bandar-e-jask/exp-neurological-diseases/"
+                  },
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-neurosurgery",
+                    url: "/s/bandar-e-jask/exp-neurosurgery/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0644\u0648\u0645 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-neuroscience",
+                    url: "/s/bandar-e-jask/exp-neuroscience/"
+                  },
+                  {
+                    title:
+                      "\u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628 \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatric-neurology",
+                    url: "/s/bandar-e-jask/exp-pediatric-neurology/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0633\u062a\u0631\u06cc\u0648\u062a\u0627\u06a9\u0633\u06cc",
+                    value: "exp-stereotaxic",
+                    url: "/s/bandar-e-jask/exp-stereotaxic/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u062f\u0631 \u062c\u0631\u0627\u062d\u06cc \u0645\u063a\u0632 \u0648 \u0627\u0639\u0635\u0627\u0628",
+                    value: "exp-anesthesia-in-neurosurgery",
+                    url: "/s/bandar-e-jask/exp-anesthesia-in-neurosurgery/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc \u0635\u0631\u0639",
+                    value: "exp-epilepsy",
+                    url: "/s/bandar-e-jask/exp-epilepsy/"
+                  },
+                  {
+                    title: "\u0628\u06cc\u0645\u0627\u0631\u06cc MS",
+                    value: "exp-ms",
+                    url: "/s/bandar-e-jask/exp-ms/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0637\u0628 \u0633\u0646\u062a\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/teb_sonati.png",
+                url: "/s/bandar-e-jask/traditional-medicine/",
+                value: "traditional-medicine",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0637\u0628 \u0633\u0646\u062a\u06cc \u0627\u06cc\u0631\u0627\u0646\u06cc",
+                    value: "exp-traditional-iranian-medicine",
+                    url: "/s/bandar-e-jask/exp-traditional-iranian-medicine/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/tavanbakhshi.png",
+                url: "/s/bandar-e-jask/rehabilitation/",
+                value: "rehabilitation",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0627\u0639\u0636\u0627\u06cc \u0645\u0635\u0646\u0648\u0639\u06cc \u0648 \u0648\u0633\u0627\u06cc\u0644 \u06a9\u0645\u06a9\u06cc",
+                    value: "exp-artificial-limbs-and-auxiliary-equipment",
+                    url: "/s/bandar-e-jask/exp-artificial-limbs-and-auxiliary-equipment/"
+                  },
+                  {
+                    title:
+                      "\u0634\u0646\u0648\u0627\u06cc\u06cc \u0634\u0646\u0627\u0633\u06cc",
+                    value: "exp-audiology",
+                    url: "/s/bandar-e-jask/exp-audiology/"
+                  },
+                  {
+                    title:
+                      "\u0641\u06cc\u0632\u06cc\u0648\u062a\u0631\u0627\u067e\u06cc",
+                    value: "exp-physiotherapy",
+                    url: "/s/bandar-e-jask/exp-physiotherapy/"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0627\u0631\u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-occupational-therapy",
+                    url: "/s/bandar-e-jask/exp-occupational-therapy/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0641\u062a\u0627\u0631 \u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-speech-therapy-1",
+                    url: "/s/bandar-e-jask/exp-speech-therapy-1/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0639\u0636\u0627\u0621 \u0645\u0635\u0646\u0648\u0639\u06cc",
+                    value: "exp-prosthesis",
+                    url: "/s/bandar-e-jask/exp-prosthesis/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0633\u062a\u0627\u0631\u06cc \u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                    value: "exp-rehabilitation-nursing",
+                    url: "/s/bandar-e-jask/exp-rehabilitation-nursing/"
+                  },
+                  {
+                    title:
+                      "\u0641\u06cc\u0632\u06cc\u06a9 \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical-physics",
+                    url: "/s/bandar-e-jask/exp-medical-physics/"
+                  },
+                  {
+                    title:
+                      "\u0641\u06cc\u0632\u06cc\u0648\u062a\u0631\u0627\u067e\u06cc \u0648\u0631\u0632\u0634\u06cc",
+                    value: "exp-sports-physiotherapy",
+                    url: "/s/bandar-e-jask/exp-sports-physiotherapy/"
+                  },
+                  {
+                    title:
+                      "\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-physiology",
+                    url: "/s/bandar-e-jask/exp-physiology/"
+                  },
+                  {
+                    title:
+                      "\u06a9\u0627\u0631 \u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-occupational-therapy-1",
+                    url: "/s/bandar-e-jask/exp-occupational-therapy-1/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0641\u062a\u0627\u0631\u062f\u0631\u0645\u0627\u0646\u06cc",
+                    value: "exp-speech-therapy",
+                    url: "/s/bandar-e-jask/exp-speech-therapy/"
+                  },
+                  {
+                    title:
+                      "\u0645\u062f\u06cc\u0631\u06cc\u062a \u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                    value: "exp-rehabilitation-management",
+                    url: "/s/bandar-e-jask/exp-rehabilitation-management/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0633\u0627\u0644\u0645\u0646\u062f\u06cc",
+                    value: "exp-geriatrics",
+                    url: "/s/bandar-e-jask/exp-geriatrics/"
+                  },
+                  {
+                    title:
+                      "\u0637\u0628 \u0641\u06cc\u0632\u06cc\u06a9\u06cc \u0648 \u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                    value: "exp-physical-medicine-and-rehabilitation",
+                    url: "/s/bandar-e-jask/exp-physical-medicine-and-rehabilitation/"
+                  },
+                  {
+                    title: "\u0637\u0628 \u06a9\u0627\u0631",
+                    value: "exp-occupational-medicine",
+                    url: "/s/bandar-e-jask/exp-occupational-medicine/"
+                  },
+                  {
+                    title:
+                      "\u0627\u0639\u0636\u0627\u06cc \u0645\u0635\u0646\u0648\u0639\u06cc",
+                    value: "exp-artificial-limbs",
+                    url: "/s/bandar-e-jask/exp-artificial-limbs/"
+                  },
+                  {
+                    title:
+                      "\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc \u0648\u0631\u0632\u0634",
+                    value: "exp-exercise-physiology",
+                    url: "/s/bandar-e-jask/exp-exercise-physiology/"
+                  },
+                  {
+                    title:
+                      "\u0645\u0634\u0627\u0648\u0631\u0647 \u062a\u0648\u0627\u0646\u0628\u062e\u0634\u06cc",
+                    value: "exp-rehabilitation-counseling",
+                    url: "/s/bandar-e-jask/exp-rehabilitation-counseling/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0647\u0648\u0634\u06cc \u067e\u06cc\u0648\u0646\u062f \u0627\u0639\u0636\u0627\u0621 \u062f\u0627\u062e\u0644\u06cc \u0634\u06a9\u0645",
+                    value:
+                      "exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen",
+                    url: "/s/bandar-e-jask/exp-anesthesia-transplantation-of-internal-organs-of-the-abdomen/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0633 \u0645\u06cc\u06a9\u0631\u0648 \u0627\u06cc\u0646\u062a\u0631\u0648\u0646\u0634\u0646\u0627\u0644- \u0627\u0644\u06a9\u062a\u0631\u0648\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-micro-interventional-electrophysiology",
+                    url: "/s/bandar-e-jask/exp-micro-interventional-electrophysiology/"
+                  },
+                  {
+                    title:
+                      "\u0646\u0648\u0631\u0648\u0641\u06cc\u0632\u06cc\u0648\u0644\u0648\u0698\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                    value: "exp-pediatrics-clinical-neurophysiology",
+                    url: "/s/bandar-e-jask/exp-pediatrics-clinical-neurophysiology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
+                image: "/getImage/icons%2Fgroup_expertise/corona test - 2.png",
+                url: "/s/bandar-e-jask/corona-virus/",
+                value: "corona-virus",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0641\u0648\u0631\u06cc\u062a\u0647\u0627\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+                    value: "exp-medical-emergency",
+                    url: "/s/bandar-e-jask/exp-medical-emergency/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u062f\u0627\u062e\u0644\u06cc",
+                    value: "exp-internal-diseases",
+                    url: "/s/bandar-e-jask/exp-internal-diseases/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0639\u0641\u0648\u0646\u06cc \u0648 \u06af\u0631\u0645\u0633\u06cc\u0631\u06cc",
+                    value: "exp-infectious-and-tropical-diseases",
+                    url: "/s/bandar-e-jask/exp-infectious-and-tropical-diseases/"
+                  },
+                  {
+                    title:
+                      "\u06af\u0648\u0634 \u0648 \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc \u0648 \u062c\u0631\u0627\u062d\u06cc \u0633\u0631 \u0648 \u06af\u0631\u062f\u0646",
+                    value: "exp-ent-head-and-neck-surgery",
+                    url: "/s/bandar-e-jask/exp-ent-head-and-neck-surgery/"
+                  },
+                  {
+                    title:
+                      "\u0627\u06cc\u0645\u0648\u0646\u0648\u0644\u0648\u0698\u06cc \u0648 \u0622\u0644\u0631\u0698\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc",
+                    value: "exp-immunology-and-clinical-allergies",
+                    url: "/s/bandar-e-jask/exp-immunology-and-clinical-allergies/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0641\u0648\u0646\u06cc \u0627\u0637\u0641\u0627\u0644",
+                    value: "exp-pediatric-infection",
+                    url: "/s/bandar-e-jask/exp-pediatric-infection/"
+                  },
+                  {
+                    title:
+                      "\u0639\u0641\u0648\u0646\u06cc \u0628\u0627\u0644\u063a\u06cc\u0646",
+                    value: "exp-adult-infection",
+                    url: "/s/bandar-e-jask/exp-adult-infection/"
+                  },
+                  {
+                    title:
+                      "\u0627\u062a\u0648\u0644\u0648\u0698\u06cc \u0648 \u0646\u0648\u0631\u0648\u0627\u062a\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-autology-and-neurology",
+                    url: "/s/bandar-e-jask/exp-autology-and-neurology/"
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u0639\u0641\u0648\u0646\u06cc \u062f\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0645\u0628\u062a\u0644\u0627 \u0628\u0647 \u0646\u0642\u0635 \u0627\u06cc\u0645\u0646\u06cc \u0648 \u067e\u06cc\u0648\u0646\u062f",
+                    value:
+                      "exp-infections-in-immunocompromised-hosts-and-organ",
+                    url: "/s/bandar-e-jask/exp-infections-in-immunocompromised-hosts-and-organ/"
+                  },
+                  {
+                    title:
+                      "\u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc \u0648 \u06a9\u0646\u062a\u0631\u0644 \u0639\u0641\u0648\u0646\u062a\u200c\u0647\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                    value:
+                      "exp-prevention-and-control-of-nosocomial-infections",
+                    url: "/s/bandar-e-jask/exp-prevention-and-control-of-nosocomial-infections/"
+                  },
+                  {
+                    title:
+                      "\u0644\u0627\u0631\u06cc\u0646\u06af\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-laryngology",
+                    url: "/s/bandar-e-jask/exp-laryngology/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u062f\u0627\u0631\u0648\u0633\u0627\u0632\u06cc",
+                image:
+                  "/getImage/icons%2Fgroup_expertise/Custom Size \u2013 15@2x.png",
+                url: "/s/bandar-e-jask/pharmacology/",
+                value: "pharmacology",
+                sub_categories: [
+                  {
+                    title: "\u062f\u0627\u0631\u0648\u0633\u0627\u0632\u06cc",
+                    value: "exp-pharmacology",
+                    url: "/s/bandar-e-jask/exp-pharmacology/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0627\u0631\u0648\u0633\u0627\u0632\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc- \u06a9\u0644\u06cc\u0646\u06cc\u06a9\u0627\u0644 \u0641\u0627\u0631\u0645\u0627\u0633\u06cc",
+                    value: "exp-clinical-pharmacy",
+                    url: "/s/bandar-e-jask/exp-clinical-pharmacy/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u0633\u0644\u0627\u0645\u062a \u062c\u0646\u0633\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/salamatjensi.png",
+                url: "/s/bandar-e-jask/sexual-health/",
+                value: "sexual-health",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0633\u0644\u0627\u0645\u062a \u062c\u0646\u0633\u06cc",
+                    value: "exp-sexual-health",
+                    url: "/s/bandar-e-jask/exp-sexual-health/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0632\u06cc\u0628\u0627\u06cc\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/beauty-1.png",
+                url: "/s/bandar-e-jask/beauty/",
+                value: "beauty",
+                sub_categories: [
+                  {
+                    title:
+                      "\u062c\u0631\u0627\u062d\u06cc \u067e\u0644\u0627\u0633\u062a\u06cc\u06a9\u060c \u062a\u0631\u0645\u06cc\u0645\u06cc \u0648 \u0633\u0648\u062e\u062a\u06af\u06cc",
+                    value: "exp-plastic-reconstructive-and-burn-surgery",
+                    url: "/s/bandar-e-jask/exp-plastic-reconstructive-and-burn-surgery/"
+                  },
+                  {
+                    title:
+                      "\u067e\u0631\u0648\u062a\u0632\u0647\u0627\u06cc \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-prostheses",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-prostheses/"
+                  },
+                  {
+                    title:
+                      "\u062f\u0631\u0645\u0627\u0646 \u0628\u06cc\u0646 \u0631\u0634\u062a\u0647\u200c\u200c\u0627\u06cc \u062a\u0631\u0645\u06cc\u0645\u200c\u0647\u0627\u06cc \u0632\u06cc\u0628\u0627\u06cc\u06cc \u0645\u0628\u062a\u0646\u06cc \u0628\u0631 \u0628\u0627\u0646\u062f\u06cc\u0646\u06af",
+                    value:
+                      "exp-interdisciplinary-treatment-of-bonding-based-cosmetic-restorations",
+                    url: "/s/bandar-e-jask/exp-interdisciplinary-treatment-of-bonding-based-cosmetic-restorations/"
+                  },
+                  {
+                    title: "\u0644\u06cc\u0632\u0631",
+                    value: "exp-laser",
+                    url: "/s/bandar-e-jask/exp-laser/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u0622\u0644\u0631\u0698\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/allergies-1.png",
+                url: "/s/bandar-e-jask/allergies/",
+                value: "allergies",
+                sub_categories: [
+                  {
+                    title:
+                      "\u0627\u06cc\u0645\u0648\u0646\u0648\u0644\u0648\u0698\u06cc \u0648 \u0622\u0644\u0631\u0698\u06cc \u0628\u0627\u0644\u06cc\u0646\u06cc",
+                    value: "exp-immunology-and-clinical-allergies",
+                    url: "/s/bandar-e-jask/exp-immunology-and-clinical-allergies/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title: "\u062f\u06cc\u0627\u0628\u062a",
+                image: "/getImage/icons%2Fgroup_expertise/diabetes-1.png",
+                url: "/s/bandar-e-jask/diabetes/",
+                value: "diabetes",
+                sub_categories: [
+                  {
+                    title:
+                      "\u063a\u062f\u062f \u062f\u0631\u0648\u0646 \u0631\u06cc\u0632 \u0648 \u0645\u062a\u0627\u0628\u0648\u0644\u06cc\u0633\u0645",
+                    value: "exp-endocrinology-and-metabolism",
+                    url: "/s/bandar-e-jask/exp-endocrinology-and-metabolism/"
+                  }
+                ],
+
+                count: 0
+              },
+              {
+                title:
+                  "\u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
+                image: "/getImage/icons%2Fgroup_expertise/imaging-icon.png",
+                url: "/s/bandar-e-jask/imaging/",
+                value: "imaging",
+                sub_categories: [
+                  {
+                    title:
+                      "\u062a\u06a9\u0646\u0648\u0644\u0648\u0698\u06cc \u067e\u0631\u062a\u0648\u0634\u0646\u0627\u0633\u06cc- \u0631\u0627\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-radiology-1",
+                    url: "/s/bandar-e-jask/exp-radiology-1/"
+                  },
+                  {
+                    title:
+                      "\u062a\u06a9\u0646\u0648\u0644\u0648\u0698\u06cc \u067e\u0632\u0634\u06a9\u06cc \u0647\u0633\u062a\u0647 \u0627\u06cc",
+                    value: "exp-nuclear-medicine-technology",
+                    url: "/s/bandar-e-jask/exp-nuclear-medicine-technology/"
+                  },
+                  {
+                    title:
+                      "\u0641\u0646\u0627\u0648\u0631\u06cc \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc \u067e\u0632\u0634\u06a9\u06cc- MRI",
+                    value: "exp-magnetic-resonance-imaging-mri",
+                    url: "/s/bandar-e-jask/exp-magnetic-resonance-imaging-mri/"
+                  },
+                  {
+                    title:
+                      "\u0641\u0646\u0627\u0648\u0631\u06cc \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc \u067e\u0632\u0634\u06a9\u06cc- \u0633\u06cc\u062a\u06cc \u0627\u0633\u06a9\u0646",
+                    value: "exp-ct-scan",
+                    url: "/s/bandar-e-jask/exp-ct-scan/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0627\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc",
+                    value: "exp-radiology",
+                    url: "/s/bandar-e-jask/exp-radiology/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0627\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc \u062f\u0647\u0627\u0646 \u0648 \u0641\u06a9 \u0648 \u0635\u0648\u0631\u062a",
+                    value: "exp-oral-and-maxillofacial-radiology",
+                    url: "/s/bandar-e-jask/exp-oral-and-maxillofacial-radiology/"
+                  },
+                  {
+                    title:
+                      "\u0631\u0627\u062f\u06cc\u0648\u0644\u0648\u0698\u06cc \u0645\u062f\u0627\u062e\u0644\u0647 \u0627\u06cc",
+                    value: "exp-interventional-radiology",
+                    url: "/s/bandar-e-jask/exp-interventional-radiology/"
+                  }
+                ],
+
+                count: 0
+              }
+            ],
+
+            filters: [
+              {
+                title: "\u0646\u0648\u0639 \u0646\u062a\u0627\u06cc\u062c",
+                name: "result_type",
+                type: "radio",
+                items: [
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                    value:
+                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u06cc",
+                    count: 5
+                  },
+                  {
+                    title:
+                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
+                    value:
+                      "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u0637\u0628\u06cc",
+                    count: 10
+                  },
+                  {
+                    title:
+                      "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
+                    value:
+                      "\u0641\u0642\u0637 \u067e\u0632\u0634\u06a9\u0627\u0646",
+                    count: 14
+                  }
+                ]
+              },
+              {
+                title:
+                  "\u062c\u0646\u0633\u06cc\u062a \u067e\u0632\u0634\u06a9",
+                name: "gender",
+                type: "radio",
+                items: [
+                  {
+                    title: "\u062e\u0627\u0646\u0645",
+                    value: "female",
+                    count: 5
+                  },
+                  {
+                    title: "\u0622\u0642\u0627",
+                    value: "male",
+                    count: 1
+                  }
+                ]
+              },
+              {
+                title: "\u062f\u0631\u062c\u0647 \u0639\u0644\u0645\u06cc",
+                name: "degree",
+                type: "radio",
+                items: [
+                  {
+                    title: "\u0645\u062a\u062e\u0635\u0635",
+                    value: "\u0645\u062a\u062e\u0635\u0635",
+                    count: 14
+                  },
+                  {
+                    title: "\u062f\u06a9\u062a\u0631\u06cc",
+                    value: "\u062f\u06a9\u062a\u0631\u0627\u06cc",
+                    count: 5
+                  }
+                ]
+              },
+              {
+                title: "\u062e\u062f\u0645\u062a",
+                name: "turn_type",
+                type: "radio",
+                items: [
+                  {
+                    title:
+                      "\u0646\u0648\u0628\u062a \u062d\u0636\u0648\u0631\u06cc",
+                    value: "non-consult",
+                    count: 14
+                  },
+                  {
+                    title:
+                      "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646",
+                    value: "consult",
+                    count: 1
+                  }
+                ]
+              },
+              {
+                title: "\u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a",
+                name: "work_time_frames",
+                type: "multiple_select",
+                items: [
+                  {
+                    title: "\u0634\u0628",
+                    value: "night",
+                    count: 33
+                  },
+                  {
+                    title: "\u0635\u0628\u062d",
+                    value: "morning",
+                    count: 24
+                  },
+                  {
+                    title: "\u0628\u0639\u062f \u0627\u0632 \u0638\u0647\u0631",
+                    value: "afternoon",
+                    count: 16
+                  }
+                ]
+              },
+              {
+                title: "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646",
+                name: "hospital_affiliation",
+                type: "multiple_select",
+                items: [
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                    value:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645 (\u0635) \u0642\u0634\u0645 \u0647\u0631\u0645\u0632\u06af\u0627\u0646",
+                    count: 2
+                  },
+                  {
+                    title:
+                      "\u0645\u062c\u062a\u0645\u0639 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645(\u0635) \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0647\u0631\u0645\u0632",
+                    value:
+                      "\u0645\u062c\u062a\u0645\u0639 \u0622\u0645\u0648\u0632\u0634\u06cc \u062f\u0631\u0645\u0627\u0646\u06cc \u067e\u06cc\u0627\u0645\u0628\u0631 \u0627\u0639\u0638\u0645(\u0635) \u06a9\u0644\u06cc\u0646\u06cc\u06a9 \u062a\u062e\u0635\u0635\u06cc \u0641\u0648\u0642 \u062a\u062e\u0635\u0635\u06cc \u0647\u0631\u0645\u0632",
+                    count: 1
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                    value:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0634\u0647\u062f\u0627\u06cc \u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                    count: 1
+                  },
+                  {
+                    title:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
+                    value:
+                      "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u062d\u0636\u0631\u062a \u0627\u0628\u0648\u0627\u0644\u0641\u0636\u0644 (\u0639) \u0645\u06cc\u0646\u0627\u0628",
+                    count: 1
+                  }
+                ]
+              },
+              {
+                title:
+                  "\u0642\u06cc\u0645\u062a \u0645\u0634\u0627\u0648\u0631\u0647",
+                name: "consult_price",
+                type: "slider_with_count",
+                items: [
+                  {
+                    title:
+                      "\u0642\u06cc\u0645\u062a \u06a9\u0645\u062a\u0631 \u0627\u0632 50000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "0_50",
+                    count: 0,
+                    from: 0,
+                    to: 50
+                  },
+                  {
+                    title:
+                      "50000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 55000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "50_55",
+                    count: 0,
+                    from: 50,
+                    to: 55
+                  },
+                  {
+                    title:
+                      "55000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 60000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "55_60",
+                    count: 0,
+                    from: 55,
+                    to: 60
+                  },
+                  {
+                    title:
+                      "60000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 65000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "60_65",
+                    count: 0,
+                    from: 60,
+                    to: 65
+                  },
+                  {
+                    title:
+                      "65000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 70000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "65_70",
+                    count: 0,
+                    from: 65,
+                    to: 70
+                  },
+                  {
+                    title:
+                      "70000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 75000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "70_75",
+                    count: 0,
+                    from: 70,
+                    to: 75
+                  },
+                  {
+                    title:
+                      "75000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 80000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "75_80",
+                    count: 0,
+                    from: 75,
+                    to: 80
+                  },
+                  {
+                    title:
+                      "80000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 85000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "80_85",
+                    count: 0,
+                    from: 80,
+                    to: 85
+                  },
+                  {
+                    title:
+                      "85000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 90000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "85_90",
+                    count: 0,
+                    from: 85,
+                    to: 90
+                  },
+                  {
+                    title:
+                      "90000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 95000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "90_95",
+                    count: 0,
+                    from: 90,
+                    to: 95
+                  },
+                  {
+                    title:
+                      "95000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 100000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "95_100",
+                    count: 0,
+                    from: 95,
+                    to: 100
+                  },
+                  {
+                    title:
+                      "100000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 105000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "100_105",
+                    count: 0,
+                    from: 100,
+                    to: 105
+                  },
+                  {
+                    title:
+                      "105000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 110000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "105_110",
+                    count: 0,
+                    from: 105,
+                    to: 110
+                  },
+                  {
+                    title:
+                      "110000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 115000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "110_115",
+                    count: 0,
+                    from: 110,
+                    to: 115
+                  },
+                  {
+                    title:
+                      "115000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 120000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "115_120",
+                    count: 0,
+                    from: 115,
+                    to: 120
+                  },
+                  {
+                    title:
+                      "120000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 125000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "120_125",
+                    count: 0,
+                    from: 120,
+                    to: 125
+                  },
+                  {
+                    title:
+                      "125000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 130000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "125_130",
+                    count: 0,
+                    from: 125,
+                    to: 130
+                  },
+                  {
+                    title:
+                      "130000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 135000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "130_135",
+                    count: 0,
+                    from: 130,
+                    to: 135
+                  },
+                  {
+                    title:
+                      "135000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 140000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "135_140",
+                    count: 0,
+                    from: 135,
+                    to: 140
+                  },
+                  {
+                    title:
+                      "140000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 145000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "140_145",
+                    count: 0,
+                    from: 140,
+                    to: 145
+                  },
+                  {
+                    title:
+                      "145000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 150000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "145_150",
+                    count: 0,
+                    from: 145,
+                    to: 150
+                  },
+                  {
+                    title:
+                      "150000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 155000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "150_155",
+                    count: 0,
+                    from: 150,
+                    to: 155
+                  },
+                  {
+                    title:
+                      "155000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 160000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "155_160",
+                    count: 0,
+                    from: 155,
+                    to: 160
+                  },
+                  {
+                    title:
+                      "160000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 165000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "160_165",
+                    count: 0,
+                    from: 160,
+                    to: 165
+                  },
+                  {
+                    title:
+                      "165000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 170000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "165_170",
+                    count: 0,
+                    from: 165,
+                    to: 170
+                  },
+                  {
+                    title:
+                      "170000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 175000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "170_175",
+                    count: 0,
+                    from: 170,
+                    to: 175
+                  },
+                  {
+                    title:
+                      "175000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 180000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "175_180",
+                    count: 0,
+                    from: 175,
+                    to: 180
+                  },
+                  {
+                    title:
+                      "180000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 185000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "180_185",
+                    count: 0,
+                    from: 180,
+                    to: 185
+                  },
+                  {
+                    title:
+                      "185000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 190000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "185_190",
+                    count: 0,
+                    from: 185,
+                    to: 190
+                  },
+                  {
+                    title:
+                      "190000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 195000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "190_195",
+                    count: 0,
+                    from: 190,
+                    to: 195
+                  },
+                  {
+                    title:
+                      "195000 \u062a\u0648\u0645\u0627\u0646 \u062a\u0627 200000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "195_200",
+                    count: 0,
+                    from: 195,
+                    to: 200
+                  },
+                  {
+                    title:
+                      "\u0642\u06cc\u0645\u062a \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 200000 \u062a\u0648\u0645\u0627\u0646",
+                    value: "200_inf",
+                    count: 1,
+                    from: 200,
+                    to: "inf"
+                  }
+                ]
+              }
+            ],
+
+            selected_filters: {
+              sub_category: "exp-skin-diseases",
+              category: "dermatology",
+              city: "bandar-e-jask"
+            },
+            seo_info: {
+              id: 10,
+              name: "\u067e\u0632\u0634\u06a9\u0627\u0646 \u062a\u062e\u0635\u0635 \u062e\u0627\u0635 \u062f\u0631 \u0634\u0647\u0631 \u062e\u0627\u0635",
+              title:
+                "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u060c \u0628\u0647\u062a\u0631\u06cc\u0646 \u062f\u06a9\u062a\u0631 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9",
+              description:
+                "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0622\u0646\u0644\u0627\u06cc\u0646 \u062f\u06a9\u062a\u0631 \u0627\u0632 \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u062a\u062e\u0635\u0635 \u0648 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u0628\u0647 \u0647\u0645\u0631\u0627\u0647 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u06a9\u0627\u0645\u0644 \u062a\u0645\u0627\u0633 \u0648 \u0622\u062f\u0631\u0633 \u0648 \u0646\u0638\u0631\u0627\u062a \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 | \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4",
+              heading:
+                "\u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9",
+              page_description: null,
+              seo_box:
+                '<h2>\u0644\u06cc\u0633\u062a \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9</h2>\n<p>\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u062d\u0636\u0648\u0631\u06cc \u06cc\u0627 <a href="https://www.paziresh24.com/consult"> \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u067e\u0632\u0634\u06a9\u06cc </a> \u0648 \u063a\u06cc\u0631 \u062d\u0636\u0648\u0631\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u062a\u0644\u0641\u0646\u06cc \u0648 \u0645\u062a\u0646\u06cc \u0627\u0632 <strong>\u0628\u0647\u062a\u0631\u06cc\u0646 \u062f\u06a9\u062a\u0631 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9</strong></p>\n<h2>\u0631\u0627\u0647\u0646\u0645\u0627\u06cc \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9</h2>\n<p>\u0628\u0627 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u0628\u062e\u0634 \u062c\u0633\u062a\u062c\u0648 \u0648 \u0641\u06cc\u0644\u062a\u0631\u0647\u0627\u06cc \u0645\u0648\u062c\u0648\u062f \u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647 \u067e\u0632\u0634\u06a9 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u062c\u0633\u062a\u062c\u0648 \u0648 \u0628\u0627 \u06a9\u0644\u06cc\u06a9 \u0628\u0631 \u0631\u0648\u06cc \u062f\u06a9\u0645\u0647 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a\u060c \u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a \u062e\u0627\u0644\u06cc \u0631\u0627 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f. \u0647\u0645\u0686\u0646\u06cc\u0646 \u062f\u0631 \u0635\u0648\u0631\u062a\u06cc \u06a9\u0647 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u0631\u0646\u0627\u0645\u0647 \u06a9\u0627\u0631\u06cc \u062e\u0648\u062f \u0631\u0627 \u062a\u06a9\u0645\u06cc\u0644 \u06a9\u0631\u062f\u0647 \u0628\u0627\u0634\u0646\u062f\u060c \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u062f\u0631 \u0632\u0645\u0627\u0646 \u062f\u0644\u062e\u0648\u0627\u0647 \u062e\u0648\u062f \u0646\u0648\u0628\u062a \u062f\u0631\u06cc\u0627\u0641\u062a \u06a9\u0646\u06cc\u062f.</p>\n<h2>\u0628\u0647\u062a\u0631\u06cc\u0646 \u062f\u06a9\u062a\u0631 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u06a9\u06cc\u0633\u062a \u061f</h2>\n<p>\u0628\u0627 \u062a\u0648\u062c\u0647 \u0628\u0647 \u062a\u0639\u062f\u0627\u062f \u0628\u0627\u0632\u062f\u06cc\u062f \u0627\u0632 \u0635\u0641\u062d\u0647 \u0647\u0631 \u067e\u0632\u0634\u06a9\u060c \u0645\u0634\u0627\u0647\u062f\u0647 \u0646\u0638\u0631\u0627\u062a \u062f\u06cc\u06af\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u0628\u0647\u062a\u0631\u06cc\u0646 \u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u0631\u0627 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f.</p>\n<h2>\u0644\u06cc\u0633\u062a \u062a\u0645\u0627\u0645 \u0645\u062a\u062e\u0635\u0635 \u0647\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0627\u06cc\u0631\u0627\u0646</h2>\n<p>\u0628\u0627 \u0645\u0631\u0627\u062c\u0639\u0647 \u0628\u0647 \u0635\u0641\u062d\u0647 \u067e\u0632\u0634\u06a9\u0627\u0646&nbsp;<a href="https://www.paziresh24.com/s/ir/exp-skin-diseases/">\u0645\u062a\u062e\u0635\u0635&nbsp;\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a</a>\u060c \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u0644\u06cc\u0633\u062a \u062a\u0645\u0627\u0645 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0627\u06cc\u0631\u0627\u0646 \u0631\u0627 \u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0646\u06cc\u062f.</p>\n<h2>\u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647</h2>\n<p>\u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647 \u0634\u0645\u0627 \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u0644\u06cc\u0633\u062a \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062e\u0648\u0628 \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u0631\u0627 \u0645\u0634\u0627\u0647\u062f\u0647 \u0646\u0645\u0627\u06cc\u06cc\u062f. \u0635\u062f\u0647\u0627 \u067e\u0632\u0634\u06a9 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u0622\u0645\u0627\u062f\u0647 \u0648\u06cc\u0632\u06cc\u062a \u062d\u0636\u0648\u0631\u06cc \u0648 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u0628\u0647 \u0633\u0648\u0627\u0644\u0627\u062a \u067e\u0632\u0634\u06a9\u06cc \u0634\u0645\u0627 \u0647\u0633\u062a\u0646\u062f.</p>\n<p>\u0627\u0644\u0628\u062a\u0647 \u062f\u0631 \u0646\u0638\u0631 \u062f\u0627\u0634\u062a\u0647 \u0628\u0627\u0634\u06cc\u062f \u06a9\u0647 \u0627\u0646\u062a\u0642\u0627\u0644 \u06a9\u0631\u0648\u0646\u0627 \u062f\u0631 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc\u060c \u0633\u0647 \u0628\u0631\u0627\u0628\u0631 \u0627\u0645\u0627\u06a9\u0646 \u0639\u0627\u062f\u06cc \u0627\u0633\u062a! \u0628\u0627 \u0627\u06cc\u0646 \u0648\u062c\u0648\u062f \u0645\u06cc \u062a\u0648\u0627\u0646\u06cc\u062f \u0628\u062f\u0648\u0646 \u062d\u0636\u0648\u0631 \u062f\u0631 \u0645\u0637\u0628 \u06cc\u0627 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646\u060c \u062f\u0631 \u062e\u0627\u0646\u0647 \u0628\u0627 <a href="https://www.paziresh24.com/consult/dermatology">\u062f\u06a9\u062a\u0631 \u0622\u0646\u0644\u0627\u06cc\u0646 \u067e\u0648\u0633\u062a \u0648 \u0645\u0648 </a>\u060c \u062a\u0644\u0641\u0646\u06cc \u0648 \u0645\u062a\u0646\u06cc \u06af\u0641\u062a\u06af\u0648 \u06a9\u0646\u06cc\u062f.</p>\n<p>\u0633\u0627\u06cc\u062a <a href="https://www.paziresh24.com/">\u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4</a> \u062e\u062f\u0645\u0627\u062a\u06cc \u0631\u0627 \u0628\u0631\u0627\u06cc \u0634\u0645\u0627 \u0641\u0631\u0627\u0647\u0645 \u0622\u0648\u0631\u062f\u0647 \u062a\u0627 \u062f\u0631 \u0633\u0631\u06cc\u0639\u062a\u0631\u06cc\u0646 \u0632\u0645\u0627\u0646 \u0648 \u0628\u0647 \u0631\u0627\u062d\u062a \u062a\u0631\u06cc\u0646 \u0634\u06cc\u0648\u0647 <a href="https://www.paziresh24.com/">\u0646\u0648\u0628\u062a \u062f\u0647\u06cc</a> \u0628\u0627 <a href="https://www.paziresh24.com/s/">\u062c\u0633\u062a\u062c\u0648\u06cc \u067e\u0632\u0634\u06a9</a> \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u062e\u0648\u062f\u060c \u0646\u0648\u0628\u062a \u062e\u0648\u062f \u0631\u0627 \u0627\u0632 \u062f\u06a9\u062a\u0631 \u0641\u0648\u0642 \u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0631 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0645\u0627\u06cc\u06cc\u062f.\u062c\u062f\u06cc\u062f\u062a\u0631\u06cc\u0646 \u0622\u062f\u0631\u0633\u060c \u062a\u0644\u0641\u0646 \u0645\u0637\u0628\u060c \u0633\u0627\u0639\u062a \u06a9\u0627\u0631\u06cc\u060c \u0633\u0648\u0627\u0628\u0642 \u06a9\u0627\u0631\u06cc \u0648 \u0639\u0644\u0645\u06cc\u060c \u0631\u0632\u0648\u0645\u0647 \u0648 \u062a\u062d\u0635\u06cc\u0644\u0627\u062a <a href="https://www.paziresh24.com/s/bandar-e-jask/doctor/">\u067e\u0632\u0634\u06a9\u0627\u0646 \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9 </a>\u0631\u0627 \u062f\u0631 \u0633\u0627\u06cc\u062a \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u0645\u0634\u0627\u0647\u062f\u0647 \u0646\u0645\u0627\u06cc\u06cc\u062f. \u062c\u0647\u062a \u06a9\u0627\u0631\u0628\u0631\u06cc \u0628\u0647\u062a\u0631 \u0648 \u0628\u0647\u0631\u0647 \u0645\u0646\u062f\u06cc \u06a9\u0627\u0645\u0644 \u0627\u0632 \u062e\u062f\u0645\u0627\u062a\u060c <a href="https://www.paziresh24.com/app/">\u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0646\u0648\u0628\u062a \u062f\u0647\u06cc</a> \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u0631\u0627 \u062f\u0627\u0646\u0644\u0648\u062f \u06a9\u0646\u06cc\u062f. \u062e\u062f\u0645\u0627\u062a\u06cc \u06a9\u0647 \u0645\u0644\u0627\u062d\u0638\u0647 \u0645\u06cc&zwnj;\u06a9\u0646\u06cc\u062f \u0628\u0647 \u0648\u0633\u06cc\u0644\u0647 \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0627\u06cc\u0631\u0627\u0646 \u0648 \u062f\u0631 \u0646\u0631\u0645 \u0627\u0641\u0632\u0627\u0631 \u0645\u062f\u06cc\u0631\u06cc\u062a \u0645\u0637\u0628 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u0645\u0648\u0631\u062f \u067e\u06cc\u06af\u06cc\u0631\u06cc \u0642\u0631\u0627\u0631 \u0645\u06cc&zwnj;\u06af\u06cc\u0631\u062f.</p>\n<h2>\u062e\u062f\u0645\u0627\u062a \u067e\u06cc\u0634\u0631\u0648\u062a\u0631\u06cc\u0646 \u067e\u0644\u062a\u0641\u0631\u0645 \u0633\u0644\u0627\u0645\u062a \u062f\u06cc\u062c\u06cc\u062a\u0627\u0644 \u062f\u0631 \u0627\u06cc\u0631\u0627\u0646</h2>\n<p>\u0628\u0627 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u062e\u062f\u0645\u0627\u062a <a href="https://www.paziresh24.com/">\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u067e\u0632\u0634\u06a9\u06cc</a> \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u0642\u0627\u062f\u0631 \u062e\u0648\u0627\u0647\u06cc\u062f \u0628\u0648\u062f \u062f\u0631 \u06a9\u0645\u062a\u0631\u06cc\u0646 \u0632\u0645\u0627\u0646 \u0648 \u0628\u062f\u0648\u0646 \u062f\u063a\u062f\u063a\u0647 \u0627\u06cc \u062c\u0632 \u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a \u062e\u0627\u0644\u06cc \u067e\u0632\u0634\u06a9 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u062b\u0628\u062a \u0646\u0645\u0627\u06cc\u06cc\u062f \u0648 \u062f\u0631 \u0632\u0645\u0627\u0646 \u0645\u0642\u0631\u0631 \u0628\u0647 \u0645\u0637\u0628 \u067e\u0632\u0634\u06a9 \u0645\u0631\u0627\u062c\u0639\u0647 \u0646\u0645\u0627\u06cc\u06cc\u062f. \u0644\u0627\u0632\u0645 \u0628\u0647 \u0630\u06a9\u0631 \u0627\u0633\u062a\u060c \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u0645\u06cc\u0627\u0646\u06af\u06cc\u0646 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631 \u0645\u0637\u0628 \u062c\u0647\u062a \u0648\u06cc\u0632\u06cc\u062a \u0631\u0627 \u062f\u0631 \u0635\u0641\u062d\u0647 \u067e\u0632\u0634\u06a9 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0646\u06cc\u062f \u06a9\u0647 \u0627\u06cc\u0646 \u0645\u0642\u062f\u0627\u0631\u060c \u06a9\u0645\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631 \u062d\u0627\u0644\u062a \u0639\u0627\u062f\u06cc \u0648 \u0628\u062f\u0648\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0627\u0633\u062a.</p>\n<p>\u0645\u0645\u06a9\u0646 \u0627\u0633\u062a \u062a\u062c\u0631\u0628\u0647 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646&zwnj;\u0647\u0627 \u0648 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0631\u0627 \u062f\u0627\u0634\u062a\u0647 \u0628\u0627\u0634\u06cc\u062f \u06a9\u0647 \u0645\u0639\u0645\u0648\u0644\u0627 \u062f\u0634\u0648\u0627\u0631 \u0648 \u0648\u0642\u062a&zwnj;\u06af\u06cc\u0631 \u0627\u0633\u062a. \u062f\u0631 \u0628\u0631\u062e\u06cc \u062d\u0627\u0644\u0627\u062a \u0647\u0645 \u0628\u0631\u0627\u06cc \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0627\u0632 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0644\u0627\u0632\u0645 \u0627\u0633\u062a \u062a\u0627 \u0628\u0647 \u0635\u0648\u0631\u062a \u062d\u0636\u0648\u0631\u06cc \u0628\u0647 \u0622\u0646 \u0647\u0627 \u0645\u0631\u0627\u062c\u0639\u0647 \u0634\u0648\u062f\u061b \u06a9\u0647 \u062f\u0631 \u0632\u0645\u0627\u0646 \u0634\u06cc\u0648\u0639 \u06a9\u0631\u0648\u0646\u0627 \u0628\u0647\u062a\u0631 \u0627\u0633\u062a \u0627\u06cc\u0646 \u06a9\u0627\u0631 \u0628\u0647 \u0635\u0648\u0631\u062a \u063a\u06cc\u0631\u062d\u0636\u0648\u0631\u06cc \u0627\u0646\u062c\u0627\u0645 \u0634\u0648\u062f.</p>\n<p>\u0628\u0627 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0627\u0632 \u062e\u062f\u0645\u062a <a href="https://www.paziresh24.com/">\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646</a> \u0645\u06cc&zwnj;\u062a\u0648\u0627\u0646\u06cc\u062f \u0628\u062f\u0648\u0646 \u0645\u0631\u0627\u062c\u0639\u0647 \u062d\u0636\u0648\u0631\u06cc \u0628\u0647 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc\u060c \u0646\u0648\u0628\u062a \u062e\u0648\u062f \u0631\u0627 \u0631\u0632\u0631\u0648 \u06a9\u0646\u06cc\u062f. \u062e\u062f\u0645\u0627\u062a \u062c\u0627\u0645\u0639 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4 \u062f\u0631 \u062d\u0648\u0632\u0647 \u0633\u0644\u0627\u0645\u062a \u062f\u0631 \u062a\u0644\u0627\u0634 \u0627\u0633\u062a \u062a\u0627 \u062a\u062c\u0631\u0628\u0647 \u062f\u0631\u0645\u0627\u0646 \u062e\u0648\u0628\u06cc \u0631\u0627 \u0628\u0631\u0627\u06cc \u062a\u0645\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0631\u0642\u0645 \u0628\u0632\u0646\u062f.</p>',
+              content: null,
+              canonical_link: null,
+              breadcrumbs: [
+                {
+                  text: "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0648 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0627\u06cc\u0631\u0627\u0646",
+                  href: "/s/"
+                },
+                {
+                  text: "\u0645\u062a\u062e\u0635\u0635 \u067e\u0648\u0633\u062a \u0648 \u0645\u0648",
+                  href: "/s/ir/dermatology/"
+                },
+                {
+                  text: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a",
+                  href: "/s/ir/exp-skin-diseases/"
+                },
+                {
+                  text: "\u067e\u0632\u0634\u06a9\u0627\u0646 \u0648 \u0645\u0631\u0627\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9",
+                  href: "/s/bandar-e-jask/"
+                },
+                {
+                  text: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9",
+                  href: "/s/bandar-e-jask/exp-skin-diseases/"
+                }
+              ],
+
+              jsonld: [
+                {
+                  href: "https://www.paziresh24.com/",
+                  name: "\u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4"
+                },
+                {
+                  href: "https://www.paziresh24.com/s/bandar-e-jask/",
+                  name: "\u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9"
+                },
+                {
+                  href: "https://www.paziresh24.com/s/ir/exp-skin-diseases/",
+                  name: "\u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a"
+                }
+              ]
+            },
+            footers: [
+              {
+                title:
+                  "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u062d\u0636\u0648\u0631\u06cc \u0627\u0632 \u0628\u0647\u062a\u0631\u06cc\u0646 \u067e\u0632\u0634\u06a9\u0627\u0646 \u0627\u06cc\u0631\u0627\u0646",
+                items: [
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631\u0639\u0628\u0627\u0633",
+                    url: "/s/bandar-abbas/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0645\u06cc\u0646\u0627\u0628",
+                    url: "/s/minab/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0642\u0634\u0645",
+                    url: "/s/qeshm/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u0644\u0646\u06af\u0647",
+                    url: "/s/bandar-lengeh/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0633\u062a\u06a9",
+                    url: "/s/bastak/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062f\u0647\u0628\u0627\u0631\u0632",
+                    url: "/s/dehb\u0101rez/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062c\u0627\u0633\u06a9",
+                    url: "/s/bandar-e-jask/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u067e\u0627\u0631\u0633\u06cc\u0627\u0646",
+                    url: "/s/parsian/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u06a9\u06cc\u0634",
+                    url: "/s/kish/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u062d\u0627\u062c\u06cc \u0622\u0628\u0627\u062f",
+                    url: "/s/haji-abad/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0627\u0628\u0648\u0645\u0648\u0633\u06cc",
+                    url: "/s/abu-musa/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0628\u0646\u062f\u0631 \u062e\u0645\u06cc\u0631",
+                    url: "/s/bandar-khamir/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0633\u06cc\u0631\u06cc\u06a9",
+                    url: "/s/sirik/exp-skin-diseases/"
+                  },
+                  {
+                    name: "\u0645\u062a\u062e\u0635\u0635 \u0628\u06cc\u0645\u0627\u0631\u06cc\u0647\u0627\u06cc \u067e\u0648\u0633\u062a \u0627\u0646\u06af\u0647\u0631\u0627\u0646",
+                    url: "/s/gouharan/exp-skin-diseases/"
+                  }
+                ]
+              }
+            ]
+          };
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -1104,10 +7546,8 @@ function PlasmicSearchResults__RenderFunc(props: {
             const currentIndex = __plasmic_idx_0;
             return (
               <div
-                data-plasmic-name={"freeBox"}
-                data-plasmic-override={overrides.freeBox}
-                className={classNames(projectcss.all, sty.freeBox, {
-                  [sty.freeBoxisHorizental]: hasVariant(
+                className={classNames(projectcss.all, sty.freeBox__a25Zy, {
+                  [sty.freeBoxisHorizental__a25ZysX3UT]: hasVariant(
                     $state,
                     "isHorizental",
                     "isHorizental"
@@ -2115,208 +8555,206 @@ function PlasmicSearchResults__RenderFunc(props: {
         }}
       />
 
-      {(() => {
-        try {
-          return (
-            ($props.searchResultResponse.search.pagination.limit === 0
-              ? false
-              : $props.searchResultResponse.search.pagination.limit *
-                  $props.searchResultResponse.search.pagination.page <
-                $props.searchResultResponse.search.total) &&
-            $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
-              "statusType"
-            ) &&
-            /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
-              window.location.href
-            )
-          );
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <PeopleAlsoSearchForBox
-          data-plasmic-name={"peopleAlsoSearchForBox"}
-          data-plasmic-override={overrides.peopleAlsoSearchForBox}
-          className={classNames("__wab_instance", sty.peopleAlsoSearchForBox)}
-          querySuggestionResponse={(() => {
+      {false ? (
+        <div className={classNames(projectcss.all, sty.freeBox__pjMfG)}>
+          {(() => {
             try {
-              return $props.searchFooterQuerySuggestionResponseObject;
+              return (
+                ($props.searchResultResponse.search.pagination.limit === 0
+                  ? false
+                  : $props.searchResultResponse.search.pagination.limit *
+                      $props.searchResultResponse.search.pagination.page <
+                    $props.searchResultResponse.search.total) &&
+                $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
+                  "statusType"
+                ) &&
+                /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
+                  window.location.href
+                )
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return {
-                  statusType: "SUCCESS",
-                  details: "The process was successful",
-                  entity: {
-                    topQuerySuggestions: [
-                      "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                      "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                      "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                      "\u0627\u0631\u062a\u0648\u067e\u062f",
-                      "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                      "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                      "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                      "\u062f\u0627\u062e\u0644\u06cc"
-                    ],
-                    topQuerySuggestionsIncludeDocCount: [
-                      {
-                        query:
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <PeopleAlsoSearchForBox
+              data-plasmic-name={"peopleAlsoSearchForBox"}
+              data-plasmic-override={overrides.peopleAlsoSearchForBox}
+              className={classNames(
+                "__wab_instance",
+                sty.peopleAlsoSearchForBox
+              )}
+              querySuggestionResponse={(() => {
+                try {
+                  return $props.searchFooterQuerySuggestionResponseObject;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return {
+                      statusType: "SUCCESS",
+                      details: "The process was successful",
+                      entity: {
+                        topQuerySuggestions: [
                           "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                        docCount: 0
-                      },
-                      {
-                        query:
+                          "\u0627\u0631\u062a\u0648\u067e\u062f",
                           "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                        docCount: 0
+                          "\u062f\u0627\u062e\u0644\u06cc"
+                        ],
+                        topQuerySuggestionsIncludeDocCount: [
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u062f\u0627\u062e\u0644\u06cc",
+                            docCount: 0
+                          }
+                        ],
+                        topQuerySuggestionsIncludeCategory: [
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            category:
+                              "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            category:
+                              "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                            category:
+                              "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            category:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0645\u0627\u0645\u0648\u06af\u0631\u0627\u0641\u06cc",
+                            category:
+                              "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647 \u0648 \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
+                            category:
+                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
+                            category:
+                              "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc \u0645\u0631\u062f\u0627\u0646",
+                            category:
+                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
+                            docCount: 0
+                          }
+                        ],
+                        searchTime: 217
                       },
-                      { query: "\u062f\u0627\u062e\u0644\u06cc", docCount: 0 }
-                    ],
-                    topQuerySuggestionsIncludeCategory: [
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        category:
-                          "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        category:
-                          "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                        category:
-                          "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        category:
-                          "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0645\u0627\u0645\u0648\u06af\u0631\u0627\u0641\u06cc",
-                        category:
-                          "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647 \u0648 \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                        category:
-                          "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                        category:
-                          "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc \u0645\u0631\u062f\u0627\u0646",
-                        category:
-                          "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                        docCount: 0
-                      }
-                    ],
-                    searchTime: 217
-                  },
-                  path: "/api/qs/index/slim_clinic_query_su"
-                };
-              }
-              throw e;
-            }
-          })()}
-        />
-      ) : null}
-      {(() => {
-        try {
-          return $props.searchFooterSecondaryTasksObject.destination !== "";
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <SearchFooterSecondaryTasks
-          data-plasmic-name={"searchFooterSecondaryTasks"}
-          data-plasmic-override={overrides.searchFooterSecondaryTasks}
-          className={classNames(
-            "__wab_instance",
-            sty.searchFooterSecondaryTasks,
-            {
-              [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
-                $state,
-                "isHorizental",
-                "isHorizental"
-              )
-            }
-          )}
-          taskObject={(() => {
-            try {
-              return $props.searchFooterSecondaryTasksObject;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return {
-                  destination:
-                    "https://support.paziresh24.com/ticketing/?action=new",
-                  title:
-                    "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
-                  openInNewTab: false
-                };
-              }
-              throw e;
-            }
-          })()}
-        />
+                      path: "/api/qs/index/slim_clinic_query_su"
+                    };
+                  }
+                  throw e;
+                }
+              })()}
+            />
+          ) : null}
+          {false ? (
+            <SearchFooterSecondaryTasks
+              data-plasmic-name={"searchFooterSecondaryTasks"}
+              data-plasmic-override={overrides.searchFooterSecondaryTasks}
+              className={classNames(
+                "__wab_instance",
+                sty.searchFooterSecondaryTasks,
+                {
+                  [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
+                    $state,
+                    "isHorizental",
+                    "isHorizental"
+                  )
+                }
+              )}
+              taskObject={(() => {
+                try {
+                  return $props.searchFooterSecondaryTasksObject;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return {
+                      destination:
+                        "https://support.paziresh24.com/ticketing/?action=new",
+                      title:
+                        "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
+                      openInNewTab: false
+                    };
+                  }
+                  throw e;
+                }
+              })()}
+            />
+          ) : null}
+        </div>
       ) : null}
       {(() => {
         try {
@@ -2350,7 +8788,6 @@ const PlasmicDescendants = {
     "apiRequest",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
-    "freeBox",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
@@ -2368,12 +8805,7 @@ const PlasmicDescendants = {
   ],
   apiRequest: ["apiRequest", "topSuggestedCard"],
   topSuggestedCard: ["topSuggestedCard"],
-  resultCardsVerticalStack2: [
-    "resultCardsVerticalStack2",
-    "freeBox",
-    "productCard"
-  ],
-  freeBox: ["freeBox", "productCard"],
+  resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
@@ -2393,7 +8825,6 @@ type NodeDefaultElementType = {
   apiRequest: typeof ApiRequest;
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
-  freeBox: "div";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
@@ -2471,7 +8902,6 @@ export const PlasmicSearchResults = Object.assign(
     apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
-    freeBox: makeNodeComponent("freeBox"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
     noResultsBlockVerticalStack: makeNodeComponent(

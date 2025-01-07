@@ -166,7 +166,7 @@
   margin-left: var(--token-vMUQwr5Jto1d);
   margin-top: 0px;
 }
-.freeBox {
+.freeBox__a25Zy {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -177,7 +177,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.freeBoxisHorizental {
+.freeBoxisHorizental__a25ZysX3UT {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -317,6 +317,17 @@
   object-fit: cover;
   position: relative;
 }
+.freeBox__pjMfG {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
 .peopleAlsoSearchForBox:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
@@ -324,10 +335,7 @@
 .searchFooterSecondaryTasks:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
-  margin-top: calc(24px + var(--token-Fv8-L_kN-2Ma)) !important;
-}
-.searchFooterSecondaryTasksisHorizental:global(.__wab_instance) {
-  margin-top: calc(24px + var(--token-Fv8-L_kN-2Ma)) !important;
+  margin-top: 24px;
 }
 .externalBookSurveyPopup:global(.__wab_instance) {
   max-width: 100%;
