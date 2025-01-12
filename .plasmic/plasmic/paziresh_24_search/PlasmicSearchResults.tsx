@@ -75,6 +75,7 @@ import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
+import Icon39Icon from "./icons/PlasmicIcon__Icon39"; // plasmic-import: hUDlEFfdxuXu/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -127,6 +128,8 @@ export type PlasmicSearchResults__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
+  noItemFound?: Flex__<"div">;
+  span?: Flex__<"span">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
@@ -1073,7 +1076,7 @@ function PlasmicSearchResults__RenderFunc(props: {
             (() => {
               try {
                 return (() => {
-                  return [
+                  const result = [
                     ...$props?.searchResultResponse?.search?.result?.slice(
                       0,
                       3
@@ -1087,6 +1090,28 @@ function PlasmicSearchResults__RenderFunc(props: {
                       : null,
                     ...$props?.searchResultResponse?.search?.result?.slice(3)
                   ]?.filter(Boolean);
+                  const firstMatchIndex = result.findIndex(item =>
+                    item.topSuggestedCardFeature
+                      ? false
+                      : item.centers
+                          .filter(center => center.id != "5532")
+                          .some(
+                            center => center.city_name !== $props.location.name
+                          )
+                  );
+                  const newList = result.map((item, index) => {
+                    if (index === firstMatchIndex && $props.location.id != -1) {
+                      return {
+                        ...item,
+                        outside_of_location: true
+                      };
+                    }
+                    return {
+                      ...item,
+                      otside_of_location: false
+                    };
+                  });
+                  return newList;
                 })();
               } catch (e) {
                 if (
@@ -1124,6 +1149,100 @@ function PlasmicSearchResults__RenderFunc(props: {
                   }
                 })()}
               >
+                {(() => {
+                  try {
+                    return currentItem.outside_of_location;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    data-plasmic-name={"noItemFound"}
+                    data-plasmic-override={overrides.noItemFound}
+                    className={classNames(projectcss.all, sty.noItemFound)}
+                  >
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__apXlz)}
+                    >
+                      <Icon39Icon
+                        className={classNames(projectcss.all, sty.svg__gd1Tp)}
+                        role={"img"}
+                      />
+
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__d3Bmq
+                        )}
+                      >
+                        <React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {
+                              "\u0646\u062a\u06cc\u062c\u0647 \u062f\u06cc\u06af\u0631\u06cc \u0645\u0631\u062a\u0628\u0637 \u0628\u0627 "
+                            }
+                          </span>
+                          <React.Fragment>{""}</React.Fragment>
+                          {
+                            <span
+                              data-plasmic-name={"span"}
+                              data-plasmic-override={overrides.span}
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                projectcss.plasmic_default__inline,
+                                sty.span
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return $props.location.name;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "-";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </span>
+                          }
+                          <React.Fragment>{""}</React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f. "}
+                          </span>
+                          <React.Fragment>
+                            {
+                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0648\u0642\u0639\u06cc\u062a\u200c\u0647\u0627 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
+                            }
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
                 <ProductCard
                   data-plasmic-name={"productCard"}
                   data-plasmic-override={overrides.productCard}
@@ -2345,6 +2464,8 @@ const PlasmicDescendants = {
     "apiRequest",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
+    "noItemFound",
+    "span",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
@@ -2362,7 +2483,14 @@ const PlasmicDescendants = {
   ],
   apiRequest: ["apiRequest", "topSuggestedCard"],
   topSuggestedCard: ["topSuggestedCard"],
-  resultCardsVerticalStack2: ["resultCardsVerticalStack2", "productCard"],
+  resultCardsVerticalStack2: [
+    "resultCardsVerticalStack2",
+    "noItemFound",
+    "span",
+    "productCard"
+  ],
+  noItemFound: ["noItemFound", "span"],
+  span: ["span"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
@@ -2382,6 +2510,8 @@ type NodeDefaultElementType = {
   apiRequest: typeof ApiRequest;
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
+  noItemFound: "div";
+  span: "span";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
@@ -2459,6 +2589,8 @@ export const PlasmicSearchResults = Object.assign(
     apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
+    noItemFound: makeNodeComponent("noItemFound"),
+    span: makeNodeComponent("span"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
     noResultsBlockVerticalStack: makeNodeComponent(

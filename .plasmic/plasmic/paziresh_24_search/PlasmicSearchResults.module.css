@@ -187,6 +187,51 @@
   width: 100%;
   min-width: auto;
 }
+.noItemFound {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fff1ec;
+  min-width: 0;
+  border-radius: 6px;
+  margin: var(--token-_c276Gs_1FIE) 0px;
+  border: 1px solid #c5885e;
+}
+.freeBox__apXlz {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.svg__gd1Tp {
+  object-fit: cover;
+  max-width: 100%;
+  height: 1em;
+  margin: var(--token-_c276Gs_1FIE);
+}
+.text__d3Bmq {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-6NbVMeD6zQwn);
+  min-width: 0;
+  padding: var(--token-fhaz6q6bl-fW);
+}
+.span {
+  font-weight: 700;
+  font-size: var(--token-6NbVMeD6zQwn);
+}
 .productCard:global(.__wab_instance) {
   width: 100%;
   position: relative;
