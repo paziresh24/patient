@@ -75,7 +75,7 @@ import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
-import Icon39Icon from "./icons/PlasmicIcon__Icon39"; // plasmic-import: hUDlEFfdxuXu/icon
+import Icon40Icon from "./icons/PlasmicIcon__Icon40"; // plasmic-import: g8tjAQ5z_ZU_/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -1091,12 +1091,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ...$props?.searchResultResponse?.search?.result?.slice(3)
                   ]?.filter(Boolean);
                   const firstMatchIndex = result.findIndex(item =>
-                    item.topSuggestedCardFeature
+                    item?.topSuggestedCardFeature?.enable ||
+                    !item?.centers ||
+                    !$props?.location?.name
                       ? false
-                      : item.centers
-                          .filter(center => center.id != "5532")
-                          .some(
-                            center => center.city_name !== $props.location.name
+                      : !item?.centers
+                          ?.filter?.(center => center.id != "5532")
+                          ?.some?.(
+                            center =>
+                              center?.city_name === $props?.location?.name
                           )
                   );
                   const newList = result.map((item, index) => {
@@ -1170,7 +1173,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     <div
                       className={classNames(projectcss.all, sty.freeBox__apXlz)}
                     >
-                      <Icon39Icon
+                      <Icon40Icon
                         className={classNames(projectcss.all, sty.svg__gd1Tp)}
                         role={"img"}
                       />
@@ -1190,7 +1193,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                             style={{ fontWeight: 700 }}
                           >
                             {
-                              "\u0646\u062a\u06cc\u062c\u0647 \u062f\u06cc\u06af\u0631\u06cc \u0645\u0631\u062a\u0628\u0637 \u0628\u0627 "
+                              "\u0646\u062a\u06cc\u062c\u0647 \u062f\u06cc\u06af\u0631\u06cc \u0645\u0631\u062a\u0628\u0637 \u0628\u0627 \u062c\u0633\u062a\u062c\u0648\u06cc \u0634\u0645\u0627 \u062f\u0631 "
                             }
                           </span>
                           <React.Fragment>{""}</React.Fragment>
@@ -1235,7 +1238,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                           </span>
                           <React.Fragment>
                             {
-                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0648\u0642\u0639\u06cc\u062a\u200c\u0647\u0627 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
+                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
                             }
                           </React.Fragment>
                         </React.Fragment>
