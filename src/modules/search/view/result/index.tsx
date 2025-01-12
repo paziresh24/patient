@@ -52,6 +52,7 @@ export const Result = () => {
               location: {
                 city_name: city?.en_slug,
                 city_id: city?.id,
+                ...city,
                 ...geoLocation,
               },
               paginationLoadingStatus: isLoading,
