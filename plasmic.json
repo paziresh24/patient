@@ -1585,6 +1585,11 @@
           "id": "__Q2-_MsbqBL",
           "name": "Icon38Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon38.tsx"
+        },
+        {
+          "id": "hUDlEFfdxuXu",
+          "name": "Icon39Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon39.tsx"
         }
       ],
       "images": [
@@ -5036,7 +5041,8 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {
