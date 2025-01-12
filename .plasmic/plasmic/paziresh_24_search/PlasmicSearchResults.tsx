@@ -1091,12 +1091,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ...$props?.searchResultResponse?.search?.result?.slice(3)
                   ]?.filter(Boolean);
                   const firstMatchIndex = result.findIndex(item =>
-                    item.topSuggestedCardFeature?.enable
+                    item?.topSuggestedCardFeature?.enable ||
+                    !item?.centers ||
+                    !$props?.location?.name
                       ? false
-                      : !item.centers
-                          .filter(center => center.id != "5532")
-                          .some(
-                            center => center.city_name === $props.location.name
+                      : !item?.centers
+                          ?.filter?.(center => center.id != "5532")
+                          ?.some?.(
+                            center =>
+                              center?.city_name === $props?.location?.name
                           )
                   );
                   const newList = result.map((item, index) => {
