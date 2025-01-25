@@ -7,10 +7,14 @@ type ModalProps = {
   onClose: OnClose;
 };
 
-type OnClose = () => {};
+type HookProps = {
+  onClose?: OnClose;
+};
+
+type OnClose = () => void;
 type IsOpen = boolean;
 
-export const useModal = () => {
+export const useModal = (props?: HookProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { lockScroll, openScroll } = useLockScroll();
 
@@ -42,7 +46,10 @@ export const useModal = () => {
     handleClose,
     modalProps: {
       isOpen: isOpen,
-      onClose: handleClose,
+      onClose: () => {
+        handleClose();
+        props?.onClose?.();
+      },
     } as ModalProps,
   };
 };

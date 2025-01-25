@@ -6,6 +6,8 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { oneApp, useOneApp } from '@/modules/dashboard/apis/one-app';
+import { HamdastAuth } from '@/modules/hamdast/components/auth';
+import { HamdastPayment } from '@/modules/hamdast/components/payment';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { isEmpty } from 'lodash';
@@ -77,6 +79,12 @@ const Page = ({ page, app }: any) => {
     };
   }, [isLogin, userPending]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsAppLoading(false);
+    }, 3000);
+  }, []);
+
   return (
     <LayoutWithHeaderAndFooter
       showSearchSuggestionButton={false}
@@ -86,6 +94,8 @@ const Page = ({ page, app }: any) => {
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
     >
       <Seo title={page.name?.fa} noIndex />
+      <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
+      <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <div className="w-full flex-grow flex flex-col">
         {(!showIframe || isAppLoading) && (
           <div className="w-full justify-center flex items-center h-full flex-grow">
@@ -112,6 +122,7 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
     const app = getOneApp?.data;
     const page = app?.fragments?.find((item: any) => item.type === 'pages')?.options?.find((item: any) => item.key == params?.[0]);
+
     return {
       props: {
         app,
