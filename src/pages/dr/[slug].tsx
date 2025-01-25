@@ -88,6 +88,7 @@ const DoctorProfile = ({
   const { openScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
+  const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -444,7 +445,7 @@ const DoctorProfile = ({
             )}
 
             <div className="flex flex-col w-full space-y-3 md:hidden">
-              {aside({ ...profileData, fragmentComponents })
+              {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
                 .filter(({ isShow }: any) => Boolean(isShow))
                 .map((section: any, index: number) => (
                   <Section key={index} {...section}>
@@ -463,7 +464,7 @@ const DoctorProfile = ({
           </section>
 
           <aside className="flex-col hidden space-y-3 md:flex">
-            {aside({ ...profileData, fragmentComponents })
+            {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
                 <Section key={index} {...section}>

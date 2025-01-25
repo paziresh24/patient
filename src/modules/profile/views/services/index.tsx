@@ -64,6 +64,7 @@ export const Services = ({
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
+  const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -113,6 +114,10 @@ export const Services = ({
 
   if (!growthbook.ready || (useAvailabilityStatusApi ? alabilityStatus.isLoading : false)) {
     return <Skeleton w="full" h="10rem" rounded="lg" />;
+  }
+
+  if (showHamdastGa) {
+    return null;
   }
 
   if (useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {

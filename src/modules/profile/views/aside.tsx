@@ -32,6 +32,7 @@ export const aside = (data: any) => {
     onlineVisit,
     waitingTimeInfo,
     fragmentComponents,
+    hamdast,
   } = data;
 
   const profileData = pick(data, [
@@ -77,6 +78,17 @@ export const aside = (data: any) => {
         ) : (
           <Services {...props} />
         ),
+    },
+    {
+      id: 'ga',
+      isShow: !!hamdast.ga,
+      children: (props: any) => (
+        <iframe
+          src={`https://hamdast.paziresh24.com/bridge/?app=xxdfcqqubwkgo5d&page=n3nhsc879uzzh9z&src=${encodeURIComponent(
+            `https://ga.fragm.site/?doctor_id=${information.id}&slug=${seo.slug}`,
+          )}`}
+        ></iframe>
+      ),
     },
     // Rcommend
     {
