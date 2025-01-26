@@ -45,6 +45,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
+    if (!mobileNumberValue) {
+      toast.error('لطفا شماره موبایل را وارد کنید.');
+    }
     if (!phoneNumberValidator(mobileNumberValue)) {
       setIsFieldError(true);
       return;
@@ -94,12 +97,16 @@ export const MobileNumber = (props: MobileNumberProps) => {
         disabled={register.isLoading || resetPassword.isLoading}
       />
 
-      <Button disabled={!mobileNumberValue} type="submit" loading={register.isLoading || resetPassword.isLoading}>
+      <Button type="submit" loading={register.isLoading || resetPassword.isLoading}>
         {t('steps.mobileNumber.action')}
       </Button>
       {(showOidcLogin || showGoogleLogin) && (
         <div className="flex flex-col !mt-3 gap-2">
-          <Divider className="mb-1" />
+          <div className="flex justify-center gap-3 items-center mb-1">
+            <Divider />
+            <span className="text-sm font-semibold">یا</span>
+            <Divider />
+          </div>
           {showOidcLogin && (
             <Button
               loading={oidcOauthLoading}
