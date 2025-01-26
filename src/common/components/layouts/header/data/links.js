@@ -382,12 +382,12 @@ export const medicalCenterMenu = [
 
 export const developersMenu = [
   {
-    title: 'وب سرویس ها',
-    link: 'https://developers.paziresh24.com/rest',
+    title: 'فرصت‌های شغلی',
+    link: 'https://join.paziresh24.com',
   },
   {
-    title: 'مستندات بازارچه',
-    link: 'https://developers.paziresh24.com/apps',
+    title: 'وب سرویس ها',
+    link: 'https://developers.paziresh24.com/rest',
   },
   {
     title: 'گیت هاب پذیرش24',
