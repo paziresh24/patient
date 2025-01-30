@@ -1452,10 +1452,20 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       </React.Fragment>
                     }
                     className={classNames("__wab_instance", sty.dialog)}
-                    onOpenChange={generateStateOnChangeProp($state, [
-                      "dialog",
-                      "open"
-                    ])}
+                    onOpenChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "dialog",
+                        "open"
+                      ]).apply(null, eventArgs);
+
+                      if (
+                        eventArgs.length > 1 &&
+                        eventArgs[1] &&
+                        eventArgs[1]._plasmic_state_init_
+                      ) {
+                        return;
+                      }
+                    }}
                     open={generateStateValueProp($state, ["dialog", "open"])}
                     title={
                       <div
@@ -1919,10 +1929,20 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     "visitOnline"
                   )
                 })}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "dialog3",
-                  "open"
-                ])}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["dialog3", "open"]).apply(
+                    null,
+                    eventArgs
+                  );
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
                 open={generateStateValueProp($state, ["dialog3", "open"])}
                 title={
                   <div
@@ -2120,11 +2140,13 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                         sty.textarea
                       )}
                       name={"description"}
-                      onChange={e => {
-                        generateStateOnChangeProp($state, [
-                          "textarea",
-                          "value"
-                        ])(e.target.value);
+                      onChange={async (...eventArgs: any) => {
+                        (e => {
+                          generateStateOnChangeProp($state, [
+                            "textarea",
+                            "value"
+                          ])(e.target.value);
+                        }).apply(null, eventArgs);
                       }}
                       placeholder={"\u062a\u0648\u0636\u06cc\u062d\u0627\u062a"}
                       ref={ref => {
@@ -2147,11 +2169,21 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                         )
                       })}
                       name={"book-id"}
-                      onChange={(...eventArgs) => {
-                        generateStateOnChangeProp($state, [
-                          "textInput",
-                          "value"
-                        ])((e => e.target?.value).apply(null, eventArgs));
+                      onChange={async (...eventArgs: any) => {
+                        ((...eventArgs) => {
+                          generateStateOnChangeProp($state, [
+                            "textInput",
+                            "value"
+                          ])((e => e.target?.value).apply(null, eventArgs));
+                        }).apply(null, eventArgs);
+
+                        if (
+                          eventArgs.length > 1 &&
+                          eventArgs[1] &&
+                          eventArgs[1]._plasmic_state_init_
+                        ) {
+                          return;
+                        }
                       }}
                       type={"hidden"}
                       value={
@@ -2175,10 +2207,20 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                   </Stack__>
                 }
                 className={classNames("__wab_instance", sty.dialog2)}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "dialog2",
-                  "open"
-                ])}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["dialog2", "open"]).apply(
+                    null,
+                    eventArgs
+                  );
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
                 open={generateStateValueProp($state, ["dialog2", "open"])}
                 title={
                   <div
