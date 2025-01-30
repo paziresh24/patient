@@ -10,7 +10,8 @@ export const getAverageWaitingTime = async ({ slug }: GetAverageWaitingTimeParam
     Sentry.captureMessage(`get average waiting time: slug:${slug}`);
   }
 
-  return {
-    ...response,
-  };
+  return response?.list?.map((item: any) => ({
+    ...item,
+    ...(item?.avg_waiting_time && { waiting_time_title: Math.ceil(item?.avg_waiting_time / 5) * 5 + ' دقیقه' }),
+  }));
 };
