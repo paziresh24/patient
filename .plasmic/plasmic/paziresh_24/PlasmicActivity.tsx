@@ -405,10 +405,12 @@ function PlasmicActivity__RenderFunc(props: {
                 data-plasmic-name={"popoverCore"}
                 data-plasmic-override={overrides.popoverCore}
                 className={classNames("__wab_instance", sty.popoverCore)}
-                onOpenChange={generateStateOnChangeProp($state, [
-                  "popoverCore",
-                  "open"
-                ])}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "popoverCore",
+                    "open"
+                  ]).apply(null, eventArgs);
+                }}
                 open={generateStateValueProp($state, ["popoverCore", "open"])}
                 overlay={
                   <div
