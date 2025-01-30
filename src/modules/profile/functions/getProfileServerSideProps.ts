@@ -286,7 +286,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             if (averageWaitingTimeData.status === 'fulfilled') {
               profileData.feedbacks = {
                 ...profileData.feedbacks,
-                waiting_time_info: averageWaitingTimeData?.value?.result,
+                waiting_time_info: averageWaitingTimeData?.value,
               };
             }
           }

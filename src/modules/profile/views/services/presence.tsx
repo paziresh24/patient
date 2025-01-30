@@ -162,7 +162,7 @@ export const Presence = memo((props: PresenceProps) => {
           description: [
             'امکان دریافت زودترین نوبت',
             mainCenterWaitingTime?.waiting_time_title &&
-              `میانگین زمان انتظار تا ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
+              `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
           ].filter(Boolean),
         }}
         footer={{

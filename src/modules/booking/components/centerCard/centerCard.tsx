@@ -71,7 +71,7 @@ export const CenterCard = (props: CenterCardProps) => {
             )}
             {!!waitingTimeInfo?.waiting_time_title && (
               <Text fontSize="sm" className="block w-full px-4 pb-4 text-slate-600">
-                میانگین زمان انتظار تا ویزیت: <strong>{waitingTimeInfo?.waiting_time_title}</strong>
+                طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>{waitingTimeInfo?.waiting_time_title}</strong>
               </Text>
             )}
           </>

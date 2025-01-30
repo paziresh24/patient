@@ -79,7 +79,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
           'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
           !duration && 'تا <strong>۳ روز</strong> می‌توانید هر سوالی دارید از پزشک بپرسید',
-          !isEmpty(waitingTime) && `میانگین زمان انتظار تا ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
+          !isEmpty(waitingTime) && `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
         ].filter(Boolean),
       }}
       footer={{

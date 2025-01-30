@@ -6,7 +6,12 @@ interface AverageWaitingTimeParams {
 }
 
 export const averageWaitingTime = async (params: AverageWaitingTimeParams) => {
-  return await apiGatewayClient.get(`/v1/feedbacks/average-waiting-time`, { params, timeout: 1000 });
+  return await apiGatewayClient.get(`/ravi/v3/avg-time-for-profile`, {
+    params: {
+      where: `(slug,eq,${params.slug})`,
+    },
+    timeout: 1000,
+  });
 };
 
 export const useAverageWaitingTime = (params: AverageWaitingTimeParams) =>
