@@ -92,6 +92,7 @@ const Page = ({ page, app }: any) => {
       showHeader={page?.layout?.show_header ?? false}
       showFooter={page?.layout?.show_footer ?? false}
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
+      className="!h-svh !min-h-svh !max-h-svh:"
     >
       <Seo title={page.name?.fa} noIndex />
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
