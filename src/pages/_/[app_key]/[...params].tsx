@@ -108,7 +108,9 @@ const Page = ({ page, app }: any) => {
             ref={iframeRef}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&src=${encodeURIComponent(embedSrc!)}`}
+            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
+              embedSrc!,
+            )}`}
           />
         )}
       </div>
