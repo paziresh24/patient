@@ -36,13 +36,13 @@ function constructUrlWithQuery(template: string, queryParams: any) {
   const queryString = new URLSearchParams(queryParams).toString();
   if (queryPart) {
     const existingQueryParams = new URLSearchParams(queryPart);
-    for (const [key, value] of queryParams) {
+    for (const [key, value] of Object.entries<string>(queryParams)) {
       existingQueryParams.set(key, value);
     }
-    return `${template}?${existingQueryParams.toString()}`;
+    return `${_}?${existingQueryParams.toString()}`;
   }
 
-  return queryString ? `${template}?${queryString}` : template;
+  return queryString ? `${_}?${queryString}` : template;
 }
 const Page = ({ page, app }: any) => {
   const {

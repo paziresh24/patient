@@ -43,6 +43,7 @@ import { Fragment } from '@/common/fragment';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import ErrorPage from '@/modules/profile/components/errorPage';
 
 const { publicRuntimeConfig } = config();
 
@@ -65,6 +66,7 @@ const DoctorProfile = ({
   shouldUseIncrementPageView,
   fragmentComponents,
   getOnlyHasuraProfileData,
+  status,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -226,6 +228,10 @@ const DoctorProfile = ({
     customize,
     seo: { breadcrumbs, slug },
   };
+
+  if ([404, 500, 504, 410].includes(status)) {
+    return <ErrorPage statusCode={status} />;
+  }
 
   return (
     <RaviGlobalContextsProvider>
