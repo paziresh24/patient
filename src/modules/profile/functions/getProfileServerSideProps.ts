@@ -98,8 +98,46 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         };
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        context.res.statusCode = 410;
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          context.res.statusCode = 410;
+          return {
+            props: {
+              centers: [],
+              information: {},
+              expertises: {},
+              feedbacks: {},
+              media: {},
+              symptomes: {},
+              history: {},
+              onlineVisit: {},
+              similarLinks: [],
+              fragmentComponents: {},
+              slug: slugFormmated,
+              status: context.res.statusCode,
+            },
+          };
+        }
+        if (error.message.includes('timeout')) {
+          context.res.statusCode = 504;
+          return {
+            props: {
+              centers: [],
+              information: {},
+              expertises: {},
+              feedbacks: {},
+              media: {},
+              symptomes: {},
+              history: {},
+              onlineVisit: {},
+              similarLinks: [],
+              fragmentComponents: {},
+              slug: slugFormmated,
+              status: context.res.statusCode,
+            },
+          };
+        }
+        context.res.statusCode = error.response?.status ?? 500;
         return {
           props: {
             centers: [],
@@ -113,10 +151,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             similarLinks: [],
             fragmentComponents: {},
             slug: slugFormmated,
+            status: context.res.statusCode,
           },
         };
       }
-      console.error('full-profile-error', error);
     }
 
     let shouldUseProvider: boolean = false;
@@ -417,6 +455,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           raviComponentTopOrderProfile: raviComponentTopOrderProfile,
         },
         getOnlyHasuraProfileData,
+        status: context.res.statusCode,
       },
     };
   } catch (error) {
