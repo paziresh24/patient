@@ -12,6 +12,7 @@ interface Window {
   najvaUserSubscribed: any;
   clarity: any;
   gozarLogin: any;
+  isMessageListenerAdded: any;
 }
 
 declare const window: Window;

@@ -394,7 +394,10 @@ const BookingSteps = (props: BookingStepsProps) => {
     );
   };
 
+  const [bookRequestLoading, setBookRequestLoading] = useState(false);
+
   const handleBookRequest = async (dataForm: TurnRequestInformation) => {
+    setBookRequestLoading(true);
     const { data } = await bookRequest.mutateAsync({
       center_id: center.id,
       service_id: service.id,
@@ -410,6 +413,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (data.status === ClinicStatus.SUCCESS) {
       return router.push(`/receipt/${center.id}/${data.result.book_request_id}`);
     }
+    setBookRequestLoading(false);
 
     toast.error(data.message);
   };
@@ -821,7 +825,9 @@ const BookingSteps = (props: BookingStepsProps) => {
             rulesBoxTitle: 'شرایط دریافت نوبت از پذیرش24',
             uploadRequired: services.find((item: any) => item.service_id === service.id)?.upload_required,
             getData: () => {},
-            loading: bookRequest.isLoading,
+            loading: bookRequest.isLoading || bookRequestLoading,
+            center_id: center.id,
+            service_id: service.id,
           }}
           nextStep={(data: TurnRequestInformation) => {
             if (!data.description) return toast.error('لطفا توضیحات را تکمیل کنید.');
