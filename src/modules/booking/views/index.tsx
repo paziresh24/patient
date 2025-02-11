@@ -238,6 +238,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       ...growthbook.getAttributes(),
       slug,
       center_id: center?.id,
+      service_id: service?.id,
     });
 
     return () => {
@@ -245,6 +246,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         ...growthbook.getAttributes(),
         slug: undefined,
         center_id: undefined,
+        service_id: undefined,
       });
     };
   }, [slug, center]);
