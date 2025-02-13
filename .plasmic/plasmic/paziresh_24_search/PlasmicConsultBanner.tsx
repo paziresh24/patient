@@ -339,28 +339,8 @@ function PlasmicConsultBanner__RenderFunc(props: {
                   data-plasmic-name={"apiRequest"}
                   data-plasmic-override={overrides.apiRequest}
                   className={classNames("__wab_instance", sty.apiRequest)}
-                  errorDisplay={
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text___3Ue9
-                      )}
-                    >
-                      {"Error fetching data"}
-                    </div>
-                  }
-                  loadingDisplay={
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text___4Ow8D
-                      )}
-                    >
-                      {"Loading..."}
-                    </div>
-                  }
+                  errorDisplay={null}
+                  loadingDisplay={null}
                   method={"GET"}
                   onError={async (...eventArgs: any) => {
                     generateStateOnChangeProp($state, [

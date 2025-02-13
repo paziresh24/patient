@@ -22,21 +22,27 @@ import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
-import { useFeatureValue, useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
+import classNames from '@/common/utils/classNames';
+import getConfig from 'next/config';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
+const { publicRuntimeConfig } = getConfig();
+import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
-const Search = ({ host }: any) => {
+const Search = ({ host, fragmentComponents }: any) => {
+  console.log('features:', fragmentComponents);
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -51,7 +57,8 @@ const Search = ({ host }: any) => {
   } = useRouter();
 
   const { handleChange, filters } = useFilterChange();
-  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems, selectedCategory, isConsult } = useSearch();
+  const { isLanding, isLoading, total, seoInfo, selectedFilters, result, search, orderItems, selectedCategory, isConsult, responseData } =
+    useSearch();
   const setUserSearchValue = useSearchStore(state => state.setUserSearchValue);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -63,6 +70,9 @@ const Search = ({ host }: any) => {
   const showConsultBanner = useFeatureIsOn('search:consult-banner');
   const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
+  const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
+  const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
+  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -85,26 +95,28 @@ const Search = ({ host }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        splunkInstance('search').sendEvent({
-          group: 'search_metrics',
-          type: 'search_view',
-          event: {
-            filters: selectedFilters,
-            result_count: result.length,
-            location: city.en_slug,
-            ...(geoLocation ?? null),
-            city_id: city.id,
-            query_id: search.query_id,
-            user_id: userInfo?.id ?? null,
-            user_type: userInfo.provider?.job_title ?? 'normal-user',
-            url: {
-              href: window.location.href,
-              qurey: { ...queries },
-              pathname: window.location.pathname,
-              host: window.location.host,
+        if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
+          splunkInstance('search').sendEvent({
+            group: 'search_metrics',
+            type: 'search_view',
+            event: {
+              filters: selectedFilters,
+              result_count: result.length,
+              location: city.en_slug,
+              ...(geoLocation ?? null),
+              city_id: city.id,
+              query_id: search.query_id,
+              user_id: userInfo?.id ?? null,
+              user_type: userInfo.provider?.job_title ?? 'normal-user',
+              url: {
+                href: window.location.href,
+                qurey: { ...queries },
+                pathname: window.location.pathname,
+                host: window.location.host,
+              },
             },
-          },
-        });
+          });
+        }
 
         splunkInstance('search').sendBatchEvent({
           group: 'search_metrics',
@@ -151,65 +163,118 @@ const Search = ({ host }: any) => {
     }
   }, [result, userPending, isLoading, growthbook.ready]);
 
+  const handleNextPage = () => {
+    const currentPage = (queries?.page as string) ? (queries?.page as string) : 1;
+    changeRoute({
+      query: {
+        page: +currentPage + 1,
+      },
+      scroll: false,
+    });
+  };
+
   return (
     <>
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion key={asPath.toString()} overlay />
+        <Suggestion
+          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+          key={asPath.toString()}
+          overlay
+        />
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
-        <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-s-5">
+        <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
           {!isLanding && <Filter isLoading={isLoading} />}
-          <div className="flex flex-col w-full">
-            {!isLanding && !isMobile && (
-              <div className="items-center justify-between hidden mb-3 md:flex">
-                {showPlasmicSort ? (
-                  <Fragment
-                    name="Sort"
-                    props={{
-                      orderItems: orderItems,
-                      selectedSort: filters['sortBy'],
-                      selectedTurn: filters['freeturn'],
-                      total: addCommas(total),
-                      isLoading: isLoading,
-                      onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
-                      onChangeSort: (value: any) => handleChange('sortBy', value),
-                    }}
-                  />
-                ) : (
-                  <>
-                    <Sort />
-                    {isLoading ? (
-                      <Skeleton w="5rem" h="1rem" rounded="full" />
-                    ) : (
-                      <Text fontSize="sm" fontWeight="semiBold">
-                        {addCommas(total)} نتیجه
-                      </Text>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-            {customize.showConsultServices &&
-              showConsultBanner &&
-              (showPlasmicConsultBanner ? (
-                <div className="mb-3 md:hidden">
-                  <Fragment
-                    name="ConsultBanner"
-                    props={{
-                      categoryValue: selectedCategory?.value,
-                      categoryTitle: selectedCategory?.title,
-                      isHide: isConsult,
-                    }}
-                  />
+          {fragmentComponents?.showPlasmicResult || showPlasmicResult ? (
+            <SearchGlobalContextsProvider>
+              <Fragment
+                name="ResultView"
+                props={{
+                  isLanding: isLanding,
+                  //banner
+                  categoryValue: selectedCategory?.value,
+                  categoryTitle: selectedCategory?.title,
+                  isHideConsultBanner: isConsult,
+                  // sort
+                  orderItems: orderItems,
+                  selectedSort: filters['sortBy'],
+                  selectedTurn: filters['freeturn'],
+                  isLoadingResult: isLoading,
+                  onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
+                  onChangeSort: (value: any) => handleChange('sortBy', value),
+                  totalResult2: addCommas(total),
+                  // result
+                  searchResultResponse: {
+                    ...responseData,
+                    search: {
+                      ...search,
+                      result,
+                    },
+                  },
+                  nextPageTrigger: handleNextPage,
+                  imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+                  location: {
+                    city_name: city?.en_slug,
+                    city_id: city?.id,
+                    ...geoLocation,
+                  },
+                  paginationLoadingStatus: isLoading,
+                }}
+              />
+            </SearchGlobalContextsProvider>
+          ) : (
+            <div className="flex flex-col w-full">
+              {!isLanding && !isMobile && (
+                <div className="items-center justify-between hidden mb-3 md:flex">
+                  {fragmentComponents?.showPlasmicSort || showPlasmicSort ? (
+                    <Fragment
+                      name="Sort"
+                      props={{
+                        orderItems: orderItems,
+                        selectedSort: filters['sortBy'],
+                        selectedTurn: filters['freeturn'],
+                        total: addCommas(total),
+                        isLoading: isLoading,
+                        onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
+                        onChangeSort: (value: any) => handleChange('sortBy', value),
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <Sort />
+                      {isLoading ? (
+                        <Skeleton w="5rem" h="1rem" rounded="full" />
+                      ) : (
+                        <Text fontSize="sm" fontWeight="semiBold">
+                          {addCommas(total)} نتیجه
+                        </Text>
+                      )}
+                    </>
+                  )}
                 </div>
-              ) : (
-                <ConsultBanner />
-              ))}
-            <Result />
-          </div>
+              )}
+              {customize.showConsultServices &&
+                showConsultBanner &&
+                (showPlasmicConsultBanner ? (
+                  <div className="mb-3 md:hidden">
+                    <Fragment
+                      name="ConsultBanner"
+                      props={{
+                        categoryValue: selectedCategory?.value,
+                        categoryTitle: selectedCategory?.title,
+                        isHide: isConsult,
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <ConsultBanner />
+                ))}
+              <Result />
+            </div>
+          )}
         </div>
         <div className="!mb-16">
           <SearchSeoBox />
@@ -236,6 +301,9 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         },
       };
     }
+    let showPlasmicSuggestion: boolean = false;
+    let showPlasmicResult: boolean = false;
+    let showPlasmicSort: boolean = false;
 
     try {
       const queryClient = new QueryClient();
@@ -265,9 +333,31 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      const host = context.req.headers.host;
+      const path = context.resolvedUrl;
+      const url = `https://${host}${path}`;
+      try {
+        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+        const growthbook = new GrowthBook(growthbookContext);
+        growthbook.setAttributes({ url });
+        await growthbook.loadFeatures({ timeout: 1000 });
+        // Plasmic
+        showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
+        showPlasmicResult = growthbook.isOn('search_plasmic_result');
+        showPlasmicSort = growthbook.isOn('search_plasmic_sort');
+      } catch (error) {
+        console.error(error);
+      }
+
       return {
         props: {
           dehydratedState: dehydrate(queryClient),
+          fragmentComponents: {
+            showPlasmicSuggestion,
+            showPlasmicResult,
+            showPlasmicSort,
+            url,
+          },
         },
       };
     } catch (error) {
@@ -284,4 +374,3 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
-

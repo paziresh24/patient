@@ -330,8 +330,7 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -1345,6 +1344,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicUnknownCityDialog.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "NYqLbXm7Qk5C",
+          "name": "ResultView",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicResultView.tsx",
+          "importSpec": {
+            "modulePath": "ResultView.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicResultView.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1572,6 +1584,16 @@
           "id": "__Q2-_MsbqBL",
           "name": "Icon38Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon38.tsx"
+        },
+        {
+          "id": "hUDlEFfdxuXu",
+          "name": "Icon39Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon39.tsx"
+        },
+        {
+          "id": "g8tjAQ5z_ZU_",
+          "name": "Icon40Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon40.tsx"
         }
       ],
       "images": [
@@ -1667,6 +1689,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "uv6x89TFSBmh",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -1677,7 +1705,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -2135,6 +2164,19 @@
           "scheme": "blackbox",
           "componentType": "component",
           "plumeType": "triggered-overlay"
+        },
+        {
+          "id": "qb59XTke1gWO",
+          "name": "ReviewRateAndReviews",
+          "type": "managed",
+          "projectId": "qQzsBf58SqzNJX45iggq96",
+          "renderModuleFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndReviews.tsx",
+          "importSpec": {
+            "modulePath": "ReviewRateAndReviews.tsx"
+          },
+          "cssFilePath": "plasmic/ravi_r_r/PlasmicReviewRateAndReviews.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -2417,6 +2459,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "UCtGIfv1QcnE",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -2450,8 +2498,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -2482,8 +2529,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",
@@ -3081,6 +3127,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "2xgnDZQ0MW9j",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [
@@ -3091,8 +3143,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -4003,6 +4054,19 @@
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileBreadcrumbsItems.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "-M0f8W0T-8eT",
+          "name": "ProfileGallery",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileGallery.tsx",
+          "importSpec": {
+            "modulePath": "ProfileGallery.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileGallery.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -4174,6 +4238,12 @@
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "bNZsEb_qQE7u",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
         }
       ],
       "customFunctions": [

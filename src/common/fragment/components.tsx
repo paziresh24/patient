@@ -10,8 +10,10 @@ const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/pa
 const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
 const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
 const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
+const PlasmicReviewRateAndReviews = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews'));
 const PlasmicRecentSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch'));
 
+import { PlasmicReviewRateAndReviews__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
 import { PlasmicReviewProgressList__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList';
 import PlasmicReceiptActionButtons, {
   PlasmicReceiptActionButtons__ArgProps,
@@ -37,6 +39,7 @@ import PlasmicProfileHead, { PlasmicProfileHead__ArgProps } from '.plasmic/plasm
 import PlasmicProfileAbout, { PlasmicProfileAbout__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
 import PlasmicProfileActivity, { PlasmicProfileActivity__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileActivity';
 import PlasmicProfileSeo, { PlasmicProfileSeo__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo';
+import PlasmicProfileGallery, { PlasmicProfileGallery__ArgProps } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery';
 import PlasmicFilterListView, { PlasmicFilterListView__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicFilterListView';
 import PlasmicFilterExpertiseView, {
   PlasmicFilterExpertiseView__ArgProps,
@@ -52,6 +55,7 @@ import PlasmicSeoBox, { PlasmicSeoBox__ArgProps } from '.plasmic/plasmic/pazires
 import { PlasmicRecentSearch__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 import PlasmicSort, { PlasmicSort__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSort';
 import PlasmicConsultBanner, { PlasmicConsultBanner__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicConsultBanner';
+import PlasmicResultView, { PlasmicResultView__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicResultView';
 
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
@@ -71,6 +75,12 @@ export const Components = {
     Component: PlasmicProgressList,
     id: 'xpGRRNKB86D2',
     propsAllowed: PlasmicReviewProgressList__ArgProps,
+    projectId: 'qQzsBf58SqzNJX45iggq96',
+  },
+  RateAndReviews: {
+    Component: PlasmicReviewRateAndReviews,
+    id: 'qb59XTke1gWO',
+    propsAllowed: PlasmicReviewRateAndReviews__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   ReviewList: {
@@ -176,6 +186,12 @@ export const Components = {
     propsAllowed: PlasmicProfileSeo__ArgProps,
     projectId: '7r312uiqyadpVPdnRoAggk',
   },
+  ProfileGallery: {
+    Component: PlasmicProfileGallery,
+    id: '-M0f8W0T-8eT',
+    propsAllowed: PlasmicProfileGallery__ArgProps,
+    projectId: '7r312uiqyadpVPdnRoAggk',
+  },
   FilterListView: {
     Component: PlasmicFilterListView,
     id: 'Z5K_XiJUvXFD',
@@ -242,5 +258,10 @@ export const Components = {
     propsAllowed: PlasmicConsultBanner__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
+  ResultView: {
+    Component: PlasmicResultView,
+    id: 'NYqLbXm7Qk5C',
+    propsAllowed: PlasmicResultView__ArgProps,
+    projectId: 'sMdpLWyxbzDCruwMRffW2m',
+  },
 };
-

@@ -672,7 +672,7 @@ function PlasmicServices__RenderFunc(props: {
                 dangerouslySetInnerHTML={{
                   __html: (() => {
                     try {
-                      return `میانگین زمان انتظار تا ویزیت: <b>${
+                      return `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${
                         $props.waitingTimeInfo.find(
                           item => item.center_id === "5532"
                         ).waiting_time_title

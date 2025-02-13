@@ -326,6 +326,14 @@ function PlasmicFilterRow__RenderFunc(props: {
                     const order_items = $props.items.order_items;
                     const allFilters = $props.items.filters;
                     const categories = $props.items.categories;
+                    const freeturnItems = {
+                      all: "هر زمان",
+                      today: "امروز",
+                      tomorrow: "تا فردا",
+                      nextThreeDays: "تا سه روز آینده",
+                      nextFiveDays: "تا پنج روز آینده",
+                      nextSevenDays: "تا هفت روز آینده"
+                    };
                     const additionalItems = [
                       {
                         title: "فیلتر ها",
@@ -334,7 +342,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                       },
                       {
                         title: !!$props.selectedSort
-                          ? order_items[$props.selectedSort]
+                          ? order_items?.[$props.selectedSort]
                           : "مرتب سازی",
                         name: "order_items",
                         type: ""
@@ -345,14 +353,27 @@ function PlasmicFilterRow__RenderFunc(props: {
                               .find(cat => cat.value === selected.category)
                               ?.sub_categories.find(
                                 sub => sub.value === selected.sub_category
-                              ).title
+                              )?.title
                           : !!selected?.category
                           ? categories.find(
                               cat => cat.value === selected.category
-                            ).title
+                            )?.title || "تخصص"
                           : "تخصص",
                         name: "category",
                         type: "category"
+                      },
+                      {
+                        title: !!selected?.freeturn
+                          ? freeturnItems[selected.freeturn]
+                          : "زمان نوبت",
+                        name: "freeturn",
+                        type: "radio",
+                        items: Object.entries(freeturnItems).map(
+                          ([value, label]) => ({
+                            title: label,
+                            value
+                          })
+                        )
                       }
                     ];
 
@@ -366,7 +387,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                           title: selected[item.name]
                             ? item.items?.find(
                                 el => el.value === selected[item.name]
-                              )?.title || item.title
+                              )?.title || item?.title
                             : item.title
                         })) || [];
                     const filterList = [...additionalItems, ...customFilters];
@@ -398,14 +419,28 @@ function PlasmicFilterRow__RenderFunc(props: {
                   className={classNames("__wab_instance", sty.filterRowSingle)}
                   isSelected={(() => {
                     try {
-                      return (
-                        !!$props.items.selected_filters?.[currentItem.name] ||
-                        (Object.keys($props.items.selected_filters).length >
-                          0 &&
-                          currentItem.name === "filters") ||
-                        (!!$props.selectedSort &&
-                          currentItem.name === "order_items")
-                      );
+                      return (() => {
+                        const filters = $props.items.selected_filters;
+                        const allowedKeys = ["city", "text"];
+
+                        const filterKeys = Object.keys(filters);
+                        const isAllowed =
+                          (filterKeys.length == 2 &&
+                            !(
+                              filterKeys.includes("text") &&
+                              filterKeys.includes("city")
+                            )) ||
+                          (filterKeys.length == 1 &&
+                            !filterKeys.includes("text") &&
+                            !filterKeys.includes("city")) ||
+                          filterKeys.length >= 3;
+                        const result =
+                          !!filters?.[currentItem.name] ||
+                          (isAllowed && currentItem.name === "filters") ||
+                          (!!$props.selectedSort &&
+                            currentItem.name === "order_items");
+                        return result;
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -483,7 +518,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                       ];
                     }
 
-                    $steps["updateCategoriesDialogOpen"] =
+                    $steps["openCategory"] =
                       name === "category"
                         ? (() => {
                             const actionArgs = {
@@ -511,15 +546,11 @@ function PlasmicFilterRow__RenderFunc(props: {
                           })()
                         : undefined;
                     if (
-                      $steps["updateCategoriesDialogOpen"] != null &&
-                      typeof $steps["updateCategoriesDialogOpen"] ===
-                        "object" &&
-                      typeof $steps["updateCategoriesDialogOpen"].then ===
-                        "function"
+                      $steps["openCategory"] != null &&
+                      typeof $steps["openCategory"] === "object" &&
+                      typeof $steps["openCategory"].then === "function"
                     ) {
-                      $steps["updateCategoriesDialogOpen"] = await $steps[
-                        "updateCategoriesDialogOpen"
-                      ];
+                      $steps["openCategory"] = await $steps["openCategory"];
                     }
 
                     $steps["openSortDialog"] =
@@ -611,7 +642,7 @@ function PlasmicFilterRow__RenderFunc(props: {
 
                     $steps["setSelectedObject"] =
                       $props.items.filters?.find(filter => filter.name === name)
-                        ?.type === "radio"
+                        ?.type === "radio" || name == "freeturn"
                         ? (() => {
                             const actionArgs = {
                               variable: {
@@ -619,9 +650,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                                 variablePath: ["selectedFilterObject"]
                               },
                               operation: 0,
-                              value: $props.items.filters.find(
-                                filter => filter.name === name
-                              )
+                              value: currentItem
                             };
                             return (({
                               variable,
@@ -651,7 +680,7 @@ function PlasmicFilterRow__RenderFunc(props: {
 
                     $steps["updateOptionsDialogOpen"] =
                       $props.items.filters?.find(filter => filter.name === name)
-                        ?.type === "radio"
+                        ?.type === "radio" || name == "freeturn"
                         ? (() => {
                             const actionArgs = {
                               variable: {

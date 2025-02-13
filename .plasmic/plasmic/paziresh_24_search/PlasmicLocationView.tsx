@@ -88,13 +88,15 @@ export type PlasmicLocationView__ArgsType = {
   selectedProvinceId?: string;
   onClickCity?: (value: any) => void;
   onClickAllCities?: () => void;
+  onFocusInput?: (value: boolean) => void;
 };
 type ArgPropType = keyof PlasmicLocationView__ArgsType;
 export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
   "locations",
   "selectedProvinceId",
   "onClickCity",
-  "onClickAllCities"
+  "onClickAllCities",
+  "onFocusInput"
 );
 
 export type PlasmicLocationView__OverridesType = {
@@ -112,6 +114,7 @@ export interface DefaultLocationViewProps {
   selectedProvinceId?: string;
   onClickCity?: (value: any) => void;
   onClickAllCities?: () => void;
+  onFocusInput?: (value: boolean) => void;
   className?: string;
 }
 
@@ -222,33 +225,58 @@ function PlasmicLocationView__RenderFunc(props: {
         "locations-container"
       )}
     >
-      <TextInput
-        data-plasmic-name={"textInput"}
-        data-plasmic-override={overrides.textInput}
-        className={classNames("__wab_instance", sty.textInput)}
-        name={"search"}
-        onChange={async (...eventArgs: any) => {
-          ((...eventArgs) => {
-            generateStateOnChangeProp($state, ["textInput", "value"])(
-              (e => e.target?.value).apply(null, eventArgs)
-            );
-          }).apply(null, eventArgs);
+      <div
+        className={classNames(projectcss.all, sty.freeBox__gvQGw)}
+        onClick={async event => {
+          const $steps = {};
 
+          $steps["runOnFocusInput"] = true
+            ? (() => {
+                const actionArgs = {
+                  eventRef: $props["onFocusInput"],
+                  args: [true]
+                };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
           if (
-            eventArgs.length > 1 &&
-            eventArgs[1] &&
-            eventArgs[1]._plasmic_state_init_
+            $steps["runOnFocusInput"] != null &&
+            typeof $steps["runOnFocusInput"] === "object" &&
+            typeof $steps["runOnFocusInput"].then === "function"
           ) {
-            return;
+            $steps["runOnFocusInput"] = await $steps["runOnFocusInput"];
           }
         }}
-        placeholder={
-          "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0634\u0647\u0631 \u0647\u0627"
-        }
-        type={"text"}
-        value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
-      />
+      >
+        <TextInput
+          data-plasmic-name={"textInput"}
+          data-plasmic-override={overrides.textInput}
+          className={classNames("__wab_instance", sty.textInput)}
+          name={"search"}
+          onChange={async (...eventArgs: any) => {
+            ((...eventArgs) => {
+              generateStateOnChangeProp($state, ["textInput", "value"])(
+                (e => e.target?.value).apply(null, eventArgs)
+              );
+            }).apply(null, eventArgs);
 
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
+              return;
+            }
+          }}
+          placeholder={
+            "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0634\u0647\u0631 \u0647\u0627"
+          }
+          type={"text"}
+          value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
+        />
+      </div>
       <Stack__
         as={"div"}
         hasGap={true}

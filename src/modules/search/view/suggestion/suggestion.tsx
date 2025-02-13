@@ -16,18 +16,23 @@ import { Section } from '../../types/suggestion';
 import classNames from '@/common/utils/classNames';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { Fragment } from '@/common/fragment';
+import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
+import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+
 interface SuggestionProps {
   overlay?: boolean;
   defaultOpen?: boolean;
   autoFocus?: boolean;
   defaultInputValue?: string;
   setDefaultInputValue?: (value: string) => void;
+  showPlasmicSuggestion?: boolean;
 }
 
 export const Suggestion = (props: SuggestionProps) => {
-  const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue } = props;
+  const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue, showPlasmicSuggestion } = props;
   const router = useRouter();
+  const { selectedFilters } = useSearch();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const setGeoLocation = useSearchStore(state => state.setGeoLocation);
@@ -37,7 +42,6 @@ export const Suggestion = (props: SuggestionProps) => {
   const city = useSearchStore(state => state.city);
   const setCity = useSearchStore(state => state.setCity);
   const { changeRoute } = useSearchRouting();
-  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(userSearchValue ?? '');
   useDebounce(
     () => {
@@ -174,30 +178,33 @@ export const Suggestion = (props: SuggestionProps) => {
   const handleClickOverlay = () => {
     if (setDefaultInputValue && !!defaultInputValue) {
       setDefaultInputValue('');
-      setIsOpenSuggestion(false);
     }
+    setIsOpenSuggestion(false);
   };
+
   if (showPlasmicSuggestion) {
     return (
       <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
-        <Fragment
-          name="SearchInput"
-          props={{
-            onClickCity: (val: any) => {
-              onChangeCity({ ...val });
-            },
-            selectedCity: city,
-            defaultValue: defaultInputValue || '',
-            onClickOverlay: handleClickOverlay,
-            inputVal: debouncedSearchTerm,
-            onChangeInputVal: setUserSearchValue,
-            onFocusChange: (val: any) => setIsOpenSuggestion(val),
-          }}
-          variants={{
-            hasOverlay: overlay,
-            isFocus: isOpenSuggestion,
-          }}
-        />
+        <SearchGlobalContextsProvider>
+          <Fragment
+            name="SearchInput"
+            props={{
+              onClickCity: (val: any) => {
+                onChangeCity({ ...val });
+              },
+              selectedCity: city,
+              defaultValue: defaultInputValue || selectedFilters?.text || '',
+              onClickOverlay: handleClickOverlay,
+              inputVal: debouncedSearchTerm,
+              onChangeInputVal: setUserSearchValue,
+              onFocusChange: (val: any) => setIsOpenSuggestion(val),
+            }}
+            variants={{
+              hasOverlay: overlay,
+              isFocus: isOpenSuggestion,
+            }}
+          />
+        </SearchGlobalContextsProvider>
       </div>
     );
   }
@@ -246,4 +253,3 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
-

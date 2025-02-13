@@ -672,7 +672,9 @@ function PlasmicSearchInput__RenderFunc(props: {
                 $steps["runOnClickCities"] = await $steps["runOnClickCities"];
               }
             }}
-            showStartIcon={true}
+            showStartIcon={
+              hasVariant(globalVariants, "screen", "mobileOnly") ? true : true
+            }
             size={
               hasVariant(globalVariants, "screen", "mobileOnly")
                 ? "compact"
@@ -721,11 +723,17 @@ function PlasmicSearchInput__RenderFunc(props: {
                       const input = globalThis.window.document.getElementById(
                         $props.inputId
                       );
+                      const params = new globalThis.URLSearchParams(
+                        globalThis.window.location.search
+                      );
                       if (typeof window != "undefined" && input) {
                         return input.addEventListener("keypress", event => {
                           if (event.key === "Enter") {
                             event.preventDefault();
-                            return ($state.enterPress = `/s/?text=${$state.textInput.value}`);
+                            params.delete("text");
+                            const existingParams = params?.toString() || "";
+                            params.append("text", $state.textInput.value);
+                            return ($state.enterPress = `/s/?${params.toString()}`);
                           }
                         });
                       }

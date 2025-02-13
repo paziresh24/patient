@@ -247,7 +247,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     return {
                       search: {
                         query_id: "",
-                        total: $ctx.fetchedData?.entity?.totalHits ?? 0, // default to 0 if undefined
+                        total: $ctx.fetchedData?.entity?.totalHits ?? 0,
                         is_landing: false,
                         pagination: {
                           limit: $props.suggestionExecutionSource ? 0 : 10,

@@ -131,8 +131,8 @@ export const aside = (data: any) => {
       isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
       children: (props: any) => (
         <div className="md:hidden flex flex-col gap-y-3">
-          <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>
-          <FragmentRateReview profileData={profileData} />
+          {!fragmentComponents?.rateAndReviews && <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>}
+          <FragmentRateReview fragmentComponents={fragmentComponents} profileData={profileData} />
         </div>
       ),
     },

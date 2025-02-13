@@ -62,6 +62,7 @@ import {
 import ProfileActions from "../../ProfileActions"; // plasmic-import: VtINgkEb27Pn/component
 import ProfileInfo from "../../ProfileInfo"; // plasmic-import: rFaRrp2J8jq8/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
@@ -111,6 +112,7 @@ export type PlasmicProfileHead__OverridesType = {
   span?: Flex__<"span">;
   svg?: Flex__<"svg">;
   profileInfo?: Flex__<typeof ProfileInfo>;
+  embedHtml?: Flex__<typeof Embed>;
 };
 
 export interface DefaultProfileHeadProps {
@@ -481,17 +483,51 @@ function PlasmicProfileHead__RenderFunc(props: {
           }}
         />
       </div>
+      {(() => {
+        try {
+          return (() => {
+            const slugs = $ctx.Growthbook.features["profile::goftino"];
+            return slugs.includes($props.slug);
+          })();
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Embed
+          data-plasmic-name={"embedHtml"}
+          data-plasmic-override={overrides.embedHtml}
+          className={classNames("__wab_instance", sty.embedHtml)}
+          code={
+            '<script type="text/javascript">\r\n  !function(){var i="Zg7Y7J",a=window,d=document;function g(){var g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}"complete"===d.readyState?g():a.attachEvent?a.attachEvent("onload",g):a.addEventListener("load",g,!1);}();\r\n</script>'
+          }
+        />
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "profileActions", "viewCount", "span", "svg", "profileInfo"],
+  root: [
+    "root",
+    "profileActions",
+    "viewCount",
+    "span",
+    "svg",
+    "profileInfo",
+    "embedHtml"
+  ],
   profileActions: ["profileActions"],
   viewCount: ["viewCount", "span", "svg"],
   span: ["span"],
   svg: ["svg"],
-  profileInfo: ["profileInfo"]
+  profileInfo: ["profileInfo"],
+  embedHtml: ["embedHtml"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -503,6 +539,7 @@ type NodeDefaultElementType = {
   span: "span";
   svg: "svg";
   profileInfo: typeof ProfileInfo;
+  embedHtml: typeof Embed;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -570,6 +607,7 @@ export const PlasmicProfileHead = Object.assign(
     span: makeNodeComponent("span"),
     svg: makeNodeComponent("svg"),
     profileInfo: makeNodeComponent("profileInfo"),
+    embedHtml: makeNodeComponent("embedHtml"),
 
     // Metadata about props expected for PlasmicProfileHead
     internalVariantProps: PlasmicProfileHead__VariantProps,

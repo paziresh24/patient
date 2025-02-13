@@ -75,6 +75,7 @@ import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
+import Icon40Icon from "./icons/PlasmicIcon__Icon40"; // plasmic-import: g8tjAQ5z_ZU_/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -127,7 +128,8 @@ export type PlasmicSearchResults__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
+  noItemFound?: Flex__<"div">;
+  span?: Flex__<"span">;
   productCard?: Flex__<typeof ProductCard>;
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
@@ -1074,7 +1076,7 @@ function PlasmicSearchResults__RenderFunc(props: {
             (() => {
               try {
                 return (() => {
-                  return [
+                  const result = [
                     ...$props?.searchResultResponse?.search?.result?.slice(
                       0,
                       3
@@ -1088,6 +1090,31 @@ function PlasmicSearchResults__RenderFunc(props: {
                       : null,
                     ...$props?.searchResultResponse?.search?.result?.slice(3)
                   ]?.filter(Boolean);
+                  const firstMatchIndex = result.findIndex(item =>
+                    item?.topSuggestedCardFeature?.enable ||
+                    !item?.centers ||
+                    !$props?.location?.name
+                      ? false
+                      : !item?.centers
+                          ?.filter?.(center => center.id != "5532")
+                          ?.some?.(
+                            center =>
+                              center?.city_name === $props?.location?.name
+                          )
+                  );
+                  const newList = result.map((item, index) => {
+                    if (index === firstMatchIndex && $props.location.id != -1) {
+                      return {
+                        ...item,
+                        outside_of_location: true
+                      };
+                    }
+                    return {
+                      ...item,
+                      otside_of_location: false
+                    };
+                  });
+                  return newList;
                 })();
               } catch (e) {
                 if (
@@ -1104,10 +1131,8 @@ function PlasmicSearchResults__RenderFunc(props: {
             const currentIndex = __plasmic_idx_0;
             return (
               <div
-                data-plasmic-name={"freeBox"}
-                data-plasmic-override={overrides.freeBox}
-                className={classNames(projectcss.all, sty.freeBox, {
-                  [sty.freeBoxisHorizental]: hasVariant(
+                className={classNames(projectcss.all, sty.freeBox__a25Zy, {
+                  [sty.freeBoxisHorizental__a25ZysX3UT]: hasVariant(
                     $state,
                     "isHorizental",
                     "isHorizental"
@@ -1127,6 +1152,100 @@ function PlasmicSearchResults__RenderFunc(props: {
                   }
                 })()}
               >
+                {(() => {
+                  try {
+                    return currentItem.outside_of_location;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    data-plasmic-name={"noItemFound"}
+                    data-plasmic-override={overrides.noItemFound}
+                    className={classNames(projectcss.all, sty.noItemFound)}
+                  >
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__apXlz)}
+                    >
+                      <Icon40Icon
+                        className={classNames(projectcss.all, sty.svg__gd1Tp)}
+                        role={"img"}
+                      />
+
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__d3Bmq
+                        )}
+                      >
+                        <React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {
+                              "\u0646\u062a\u06cc\u062c\u0647 \u062f\u06cc\u06af\u0631\u06cc \u0645\u0631\u062a\u0628\u0637 \u0628\u0627 \u062c\u0633\u062a\u062c\u0648\u06cc \u0634\u0645\u0627 \u062f\u0631 "
+                            }
+                          </span>
+                          <React.Fragment>{""}</React.Fragment>
+                          {
+                            <span
+                              data-plasmic-name={"span"}
+                              data-plasmic-override={overrides.span}
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                projectcss.plasmic_default__inline,
+                                sty.span
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return $props.location.name;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "-";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </span>
+                          }
+                          <React.Fragment>{""}</React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f. "}
+                          </span>
+                          <React.Fragment>
+                            {
+                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
+                            }
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
                 <ProductCard
                   data-plasmic-name={"productCard"}
                   data-plasmic-override={overrides.productCard}
@@ -2115,208 +2234,206 @@ function PlasmicSearchResults__RenderFunc(props: {
         }}
       />
 
-      {(() => {
-        try {
-          return (
-            ($props.searchResultResponse.search.pagination.limit === 0
-              ? false
-              : $props.searchResultResponse.search.pagination.limit *
-                  $props.searchResultResponse.search.pagination.page <
-                $props.searchResultResponse.search.total) &&
-            $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
-              "statusType"
-            ) &&
-            /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
-              window.location.href
-            )
-          );
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <PeopleAlsoSearchForBox
-          data-plasmic-name={"peopleAlsoSearchForBox"}
-          data-plasmic-override={overrides.peopleAlsoSearchForBox}
-          className={classNames("__wab_instance", sty.peopleAlsoSearchForBox)}
-          querySuggestionResponse={(() => {
+      {false ? (
+        <div className={classNames(projectcss.all, sty.freeBox__pjMfG)}>
+          {(() => {
             try {
-              return $props.searchFooterQuerySuggestionResponseObject;
+              return (
+                ($props.searchResultResponse.search.pagination.limit === 0
+                  ? false
+                  : $props.searchResultResponse.search.pagination.limit *
+                      $props.searchResultResponse.search.pagination.page <
+                    $props.searchResultResponse.search.total) &&
+                $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
+                  "statusType"
+                ) &&
+                /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
+                  window.location.href
+                )
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return {
-                  statusType: "SUCCESS",
-                  details: "The process was successful",
-                  entity: {
-                    topQuerySuggestions: [
-                      "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                      "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                      "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                      "\u0627\u0631\u062a\u0648\u067e\u062f",
-                      "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                      "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                      "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                      "\u062f\u0627\u062e\u0644\u06cc"
-                    ],
-                    topQuerySuggestionsIncludeDocCount: [
-                      {
-                        query:
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <PeopleAlsoSearchForBox
+              data-plasmic-name={"peopleAlsoSearchForBox"}
+              data-plasmic-override={overrides.peopleAlsoSearchForBox}
+              className={classNames(
+                "__wab_instance",
+                sty.peopleAlsoSearchForBox
+              )}
+              querySuggestionResponse={(() => {
+                try {
+                  return $props.searchFooterQuerySuggestionResponseObject;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return {
+                      statusType: "SUCCESS",
+                      details: "The process was successful",
+                      entity: {
+                        topQuerySuggestions: [
                           "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                        docCount: 0
-                      },
-                      {
-                        query:
+                          "\u0627\u0631\u062a\u0648\u067e\u062f",
                           "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
                           "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                        docCount: 0
+                          "\u062f\u0627\u062e\u0644\u06cc"
+                        ],
+                        topQuerySuggestionsIncludeDocCount: [
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u062f\u0627\u062e\u0644\u06cc",
+                            docCount: 0
+                          }
+                        ],
+                        topQuerySuggestionsIncludeCategory: [
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            category:
+                              "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
+                            category:
+                              "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
+                            category:
+                              "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            category:
+                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0645\u0627\u0645\u0648\u06af\u0631\u0627\u0641\u06cc",
+                            category:
+                              "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647 \u0648 \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
+                            category:
+                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
+                            docCount: 0
+                          },
+                          {
+                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
+                            category:
+                              "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
+                            docCount: 0
+                          },
+                          {
+                            query:
+                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc \u0645\u0631\u062f\u0627\u0646",
+                            category:
+                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
+                            docCount: 0
+                          }
+                        ],
+                        searchTime: 217
                       },
-                      { query: "\u062f\u0627\u062e\u0644\u06cc", docCount: 0 }
-                    ],
-                    topQuerySuggestionsIncludeCategory: [
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        category:
-                          "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                        category:
-                          "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                        category:
-                          "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        category:
-                          "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0645\u0627\u0645\u0648\u06af\u0631\u0627\u0641\u06cc",
-                        category:
-                          "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647 \u0648 \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                        category:
-                          "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                        docCount: 0
-                      },
-                      {
-                        query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                        category:
-                          "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
-                        docCount: 0
-                      },
-                      {
-                        query:
-                          "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc \u0645\u0631\u062f\u0627\u0646",
-                        category:
-                          "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                        docCount: 0
-                      }
-                    ],
-                    searchTime: 217
-                  },
-                  path: "/api/qs/index/slim_clinic_query_su"
-                };
-              }
-              throw e;
-            }
-          })()}
-        />
-      ) : null}
-      {(() => {
-        try {
-          return $props.searchFooterSecondaryTasksObject.destination !== "";
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <SearchFooterSecondaryTasks
-          data-plasmic-name={"searchFooterSecondaryTasks"}
-          data-plasmic-override={overrides.searchFooterSecondaryTasks}
-          className={classNames(
-            "__wab_instance",
-            sty.searchFooterSecondaryTasks,
-            {
-              [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
-                $state,
-                "isHorizental",
-                "isHorizental"
-              )
-            }
-          )}
-          taskObject={(() => {
-            try {
-              return $props.searchFooterSecondaryTasksObject;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return {
-                  destination:
-                    "https://support.paziresh24.com/ticketing/?action=new",
-                  title:
-                    "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
-                  openInNewTab: false
-                };
-              }
-              throw e;
-            }
-          })()}
-        />
+                      path: "/api/qs/index/slim_clinic_query_su"
+                    };
+                  }
+                  throw e;
+                }
+              })()}
+            />
+          ) : null}
+          {false ? (
+            <SearchFooterSecondaryTasks
+              data-plasmic-name={"searchFooterSecondaryTasks"}
+              data-plasmic-override={overrides.searchFooterSecondaryTasks}
+              className={classNames(
+                "__wab_instance",
+                sty.searchFooterSecondaryTasks,
+                {
+                  [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
+                    $state,
+                    "isHorizental",
+                    "isHorizental"
+                  )
+                }
+              )}
+              taskObject={(() => {
+                try {
+                  return $props.searchFooterSecondaryTasksObject;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return {
+                      destination:
+                        "https://support.paziresh24.com/ticketing/?action=new",
+                      title:
+                        "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
+                      openInNewTab: false
+                    };
+                  }
+                  throw e;
+                }
+              })()}
+            />
+          ) : null}
+        </div>
       ) : null}
       {(() => {
         try {
@@ -2350,7 +2467,8 @@ const PlasmicDescendants = {
     "apiRequest",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
-    "freeBox",
+    "noItemFound",
+    "span",
     "productCard",
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
@@ -2370,10 +2488,12 @@ const PlasmicDescendants = {
   topSuggestedCard: ["topSuggestedCard"],
   resultCardsVerticalStack2: [
     "resultCardsVerticalStack2",
-    "freeBox",
+    "noItemFound",
+    "span",
     "productCard"
   ],
-  freeBox: ["freeBox", "productCard"],
+  noItemFound: ["noItemFound", "span"],
+  span: ["span"],
   productCard: ["productCard"],
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
@@ -2393,7 +2513,8 @@ type NodeDefaultElementType = {
   apiRequest: typeof ApiRequest;
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
-  freeBox: "div";
+  noItemFound: "div";
+  span: "span";
   productCard: typeof ProductCard;
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
@@ -2471,7 +2592,8 @@ export const PlasmicSearchResults = Object.assign(
     apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
-    freeBox: makeNodeComponent("freeBox"),
+    noItemFound: makeNodeComponent("noItemFound"),
+    span: makeNodeComponent("span"),
     productCard: makeNodeComponent("productCard"),
     paginationMoreButton: makeNodeComponent("paginationMoreButton"),
     noResultsBlockVerticalStack: makeNodeComponent(

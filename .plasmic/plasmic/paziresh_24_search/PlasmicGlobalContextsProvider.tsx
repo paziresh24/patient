@@ -217,7 +217,7 @@ export default function GlobalContextsProvider(
                   css={
                     embedCssProps && "css" in embedCssProps
                       ? embedCssProps.css!
-                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}\n.default-styles span {\n  font-size: 0.875rem !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.pl__z-50{\n  z-index: 99 !important;\n}"
+                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}\n.default-styles span {\n  font-size: 0.875rem !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.pl__z-50{\n  z-index: 99 !important;\n}"
                   }
                 >
                   {children}
