@@ -10,12 +10,9 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
-import { useMembership } from '@/modules/bookingV2/apis/membership';
-import BookingStepsV2 from '@/modules/bookingV2/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
-import { useFeatureValue } from '@growthbook/growthbook-react';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -26,20 +23,7 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
-  const isMembershipCity = useFeatureValue<any>('booking:membership-api|cities', { cities: [] });
-  const isMembershipUser = useFeatureValue<any>('booking:membership-api|doctor-list', { ids: [] });
   const { display_name, isLoading: profileNameLoading } = useProfile({ slug: router.query?.slug as string });
-
-  const { data: membershipData, isLoading: membershipLoading } = useMembership(
-    { provider_id: router.query.providerId as string },
-    {
-      enabled:
-        !!router.query.userId &&
-        (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
-          !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
-          !!isMembershipCity.cities?.includes?.('*')),
-    },
-  );
 
   const {
     data,
@@ -71,13 +55,7 @@ const Booking = () => {
     }
   }, [profileData]);
 
-  const isLoading =
-    fullProfileLoading ||
-    (!!router.query.userId &&
-      (!!isMembershipUser.ids?.includes?.(router.query?.userId) ||
-        !!isMembershipCity.cities?.includes?.(router.query?.cityName) ||
-        !!isMembershipCity.cities?.includes?.('*')) &&
-      membershipLoading);
+  const isLoading = fullProfileLoading;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
@@ -145,11 +123,7 @@ const Booking = () => {
             </div>
           )}
           <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
-            {membershipData?.data?.memberships?.some((center: any) => center.center_id === router.query.centerId) ? (
-              <BookingStepsV2 defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
-            ) : (
-              <BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />
-            )}
+            {<BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />}
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
