@@ -2851,6 +2851,36 @@
       }
     },
     {
+      "name": "Unnamed Style Token 5",
+      "type": "color",
+      "value": "#22C55E33",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "MRsRFvvpLrv_"
+      }
+    },
+    {
+      "name": "Unnamed Style Token 6",
+      "type": "color",
+      "value": "#22C55E33",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "xfy4-a3dA6R1"
+      }
+    },
+    {
+      "name": "Unnamed Style Token 7",
+      "type": "color",
+      "value": "#22C55E33",
+      "category": "color",
+      "meta": {
+        "projectId": "8NbkXymcLwvMUC2yXeRrWk",
+        "id": "E7pe0JlQT263"
+      }
+    },
+    {
       "name": "X Large",
       "type": "fontsize",
       "value": "1.25rem",

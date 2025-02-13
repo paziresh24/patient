@@ -201,7 +201,7 @@ function PlasmicCenterList__RenderFunc(props: {
             })()}
             inActive={(() => {
               try {
-                return !currentItem.isActive || !currentItem.isAvailable;
+                return !currentItem.isActive;
               } catch (e) {
                 if (
                   e instanceof TypeError ||

@@ -61,7 +61,6 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: -32RqKI9mlfN/codeComponent
 import BookingService from "../../BookingService"; // plasmic-import: Fbeul3tjKryJ/component
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import CenterList from "../../CenterList"; // plasmic-import: 4Y4p7schjdHw/component
 import CenterListService from "../../CenterListService"; // plasmic-import: oxKPcE6Kc5i3/component
@@ -96,8 +95,8 @@ export const PlasmicBookingServiceList__ArgProps = new Array<ArgPropType>(
 export type PlasmicBookingServiceList__OverridesType = {
   root?: Flex__<"div">;
   getFullProfileData?: Flex__<typeof ApiRequest>;
-  apiRequest?: Flex__<typeof ApiRequest>;
-  sideEffect?: Flex__<typeof SideEffect>;
+  svg?: Flex__<"svg">;
+  waitingApi?: Flex__<typeof ApiRequest>;
   centerListDialog?: Flex__<typeof Dialog>;
   centerList?: Flex__<typeof CenterList>;
   serviceListDialog?: Flex__<typeof Dialog>;
@@ -171,19 +170,19 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "apiRequest.data",
+        path: "waitingApi.data",
         type: "private",
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "apiRequest.error",
+        path: "waitingApi.error",
         type: "private",
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "apiRequest.loading",
+        path: "waitingApi.loading",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
@@ -192,7 +191,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         path: "centerListDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       },
       {
         path: "serviceListDialog.open",
@@ -251,23 +250,31 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         errorDisplay={null}
         loadingDisplay={
           <Icon15Icon
-            className={classNames(projectcss.all, sty.svg__o8Sgz)}
+            data-plasmic-name={"svg"}
+            data-plasmic-override={overrides.svg}
+            className={classNames(projectcss.all, sty.svg)}
             role={"img"}
           />
         }
         method={"GET"}
-        onError={generateStateOnChangeProp($state, [
-          "getFullProfileData",
-          "error"
-        ])}
-        onLoading={generateStateOnChangeProp($state, [
-          "getFullProfileData",
-          "loading"
-        ])}
-        onSuccess={generateStateOnChangeProp($state, [
-          "getFullProfileData",
-          "data"
-        ])}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "getFullProfileData",
+            "error"
+          ]).apply(null, eventArgs);
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "getFullProfileData",
+            "loading"
+          ]).apply(null, eventArgs);
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "getFullProfileData",
+            "data"
+          ]).apply(null, eventArgs);
+        }}
         url={(() => {
           try {
             return `https://api.paziresh24.com/doctor/v1/full-profile/${$props.slug}`;
@@ -282,141 +289,294 @@ function PlasmicBookingServiceList__RenderFunc(props: {
           }
         })()}
       >
-        <ApiRequest
-          data-plasmic-name={"apiRequest"}
-          data-plasmic-override={overrides.apiRequest}
-          className={classNames("__wab_instance", sty.apiRequest)}
-          errorDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__xdYt
-              )}
-            >
-              {"Error fetching data"}
-            </div>
-          }
-          loadingDisplay={
-            <Icon15Icon
-              className={classNames(projectcss.all, sty.svg__oQMsp)}
-              role={"img"}
-            />
-          }
-          method={"GET"}
-          onError={generateStateOnChangeProp($state, ["apiRequest", "error"])}
-          onLoading={generateStateOnChangeProp($state, [
-            "apiRequest",
-            "loading"
-          ])}
-          onSuccess={generateStateOnChangeProp($state, ["apiRequest", "data"])}
-          url={(() => {
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__gTjnf)}
+        >
+          {(() => {
             try {
-              return `https://apigw.paziresh24.com/v1/feedbacks/average-waiting-time?slug=${$props.slug}`;
+              return $state.getFullProfileData.data.data.centers?.some(
+                center => center.id == 5532 && center.is_active
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return undefined;
+                return true;
               }
               throw e;
             }
-          })()}
-        >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__gTjnf)}
-          >
-            {(() => {
-              try {
-                return $state.getFullProfileData.data.data.centers?.some(
-                  center => center.id == 5532 && center.is_active
-                );
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+          })() ? (
+            <BookingService
+              buttonContent={(() => {
+                try {
+                  return `شروع ویزیت با ${$state.getFullProfileData.data.data.display_name}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })() ? (
-              <BookingService
-                buttonContent={(() => {
-                  try {
-                    return `شروع ویزیت با ${$state.getFullProfileData.data.data.display_name}`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
+              })()}
+              className={classNames(
+                "__wab_instance",
+                sty.bookingService__iHeOr
+              )}
+              content={(() => {
+                try {
+                  return (() => {
+                    const waitingTime = $state.waitingApi?.data?.result?.find(
+                      center => center.center_id == 5532
+                    )?.waiting_time_title;
+                    return [
+                      { text: "تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی" },
+                      { text: "امکان برقراری تماس با این پزشک وجود دارد." },
+                      {
+                        text: "تا <b>3 روز</b> می‌توانید هر سوالی دارید از پزشک بپرسید"
+                      },
+                      !!waitingTime && {
+                        text: `میانگین زمان انتظار تا ویزیت: <b>${waitingTime}</b>`
+                      }
+                    ];
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
                   }
-                })()}
-                className={classNames(
-                  "__wab_instance",
-                  sty.bookingService__iHeOr
-                )}
-                content={(() => {
-                  try {
-                    return (() => {
-                      const waitingTime = $state.apiRequest?.data?.result?.find(
-                        center => center.center_id == 5532
-                      )?.waiting_time_title;
-                      return [
-                        { text: "تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی" },
-                        { text: "امکان برقراری تماس با این پزشک وجود دارد." },
-                        {
-                          text: "تا <b>3 روز</b> می‌توانید هر سوالی دارید از پزشک بپرسید"
-                        },
-                        !!waitingTime && {
-                          text: `میانگین زمان انتظار تا ویزیت: <b>${waitingTime}</b>`
-                        }
-                      ];
-                    })();
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
-                    }
-                    throw e;
+                  throw e;
+                }
+              })()}
+              errorMessage={(() => {
+                try {
+                  return `درحال حاضر نوبت جدیدی برای ${$state.getFullProfileData.data.data.display_name} تعریف نشده است.`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
                   }
-                })()}
-                errorMessage={(() => {
-                  try {
-                    return `درحال حاضر نوبت جدیدی برای ${$state.getFullProfileData.data.data.display_name} تعریف نشده است.`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                isOnlineType={true}
-                onClick={async () => {
-                  const $steps = {};
+                  throw e;
+                }
+              })()}
+              isOnlineType={true}
+              onClick={async () => {
+                const $steps = {};
 
-                  $steps["goToPage"] = true
+                $steps["goToPage"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return `/booking/${
+                              $props.slug
+                            }?centerId=5532&skipTimeSelectStep=true&serviceId=${
+                              $state.getFullProfileData?.data?.data?.centers?.find(
+                                center => center?.id == 5532
+                              )?.services?.[0]?.id
+                            }`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
+                ) {
+                  $steps["goToPage"] = await $steps["goToPage"];
+                }
+              }}
+              onlineVisitChannelTypes={(() => {
+                try {
+                  return $state.getFullProfileData.data.data
+                    .online_visit_channel_types;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
+              price={(() => {
+                try {
+                  return $state.getFullProfileData.data.data.centers?.find(
+                    center => center.id == 5532
+                  )?.services?.[0]?.free_price;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              title={
+                "\u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646 \u0622\u0646\u0644\u0627\u06cc\u0646 \u0648\u06cc\u0632\u06cc\u062a \u0634\u0648\u06cc\u062f"
+              }
+            />
+          ) : null}
+          {(() => {
+            try {
+              return (
+                $state.getFullProfileData.data.data.centers?.filter(
+                  center => center.id !== 5532
+                )?.length !== 0
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <BookingService
+              buttonContent={
+                "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"
+              }
+              className={classNames(
+                "__wab_instance",
+                sty.bookingService___5MdRf
+              )}
+              content={(() => {
+                try {
+                  return (() => {
+                    const waitingTime = $state.waitingApi?.data?.result?.filter(
+                      center => center.center_id !== 5532
+                    )[0]?.waiting_time_title;
+                    return [
+                      { text: "امکان دریافت زودترین نوبت" },
+                      !!waitingTime && {
+                        text: `میانگین زمان انتظار تا ویزیت: <b>${waitingTime}</b>`
+                      }
+                    ];
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return {
+                      content: [
+                        {
+                          text: "\u0627\u0645\u06a9\u0627\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0632\u0648\u062f\u062a\u0631\u06cc\u0646 \u0646\u0648\u0628\u062a"
+                        }
+                      ]
+                    };
+                  }
+                  throw e;
+                }
+              })()}
+              errorMessage={(() => {
+                try {
+                  return `درحال حاضر نوبت جدیدی برای ${$state.getFullProfileData.data.data.display_name} تعریف نشده است.`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              groupExpertiseSlug={(() => {
+                try {
+                  return $state.getFullProfileData.data.data.group_expertises[0]
+                    .en_slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              isOnlineType={false}
+              isUnAvailable={(() => {
+                try {
+                  return (
+                    $state.getFullProfileData.data.data.centers.filter(
+                      center => center.id != 5532 && center.is_active
+                    ).length == 0
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
+              onClick={async () => {
+                const $steps = {};
+
+                $steps["goToPage"] =
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length == 1 &&
+                  !$state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].is_only_in_app.status &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].services.length == 1 &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].is_center != "mashhad"
                     ? (() => {
                         const actionArgs = {
                           destination: (() => {
                             try {
-                              return `/booking/${
-                                $props.slug
-                              }?centerId=5532&skipTimeSelectStep=true&serviceId=${
-                                $state.getFullProfileData?.data?.data?.centers?.find(
-                                  center => center?.id == 5532
-                                )?.services?.[0]?.id
+                              return `/booking/${$props.slug}/?centerId=${
+                                $state.getFullProfileData.data.data.centers.find(
+                                  center => center.id != 5532
+                                ).id
+                              }&serviceId=${
+                                $state.getFullProfileData.data.data.centers.find(
+                                  center => center.id != 5532
+                                ).services[0].id
                               }`;
                             } catch (e) {
                               if (
@@ -443,472 +603,285 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
-                  if (
-                    $steps["goToPage"] != null &&
-                    typeof $steps["goToPage"] === "object" &&
-                    typeof $steps["goToPage"].then === "function"
-                  ) {
-                    $steps["goToPage"] = await $steps["goToPage"];
-                  }
-                }}
-                onlineVisitChannelTypes={(() => {
-                  try {
-                    return $state.getFullProfileData.data.data
-                      .online_visit_channel_types;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
-                    }
-                    throw e;
-                  }
-                })()}
-                price={(() => {
-                  try {
-                    return $state.getFullProfileData.data.data.centers?.find(
-                      center => center.id == 5532
-                    )?.services?.[0]?.free_price;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                title={
-                  "\u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646 \u0622\u0646\u0644\u0627\u06cc\u0646 \u0648\u06cc\u0632\u06cc\u062a \u0634\u0648\u06cc\u062f"
-                }
-              />
-            ) : null}
-            {(() => {
-              try {
-                return (
-                  $state.getFullProfileData.data.data.centers?.filter(
-                    center => center.id !== 5532
-                  )?.length !== 0
-                );
-              } catch (e) {
                 if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
                 ) {
-                  return true;
+                  $steps["goToPage"] = await $steps["goToPage"];
                 }
-                throw e;
-              }
-            })() ? (
-              <BookingService
-                buttonContent={
-                  "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"
-                }
-                className={classNames(
-                  "__wab_instance",
-                  sty.bookingService___5MdRf
-                )}
-                content={(() => {
-                  try {
-                    return (() => {
-                      const waitingTime =
-                        $state.apiRequest?.data?.result?.filter(
-                          center => center.center_id !== 5532
-                        )[0]?.waiting_time_title;
-                      return [
-                        { text: "امکان دریافت زودترین نوبت" },
-                        !!waitingTime && {
-                          text: `میانگین زمان انتظار تا ویزیت: <b>${waitingTime}</b>`
-                        }
-                      ];
-                    })();
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return {
-                        content: [
-                          {
-                            text: "\u0627\u0645\u06a9\u0627\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0632\u0648\u062f\u062a\u0631\u06cc\u0646 \u0646\u0648\u0628\u062a"
+
+                $steps["updateSelectedCenter"] =
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length == 1
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["selectedCenter"]
+                          },
+                          operation: 0,
+                          value:
+                            $state.getFullProfileData.data.data.centers.filter(
+                              center => center.id != 5532
+                            )[0].id
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
                           }
-                        ]
-                      };
-                    }
-                    throw e;
-                  }
-                })()}
-                errorMessage={(() => {
-                  try {
-                    return `درحال حاضر نوبت جدیدی برای ${$state.getFullProfileData.data.data.display_name} تعریف نشده است.`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                groupExpertiseSlug={(() => {
-                  try {
-                    return $state.getFullProfileData.data.data
-                      .group_expertises[0].en_slug;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                isOnlineType={false}
-                isUnAvailable={(() => {
-                  try {
-                    return (
-                      $state.getFullProfileData.data.data.centers.filter(
-                        center => center.id != 5532 && center.is_active
-                      ).length == 0
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
-                    }
-                    throw e;
-                  }
-                })()}
-                onClick={async () => {
-                  const $steps = {};
+                          const { objRoot, variablePath } = variable;
 
-                  $steps["goToPage"] =
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length == 1 &&
-                    !$state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].is_only_in_app.status &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].services.length == 1 &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].is_center != "mashhad"
-                      ? (() => {
-                          const actionArgs = {
-                            destination: (() => {
-                              try {
-                                return `/booking/${$props.slug}/?centerId=${
-                                  $state.getFullProfileData.data.data.centers.find(
-                                    center => center.id != 5532
-                                  ).id
-                                }&serviceId=${
-                                  $state.getFullProfileData.data.data.centers.find(
-                                    center => center.id != 5532
-                                  ).services[0].id
-                                }`;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()
-                          };
-                          return (({ destination }) => {
-                            if (
-                              typeof destination === "string" &&
-                              destination.startsWith("#")
-                            ) {
-                              document
-                                .getElementById(destination.substr(1))
-                                .scrollIntoView({ behavior: "smooth" });
-                            } else {
-                              __nextRouter?.push(destination);
-                            }
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["goToPage"] != null &&
-                    typeof $steps["goToPage"] === "object" &&
-                    typeof $steps["goToPage"].then === "function"
-                  ) {
-                    $steps["goToPage"] = await $steps["goToPage"];
-                  }
-
-                  $steps["updateSelectedCenter"] =
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length == 1
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["selectedCenter"]
-                            },
-                            operation: 0,
-                            value:
-                              $state.getFullProfileData.data.data.centers.filter(
-                                center => center.id != 5532
-                              )[0].id
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["updateSelectedCenter"] != null &&
-                    typeof $steps["updateSelectedCenter"] === "object" &&
-                    typeof $steps["updateSelectedCenter"].then === "function"
-                  ) {
-                    $steps["updateSelectedCenter"] = await $steps[
-                      "updateSelectedCenter"
-                    ];
-                  }
-
-                  $steps["updateMashhadBookingDialogOpen"] =
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].is_center == "mashhad" &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length == 1
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["mashhadBookingDialog", "open"]
-                            },
-                            operation: 4
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            const oldValue = $stateGet(objRoot, variablePath);
-                            $stateSet(objRoot, variablePath, !oldValue);
-                            return !oldValue;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["updateMashhadBookingDialogOpen"] != null &&
-                    typeof $steps["updateMashhadBookingDialogOpen"] ===
-                      "object" &&
-                    typeof $steps["updateMashhadBookingDialogOpen"].then ===
-                      "function"
-                  ) {
-                    $steps["updateMashhadBookingDialogOpen"] = await $steps[
-                      "updateMashhadBookingDialogOpen"
-                    ];
-                  }
-
-                  $steps["updateApplicationDialogOpen"] =
-                    !$ctx["Fragment/PWA"].isPWAUser &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].is_only_in_app.status &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length == 1
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["applicationDialog", "open"]
-                            },
-                            operation: 4
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            const oldValue = $stateGet(objRoot, variablePath);
-                            $stateSet(objRoot, variablePath, !oldValue);
-                            return !oldValue;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["updateApplicationDialogOpen"] != null &&
-                    typeof $steps["updateApplicationDialogOpen"] === "object" &&
-                    typeof $steps["updateApplicationDialogOpen"].then ===
-                      "function"
-                  ) {
-                    $steps["updateApplicationDialogOpen"] = await $steps[
-                      "updateApplicationDialogOpen"
-                    ];
-                  }
-
-                  $steps["updateServiceListDialogOpen"] =
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    )[0].services.length > 1 &&
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length == 1
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["serviceListDialog", "open"]
-                            },
-                            operation: 4
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            const oldValue = $stateGet(objRoot, variablePath);
-                            $stateSet(objRoot, variablePath, !oldValue);
-                            return !oldValue;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["updateServiceListDialogOpen"] != null &&
-                    typeof $steps["updateServiceListDialogOpen"] === "object" &&
-                    typeof $steps["updateServiceListDialogOpen"].then ===
-                      "function"
-                  ) {
-                    $steps["updateServiceListDialogOpen"] = await $steps[
-                      "updateServiceListDialogOpen"
-                    ];
-                  }
-
-                  $steps["updateDialogOpen"] =
-                    $state.getFullProfileData.data.data.centers.filter(
-                      center => center.id != 5532
-                    ).length > 1
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["centerListDialog", "open"]
-                            },
-                            operation: 4
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            const oldValue = $stateGet(objRoot, variablePath);
-                            $stateSet(objRoot, variablePath, !oldValue);
-                            return !oldValue;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                  if (
-                    $steps["updateDialogOpen"] != null &&
-                    typeof $steps["updateDialogOpen"] === "object" &&
-                    typeof $steps["updateDialogOpen"].then === "function"
-                  ) {
-                    $steps["updateDialogOpen"] = await $steps[
-                      "updateDialogOpen"
-                    ];
-                  }
-                }}
-                price={(() => {
-                  try {
-                    return $state.getFullProfileData.data.data.centers?.find(
-                      center => center.id == 5532
-                    )?.services?.[0]?.free_price;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                title={
-                  "\u0646\u0648\u0628\u062a \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0648 \u0645\u0631\u0627\u062c\u0639\u0647 \u062d\u0636\u0648\u0631\u06cc"
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateSelectedCenter"] != null &&
+                  typeof $steps["updateSelectedCenter"] === "object" &&
+                  typeof $steps["updateSelectedCenter"].then === "function"
+                ) {
+                  $steps["updateSelectedCenter"] = await $steps[
+                    "updateSelectedCenter"
+                  ];
                 }
-              />
-            ) : null}
-          </Stack__>
-          <SideEffect
-            data-plasmic-name={"sideEffect"}
-            data-plasmic-override={overrides.sideEffect}
-            className={classNames("__wab_instance", sty.sideEffect)}
-            onMount={async () => {
-              const $steps = {};
 
-              $steps["runCode"] = true
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return console.log($state.getFullProfileData.data);
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runCode"] != null &&
-                typeof $steps["runCode"] === "object" &&
-                typeof $steps["runCode"].then === "function"
-              ) {
-                $steps["runCode"] = await $steps["runCode"];
+                $steps["updateMashhadBookingDialogOpen"] =
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].is_center == "mashhad" &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length == 1
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["mashhadBookingDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateMashhadBookingDialogOpen"] != null &&
+                  typeof $steps["updateMashhadBookingDialogOpen"] ===
+                    "object" &&
+                  typeof $steps["updateMashhadBookingDialogOpen"].then ===
+                    "function"
+                ) {
+                  $steps["updateMashhadBookingDialogOpen"] = await $steps[
+                    "updateMashhadBookingDialogOpen"
+                  ];
+                }
+
+                $steps["updateApplicationDialogOpen"] =
+                  !$ctx["Fragment/PWA"].isPWAUser &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].is_only_in_app.status &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length == 1
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["applicationDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateApplicationDialogOpen"] != null &&
+                  typeof $steps["updateApplicationDialogOpen"] === "object" &&
+                  typeof $steps["updateApplicationDialogOpen"].then ===
+                    "function"
+                ) {
+                  $steps["updateApplicationDialogOpen"] = await $steps[
+                    "updateApplicationDialogOpen"
+                  ];
+                }
+
+                $steps["updateServiceListDialogOpen"] =
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  )[0].services.length > 1 &&
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length == 1
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["serviceListDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateServiceListDialogOpen"] != null &&
+                  typeof $steps["updateServiceListDialogOpen"] === "object" &&
+                  typeof $steps["updateServiceListDialogOpen"].then ===
+                    "function"
+                ) {
+                  $steps["updateServiceListDialogOpen"] = await $steps[
+                    "updateServiceListDialogOpen"
+                  ];
+                }
+
+                $steps["updateDialogOpen"] =
+                  $state.getFullProfileData.data.data.centers.filter(
+                    center => center.id != 5532
+                  ).length > 1
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["centerListDialog", "open"]
+                          },
+                          operation: 4
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          const oldValue = $stateGet(objRoot, variablePath);
+                          $stateSet(objRoot, variablePath, !oldValue);
+                          return !oldValue;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                if (
+                  $steps["updateDialogOpen"] != null &&
+                  typeof $steps["updateDialogOpen"] === "object" &&
+                  typeof $steps["updateDialogOpen"].then === "function"
+                ) {
+                  $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
+                }
+              }}
+              price={(() => {
+                try {
+                  return $state.getFullProfileData.data.data.centers?.find(
+                    center => center.id == 5532
+                  )?.services?.[0]?.free_price;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              title={
+                "\u0646\u0648\u0628\u062a \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0648 \u0645\u0631\u0627\u062c\u0639\u0647 \u062d\u0636\u0648\u0631\u06cc"
               }
-            }}
-          />
-        </ApiRequest>
+            />
+          ) : null}
+        </Stack__>
+        <ApiRequest
+          data-plasmic-name={"waitingApi"}
+          data-plasmic-override={overrides.waitingApi}
+          children={null}
+          className={classNames("__wab_instance", sty.waitingApi)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["waitingApi", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["waitingApi", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["waitingApi", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/v1/feedbacks/average-waiting-time?slug=${$props.slug}`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
       </ApiRequest>
       <Dialog
         data-plasmic-name={"centerListDialog"}
@@ -919,33 +892,29 @@ function PlasmicBookingServiceList__RenderFunc(props: {
             data-plasmic-override={overrides.centerList}
             centers={(() => {
               try {
-                return (() => {
-                  return $state.getFullProfileData.data.data.centers
-                    ?.filter(center => center.id != 5532)
-                    .map(item => {
-                      const freeturnsInfo = item.freeturns_info?.[0];
-                      const selectedWaitingTime =
-                        $state.apiRequest.data?.result?.find(
-                          waitingTime => waitingTime.center_id === item.id
-                        )?.waiting_time_title;
-                      return {
-                        id: item.id,
-                        name: item.name,
-                        address: item.address,
-                        freeTurn: item.freeturn_text,
-                        isActive: item.is_active,
-                        type: item.center_type == 1 ? "office" : "hospital",
-                        phoneNumbers: item.display_number_array,
-                        nextFreeTurn: freeturnsInfo?.availalbe_time_text,
-                        waitingTime: selectedWaitingTime,
-                        isAvailable:
-                          item.services.length === 1 && !!freeturnsInfo
-                            ? freeturnsInfo?.available_time <=
-                              Math.floor(new Date().getTime() / 1000)
-                            : true
-                      };
-                    });
-                })();
+                return $state.getFullProfileData.data.data.centers
+                  ?.filter(center => center.id != 5532)
+                  .map(item => {
+                    const freeturnsInfo = item.freeturns_info?.[0];
+                    const selectedWaitingTime =
+                      $state.waitingApi.data?.result?.find(
+                        waitingTime => waitingTime.center_id === item.id
+                      )?.waiting_time_title;
+                    const nowDate = new Date().getTime();
+                    return {
+                      id: item.id,
+                      name: item.name,
+                      address: item.address,
+                      freeTurn: item.freeturn_text,
+                      isActive: item.is_active,
+                      type: item.center_type == 1 ? "office" : "hospital",
+                      phoneNumbers: item.display_number_array,
+                      nextFreeTurn: freeturnsInfo?.availalbe_time_text,
+                      waitingTime: selectedWaitingTime,
+                      // isAvailable: item.services.length === 1 && !!freeturnsInfo ? +freeturnsInfo?.available_time <= Math.floor(nowDate / 1000) : false
+                      isAvailable: true
+                    };
+                  });
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -1174,10 +1143,20 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.centerListDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "centerListDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["centerListDialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["centerListDialog", "open"])}
         title={"\u0627\u0646\u062a\u062e\u0627\u0628 \u0645\u0631\u06a9\u0632"}
         trigger={null}
@@ -1255,10 +1234,20 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.serviceListDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "serviceListDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "serviceListDialog",
+            "open"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["serviceListDialog", "open"])}
         title={"\u0627\u0646\u062a\u062e\u0627\u0628 \u062e\u062f\u0645\u062a"}
         trigger={null}
@@ -1304,10 +1293,20 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.mashhadBookingDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "mashhadBookingDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "mashhadBookingDialog",
+            "open"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["mashhadBookingDialog", "open"])}
         title={
           "\u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0648 \u062d\u0636\u0648\u0631\u06cc (\u063a\u06cc\u0631\u0641\u0639\u0627\u0644)"
@@ -1387,10 +1386,20 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         }
         className={classNames("__wab_instance", sty.applicationDialog)}
         noTrigger={true}
-        onOpenChange={generateStateOnChangeProp($state, [
-          "applicationDialog",
-          "open"
-        ])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, [
+            "applicationDialog",
+            "open"
+          ]).apply(null, eventArgs);
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["applicationDialog", "open"])}
         title={
           "\u062f\u0627\u0646\u0644\u0648\u062f \u0627\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646"
@@ -1405,8 +1414,8 @@ const PlasmicDescendants = {
   root: [
     "root",
     "getFullProfileData",
-    "apiRequest",
-    "sideEffect",
+    "svg",
+    "waitingApi",
     "centerListDialog",
     "centerList",
     "serviceListDialog",
@@ -1415,9 +1424,9 @@ const PlasmicDescendants = {
     "link",
     "applicationDialog"
   ],
-  getFullProfileData: ["getFullProfileData", "apiRequest", "sideEffect"],
-  apiRequest: ["apiRequest", "sideEffect"],
-  sideEffect: ["sideEffect"],
+  getFullProfileData: ["getFullProfileData", "svg", "waitingApi"],
+  svg: ["svg"],
+  waitingApi: ["waitingApi"],
   centerListDialog: ["centerListDialog", "centerList"],
   centerList: ["centerList"],
   serviceListDialog: ["serviceListDialog", "centerListService"],
@@ -1432,8 +1441,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   getFullProfileData: typeof ApiRequest;
-  apiRequest: typeof ApiRequest;
-  sideEffect: typeof SideEffect;
+  svg: "svg";
+  waitingApi: typeof ApiRequest;
   centerListDialog: typeof Dialog;
   centerList: typeof CenterList;
   serviceListDialog: typeof Dialog;
@@ -1504,8 +1513,8 @@ export const PlasmicBookingServiceList = Object.assign(
   {
     // Helper components rendering sub-elements
     getFullProfileData: makeNodeComponent("getFullProfileData"),
-    apiRequest: makeNodeComponent("apiRequest"),
-    sideEffect: makeNodeComponent("sideEffect"),
+    svg: makeNodeComponent("svg"),
+    waitingApi: makeNodeComponent("waitingApi"),
     centerListDialog: makeNodeComponent("centerListDialog"),
     centerList: makeNodeComponent("centerList"),
     serviceListDialog: makeNodeComponent("serviceListDialog"),

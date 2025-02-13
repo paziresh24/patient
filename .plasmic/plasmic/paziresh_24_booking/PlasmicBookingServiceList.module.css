@@ -13,32 +13,13 @@
   max-width: 100%;
   object-fit: cover;
 }
-.svg__o8Sgz {
+.svg {
   object-fit: cover;
   max-width: 100%;
   margin-top: var(--token-UIMkdd_bvvx_);
   margin-bottom: var(--token-UIMkdd_bvvx_);
   width: 24px;
   height: 24px;
-}
-.apiRequest:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.svg__oQMsp {
-  object-fit: cover;
-  max-width: 100%;
-  margin-top: var(--token-UIMkdd_bvvx_);
-  margin-bottom: var(--token-UIMkdd_bvvx_);
-  width: 24px;
-  height: 24px;
-}
-.text__xdYt {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
 }
 .freeBox__gTjnf {
   display: flex;
@@ -73,7 +54,7 @@
 .bookingService___5MdRf:global(.__wab_instance) {
   max-width: 100%;
 }
-.sideEffect:global(.__wab_instance) {
+.waitingApi:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
 }

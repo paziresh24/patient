@@ -192,8 +192,18 @@
   height: 20px;
   flex-shrink: 0;
 }
-.text__zjhiU {
+.freeBox__j6E3A {
+  display: flex;
+  flex-direction: column;
   position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.text__zjhiU {
   height: auto;
   max-width: 100%;
   text-overflow: clip;

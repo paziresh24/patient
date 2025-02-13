@@ -240,10 +240,6 @@ function PlasmicSchedules__RenderFunc(props: {
               </DataCtxReader__>
             }
             errorName={"fetchError"}
-            headers={{
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            }}
             loadingDisplay={
               <DataCtxReader__>
                 {$ctx => (
@@ -320,10 +316,12 @@ function PlasmicSchedules__RenderFunc(props: {
                           "__wab_instance",
                           sty.popoverCore
                         )}
-                        onOpenChange={generateStateOnChangeProp($state, [
-                          "popoverCore",
-                          "open"
-                        ])}
+                        onOpenChange={async (...eventArgs: any) => {
+                          generateStateOnChangeProp($state, [
+                            "popoverCore",
+                            "open"
+                          ]).apply(null, eventArgs);
+                        }}
                         open={generateStateValueProp($state, [
                           "popoverCore",
                           "open"
@@ -830,7 +828,20 @@ function PlasmicSchedules__RenderFunc(props: {
           </DataFetcher>
         }
         className={classNames("__wab_instance", sty.dialog)}
-        onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
         open={generateStateValueProp($state, ["dialog", "open"])}
         title={
           <div
@@ -843,7 +854,7 @@ function PlasmicSchedules__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return `برنامه کاری پزشک در ${$props.centerName}`;
+                  return `برنامه کاری در ${$props.centerName}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -868,7 +879,7 @@ function PlasmicSchedules__RenderFunc(props: {
                 )}
               >
                 {
-                  "\u0628\u0631\u0646\u0627\u0645\u0647 \u06a9\u0627\u0631\u06cc \u067e\u0632\u0634\u06a9"
+                  "\u0628\u0631\u0646\u0627\u0645\u0647 \u06a9\u0627\u0631\u06cc"
                 }
               </div>
             }
