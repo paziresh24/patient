@@ -11,7 +11,6 @@ import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
@@ -23,7 +22,6 @@ const { publicRuntimeConfig } = getConfig();
 const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
-  const { display_name, isLoading: profileNameLoading } = useProfile({ slug: router.query?.slug as string });
 
   const {
     data,
@@ -41,7 +39,7 @@ const Booking = () => {
 
   const profileData = data?.data;
 
-  const doctorName = display_name ?? profileData?.display_name ?? '';
+  const doctorName = profileData?.display_name ?? '';
 
   useEffect(() => {
     if (data?.redirect) {
@@ -129,7 +127,7 @@ const Booking = () => {
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-50"
-            isLoading={isLoading || profileNameLoading || !profileData}
+            isLoading={isLoading || !profileData}
             avatar={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
