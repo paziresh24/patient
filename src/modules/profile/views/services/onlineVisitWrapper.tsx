@@ -144,7 +144,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         buttonText={`شروع ویزیت با ${fullName}`}
       />
       <Modal
-        title="انتخاب کاربر برای گفتگو با پزشک"
+        title="انتخاب کاربر برای گفتگو"
         {...bookingModalProps}
         onClose={() => {
           unSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
@@ -171,7 +171,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
           </Text>
           <div className="flex flex-col space-y-3">
             <Text fontSize="sm" className="px-5 leading-6">
-              پزشکان آنلاین <Text fontWeight="bold">{expertise?.name}</Text> منتخب بیماران
+              سایر سرویس دهندگان آنلاین <Text fontWeight="bold">{expertise?.name}</Text> منتخب بیماران
             </Text>
             <Recommend doctorId={doctorId} city={city.slug} category={expertise.slug} />
           </div>

@@ -149,7 +149,7 @@ export const UserCard = (props: UserCardProps) => {
       {select && shouldShowMessengers && (
         <>
           <Text fontWeight="medium" fontSize="sm">
-            از کدام پیام رسان برای گفتگو با پزشک استفاده می کنید؟
+            از کدام پیام رسان برای گفتگو استفاده می کنید؟
           </Text>
           <div className="flex items-center mt-3 select-none space-s-3">
             {doctorMessenger.map((messenger: any) => (

@@ -239,7 +239,7 @@ export const ConsultBanner = () => {
           </div>
         )}
         <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-          مشاهده سایر پزشکان آنلاین {selectedCategory.title}
+          مشاهده سایر سرویس دهندگان آنلاین {selectedCategory.title}
         </Button>
       </Modal>
     </div>

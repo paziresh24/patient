@@ -105,7 +105,7 @@ const Factor = () => {
           {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
             <div className="flex flex-col p-2 space-y-1">
               <Text fontSize="sm" as="p">
-                سلام. من دکتر {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
+                سلام. من {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
               </Text>
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
