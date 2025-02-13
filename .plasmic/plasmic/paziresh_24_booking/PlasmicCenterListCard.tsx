@@ -59,8 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import BookingNotAvailible from "../../BookingNotAvailible"; // plasmic-import: HI9wFtACqPcK/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import BookingNotAvailible from "../../BookingNotAvailible"; // plasmic-import: HI9wFtACqPcK/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -72,6 +72,7 @@ import sty from "./PlasmicCenterListCard.module.css"; // plasmic-import: nIhB-6J
 import Icon9Icon from "./icons/PlasmicIcon__Icon9"; // plasmic-import: 0gLQ04Nbu4rj/icon
 import Icon10Icon from "./icons/PlasmicIcon__Icon10"; // plasmic-import: 6P7akNzsUIt3/icon
 import Icon7Icon from "./icons/PlasmicIcon__Icon7"; // plasmic-import: lTkwh8jbYYBj/icon
+import Icon16Icon from "./icons/PlasmicIcon__Icon16"; // plasmic-import: ShAkS10pD69-/icon
 import Icon5Icon from "./icons/PlasmicIcon__Icon5"; // plasmic-import: aV0jjDZF4Ql6/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
@@ -79,11 +80,11 @@ import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; 
 createPlasmicElementProxy;
 
 export type PlasmicCenterListCard__VariantMembers = {
-  type: "online" | "hospital" | "office";
+  type: "online" | "hospital" | "office" | "external";
   inActive: "inActive";
 };
 export type PlasmicCenterListCard__VariantsArgs = {
-  type?: SingleChoiceArg<"online" | "hospital" | "office">;
+  type?: SingleChoiceArg<"online" | "hospital" | "office" | "external">;
   inActive?: SingleBooleanChoiceArg<"inActive">;
 };
 type VariantPropType = keyof PlasmicCenterListCard__VariantsArgs;
@@ -129,7 +130,7 @@ export interface DefaultCenterListCardProps {
   phoneNumbers?: any;
   waitingTime?: string;
   onClick?: () => void;
-  type?: SingleChoiceArg<"online" | "hospital" | "office">;
+  type?: SingleChoiceArg<"online" | "hospital" | "office" | "external">;
   inActive?: SingleBooleanChoiceArg<"inActive">;
   className?: string;
 }
@@ -223,6 +224,7 @@ function PlasmicCenterListCard__RenderFunc(props: {
           [sty.rootinActive_type_office]:
             hasVariant($state, "inActive", "inActive") &&
             hasVariant($state, "type", "office"),
+          [sty.roottype_external]: hasVariant($state, "type", "external"),
           [sty.roottype_hospital]: hasVariant($state, "type", "hospital"),
           [sty.roottype_office]: hasVariant($state, "type", "office"),
           [sty.roottype_online]: hasVariant($state, "type", "online")
@@ -258,6 +260,14 @@ function PlasmicCenterListCard__RenderFunc(props: {
           [sty.freeBoxinActive_type_online___3OKkVnPejHHxzXc]:
             hasVariant($state, "type", "online") &&
             hasVariant($state, "inActive", "inActive"),
+          [sty.freeBoxtype_external___3OKkVgTeVi]: hasVariant(
+            $state,
+            "type",
+            "external"
+          ),
+          [sty.freeBoxtype_external_inActive___3OKkVgTeViNPejH]:
+            hasVariant($state, "inActive", "inActive") &&
+            hasVariant($state, "type", "external"),
           [sty.freeBoxtype_office___3OKkVcViZf]: hasVariant(
             $state,
             "type",
@@ -278,6 +288,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
               $state,
               "inActive",
               "inActive"
+            ),
+            [sty.freeBoxtype_external__euqmtGTeVi]: hasVariant(
+              $state,
+              "type",
+              "external"
             )
           })}
         >
@@ -287,6 +302,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
                 $state,
                 "inActive",
                 "inActive"
+              ),
+              [sty.freeBoxtype_external__w2VtWgTeVi]: hasVariant(
+                $state,
+                "type",
+                "external"
               ),
               [sty.freeBoxtype_hospital__w2VtWdUdd3]: hasVariant(
                 $state,
@@ -318,6 +338,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
 
             <Icon10Icon
               className={classNames(projectcss.all, sty.svg__e5OhW, {
+                [sty.svgtype_external__e5OhWgTeVi]: hasVariant(
+                  $state,
+                  "type",
+                  "external"
+                ),
                 [sty.svgtype_hospital__e5OhWdUdd3]: hasVariant(
                   $state,
                   "type",
@@ -344,6 +369,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
                   "inActive",
                   "inActive"
                 ),
+                [sty.svgtype_external__c1OeNgTeVi]: hasVariant(
+                  $state,
+                  "type",
+                  "external"
+                ),
                 [sty.svgtype_hospital__c1OeNdUdd3]: hasVariant(
                   $state,
                   "type",
@@ -362,6 +392,19 @@ function PlasmicCenterListCard__RenderFunc(props: {
               })}
               role={"img"}
             />
+
+            {(hasVariant($state, "type", "external") ? true : false) ? (
+              <Icon16Icon
+                className={classNames(projectcss.all, sty.svg__a0W0U, {
+                  [sty.svgtype_external__a0W0UgTeVi]: hasVariant(
+                    $state,
+                    "type",
+                    "external"
+                  )
+                })}
+                role={"img"}
+              />
+            ) : null}
           </div>
           <div
             className={classNames(projectcss.all, sty.freeBox__naxc8, {
@@ -376,10 +419,20 @@ function PlasmicCenterListCard__RenderFunc(props: {
               [sty.freeBoxinActive_type_online__naxc8NPejHHxzXc]:
                 hasVariant($state, "type", "online") &&
                 hasVariant($state, "inActive", "inActive"),
+              [sty.freeBoxtype_external__naxc8GTeVi]: hasVariant(
+                $state,
+                "type",
+                "external"
+              ),
               [sty.freeBoxtype_hospital__naxc8DUdd3]: hasVariant(
                 $state,
                 "type",
                 "hospital"
+              ),
+              [sty.freeBoxtype_office__naxc8CViZf]: hasVariant(
+                $state,
+                "type",
+                "office"
               ),
               [sty.freeBoxtype_online__naxc8HxzXc]: hasVariant(
                 $state,
@@ -398,6 +451,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
                     $state,
                     "inActive",
                     "inActive"
+                  ),
+                  [sty.texttype_external__g0SmoGTeVi]: hasVariant(
+                    $state,
+                    "type",
+                    "external"
                   ),
                   [sty.texttype_hospital__g0SmodUdd3]: hasVariant(
                     $state,
@@ -449,6 +507,8 @@ function PlasmicCenterListCard__RenderFunc(props: {
                   throw e;
                 }
               })()
+            : hasVariant($state, "type", "external")
+            ? true
             : hasVariant($state, "type", "online")
             ? true
             : (() => {
@@ -475,6 +535,16 @@ function PlasmicCenterListCard__RenderFunc(props: {
                   $state,
                   "inActive",
                   "inActive"
+                ),
+                [sty.texttype_external__sdKiXgTeVi]: hasVariant(
+                  $state,
+                  "type",
+                  "external"
+                ),
+                [sty.texttype_hospital__sdKiXdUdd3]: hasVariant(
+                  $state,
+                  "type",
+                  "hospital"
                 ),
                 [sty.texttype_office__sdKiXcViZf]: hasVariant(
                   $state,
@@ -506,28 +576,77 @@ function PlasmicCenterListCard__RenderFunc(props: {
             </React.Fragment>
           </div>
         ) : null}
-      </div>
-      {(() => {
-        try {
-          return (
-            (!!$props.freeTurn && $props.isAvailable) || !!$props.waitingTime
-          );
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__yxmqg,
+            {
+              [sty.texttype_external__yxmqggTeVi]: hasVariant(
+                $state,
+                "type",
+                "external"
+              )
+            }
+          )}
+        >
+          {
+            "\u0645\u062a\u0627\u0633\u0641\u0627\u0646\u0647 \u0627\u06cc\u0646 \u062f\u06a9\u062a\u0631 \u062f\u0631 \u0633\u0627\u06cc\u062a \u067e\u0630\u06cc\u0631\u0634 24 \u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0646\u0645\u06cc\u06a9\u0646\u062f. \u0634\u0645\u0627 \u0645\u06cc\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0633\u0627\u06cc\u062a \u0641\u0644\u0627\u0646 \u0646\u0648\u0628\u062a \u062e\u0648\u062f \u0631\u0627 \u062f\u0631\u06cc\u0627\u0641\u062a \u06a9\u0646\u06cc\u062f. "
           }
-          throw e;
-        }
-      })() ? (
+        </div>
+        <Button
+          children2={
+            "\u0627\u0632 \u0641\u0644\u0627\u0646 \u0633\u0627\u06cc\u062a \u0646\u0648\u0628\u062a \u0628\u06af\u06cc\u0631\u06cc\u062f"
+          }
+          className={classNames("__wab_instance", sty.button___8Is7, {
+            [sty.buttontype_external___8Is7GTeVi]: hasVariant(
+              $state,
+              "type",
+              "external"
+            )
+          })}
+          color={"text"}
+          outline={true}
+          shape={"sharp"}
+          showEndIcon={true}
+          size={"minimal"}
+        />
+      </div>
+      {(
+        hasVariant($state, "type", "external")
+          ? true
+          : (() => {
+              try {
+                return (
+                  (!!$props.freeTurn &&
+                    $props.isAvailable &&
+                    !$state.inActive) ||
+                  (!!$props.waitingTime &&
+                    !$state.inActive &&
+                    $props.isAvailable)
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })()
+      ) ? (
         <div
           className={classNames(projectcss.all, sty.freeBox__dMd33, {
             [sty.freeBoxinActive__dMd33NPejH]: hasVariant(
               $state,
               "inActive",
               "inActive"
+            ),
+            [sty.freeBoxtype_external__dMd33GTeVi]: hasVariant(
+              $state,
+              "type",
+              "external"
             )
           })}
         >
@@ -564,6 +683,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
                   projectcss.__wab_text,
                   sty.text__sp5S9,
                   {
+                    [sty.texttype_external__sp5S9GTeVi]: hasVariant(
+                      $state,
+                      "type",
+                      "external"
+                    ),
                     [sty.texttype_online__sp5S9HxzXc]: hasVariant(
                       $state,
                       "type",
@@ -739,7 +863,7 @@ function PlasmicCenterListCard__RenderFunc(props: {
         hasVariant($state, "inActive", "inActive")
           ? (() => {
               try {
-                return !$props.isAvailable || !!$state.inActive;
+                return !$props.isAvailable && !$state.inActive;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -770,6 +894,11 @@ function PlasmicCenterListCard__RenderFunc(props: {
               $state,
               "inActive",
               "inActive"
+            ),
+            [sty.freeBoxtype_external__hWtMjGTeVi]: hasVariant(
+              $state,
+              "type",
+              "external"
             )
           })}
         >
@@ -811,7 +940,7 @@ function PlasmicCenterListCard__RenderFunc(props: {
         hasVariant($state, "inActive", "inActive")
           ? (() => {
               try {
-                return $props.isAvailable;
+                return !!$state.inActive;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -1022,7 +1151,20 @@ function PlasmicCenterListCard__RenderFunc(props: {
               [sty.dialoginActive]: hasVariant($state, "inActive", "inActive")
             })}
             noTrigger={true}
-            onOpenChange={generateStateOnChangeProp($state, ["dialog", "open"])}
+            onOpenChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+                null,
+                eventArgs
+              );
+
+              if (
+                eventArgs.length > 1 &&
+                eventArgs[1] &&
+                eventArgs[1]._plasmic_state_init_
+              ) {
+                return;
+              }
+            }}
             open={generateStateValueProp($state, ["dialog", "open"])}
             title={
               <React.Fragment>

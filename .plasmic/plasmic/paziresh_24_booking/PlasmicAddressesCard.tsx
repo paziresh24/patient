@@ -73,6 +73,7 @@ import sty from "./PlasmicAddressesCard.module.css"; // plasmic-import: z1k0-vbk
 
 import ChevronDownIcon from "../fragment_icons/icons/PlasmicIcon__ChevronDown"; // plasmic-import: aC_QFogxt1Ko/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronUpIcon from "../fragment_icons/icons/PlasmicIcon__ChevronUp"; // plasmic-import: YXreB8gS3SjV/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: _jSTfORV1qH0/icon
 import Icon11Icon from "./icons/PlasmicIcon__Icon11"; // plasmic-import: S_uiUWqNHHLN/icon
 import Icon12Icon from "./icons/PlasmicIcon__Icon12"; // plasmic-import: gJeK2OqgBb2l/icon
@@ -320,7 +321,7 @@ function PlasmicAddressesCard__RenderFunc(props: {
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
@@ -339,7 +340,7 @@ function PlasmicAddressesCard__RenderFunc(props: {
                 color={"text"}
                 showStartIcon={true}
                 startIcon={
-                  <ChevronDownIcon
+                  <ChevronUpIcon
                     className={classNames(projectcss.all, sty.svg__qf2Mr)}
                     role={"img"}
                   />
@@ -358,28 +359,30 @@ function PlasmicAddressesCard__RenderFunc(props: {
                 role={"img"}
               />
 
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__zjhiU
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $props.description;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.";
+              <div className={classNames(projectcss.all, sty.freeBox__j6E3A)}>
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__zjhiU
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.description;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.";
+                        }
+                        throw e;
                       }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
+                    })()}
+                  </React.Fragment>
+                </div>
               </div>
             </Stack__>
           }
