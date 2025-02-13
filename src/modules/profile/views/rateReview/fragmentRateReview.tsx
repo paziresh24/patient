@@ -193,4 +193,3 @@ export const FragmentRateReview = ({ profileData, fragmentComponents }: { profil
     </div>
   );
 };
-

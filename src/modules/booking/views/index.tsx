@@ -947,7 +947,8 @@ const BookingSteps = (props: BookingStepsProps) => {
             <div className="flex flex-col space-y-3">
               {!shouldShowOnlineVistRecommendModal && (
                 <Text fontSize="sm" className="leading-6">
-                  <Text fontWeight="bold">پزشکان آنلاین {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}</Text> منتخب بیماران
+                  <Text fontWeight="bold">سایر سرویس دهندگان آنلاین {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}</Text> منتخب
+                  بیماران
                 </Text>
               )}
               {profile && (
@@ -1003,7 +1004,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                         )}
                       </div>
                       <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-                        مشاهده سایر پزشکان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                        مشاهده سایر سرویس دهندگان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
                       </Button>
                     </div>
                   ) : (

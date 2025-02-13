@@ -107,4 +107,3 @@ export const Filter = (props: FilterProps) => {
 };
 
 export default Filter;
-

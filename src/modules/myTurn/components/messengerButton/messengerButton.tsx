@@ -26,7 +26,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
           }}
           icon={<img src={messengers[channel?.type]?.image} width={24} height={24} alt="" className="ml-1" />}
         >
-          شروع گفتگو با پزشک در {messengers[channel?.type]?.text}
+          شروع گفتگو در {messengers[channel?.type]?.text}
         </Button>
       )}
       {buttonType === 'SOLID' && !colorFull && (
@@ -44,7 +44,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
             window.open(channel?.channel_link);
           }}
         >
-          شروع گفتگو با پزشک در {messengers[channel?.type]?.text}
+          شروع گفتگو در {messengers[channel?.type]?.text}
         </Button>
       )}
       {buttonType === 'COLOR_FULL' && colorFull && (
@@ -68,7 +68,7 @@ export const MessengerButton = ({ channel, colorFull }: { channel: OnlineVisitCh
           }}
           icon={<img src={messengers[channel?.type]?.image} width={24} height={24} alt="" className="ml-1" />}
         >
-          شروع گفتگو با پزشک در {messengers[channel?.type]?.text}
+          شروع گفتگو در {messengers[channel?.type]?.text}
         </Button>
       )}
     </div>

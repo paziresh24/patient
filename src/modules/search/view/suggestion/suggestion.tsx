@@ -253,4 +253,3 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
-

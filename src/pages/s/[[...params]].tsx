@@ -374,4 +374,3 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
-

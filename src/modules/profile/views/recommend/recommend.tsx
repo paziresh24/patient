@@ -17,14 +17,14 @@ export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommen
     <div className="flex flex-col space-y-3 md:hidden">
       {useVisitOnlineDoctorSubstitute ? (
         <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          پزشکان آنلاین {groupExpertise.name}{' '}
+          سایر سرویس دهندگان آنلاین {groupExpertise.name}{' '}
           <Text fontWeight="medium" fontSize="sm">
             منتخب بیماران
           </Text>
         </Text>
       ) : (
         <Text fontWeight="bold" className="px-4 leading-6 md:px-0 line-clamp-1">
-          پزشکان آنلاین {groupExpertise.name}{' '}
+          سایر سرویس دهندگان آنلاین {groupExpertise.name}{' '}
           <Text fontWeight="medium" fontSize="sm">
             منتخب بیماران
           </Text>

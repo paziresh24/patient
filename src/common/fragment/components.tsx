@@ -265,4 +265,3 @@ export const Components = {
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
 };
-

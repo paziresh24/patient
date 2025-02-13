@@ -265,4 +265,3 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
-

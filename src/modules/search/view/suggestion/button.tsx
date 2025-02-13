@@ -30,4 +30,3 @@ export const ButtonSuggestion = () => {
 };
 
 export default ButtonSuggestion;
-
