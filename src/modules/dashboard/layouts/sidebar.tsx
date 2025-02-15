@@ -21,6 +21,7 @@ import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
 import axios from 'axios';
+import HeadphoneIcon from '@/common/components/icons/headphone';
 
 export type App = {
   key: string;
@@ -37,6 +38,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   const isUserPending = useUserInfoStore(state => state.pending);
   const { asPath, ...router } = useRouter();
   const shouldShowBazaarMenu = useFeatureIsOn('dashboard:bazaar-menu|enable');
+  const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
   const queryClient = useQueryClient();
   const [unreads, setUnreads] = useState({});
 
@@ -216,6 +218,13 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       url: '/dashboard/subuser',
       shouldShowDoctor: true,
       shouldShow: true,
+    },
+    {
+      icon: <HeadphoneIcon />,
+      label: 'پشتیبانی',
+      url: 'https://supporto.paziresh24.com',
+      shouldShowDoctor: true,
+      shouldShow: user.provider?.job_title === 'doctor' && showSupportMenuButton,
     },
   ].filter(item => item.shouldShow);
 
