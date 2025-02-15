@@ -16,6 +16,7 @@ import DiamondIcon from '@/common/components/icons/diamond';
 import EditIcon from '@/common/components/icons/edit';
 import ElementIcon from '@/common/components/icons/element';
 import EyeIcon from '@/common/components/icons/eye';
+import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
@@ -55,6 +56,7 @@ export const UserProfile = () => {
     destination?: string;
   }>('redirect-to-gozargah', {});
   const loginPopup = useFeatureIsOn('gozargah::popup-login');
+  const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -99,6 +101,12 @@ export const UserProfile = () => {
           icon: <EyeIcon width={22} height={22} />,
           link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,
           shouldShow: userInfo.provider?.job_title === 'doctor',
+        },
+        {
+          name: 'پشتیبانی',
+          icon: <HeadphoneIcon width={22} height={22} />,
+          link: 'https://supporto.paziresh24.com',
+          shouldShow: userInfo.provider?.job_title === 'doctor' && showSupportMenuButton,
         },
       ].filter(item => item.shouldShow)
     : [

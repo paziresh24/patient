@@ -27,9 +27,15 @@ export const AppointmentsPage = () => {
           />
         </>
       ) : (
-        <Wrapper>
-          <PatinetProfile />
-        </Wrapper>
+        <>
+          <Seo title="ویرایش پروفایل" noIndex />
+          {isAppLoading && <LoadingApps />}
+          <iframe
+            onLoad={() => setIsAppLoading(false)}
+            className={classNames('w-full h-full', { hidden: isAppLoading })}
+            src="https://profile.paziresh24.com"
+          />
+        </>
       )}
     </div>
   );
