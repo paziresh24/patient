@@ -349,7 +349,49 @@
 .texttype_onlineVisit__dNgG7QAlK {
   display: block;
 }
-.button:global(.__wab_instance) {
+.button__segTd:global(.__wab_instance) {
+  max-width: 100%;
+  display: none;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .buttontype_onlineVisit__segTd7QAlK:global(.__wab_instance) {
+    display: flex;
+  }
+}
+.svg__u49Qu {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__o1CF {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.button__hPh8A:global(.__wab_instance) {
+  max-width: 100%;
+  display: none;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .buttontype_onlineVisit__hPh8A7QAlK:global(.__wab_instance) {
+    display: flex;
+  }
+}
+.svg__o2WxQ {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__tNffn {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.button___3VCfh:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
   width: 100%;
