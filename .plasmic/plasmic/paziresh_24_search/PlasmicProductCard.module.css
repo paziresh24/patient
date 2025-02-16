@@ -229,6 +229,17 @@
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
 }
+.freeBox__d8Dss {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
 .link__iYnI7 {
   display: flex;
   position: relative;
@@ -253,6 +264,22 @@
   text-overflow: ellipsis !important;
   overflow: hidden;
   min-width: 0;
+}
+.link__jKdVb {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.svg__mb4OC {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token--OFi8MN_ymYh);
+  height: 1em;
 }
 .link__xjBwH {
   display: flex;

@@ -84,6 +84,7 @@ export const PlasmicExternalBookSurveyPopup__ArgProps =
 export type PlasmicExternalBookSurveyPopup__OverridesType = {
   root?: Flex__<"div">;
   showSurveyPopupRemoveCookie?: Flex__<typeof SideEffect>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultExternalBookSurveyPopupProps {
@@ -387,13 +388,66 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
           }
         }}
       />
+
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["runCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      function getTransitionData() {
+                        const name = "transitionData=";
+                        const cookies = globalThis.window.document.cookie
+                          .split(";")
+                          .map(c => c.trim());
+                        console.log(cookies);
+                        const cookie = cookies.find(c => c.startsWith(name));
+                        if (cookie) {
+                          console.log("transitionData exists in cookies");
+                          try {
+                            const cookieValue = cookie.slice(name.length);
+                            return JSON.parse(decodeURIComponent(cookieValue));
+                          } catch (e) {
+                            console.error(
+                              "Error parsing transitionData cookie:",
+                              e
+                            );
+                          }
+                        }
+                        return null;
+                      }
+                      return getTransitionData();
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "showSurveyPopupRemoveCookie"],
-  showSurveyPopupRemoveCookie: ["showSurveyPopupRemoveCookie"]
+  root: ["root", "showSurveyPopupRemoveCookie", "sideEffect"],
+  showSurveyPopupRemoveCookie: ["showSurveyPopupRemoveCookie"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -401,6 +455,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   showSurveyPopupRemoveCookie: typeof SideEffect;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -466,6 +521,7 @@ export const PlasmicExternalBookSurveyPopup = Object.assign(
     showSurveyPopupRemoveCookie: makeNodeComponent(
       "showSurveyPopupRemoveCookie"
     ),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicExternalBookSurveyPopup
     internalVariantProps: PlasmicExternalBookSurveyPopup__VariantProps,

@@ -1154,7 +1154,10 @@ function PlasmicSearchResults__RenderFunc(props: {
               >
                 {(() => {
                   try {
-                    return currentItem.outside_of_location;
+                    return (
+                      currentItem.outside_of_location &&
+                      !window.location.href.includes("turn_type=consult")
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
