@@ -61,6 +61,8 @@ import {
 
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -108,7 +110,6 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicServices__OverridesType = {
   root?: Flex__<"div">;
-  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultServicesProps {
@@ -177,6 +178,10 @@ function PlasmicServices__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
@@ -496,7 +501,14 @@ function PlasmicServices__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text___595KF
+                sty.text___595KF,
+                {
+                  [sty.texttype_onlineVisit___595KF7QAlK]: hasVariant(
+                    $state,
+                    "type",
+                    "onlineVisit"
+                  )
+                }
               )}
             >
               {
@@ -692,11 +704,106 @@ function PlasmicServices__RenderFunc(props: {
             </div>
           ) : null}
         </div>
+        {(
+          hasVariant($state, "type", "onlineVisit") &&
+          hasVariant(globalVariants, "screen", "mobileOnly")
+            ? (() => {
+                try {
+                  return (() => {
+                    const slugs = ["دکتر-رسول-اسماعیلی-0"];
+                    const currentHour = new globalThis.Date().getHours();
+                    return (
+                      slugs.includes($props.seo.slug) &&
+                      currentHour >= 0 &&
+                      currentHour < 6
+                    );
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+            : true
+        ) ? (
+          <Button
+            children2={
+              "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 \u067e\u0627\u0633\u062e\u06af\u0648 \u0646\u06cc\u0633\u062a"
+            }
+            className={classNames("__wab_instance", sty.button__segTd, {
+              [sty.buttontype_onlineVisit__segTd7QAlK]: hasVariant(
+                $state,
+                "type",
+                "onlineVisit"
+              )
+            })}
+            color={"softYellow"}
+          />
+        ) : null}
+        {(
+          hasVariant($state, "type", "onlineVisit") &&
+          hasVariant(globalVariants, "screen", "mobileOnly")
+            ? (() => {
+                try {
+                  return (() => {
+                    const slugs = ["دکتر-رسول-اسماعیلی-0"];
+                    const currentHour = new globalThis.Date().getHours();
+                    return (
+                      slugs.includes($props.seo.slug) &&
+                      currentHour >= 7 &&
+                      currentHour < 23
+                    );
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+            : true
+        ) ? (
+          <Button
+            children2={
+              "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u062a\u0627\u062e\u06cc\u0631 \u062f\u0627\u0631\u062f."
+            }
+            className={classNames("__wab_instance", sty.button__hPh8A, {
+              [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
+                $state,
+                "type",
+                "onlineVisit"
+              )
+            })}
+            color={"softSand"}
+          />
+        ) : null}
         <Button
-          data-plasmic-name={"button"}
-          data-plasmic-override={overrides.button}
           children2={
-            hasVariant($state, "type", "onlineVisit") ? (
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly") ? (
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return `شروع ویزیت آنلاین با ${$props.information.display_name}`;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0634\u0631\u0648\u0639 \u0648\u06cc\u0632\u06cc\u062a";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            ) : hasVariant($state, "type", "onlineVisit") ? (
               <React.Fragment>
                 {(() => {
                   try {
@@ -716,8 +823,8 @@ function PlasmicServices__RenderFunc(props: {
               "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"
             )
           }
-          className={classNames("__wab_instance", sty.button, {
-            [sty.buttontype_onlineVisit]: hasVariant(
+          className={classNames("__wab_instance", sty.button___3VCfh, {
+            [sty.buttontype_onlineVisit___3VCfh7QAlK]: hasVariant(
               $state,
               "type",
               "onlineVisit"
@@ -848,15 +955,13 @@ function PlasmicServices__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "button"],
-  button: ["button"]
+  root: ["root"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -919,7 +1024,6 @@ export const PlasmicServices = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicServices
     internalVariantProps: PlasmicServices__VariantProps,
