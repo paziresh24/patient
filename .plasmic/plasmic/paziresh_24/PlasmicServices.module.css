@@ -292,6 +292,11 @@
 .texttype_onlineVisit__orRx7QAlK {
   font-weight: 400;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .texttype_onlineVisit__orRx7QAlK {
+    display: block;
+  }
+}
 .text___595KF {
   position: relative;
   width: 100%;
@@ -384,6 +389,19 @@
   object-fit: cover;
   width: auto;
   height: 1em;
+}
+.svg__c5Ok9 {
+  object-fit: cover;
+  max-width: 100%;
+  color: #ffdf00;
+  width: var(--token--IM3__qUOemQ);
+  height: var(--token--IM3__qUOemQ);
+  display: none;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .svgtype_onlineVisit__c5Ok97QAlK {
+    display: none;
+  }
 }
 .svg__tNffn {
   position: relative;

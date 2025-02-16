@@ -75,6 +75,7 @@ import EitaaSvgIcon from "./icons/PlasmicIcon__EitaaSvg"; // plasmic-import: WqD
 import WhatsappSvgIcon from "./icons/PlasmicIcon__WhatsappSvg"; // plasmic-import: aiEdwD29mrY6/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
+import Icon25Icon from "./icons/PlasmicIcon__Icon25"; // plasmic-import: rtTJLgJ9hRbl/icon
 import Icon24Icon from "./icons/PlasmicIcon__Icon24"; // plasmic-import: bFoMwbPekE8y/icon
 
 createPlasmicElementProxy;
@@ -464,7 +465,26 @@ function PlasmicServices__RenderFunc(props: {
               ) : null}
             </Stack__>
           </div>
-          {(hasVariant($state, "type", "onlineVisit") ? true : false) ? (
+          {(
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? (() => {
+                  try {
+                    return !$props.seo.slug.includes("دکتر-رسول-اسماعیلی-0");
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })()
+              : hasVariant($state, "type", "onlineVisit")
+              ? true
+              : false
+          ) ? (
             <div
               className={classNames(
                 projectcss.all,
@@ -710,7 +730,11 @@ function PlasmicServices__RenderFunc(props: {
             ? (() => {
                 try {
                   return (() => {
-                    const slugs = ["دکتر-رسول-اسماعیلی-0"];
+                    const slugs = [
+                      "دکتر-رسول-اسماعیلی-0",
+                      "دکتر-امیرمحمود-افشار-1"
+                    ];
+
                     const currentHour = new globalThis.Date().getHours();
                     return (
                       slugs.includes($props.seo.slug) &&
@@ -750,7 +774,11 @@ function PlasmicServices__RenderFunc(props: {
             ? (() => {
                 try {
                   return (() => {
-                    const slugs = ["دکتر-رسول-اسماعیلی-0"];
+                    const slugs = [
+                      "دکتر-رسول-اسماعیلی-0",
+                      "دکتر-امیرمحمود-افشار-1"
+                    ];
+
                     const currentHour = new globalThis.Date().getHours();
                     return (
                       slugs.includes($props.seo.slug) &&
@@ -772,7 +800,37 @@ function PlasmicServices__RenderFunc(props: {
         ) ? (
           <Button
             children2={
-              "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u062a\u0627\u062e\u06cc\u0631 \u062f\u0627\u0631\u062f."
+              <React.Fragment>
+                <Icon25Icon
+                  className={classNames(projectcss.all, sty.svg__c5Ok9, {
+                    [sty.svgtype_onlineVisit__c5Ok97QAlK]: hasVariant(
+                      $state,
+                      "type",
+                      "onlineVisit"
+                    )
+                  })}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text___8Cplp,
+                    {
+                      [sty.texttype_onlineVisit___8Cplp7QAlK]: hasVariant(
+                        $state,
+                        "type",
+                        "onlineVisit"
+                      )
+                    }
+                  )}
+                >
+                  {
+                    "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u062a\u0627\u062e\u06cc\u0631 \u062f\u0627\u0631\u062f."
+                  }
+                </div>
+              </React.Fragment>
             }
             className={classNames("__wab_instance", sty.button__hPh8A, {
               [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
