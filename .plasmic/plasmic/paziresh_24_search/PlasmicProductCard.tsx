@@ -939,7 +939,16 @@ function PlasmicProductCard__RenderFunc(props: {
                   component={Link}
                   href={(() => {
                     try {
-                      return `https://apigw.paziresh24.com/v1/hami/report?searchCardId=${$props.searchCardId}&name=${$props.title}&url=${window.location.href}`;
+                      return (() => {
+                        const encodedUrl = window.location.href
+                          .replace(/#/g, "%23")
+                          .replace(/&/g, "%26")
+                          .replace(/:/g, "%3A")
+                          .replace(/\//g, "%2F")
+                          .replace(/\?/g, "%3F");
+                        const reportUrl = `https://apigw.paziresh24.com/v1/hami/report?searchCardId=${$props.searchCardId}&name=${$props.title}&url=${encodedUrl}`;
+                        return reportUrl;
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
