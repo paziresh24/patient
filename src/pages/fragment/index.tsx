@@ -13,6 +13,7 @@ import { RadioFilter, radioFilterMeta } from '@/common/fragment/components/radio
 import { Portal, portalMeta } from '@/common/fragment/components/portal';
 import { Accordion, accordionMeta } from '@/common/fragment/components/accordion';
 import { Gallery, galleryMeta } from '@/common/fragment/components/gallery';
+import { Popover, popoverMeta } from '@/common/fragment/components/popover';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -111,6 +112,7 @@ registerComponent(Gallery as any, galleryMeta);
 registerGlobalContext(PWA, fragmentPWAMeta);
 registerComponent(Portal, portalMeta);
 registerComponent(Accordion, accordionMeta);
+registerComponent(Popover, popoverMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',
@@ -154,4 +156,3 @@ registerComponent(LayoutWithHeaderAndFooter, {
     width: 'stretch',
   },
 });
-
