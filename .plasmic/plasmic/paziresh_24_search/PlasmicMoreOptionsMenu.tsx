@@ -204,7 +204,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                   )}
                 >
                   {
-                    "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0627\u0635\u0644\u0627\u062d"
+                    "\u06af\u0632\u0627\u0631\u0634 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0634\u062a\u0628\u0627\u0647"
                   }
                 </div>
               }

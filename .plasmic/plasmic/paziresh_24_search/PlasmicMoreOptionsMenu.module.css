@@ -31,6 +31,7 @@
   position: relative;
   left: auto;
   top: auto;
+  z-index: 900;
   min-width: 0;
   border-radius: 8px;
   padding: 8px;
@@ -44,7 +45,7 @@
   object-fit: cover;
   width: auto;
   height: 1em;
-  color: var(--token-LXnAFDUkrIJT);
+  color: var(--token-LPwJqXnrei6F);
 }
 .text {
   color: var(--token-LXnAFDUkrIJT);
