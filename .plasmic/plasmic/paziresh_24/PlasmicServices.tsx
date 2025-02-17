@@ -756,34 +756,7 @@ function PlasmicServices__RenderFunc(props: {
         ) ? (
           <Button
             children2={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__vklI
-                )}
-              >
-                <React.Fragment>
-                  <React.Fragment>
-                    {
-                      "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 "
-                    }
-                  </React.Fragment>
-                  <span
-                    className={"plasmic_default__all plasmic_default__span"}
-                    style={{ fontWeight: 700 }}
-                  >
-                    {
-                      "\u062d\u062f\u0627\u0642\u0644 2 \u0633\u0627\u0639\u062a"
-                    }
-                  </span>
-                  <React.Fragment>
-                    {
-                      " \u062a\u0627\u062e\u06cc\u0631\u062e\u0648\u0627\u0647\u062f \u062f\u0627\u0634\u062a."
-                    }
-                  </React.Fragment>
-                </React.Fragment>
-              </div>
+              "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 \u067e\u0627\u0633\u062e\u06af\u0648 \u0646\u06cc\u0633\u062a"
             }
             className={classNames("__wab_instance", sty.button__segTd, {
               [sty.buttontype_onlineVisit__segTd7QAlK]: hasVariant(
@@ -792,64 +765,83 @@ function PlasmicServices__RenderFunc(props: {
                 "onlineVisit"
               )
             })}
-            color={"softRed"}
+            color={"softYellow"}
           />
         ) : null}
-        <Button
-          children2={
-            <React.Fragment>
-              <Icon25Icon
-                className={classNames(projectcss.all, sty.svg__c5Ok9, {
-                  [sty.svgtype_onlineVisit__c5Ok97QAlK]: hasVariant(
-                    $state,
-                    "type",
-                    "onlineVisit"
-                  )
-                })}
-                role={"img"}
-              />
+        {(
+          hasVariant($state, "type", "onlineVisit") &&
+          hasVariant(globalVariants, "screen", "mobileOnly")
+            ? (() => {
+                try {
+                  return (() => {
+                    const slugs = [
+                      "دکتر-رسول-اسماعیلی-0",
+                      "دکتر-امیرمحمود-افشار-1"
+                    ];
 
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text___8Cplp,
-                  {
-                    [sty.texttype_onlineVisit___8Cplp7QAlK]: hasVariant(
+                    const currentHour = new globalThis.Date().getHours();
+                    return (
+                      slugs.includes($props.seo.slug) &&
+                      currentHour >= 7 &&
+                      currentHour < 23
+                    );
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+            : true
+        ) ? (
+          <Button
+            children2={
+              <React.Fragment>
+                <Icon25Icon
+                  className={classNames(projectcss.all, sty.svg__c5Ok9, {
+                    [sty.svgtype_onlineVisit__c5Ok97QAlK]: hasVariant(
                       $state,
                       "type",
                       "onlineVisit"
                     )
+                  })}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text___8Cplp,
+                    {
+                      [sty.texttype_onlineVisit___8Cplp7QAlK]: hasVariant(
+                        $state,
+                        "type",
+                        "onlineVisit"
+                      )
+                    }
+                  )}
+                >
+                  {
+                    "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u062a\u0627\u062e\u06cc\u0631 \u062f\u0627\u0631\u062f."
                   }
-                )}
-              >
-                {
-                  "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0632\u0645\u0627\u0646 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u062c \u0634\u062f\u0647 \u0645\u06cc \u0628\u0627\u0634\u062f."
-                }
-              </div>
-            </React.Fragment>
-          }
-          className={classNames("__wab_instance", sty.button__hPh8A, {
-            [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
-              $state,
-              "type",
-              "onlineVisit"
-            )
-          })}
-          color={"softRed"}
-        />
-
-        <Icon23Icon
-          className={classNames(projectcss.all, sty.svg__yhkW, {
-            [sty.svgtype_onlineVisit__yhkW7QAlK]: hasVariant(
-              $state,
-              "type",
-              "onlineVisit"
-            )
-          })}
-          role={"img"}
-        />
-
+                </div>
+              </React.Fragment>
+            }
+            className={classNames("__wab_instance", sty.button__hPh8A, {
+              [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
+                $state,
+                "type",
+                "onlineVisit"
+              )
+            })}
+            color={"softSand"}
+          />
+        ) : null}
         <Button
           children2={
             hasVariant($state, "type", "onlineVisit") &&
