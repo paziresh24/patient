@@ -281,6 +281,10 @@
   color: var(--token--OFi8MN_ymYh);
   height: 1em;
 }
+.moreOptionsMenu:global(.__wab_instance) {
+  position: relative;
+  width: auto;
+}
 .link__xjBwH {
   display: flex;
   position: relative;
