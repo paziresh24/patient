@@ -62,6 +62,7 @@ import {
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
+import MoreOptionsMenu from "../../MoreOptionsMenu"; // plasmic-import: v0iNnwZxOTSN/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
@@ -161,6 +162,7 @@ export type PlasmicProductCard__OverridesType = {
   classificationApi?: Flex__<typeof DataFetcher>;
   classificationTitle?: Flex__<"span">;
   cardTitle?: Flex__<"h2">;
+  moreOptionsMenu?: Flex__<typeof MoreOptionsMenu>;
   cardSubtitle?: Flex__<"span">;
   cardAddressRow?: Flex__<"span">;
   cardPrice?: Flex__<"span">;
@@ -916,20 +918,7 @@ function PlasmicProductCard__RenderFunc(props: {
                   </LineClamp>
                 </PlasmicLink__>
               ) : null}
-              {(() => {
-                try {
-                  return $ctx.Growthbook.features
-                    .search_cards_edit_suggestion_button;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
-                }
-              })() ? (
+              {false ? (
                 <PlasmicLink__
                   className={classNames(
                     projectcss.all,
@@ -967,6 +956,28 @@ function PlasmicProductCard__RenderFunc(props: {
                     role={"img"}
                   />
                 </PlasmicLink__>
+              ) : null}
+              {(() => {
+                try {
+                  return $ctx.Growthbook.features
+                    .search_cards_edit_suggestion_button;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <MoreOptionsMenu
+                  data-plasmic-name={"moreOptionsMenu"}
+                  data-plasmic-override={overrides.moreOptionsMenu}
+                  className={classNames("__wab_instance", sty.moreOptionsMenu)}
+                  searchCardId={args.searchCardId}
+                  title={args.title}
+                />
               ) : null}
             </div>
             {(() => {
@@ -2608,6 +2619,7 @@ const PlasmicDescendants = {
     "classificationApi",
     "classificationTitle",
     "cardTitle",
+    "moreOptionsMenu",
     "cardSubtitle",
     "cardAddressRow",
     "cardPrice",
@@ -2622,6 +2634,7 @@ const PlasmicDescendants = {
   classificationApi: ["classificationApi", "classificationTitle"],
   classificationTitle: ["classificationTitle"],
   cardTitle: ["cardTitle"],
+  moreOptionsMenu: ["moreOptionsMenu"],
   cardSubtitle: ["cardSubtitle"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
@@ -2648,6 +2661,7 @@ type NodeDefaultElementType = {
   classificationApi: typeof DataFetcher;
   classificationTitle: "span";
   cardTitle: "h2";
+  moreOptionsMenu: typeof MoreOptionsMenu;
   cardSubtitle: "span";
   cardAddressRow: "span";
   cardPrice: "span";
@@ -2723,6 +2737,7 @@ export const PlasmicProductCard = Object.assign(
     classificationApi: makeNodeComponent("classificationApi"),
     classificationTitle: makeNodeComponent("classificationTitle"),
     cardTitle: makeNodeComponent("cardTitle"),
+    moreOptionsMenu: makeNodeComponent("moreOptionsMenu"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
     cardAddressRow: makeNodeComponent("cardAddressRow"),
     cardPrice: makeNodeComponent("cardPrice"),

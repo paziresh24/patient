@@ -1358,6 +1358,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicResultView.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "v0iNnwZxOTSN",
+          "name": "MoreOptionsMenu",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicMoreOptionsMenu.tsx",
+          "importSpec": {
+            "modulePath": "MoreOptionsMenu.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicMoreOptionsMenu.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1600,6 +1613,16 @@
           "id": "l0_vYhehuk4T",
           "name": "Icon41Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon41.tsx"
+        },
+        {
+          "id": "wATncvKPIXpn",
+          "name": "Icon42Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon42.tsx"
+        },
+        {
+          "id": "yKa-YpcgLEXS",
+          "name": "Icon43Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon43.tsx"
         }
       ],
       "images": [
@@ -1701,6 +1724,12 @@
           "name": "Gallery",
           "displayName": "Gallery",
           "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "RaDHRLat0tPP",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
         }
       ],
       "customFunctions": [
@@ -1711,8 +1740,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -3156,7 +3184,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
