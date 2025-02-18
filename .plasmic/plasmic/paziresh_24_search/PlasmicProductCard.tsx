@@ -407,6 +407,9 @@ function PlasmicProductCard__RenderFunc(props: {
                 "isSingleCard"
               )
             })}
+            onClick={async event => {
+              const $steps = {};
+            }}
           >
             {(() => {
               try {

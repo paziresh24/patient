@@ -273,7 +273,7 @@ function PlasmicSearchResults__RenderFunc(props: {
         className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
         deps={(() => {
           try {
-            return [$ctx.Growthbook.isReady];
+            return [$ctx.Growthbook.isReady, $ctx.auth.info.id];
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -294,7 +294,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                     (() => {
                       try {
                         return {
-                          url: window.location.href
+                          url: window.location.href,
+                          user_id: $ctx.auth?.info?.id
                         };
                       } catch (e) {
                         if (
