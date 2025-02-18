@@ -1740,7 +1740,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -3174,6 +3175,12 @@
           "name": "Gallery",
           "displayName": "Gallery",
           "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "T4L-15jY2KwI",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
         }
       ],
       "customFunctions": [
@@ -3184,8 +3191,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
