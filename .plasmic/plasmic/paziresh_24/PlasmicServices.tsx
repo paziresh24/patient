@@ -753,8 +753,7 @@ function PlasmicServices__RenderFunc(props: {
                 }
               })()
             : hasVariant($state, "type", "onlineVisit")
-            ? true
-            : (() => {
+            ? (() => {
                 try {
                   return (() => {
                     const slugs = [
@@ -769,6 +768,19 @@ function PlasmicServices__RenderFunc(props: {
                       currentHour < 6
                     );
                   })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+            : (() => {
+                try {
+                  return true;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
