@@ -756,7 +756,19 @@ function PlasmicServices__RenderFunc(props: {
             ? true
             : (() => {
                 try {
-                  return true;
+                  return (() => {
+                    const slugs = [
+                      "دکتر-رسول-اسماعیلی-0",
+                      "دکتر-امیرمحمود-افشار-1"
+                    ];
+
+                    const currentHour = new globalThis.Date().getHours();
+                    return (
+                      slugs.includes($props.seo.slug) &&
+                      currentHour >= 0 &&
+                      currentHour < 6
+                    );
+                  })();
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
