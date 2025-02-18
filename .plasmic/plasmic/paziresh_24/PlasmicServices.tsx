@@ -752,7 +752,21 @@ function PlasmicServices__RenderFunc(props: {
                   throw e;
                 }
               })()
-            : true
+            : hasVariant($state, "type", "onlineVisit")
+            ? true
+            : (() => {
+                try {
+                  return true;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
         ) ? (
           <Button
             children2={
@@ -760,13 +774,20 @@ function PlasmicServices__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.__wab_text,
-                  sty.text__vklI
+                  sty.text__vklI,
+                  {
+                    [sty.texttype_onlineVisit__vklI7QAlK]: hasVariant(
+                      $state,
+                      "type",
+                      "onlineVisit"
+                    )
+                  }
                 )}
               >
                 <React.Fragment>
                   <React.Fragment>
                     {
-                      "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 "
+                      "\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 "
                     }
                   </React.Fragment>
                   <span
@@ -801,16 +822,18 @@ function PlasmicServices__RenderFunc(props: {
             ? (() => {
                 try {
                   return (() => {
-                    const slugs = [
-                      "دکتر-رسول-اسماعیلی-0",
-                      "دکتر-امیرمحمود-افشار-1"
-                    ];
-
                     const currentHour = new globalThis.Date().getHours();
+                    const currentSlug = $props.seo.slug;
                     return (
-                      slugs.includes($props.seo.slug) &&
-                      currentHour >= 7 &&
-                      currentHour < 23
+                      ([
+                        "دکتر-رسول-اسماعیلی-0",
+                        "دکتر-امیرمحمود-افشار-1"
+                      ].includes(currentSlug) &&
+                        currentHour >= 7 &&
+                        currentHour < 23) ||
+                      (currentSlug === "دکتر-ساتی-نیک-درزی-1" &&
+                        currentHour >= 12 &&
+                        currentHour < 17)
                     );
                   })();
                 } catch (e) {
