@@ -356,7 +356,9 @@
 }
 .button__segTd:global(.__wab_instance) {
   max-width: 100%;
-  display: none;
+}
+.buttontype_onlineVisit__segTd7QAlK:global(.__wab_instance) {
+  display: flex;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .buttontype_onlineVisit__segTd7QAlK:global(.__wab_instance) {
