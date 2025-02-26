@@ -111,16 +111,12 @@ const Receipt = () => {
     timestamp: bookDetailsData.book_time,
   });
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
-  const {
-    display_name,
-    isLoading: profileNameLoading,
-    specialities,
-  } = useProfile({
+  const { isLoading: profileNameLoading, specialities } = useProfile({
     slug: bookDetailsData?.doctor?.slug,
     includeData: ['SPECIALITIES'],
   });
 
-  const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
+  const doctorName = bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
     growthbook.setAttributes({
