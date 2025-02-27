@@ -32,6 +32,8 @@ import MoveTurn from '../../moveTurn/moveTurn';
 import Queue from '../../queue';
 import { SecureCallButton } from '../../secureCallButton/secureCallButton';
 import { OnlineVisitChannel } from '../turnType';
+import axios from 'axios';
+import { growthbook } from 'src/pages/_app';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -92,7 +94,21 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
   const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
   const { handleOpen: handleOpenTurnDesciription, modalProps: turnDesciriptionProp } = useModal();
-  const { handleOpen: handleOpenRemoveTurn, handleClose: handleCloseRemoveTurnModal, modalProps: removeTurnProp } = useModal();
+  const {
+    handleOpen: handleOpenRemoveTurn,
+    handleClose: handleCloseRemoveTurnModal,
+    modalProps: removeTurnProp,
+  } = useModal({
+    onClose: () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        user_center_id: undefined,
+        center_id: undefined,
+        book_id: undefined,
+        slug: undefined,
+      });
+    },
+  });
 
   const router = useRouter();
   const { removeBookApi } = useBookAction();
@@ -155,6 +171,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         center_id: centerId,
         reference_code: trackingCode,
         national_code: nationalCode,
+        book_id: id,
       },
       {
         onSuccess: data => {
@@ -182,11 +199,23 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }
           toast.error(data.data.message);
         },
+        onError: (error: any) => {
+          if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.message);
+          }
+        },
       },
     );
   };
 
   const showRemoveTurnModal = () => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      user_center_id: userCenterId,
+      center_id: centerId,
+      book_id: id,
+      slug: slug,
+    });
     handleOpenRemoveTurn();
     splunkInstance('doctor-profile').sendEvent({
       group: 'my-turn',
@@ -310,7 +339,6 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           </Button>
         )}
       </div>
-
 
       {paymentStatus === PaymentStatus.paying && !localPaymentCenters.includes(centerId) && (
         <Button variant="primary" block={true} onClick={redirectToFactor}>

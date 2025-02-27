@@ -126,7 +126,10 @@ const Receipt = () => {
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       slug: bookDetailsData?.doctor?.slug,
+      book_id: bookId,
+      center_id: centerId,
     });
+
     return () => {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
@@ -213,6 +216,7 @@ const Receipt = () => {
         center_id: bookDetailsData.center_id,
         national_code: bookDetailsData.patient?.national_code,
         reference_code: bookDetailsData.reference_code,
+        book_id: bookId as string,
       },
       {
         onSuccess: data => {
@@ -240,6 +244,11 @@ const Receipt = () => {
             return;
           }
           toast.error(data.data.message);
+        },
+        onError: (error: any) => {
+          if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.message);
+          }
         },
       },
     );
