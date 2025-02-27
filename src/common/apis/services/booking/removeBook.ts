@@ -1,14 +1,26 @@
-import { clinicClient } from '@/common/apis/client';
+import { apiGatewayClient, clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useMutation } from '@tanstack/react-query';
 
 interface Params {
   center_id: string;
   reference_code: string;
   national_code: string;
+  book_id: string;
 }
 
-export const removeBook = (params: Params) => {
+export const removeBook = ({ book_id, ...params }: Params, useMoshirDeleteBook: boolean) => {
+  if (useMoshirDeleteBook) {
+    return apiGatewayClient.post(
+      '/moshir/v1/deleteBook',
+      formData({
+        ...params,
+        book_id,
+      }),
+    );
+  }
+
   return clinicClient.post(
     '/api/deleteBook',
     formData({
@@ -18,5 +30,6 @@ export const removeBook = (params: Params) => {
 };
 
 export const useRemoveBook = () => {
-  return useMutation(removeBook);
+  const useMoshirDeleteBook = useFeatureIsOn('moshir-delete-book-api');
+  return useMutation((params: Params) => removeBook(params, useMoshirDeleteBook));
 };

@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
+import axios from 'axios';
 
 interface TurnHeaderProps {
   id: string;
@@ -51,6 +52,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
         center_id: centerId,
         reference_code: trackingCode,
         national_code: nationalCode,
+        book_id: id,
       },
       {
         onSuccess: data => {
@@ -60,6 +62,11 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
             return;
           }
           toast.error(data.data.message);
+        },
+        onError: (error: any) => {
+          if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.message);
+          }
         },
       },
     );
