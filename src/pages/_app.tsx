@@ -69,7 +69,7 @@ function MyApp(props: AppProps) {
     return () => {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
-  }, []);
+  }, [router.query]);
 
   useEffect(() => {
     growthbook.setAttributes({
