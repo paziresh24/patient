@@ -176,6 +176,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
+            toast.success(data.data?.message);
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
             if (isOnlineVisitTurn) {
@@ -197,7 +198,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             }
             return;
           }
-          toast.error(data.data.message);
+          toast.error(data.data.message ?? data.data?.[0]?.message);
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
