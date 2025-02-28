@@ -123,6 +123,7 @@ const Receipt = () => {
   const doctorName = display_name ?? bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
+    growthbook.loadFeatures({ skipCache: true });
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       slug: bookDetailsData?.doctor?.slug,

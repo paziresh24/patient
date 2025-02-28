@@ -2,6 +2,7 @@ import { apiGatewayClient, clinicClient } from '@/common/apis/client';
 import { formData } from '@/common/utils/formData';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useMutation } from '@tanstack/react-query';
+import { growthbook } from 'src/pages/_app';
 
 interface Params {
   center_id: string;
@@ -31,5 +32,7 @@ export const removeBook = ({ book_id, ...params }: Params, useMoshirDeleteBook: 
 
 export const useRemoveBook = () => {
   const useMoshirDeleteBook = useFeatureIsOn('moshir-delete-book-api');
+  growthbook.loadFeatures({ skipCache: true });
+
   return useMutation((params: Params) => removeBook(params, useMoshirDeleteBook));
 };
