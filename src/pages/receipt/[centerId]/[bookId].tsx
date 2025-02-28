@@ -223,7 +223,7 @@ const Receipt = () => {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
             handleCloseRemoveModal();
-            toast.success('نوبت شما با موفقیت لغو شد!');
+            toast.success(data.data?.message);
             if (centerType === 'consult') {
               splunkInstance('doctor-profile').sendEvent({
                 group: 'my-turn',
@@ -244,7 +244,7 @@ const Receipt = () => {
             router.push('/patient/appointments');
             return;
           }
-          toast.error(data.data.message);
+          toast.error(data.data.message ?? data.data?.[0]?.message);
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
