@@ -405,7 +405,7 @@ function PlasmicProfileActivity__RenderFunc(props: {
                   dangerouslySetInnerHTML={{
                     __html: (() => {
                       try {
-                        return `<b>${$props.history.count_of_consult_books}</b> مشاوره فعال`;
+                        return `<b>${$props.history.count_of_consult_books}</b> مشاوره موفق`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
