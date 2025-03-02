@@ -28,7 +28,7 @@ export const FragmentRateReview = ({ profileData, fragmentComponents }: { profil
       sort,
       search: searchTerm,
       offset: (page - 1) * 10,
-      showOnlyPositiveFeedbacks: isLogin && userInfo?.id === profileData.information.user_id ? false : true,
+      isDoctor: isLogin && userInfo?.id === profileData.information.user_id ? true : false,
       ...filterParams,
     },
     {

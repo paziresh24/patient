@@ -11,12 +11,12 @@ export interface ReviewParams {
   visited?: boolean;
   center_id?: string;
   offset?: number;
-  showOnlyPositiveFeedbacks?: boolean;
+  isDoctor?: boolean;
   book_id?: string;
 }
 
 export const getReviews = async (params: ReviewParams) => {
-  const { data } = await apiGatewayClient.get(`/ravi/v1/feedbacks`, {
+  const { data } = await apiGatewayClient.get(params.isDoctor ? `/ravi/v2/feedbacks-fordoc` : `/ravi/v2/feedbacks`, {
     params: {
       where: [
         params.slug && `(doctor_slug,eq,${params.slug})`,
@@ -26,7 +26,6 @@ export const getReviews = async (params: ReviewParams) => {
         params.not_recommended && `(recommended,eq,0)`,
         params.visited && `(visit_status,eq,visited)`,
         params.center_id && `(center_id,eq,${params.center_id})`,
-        params.showOnlyPositiveFeedbacks && `((avg_rate_value,gt,3.5)~or(avg_rate_value,is,null))`,
         params.book_id && `(book_id,eq,${params.book_id})`,
       ]
         .filter(Boolean)

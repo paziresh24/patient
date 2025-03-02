@@ -408,14 +408,14 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             {
               slug: slugFormmated,
               sort: 'default_order',
-              showOnlyPositiveFeedbacks: true,
+              isDoctor: false,
             },
           ],
           () =>
             getReviews({
               slug: slugFormmated,
               sort: 'default_order',
-              showOnlyPositiveFeedbacks: true,
+              isDoctor: false,
             }),
         );
       }
