@@ -856,8 +856,12 @@ function PlasmicServices__RenderFunc(props: {
                         currentHour >= 7 &&
                         currentHour < 23) ||
                       (currentSlug === "دکتر-ساتی-نیک-درزی-1" &&
-                        currentHour >= 12 &&
-                        currentHour < 17)
+                        ((currentHour >= 14 && currentHour < 17) ||
+                          (currentHour >= 21 && currentHour < 23) ||
+                          (currentHour >= 2 && currentHour < 5))) ||
+                      (currentSlug === "دکتر-مهدی-نصوحی-0" &&
+                        ((currentHour >= 10 && currentHour < 12) ||
+                          (currentHour >= 14 && currentHour < 17)))
                     );
                   })();
                 } catch (e) {
@@ -901,7 +905,7 @@ function PlasmicServices__RenderFunc(props: {
                   )}
                 >
                   {
-                    "\u0637\u0628\u0642 \u0646\u0638\u0631 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0632\u0645\u0627\u0646 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u062c \u0634\u062f\u0647 \u0645\u06cc \u0628\u0627\u0634\u062f."
+                    " \u0632\u0645\u0627\u0646 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u062c \u0634\u062f\u0647 \u0645\u06cc \u0628\u0627\u0634\u062f."
                   }
                 </div>
               </React.Fragment>
