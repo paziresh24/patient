@@ -285,6 +285,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         selected_cell: user?.cell,
         selected_name: user?.name,
         selected_family: user?.family,
+        selected_online_channel: user?.messengerType,
         user_id: getProvider?.data?.user_id,
         provider_id: getProvider?.data?.id,
       });
@@ -336,6 +337,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 selected_cell: user?.cell,
                 selected_name: user?.name,
                 selected_family: user?.family,
+                selected_online_channel: user?.messengerType,
                 user_id: getProvider?.data?.user_id,
                 provider_id: getProvider?.data?.id,
                 book_id: data.book_info.id,
