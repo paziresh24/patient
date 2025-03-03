@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: J-umObTYZwAG/codeComponent
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
@@ -75,7 +76,6 @@ import EitaaSvgIcon from "./icons/PlasmicIcon__EitaaSvg"; // plasmic-import: WqD
 import WhatsappSvgIcon from "./icons/PlasmicIcon__WhatsappSvg"; // plasmic-import: aiEdwD29mrY6/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: Zop7nqClMso8/icon
 import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: UYWDQf69XzlE/icon
-import Icon25Icon from "./icons/PlasmicIcon__Icon25"; // plasmic-import: rtTJLgJ9hRbl/icon
 import Icon24Icon from "./icons/PlasmicIcon__Icon24"; // plasmic-import: bFoMwbPekE8y/icon
 
 createPlasmicElementProxy;
@@ -111,6 +111,7 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicServices__OverridesType = {
   root?: Flex__<"div">;
+  apiRequest?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultServicesProps {
@@ -170,6 +171,24 @@ function PlasmicServices__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.type
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -724,172 +743,137 @@ function PlasmicServices__RenderFunc(props: {
             </div>
           ) : null}
         </div>
-        {(
-          hasVariant($state, "type", "onlineVisit") &&
-          hasVariant(globalVariants, "screen", "mobileOnly")
-            ? (() => {
-                try {
-                  return (() => {
-                    const slugs = [
-                      "دکتر-رسول-اسماعیلی-0",
-                      "دکتر-امیرمحمود-افشار-1"
-                    ];
-
-                    const currentHour = new globalThis.Date().getHours();
-                    return (
-                      slugs.includes($props.seo.slug) &&
-                      currentHour >= 0 &&
-                      currentHour < 6
-                    );
-                  })();
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+        <ApiRequest
+          data-plasmic-name={"apiRequest"}
+          data-plasmic-override={overrides.apiRequest}
+          className={classNames("__wab_instance", sty.apiRequest, {
+            [sty.apiRequesttype_onlineVisit]: hasVariant(
+              $state,
+              "type",
+              "onlineVisit"
+            )
+          })}
+          errorDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___7Wzl1,
+                {
+                  [sty.texttype_onlineVisit___7Wzl17QAlK]: hasVariant(
+                    $state,
+                    "type",
+                    "onlineVisit"
+                  )
                 }
-              })()
-            : hasVariant($state, "type", "onlineVisit")
-            ? (() => {
-                try {
-                  return (() => {
-                    const slugs = [
-                      "دکتر-رسول-اسماعیلی-0",
-                      "دکتر-امیرمحمود-افشار-1"
-                    ];
-
-                    const currentHour = new globalThis.Date().getHours();
-                    return (
-                      slugs.includes($props.seo.slug) &&
-                      currentHour >= 0 &&
-                      currentHour < 6
-                    );
-                  })();
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })()
-            : (() => {
-                try {
-                  return true;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })()
-        ) ? (
-          <Button
-            children2={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__vklI,
-                  {
-                    [sty.texttype_onlineVisit__vklI7QAlK]: hasVariant(
-                      $state,
-                      "type",
-                      "onlineVisit"
-                    )
-                  }
-                )}
-              >
-                <React.Fragment>
-                  <React.Fragment>
-                    {
-                      "\u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0646\u06cc\u0645\u0647 \u0634\u0628 "
+              )}
+            >
+              {"Error fetching data"}
+            </div>
+          }
+          loadingDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__v9PmT
+              )}
+            >
+              {"Loading..."}
+            </div>
+          }
+          method={
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? "GET"
+              : "GET"
+          }
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          params={
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? (() => {
+                  try {
+                    return {
+                      where: `(slug,eq,${$props.seo.slug})`
+                    };
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  </React.Fragment>
-                  <span
-                    className={"plasmic_default__all plasmic_default__span"}
-                    style={{ fontWeight: 700 }}
-                  >
-                    {
-                      "\u062d\u062f\u0627\u0642\u0644 2 \u0633\u0627\u0639\u062a"
-                    }
-                  </span>
-                  <React.Fragment>
-                    {
-                      " \u062a\u0627\u062e\u06cc\u0631\u062e\u0648\u0627\u0647\u062f \u062f\u0627\u0634\u062a."
-                    }
-                  </React.Fragment>
-                </React.Fragment>
-              </div>
-            }
-            className={classNames("__wab_instance", sty.button__segTd, {
-              [sty.buttontype_onlineVisit__segTd7QAlK]: hasVariant(
-                $state,
-                "type",
-                "onlineVisit"
-              )
-            })}
-            color={"softRed"}
-          />
-        ) : null}
-        {(
-          hasVariant($state, "type", "onlineVisit") &&
-          hasVariant(globalVariants, "screen", "mobileOnly")
-            ? (() => {
-                try {
-                  return (() => {
-                    const currentHour = new globalThis.Date().getHours();
-                    const currentSlug = $props.seo.slug;
-                    return (
-                      ([
-                        "دکتر-رسول-اسماعیلی-0",
-                        "دکتر-امیرمحمود-افشار-1"
-                      ].includes(currentSlug) &&
-                        currentHour >= 7 &&
-                        currentHour < 23) ||
-                      (currentSlug === "دکتر-ساتی-نیک-درزی-1" &&
-                        ((currentHour >= 14 && currentHour < 17) ||
-                          (currentHour >= 21 && currentHour < 23) ||
-                          (currentHour >= 2 && currentHour < 5))) ||
-                      (currentSlug === "دکتر-مهدی-نصوحی-0" &&
-                        ((currentHour >= 10 && currentHour < 12) ||
-                          (currentHour >= 14 && currentHour < 17)))
-                    );
-                  })();
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
+                    throw e;
                   }
-                  throw e;
-                }
-              })()
-            : true
-        ) ? (
-          <Button
-            children2={
-              <React.Fragment>
-                <Icon25Icon
-                  className={classNames(projectcss.all, sty.svg__c5Ok9, {
-                    [sty.svgtype_onlineVisit__c5Ok97QAlK]: hasVariant(
-                      $state,
-                      "type",
-                      "onlineVisit"
-                    )
-                  })}
-                  role={"img"}
-                />
-
+                })()
+              : undefined
+          }
+          url={
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? "https://apigw.paziresh24.com/ravi/v1/anomali"
+              : undefined
+          }
+        >
+          {(
+            hasVariant($state, "type", "onlineVisit") &&
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? (() => {
+                  try {
+                    return (() => {
+                      const currentDate = new globalThis.Date();
+                      const currentHour = currentDate.getHours();
+                      const currentMinute = currentDate.getMinutes();
+                      function isInTimeRange(hour) {
+                        const startHour = hour;
+                        const endHour = hour + 1;
+                        if (
+                          (currentHour === startHour && currentMinute >= 0) ||
+                          (currentHour === endHour && currentMinute === 0) ||
+                          (currentHour > startHour && currentHour < endHour)
+                        ) {
+                          return true;
+                        }
+                        return false;
+                      }
+                      const result =
+                        $state.apiRequest.data?.list?.[0]?.anomali_hours?.data?.some(
+                          item => isInTimeRange(item.hour)
+                        );
+                      return result;
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })()
+              : true
+          ) ? (
+            <Button
+              children2={
                 <div
                   className={classNames(
                     projectcss.all,
@@ -908,29 +892,18 @@ function PlasmicServices__RenderFunc(props: {
                     " \u0632\u0645\u0627\u0646 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u062c \u0634\u062f\u0647 \u0645\u06cc \u0628\u0627\u0634\u062f."
                   }
                 </div>
-              </React.Fragment>
-            }
-            className={classNames("__wab_instance", sty.button__hPh8A, {
-              [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
-                $state,
-                "type",
-                "onlineVisit"
-              )
-            })}
-            color={"softRed"}
-          />
-        ) : null}
-        <Icon23Icon
-          className={classNames(projectcss.all, sty.svg__yhkW, {
-            [sty.svgtype_onlineVisit__yhkW7QAlK]: hasVariant(
-              $state,
-              "type",
-              "onlineVisit"
-            )
-          })}
-          role={"img"}
-        />
-
+              }
+              className={classNames("__wab_instance", sty.button__hPh8A, {
+                [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
+                  $state,
+                  "type",
+                  "onlineVisit"
+                )
+              })}
+              color={"softRed"}
+            />
+          ) : null}
+        </ApiRequest>
         <Button
           children2={
             hasVariant($state, "type", "onlineVisit") &&
@@ -1102,13 +1075,15 @@ function PlasmicServices__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "apiRequest"],
+  apiRequest: ["apiRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  apiRequest: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1171,6 +1146,7 @@ export const PlasmicServices = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    apiRequest: makeNodeComponent("apiRequest"),
 
     // Metadata about props expected for PlasmicServices
     internalVariantProps: PlasmicServices__VariantProps,
