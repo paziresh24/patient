@@ -753,35 +753,8 @@ function PlasmicServices__RenderFunc(props: {
               "onlineVisit"
             )
           })}
-          errorDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text___7Wzl1,
-                {
-                  [sty.texttype_onlineVisit___7Wzl17QAlK]: hasVariant(
-                    $state,
-                    "type",
-                    "onlineVisit"
-                  )
-                }
-              )}
-            >
-              {"Error fetching data"}
-            </div>
-          }
-          loadingDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__v9PmT
-              )}
-            >
-              {"Loading..."}
-            </div>
-          }
+          errorDisplay={null}
+          loadingDisplay={null}
           method={
             hasVariant($state, "type", "onlineVisit") &&
             hasVariant(globalVariants, "screen", "mobileOnly")
