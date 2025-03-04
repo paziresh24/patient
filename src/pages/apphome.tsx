@@ -2,21 +2,29 @@ import Logo from '@/common/components/atom/logo';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { Fragment } from '@/common/fragment';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
+import { useSearchStore } from '@/modules/search/store/search';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect } from 'react';
+import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
+import { ReactElement, useEffect, useState } from 'react';
 
-const Home = () => {
+const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
   const { query, isReady } = useRouter();
   const { recent } = useRecentSearch();
+  const [defaultInputValue, setDefaultInputValue] = useState('');
+  const { setIsOpenSuggestion } = useSearchStore();
+  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
+  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
+  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
 
   useEffect(() => {
     if (isReady && isApplication) {
@@ -35,10 +43,31 @@ const Home = () => {
         <Logo as="h1" className="text-2xl md:text-3xl" width={55} />
 
         <div className="flex justify-center w-full px-4">
-          <Suggestion />
+          <Suggestion
+            showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+            defaultInputValue={defaultInputValue}
+            setDefaultInputValue={setDefaultInputValue}
+          />
         </div>
-        <div className="flex justify-center w-full px-4">{recent.length > 0 && <RecentSearch />}</div>
-        <OnlineVisitPromote />
+        {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
+          <div className="lg:w-[50rem] w-full">
+            <Fragment
+              name="RecentSearch"
+              props={{
+                onClick: (value: any) => {
+                  setDefaultInputValue(value?.name || '');
+                  setIsOpenSuggestion(true);
+                },
+              }}
+            />
+          </div>
+        )}
+
+        {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
+          <div className="lg:w-[50rem] w-full">
+            <RecentSearch />
+          </div>
+        )}
       </main>
     </>
   );
@@ -60,9 +89,34 @@ Home.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
+    let showPlasmicSuggestion: boolean = false;
+    let showPlasmicRecentSearch: boolean = false;
+    let showPlasmicOnlineVisit: boolean = false;
+    try {
+      const host = context.req.headers.host;
+      const path = context.resolvedUrl;
+
+      const url = `https://${host}${path}`;
+      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+      const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ url });
+      await growthbook.loadFeatures({ timeout: 1000 });
+
+      // Plasmic
+      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
+      showPlasmicRecentSearch = growthbook.isOn('search_plasmic_recent_search');
+      showPlasmicOnlineVisit = growthbook.isOn('search_plasmic_online_visit');
+    } catch (error) {
+      console.error(error);
+    }
     return {
       props: {
         query: context.query,
+        fragmentComponents: {
+          showPlasmicSuggestion,
+          showPlasmicRecentSearch,
+          showPlasmicOnlineVisit,
+        },
       },
     };
   }),
