@@ -111,6 +111,7 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicServices__OverridesType = {
   root?: Flex__<"div">;
+  apiRequest2?: Flex__<typeof ApiRequest>;
   apiRequest?: Flex__<typeof ApiRequest>;
 };
 
@@ -186,6 +187,24 @@ function PlasmicServices__RenderFunc(props: {
       },
       {
         path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest2.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest2.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest2.loading",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
@@ -743,6 +762,101 @@ function PlasmicServices__RenderFunc(props: {
             </div>
           ) : null}
         </div>
+        {(
+          hasVariant($state, "type", "onlineVisit") &&
+          hasVariant(globalVariants, "screen", "mobileOnly")
+            ? (() => {
+                try {
+                  return $props.seo.slug === "دکتر-مهدی-نصوحی-0";
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
+            : true
+        ) ? (
+          <div
+            className={classNames(projectcss.all, sty.freeBox___6ASCm, {
+              [sty.freeBoxtype_onlineVisit___6ASCm7QAlK]: hasVariant(
+                $state,
+                "type",
+                "onlineVisit"
+              )
+            })}
+          >
+            <ApiRequest
+              data-plasmic-name={"apiRequest2"}
+              data-plasmic-override={overrides.apiRequest2}
+              className={classNames("__wab_instance", sty.apiRequest2, {
+                [sty.apiRequest2type_onlineVisit]: hasVariant(
+                  $state,
+                  "type",
+                  "onlineVisit"
+                )
+              })}
+              errorDisplay={null}
+              loadingDisplay={null}
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest2",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest2",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest2",
+                  "data"
+                ]).apply(null, eventArgs);
+              }}
+              url={"https://apigw.paziresh24.com/ravi/v1/came_sensore"}
+            >
+              <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__rZHtS,
+                      {
+                        [sty.texttype_onlineVisit__rZHtS7QAlK]: hasVariant(
+                          $state,
+                          "type",
+                          "onlineVisit"
+                        )
+                      }
+                    )}
+                  >
+                    {
+                      "\u062f\u0642\u062a \u06a9\u0646\u06cc\u062f: \u067e\u0632\u0634\u06a9 \u0647\u0646\u0648\u0632 \u0628\u06cc\u0645\u0627\u0631 \u0642\u0628\u0644\u06cc \u0631\u0627 \u0648\u06cc\u0632\u06cc\u062a \u0646\u06a9\u0631\u062f\u0647 \u0627\u0633\u062a."
+                    }
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.button__vm8Im, {
+                  [sty.buttontype_onlineVisit__vm8Im7QAlK]: hasVariant(
+                    $state,
+                    "type",
+                    "onlineVisit"
+                  )
+                })}
+                color={"softYellow"}
+                endIcon={null}
+                startIcon={null}
+              />
+            </ApiRequest>
+          </div>
+        ) : null}
         <ApiRequest
           data-plasmic-name={"apiRequest"}
           data-plasmic-override={overrides.apiRequest}
@@ -1048,7 +1162,8 @@ function PlasmicServices__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest"],
+  root: ["root", "apiRequest2", "apiRequest"],
+  apiRequest2: ["apiRequest2"],
   apiRequest: ["apiRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -1056,6 +1171,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  apiRequest2: typeof ApiRequest;
   apiRequest: typeof ApiRequest;
 };
 
@@ -1119,6 +1235,7 @@ export const PlasmicServices = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    apiRequest2: makeNodeComponent("apiRequest2"),
     apiRequest: makeNodeComponent("apiRequest"),
 
     // Metadata about props expected for PlasmicServices

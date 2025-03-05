@@ -354,6 +354,40 @@
 .texttype_onlineVisit__dNgG7QAlK {
   display: block;
 }
+.freeBox___6ASCm {
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+  display: none;
+  padding: 0px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBoxtype_onlineVisit___6ASCm7QAlK {
+    display: flex;
+  }
+}
+.apiRequest2:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.button__vm8Im:global(.__wab_instance) {
+  max-width: 100%;
+  display: none;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .buttontype_onlineVisit__vm8Im7QAlK:global(.__wab_instance) {
+    display: flex;
+  }
+}
+.text__rZHtS {
+  font-size: var(--token-VrIY9r5RDQZ_);
+  color: var(--token-1jTXKEDkeRHC);
+}
 .apiRequest:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
