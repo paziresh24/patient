@@ -33,7 +33,6 @@ const Factor = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const getBookDetails = useGetBookDetails();
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
-  const { display_name, isLoading: profileNameLoading } = useProfile({ slug: getBookDetails.data?.data?.result?.[0]?.doctor_slug });
 
   useEffect(() => {
     if (!isLogin && !userPending) {
@@ -47,7 +46,7 @@ const Factor = () => {
   }, [bookId, isLogin, userPending]);
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
-  const doctorName = display_name ?? bookDetailsData?.doctor_display_name ?? '';
+  const doctorName = bookDetailsData?.doctor_display_name ?? '';
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
@@ -88,7 +87,7 @@ const Factor = () => {
               degree: bookDetailsData?.expertises?.[0]?.degree?.name,
               expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
             })}
-            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData || profileNameLoading}
+            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
           />
           {centerId === CENTERS.CONSULT && (getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
             <Skeleton w="100%" h="8rem" className="!mt-2" rounded="md" />
