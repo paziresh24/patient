@@ -1,0 +1,197 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 20px;
+}
+.root > :global(.__wab_flex-container) {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  margin-top: calc(0px - 15px);
+  height: calc(100% + 15px);
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: 15px;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__nBwz4 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+}
+.apiRequest2:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__daNwg {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+}
+.text__h1Ll {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__wxcz5 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__wxcz5 > :global(.__wab_flex-container) {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+  margin-top: calc(0px - 2px);
+  height: calc(100% + 2px);
+}
+.freeBox__wxcz5 > :global(.__wab_flex-container) > *,
+.freeBox__wxcz5 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__wxcz5 > :global(.__wab_flex-container) > picture > img,
+.freeBox__wxcz5
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 2px;
+}
+.freeBox__vnEpp {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox__vnEpp > :global(.__wab_flex-container) {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: calc(0px - 5px);
+  width: calc(100% + 5px);
+}
+.freeBox__vnEpp > :global(.__wab_flex-container) > *,
+.freeBox__vnEpp > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__vnEpp > :global(.__wab_flex-container) > picture > img,
+.freeBox__vnEpp
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 5px;
+}
+.freeBox__dyTj {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 7px;
+  justify-content: flex-start;
+  align-items: center;
+  background: #00b894;
+  width: 7px;
+  flex-shrink: 1;
+  min-width: 7px;
+  min-height: 7px;
+  max-width: 7px;
+  max-height: 7px;
+  border-radius: 200px;
+}
+.text___8VQOi {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  padding-top: 0px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #00b894;
+  min-width: 0;
+}
+.freeBox__bvg8K {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox__bvg8K > :global(.__wab_flex-container) {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: calc(0px - 5px);
+  width: calc(100% + 5px);
+}
+.freeBox__bvg8K > :global(.__wab_flex-container) > *,
+.freeBox__bvg8K > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__bvg8K > :global(.__wab_flex-container) > picture > img,
+.freeBox__bvg8K
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: 5px;
+}
+.freeBox__fd0Vr {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 7px;
+  justify-content: flex-start;
+  align-items: center;
+  background: #b80000;
+  width: 7px;
+  flex-shrink: 1;
+  min-width: 7px;
+  min-height: 7px;
+  max-width: 7px;
+  max-height: 7px;
+  border-radius: 200px;
+}
+.text__thjMx {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  padding-top: 0px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b80000;
+  min-width: 0;
+}
+.text__ru0Jt {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  padding-top: 0px;
+  font-size: 11px;
+  min-width: 0;
+}
+._switch:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
