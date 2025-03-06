@@ -767,7 +767,11 @@ function PlasmicServices__RenderFunc(props: {
           hasVariant(globalVariants, "screen", "mobileOnly")
             ? (() => {
                 try {
-                  return $props.seo.slug === "دکتر-مهدی-نصوحی-0";
+                  return (
+                    $props.seo.slug === "دکتر-مهدی-نصوحی-0" ||
+                    $props.seo.slug === "دکتر-امیرمحمود-افشار-1" ||
+                    $props.seo.slug === "دکتر-رسول-اسماعیلی-0"
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -820,6 +824,21 @@ function PlasmicServices__RenderFunc(props: {
                   "data"
                 ]).apply(null, eventArgs);
               }}
+              params={(() => {
+                try {
+                  return {
+                    where: `${$props.seo.slug}`
+                  };
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
               url={"https://apigw.paziresh24.com/ravi/v1/came_sensore"}
             >
               <Button
