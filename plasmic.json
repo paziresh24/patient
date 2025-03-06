@@ -3191,7 +3191,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -5134,6 +5135,325 @@
       ],
       "customFunctions": [],
       "jsBundleThemes": []
+    },
+    {
+      "projectId": "grxNYctbMek6PL66cujx3u",
+      "projectApiToken": "90MSEcvFKJ7JnzOGXpgyMzXrrogPGQ524Mr3PNwqYAlDuUwaPlEIdLRE7Z6Fv9usfuiCGCqebtDS0exCqxhw",
+      "projectName": "Launcher",
+      "version": "latest",
+      "cssFilePath": "plasmic/launcher/plasmic.module.css",
+      "components": [
+        {
+          "id": "zKD4DmZLEtqh",
+          "name": "LauncherMain",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherMain.tsx",
+          "importSpec": {
+            "modulePath": "LauncherMain.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherMain.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "h-1safqUkN1a",
+          "name": "LauncherBlocksWallet",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksWallet.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksWallet.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWallet.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "SALc6_vQPXlG",
+          "name": "LauncherBlocksShortcuts",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksShortcuts.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksShortcuts.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksShortcuts.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "p_ncR6UWroPY",
+          "name": "LauncherBlocksWidgetsSanje",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksWidgetsSanje.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksWidgetsSanje.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWidgetsSanje.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "kPpI69i3raKy",
+          "name": "LauncherBlocksWidgetsNelson",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksWidgetsNelson.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksWidgetsNelson.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWidgetsNelson.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "1JVvWgQsicxr",
+          "name": "LauncherBlocksApps",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksApps.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksApps.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "ofxhzuPg2IHJ",
+          "name": "LauncherBlocksPatientServices",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksPatientServices.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksPatientServices.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksPatientServices.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "sRZYv0Q2DAH0",
+          "name": "LauncherServices",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherServices.tsx",
+          "importSpec": {
+            "modulePath": "LauncherServices.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherServices.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "51AmRlCgKgNN",
+          "name": "LauncherComponentsService",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsService.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsService.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsService.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "hyfYYMUJ_ZCV",
+          "name": "LauncherComponentsTitle",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsTitle.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsTitle.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsTitle.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "1FBJsfya0Spv",
+          "name": "LauncherComponentsSeparator",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsSeparator.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsSeparator.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsSeparator.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "Qz6g1T5BaK7n",
+          "name": "LauncherApps",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherApps.tsx",
+          "importSpec": {
+            "modulePath": "LauncherApps.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "0KB-vfelIleY",
+          "name": "LauncherComponentsCategory",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsCategory.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsCategory.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsCategory.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "25u6_6Q-fQwp",
+          "name": "LauncherComponentsApp",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsApp.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsApp.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsApp.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        }
+      ],
+      "icons": [
+        {
+          "id": "KKbq06nKrEoJ",
+          "name": "LauncherIconsWalletIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsWallet.tsx"
+        },
+        {
+          "id": "bpf8GR68xA_B",
+          "name": "LauncherIconsChevronLeftIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsChevronLeft.tsx"
+        },
+        {
+          "id": "4lP5I8e4Rz71",
+          "name": "LauncherIconsLoaderIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsLoader.tsx"
+        }
+      ],
+      "images": [
+        {
+          "id": "ok_csAiGiEdj",
+          "name": "Launcher/Image/Performance",
+          "filePath": "plasmic/launcher/images/launcherImagePerformance.png"
+        }
+      ],
+      "indirect": false,
+      "globalContextsFilePath": "plasmic/launcher/PlasmicGlobalContextsProvider.tsx",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "vZ3dIrEadwOb",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "UKgSI1Y2oAvB",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        },
+        {
+          "id": "IpxudV5ARc89",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "pCEFX6I6UzMW",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "9ZM54Jq13pBf",
+          "name": "RadioFilter",
+          "displayName": "RadioFilter",
+          "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "OPegsXy4dTwC",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "8JnrBOuqUY30",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "tin2uH4mbZBr",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "WRLX-a6z_luG",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "fPehZr7Sn4-C",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "Zp2TCd6iY4kZ",
+          "name": "AuthGlobalContext",
+          "displayName": "AuthGlobalContext",
+          "componentImportPath": "@/common/fragment/authGlobalContext"
+        },
+        {
+          "id": "vZbgq5bYK1Sy",
+          "name": "Fragment",
+          "displayName": "Fragment",
+          "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "Lh7MsDRxKvrC",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "dI_F7URPFmvR",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
+        },
+        {
+          "id": "6WQFMgFgcDau",
+          "name": "PWA",
+          "displayName": "PWA",
+          "componentImportPath": "@/common/fragment/pwa"
+        }
+      ],
+      "customFunctions": [
+        {
+          "defaultExport": true,
+          "id": "splunkEvent",
+          "importPath": "@/common/services/plasmicSplunkEvent",
+          "name": "splunkEvent",
+          "namespace": null
+        }
+      ]
     }
   ],
   "globalVariants": {
@@ -5191,6 +5511,12 @@
         "name": "Screen",
         "projectId": "pkMLinFwM9pzwv5S5KpiAu",
         "contextFilePath": "plasmic/ravi_design_system/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "8VpbRDkwC30F",
+        "name": "Screen",
+        "projectId": "grxNYctbMek6PL66cujx3u",
+        "contextFilePath": "plasmic/launcher/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
