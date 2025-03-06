@@ -768,9 +768,9 @@ function PlasmicServices__RenderFunc(props: {
             ? (() => {
                 try {
                   return (
-                    $props.seo.slug === "دکتر-مهدی-نصوحی-0" ||
-                    $props.seo.slug === "دکتر-امیرمحمود-افشار-1" ||
-                    $props.seo.slug === "دکتر-رسول-اسماعیلی-0"
+                    $props.seo.slug.includes("دکتر-مهدی-نصوحی-0") ||
+                    $props.seo.slug.includes("دکتر-امیرمحمود-افشار-1") ||
+                    $props.seo.slug.includes("دکتر-رسول-اسماعیلی-0")
                   );
                 } catch (e) {
                   if (
