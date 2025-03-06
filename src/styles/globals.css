@@ -183,5 +183,9 @@ input[type='range']::-webkit-slider-thumb {
 
 .recharts-layer.recharts-pie,
 .recharts-sector:focus {
-    outline: none !important;
+  outline: none !important;
+}
+
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
 }
