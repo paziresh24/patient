@@ -28,87 +28,17 @@
   max-width: 100%;
   object-fit: cover;
 }
-.svg {
+.svg__suKw8 {
   object-fit: cover;
   max-width: 100%;
   width: 22px;
   height: 22px;
 }
-.freeBox__lmDdl {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  min-width: 0;
-  min-height: 0;
-  border-radius: 14px;
-}
-.freeBox__lmDdl > :global(.__wab_flex-container) {
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  min-width: 0;
-  min-height: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__lmDdl > :global(.__wab_flex-container) > *,
-.freeBox__lmDdl > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__lmDdl > :global(.__wab_flex-container) > picture > img,
-.freeBox__lmDdl
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
-}
-.freeBox__z3ShA {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.text__hg7Mm {
-  font-size: 15px;
-  font-weight: 600;
-}
-.text__g9RHu {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  text-align: right;
-  padding-top: 0px;
-  font-size: 12px;
-  min-width: 0;
-}
-.text__lkScN {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  text-align: right;
-  padding-top: 0px;
-  font-size: 10px;
-  opacity: 0.8;
-  min-width: 0;
-}
-.img__kBjmc {
+.svg___5Xek1 {
   object-fit: cover;
   max-width: 100%;
-  position: absolute;
-  left: 0px;
-  top: -20px;
-  width: 46px;
-}
-.img__kBjmc > picture > img {
-  object-fit: cover;
+  width: 22px;
+  height: 22px;
 }
 .freeBox__hIhKh {
   display: flex;
@@ -175,7 +105,7 @@
   opacity: 0.8;
   min-width: 0;
 }
-.img__fmYcq {
+.img {
   object-fit: cover;
   max-width: 100%;
   position: absolute;
@@ -183,6 +113,6 @@
   top: -20px;
   width: 46px;
 }
-.img__fmYcq > picture > img {
+.img > picture > img {
   object-fit: cover;
 }

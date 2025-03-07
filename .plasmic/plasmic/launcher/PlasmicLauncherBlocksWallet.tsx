@@ -177,11 +177,10 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"] = true
+        $steps["goToDashboardAppsWalletPayment"] = true
           ? (() => {
               const actionArgs = {
-                destination:
-                  "https://www.paziresh24.com/dashboard/apps/wallet/payment/"
+                destination: "/dashboard/apps/wallet/payment/"
               };
               return (({ destination }) => {
                 if (
@@ -198,16 +197,13 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
             })()
           : undefined;
         if (
-          $steps["goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"] !=
-            null &&
-          typeof $steps[
-            "goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"
-          ] === "object" &&
-          typeof $steps["goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"]
-            .then === "function"
+          $steps["goToDashboardAppsWalletPayment"] != null &&
+          typeof $steps["goToDashboardAppsWalletPayment"] === "object" &&
+          typeof $steps["goToDashboardAppsWalletPayment"].then === "function"
         ) {
-          $steps["goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"] =
-            await $steps["goToHttpsWwwPaziresh24ComDashboardAppsWalletPayment"];
+          $steps["goToDashboardAppsWalletPayment"] = await $steps[
+            "goToDashboardAppsWalletPayment"
+          ];
         }
       }}
     >

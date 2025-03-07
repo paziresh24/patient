@@ -167,22 +167,22 @@ function PlasmicLauncherBlocksPatientServices__RenderFunc(props: {
                 {
                   name: "نوبت های من",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-appointments.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/appointments/"
+                  url: "/dashboard/appointments/"
                 },
                 {
                   name: "دوستان من",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-friends.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/subuser/"
+                  url: "/dashboard/subuser/"
                 },
                 {
                   name: "پزشکان من",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-doctors.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/bookmarks/"
+                  url: "/dashboard/bookmarks/"
                 },
                 {
                   name: "نظرات من",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-reviews.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/apps/ravi/my_feedbacks/"
+                  url: "/dashboard/apps/ravi/my_feedbacks/"
                 }
               ];
             } catch (e) {

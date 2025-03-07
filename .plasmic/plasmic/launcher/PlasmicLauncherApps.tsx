@@ -273,6 +273,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
             />
           );
         })}
+        <div className={classNames(projectcss.all, sty.freeBox__edkby)} />
       </Stack__>
       <Stack__
         as={"div"}
@@ -331,9 +332,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               description={
                 "\u0627\u0631\u0633\u0627\u0644 \u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc \u0647\u0627 \u0628\u0631\u0627\u0633\u0627\u0633 \u0631\u0648\u06cc\u062f\u0627\u062f\u0647\u0627\u06cc \u0645\u062e\u0644\u062a\u0641"
               }
-              link={
-                "https://www.paziresh24.com/dashboard/apps/drapp/notification/"
-              }
+              link={"/dashboard/apps/drapp/notification/"}
               name={
                 "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
               }
@@ -521,9 +520,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               description={
                 "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
               }
-              link={
-                "paziresh24.com/_/liom/irregularities/?origin=launcher-apps"
-              }
+              link={"/_/liom/irregularities/?origin=launcher-apps"}
               name={
                 "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
               }

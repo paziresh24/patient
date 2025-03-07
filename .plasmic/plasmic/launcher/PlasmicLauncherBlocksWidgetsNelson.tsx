@@ -222,7 +222,12 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
         data-plasmic-name={"apiRequest"}
         data-plasmic-override={overrides.apiRequest}
         className={classNames("__wab_instance", sty.apiRequest)}
-        errorDisplay={null}
+        errorDisplay={
+          <LauncherIconsLoaderIcon
+            className={classNames(projectcss.all, sty.svg__y4P0L)}
+            role={"img"}
+          />
+        }
         loadingDisplay={
           <LauncherIconsLoaderIcon
             className={classNames(projectcss.all, sty.svg__nBwz4)}
@@ -255,15 +260,10 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
           data-plasmic-override={overrides.apiRequest2}
           className={classNames("__wab_instance", sty.apiRequest2)}
           errorDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__h1Ll
-              )}
-            >
-              {"Error fetching data"}
-            </div>
+            <LauncherIconsLoaderIcon
+              className={classNames(projectcss.all, sty.svg__psTe)}
+              role={"img"}
+            />
           }
           loadingDisplay={
             <LauncherIconsLoaderIcon
@@ -446,7 +446,26 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                       const actionArgs = {
                         args: [
                           "PATCH",
-                          "https://apigw.paziresh24.com/v1/canbookingon&off"
+                          "https://apigw.paziresh24.com/v1/canbookingon&off",
+                          undefined,
+                          (() => {
+                            try {
+                              return {
+                                user_center_id:
+                                  $state.apiRequest2.data.data[0]
+                                    .user_center_id,
+                                can_booking: "0"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
                         ]
                       };
                       return $globalActions["Fragment.apiRequest"]?.apply(

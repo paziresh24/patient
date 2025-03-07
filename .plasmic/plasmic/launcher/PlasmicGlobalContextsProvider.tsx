@@ -53,7 +53,7 @@ export default function GlobalContextsProvider(
         apiConfig={
           fragmentProps && "apiConfig" in fragmentProps
             ? fragmentProps.apiConfig!
-            : undefined
+            : { withCredentials: true }
         }
         previewApiConfig={
           fragmentProps && "previewApiConfig" in fragmentProps
