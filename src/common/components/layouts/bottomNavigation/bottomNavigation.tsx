@@ -35,6 +35,16 @@ export const BottomNavigation = () => {
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
   const servicesMenu = useMemo(() => {
+    if (!user?.id) {
+      return {
+        name: 'پروفایل',
+        icon: <UserCircle />,
+        link: '/patient',
+        pattern: '/patient',
+        privateRoute: false,
+        exact: false,
+      };
+    }
     if (customize.partnerKey) {
       return {
         name: 'پروفایل',
@@ -46,7 +56,7 @@ export const BottomNavigation = () => {
       };
     }
 
-    if (isEnabledDashboard)
+    if (isEnabledLauncher)
       return {
         name: 'خدمات',
         icon: <ElementIcon />,
@@ -57,7 +67,7 @@ export const BottomNavigation = () => {
       };
     if (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
       return {
-        name: 'داشیورد',
+        name: 'داشبورد',
         icon: <ElementIcon />,
         link: '/dashboard',
         pattern: '/dashboard',
