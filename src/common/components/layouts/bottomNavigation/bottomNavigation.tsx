@@ -7,7 +7,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/dist/client/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Text from '../../atom/text/text';
 import CalenderIcon from '../../icons/calender';
 import ElementIcon from '../../icons/element';
@@ -29,9 +29,51 @@ export const BottomNavigation = () => {
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isEnabledLauncher = useFeatureIsOn('launcher-flag');
   const isShowDashboard =
     !customize.partnerKey &&
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
+
+  const servicesMenu = useMemo(() => {
+    if (customize.partnerKey) {
+      return {
+        name: 'پروفایل',
+        icon: <UserCircle />,
+        link: '/patient',
+        pattern: '/patient',
+        privateRoute: false,
+        exact: false,
+      };
+    }
+
+    if (isEnabledDashboard)
+      return {
+        name: 'خدمات',
+        icon: <ElementIcon />,
+        link: '/_',
+        pattern: '/_',
+        privateRoute: true,
+        exact: false,
+      };
+    if (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
+      return {
+        name: 'داشیورد',
+        icon: <ElementIcon />,
+        link: '/dashboard',
+        pattern: '/dashboard',
+        privateRoute: false,
+        exact: false,
+      };
+
+    return {
+      name: 'پروفایل',
+      icon: <UserCircle />,
+      link: '/patient',
+      pattern: '/patient',
+      privateRoute: false,
+      exact: false,
+    };
+  }, [isShowDashboard, isEnabledLauncher, isEnabledDashboard, customize.partnerKey, user?.id]);
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();
@@ -85,21 +127,7 @@ export const BottomNavigation = () => {
           pattern: '/patient/appointments',
           privateRoute: true,
         },
-    user.id && isShowDashboard
-      ? {
-          name: 'داشبورد',
-          icon: <ElementIcon />,
-          link: '/dashboard',
-          pattern: '/dashboard',
-          privateRoute: false,
-        }
-      : {
-          name: 'پروفایل',
-          icon: <UserCircle />,
-          link: '/patient',
-          pattern: '/patient',
-          privateRoute: false,
-        },
+    servicesMenu,
   ];
 
   const handleChangeRoute = (link: string, privateRoute: boolean) => {
