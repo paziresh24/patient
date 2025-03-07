@@ -81,7 +81,13 @@ export const Dashboard = (props: any) => {
   }, [app, selctedMenu, user?.id, isReady]);
 
   return (
-    <LayoutWithHeaderAndFooter {...props.config} shouldShowPromoteApp={false} showFooter={false} showHeader={!isMobile}>
+    <LayoutWithHeaderAndFooter
+      {...props.config}
+      shouldShowPromoteApp={false}
+      showFooter={false}
+      showHeader={!isMobile}
+      className="!h-svh !min-h-svh !max-h-svh:"
+    >
       <SideBar className="hidden md:flex">
         <div className="flex flex-grow flex-col w-full">
           <Seo title={appName} noIndex />
