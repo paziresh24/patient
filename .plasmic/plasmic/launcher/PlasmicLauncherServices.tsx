@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsService from "../../LauncherComponentsService"; // plasmic-import: 51AmRlCgKgNN/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
@@ -143,315 +144,338 @@ function PlasmicLauncherServices__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__uIxXe)}
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__cm1K)}
+        triggerOnce={true}
       >
-        <LauncherComponentsTitle
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__uIxXe)}
+        >
+          <LauncherComponentsTitle
+            className={classNames(
+              "__wab_instance",
+              sty.launcherComponentsTitle__yVrls
+            )}
+          />
+
+          <div className={classNames(projectcss.all, sty.freeBox___86G0H)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return [
+                    {
+                      name: "مراجعین من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fmy-patients.svg?versionId=",
+                      url: "/dashboard/apps/drapp/appointments/"
+                    },
+                    {
+                      name: "ساعت کاری",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fworking-hours.svg?versionId=",
+                      url: "/dashboard/apps/drapp/workhours/"
+                    },
+                    {
+                      name: "مرخصی",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fvacation.svg?versionId=",
+                      url: "/dashboard/apps/drapp/vacation/"
+                    },
+                    {
+                      name: "تنظیمات",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fbooking-settings.svg?versionId=",
+                      url: "/dashboard/apps/drapp/setting/"
+                    }
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherComponentsService
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsService__irck1
+                  )}
+                  icon={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  key={currentIndex}
+                  link={(() => {
+                    try {
+                      return currentItem.url;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  name={(() => {
+                    try {
+                      return currentItem.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              );
+            })}
+          </div>
+        </Stack__>
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal___9YwDd)}
+        triggerOnce={true}
+      >
+        <LauncherComponentsSeparator
           className={classNames(
             "__wab_instance",
-            sty.launcherComponentsTitle__yVrls
+            sty.launcherComponentsSeparator__dUjm
           )}
         />
-
-        <div className={classNames(projectcss.all, sty.freeBox___86G0H)}>
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return [
-                  {
-                    name: "مراجعین من",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fmy-patients.svg?versionId=",
-                    url: "/dashboard/apps/drapp/appointments/"
-                  },
-                  {
-                    name: "ساعت کاری",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fworking-hours.svg?versionId=",
-                    url: "/dashboard/apps/drapp/workhours/"
-                  },
-                  {
-                    name: "مرخصی",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fvacation.svg?versionId=",
-                    url: "/dashboard/apps/drapp/vacation/"
-                  },
-                  {
-                    name: "تنظیمات",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fbooking-settings.svg?versionId=",
-                    url: "/dashboard/apps/drapp/setting/"
-                  }
-                ];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <LauncherComponentsService
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsService__irck1
-                )}
-                icon={(() => {
-                  try {
-                    return currentItem.icon;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                key={currentIndex}
-                link={(() => {
-                  try {
-                    return currentItem.url;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                name={(() => {
-                  try {
-                    return currentItem.name;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-            );
-          })}
-        </div>
-      </Stack__>
-      <LauncherComponentsSeparator
-        className={classNames(
-          "__wab_instance",
-          sty.launcherComponentsSeparator__dUjm
-        )}
-      />
-
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__mNsks)}
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__q4WNz)}
+        triggerOnce={true}
       >
-        <LauncherComponentsTitle
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__mNsks)}
+        >
+          <LauncherComponentsTitle
+            className={classNames(
+              "__wab_instance",
+              sty.launcherComponentsTitle__rqL6X
+            )}
+            title={
+              "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u062f\u0627\u062e\u062a"
+            }
+          />
+
+          <div className={classNames(projectcss.all, sty.freeBox___93XgG)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return [
+                    {
+                      name: "تراکنش ها",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
+                      url: "/dashboard/apps/katibe/bills/"
+                    },
+                    {
+                      name: "فاکتور ها",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Finvoices.svg?versionId=",
+                      url: "/dashboard/apps/katibe/factors/"
+                    },
+                    {
+                      name: "تنظیمات",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
+                      url: "/dashboard/apps/katibe/setting/"
+                    }
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherComponentsService
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsService__pWhtd
+                  )}
+                  icon={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  key={currentIndex}
+                  link={(() => {
+                    try {
+                      return currentItem.url;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  name={(() => {
+                    try {
+                      return currentItem.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              );
+            })}
+          </div>
+        </Stack__>
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__ghIlb)}
+        triggerOnce={true}
+      >
+        <LauncherComponentsSeparator
           className={classNames(
             "__wab_instance",
-            sty.launcherComponentsTitle__rqL6X
+            sty.launcherComponentsSeparator__pOLbH
           )}
-          title={
-            "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u062f\u0627\u062e\u062a"
-          }
         />
-
-        <div className={classNames(projectcss.all, sty.freeBox___93XgG)}>
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return [
-                  {
-                    name: "تراکنش ها",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
-                    url: "/dashboard/apps/katibe/bills/"
-                  },
-                  {
-                    name: "فاکتور ها",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Finvoices.svg?versionId=",
-                    url: "/dashboard/apps/katibe/factors/"
-                  },
-                  {
-                    name: "تنظیمات",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
-                    url: "/dashboard/apps/katibe/setting/"
-                  }
-                ];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <LauncherComponentsService
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsService__pWhtd
-                )}
-                icon={(() => {
-                  try {
-                    return currentItem.icon;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                key={currentIndex}
-                link={(() => {
-                  try {
-                    return currentItem.url;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                name={(() => {
-                  try {
-                    return currentItem.name;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-            );
-          })}
-        </div>
-      </Stack__>
-      <LauncherComponentsSeparator
-        className={classNames(
-          "__wab_instance",
-          sty.launcherComponentsSeparator__pOLbH
-        )}
-      />
-
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__ffZ6Q)}
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__l0T55)}
+        triggerOnce={true}
       >
-        <LauncherComponentsTitle
-          className={classNames(
-            "__wab_instance",
-            sty.launcherComponentsTitle___2CDui
-          )}
-          title={"\u0639\u0645\u0644\u06a9\u0631\u062f"}
-        />
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__ffZ6Q)}
+        >
+          <LauncherComponentsTitle
+            className={classNames(
+              "__wab_instance",
+              sty.launcherComponentsTitle___2CDui
+            )}
+            title={"\u0639\u0645\u0644\u06a9\u0631\u062f"}
+          />
 
-        <div className={classNames(projectcss.all, sty.freeBox__si3Ts)}>
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return [
-                  {
-                    name: "رتبه من",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fperformance.svg?versionId=",
-                    url: "/dashboard/apps/sanje/my-performance/"
-                  },
-                  {
-                    name: "نظرات",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Freviews.svg?versionId=",
-                    url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
+          <div className={classNames(projectcss.all, sty.freeBox__si3Ts)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return [
+                    {
+                      name: "رتبه من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fperformance.svg?versionId=",
+                      url: "/dashboard/apps/sanje/my-performance/"
+                    },
+                    {
+                      name: "نظرات",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Freviews.svg?versionId=",
+                      url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
+                    }
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
                   }
-                ];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
+                  throw e;
                 }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <LauncherComponentsService
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsService__xuf5W
-                )}
-                icon={(() => {
-                  try {
-                    return currentItem.icon;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherComponentsService
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsService__xuf5W
+                  )}
+                  icon={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()}
-                key={currentIndex}
-                link={(() => {
-                  try {
-                    return currentItem.url;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
+                  })()}
+                  key={currentIndex}
+                  link={(() => {
+                    try {
+                      return currentItem.url;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()}
-                name={(() => {
-                  try {
-                    return currentItem.name;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
+                  })()}
+                  name={(() => {
+                    try {
+                      return currentItem.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()}
-              />
-            );
-          })}
-        </div>
-      </Stack__>
+                  })()}
+                />
+              );
+            })}
+          </div>
+        </Stack__>
+      </Reveal>
     </Stack__>
   ) as React.ReactElement | null;
 }

@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
@@ -84,6 +86,7 @@ export const PlasmicLauncherComponentsService__ArgProps =
 export type PlasmicLauncherComponentsService__OverridesType = {
   root?: Flex__<"div">;
   freeBox?: Flex__<"div">;
+  reveal?: Flex__<typeof Reveal>;
   img?: Flex__<typeof PlasmicImg__>;
   text?: Flex__<"div">;
 };
@@ -200,34 +203,41 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
         data-plasmic-override={overrides.freeBox}
         className={classNames(projectcss.all, sty.freeBox)}
       >
-        <PlasmicImg__
-          data-plasmic-name={"img"}
-          data-plasmic-override={overrides.img}
-          alt={""}
-          className={classNames(sty.img)}
-          displayHeight={"26px"}
-          displayMaxHeight={"none"}
-          displayMaxWidth={"100%"}
-          displayMinHeight={"0"}
-          displayMinWidth={"0"}
-          displayWidth={"26px"}
-          height={"26px"}
-          loading={"lazy"}
-          src={(() => {
-            try {
-              return $props.icon;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
+        <Reveal
+          data-plasmic-name={"reveal"}
+          data-plasmic-override={overrides.reveal}
+          className={classNames("__wab_instance", sty.reveal)}
+          triggerOnce={true}
+        >
+          <PlasmicImg__
+            data-plasmic-name={"img"}
+            data-plasmic-override={overrides.img}
+            alt={""}
+            className={classNames(sty.img)}
+            displayHeight={"26px"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"26px"}
+            height={"26px"}
+            loading={"lazy"}
+            src={(() => {
+              try {
+                return $props.icon;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-          width={"26px"}
-        />
+            })()}
+            width={"26px"}
+          />
+        </Reveal>
       </div>
       <div
         data-plasmic-name={"text"}
@@ -255,8 +265,9 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "img", "text"],
-  freeBox: ["freeBox", "img"],
+  root: ["root", "freeBox", "reveal", "img", "text"],
+  freeBox: ["freeBox", "reveal", "img"],
+  reveal: ["reveal", "img"],
   img: ["img"],
   text: ["text"]
 } as const;
@@ -266,6 +277,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   freeBox: "div";
+  reveal: typeof Reveal;
   img: typeof PlasmicImg__;
   text: "div";
 };
@@ -332,6 +344,7 @@ export const PlasmicLauncherComponentsService = Object.assign(
   {
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
+    reveal: makeNodeComponent("reveal"),
     img: makeNodeComponent("img"),
     text: makeNodeComponent("text"),
 

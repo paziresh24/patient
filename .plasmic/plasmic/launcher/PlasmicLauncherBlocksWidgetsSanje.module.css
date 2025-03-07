@@ -116,3 +116,9 @@
 .img > picture > img {
   object-fit: cover;
 }
+.svg__zYtC3 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+}

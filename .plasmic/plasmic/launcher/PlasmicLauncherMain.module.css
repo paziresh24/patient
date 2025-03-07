@@ -27,11 +27,29 @@
     background: #f2f3f5;
   }
 }
+.reveal__j6Oe5:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
 .launcherBlocksWallet:global(.__wab_instance) {
   max-width: 100%;
 }
+.reveal__pf8Ib:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
 .launcherBlocksShortcuts:global(.__wab_instance) {
   max-width: 100%;
+}
+.reveal__vsuQt:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
 }
 .freeBox {
   display: flex;
@@ -69,8 +87,20 @@
   min-width: 40%;
   height: 120px;
 }
+.reveal__vvBKi:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
 .launcherBlocksApps:global(.__wab_instance) {
   max-width: 100%;
+}
+.reveal__h09Vw:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
 }
 .launcherBlocksPatientServices:global(.__wab_instance) {
   max-width: 100%;

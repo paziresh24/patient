@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsCategory from "../../LauncherComponentsCategory"; // plasmic-import: 0KB-vfelIleY/component
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-import: 25u6_6Q-fQwp/component
@@ -160,391 +161,411 @@ function PlasmicLauncherApps__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__irEu, "no-scroll")}
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__hxDkw)}
+        triggerOnce={true}
       >
-        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-          (() => {
-            try {
-              return [
-                { name: "همه", value: "all" },
-                {
-                  name: "اطلاع رسانی",
-                  value: "notifications"
-                },
-                {
-                  name: "افزونه پروفایل",
-                  value: "profile-plugin"
-                },
-                {
-                  name: "خودتشخیصی",
-                  value: "self-diagnosis"
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__irEu, "no-scroll")}
+        >
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return [
+                  { name: "همه", value: "all" },
+                  {
+                    name: "اطلاع رسانی",
+                    value: "notifications"
+                  },
+                  {
+                    name: "افزونه پروفایل",
+                    value: "profile-plugin"
+                  },
+                  {
+                    name: "خودتشخیصی",
+                    value: "self-diagnosis"
+                  }
+                ];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
                 }
-              ];
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <LauncherComponentsCategory
+                data-plasmic-name={"launcherComponentsCategory"}
+                data-plasmic-override={overrides.launcherComponentsCategory}
+                active={(() => {
+                  try {
+                    return $state.selectedCategory === currentItem.value;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsCategory
+                )}
+                key={currentIndex}
+                name={(() => {
+                  try {
+                    return currentItem.name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                onClick={async () => {
+                  const $steps = {};
+
+                  $steps["updateSelectedCategory"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["selectedCategory"]
+                          },
+                          operation: 0,
+                          value: currentItem.value
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateSelectedCategory"] != null &&
+                    typeof $steps["updateSelectedCategory"] === "object" &&
+                    typeof $steps["updateSelectedCategory"].then === "function"
+                  ) {
+                    $steps["updateSelectedCategory"] = await $steps[
+                      "updateSelectedCategory"
+                    ];
+                  }
+                }}
+              />
+            );
+          })}
+          <div className={classNames(projectcss.all, sty.freeBox__edkby)} />
+        </Stack__>
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__yyNqO)}
+        delay={300}
+        effect={"fade"}
+        triggerOnce={true}
+      >
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__jojFn)}
+        >
+          {(() => {
+            try {
+              return ["all", "notifications"].includes($state.selectedCategory);
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return [];
+                return true;
               }
               throw e;
             }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <LauncherComponentsCategory
-              data-plasmic-name={"launcherComponentsCategory"}
-              data-plasmic-override={overrides.launcherComponentsCategory}
-              active={(() => {
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__bug)}
+            >
+              {(() => {
                 try {
-                  return $state.selectedCategory === currentItem.value;
+                  return $state.selectedCategory === "all";
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return [];
+                    return true;
                   }
                   throw e;
                 }
-              })()}
+              })() ? (
+                <LauncherComponentsTitle
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsTitle___9YhTd
+                  )}
+                  title={
+                    "\u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc"
+                  }
+                />
+              ) : null}
+              <LauncherComponentsApp
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnelson-notification.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__v6ChM
+                )}
+                description={
+                  "\u0627\u0631\u0633\u0627\u0644 \u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc \u0647\u0627 \u0628\u0631\u0627\u0633\u0627\u0633 \u0631\u0648\u06cc\u062f\u0627\u062f\u0647\u0627\u06cc \u0645\u062e\u0644\u062a\u0641"
+                }
+                link={"/dashboard/apps/drapp/notification/"}
+                name={
+                  "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
+                }
+              />
+            </Stack__>
+          ) : null}
+          {(() => {
+            try {
+              return $state.selectedCategory === "all";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <LauncherComponentsSeparator
               className={classNames(
                 "__wab_instance",
-                sty.launcherComponentsCategory
+                sty.launcherComponentsSeparator__de8Lg
               )}
-              key={currentIndex}
-              name={(() => {
+            />
+          ) : null}
+          {(() => {
+            try {
+              return ["all", "profile-plugin"].includes(
+                $state.selectedCategory
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__jfYAj)}
+            >
+              {(() => {
                 try {
-                  return currentItem.name;
+                  return $state.selectedCategory === "all";
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return undefined;
+                    return true;
                   }
                   throw e;
                 }
-              })()}
-              onClick={async () => {
-                const $steps = {};
-
-                $steps["updateSelectedCategory"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["selectedCategory"]
-                        },
-                        operation: 0,
-                        value: currentItem.value
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["updateSelectedCategory"] != null &&
-                  typeof $steps["updateSelectedCategory"] === "object" &&
-                  typeof $steps["updateSelectedCategory"].then === "function"
-                ) {
-                  $steps["updateSelectedCategory"] = await $steps[
-                    "updateSelectedCategory"
-                  ];
+              })() ? (
+                <LauncherComponentsTitle
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsTitle__zis3D
+                  )}
+                  title={
+                    "\u0627\u0641\u0632\u0648\u0646\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+                  }
+                />
+              ) : null}
+              <LauncherComponentsApp
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finsurance-plugin.png?versionId="
                 }
-              }}
-            />
-          );
-        })}
-        <div className={classNames(projectcss.all, sty.freeBox__edkby)} />
-      </Stack__>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__jojFn)}
-      >
-        {(() => {
-          try {
-            return ["all", "notifications"].includes($state.selectedCategory);
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__bug)}
-          >
-            {(() => {
-              try {
-                return $state.selectedCategory === "all";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <LauncherComponentsTitle
                 className={classNames(
                   "__wab_instance",
-                  sty.launcherComponentsTitle___9YhTd
+                  sty.launcherComponentsApp__fBpFq
                 )}
-                title={
-                  "\u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc"
+                description={
+                  "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u067e\u0627\u06cc\u0647 \u0648 \u062a\u06a9\u0645\u06cc\u0644\u06cc \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
                 }
+                name={
+                  "\u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u0645\u0646"
+                }
+                soon={true}
               />
-            ) : null}
-            <LauncherComponentsApp
-              avatar={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnelson-notification.png?versionId="
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsApp__v6ChM
-              )}
-              description={
-                "\u0627\u0631\u0633\u0627\u0644 \u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc \u0647\u0627 \u0628\u0631\u0627\u0633\u0627\u0633 \u0631\u0648\u06cc\u062f\u0627\u062f\u0647\u0627\u06cc \u0645\u062e\u0644\u062a\u0641"
-              }
-              link={"/dashboard/apps/drapp/notification/"}
-              name={
-                "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
-              }
-            />
-          </Stack__>
-        ) : null}
-        {(() => {
-          try {
-            return $state.selectedCategory === "all";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <LauncherComponentsSeparator
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsSeparator__de8Lg
-            )}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return ["all", "profile-plugin"].includes($state.selectedCategory);
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__jfYAj)}
-          >
-            {(() => {
-              try {
-                return $state.selectedCategory === "all";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+
+              <LauncherComponentsApp
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
                 }
-                throw e;
-              }
-            })() ? (
-              <LauncherComponentsTitle
                 className={classNames(
                   "__wab_instance",
-                  sty.launcherComponentsTitle__zis3D
+                  sty.launcherComponentsApp__dA5Ff
                 )}
-                title={
-                  "\u0627\u0641\u0632\u0648\u0646\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+                description={
+                  "\u0627\u0641\u0632\u0648\u062f\u0646 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
                 }
+                name={
+                  "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
+                }
+                soon={true}
               />
-            ) : null}
-            <LauncherComponentsApp
-              avatar={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finsurance-plugin.png?versionId="
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsApp__fBpFq
-              )}
-              description={
-                "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u067e\u0627\u06cc\u0647 \u0648 \u062a\u06a9\u0645\u06cc\u0644\u06cc \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
-              }
-              name={"\u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u0645\u0646"}
-              soon={true}
-            />
 
-            <LauncherComponentsApp
-              avatar={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsApp__dA5Ff
-              )}
-              description={
-                "\u0627\u0641\u0632\u0648\u062f\u0646 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
-              }
-              name={
-                "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
-              }
-              soon={true}
-            />
-
-            <LauncherComponentsApp
-              avatar={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fwaiting-plugin.png?versionId="
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsApp__n2XvW
-              )}
-              description={
-                "\u062f\u0631 \u0632\u0645\u0627\u0646\u06cc \u06a9\u0647 \u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0628\u0633\u062a\u0647 \u0627\u0633\u062a\u060c \u0646\u0648\u0628\u062a \u0628\u062f\u0647."
-              }
-              name={
-                "\u0646\u0648\u0628\u062a \u062f\u0627\u0631 \u0634\u062f \u0628\u0647 \u0645\u0646 \u0627\u0637\u0644\u0627\u0639 \u0628\u062f\u0647"
-              }
-              soon={true}
-            />
-          </Stack__>
-        ) : null}
-        {(() => {
-          try {
-            return $state.selectedCategory === "all";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <LauncherComponentsSeparator
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsSeparator__dcM8
-            )}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return ["all", "self-diagnosis"].includes($state.selectedCategory);
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__nu6H4)}
-          >
-            {(() => {
-              try {
-                return $state.selectedCategory === "all";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+              <LauncherComponentsApp
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fwaiting-plugin.png?versionId="
                 }
-                throw e;
-              }
-            })() ? (
-              <LauncherComponentsTitle
                 className={classNames(
                   "__wab_instance",
-                  sty.launcherComponentsTitle__mMdX8
+                  sty.launcherComponentsApp__n2XvW
                 )}
-                title={"\u062e\u0648\u062f\u062a\u0634\u062e\u06cc\u0635\u06cc"}
+                description={
+                  "\u062f\u0631 \u0632\u0645\u0627\u0646\u06cc \u06a9\u0647 \u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0628\u0633\u062a\u0647 \u0627\u0633\u062a\u060c \u0646\u0648\u0628\u062a \u0628\u062f\u0647."
+                }
+                name={
+                  "\u0646\u0648\u0628\u062a \u062f\u0627\u0631 \u0634\u062f \u0628\u0647 \u0645\u0646 \u0627\u0637\u0644\u0627\u0639 \u0628\u062f\u0647"
+                }
+                soon={true}
               />
-            ) : null}
-            <LauncherComponentsApp
-              avatar={
-                "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
+            </Stack__>
+          ) : null}
+          {(() => {
+            try {
+              return $state.selectedCategory === "all";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
               }
+              throw e;
+            }
+          })() ? (
+            <LauncherComponentsSeparator
               className={classNames(
                 "__wab_instance",
-                sty.launcherComponentsApp__yj1N6
+                sty.launcherComponentsSeparator__dcM8
               )}
-              description={
-                "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
-              }
-              link={"/_/liom/irregularities/?origin=launcher-apps"}
-              name={
-                "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
-              }
             />
+          ) : null}
+          {(() => {
+            try {
+              return ["all", "self-diagnosis"].includes(
+                $state.selectedCategory
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__nu6H4)}
+            >
+              {(() => {
+                try {
+                  return $state.selectedCategory === "all";
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherComponentsTitle
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsTitle__mMdX8
+                  )}
+                  title={
+                    "\u062e\u0648\u062f\u062a\u0634\u062e\u06cc\u0635\u06cc"
+                  }
+                />
+              ) : null}
+              <LauncherComponentsApp
+                avatar={
+                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__yj1N6
+                )}
+                description={
+                  "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
+                }
+                link={"/_/liom/irregularities/?origin=launcher-apps"}
+                name={
+                  "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
+                }
+              />
 
-            <LauncherComponentsApp
-              avatar={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsApp__bytUs
-              )}
-              description={
-                "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
-              }
-              name={
-                "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9"
-              }
-              soon={true}
-            />
-          </Stack__>
-        ) : null}
-      </Stack__>
+              <LauncherComponentsApp
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__bytUs
+                )}
+                description={
+                  "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
+                }
+                name={
+                  "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9"
+                }
+                soon={true}
+              />
+            </Stack__>
+          ) : null}
+        </Stack__>
+      </Reveal>
     </div>
   ) as React.ReactElement | null;
 }
