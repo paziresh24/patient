@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-import: SALc6_vQPXlG/component
 import LauncherBlocksWidgetsSanje from "../../LauncherBlocksWidgetsSanje"; // plasmic-import: p_ncR6UWroPY/component
@@ -152,57 +153,79 @@ function PlasmicLauncherMain__RenderFunc(props: {
         sty.root
       )}
     >
-      <LauncherBlocksWallet
-        data-plasmic-name={"launcherBlocksWallet"}
-        data-plasmic-override={overrides.launcherBlocksWallet}
-        className={classNames("__wab_instance", sty.launcherBlocksWallet)}
-      />
-
-      <LauncherBlocksShortcuts
-        data-plasmic-name={"launcherBlocksShortcuts"}
-        data-plasmic-override={overrides.launcherBlocksShortcuts}
-        className={classNames("__wab_instance", sty.launcherBlocksShortcuts)}
-      />
-
-      <Stack__
-        as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox)}
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__j6Oe5)}
+        triggerOnce={true}
       >
-        <LauncherBlocksWidgetsSanje
-          data-plasmic-name={"launcherBlocksWidgetsSanje"}
-          data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
+        <LauncherBlocksWallet
+          data-plasmic-name={"launcherBlocksWallet"}
+          data-plasmic-override={overrides.launcherBlocksWallet}
+          className={classNames("__wab_instance", sty.launcherBlocksWallet)}
+        />
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__pf8Ib)}
+        triggerOnce={true}
+      >
+        <LauncherBlocksShortcuts
+          data-plasmic-name={"launcherBlocksShortcuts"}
+          data-plasmic-override={overrides.launcherBlocksShortcuts}
+          className={classNames("__wab_instance", sty.launcherBlocksShortcuts)}
+        />
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__vsuQt)}
+        triggerOnce={true}
+      >
+        <Stack__
+          as={"div"}
+          data-plasmic-name={"freeBox"}
+          data-plasmic-override={overrides.freeBox}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox)}
+        >
+          <LauncherBlocksWidgetsSanje
+            data-plasmic-name={"launcherBlocksWidgetsSanje"}
+            data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
+            className={classNames(
+              "__wab_instance",
+              sty.launcherBlocksWidgetsSanje
+            )}
+          />
+
+          <LauncherBlocksWidgetsNelson
+            data-plasmic-name={"launcherBlocksWidgetsNelson"}
+            data-plasmic-override={overrides.launcherBlocksWidgetsNelson}
+            className={classNames(
+              "__wab_instance",
+              sty.launcherBlocksWidgetsNelson
+            )}
+          />
+        </Stack__>
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__vvBKi)}
+        triggerOnce={true}
+      >
+        <LauncherBlocksApps
+          data-plasmic-name={"launcherBlocksApps"}
+          data-plasmic-override={overrides.launcherBlocksApps}
+          className={classNames("__wab_instance", sty.launcherBlocksApps)}
+        />
+      </Reveal>
+      <Reveal
+        className={classNames("__wab_instance", sty.reveal__h09Vw)}
+        triggerOnce={true}
+      >
+        <LauncherBlocksPatientServices
+          data-plasmic-name={"launcherBlocksPatientServices"}
+          data-plasmic-override={overrides.launcherBlocksPatientServices}
           className={classNames(
             "__wab_instance",
-            sty.launcherBlocksWidgetsSanje
+            sty.launcherBlocksPatientServices
           )}
         />
-
-        <LauncherBlocksWidgetsNelson
-          data-plasmic-name={"launcherBlocksWidgetsNelson"}
-          data-plasmic-override={overrides.launcherBlocksWidgetsNelson}
-          className={classNames(
-            "__wab_instance",
-            sty.launcherBlocksWidgetsNelson
-          )}
-        />
-      </Stack__>
-      <LauncherBlocksApps
-        data-plasmic-name={"launcherBlocksApps"}
-        data-plasmic-override={overrides.launcherBlocksApps}
-        className={classNames("__wab_instance", sty.launcherBlocksApps)}
-      />
-
-      <LauncherBlocksPatientServices
-        data-plasmic-name={"launcherBlocksPatientServices"}
-        data-plasmic-override={overrides.launcherBlocksPatientServices}
-        className={classNames(
-          "__wab_instance",
-          sty.launcherBlocksPatientServices
-        )}
-      />
+      </Reveal>
     </Stack__>
   ) as React.ReactElement | null;
 }

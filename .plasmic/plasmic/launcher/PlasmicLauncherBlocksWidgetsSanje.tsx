@@ -250,98 +250,130 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           "https://apigw.paziresh24.com/v1/n8n-search/webhook/growth-opportunities"
         }
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__hIhKh)}
-        >
-          <div className={classNames(projectcss.all, sty.freeBox__sgOar)}>
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__vnxRa
-              )}
-            >
-              <React.Fragment>
-                <React.Fragment>{""}</React.Fragment>
-                {
-                  <span
-                    data-plasmic-name={"span"}
-                    data-plasmic-override={overrides.span}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.span,
-                      projectcss.__wab_text,
-                      projectcss.plasmic_default__inline,
-                      sty.span
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $state.apiRequest.data?.final_score ?? 0;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "0";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </span>
-                }
+        {(() => {
+          try {
+            return !!$state.apiRequest.data?.final_score;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__hIhKh)}
+          >
+            <div className={classNames(projectcss.all, sty.freeBox__sgOar)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__vnxRa
+                )}
+              >
                 <React.Fragment>
-                  {" \u0627\u0632 \u06f1\u06f0\u06f0"}
+                  <React.Fragment>{""}</React.Fragment>
+                  {
+                    <span
+                      data-plasmic-name={"span"}
+                      data-plasmic-override={overrides.span}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.span,
+                        projectcss.__wab_text,
+                        projectcss.plasmic_default__inline,
+                        sty.span
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $state.apiRequest.data?.final_score ?? 0;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "0";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </span>
+                  }
+                  <React.Fragment>
+                    {" \u0627\u0632 \u06f1\u06f0\u06f0"}
+                  </React.Fragment>
                 </React.Fragment>
-              </React.Fragment>
+              </div>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___31Mxf
+                )}
+              >
+                {
+                  "\u0627\u0645\u062a\u06cc\u0627\u0632 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627"
+                }
+              </div>
             </div>
             <div
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text___31Mxf
+                sty.text__vy3Zp
               )}
             >
               {
-                "\u0627\u0645\u062a\u06cc\u0627\u0632 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627"
+                "\u0628\u0631\u0627\u06cc \u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f."
               }
             </div>
-          </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__vy3Zp
-            )}
-          >
-            {
-              "\u0628\u0631\u0627\u06cc \u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f."
+            <PlasmicImg__
+              data-plasmic-name={"img"}
+              data-plasmic-override={overrides.img}
+              alt={""}
+              className={classNames(sty.img)}
+              displayHeight={"auto"}
+              displayMaxHeight={"none"}
+              displayMaxWidth={"100%"}
+              displayMinHeight={"0"}
+              displayMinWidth={"0"}
+              displayWidth={"46px"}
+              loading={"lazy"}
+              src={{
+                src: launcherImagePerformanceOkCsAiGiEdj,
+                fullWidth: 73,
+                fullHeight: 73,
+                aspectRatio: undefined
+              }}
+            />
+          </Stack__>
+        ) : null}
+        {(() => {
+          try {
+            return !$state.apiRequest.data?.final_score;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
             }
-          </div>
-          <PlasmicImg__
-            data-plasmic-name={"img"}
-            data-plasmic-override={overrides.img}
-            alt={""}
-            className={classNames(sty.img)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"46px"}
-            loading={"lazy"}
-            src={{
-              src: launcherImagePerformanceOkCsAiGiEdj,
-              fullWidth: 73,
-              fullHeight: 73,
-              aspectRatio: undefined
-            }}
+            throw e;
+          }
+        })() ? (
+          <LauncherIconsLoaderIcon
+            className={classNames(projectcss.all, sty.svg__zYtC3)}
+            role={"img"}
           />
-        </Stack__>
+        ) : null}
       </ApiRequest>
     </Stack__>
   ) as React.ReactElement | null;
