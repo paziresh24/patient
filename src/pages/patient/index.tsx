@@ -44,10 +44,14 @@ export const PatinetProfile = () => {
   const { customize } = useCustomize();
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
+  const isEnabledLauncher = useFeatureIsOn('launcher-flag');
+
   const { getRatingAppLink } = usePwa();
 
   useEffect(() => {
-    if (
+    if (userInfo.id && isEnabledLauncher && !customize.partnerKey) {
+      router.replace(`/_`);
+    } else if (
       userInfo.id &&
       !customize.partnerKey &&
       (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
