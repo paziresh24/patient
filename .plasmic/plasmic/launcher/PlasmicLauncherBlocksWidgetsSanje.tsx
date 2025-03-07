@@ -85,7 +85,8 @@ export const PlasmicLauncherBlocksWidgetsSanje__ArgProps =
 export type PlasmicLauncherBlocksWidgetsSanje__OverridesType = {
   root?: Flex__<"div">;
   apiRequest?: Flex__<typeof ApiRequest>;
-  svg?: Flex__<"svg">;
+  span?: Flex__<"span">;
+  img?: Flex__<typeof PlasmicImg__>;
 };
 
 export interface DefaultLauncherBlocksWidgetsSanjeProps {
@@ -179,41 +180,34 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"] =
-          true
-            ? (() => {
-                const actionArgs = {
-                  destination:
-                    "https://www.paziresh24.com/dashboard/apps/sanje/my-performance/"
-                };
-                return (({ destination }) => {
-                  if (
-                    typeof destination === "string" &&
-                    destination.startsWith("#")
-                  ) {
-                    document
-                      .getElementById(destination.substr(1))
-                      .scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    __nextRouter?.push(destination);
-                  }
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
+        $steps["goToDashboardAppsSanjeMyPerformance"] = true
+          ? (() => {
+              const actionArgs = {
+                destination: "/dashboard/apps/sanje/my-performance/"
+              };
+              return (({ destination }) => {
+                if (
+                  typeof destination === "string" &&
+                  destination.startsWith("#")
+                ) {
+                  document
+                    .getElementById(destination.substr(1))
+                    .scrollIntoView({ behavior: "smooth" });
+                } else {
+                  __nextRouter?.push(destination);
+                }
+              })?.apply(null, [actionArgs]);
+            })()
+          : undefined;
         if (
-          $steps["goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"] !=
-            null &&
-          typeof $steps[
-            "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-          ] === "object" &&
-          typeof $steps[
-            "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-          ].then === "function"
+          $steps["goToDashboardAppsSanjeMyPerformance"] != null &&
+          typeof $steps["goToDashboardAppsSanjeMyPerformance"] === "object" &&
+          typeof $steps["goToDashboardAppsSanjeMyPerformance"].then ===
+            "function"
         ) {
-          $steps["goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"] =
-            await $steps[
-              "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-            ];
+          $steps["goToDashboardAppsSanjeMyPerformance"] = await $steps[
+            "goToDashboardAppsSanjeMyPerformance"
+          ];
         }
       }}
     >
@@ -222,143 +216,14 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
         data-plasmic-override={overrides.apiRequest}
         className={classNames("__wab_instance", sty.apiRequest)}
         errorDisplay={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__lmDdl)}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps[
-                "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-              ] = true
-                ? (() => {
-                    const actionArgs = {
-                      destination:
-                        "https://www.paziresh24.com/dashboard/apps/sanje/my-performance/"
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
-                      }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps[
-                  "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-                ] != null &&
-                typeof $steps[
-                  "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-                ] === "object" &&
-                typeof $steps[
-                  "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-                ].then === "function"
-              ) {
-                $steps[
-                  "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-                ] = await $steps[
-                  "goToHttpsWwwPaziresh24ComDashboardAppsSanjeMyPerformance"
-                ];
-              }
-            }}
-          >
-            <div className={classNames(projectcss.all, sty.freeBox__z3ShA)}>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__hg7Mm
-                )}
-              >
-                <React.Fragment>
-                  <React.Fragment>{""}</React.Fragment>
-                  {
-                    <span
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.span,
-                        projectcss.__wab_text,
-                        projectcss.plasmic_default__inline,
-                        sty.span__rFUvk
-                      )}
-                    >
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return $state.apiRequest.data?.final_score ?? 0;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return "0";
-                            }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
-                    </span>
-                  }
-                  <React.Fragment>
-                    {" \u0627\u0632 \u06f1\u06f0\u06f0"}
-                  </React.Fragment>
-                </React.Fragment>
-              </div>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__g9RHu
-                )}
-              >
-                {
-                  "\u0627\u0645\u062a\u06cc\u0627\u0632 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627"
-                }
-              </div>
-            </div>
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__lkScN
-              )}
-            >
-              {
-                "\u0628\u0631\u0627\u06cc \u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f."
-              }
-            </div>
-            <PlasmicImg__
-              alt={""}
-              className={classNames(sty.img__kBjmc)}
-              displayHeight={"auto"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"100%"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"46px"}
-              loading={"lazy"}
-              src={{
-                src: launcherImagePerformanceOkCsAiGiEdj,
-                fullWidth: 73,
-                fullHeight: 73,
-                aspectRatio: undefined
-              }}
-            />
-          </Stack__>
+          <LauncherIconsLoaderIcon
+            className={classNames(projectcss.all, sty.svg___5Xek1)}
+            role={"img"}
+          />
         }
         loadingDisplay={
           <LauncherIconsLoaderIcon
-            data-plasmic-name={"svg"}
-            data-plasmic-override={overrides.svg}
-            className={classNames(projectcss.all, sty.svg)}
+            className={classNames(projectcss.all, sty.svg__suKw8)}
             role={"img"}
           />
         }
@@ -381,6 +246,9 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
             eventArgs
           );
         }}
+        url={
+          "https://apigw.paziresh24.com/v1/n8n-search/webhook/growth-opportunities"
+        }
       >
         <Stack__
           as={"div"}
@@ -399,12 +267,14 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
                 <React.Fragment>{""}</React.Fragment>
                 {
                   <span
+                    data-plasmic-name={"span"}
+                    data-plasmic-override={overrides.span}
                     className={classNames(
                       projectcss.all,
                       projectcss.span,
                       projectcss.__wab_text,
                       projectcss.plasmic_default__inline,
-                      sty.span__gSsHb
+                      sty.span
                     )}
                   >
                     <React.Fragment>
@@ -453,8 +323,10 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
             }
           </div>
           <PlasmicImg__
+            data-plasmic-name={"img"}
+            data-plasmic-override={overrides.img}
             alt={""}
-            className={classNames(sty.img__fmYcq)}
+            className={classNames(sty.img)}
             displayHeight={"auto"}
             displayMaxHeight={"none"}
             displayMaxWidth={"100%"}
@@ -476,9 +348,10 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "svg"],
-  apiRequest: ["apiRequest", "svg"],
-  svg: ["svg"]
+  root: ["root", "apiRequest", "span", "img"],
+  apiRequest: ["apiRequest", "span", "img"],
+  span: ["span"],
+  img: ["img"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -486,7 +359,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   apiRequest: typeof ApiRequest;
-  svg: "svg";
+  span: "span";
+  img: typeof PlasmicImg__;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -551,7 +425,8 @@ export const PlasmicLauncherBlocksWidgetsSanje = Object.assign(
   {
     // Helper components rendering sub-elements
     apiRequest: makeNodeComponent("apiRequest"),
-    svg: makeNodeComponent("svg"),
+    span: makeNodeComponent("span"),
+    img: makeNodeComponent("img"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWidgetsSanje
     internalVariantProps: PlasmicLauncherBlocksWidgetsSanje__VariantProps,

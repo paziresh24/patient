@@ -33,6 +33,12 @@
   width: 22px;
   height: 22px;
 }
+.svg__y4P0L {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+}
 .apiRequest2:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -43,12 +49,11 @@
   width: 22px;
   height: 22px;
 }
-.text__h1Ll {
-  position: relative;
-  width: 100%;
-  height: auto;
+.svg__psTe {
+  object-fit: cover;
   max-width: 100%;
-  min-width: 0;
+  width: 22px;
+  height: 22px;
 }
 .freeBox__wxcz5 {
   display: flex;

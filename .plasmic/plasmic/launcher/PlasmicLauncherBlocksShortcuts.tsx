@@ -169,22 +169,22 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
                 {
                   name: "مراجعین من",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fmy-patients.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/apps/drapp/appointments/"
+                  url: "/dashboard/apps/drapp/appointments/"
                 },
                 {
                   name: "ساعت کاری",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fworking-hours.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/apps/drapp/workhours/"
+                  url: "/dashboard/apps/drapp/workhours/"
                 },
                 {
                   name: "مرخصی",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fvacation.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/apps/drapp/vacation/"
+                  url: "/dashboard/apps/drapp/vacation/"
                 },
                 {
                   name: "نظرات",
                   icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Freviews.svg?versionId=",
-                  url: "https://www.paziresh24.com/dashboard/apps/ravi/my_prifile_feedbacks/"
+                  url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
                 }
               ];
             } catch (e) {

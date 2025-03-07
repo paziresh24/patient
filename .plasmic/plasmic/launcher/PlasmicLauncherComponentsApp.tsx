@@ -180,7 +180,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToPage"] = true
+        $steps["goToPage"] = !!$props.link
           ? (() => {
               const actionArgs = {
                 destination: (() => {

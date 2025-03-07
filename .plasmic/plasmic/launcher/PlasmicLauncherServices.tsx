@@ -163,22 +163,22 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   {
                     name: "مراجعین من",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fmy-patients.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/drapp/appointments/"
+                    url: "/dashboard/apps/drapp/appointments/"
                   },
                   {
                     name: "ساعت کاری",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fworking-hours.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/drapp/workhours/"
+                    url: "/dashboard/apps/drapp/workhours/"
                   },
                   {
                     name: "مرخصی",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fvacation.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/drapp/vacation/"
+                    url: "/dashboard/apps/drapp/vacation/"
                   },
                   {
                     name: "تنظیمات",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fbooking-settings.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/drapp/setting/"
+                    url: "/dashboard/apps/drapp/setting/"
                   }
                 ];
               } catch (e) {
@@ -214,6 +214,19 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   }
                 })()}
                 key={currentIndex}
+                link={(() => {
+                  try {
+                    return currentItem.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 name={(() => {
                   try {
                     return currentItem.name;
@@ -262,17 +275,17 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   {
                     name: "تراکنش ها",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/katibe/bills/"
+                    url: "/dashboard/apps/katibe/bills/"
                   },
                   {
                     name: "فاکتور ها",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Finvoices.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/katibe/factors/"
+                    url: "/dashboard/apps/katibe/factors/"
                   },
                   {
                     name: "تنظیمات",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/katibe/setting/"
+                    url: "/dashboard/apps/katibe/setting/"
                   }
                 ];
               } catch (e) {
@@ -308,6 +321,19 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   }
                 })()}
                 key={currentIndex}
+                link={(() => {
+                  try {
+                    return currentItem.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 name={(() => {
                   try {
                     return currentItem.name;
@@ -354,12 +380,12 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   {
                     name: "رتبه من",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fperformance.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/sanje/my-performance/"
+                    url: "/dashboard/apps/sanje/my-performance/"
                   },
                   {
                     name: "نظرات",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Freviews.svg?versionId=",
-                    url: "https://www.paziresh24.com/dashboard/apps/ravi/my_prifile_feedbacks/"
+                    url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
                   }
                 ];
               } catch (e) {
@@ -395,6 +421,19 @@ function PlasmicLauncherServices__RenderFunc(props: {
                   }
                 })()}
                 key={currentIndex}
+                link={(() => {
+                  try {
+                    return currentItem.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 name={(() => {
                   try {
                     return currentItem.name;
