@@ -116,7 +116,7 @@ export const Services = ({
     return <Skeleton w="full" h="10rem" rounded="lg" />;
   }
 
-  if (showHamdastGa) {
+  if (showHamdastGa && useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
     return null;
   }
 

@@ -81,7 +81,7 @@ export const aside = (data: any) => {
     },
     {
       id: 'ga',
-      isShow: !!hamdast.ga,
+      isShow: !!hamdast.ga && isBulk,
       children: (props: any) => (
         <iframe
           src={`https://hamdast.paziresh24.com/bridge/?app=xxdfcqqubwkgo5d&page=n3nhsc879uzzh9z&src=${encodeURIComponent(
