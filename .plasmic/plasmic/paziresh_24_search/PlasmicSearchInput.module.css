@@ -206,13 +206,27 @@
   height: 20px;
   color: var(--token-u3OudfMChOo3);
 }
-.text {
+@media (min-width: 0px) and (max-width: 768px) {
+  .svg__qSzR {
+    display: block;
+  }
+}
+.svg__v0974 {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-JDvyxAtm9ONK);
+  height: 24px;
+}
+.text__msn1F {
   color: var(--token-u3OudfMChOo3);
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .text {
+  .text__msn1F {
     font-size: var(--token-6NbVMeD6zQwn);
   }
+}
+.text__mKZue {
+  color: var(--token-JDvyxAtm9ONK);
 }
 .svg__m8Ol {
   position: relative;

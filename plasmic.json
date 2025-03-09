@@ -1623,6 +1623,11 @@
           "id": "yKa-YpcgLEXS",
           "name": "Icon43Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon43.tsx"
+        },
+        {
+          "id": "mnMqeXnQZuQo",
+          "name": "Icon44Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon44.tsx"
         }
       ],
       "images": [
@@ -1740,8 +1745,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -5133,8 +5137,7 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -5453,7 +5456,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {
