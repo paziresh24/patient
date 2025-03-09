@@ -659,7 +659,21 @@ function PlasmicProductCard__RenderFunc(props: {
                         sty.text__yApKc
                       )}
                     >
-                      {"Error fetching data"}
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return "بروز خطا در دریافت اطلاعات ";
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "Error fetching data";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
                     </div>
                   )}
                 </DataCtxReader__>
@@ -1749,20 +1763,24 @@ function PlasmicProductCard__RenderFunc(props: {
                   sty.text__s4JDx
                 )}
               >
-                {"Error fetching data"}
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return "بروز خطا در دریافت اطلاعات ";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "Error fetching data";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
               </div>
             }
-            loadingDisplay={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text___9H2S0
-                )}
-              >
-                {"Loading..."}
-              </div>
-            }
+            loadingDisplay={null}
             method={"GET"}
             onError={async (...eventArgs: any) => {
               generateStateOnChangeProp($state, [
@@ -2200,7 +2218,22 @@ function PlasmicProductCard__RenderFunc(props: {
                               sty.text__lq4Dj
                             )}
                           >
-                            {"Error fetching data"}
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return "بروز خطا در دریافت اطلاعات ";
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return "Error fetching data";
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
                           </div>
                         }
                         loadingDisplay={
@@ -2268,7 +2301,22 @@ function PlasmicProductCard__RenderFunc(props: {
                                 sty.text__utvuQ
                               )}
                             >
-                              {"Error fetching data"}
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return "بروز خطا در دریافت اطلاعات ";
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "Error fetching data";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
                             </div>
                           }
                           loadingDisplay={
