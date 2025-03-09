@@ -140,10 +140,7 @@ export const Suggestion = (props: SuggestionProps) => {
     }
   }, [searchSuggestion.data, isOpenSuggestion]);
 
-  const onChangeCity = (city: any) => {
-    setCity({
-      ...city,
-    });
+  useEffect(() => {
     if (city.is_aroundme) {
       navigator.geolocation.getCurrentPosition(position => {
         let lat = position.coords.latitude;
@@ -154,7 +151,7 @@ export const Suggestion = (props: SuggestionProps) => {
         });
         router.pathname.startsWith('/s/') &&
           changeRoute({
-            params: { city: 'ir' },
+            // params: { city: 'ir' },
             query: {
               ...(router.query.city_id && { city_id: city.id }),
               lat,
@@ -164,15 +161,23 @@ export const Suggestion = (props: SuggestionProps) => {
       });
       return;
     }
-    setGeoLocation(undefined);
-    router.pathname.startsWith('/s/') &&
-      changeRoute({
-        params: { city: city.en_slug },
-        query: {
-          ...(router.query.city_id && { city_id: city.id }),
-        },
-        previousQueries: false,
-      });
+  }, [city]);
+
+  const onChangeCity = (city: any) => {
+    setCity({
+      ...city,
+    });
+    if (!city.is_aroundme) {
+      setGeoLocation(undefined);
+      router.pathname.startsWith('/s/') &&
+        changeRoute({
+          params: { city: city.en_slug },
+          query: {
+            ...(router.query.city_id && { city_id: city.id }),
+          },
+          previousQueries: false,
+        });
+    }
   };
 
   const handleClickOverlay = () => {
@@ -182,6 +187,7 @@ export const Suggestion = (props: SuggestionProps) => {
     setIsOpenSuggestion(false);
   };
 
+  console.log('selected city: ', city);
   if (showPlasmicSuggestion) {
     return (
       <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
@@ -198,6 +204,7 @@ export const Suggestion = (props: SuggestionProps) => {
               inputVal: debouncedSearchTerm,
               onChangeInputVal: setUserSearchValue,
               onFocusChange: (val: any) => setIsOpenSuggestion(val),
+              isAroundMe: city.is_aroundme,
             }}
             variants={{
               hasOverlay: overlay,
@@ -253,3 +260,4 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
+

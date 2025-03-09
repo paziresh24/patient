@@ -62,6 +62,7 @@ type City = {
   id: string;
   en_slug: string;
   province_id: string;
+  is_aroundme: boolean;
 };
 
 export const useSearchStore = create<SearchStore>(set => ({
@@ -70,6 +71,7 @@ export const useSearchStore = create<SearchStore>(set => ({
     name: 'همه شهرها',
     en_slug: 'ir',
     province_id: '-1',
+    is_aroundme: false,
   },
   isOpenSuggestion: false,
   userSearchValue: '',
@@ -130,3 +132,4 @@ export const useSearchStore = create<SearchStore>(set => ({
   setSeoInfo: seoInfo => set(state => ({ ...state, seoInfo })),
   setGeoLocation: geoLocation => set(state => ({ ...state, geoLocation })),
 }));
+
