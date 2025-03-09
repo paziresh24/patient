@@ -109,6 +109,7 @@ export type PlasmicSearch__ArgsType = {
   inputVal?: string;
   onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
+  isAroundMe?: boolean;
 };
 type ArgPropType = keyof PlasmicSearch__ArgsType;
 export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
@@ -118,7 +119,8 @@ export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
   "onClickOverlay",
   "inputVal",
   "onChangeInputVal",
-  "onFocusChange"
+  "onFocusChange",
+  "isAroundMe"
 );
 
 export type PlasmicSearch__OverridesType = {
@@ -140,6 +142,7 @@ export interface DefaultSearchProps {
   inputVal?: string;
   onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
+  isAroundMe?: boolean;
   hasOverlay?: SingleBooleanChoiceArg<"hasOverlay">;
   isFocus?: SingleBooleanChoiceArg<"isFocus">;
   className?: string;
@@ -170,7 +173,9 @@ function PlasmicSearch__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          isAroundMe: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -401,6 +406,19 @@ function PlasmicSearch__RenderFunc(props: {
                       }
                     })()
               }
+              isAroundMe={(() => {
+                try {
+                  return $props.isAroundMe;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })()}
               isFocused={
                 hasVariant(globalVariants, "screen", "mobileOnly")
                   ? (() => {

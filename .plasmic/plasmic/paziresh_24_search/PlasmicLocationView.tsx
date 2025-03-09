@@ -73,7 +73,7 @@ import sty from "./PlasmicLocationView.module.css"; // plasmic-import: p2ixA7V1v
 
 import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: QrVR5pllCw55/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: 6y6ixEKeF2Sb/icon
-import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNamgvSO/icon
+import Icon44Icon from "./icons/PlasmicIcon__Icon44"; // plasmic-import: mnMqeXnQZuQo/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
@@ -367,7 +367,7 @@ function PlasmicLocationView__RenderFunc(props: {
           }}
           showStartIcon={true}
           startIcon={
-            <Icon21Icon
+            <Icon44Icon
               data-plasmic-name={"svg"}
               data-plasmic-override={overrides.svg}
               className={classNames(projectcss.all, sty.svg)}

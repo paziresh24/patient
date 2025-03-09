@@ -151,7 +151,6 @@ export const Suggestion = (props: SuggestionProps) => {
         });
         router.pathname.startsWith('/s/') &&
           changeRoute({
-            // params: { city: 'ir' },
             query: {
               ...(router.query.city_id && { city_id: city.id }),
               lat,
@@ -187,7 +186,6 @@ export const Suggestion = (props: SuggestionProps) => {
     setIsOpenSuggestion(false);
   };
 
-  console.log('selected city: ', city);
   if (showPlasmicSuggestion) {
     return (
       <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">

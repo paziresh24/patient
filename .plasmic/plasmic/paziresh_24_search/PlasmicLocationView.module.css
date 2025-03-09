@@ -111,11 +111,10 @@
   max-width: 100%;
 }
 .svg {
-  position: relative;
   object-fit: cover;
-  width: 24px;
-  height: 24px;
+  max-width: 100%;
   color: var(--token-JDvyxAtm9ONK);
+  height: 24px;
 }
 .svg__umt4M {
   position: relative;
