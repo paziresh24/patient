@@ -239,7 +239,7 @@
     overflow-y: auto;
     height: 100%;
     overflow-x: hidden;
-    min-height: 500px;
+    min-height: 100%;
   }
 }
 .getLocationList:global(.__wab_instance) {
@@ -269,8 +269,7 @@
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .locationView:global(.__wab_instance) {
-    height: 100%;
-    min-height: 0;
+    height: auto;
   }
 }
 .fragmentPortal:global(.__wab_instance) {
