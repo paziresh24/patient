@@ -1371,6 +1371,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicMoreOptionsMenu.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "6MD8zdNphdeG",
+          "name": "SearchContentSuggestion",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchContentSuggestion.tsx",
+          "importSpec": {
+            "modulePath": "SearchContentSuggestion.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchContentSuggestion.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [

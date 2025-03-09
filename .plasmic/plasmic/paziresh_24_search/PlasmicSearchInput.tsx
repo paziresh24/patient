@@ -725,7 +725,19 @@ function PlasmicSearchInput__RenderFunc(props: {
               <React.Fragment>
                 {(
                   hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? true
+                    ? (() => {
+                        try {
+                          return !$props.isAroundMe;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })()
                     : (() => {
                         try {
                           return !$props.isAroundMe;
