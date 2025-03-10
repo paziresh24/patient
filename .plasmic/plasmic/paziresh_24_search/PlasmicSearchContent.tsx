@@ -264,187 +264,171 @@ function PlasmicSearchContent__RenderFunc(props: {
               }
             })()}
           >
-            {(() => {
-              try {
-                return currentItem.component == "text";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })() ? (
-              <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
-                className={classNames(
-                  projectcss.all,
-                  sty.text,
-                  hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? "default-styles"
-                    : undefined
-                )}
-              >
-                {(() => {
-                  try {
+            <div
+              data-plasmic-name={"text"}
+              data-plasmic-override={overrides.text}
+              className={classNames(
+                projectcss.all,
+                sty.text,
+                hasVariant(globalVariants, "screen", "mobileOnly")
+                  ? "default-styles"
+                  : undefined
+              )}
+            >
+              {(() => {
+                try {
+                  return true;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
                     return true;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
                   }
-                })()
-                  ? (_par =>
-                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return currentItem.items;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
+                  throw e;
+                }
+              })()
+                ? (_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return currentItem.items;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
                         }
-                      })()
-                    ).map((__plasmic_item_1, __plasmic_idx_1) => {
-                      const currentItem = __plasmic_item_1;
-                      const currentIndex = __plasmic_idx_1;
-                      return (
-                        <Button
-                          data-plasmic-name={"button"}
-                          data-plasmic-override={overrides.button}
-                          children2={
-                            <Stack__
-                              as={"div"}
-                              hasGap={true}
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_1, __plasmic_idx_1) => {
+                    const currentItem = __plasmic_item_1;
+                    const currentIndex = __plasmic_idx_1;
+                    return (
+                      <Button
+                        data-plasmic-name={"button"}
+                        data-plasmic-override={overrides.button}
+                        children2={
+                          <Stack__
+                            as={"div"}
+                            hasGap={true}
+                            className={classNames(
+                              projectcss.all,
+                              sty.freeBox__uxToj
+                            )}
+                          >
+                            {(() => {
+                              try {
+                                return currentItem.type !== "center";
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return true;
+                                }
+                                throw e;
+                              }
+                            })() ? (
+                              <SearchContentIcon
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.searchContentIcon__wv4Na
+                                )}
+                                iconType={(() => {
+                                  try {
+                                    return currentItem.type;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              />
+                            ) : null}
+                            <div
                               className={classNames(
                                 projectcss.all,
-                                sty.freeBox__uxToj
+                                projectcss.__wab_text,
+                                sty.text__cOaz
                               )}
                             >
-                              {(() => {
-                                try {
-                                  return currentItem.type !== "center";
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return true;
-                                  }
-                                  throw e;
-                                }
-                              })() ? (
-                                <SearchContentIcon
-                                  className={classNames(
-                                    "__wab_instance",
-                                    sty.searchContentIcon__wv4Na
-                                  )}
-                                  iconType={(() => {
+                              <div
+                                className={projectcss.__wab_expr_html_text}
+                                dangerouslySetInnerHTML={{
+                                  __html: (() => {
                                     try {
-                                      return currentItem.type;
+                                      return currentItem.formatted_title;
                                     } catch (e) {
                                       if (
                                         e instanceof TypeError ||
                                         e?.plasmicType ===
                                           "PlasmicUndefinedDataError"
                                       ) {
-                                        return undefined;
+                                        return "Button";
                                       }
                                       throw e;
                                     }
-                                  })()}
-                                />
-                              ) : null}
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__cOaz
-                                )}
-                              >
-                                <div
-                                  className={projectcss.__wab_expr_html_text}
-                                  dangerouslySetInnerHTML={{
-                                    __html: (() => {
+                                  })()
+                                }}
+                              />
+                            </div>
+                          </Stack__>
+                        }
+                        className={classNames("__wab_instance", sty.button)}
+                        color={"link"}
+                        key={currentIndex}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["runOnClick"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  eventRef: $props["onClick"],
+                                  args: [
+                                    (() => {
                                       try {
-                                        return currentItem.formatted_title;
+                                        return currentItem;
                                       } catch (e) {
                                         if (
                                           e instanceof TypeError ||
                                           e?.plasmicType ===
                                             "PlasmicUndefinedDataError"
                                         ) {
-                                          return "Button";
+                                          return undefined;
                                         }
                                         throw e;
                                       }
                                     })()
-                                  }}
-                                />
-                              </div>
-                            </Stack__>
+                                  ]
+                                };
+                                return (({ eventRef, args }) => {
+                                  return eventRef?.(...(args ?? []));
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runOnClick"] != null &&
+                            typeof $steps["runOnClick"] === "object" &&
+                            typeof $steps["runOnClick"].then === "function"
+                          ) {
+                            $steps["runOnClick"] = await $steps["runOnClick"];
                           }
-                          className={classNames("__wab_instance", sty.button)}
-                          color={"link"}
-                          key={currentIndex}
-                          onClick={async event => {
-                            const $steps = {};
-
-                            $steps["runOnClick"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    eventRef: $props["onClick"],
-                                    args: [
-                                      (() => {
-                                        try {
-                                          return currentItem;
-                                        } catch (e) {
-                                          if (
-                                            e instanceof TypeError ||
-                                            e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
-                                          ) {
-                                            return undefined;
-                                          }
-                                          throw e;
-                                        }
-                                      })()
-                                    ]
-                                  };
-                                  return (({ eventRef, args }) => {
-                                    return eventRef?.(...(args ?? []));
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runOnClick"] != null &&
-                              typeof $steps["runOnClick"] === "object" &&
-                              typeof $steps["runOnClick"].then === "function"
-                            ) {
-                              $steps["runOnClick"] = await $steps["runOnClick"];
-                            }
-                          }}
-                          size={"compact"}
-                          space={true}
-                          startIcon={null}
-                        />
-                      );
-                    })
-                  : null}
-              </div>
-            ) : null}
+                        }}
+                        size={"compact"}
+                        space={true}
+                        startIcon={null}
+                      />
+                    );
+                  })
+                : null}
+            </div>
             {(() => {
               try {
                 return currentItem.component == "slider";
