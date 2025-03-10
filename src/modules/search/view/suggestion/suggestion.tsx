@@ -198,6 +198,7 @@ export const Suggestion = (props: SuggestionProps) => {
               inputVal: debouncedSearchTerm,
               onChangeInputVal: setUserSearchValue,
               onFocusChange: (val: any) => setIsOpenSuggestion(val),
+              isAroundMe: city.is_aroundme,
             }}
             variants={{
               hasOverlay: overlay,
@@ -253,3 +254,4 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
+
