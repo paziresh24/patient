@@ -248,6 +248,32 @@ function PlasmicLocationView__RenderFunc(props: {
           ) {
             $steps["runOnFocusInput"] = await $steps["runOnFocusInput"];
           }
+
+          $steps["runCode"] = false
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      const list =
+                        globalThis.document.getElementById("cities-list");
+                      if (list) {
+                        return (list.scrollTop = 0);
+                      }
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
         }}
       >
         <TextInput
@@ -269,6 +295,36 @@ function PlasmicLocationView__RenderFunc(props: {
             ) {
               return;
             }
+
+            (async event => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          const list =
+                            globalThis.document.getElementById("cities-list");
+                          if (list && list.scrollTop > 0) {
+                            return (list.scrollTop = 0);
+                          }
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }).apply(null, eventArgs);
           }}
           placeholder={
             "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0634\u0647\u0631 \u0647\u0627"
@@ -411,7 +467,10 @@ function PlasmicLocationView__RenderFunc(props: {
           />
         ) : null}
       </Stack__>
-      <div className={classNames(projectcss.all, sty.freeBox__hlKod)}>
+      <div
+        className={classNames(projectcss.all, sty.freeBox__hlKod)}
+        id={"cities-list"}
+      >
         <LocationList
           data-plasmic-name={"locationList"}
           data-plasmic-override={overrides.locationList}

@@ -6,7 +6,6 @@
   max-width: 100%;
   position: relative;
   background: #ffffff;
-  max-height: 300px;
   overflow-x: visible;
   overflow-y: auto;
   min-width: 0;
@@ -36,10 +35,10 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  background: var(--token-BU1JCAY6hntB);
+  background: none;
   cursor: pointer;
   min-width: 0;
-  padding: var(--token-Fv8-L_kN-2Ma);
+  padding: var(--token-_c276Gs_1FIE) var(--token-Fv8-L_kN-2Ma);
 }
 .freeBox > :global(.__wab_flex-container) {
   flex-direction: row;
@@ -59,8 +58,13 @@
   > img {
   margin-left: var(--token-_c276Gs_1FIE);
 }
-.searchContentIcon:global(.__wab_instance) {
+.svg {
+  object-fit: cover;
   max-width: 100%;
+  width: 18px;
+  height: 18px;
+  color: var(--token-u3OudfMChOo3);
+  flex-shrink: 0;
 }
 .text {
   position: relative;
@@ -69,5 +73,6 @@
   max-width: 100%;
   font-size: var(--token-6NbVMeD6zQwn);
   font-weight: 500;
+  color: var(--token-u3OudfMChOo3);
   min-width: 0;
 }
