@@ -431,7 +431,21 @@ function PlasmicSearchResults__RenderFunc(props: {
                   sty.text__ffikx
                 )}
               >
-                {"Error fetching data"}
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return "بروز خطا در دریافت نتایج جست و جو";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "Error fetching data";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
               </div>
             }
             loadingDisplay={

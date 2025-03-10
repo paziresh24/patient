@@ -1371,6 +1371,45 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicMoreOptionsMenu.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "6MD8zdNphdeG",
+          "name": "SearchContentSuggestion",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchContentSuggestion.tsx",
+          "importSpec": {
+            "modulePath": "SearchContentSuggestion.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchContentSuggestion.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "dQKny9PQUcJM",
+          "name": "SearchResultSimple",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchResultSimple.tsx",
+          "importSpec": {
+            "modulePath": "SearchResultSimple.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchResultSimple.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "4t5SBkIXsA5h",
+          "name": "SearchResultQs",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicSearchResultQs.tsx",
+          "importSpec": {
+            "modulePath": "SearchResultQs.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchResultQs.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1623,6 +1662,11 @@
           "id": "yKa-YpcgLEXS",
           "name": "Icon43Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon43.tsx"
+        },
+        {
+          "id": "mnMqeXnQZuQo",
+          "name": "Icon44Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon44.tsx"
         }
       ],
       "images": [
@@ -1740,8 +1784,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -3191,7 +3234,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -5132,8 +5176,7 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",

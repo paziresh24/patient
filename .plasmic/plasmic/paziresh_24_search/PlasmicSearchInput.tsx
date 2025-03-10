@@ -77,6 +77,7 @@ import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: Cfw-VAdl-_5
 import SearchSvgIcon from "./icons/PlasmicIcon__SearchSvg"; // plasmic-import: QrVR5pllCw55/icon
 import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: E9NGWfCxi3aB/icon
 import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNamgvSO/icon
+import Icon44Icon from "./icons/PlasmicIcon__Icon44"; // plasmic-import: mnMqeXnQZuQo/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
@@ -100,6 +101,7 @@ export type PlasmicSearchInput__ArgsType = {
   onClickSearchIcon?: () => void;
   onFocuse?: (value: boolean) => void;
   cityName?: string;
+  isAroundMe?: boolean;
 };
 type ArgPropType = keyof PlasmicSearchInput__ArgsType;
 export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
@@ -109,14 +111,14 @@ export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
   "onChangeInput",
   "onClickSearchIcon",
   "onFocuse",
-  "cityName"
+  "cityName",
+  "isAroundMe"
 );
 
 export type PlasmicSearchInput__OverridesType = {
   root?: Flex__<"div">;
   textInput?: Flex__<typeof SearchTextInput>;
   button?: Flex__<typeof Button>;
-  text?: Flex__<"div">;
   sideEffect?: Flex__<typeof SideEffect>;
 };
 
@@ -128,6 +130,7 @@ export interface DefaultSearchInputProps {
   onClickSearchIcon?: () => void;
   onFocuse?: (value: boolean) => void;
   cityName?: string;
+  isAroundMe?: boolean;
   isFocused?: SingleBooleanChoiceArg<"isFocused">;
   className?: string;
 }
@@ -153,7 +156,8 @@ function PlasmicSearchInput__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          cityName: "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627"
+          cityName: "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627",
+          isAroundMe: false
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -619,31 +623,68 @@ function PlasmicSearchInput__RenderFunc(props: {
             data-plasmic-name={"button"}
             data-plasmic-override={overrides.button}
             children2={
-              <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $props.cityName;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627";
-                      }
-                      throw e;
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return !$props.isAroundMe;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
-                  })()}
-                </React.Fragment>
-              </div>
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__msn1F
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $props.cityName;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0647\u0645\u0647 \u0634\u0647\u0631\u0647\u0627";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                ) : null}
+                {(() => {
+                  try {
+                    return $props.isAroundMe;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__mKZue
+                    )}
+                  >
+                    {"\u0627\u0637\u0631\u0627\u0641 \u0645\u0646"}
+                  </div>
+                ) : null}
+              </React.Fragment>
             }
             className={classNames("__wab_instance", sty.button, {
               [sty.buttonisFocused]: hasVariant(
@@ -681,10 +722,60 @@ function PlasmicSearchInput__RenderFunc(props: {
                 : undefined
             }
             startIcon={
-              <Icon21Icon
-                className={classNames(projectcss.all, sty.svg__qSzR)}
-                role={"img"}
-              />
+              <React.Fragment>
+                {(
+                  hasVariant(globalVariants, "screen", "mobileOnly")
+                    ? (() => {
+                        try {
+                          return !$props.isAroundMe;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })()
+                    : (() => {
+                        try {
+                          return !$props.isAroundMe;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })()
+                ) ? (
+                  <Icon21Icon
+                    className={classNames(projectcss.all, sty.svg__qSzR)}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return $props.isAroundMe;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Icon44Icon
+                    className={classNames(projectcss.all, sty.svg__v0974)}
+                    role={"img"}
+                  />
+                ) : null}
+              </React.Fragment>
             }
           />
         </div>
@@ -801,10 +892,9 @@ function PlasmicSearchInput__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "button", "text", "sideEffect"],
+  root: ["root", "textInput", "button", "sideEffect"],
   textInput: ["textInput"],
-  button: ["button", "text"],
-  text: ["text"],
+  button: ["button"],
   sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -814,7 +904,6 @@ type NodeDefaultElementType = {
   root: "div";
   textInput: typeof SearchTextInput;
   button: typeof Button;
-  text: "div";
   sideEffect: typeof SideEffect;
 };
 
@@ -880,7 +969,6 @@ export const PlasmicSearchInput = Object.assign(
     // Helper components rendering sub-elements
     textInput: makeNodeComponent("textInput"),
     button: makeNodeComponent("button"),
-    text: makeNodeComponent("text"),
     sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicSearchInput

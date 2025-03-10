@@ -111,11 +111,10 @@
   max-width: 100%;
 }
 .svg {
-  position: relative;
   object-fit: cover;
-  width: 24px;
-  height: 24px;
+  max-width: 100%;
   color: var(--token-JDvyxAtm9ONK);
+  height: 24px;
 }
 .svg__umt4M {
   position: relative;
@@ -133,14 +132,18 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: 100%;
+  height: auto;
   max-width: 100%;
   overflow: auto;
   min-width: 0;
-  min-height: 0;
 }
 .locationList:global(.__wab_instance) {
   max-width: 100%;
   height: 100%;
   min-height: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .locationList:global(.__wab_instance) {
+    min-height: 55em;
+  }
 }
