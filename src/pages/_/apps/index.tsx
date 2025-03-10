@@ -25,7 +25,6 @@ Page.getLayout = function getLayout(page: ReactElement) {
     <LayoutWithHeaderAndFooter
       className="bg-white"
       showHeader={false}
-      showBottomNavigation={false}
       showFooter={false}
       shouldShowPromoteApp={false}
       {...page.props.config}

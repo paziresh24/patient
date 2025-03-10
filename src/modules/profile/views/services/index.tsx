@@ -18,6 +18,7 @@ import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
 import { sortBy } from 'lodash';
 import { splunkInstance } from '@/common/services/splunk';
+import useCustomize from '@/common/hooks/useCustomize';
 const Presence = dynamic(() => import('./presence'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -65,6 +66,7 @@ export const Services = ({
   const isWebView = useWebView();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+  const customize = useCustomize(state => state.customize);
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -116,7 +118,7 @@ export const Services = ({
     return <Skeleton w="full" h="10rem" rounded="lg" />;
   }
 
-  if (showHamdastGa && useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (!customize?.partnerKey && showHamdastGa && useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
     return null;
   }
 
