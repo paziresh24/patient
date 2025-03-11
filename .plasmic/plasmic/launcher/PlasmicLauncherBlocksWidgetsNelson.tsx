@@ -68,6 +68,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherBlocksWidgetsNelson.module.css"; // plasmic-import: kPpI69i3raKy/css
 
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import LauncherIconsChevronLeftIcon from "./icons/PlasmicIcon__LauncherIconsChevronLeft"; // plasmic-import: bpf8GR68xA_B/icon
 
 createPlasmicElementProxy;
 
@@ -143,7 +144,9 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
             try {
-              return $state.apiRequest2.data.data[0].active_booking;
+              return $state.apiRequest2.data.data?.some(
+                item => item?.active_booking
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -260,10 +263,138 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
           data-plasmic-override={overrides.apiRequest2}
           className={classNames("__wab_instance", sty.apiRequest2)}
           errorDisplay={
-            <LauncherIconsLoaderIcon
-              className={classNames(projectcss.all, sty.svg__psTe)}
-              role={"img"}
-            />
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $state.apiRequest.data.data?.some(
+                    item => item.id == "5532"
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherIconsLoaderIcon
+                  className={classNames(projectcss.all, sty.svg__psTe)}
+                  role={"img"}
+                />
+              ) : null}
+              {(() => {
+                try {
+                  return $state.apiRequest.data.data?.some(
+                    item => item.id != "5532"
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__xh81H)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["goToHttpsDrPaziresh24ComActivationConsultRules"] =
+                      true
+                        ? (() => {
+                            const actionArgs = {
+                              destination:
+                                "https://dr.paziresh24.com/activation/consult/rules"
+                            };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                    if (
+                      $steps[
+                        "goToHttpsDrPaziresh24ComActivationConsultRules"
+                      ] != null &&
+                      typeof $steps[
+                        "goToHttpsDrPaziresh24ComActivationConsultRules"
+                      ] === "object" &&
+                      typeof $steps[
+                        "goToHttpsDrPaziresh24ComActivationConsultRules"
+                      ].then === "function"
+                    ) {
+                      $steps["goToHttpsDrPaziresh24ComActivationConsultRules"] =
+                        await $steps[
+                          "goToHttpsDrPaziresh24ComActivationConsultRules"
+                        ];
+                    }
+                  }}
+                >
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__g495E)}
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__i1Zr2
+                      )}
+                    >
+                      {
+                        "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646"
+                      }
+                    </div>
+                  </Stack__>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__psjuT
+                    )}
+                  >
+                    {
+                      "\u0628\u0647 \u0635\u0648\u0631\u062a \u063a\u06cc\u0631\u062d\u0636\u0648\u0631\u06cc \u0648\u06cc\u0632\u06cc\u062a \u06a9\u0646\u06cc\u062f."
+                    }
+                  </div>
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__wM0Lm)}
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__jTlDl
+                      )}
+                    >
+                      {"\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"}
+                    </div>
+                    <LauncherIconsChevronLeftIcon
+                      className={classNames(projectcss.all, sty.svg__gmwpb)}
+                      role={"img"}
+                    />
+                  </Stack__>
+                </Stack__>
+              ) : null}
+            </React.Fragment>
           }
           loadingDisplay={
             <LauncherIconsLoaderIcon
