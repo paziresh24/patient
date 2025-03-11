@@ -155,6 +155,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
     >
       <Reveal
         className={classNames("__wab_instance", sty.reveal__j6Oe5)}
+        duration={300}
         triggerOnce={true}
       >
         <LauncherBlocksWallet
@@ -165,6 +166,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__pf8Ib)}
+        duration={300}
         triggerOnce={true}
       >
         <LauncherBlocksShortcuts
@@ -175,6 +177,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__vsuQt)}
+        duration={300}
         triggerOnce={true}
       >
         <Stack__
@@ -205,6 +208,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__vvBKi)}
+        duration={300}
         triggerOnce={true}
       >
         <LauncherBlocksApps
@@ -215,6 +219,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__h09Vw)}
+        duration={300}
         triggerOnce={true}
       >
         <LauncherBlocksPatientServices

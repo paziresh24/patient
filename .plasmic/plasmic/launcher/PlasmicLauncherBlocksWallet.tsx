@@ -177,25 +177,26 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToDashboardAppsWalletPayment"] = true
-          ? (() => {
-              const actionArgs = {
-                destination: "/dashboard/apps/wallet/payment/"
-              };
-              return (({ destination }) => {
-                if (
-                  typeof destination === "string" &&
-                  destination.startsWith("#")
-                ) {
-                  document
-                    .getElementById(destination.substr(1))
-                    .scrollIntoView({ behavior: "smooth" });
-                } else {
-                  __nextRouter?.push(destination);
-                }
-              })?.apply(null, [actionArgs]);
-            })()
-          : undefined;
+        $steps["goToDashboardAppsWalletPayment"] =
+          $ctx.Growthbook.features["hamdast::wallet"]?.hide === false
+            ? (() => {
+                const actionArgs = {
+                  destination: "/dashboard/apps/wallet/payment/"
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
+                  }
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
         if (
           $steps["goToDashboardAppsWalletPayment"] != null &&
           typeof $steps["goToDashboardAppsWalletPayment"] === "object" &&
@@ -203,6 +204,36 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         ) {
           $steps["goToDashboardAppsWalletPayment"] = await $steps[
             "goToDashboardAppsWalletPayment"
+          ];
+        }
+
+        $steps["goToDashboardAppsKatibeBills"] =
+          $ctx.Growthbook.features["hamdast::wallet"].hide == true
+            ? (() => {
+                const actionArgs = {
+                  destination: "/dashboard/apps/katibe/bills/"
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
+                  }
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+        if (
+          $steps["goToDashboardAppsKatibeBills"] != null &&
+          typeof $steps["goToDashboardAppsKatibeBills"] === "object" &&
+          typeof $steps["goToDashboardAppsKatibeBills"].then === "function"
+        ) {
+          $steps["goToDashboardAppsKatibeBills"] = await $steps[
+            "goToDashboardAppsKatibeBills"
           ];
         }
       }}
@@ -288,9 +319,11 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                   <React.Fragment>
                     {(() => {
                       try {
-                        return $state.apiRequest.data[1].sum_Unpaid_Amount.toLocaleString(
-                          "fa-IR"
-                        );
+                        return (
+                          $state.apiRequest.data[
+                            $state.apiRequest.data?.length - 1
+                          ]?.sum_Unpaid_Amount / 10
+                        )?.toLocaleString("fa-IR");
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

@@ -1784,7 +1784,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -5176,7 +5177,8 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -5383,6 +5385,11 @@
           "id": "4lP5I8e4Rz71",
           "name": "LauncherIconsLoaderIcon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsLoader.tsx"
+        },
+        {
+          "id": "yHLOWiNKZiaE",
+          "name": "CircleIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Circle.tsx"
         }
       ],
       "images": [
@@ -5495,8 +5502,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     }
   ],
   "globalVariants": {
