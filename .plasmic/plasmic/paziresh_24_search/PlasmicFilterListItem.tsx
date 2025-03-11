@@ -62,6 +62,8 @@ import {
 import { Switch } from "@/common/fragment/components/switch"; // plasmic-import: 3ov1diNJvJkk/codeComponent
 import { RadioFilter } from "@/common/fragment/components/radioFilter"; // plasmic-import: 4HH4ImSoMWKe/codeComponent
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -201,6 +203,10 @@ function PlasmicFilterListItem__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
@@ -352,7 +358,11 @@ function PlasmicFilterListItem__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <div className={classNames(projectcss.all, sty.freeBox__gfvgx)}>
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__gfvgx)}
+        >
           <RadioFilter
             data-plasmic-name={"radioFilter"}
             data-plasmic-override={overrides.radioFilter}
@@ -448,7 +458,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
             }}
             value={generateStateValueProp($state, ["radioFilter", "selected"])}
           />
-        </div>
+        </Stack__>
       ) : null}
     </Stack__>
   ) as React.ReactElement | null;

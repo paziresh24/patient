@@ -71,6 +71,8 @@ import sty from "./PlasmicSearchResultQs.module.css"; // plasmic-import: 4t5SBkI
 
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
 
+import { uniqBy as __lib_lodash__uniqBy } from "lodash";
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchResultQs__VariantMembers = {};
@@ -80,9 +82,15 @@ export const PlasmicSearchResultQs__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicSearchResultQs__ArgsType = {
   terms?: string;
+  onClick?: (value: string) => void;
+  citySlug?: string;
 };
 type ArgPropType = keyof PlasmicSearchResultQs__ArgsType;
-export const PlasmicSearchResultQs__ArgProps = new Array<ArgPropType>("terms");
+export const PlasmicSearchResultQs__ArgProps = new Array<ArgPropType>(
+  "terms",
+  "onClick",
+  "citySlug"
+);
 
 export type PlasmicSearchResultQs__OverridesType = {
   root?: Flex__<"div">;
@@ -94,10 +102,16 @@ export type PlasmicSearchResultQs__OverridesType = {
 
 export interface DefaultSearchResultQsProps {
   terms?: string;
+  onClick?: (value: string) => void;
+  citySlug?: string;
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  lodash: {
+    uniqBy: __lib_lodash__uniqBy
+  }
+};
 
 function useNextRouter() {
   try {
@@ -263,12 +277,46 @@ function PlasmicSearchResultQs__RenderFunc(props: {
           onClick={async value => {
             const $steps = {};
 
+            $steps["localstorage"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        const history = $$.lodash.uniqBy(
+                          JSON.parse(localStorage.getItem("history") ?? "[]"),
+                          "name"
+                        );
+                        const newHistory = history.filter(
+                          historyItem => historyItem.name !== value.name
+                        );
+                        return localStorage.setItem(
+                          "history",
+                          JSON.stringify([...newHistory, value])
+                        );
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["localstorage"] != null &&
+              typeof $steps["localstorage"] === "object" &&
+              typeof $steps["localstorage"].then === "function"
+            ) {
+              $steps["localstorage"] = await $steps["localstorage"];
+            }
+
             $steps["goToPage"] = true
               ? (() => {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/?text=${value}`;
+                        return `/s/${
+                          $props.citySlug ? $props.citySlug + "/" : ""
+                        }?text=${value}`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -300,6 +348,39 @@ function PlasmicSearchResultQs__RenderFunc(props: {
               typeof $steps["goToPage"].then === "function"
             ) {
               $steps["goToPage"] = await $steps["goToPage"];
+            }
+
+            $steps["runOnClick"] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props["onClick"],
+                    args: [
+                      (() => {
+                        try {
+                          return value;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runOnClick"] != null &&
+              typeof $steps["runOnClick"] === "object" &&
+              typeof $steps["runOnClick"].then === "function"
+            ) {
+              $steps["runOnClick"] = await $steps["runOnClick"];
             }
           }}
           topQuerySuggestions={(() => {

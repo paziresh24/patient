@@ -89,6 +89,7 @@ export type PlasmicLocationView__ArgsType = {
   onClickCity?: (value: any) => void;
   onClickAllCities?: () => void;
   onFocusInput?: (value: boolean) => void;
+  selectedCity?: any;
 };
 type ArgPropType = keyof PlasmicLocationView__ArgsType;
 export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
@@ -96,7 +97,8 @@ export const PlasmicLocationView__ArgProps = new Array<ArgPropType>(
   "selectedProvinceId",
   "onClickCity",
   "onClickAllCities",
-  "onFocusInput"
+  "onFocusInput",
+  "selectedCity"
 );
 
 export type PlasmicLocationView__OverridesType = {
@@ -115,6 +117,7 @@ export interface DefaultLocationViewProps {
   onClickCity?: (value: any) => void;
   onClickAllCities?: () => void;
   onFocusInput?: (value: boolean) => void;
+  selectedCity?: any;
   className?: string;
 }
 
@@ -391,9 +394,11 @@ function PlasmicLocationView__RenderFunc(props: {
                       (() => {
                         try {
                           return {
-                            id: -1,
-                            name: "همه شهر ها",
-                            en_slug: "ir",
+                            id: $props.selectedCity.id,
+                            name: $props.selectedCity.name,
+                            en_slug: $props.selectedCity.en_slug,
+                            province_id:
+                              $props.selectedCity.province_id || "-1",
                             is_aroundme: true
                           };
                         } catch (e) {
