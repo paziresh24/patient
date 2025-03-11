@@ -1,0 +1,74 @@
+.ariaTextField:global(.__wab_instance) {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+  min-width: 0;
+  row-gap: 0.25rem;
+}
+.ariaTextField[data-disabled]:global(.__wab_instance) {
+  opacity: 0.5;
+}
+.label:global(.__wab_instance):global(.__wab_instance) {
+  position: relative;
+}
+.freeBox__vGgPa {
+  display: flex;
+  flex-direction: column;
+}
+.freeBox__crtNj {
+  flex-direction: row;
+  position: absolute;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  left: 0px;
+  top: 0px;
+  flex-shrink: 0;
+  display: none;
+  padding: 0.375rem 0.625rem;
+}
+.freeBoxiconStart__crtNjMjcnc {
+  display: flex;
+}
+.slotTargetStart {
+  color: #6b7280;
+}
+.svg__gRGmM {
+  position: relative;
+  height: 1em;
+}
+.textInputmultiLine:global(.__wab_instance):global(.__wab_instance) {
+  display: none;
+}
+.textAreaInputmultiLine:global(.__wab_instance):global(.__wab_instance) {
+  display: block;
+}
+.freeBox__ln4T {
+  height: 2rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  right: 0px;
+  flex-shrink: 0;
+  display: none;
+  padding: 0.375rem 0.625rem;
+}
+.freeBoxiconEnd__ln4TlMbL {
+  display: flex;
+}
+.slotTargetEnd {
+  color: #6b7280;
+}
+.svg__m0Gnw {
+  position: relative;
+  height: 1em;
+}
+.description:global(.__wab_instance):global(.__wab_instance) {
+  position: relative;
+}
