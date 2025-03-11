@@ -333,6 +333,22 @@ function PlasmicSearch__RenderFunc(props: {
                     throw e;
                   }
                 })()}
+                citySlug={(() => {
+                  try {
+                    return $props.selectedCity.en_slug != "ir" &&
+                      $props.selectedCity.en_slug
+                      ? $props.selectedCity.en_slug
+                      : "";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 className={classNames(
                   "__wab_instance",
                   sty.searchInput__cXqko,
@@ -703,6 +719,22 @@ function PlasmicSearch__RenderFunc(props: {
               id={"suggestionContent"}
             >
               <SearchResultQs
+                citySlug={(() => {
+                  try {
+                    return $props.selectedCity.en_slug != "ir" &&
+                      $props.selectedCity.en_slug
+                      ? $props.selectedCity.en_slug
+                      : "";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 className={classNames(
                   "__wab_instance",
                   sty.searchResultQs__mz2G7,
@@ -1640,6 +1672,26 @@ function PlasmicSearch__RenderFunc(props: {
                         })()
                       : undefined
                   }
+                  citySlug={
+                    hasVariant(globalVariants, "screen", "mobileOnly")
+                      ? (() => {
+                          try {
+                            return $props.selectedCity.en_slug != "ir" &&
+                              $props.selectedCity.en_slug
+                              ? $props.selectedCity.en_slug
+                              : "";
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      : undefined
+                  }
                   className={classNames(
                     "__wab_instance",
                     sty.searchInput___9QpFr,
@@ -1897,6 +1949,26 @@ function PlasmicSearch__RenderFunc(props: {
                   id={"suggestionContent"}
                 >
                   <SearchResultQs
+                    citySlug={
+                      hasVariant(globalVariants, "screen", "mobileOnly")
+                        ? (() => {
+                            try {
+                              return $props.selectedCity.en_slug != "ir" &&
+                                $props.selectedCity.en_slug
+                                ? $props.selectedCity.en_slug
+                                : "";
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        : undefined
+                    }
                     className={classNames(
                       "__wab_instance",
                       sty.searchResultQs__sn1YQ
