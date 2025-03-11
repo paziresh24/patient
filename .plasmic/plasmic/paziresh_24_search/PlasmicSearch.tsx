@@ -714,6 +714,50 @@ function PlasmicSearch__RenderFunc(props: {
                     )
                   }
                 )}
+                onClick={async value => {
+                  const $steps = {};
+
+                  $steps["updateIsFocus"] = true
+                    ? (() => {
+                        const actionArgs = { vgroup: "isFocus", operation: 6 };
+                        return (({ vgroup, value }) => {
+                          if (typeof value === "string") {
+                            value = [value];
+                          }
+
+                          $stateSet($state, vgroup, false);
+                          return false;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateIsFocus"] != null &&
+                    typeof $steps["updateIsFocus"] === "object" &&
+                    typeof $steps["updateIsFocus"].then === "function"
+                  ) {
+                    $steps["updateIsFocus"] = await $steps["updateIsFocus"];
+                  }
+
+                  $steps["runOnFocusChange"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onFocusChange"]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnFocusChange"] != null &&
+                    typeof $steps["runOnFocusChange"] === "object" &&
+                    typeof $steps["runOnFocusChange"].then === "function"
+                  ) {
+                    $steps["runOnFocusChange"] = await $steps[
+                      "runOnFocusChange"
+                    ];
+                  }
+                }}
                 terms={(() => {
                   const updateTerms = $$.lodash.debounce(() => {
                     $state.terms = $state.inputValue;
@@ -723,19 +767,53 @@ function PlasmicSearch__RenderFunc(props: {
                 })()}
               />
 
-              <SearchResultSimple
-                className={classNames(
-                  "__wab_instance",
-                  sty.searchResultSimple__ipciO
-                )}
-                inputValue={(() => {
-                  const updateTerms = $$.lodash.debounce(() => {
-                    $state.terms = $state.inputValue;
-                  }, 1000);
-                  updateTerms();
-                  return $state.terms;
-                })()}
-              />
+              {(() => {
+                try {
+                  return $state.inputValue.trim().length >= 3;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <SearchResultSimple
+                  cityId={(() => {
+                    try {
+                      return $props.selectedCity.id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.searchResultSimple__ipciO,
+                    {
+                      [sty.searchResultSimpleisFocus__ipciOmexBq]: hasVariant(
+                        $state,
+                        "isFocus",
+                        "isFocus"
+                      )
+                    }
+                  )}
+                  inputValue={(() => {
+                    const updateTerms = $$.lodash.debounce(() => {
+                      $state.terms = $state.inputValue;
+                    }, 1000);
+                    updateTerms();
+                    return $state.terms;
+                  })()}
+                />
+              ) : null}
             </div>
           ) : null}
         </div>
@@ -1409,6 +1487,19 @@ function PlasmicSearch__RenderFunc(props: {
                       ];
                     }
                   }}
+                  selectedCity={(() => {
+                    try {
+                      return $props.selectedCity;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   selectedProvinceId={(() => {
                     try {
                       return $props.selectedCity.id;
@@ -1810,6 +1901,53 @@ function PlasmicSearch__RenderFunc(props: {
                       "__wab_instance",
                       sty.searchResultQs__sn1YQ
                     )}
+                    onClick={async value => {
+                      const $steps = {};
+
+                      $steps["updateIsFocus"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              vgroup: "isFocus",
+                              operation: 6
+                            };
+                            return (({ vgroup, value }) => {
+                              if (typeof value === "string") {
+                                value = [value];
+                              }
+
+                              $stateSet($state, vgroup, false);
+                              return false;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsFocus"] != null &&
+                        typeof $steps["updateIsFocus"] === "object" &&
+                        typeof $steps["updateIsFocus"].then === "function"
+                      ) {
+                        $steps["updateIsFocus"] = await $steps["updateIsFocus"];
+                      }
+
+                      $steps["runOnFocusChange"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              eventRef: $props["onFocusChange"]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runOnFocusChange"] != null &&
+                        typeof $steps["runOnFocusChange"] === "object" &&
+                        typeof $steps["runOnFocusChange"].then === "function"
+                      ) {
+                        $steps["runOnFocusChange"] = await $steps[
+                          "runOnFocusChange"
+                        ];
+                      }
+                    }}
                     terms={
                       hasVariant(globalVariants, "screen", "mobileOnly")
                         ? (() => {
@@ -1835,35 +1973,70 @@ function PlasmicSearch__RenderFunc(props: {
                     }
                   />
 
-                  <SearchResultSimple
-                    className={classNames(
-                      "__wab_instance",
-                      sty.searchResultSimple__zvKe
-                    )}
-                    inputValue={
-                      hasVariant(globalVariants, "screen", "mobileOnly")
-                        ? (() => {
-                            try {
-                              return (() => {
-                                const updateTerms = $$.lodash.debounce(() => {
-                                  $state.terms = $state.inputValue;
-                                }, 1000);
-                                updateTerms();
-                                return $state.terms;
-                              })();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
+                  {(
+                    hasVariant(globalVariants, "screen", "mobileOnly")
+                      ? (() => {
+                          try {
+                            return $state.inputValue.trim().length >= 3;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return true;
                             }
-                          })()
-                        : undefined
-                    }
-                  />
+                            throw e;
+                          }
+                        })()
+                      : true
+                  ) ? (
+                    <SearchResultSimple
+                      cityId={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return $props.selectedCity.id;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : undefined
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.searchResultSimple__zvKe
+                      )}
+                      inputValue={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return (() => {
+                                  const updateTerms = $$.lodash.debounce(() => {
+                                    $state.terms = $state.inputValue;
+                                  }, 1000);
+                                  updateTerms();
+                                  return $state.terms;
+                                })();
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : undefined
+                      }
+                    />
+                  ) : null}
                 </div>
               ) : null}
             </div>
