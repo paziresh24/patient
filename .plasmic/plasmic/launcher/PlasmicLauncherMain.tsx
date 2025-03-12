@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-import: SALc6_vQPXlG/component
@@ -85,6 +86,7 @@ export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherMain__OverridesType = {
   root?: Flex__<"div">;
+  launcherWrapper?: Flex__<typeof LauncherWrapper>;
   launcherBlocksWallet?: Flex__<typeof LauncherBlocksWallet>;
   launcherBlocksShortcuts?: Flex__<typeof LauncherBlocksShortcuts>;
   freeBox?: Flex__<"div">;
@@ -153,6 +155,12 @@ function PlasmicLauncherMain__RenderFunc(props: {
         sty.root
       )}
     >
+      <LauncherWrapper
+        data-plasmic-name={"launcherWrapper"}
+        data-plasmic-override={overrides.launcherWrapper}
+        className={classNames("__wab_instance", sty.launcherWrapper)}
+      />
+
       <Reveal
         className={classNames("__wab_instance", sty.reveal__j6Oe5)}
         duration={300}
@@ -175,37 +183,51 @@ function PlasmicLauncherMain__RenderFunc(props: {
           className={classNames("__wab_instance", sty.launcherBlocksShortcuts)}
         />
       </Reveal>
-      <Reveal
-        className={classNames("__wab_instance", sty.reveal__vsuQt)}
-        duration={300}
-        triggerOnce={true}
-      >
-        <Stack__
-          as={"div"}
-          data-plasmic-name={"freeBox"}
-          data-plasmic-override={overrides.freeBox}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox)}
+      {(() => {
+        try {
+          return $ctx.auth.info?.provider?.job_title === "doctor";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Reveal
+          className={classNames("__wab_instance", sty.reveal__vsuQt)}
+          duration={300}
+          triggerOnce={true}
         >
-          <LauncherBlocksWidgetsSanje
-            data-plasmic-name={"launcherBlocksWidgetsSanje"}
-            data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
-            className={classNames(
-              "__wab_instance",
-              sty.launcherBlocksWidgetsSanje
-            )}
-          />
+          <Stack__
+            as={"div"}
+            data-plasmic-name={"freeBox"}
+            data-plasmic-override={overrides.freeBox}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox)}
+          >
+            <LauncherBlocksWidgetsSanje
+              data-plasmic-name={"launcherBlocksWidgetsSanje"}
+              data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksWidgetsSanje
+              )}
+            />
 
-          <LauncherBlocksWidgetsNelson
-            data-plasmic-name={"launcherBlocksWidgetsNelson"}
-            data-plasmic-override={overrides.launcherBlocksWidgetsNelson}
-            className={classNames(
-              "__wab_instance",
-              sty.launcherBlocksWidgetsNelson
-            )}
-          />
-        </Stack__>
-      </Reveal>
+            <LauncherBlocksWidgetsNelson
+              data-plasmic-name={"launcherBlocksWidgetsNelson"}
+              data-plasmic-override={overrides.launcherBlocksWidgetsNelson}
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksWidgetsNelson
+              )}
+            />
+          </Stack__>
+        </Reveal>
+      ) : null}
       <Reveal
         className={classNames("__wab_instance", sty.reveal__vvBKi)}
         duration={300}
@@ -217,20 +239,34 @@ function PlasmicLauncherMain__RenderFunc(props: {
           className={classNames("__wab_instance", sty.launcherBlocksApps)}
         />
       </Reveal>
-      <Reveal
-        className={classNames("__wab_instance", sty.reveal__h09Vw)}
-        duration={300}
-        triggerOnce={true}
-      >
-        <LauncherBlocksPatientServices
-          data-plasmic-name={"launcherBlocksPatientServices"}
-          data-plasmic-override={overrides.launcherBlocksPatientServices}
-          className={classNames(
-            "__wab_instance",
-            sty.launcherBlocksPatientServices
-          )}
-        />
-      </Reveal>
+      {(() => {
+        try {
+          return $ctx.auth.info?.provider?.job_title === "doctor";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Reveal
+          className={classNames("__wab_instance", sty.reveal__h09Vw)}
+          duration={300}
+          triggerOnce={true}
+        >
+          <LauncherBlocksPatientServices
+            data-plasmic-name={"launcherBlocksPatientServices"}
+            data-plasmic-override={overrides.launcherBlocksPatientServices}
+            className={classNames(
+              "__wab_instance",
+              sty.launcherBlocksPatientServices
+            )}
+          />
+        </Reveal>
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -238,6 +274,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "launcherWrapper",
     "launcherBlocksWallet",
     "launcherBlocksShortcuts",
     "freeBox",
@@ -246,6 +283,7 @@ const PlasmicDescendants = {
     "launcherBlocksApps",
     "launcherBlocksPatientServices"
   ],
+  launcherWrapper: ["launcherWrapper"],
   launcherBlocksWallet: ["launcherBlocksWallet"],
   launcherBlocksShortcuts: ["launcherBlocksShortcuts"],
   freeBox: [
@@ -263,6 +301,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  launcherWrapper: typeof LauncherWrapper;
   launcherBlocksWallet: typeof LauncherBlocksWallet;
   launcherBlocksShortcuts: typeof LauncherBlocksShortcuts;
   freeBox: "div";
@@ -332,6 +371,7 @@ export const PlasmicLauncherMain = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    launcherWrapper: makeNodeComponent("launcherWrapper"),
     launcherBlocksWallet: makeNodeComponent("launcherBlocksWallet"),
     launcherBlocksShortcuts: makeNodeComponent("launcherBlocksShortcuts"),
     freeBox: makeNodeComponent("freeBox"),

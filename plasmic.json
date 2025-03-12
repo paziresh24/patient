@@ -5368,6 +5368,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsApp.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "3TTnoIEhqXMk",
+          "name": "LauncherWrapper",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherWrapper.tsx",
+          "importSpec": {
+            "modulePath": "LauncherWrapper.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherWrapper.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
