@@ -293,7 +293,21 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
               eventArgs
             );
           }}
-          url={"https://apigw.paziresh24.com/v1/details-payment"}
+          url={(() => {
+            try {
+              return $ctx.Growthbook.features["hamdast::wallet"].hide
+                ? "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
+                : "https://apigw.paziresh24.com/v1/details-payment";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
         >
           <div
             className={classNames(
@@ -319,11 +333,20 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                   <React.Fragment>
                     {(() => {
                       try {
-                        return (
-                          $state.apiRequest.data[
-                            $state.apiRequest.data?.length - 1
-                          ]?.sum_Unpaid_Amount / 10
-                        )?.toLocaleString("fa-IR");
+                        return (() => {
+                          if (
+                            $ctx.Growthbook.features["hamdast::wallet"].hide
+                          ) {
+                            return (
+                              $state.apiRequest.data?.data?.balance / 10
+                            )?.toLocaleString("fa-IR");
+                          }
+                          return (
+                            $state.apiRequest.data[
+                              $state.apiRequest.data?.length - 1
+                            ]?.sum_Unpaid_Amount / 10
+                          )?.toLocaleString("fa-IR");
+                        })();
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

@@ -23,7 +23,7 @@
 .launcherComponentsTitle:global(.__wab_instance) {
   max-width: 100%;
 }
-.freeBox {
+.freeBox___9RuOc {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -38,6 +38,24 @@
   border-radius: 12px;
   padding: 16px;
 }
-.launcherComponentsService:global(.__wab_instance) {
+.launcherComponentsService__cIyhr:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__pfGz1 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: none;
+  min-width: 0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.launcherComponentsService__vrQg:global(.__wab_instance) {
   max-width: 100%;
 }
