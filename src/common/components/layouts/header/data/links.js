@@ -387,7 +387,7 @@ export const developersMenu = [
   },
   {
     title: 'وب سرویس ها',
-    link: 'https://developers.paziresh24.com/rest',
+    link: 'https://developers.paziresh24.com/',
   },
   {
     title: 'گیت هاب پذیرش24',
