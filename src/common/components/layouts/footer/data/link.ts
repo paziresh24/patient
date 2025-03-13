@@ -53,7 +53,7 @@ export const footerPaziresh24 = {
     },
     {
       title: 'فرصت‌های شغلی',
-      link: 'https://hr.paziresh24.com/',
+      link: 'https://join.paziresh24.com/',
     },
     {
       title: 'مجله سلامتی',
