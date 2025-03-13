@@ -178,7 +178,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         const $steps = {};
 
         $steps["goToDashboardAppsWalletPayment"] =
-          $ctx.Growthbook.features["hamdast::wallet"]?.hide === false
+          $ctx.Growthbook.features["hamdast::katibe"]?.hide === true
             ? (() => {
                 const actionArgs = {
                   destination: "/dashboard/apps/wallet/payment/"
@@ -208,7 +208,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         }
 
         $steps["goToDashboardAppsKatibeBills"] =
-          $ctx.Growthbook.features["hamdast::wallet"].hide == true
+          $ctx.Growthbook.features["hamdast::katibe"]?.hide === false
             ? (() => {
                 const actionArgs = {
                   destination: "/dashboard/apps/katibe/bills/"
@@ -295,7 +295,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
           }}
           url={(() => {
             try {
-              return $ctx.Growthbook.features["hamdast::wallet"].hide
+              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false
                 ? "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
                 : "https://apigw.paziresh24.com/v1/details-payment";
             } catch (e) {
@@ -335,7 +335,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       try {
                         return (() => {
                           if (
-                            $ctx.Growthbook.features["hamdast::wallet"].hide
+                            !$ctx.Growthbook.features["hamdast::katibe"]?.hide
                           ) {
                             return (
                               $state.apiRequest.data?.data?.balance / 10

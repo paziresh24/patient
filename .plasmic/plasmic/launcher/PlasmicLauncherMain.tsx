@@ -161,17 +161,34 @@ function PlasmicLauncherMain__RenderFunc(props: {
         className={classNames("__wab_instance", sty.launcherWrapper)}
       />
 
-      <Reveal
-        className={classNames("__wab_instance", sty.reveal__j6Oe5)}
-        duration={300}
-        triggerOnce={true}
-      >
-        <LauncherBlocksWallet
-          data-plasmic-name={"launcherBlocksWallet"}
-          data-plasmic-override={overrides.launcherBlocksWallet}
-          className={classNames("__wab_instance", sty.launcherBlocksWallet)}
-        />
-      </Reveal>
+      {(() => {
+        try {
+          return (() => {
+            if ($ctx.auth.info?.provider?.job_title === "doctor") return true;
+            return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
+          })();
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Reveal
+          className={classNames("__wab_instance", sty.reveal__j6Oe5)}
+          duration={300}
+          triggerOnce={true}
+        >
+          <LauncherBlocksWallet
+            data-plasmic-name={"launcherBlocksWallet"}
+            data-plasmic-override={overrides.launcherBlocksWallet}
+            className={classNames("__wab_instance", sty.launcherBlocksWallet)}
+          />
+        </Reveal>
+      ) : null}
       <Reveal
         className={classNames("__wab_instance", sty.reveal__pf8Ib)}
         duration={300}

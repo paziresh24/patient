@@ -291,13 +291,13 @@ function PlasmicLauncherServices__RenderFunc(props: {
 
           {(() => {
             try {
-              return $ctx.Growthbook.features["hamdast::wallet"].hide == true;
+              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
@@ -389,13 +389,13 @@ function PlasmicLauncherServices__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return $ctx.Growthbook.features["hamdast::wallet"].hide == false;
+              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == true;
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
