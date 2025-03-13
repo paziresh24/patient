@@ -11,6 +11,7 @@ import pick from 'lodash/pick';
 import { Fragment } from '@/common/fragment';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
+import { ActionButton } from './centersInfo/actionButton';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -142,14 +143,7 @@ export const aside = (data: any) => {
       isShow: centers.some((center: any) => center.id !== CENTERS.CONSULT),
       ...(fragmentComponents?.addresses?.hide === true && {
         title: 'آدرس و تلفن تماس',
-        ActionButton: customize.showContribute && !editable && (
-          <Link href={`/patient/contribute/?slug=${seo.slug}&test_src=profile_eslah`} prefetch={false}>
-            <Button variant="text" size="sm" className="flex text-xs font-semibold h-9 gap-x-1 text-primary">
-              <EditIcon width={17} height={17} />
-              گزارش تلفن و آدرس صحیح
-            </Button>
-          </Link>
-        ),
+        ActionButton: customize.showContribute && !editable && <ActionButton slug={seo?.slug} />,
       }),
       function: () => {
         return {

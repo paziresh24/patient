@@ -19,6 +19,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle, editabl
   const bookmarkController = useBookmarkController({ slug });
   const share = useShare();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const user = useUserInfoStore(state => state.info);
   const { handleOpenLoginModal } = useLoginModalContext();
   const { customize } = useCustomize();
 
@@ -51,7 +52,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle, editabl
       !editable && {
         type: 'edit',
         action: () => {
-          router.push(`/patient/contribute?slug=${slug}`);
+          router.push(`https://survey.porsline.ir/s/35ggjRX?slug=${slug}&user-cell=${user?.cell ?? ''}`);
         },
       },
   ].filter(Boolean);

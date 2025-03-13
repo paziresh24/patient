@@ -1,6 +1,7 @@
 import Text from '@/common/components/atom/text/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import EditIcon from '@/common/components/icons/edit';
+import InfoIcon from '@/common/components/icons/info';
 import ShareIcon from '@/common/components/icons/share';
 
 interface ToolBarProps {
@@ -33,7 +34,7 @@ export const ToolBar = ({ items = [] }: ToolBarProps) => {
     },
     {
       title: 'گزارش',
-      icon: <EditIcon width={21} height={21} />,
+      icon: <InfoIcon width={21} height={21} />,
       shouldShow: typeArray.includes('edit'),
       onClick: items.find(item => item.type == 'edit')?.action,
     },
