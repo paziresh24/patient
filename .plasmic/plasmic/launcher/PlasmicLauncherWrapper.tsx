@@ -162,32 +162,33 @@ function PlasmicLauncherWrapper__RenderFunc(props: {
         onMount={async () => {
           const $steps = {};
 
-          $steps["invokeGlobalAction"] = true
-            ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          user_id: $ctx.auth?.info?.id
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+          $steps["invokeGlobalAction"] =
+            $ctx.Growthbook.isReady && $ctx?.auth?.info?.id
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            user_id: $ctx.auth?.info?.id
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return $globalActions[
-                  "GrowthbookGlobalContext.setAttributes"
-                ]?.apply(null, [...actionArgs.args]);
-              })()
-            : undefined;
+                      })()
+                    ]
+                  };
+                  return $globalActions[
+                    "GrowthbookGlobalContext.setAttributes"
+                  ]?.apply(null, [...actionArgs.args]);
+                })()
+              : undefined;
           if (
             $steps["invokeGlobalAction"] != null &&
             typeof $steps["invokeGlobalAction"] === "object" &&
