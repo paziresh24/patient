@@ -4,26 +4,43 @@
   position: relative;
   width: 100%;
   height: auto;
-  background: #f2f3f5;
+  max-width: 100%;
+  justify-content: center;
+  align-items: center;
+  background: #f4f5f8;
   min-width: 0;
+}
+.freeBox__by7Eu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #f4f5f8;
+  min-width: 0;
+  min-height: 0;
   padding: 15px;
 }
-.root > :global(.__wab_flex-container) {
+.freeBox__by7Eu > :global(.__wab_flex-container) {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   min-width: 0;
+  min-height: 0;
   margin-top: calc(0px - 20px);
   height: calc(100% + 20px);
 }
-.root > :global(.__wab_flex-container) > *,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.root > :global(.__wab_flex-container) > picture > img,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+.freeBox__by7Eu > :global(.__wab_flex-container) > *,
+.freeBox__by7Eu > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__by7Eu > :global(.__wab_flex-container) > picture > img,
+.freeBox__by7Eu
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
   margin-top: 20px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .root {
+  .freeBox__by7Eu {
     background: #f2f3f5;
   }
 }
@@ -54,7 +71,7 @@
   width: 100%;
   min-width: 0;
 }
-.freeBox {
+.freeBox__cJfkN {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -63,7 +80,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.freeBox > :global(.__wab_flex-container) {
+.freeBox__cJfkN > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
@@ -71,10 +88,10 @@
   margin-left: calc(0px - 11px);
   width: calc(100% + 11px);
 }
-.freeBox > :global(.__wab_flex-container) > *,
-.freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox > :global(.__wab_flex-container) > picture > img,
-.freeBox
+.freeBox__cJfkN > :global(.__wab_flex-container) > *,
+.freeBox__cJfkN > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__cJfkN > :global(.__wab_flex-container) > picture > img,
+.freeBox__cJfkN
   > :global(.__wab_flex-container)
   > :global(.__wab_slot)
   > picture
@@ -107,4 +124,11 @@
 }
 .launcherBlocksPatientServices:global(.__wab_instance) {
   max-width: 100%;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
 }
