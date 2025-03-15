@@ -392,11 +392,6 @@
   max-width: 100%;
   object-fit: cover;
 }
-@media (min-width: 0px) and (max-width: 768px) {
-  .apiRequesttype_onlineVisit:global(.__wab_instance) {
-    display: none;
-  }
-}
 .button__hPh8A:global(.__wab_instance) {
   max-width: 100%;
   display: none;

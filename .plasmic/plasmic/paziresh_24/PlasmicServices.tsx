@@ -938,7 +938,7 @@ function PlasmicServices__RenderFunc(props: {
                         return false;
                       }
                       const result =
-                        $state.apiRequest.data?.list?.[0]?.anomali_hours?.data?.some(
+                        $state.apiRequest.data?.list?.[0]?.anomali?.data?.some(
                           item => isInTimeRange(item.hour)
                         );
                       return result;
