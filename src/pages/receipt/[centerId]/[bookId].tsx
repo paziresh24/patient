@@ -80,6 +80,7 @@ const Receipt = () => {
     modalProps: notificationGrantAccsesModalProps,
   } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
+  const [hasHolidays, setHasHolidays] = useState(false);
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -328,6 +329,61 @@ const Receipt = () => {
     }
   }, [isLogin]);
 
+  useEffect(() => {
+    if (bookDetailsData?.book_time) {
+      const bookDate = moment(bookDetailsData.book_time * 1000);
+      const bookDateStr = bookDate.format('YYYY-MM-DD');
+      const startDate = bookDate.clone().subtract(3, 'days').format('YYYY-MM-DD');
+      const endDate = bookDate.clone().add(3, 'days').format('YYYY-MM-DD');
+
+      axios
+        .get(`https://apigw.paziresh24.com/v1/holidays?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => {
+          // Get the appointment date as a moment object for comparison
+          const appointmentDate = moment(bookDateStr);
+
+          // Create an array of all dates in the range
+          const allDates = [];
+          const currentDate = moment(startDate);
+          const lastDate = moment(endDate);
+
+          while (currentDate.isSameOrBefore(lastDate)) {
+            allDates.push(currentDate.format('YYYY-MM-DD'));
+            currentDate.add(1, 'days');
+          }
+
+          // Get holidays from API response
+          const apiHolidays = response.data && response.data.length > 0 ? response.data.map((holiday: any) => holiday.date) : [];
+
+          // Add Fridays (Iranian weekend) to the holiday list
+          const allHolidays = [...apiHolidays];
+
+          allDates.forEach(date => {
+            const dayOfWeek = moment(date).day();
+            // In moment.js, Friday is day 5 (0 is Sunday, 1 is Monday, etc.)
+            if (dayOfWeek === 5 && !allHolidays.includes(date)) {
+              allHolidays.push(date);
+            }
+          });
+
+          if (allHolidays.length > 0) {
+            // Find if there are holidays before and after the appointment date
+            const holidaysBeforeAppointment = allHolidays.some((date: string) => moment(date).isBefore(appointmentDate));
+
+            const holidaysAfterAppointment = allHolidays.some((date: string) => moment(date).isAfter(appointmentDate));
+
+            // Set hasHolidays to true only if the appointment is between holidays
+            if (holidaysBeforeAppointment && holidaysAfterAppointment) {
+              setHasHolidays(true);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching holidays:', error);
+        });
+    }
+  }, [bookDetailsData?.book_time]);
+
   return (
     <>
       {isLogin && (
@@ -379,6 +435,12 @@ const Receipt = () => {
                   </>
                 )}
               </>
+            )}
+            {hasHolidays && (
+              <Alert severity="info" className="p-3 font-medium text-cyan-800 text-sm">
+                به دلیل اینکه نوبت شما در بازه‌ی بین التعطیلی است، لطفا پیش از مراجعه، از طریق شماره تلفن مطب، از حضور پزشک در مطب اطمینان
+                حاصل کنید.
+              </Alert>
             )}
             <BookInfo
               turnData={bookDetailsData}
