@@ -7,7 +7,8 @@ import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
-
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -44,6 +45,13 @@ export const Factor = (props: FactorProps) => {
     loading,
   } = props;
 
+  const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
+  const { data: balance, isLoading: balanceLoading } = useGetBalance({
+    enabled: !!newVisitInvoice,
+  });
+
+  console.log(newVisitInvoice);
+
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
       <div className="flex flex-col justify-center p-5 space-y-3 bg-white  border border-solid border-[#d0d2d6] rounded-lg shadow-card">
@@ -51,12 +59,15 @@ export const Factor = (props: FactorProps) => {
           اطلاعات پرداخت
         </Text>
         <Invoice
-          priceText={centerId === CENTERS.CONSULT ? 'ویزیت آنلاین' : 'پیش پرداخت حق ویزیت (بیعانه)'}
+          serviceFeeText={newVisitInvoice ? 'مالیات و کارمزد خدمات آنلاین' : ''}
+          serviceFee={newVisitInvoice ? 'رایگان' : ''}
+          priceText={centerId === CENTERS.CONSULT || newVisitInvoice ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
+          walletAmount={newVisitInvoice ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
-          loading={loading}
+          loading={loading || (newVisitInvoice ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && (
           <Chips
@@ -84,27 +95,19 @@ export const Factor = (props: FactorProps) => {
           errorMessage={discountErrorMessage}
         />
       )}
-      {!isEmpty(rules) && (
-        <Alert severity="warning">
-          <div className="flex flex-col p-5 space-y-1 bg-white md:rounded-lg shadow-card">
-            <div className="flex items-strat gap-2 mb-2">
-              <WarningIcon className="-translate-y-1 text-[#FDCA64]" />
-              <Text fontWeight="bold" className="text-[#798092]">
-                لطفا دقت کنید!
-              </Text>
-            </div>
-            <ul className="mr-5 list-disc space-y-4">
-              {rules.map((rule, index) => [
-                <li key={index}>
-                  <Text
-                    fontSize="sm"
-                    className={clsx('text-[#798092]', { 'text-[#FDCA64]': index === 0 })}
-                    dangerouslySetInnerHTML={{ __html: rule }}
-                  />
-                </li>,
-              ])}
-            </ul>
+      {!isEmpty(rules) && !loading && (
+        <Alert severity="warning" className="p-5">
+          <div className="flex items-strat gap-2 mb-2">
+            <WarningIcon className="-translate-y-1 text-[#975b2a]" />
+            <Text fontWeight="bold">لطفا دقت کنید!</Text>
           </div>
+          <ul className="mr-5 list-disc space-y-4">
+            {rules.map((rule, index) => [
+              <li key={index}>
+                <Text fontSize="sm" className={clsx({ 'text-[#975b2a]': index === 0 })} dangerouslySetInnerHTML={{ __html: rule }} />
+              </li>,
+            ])}
+          </ul>
         </Alert>
       )}
     </div>

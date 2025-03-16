@@ -23,4 +23,5 @@ export enum ServerStateKeysEnum {
   Rate = 'rate',
   AvailabilityStatus = 'availabilityStatus',
   Services = 'services',
+  WalletBalance = 'walletBalance',
 }
