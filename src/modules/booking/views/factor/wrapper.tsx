@@ -8,7 +8,7 @@ import useApplication from '@/common/hooks/useApplication';
 import { CENTERS } from '@/common/types/centers';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import useDiscount from '../../hooks/factor/useDiscount';
@@ -30,6 +30,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const userInfo = useUserInfoStore(state => state.info);
   const premiumOnlineVistDiscountCode = useFeatureValue('premium.online_visit_discount_code', '');
   const premiumOnlineVisitDiscountPercentage = useFeatureValue('premium.online_visit_discount_percentage', '');
+  const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
 
   const { isLoading, ...invoice } = useInvoice({
     bookId,
@@ -81,7 +82,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     if (centerId === CENTERS.CONSULT) return [];
     return [
       `تنها در صورت لغو نوبت تا <b> ${respiteToRefundAfterDelete} ساعت</b> قبل از زمان ویزیت، امکان استرداد وجه شما ممکن می باشد.`,
-      `مبلغ فوق به عنوان پیش پرداخت حق ویزیت (بیعانه) می باشد و تسویه نهایی بعد از مراجعه به مطب انجام خواهد شد.`,
+      newVisitInvoice
+        ? `این مبلغ هزینه ویزیت شما است که به‌صورت آنلاین پرداخت می‌شود.`
+        : `مبلغ فوق به عنوان پیش پرداخت حق ویزیت (بیعانه) می باشد و تسویه نهایی بعد از مراجعه به مطب انجام خواهد شد.`,
+      newVisitInvoice ? `درصورتی‌که خدمات اضافی در مطب ارائه شود، ممکن است هزینه‌های دیگری نیز توسط پزشک تعیین و دریافت شود.` : undefined,
     ];
   };
 
@@ -99,7 +103,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
           centerId === CENTERS.CONSULT &&
           (checkPremiumUser(userInfo.vip) ? !premiumOnlineVisitDiscountPercentage && !premiumOnlineVistDiscountCode : true)
         }
-        rules={getRules()}
+        rules={getRules()?.filter(Boolean) as string[]}
       />
       {isApplyPremiumDiscount && (
         <Alert severity="warning" className="p-4">
