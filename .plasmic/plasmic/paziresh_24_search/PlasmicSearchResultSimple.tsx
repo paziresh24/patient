@@ -81,10 +81,12 @@ export const PlasmicSearchResultSimple__VariantProps =
 
 export type PlasmicSearchResultSimple__ArgsType = {
   inputValue?: string;
+  cityId?: string;
 };
 type ArgPropType = keyof PlasmicSearchResultSimple__ArgsType;
 export const PlasmicSearchResultSimple__ArgProps = new Array<ArgPropType>(
-  "inputValue"
+  "inputValue",
+  "cityId"
 );
 
 export type PlasmicSearchResultSimple__OverridesType = {
@@ -98,6 +100,7 @@ export type PlasmicSearchResultSimple__OverridesType = {
 
 export interface DefaultSearchResultSimpleProps {
   inputValue?: string;
+  cityId?: string;
   className?: string;
 }
 
@@ -162,6 +165,21 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
           data-plasmic-name={"searchRequest"}
           data-plasmic-override={overrides.searchRequest}
           className={classNames("__wab_instance", sty.searchRequest)}
+          searchOptionalFilters={(() => {
+            try {
+              return {
+                ...($props.cityId != -1 ? { city_id: [$props.cityId] } : {})
+              };
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
           searchQuery={(() => {
             try {
               return $props.inputValue;
