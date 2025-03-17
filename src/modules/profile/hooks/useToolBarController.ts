@@ -52,7 +52,7 @@ export const useToolBarController = ({ slug, displayName, documentTitle, editabl
       !editable && {
         type: 'edit',
         action: () => {
-          router.push(`https://survey.porsline.ir/s/35ggjRX?slug=${slug}&user-cell=${user?.cell ?? ''}`);
+          router.push(`https://survey.porsline.ir/s/35ggjRX?slug=${encodeURI(encodeURIComponent(slug))}&user-cell=${user?.cell ?? ''}`);
         },
       },
   ].filter(Boolean);

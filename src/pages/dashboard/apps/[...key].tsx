@@ -88,6 +88,7 @@ export const Dashboard = (props: any) => {
       showHeader={!isMobile}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
+      <AppBar title={appName} titleLoading={!appsData.isSuccess} backButton={true} />
       <SideBar className="hidden md:flex">
         <div className="flex flex-grow flex-col w-full">
           <Seo title={appName} noIndex />
