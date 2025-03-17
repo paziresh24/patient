@@ -1,6 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { addCommas } from '@persian-tools/persian-tools';
+import { isEmpty } from 'lodash';
 
 interface InvoiceProps {
   serviceFeeText?: string;
@@ -9,7 +10,7 @@ interface InvoiceProps {
   priceText: string;
   tax?: string;
   discount?: string;
-  walletAmount?: string;
+  walletAmount?: number;
   totalPrice?: string;
   loading: boolean;
 }
@@ -18,7 +19,8 @@ export const Invoice = (props: InvoiceProps) => {
   const formattedPrice = price ? addCommas(Math.round(+price / 10)) : null;
   const formattedTax = tax ? addCommas(Math.round(+tax / 10)) : null;
   const formattedTotalPrice = totalPrice ? addCommas(Math.max(0, Math.round((+totalPrice - +(walletAmount ?? 0)) / 10))) : null;
-  const formattedWalletAmount = walletAmount ? addCommas(Math.round(+walletAmount / 10)) : null;
+  const formattedWalletAmount =
+    (walletAmount == 0 || walletAmount) && typeof walletAmount === 'number' ? addCommas(Math.round(+walletAmount / 10)) : null;
   const formattedDiscount = discount ? addCommas(Math.round(+discount / 10)) : null;
 
   return (
@@ -37,7 +39,7 @@ export const Invoice = (props: InvoiceProps) => {
           </div>
         )}
 
-        {!loading && serviceFeeText && (
+        {!loading && !!serviceFeeText && (
           <div className="flex justify-between">
             <Text fontWeight="medium" fontSize="sm">
               {serviceFeeText}:
@@ -59,7 +61,7 @@ export const Invoice = (props: InvoiceProps) => {
           </div>
         )}
 
-        {!loading && formattedTax && (
+        {!loading && !!formattedTax && (
           <div className="flex justify-between">
             <Text fontWeight="medium" fontSize="sm">
               مالیات:
@@ -69,7 +71,7 @@ export const Invoice = (props: InvoiceProps) => {
             </Text>
           </div>
         )}
-        {formattedDiscount && (
+        {!!formattedDiscount && (
           <div className="flex justify-between text-red-500">
             <Text fontWeight="medium" fontSize="sm">
               تخفیف:
@@ -80,7 +82,7 @@ export const Invoice = (props: InvoiceProps) => {
           </div>
         )}
 
-        {!loading && walletAmount && (
+        {!loading && !!formattedWalletAmount && (
           <div className="flex justify-between">
             <Text fontWeight="medium" fontSize="sm">
               شارژ کیف پول:
