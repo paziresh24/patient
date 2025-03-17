@@ -90,6 +90,12 @@
   width: 22px;
   height: 22px;
 }
+.svg__z79 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
+}
 .text__o6HKn {
   position: relative;
   width: 100%;
@@ -98,6 +104,12 @@
   font-size: 12px;
   font-weight: 500;
   min-width: 0;
+}
+.svg__rDJxB {
+  object-fit: cover;
+  max-width: 100%;
+  width: 22px;
+  height: 22px;
 }
 .svg__wJkmF {
   object-fit: cover;

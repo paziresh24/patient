@@ -165,7 +165,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
           }
         })()}
         title={
-          "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u06a9\u0627\u0628\u0631\u062f"
+          "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u06a9\u0627\u0631\u0628\u0631\u062f"
         }
       />
 
