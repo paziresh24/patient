@@ -102,6 +102,7 @@ export type PlasmicSearchInput__ArgsType = {
   onFocuse?: (value: boolean) => void;
   cityName?: string;
   isAroundMe?: boolean;
+  citySlug?: string;
 };
 type ArgPropType = keyof PlasmicSearchInput__ArgsType;
 export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
@@ -112,7 +113,8 @@ export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
   "onClickSearchIcon",
   "onFocuse",
   "cityName",
-  "isAroundMe"
+  "isAroundMe",
+  "citySlug"
 );
 
 export type PlasmicSearchInput__OverridesType = {
@@ -131,6 +133,7 @@ export interface DefaultSearchInputProps {
   onFocuse?: (value: boolean) => void;
   cityName?: string;
   isAroundMe?: boolean;
+  citySlug?: string;
   isFocused?: SingleBooleanChoiceArg<"isFocused">;
   className?: string;
 }
@@ -824,7 +827,9 @@ function PlasmicSearchInput__RenderFunc(props: {
                             params.delete("text");
                             const existingParams = params?.toString() || "";
                             params.append("text", $state.textInput.value);
-                            return ($state.enterPress = `/s/?${params.toString()}`);
+                            return ($state.enterPress = `/s/${
+                              $props.citySlug ? $props.citySlug + "/" : ""
+                            }?${params.toString()}`);
                           }
                         });
                       }
