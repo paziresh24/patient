@@ -15,6 +15,7 @@ import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
+import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
@@ -68,6 +69,10 @@ const Home = ({ fragmentComponents }: any) => {
             <RecentSearch />
           </div>
         )}
+
+        <SearchGlobalContextsProvider>
+          <Fragment name="HomePageShortcuts" />
+        </SearchGlobalContextsProvider>
       </main>
     </>
   );
