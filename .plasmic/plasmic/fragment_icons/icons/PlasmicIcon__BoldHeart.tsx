@@ -5,11 +5,11 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type BoldheartIconProps = React.ComponentProps<"svg"> & {
+export type BoldHeartIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function BoldheartIcon(props: BoldheartIconProps) {
+export function BoldHeartIcon(props: BoldHeartIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
@@ -33,5 +33,5 @@ export function BoldheartIcon(props: BoldheartIconProps) {
   );
 }
 
-export default BoldheartIcon;
+export default BoldHeartIcon;
 /* prettier-ignore-end */
