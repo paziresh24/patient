@@ -158,8 +158,8 @@
         },
         {
           "id": "eZfYsLpdWQA_",
-          "name": "BoldheartIcon",
-          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Boldheart.tsx"
+          "name": "BoldHeartIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__BoldHeart.tsx"
         },
         {
           "id": "NSxX1Iy4jDVL",
@@ -190,6 +190,16 @@
           "id": "qxWwW7vbw7na",
           "name": "EitaaIcon",
           "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Eitaa.tsx"
+        },
+        {
+          "id": "vu4uxcIH4gVk",
+          "name": "TelegramIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__Telegram.tsx"
+        },
+        {
+          "id": "0Ejs1gKiFp1s",
+          "name": "TwitterXIcon",
+          "moduleFilePath": "plasmic/fragment_icons/icons/PlasmicIcon__TwitterX.tsx"
         }
       ],
       "images": [
@@ -216,8 +226,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
@@ -473,8 +482,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -1784,7 +1792,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -5516,6 +5525,155 @@
         }
       ],
       "jsBundleThemes": []
+    },
+    {
+      "projectId": "9UibdRruyX43DxnB8Q1QXF",
+      "projectApiToken": "ZNj972EbwCfknN1MAhdxLU3H7BjjWdUah5wjYLBnTSIVLgc0W6mbuSO49RMpnrdKocnSMgvQwlZ1GHOA3TuCg",
+      "projectName": "nanoid",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/nanoid/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [],
+      "customFunctions": []
+    },
+    {
+      "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
+      "projectApiToken": "AyUAG1O8tuJSh6suPHSWieHCx2P5p88csk0vvv7Adt0XkyavEGBvYBMQYFSOzNqkg17S3lUiAQ5yzlfMQmA",
+      "projectName": "@hamdast/Bimehnama",
+      "version": "latest",
+      "cssFilePath": "plasmic/hamdast_bimehnama/plasmic.module.css",
+      "components": [
+        {
+          "id": "6-Wp84uf7hB4",
+          "name": "HamdastBimehnamaWidget",
+          "type": "managed",
+          "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
+          "renderModuleFilePath": "plasmic/hamdast_bimehnama/PlasmicHamdastBimehnamaWidget.tsx",
+          "importSpec": {
+            "modulePath": "HamdastBimehnamaWidget.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_bimehnama/PlasmicHamdastBimehnamaWidget.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        }
+      ],
+      "icons": [
+        {
+          "id": "fXb4BRQWSj1u",
+          "name": "IconIcon",
+          "moduleFilePath": "plasmic/hamdast_bimehnama/icons/PlasmicIcon__Icon.tsx"
+        }
+      ],
+      "images": [],
+      "indirect": false,
+      "globalContextsFilePath": "plasmic/hamdast_bimehnama/PlasmicGlobalContextsProvider.tsx",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "-IeObyOIsc0t",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "DEq71cnvGnQa",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        },
+        {
+          "id": "lqSJADy1VaaO",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "7lzlFC8uITJu",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "IcgtaffmmoM1",
+          "name": "RadioFilter",
+          "displayName": "RadioFilter",
+          "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "HMvOqJZ2PsXa",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "22NrgAcvW8Ec",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "WFaHdNfyPaVC",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "adf14Xr_wY-7",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "nL25peHobYq7",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "VUAeX6xLWUnF",
+          "name": "AuthGlobalContext",
+          "displayName": "AuthGlobalContext",
+          "componentImportPath": "@/common/fragment/authGlobalContext"
+        },
+        {
+          "id": "ru2DZRerUmTu",
+          "name": "Fragment",
+          "displayName": "Fragment",
+          "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "qKuSEh937qob",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "I-s41H8Nlhtr",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
+        },
+        {
+          "id": "GO5etPhEqkon",
+          "name": "PWA",
+          "displayName": "PWA",
+          "componentImportPath": "@/common/fragment/pwa"
+        }
+      ],
+      "customFunctions": [
+        {
+          "defaultExport": true,
+          "id": "splunkEvent",
+          "importPath": "@/common/services/plasmicSplunkEvent",
+          "name": "splunkEvent",
+          "namespace": null
+        }
+      ]
     }
   ],
   "globalVariants": {
@@ -5579,6 +5737,12 @@
         "name": "Screen",
         "projectId": "grxNYctbMek6PL66cujx3u",
         "contextFilePath": "plasmic/launcher/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "26V_wbvcdVyW",
+        "name": "Screen",
+        "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
+        "contextFilePath": "plasmic/hamdast_bimehnama/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
