@@ -67,6 +67,8 @@ const DoctorProfile = ({
   fragmentComponents,
   getOnlyHasuraProfileData,
   status,
+  hamdastWidgets,
+  hamdastWidgetsData,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -227,6 +229,8 @@ const DoctorProfile = ({
     handleViewAs,
     customize,
     seo: { breadcrumbs, slug },
+    hamdastWidgetsData,
+    hamdastWidgets,
   };
 
   if ([404, 500, 504, 410].includes(status)) {
