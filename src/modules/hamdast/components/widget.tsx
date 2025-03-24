@@ -28,8 +28,6 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
 
   useEffect(() => {
     const handleEventFunction = (messageEvent: MessageEvent) => {
-      console.log(messageEvent.data?.hamdast);
-
       if (messageEvent.data?.hamdast?.event === 'HAMDAST_WIDGET_ADD_TO_PROFILE') {
         hashId.current = messageEvent.data?.hamdast?.hash_id;
         handleOpen();
