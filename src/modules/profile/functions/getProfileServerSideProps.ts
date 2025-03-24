@@ -85,7 +85,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
   try {
     const queryClient = new QueryClient();
-    let fullProfileData;
+    let fullProfileData: any;
     try {
       const { redirect, fullProfileData: data } = await getProfile({ slug: slugFormmated, university });
       fullProfileData = data;
