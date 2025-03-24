@@ -163,7 +163,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
           )}
         >
           {
-            "\u0628\u06cc\u0645\u0647\u200c\u0647\u0627\u06cc \u0637\u0631\u0641 \u0642\u0631\u0627\u0631\u062f\u0627\u062f \u067e\u0632\u0634\u06a9"
+            "\u0628\u06cc\u0645\u0647\u200c\u0647\u0627\u06cc \u0637\u0631\u0641 \u0642\u0631\u0627\u0631\u062f\u0627\u062f"
           }
         </div>
       </div>
@@ -218,7 +218,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
@@ -252,7 +252,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
@@ -287,33 +287,39 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                         )}
                         key={currentIndex}
                       >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__n9TZl)}
-                          displayHeight={"24px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"100%"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"24px"}
-                          height={"24"}
-                          loading={"lazy"}
-                          src={(() => {
-                            try {
-                              return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox___3F6Ny
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__n9TZl)}
+                            displayHeight={"30px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"100%"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"30px"}
+                            height={"28"}
+                            loading={"lazy"}
+                            src={(() => {
+                              try {
+                                return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          width={"24"}
-                        />
-
+                            })()}
+                            width={"28"}
+                          />
+                        </div>
                         <LineClamp
                           className={classNames(
                             "__wab_instance",
@@ -358,7 +364,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
@@ -394,7 +400,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
@@ -427,44 +433,50 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                         )}
                         key={currentIndex}
                       >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__uqljK)}
-                          displayHeight={"20px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"100%"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"20px"}
-                          height={"24"}
-                          loading={"lazy"}
-                          src={(() => {
-                            try {
-                              return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/insurances%2F${currentItem.key}-insurance.svg`;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__d2Onp
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img___84T5Y)}
+                            displayHeight={"30px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"100%"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"30px"}
+                            height={"28"}
+                            loading={"lazy"}
+                            src={(() => {
+                              try {
+                                return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/insurances%2F${currentItem.key}-insurance.svg`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          width={"24"}
-                        />
-
+                            })()}
+                            width={"28"}
+                          />
+                        </div>
                         <LineClamp
                           className={classNames(
                             "__wab_instance",
-                            sty.lineClamp__cDm5M
+                            sty.lineClamp__liG8T
                           )}
                         >
                           <div
                             className={classNames(
                               projectcss.all,
                               projectcss.__wab_text,
-                              sty.text___7XCy2
+                              sty.text__lNgPl
                             )}
                           >
                             <React.Fragment>
