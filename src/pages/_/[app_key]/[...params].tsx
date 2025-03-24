@@ -8,6 +8,7 @@ import classNames from '@/common/utils/classNames';
 import { oneApp, useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastPayment } from '@/modules/hamdast/components/payment';
+import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { isEmpty } from 'lodash';
@@ -97,6 +98,7 @@ const Page = ({ page, app }: any) => {
       <Seo title={page.name?.fa} noIndex />
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
+      <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <div className="w-full flex-grow flex flex-col">
         {(!showIframe || isAppLoading) && (
           <div className="w-full justify-center flex items-center h-full flex-grow">

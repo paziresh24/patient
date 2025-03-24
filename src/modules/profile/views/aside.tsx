@@ -12,6 +12,7 @@ import { Fragment } from '@/common/fragment';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import { ActionButton } from './centersInfo/actionButton';
+import Hamdast from '@/modules/hamdast/render';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -34,6 +35,8 @@ export const aside = (data: any) => {
     waitingTimeInfo,
     fragmentComponents,
     hamdast,
+    hamdastWidgetsData,
+    hamdastWidgets,
   } = data;
 
   const profileData = pick(data, [
@@ -90,6 +93,16 @@ export const aside = (data: any) => {
           )}`}
         ></iframe>
       ),
+    },
+    {
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () =>
+        hamdastWidgets
+          .filter((widget: any) => widget?.placement?.includes?.('aside_one'))
+          .map((widget: any) => (
+            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+          )),
     },
     // Rcommend
     {
@@ -232,6 +245,16 @@ export const aside = (data: any) => {
         ) : (
           <CentersInfo className="bg-white md:rounded-lg" {...props} />
         ),
+    },
+    {
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () =>
+        hamdastWidgets
+          .filter((widget: any) => widget?.placement?.includes?.('aside_two'))
+          .map((widget: any) => (
+            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+          )),
     },
   ];
 };
