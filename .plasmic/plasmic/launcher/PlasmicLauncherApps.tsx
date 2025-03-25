@@ -413,7 +413,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
@@ -457,10 +457,21 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 description={
                   "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u067e\u0627\u06cc\u0647 \u0648 \u062a\u06a9\u0645\u06cc\u0644\u06cc \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
                 }
-                name={
-                  "\u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u0645\u0646"
-                }
-                soon={true}
+                link={"/_/bimehnama/setting/"}
+                name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
+                soon={(() => {
+                  try {
+                    return !$ctx.Growthbook.features["hamdast::bimehnama"];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "soon";
+                    }
+                    throw e;
+                  }
+                })()}
               />
 
               <LauncherComponentsApp
