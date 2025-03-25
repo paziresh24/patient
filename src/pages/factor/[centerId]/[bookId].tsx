@@ -59,7 +59,8 @@ const Factor = () => {
   }, [getBookDetails.isSuccess, getBookDetails.data?.data?.result?.[0]]);
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
-  const doctorName = bookDetailsData?.doctor_display_name ?? '';
+  const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
+
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {

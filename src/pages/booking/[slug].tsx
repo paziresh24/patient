@@ -39,7 +39,7 @@ const Booking = () => {
 
   const profileData = data?.data;
 
-  const doctorName = profileData?.display_name ?? '';
+  const doctorName = `${profileData?.name} ${profileData?.family}`;
 
   useEffect(() => {
     if (data?.redirect) {
