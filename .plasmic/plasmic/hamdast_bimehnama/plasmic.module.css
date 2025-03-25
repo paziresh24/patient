@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
+.plasmic_tokens {
+  --token-KVpCKYXYUCBt: 11px;
+  --plasmic-token-unnamed-style-token: var(--token-KVpCKYXYUCBt);
+}
+
 .plasmic_default_styles {
   --mixin-aIBG0l1RZ9PA_font-size: var(--token-tM2Vh4zTir7U);
   --mixin-aIBG0l1RZ9PA_font-weight: 400;

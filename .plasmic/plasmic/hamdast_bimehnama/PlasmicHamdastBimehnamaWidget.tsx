@@ -90,6 +90,7 @@ export const PlasmicHamdastBimehnamaWidget__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicHamdastBimehnamaWidget__OverridesType = {
   root?: Flex__<"div">;
+  span?: Flex__<"span">;
   collapsible?: Flex__<typeof Collapsible>;
 };
 
@@ -172,6 +173,55 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
         hasGap={true}
         className={classNames(projectcss.all, sty.freeBox__oziL8)}
       >
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__ne0Ob
+          )}
+        >
+          <React.Fragment>
+            <React.Fragment>
+              {
+                "\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc "
+              }
+            </React.Fragment>
+            {
+              <span
+                data-plasmic-name={"span"}
+                data-plasmic-override={overrides.span}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.span,
+                  projectcss.__wab_text,
+                  projectcss.plasmic_default__inline,
+                  sty.span
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return new Date(
+                        $props.data.updated_at
+                      ).toLocaleDateString("fa-IR");
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "4/12/1403";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </span>
+            }
+            <React.Fragment>
+              {" \u062a\u0648\u0633\u0637 \u067e\u0632\u0634\u06a9"}
+            </React.Fragment>
+          </React.Fragment>
+        </div>
         <Collapsible
           data-plasmic-name={"collapsible"}
           data-plasmic-override={overrides.collapsible}
@@ -537,7 +587,8 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "collapsible"],
+  root: ["root", "span", "collapsible"],
+  span: ["span"],
   collapsible: ["collapsible"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -545,6 +596,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  span: "span";
   collapsible: typeof Collapsible;
 };
 
@@ -608,6 +660,7 @@ export const PlasmicHamdastBimehnamaWidget = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    span: makeNodeComponent("span"),
     collapsible: makeNodeComponent("collapsible"),
 
     // Metadata about props expected for PlasmicHamdastBimehnamaWidget

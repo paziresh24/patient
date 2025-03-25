@@ -84,6 +84,16 @@
     border-radius: 0px;
   }
 }
+.text__ne0Ob {
+  position: absolute;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  color: var(--token-zGjeYJZOhQzx);
+  left: 15px;
+  top: 5px;
+  font-size: 9px;
+}
 .collapsible:global(.__wab_instance) {
   max-width: 100%;
 }
