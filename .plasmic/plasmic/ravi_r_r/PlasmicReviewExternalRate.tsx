@@ -84,9 +84,7 @@ type VariantPropType = keyof PlasmicReviewExternalRate__VariantsArgs;
 export const PlasmicReviewExternalRate__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicReviewExternalRate__ArgsType = {
-  doctorSlug?: string;
-};
+export type PlasmicReviewExternalRate__ArgsType = { doctorSlug?: string };
 type ArgPropType = keyof PlasmicReviewExternalRate__ArgsType;
 export const PlasmicReviewExternalRate__ArgProps = new Array<ArgPropType>(
   "doctorSlug"

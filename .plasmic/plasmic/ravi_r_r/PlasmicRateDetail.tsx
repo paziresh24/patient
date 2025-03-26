@@ -77,10 +77,7 @@ export type PlasmicRateDetail__VariantsArgs = {};
 type VariantPropType = keyof PlasmicRateDetail__VariantsArgs;
 export const PlasmicRateDetail__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicRateDetail__ArgsType = {
-  centers?: any;
-  slug?: string;
-};
+export type PlasmicRateDetail__ArgsType = { centers?: any; slug?: string };
 type ArgPropType = keyof PlasmicRateDetail__ArgsType;
 export const PlasmicRateDetail__ArgProps = new Array<ArgPropType>(
   "centers",

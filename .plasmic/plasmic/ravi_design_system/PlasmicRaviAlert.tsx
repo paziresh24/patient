@@ -80,9 +80,7 @@ export const PlasmicRaviAlert__VariantProps = new Array<VariantPropType>(
   "isSmall"
 );
 
-export type PlasmicRaviAlert__ArgsType = {
-  content?: string;
-};
+export type PlasmicRaviAlert__ArgsType = { content?: string };
 type ArgPropType = keyof PlasmicRaviAlert__ArgsType;
 export const PlasmicRaviAlert__ArgProps = new Array<ArgPropType>("content");
 

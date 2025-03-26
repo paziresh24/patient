@@ -1156,10 +1156,6 @@ function PlasmicReviewList2__RenderFunc(props: {
                       }
                     })()}
                   />
-
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__oRu6)}
-                  />
                 </Stack__>
               );
             })}
