@@ -57,8 +57,8 @@ export const Factor = (props: FactorProps) => {
           اطلاعات پرداخت
         </Text>
         <Invoice
-          serviceFeeText={newVisitInvoice ? 'مالیات و کارمزد خدمات آنلاین' : ''}
-          serviceFee={newVisitInvoice ? 'رایگان' : ''}
+          serviceFeeText={newVisitInvoice ? (centerId === CENTERS.CONSULT ? 'کارمزد خدمات آنلاین' : 'مالیات و کارمزد خدمات آنلاین') : ''}
+          serviceFee={newVisitInvoice ? (centerId === CENTERS.CONSULT ? 'پزشک پرداخت کرده' : 'رایگان') : ''}
           priceText={centerId === CENTERS.CONSULT || newVisitInvoice ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
