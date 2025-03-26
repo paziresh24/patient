@@ -221,4 +221,5 @@
   text-align: center;
   font-size: 0.65rem;
   align-self: flex-end;
+  cursor: pointer;
 }

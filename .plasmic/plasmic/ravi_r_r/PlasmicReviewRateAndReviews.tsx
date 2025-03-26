@@ -100,7 +100,7 @@ export const PlasmicReviewRateAndReviews__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReviewRateAndReviews__OverridesType = {
   root?: Flex__<"div">;
-  text?: Flex__<"div">;
+  h2?: Flex__<"h2">;
   freeBox?: Flex__<"div">;
   reviewRateAndCommentCount?: Flex__<typeof ReviewRateAndCommentCount>;
   reviewProgressList?: Flex__<typeof ReviewProgressList>;
@@ -197,10 +197,15 @@ function PlasmicReviewRateAndReviews__RenderFunc(props: {
         sty.root
       )}
     >
-      <div
-        data-plasmic-name={"text"}
-        data-plasmic-override={overrides.text}
-        className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
+      <h2
+        data-plasmic-name={"h2"}
+        data-plasmic-override={overrides.h2}
+        className={classNames(
+          projectcss.all,
+          projectcss.h2,
+          projectcss.__wab_text,
+          sty.h2
+        )}
       >
         <React.Fragment>
           {(() => {
@@ -217,7 +222,7 @@ function PlasmicReviewRateAndReviews__RenderFunc(props: {
             }
           })()}
         </React.Fragment>
-      </div>
+      </h2>
       <Stack__
         as={"div"}
         data-plasmic-name={"freeBox"}
@@ -253,12 +258,12 @@ function PlasmicReviewRateAndReviews__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "text",
+    "h2",
     "freeBox",
     "reviewRateAndCommentCount",
     "reviewProgressList"
   ],
-  text: ["text"],
+  h2: ["h2"],
   freeBox: ["freeBox", "reviewRateAndCommentCount", "reviewProgressList"],
   reviewRateAndCommentCount: ["reviewRateAndCommentCount"],
   reviewProgressList: ["reviewProgressList"]
@@ -268,7 +273,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  text: "div";
+  h2: "h2";
   freeBox: "div";
   reviewRateAndCommentCount: typeof ReviewRateAndCommentCount;
   reviewProgressList: typeof ReviewProgressList;
@@ -334,7 +339,7 @@ export const PlasmicReviewRateAndReviews = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    text: makeNodeComponent("text"),
+    h2: makeNodeComponent("h2"),
     freeBox: makeNodeComponent("freeBox"),
     reviewRateAndCommentCount: makeNodeComponent("reviewRateAndCommentCount"),
     reviewProgressList: makeNodeComponent("reviewProgressList"),
