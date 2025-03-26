@@ -79,9 +79,7 @@ export type PlasmicSetNweReview__VariantsArgs = {};
 type VariantPropType = keyof PlasmicSetNweReview__VariantsArgs;
 export const PlasmicSetNweReview__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicSetNweReview__ArgsType = {
-  addCommentPage?: string;
-};
+export type PlasmicSetNweReview__ArgsType = { addCommentPage?: string };
 type ArgPropType = keyof PlasmicSetNweReview__ArgsType;
 export const PlasmicSetNweReview__ArgProps = new Array<ArgPropType>(
   "addCommentPage"

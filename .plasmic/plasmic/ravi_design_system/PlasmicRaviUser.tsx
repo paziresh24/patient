@@ -88,6 +88,7 @@ export type PlasmicRaviUser__ArgsType = {
   isDoctor?: boolean;
   userId?: string;
   doctorLink?: any;
+  onClickDoctorLink?: (value: string) => void;
 };
 type ArgPropType = keyof PlasmicRaviUser__ArgsType;
 export const PlasmicRaviUser__ArgProps = new Array<ArgPropType>(
@@ -99,7 +100,8 @@ export const PlasmicRaviUser__ArgProps = new Array<ArgPropType>(
   "onlyDoctor",
   "isDoctor",
   "userId",
-  "doctorLink"
+  "doctorLink",
+  "onClickDoctorLink"
 );
 
 export type PlasmicRaviUser__OverridesType = {
@@ -117,6 +119,7 @@ export interface DefaultRaviUserProps {
   isDoctor?: boolean;
   userId?: string;
   doctorLink?: any;
+  onClickDoctorLink?: (value: string) => void;
   className?: string;
 }
 
@@ -477,19 +480,44 @@ function PlasmicRaviUser__RenderFunc(props: {
                   sty.link__xAgss
                 )}
                 component={Link}
-                href={(() => {
-                  try {
-                    return $props.doctorLink.url;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "/";
-                    }
-                    throw e;
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runOnClickDoctorLink"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onClickDoctorLink"],
+                          args: [
+                            (() => {
+                              try {
+                                return $props.doctorLink.url;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnClickDoctorLink"] != null &&
+                    typeof $steps["runOnClickDoctorLink"] === "object" &&
+                    typeof $steps["runOnClickDoctorLink"].then === "function"
+                  ) {
+                    $steps["runOnClickDoctorLink"] = await $steps[
+                      "runOnClickDoctorLink"
+                    ];
                   }
-                })()}
+                }}
                 platform={"nextjs"}
               >
                 <React.Fragment>

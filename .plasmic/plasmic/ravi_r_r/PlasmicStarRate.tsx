@@ -83,9 +83,7 @@ export const PlasmicStarRate__VariantProps = new Array<VariantPropType>(
   "selected"
 );
 
-export type PlasmicStarRate__ArgsType = {
-  onSelect?: () => void;
-};
+export type PlasmicStarRate__ArgsType = { onSelect?: () => void };
 type ArgPropType = keyof PlasmicStarRate__ArgsType;
 export const PlasmicStarRate__ArgProps = new Array<ArgPropType>("onSelect");
 

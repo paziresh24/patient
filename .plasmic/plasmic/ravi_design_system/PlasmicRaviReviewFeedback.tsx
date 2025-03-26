@@ -64,6 +64,7 @@ import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5f
 import RaviTabs from "../../RaviTabs"; // plasmic-import: eIcAmCTlZ2yT/component
 import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyEBPJSmH/component
 import Checkbox from "../../Checkbox"; // plasmic-import: 3y7pc6cf4L1a/component
+import Paziresh24MultilineTextInput from "../../Paziresh24MultilineTextInput"; // plasmic-import: 5O8XqcSJJk6J/component
 
 import { useScreenVariants as useScreenVariantsqiBuxNlixBgQ } from "../paziresh_24_design_system/PlasmicGlobalVariant__Screen"; // plasmic-import: QiBUXNlixBgQ/globalVariant
 
@@ -90,13 +91,15 @@ export type PlasmicRaviReviewFeedback__ArgsType = {
   negativeList?: any;
   timeList?: any;
   onSubmit?: (values: string) => void;
+  onClickSendComment?: (value: string) => void;
 };
 type ArgPropType = keyof PlasmicRaviReviewFeedback__ArgsType;
 export const PlasmicRaviReviewFeedback__ArgProps = new Array<ArgPropType>(
   "positiveList",
   "negativeList",
   "timeList",
-  "onSubmit"
+  "onSubmit",
+  "onClickSendComment"
 );
 
 export type PlasmicRaviReviewFeedback__OverridesType = {
@@ -106,6 +109,7 @@ export type PlasmicRaviReviewFeedback__OverridesType = {
   svg?: Flex__<"svg">;
   commentDialog?: Flex__<typeof Paziresh24Dialog>;
   checkbox?: Flex__<typeof Checkbox>;
+  multilineTextInput?: Flex__<typeof Paziresh24MultilineTextInput>;
 };
 
 export interface DefaultRaviReviewFeedbackProps {
@@ -113,6 +117,7 @@ export interface DefaultRaviReviewFeedbackProps {
   negativeList?: any;
   timeList?: any;
   onSubmit?: (values: string) => void;
+  onClickSendComment?: (value: string) => void;
   className?: string;
 }
 
@@ -191,6 +196,18 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "multilineTextInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "isLoadingComment",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -1021,7 +1038,11 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
             hasGap={true}
             className={classNames(projectcss.all, sty.freeBox___4HpLt)}
           >
-            <div className={classNames(projectcss.all, sty.freeBox__fzD7)}>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__fzD7)}
+            >
               <Checkbox
                 data-plasmic-name={"checkbox"}
                 data-plasmic-override={overrides.checkbox}
@@ -1052,7 +1073,34 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                   }
                 }}
               />
-            </div>
+
+              <Paziresh24MultilineTextInput
+                data-plasmic-name={"multilineTextInput"}
+                data-plasmic-override={overrides.multilineTextInput}
+                className={classNames("__wab_instance", sty.multilineTextInput)}
+                onValueChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "multilineTextInput",
+                    "value"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                placeholder={
+                  "\u0646\u0638\u0631 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f..."
+                }
+                value={generateStateValueProp($state, [
+                  "multilineTextInput",
+                  "value"
+                ])}
+              />
+            </Stack__>
             <Paziresh24Button
               children2={"\u062b\u0628\u062a"}
               className={classNames(
@@ -1061,6 +1109,113 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
               )}
               onClick={async event => {
                 const $steps = {};
+
+                $steps["updateIsLoadingComment"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingComment"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingComment"] != null &&
+                  typeof $steps["updateIsLoadingComment"] === "object" &&
+                  typeof $steps["updateIsLoadingComment"].then === "function"
+                ) {
+                  $steps["updateIsLoadingComment"] = await $steps[
+                    "updateIsLoadingComment"
+                  ];
+                }
+
+                $steps["runOnClickSendComment"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onClickSendComment"],
+                        args: [
+                          (() => {
+                            try {
+                              return $state.multilineTextInput.value;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnClickSendComment"] != null &&
+                  typeof $steps["runOnClickSendComment"] === "object" &&
+                  typeof $steps["runOnClickSendComment"].then === "function"
+                ) {
+                  $steps["runOnClickSendComment"] = await $steps[
+                    "runOnClickSendComment"
+                  ];
+                }
+
+                $steps["updateIsLoadingComment2"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoadingComment"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoadingComment2"] != null &&
+                  typeof $steps["updateIsLoadingComment2"] === "object" &&
+                  typeof $steps["updateIsLoadingComment2"].then === "function"
+                ) {
+                  $steps["updateIsLoadingComment2"] = await $steps[
+                    "updateIsLoadingComment2"
+                  ];
+                }
 
                 $steps["updateCommentDialogOpen"] = true
                   ? (() => {
@@ -1134,13 +1289,15 @@ const PlasmicDescendants = {
     "raviTabs",
     "svg",
     "commentDialog",
-    "checkbox"
+    "checkbox",
+    "multilineTextInput"
   ],
   raviRateStar: ["raviRateStar"],
   raviTabs: ["raviTabs"],
   svg: ["svg"],
-  commentDialog: ["commentDialog", "checkbox"],
-  checkbox: ["checkbox"]
+  commentDialog: ["commentDialog", "checkbox", "multilineTextInput"],
+  checkbox: ["checkbox"],
+  multilineTextInput: ["multilineTextInput"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1152,6 +1309,7 @@ type NodeDefaultElementType = {
   svg: "svg";
   commentDialog: typeof Paziresh24Dialog;
   checkbox: typeof Checkbox;
+  multilineTextInput: typeof Paziresh24MultilineTextInput;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1219,6 +1377,7 @@ export const PlasmicRaviReviewFeedback = Object.assign(
     svg: makeNodeComponent("svg"),
     commentDialog: makeNodeComponent("commentDialog"),
     checkbox: makeNodeComponent("checkbox"),
+    multilineTextInput: makeNodeComponent("multilineTextInput"),
 
     // Metadata about props expected for PlasmicRaviReviewFeedback
     internalVariantProps: PlasmicRaviReviewFeedback__VariantProps,
