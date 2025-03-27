@@ -76,10 +76,7 @@ export type PlasmicSeoBox__VariantsArgs = {};
 type VariantPropType = keyof PlasmicSeoBox__VariantsArgs;
 export const PlasmicSeoBox__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicSeoBox__ArgsType = {
-  seoInfo?: any;
-  footer?: any;
-};
+export type PlasmicSeoBox__ArgsType = { seoInfo?: any; footer?: any };
 type ArgPropType = keyof PlasmicSeoBox__ArgsType;
 export const PlasmicSeoBox__ArgProps = new Array<ArgPropType>(
   "seoInfo",

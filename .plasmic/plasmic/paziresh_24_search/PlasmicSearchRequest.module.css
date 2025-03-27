@@ -21,6 +21,7 @@
   width: 100%;
   max-width: 100%;
   object-fit: cover;
+  margin-right: 0px;
   min-width: 0;
 }
 .searchResults:global(.__wab_instance) {

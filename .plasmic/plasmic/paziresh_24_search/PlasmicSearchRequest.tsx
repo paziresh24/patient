@@ -272,7 +272,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 item.source?.expertises
                                   ?.map(
                                     expertise =>
-                                      expertise?.alias_title ||
+                                      expertise?.degree?.name +
+                                      " " +
                                       expertise?.expertise?.name
                                   )
                                   .join(", ") ?? "",
