@@ -118,11 +118,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
+  const isRequestVisitTurn = status === BookStatus.requested;
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const shouldShowRemoveTurn =
-    (status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && status !== BookStatus.visited)) &&
-    paymentStatus !== PaymentStatus.paying;
+    isRequestVisitTurn ||
+    ((status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && status !== BookStatus.visited)) &&
+      paymentStatus !== PaymentStatus.paying);
 
   const shouldShowMessengerButton =
     isOnlineVisitTurn &&
@@ -172,10 +174,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         reference_code: trackingCode,
         national_code: nationalCode,
         book_id: id,
+        isBookRequest: isRequestVisitTurn,
       },
       {
         onSuccess: data => {
-          if (data.data.status === ClinicStatus.SUCCESS) {
+          if (data.data?.status === ClinicStatus?.SUCCESS) {
             toast.success(data.data?.message);
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
@@ -198,7 +201,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             }
             return;
           }
-          toast.error(data.data.message ?? data.data?.[0]?.message);
+          if (data.data?.status) {
+            toast.error(data.data.message ?? data.data?.[0]?.message);
+          } else {
+            removeBook({ bookId: id });
+            handleCloseRemoveTurnModal();
+            toast.success(data.data.message ?? data.data?.[0]?.message);
+          }
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
