@@ -82,9 +82,7 @@ export type PlasmicSearchPage3__VariantsArgs = {};
 type VariantPropType = keyof PlasmicSearchPage3__VariantsArgs;
 export const PlasmicSearchPage3__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicSearchPage3__ArgsType = {
-  resultCount?: string;
-};
+export type PlasmicSearchPage3__ArgsType = { resultCount?: string };
 type ArgPropType = keyof PlasmicSearchPage3__ArgsType;
 export const PlasmicSearchPage3__ArgProps = new Array<ArgPropType>(
   "resultCount"
