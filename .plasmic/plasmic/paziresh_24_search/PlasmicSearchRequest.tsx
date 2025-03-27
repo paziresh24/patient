@@ -269,14 +269,16 @@ function PlasmicSearchRequest__RenderFunc(props: {
                               }?size=150`,
                               view: item.source?.number_of_visits ?? 0,
                               display_expertise:
-                                item.source?.expertises
-                                  ?.map(
-                                    expertise =>
-                                      expertise?.degree?.name +
-                                      " " +
-                                      expertise?.expertise?.name
+                                Array.from(
+                                  new Set(
+                                    (item.source?.expertises ?? []).map(
+                                      expertise =>
+                                        expertise?.degree?.name +
+                                        " " +
+                                        expertise?.expertise?.name
+                                    )
                                   )
-                                  .join(", ") ?? "",
+                                ).join(", ") ?? "",
                               satisfaction: item.source?.satisfaction ?? 0,
                               rates_count: item.source?.rates_count ?? 0,
                               price: (() => {
