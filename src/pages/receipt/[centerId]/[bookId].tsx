@@ -215,6 +215,7 @@ const Receipt = () => {
         national_code: bookDetailsData.patient?.national_code,
         reference_code: bookDetailsData.reference_code,
         book_id: bookId as string,
+        isBookRequest: turnStatus.requestedTurn,
       },
       {
         onSuccess: data => {
@@ -241,7 +242,13 @@ const Receipt = () => {
             router.push('/patient/appointments');
             return;
           }
-          toast.error(data.data.message ?? data.data?.[0]?.message);
+          if (data.data?.status) {
+            toast.error(data.data.message ?? data.data?.[0]?.message);
+          } else {
+            handleCloseRemoveModal();
+            toast.success(data.data.message ?? data.data?.[0]?.message);
+            router.push('/patient/appointments');
+          }
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
@@ -269,7 +276,10 @@ const Receipt = () => {
   };
   const handleMyTrunButtonAction = () => {
     router.push({
-      pathname: '/patient/appointments',
+      pathname: '/dashboard/appointments',
+      query: {
+        type: turnStatus.requestedTurn ? 'book_request' : 'book',
+      },
     });
   };
 
@@ -315,6 +325,7 @@ const Receipt = () => {
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
     if (turnStatus.expiredTurn && centerType === 'consult') return '';
+    if (turnStatus.requestedTurn) return '';
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
@@ -408,7 +419,7 @@ const Receipt = () => {
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt" className="flex flex-col px-5 pt-5 space-y-4">
-            {!turnStatus.requestedTurn && !!statusText && (
+            {!!statusText && (
               <>
                 {getReceiptDetails.isSuccess ? (
                   <div className="flex flex-col items-center justify-center space-y-3">
@@ -494,9 +505,16 @@ const Receipt = () => {
                 </>
               )}
               {turnStatus.requestedTurn && (
-                <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                  نوبت های من
-                </Button>
+                <div className="flex flex-col space-y-3">
+                  <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                    نوبت های من
+                  </Button>
+                  {!turnStatus.deletedTurn && (
+                    <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                      لغو نوبت
+                    </Button>
+                  )}
+                </div>
               )}
               {centerType === 'consult' && !shouldUsePlasmicActionButtons && (
                 <div className="grid gap-2">

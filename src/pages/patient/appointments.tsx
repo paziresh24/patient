@@ -40,7 +40,7 @@ export const Appointments = () => {
   const [page, setPage] = useState<number>(1);
   const { books, addBooks, setBooks } = useBookStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [type, setType] = useState<BookType>('book');
+  const [type, setType] = useState<BookType>(query.type === 'book_request' ? 'book_request' : 'book');
   const { handleOpenLoginModal } = useLoginModalContext();
   const serverTime = useGetServerTime();
   const university = useCustomize(state => state.customize?.partnerKey);
@@ -64,7 +64,7 @@ export const Appointments = () => {
   useEffect(() => {
     return () => {
       getBooks.remove();
-      handleChangeType('book');
+      handleChangeType(query.type === 'book_request' ? 'book_request' : 'book');
     };
   }, []);
 
