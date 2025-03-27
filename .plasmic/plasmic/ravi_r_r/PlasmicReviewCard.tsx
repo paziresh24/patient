@@ -2872,12 +2872,32 @@ function PlasmicReviewCard__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
+              $steps["invokeGlobalAction"] =
+                $ctx.auth.isLogin == false
+                  ? (() => {
+                      const actionArgs = { args: [] };
+                      return $globalActions["AuthGlobalContext.login"]?.apply(
+                        null,
+                        [...actionArgs.args]
+                      );
+                    })()
+                  : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+
               $steps["runCode"] = $ctx.auth.isLogin
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
                         return (() => {
-                          const formData = new FormData();
+                          const formData = new globalThis.FormData();
                           formData.append("feedback_id", $props.feedbackId);
                           formData.append(
                             "description",
@@ -2931,55 +2951,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 $steps["toast"] = await $steps["toast"];
               }
 
-              $steps["multiline"] = $ctx.auth.isLogin
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["multilineTextInput", "value"]
-                      },
-                      operation: 1
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, undefined);
-                      return undefined;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["multiline"] != null &&
-                typeof $steps["multiline"] === "object" &&
-                typeof $steps["multiline"].then === "function"
-              ) {
-                $steps["multiline"] = await $steps["multiline"];
-              }
-
-              $steps["invokeGlobalAction"] =
-                $ctx.auth.isLogin == false
-                  ? (() => {
-                      const actionArgs = { args: [] };
-                      return $globalActions["AuthGlobalContext.login"]?.apply(
-                        null,
-                        [...actionArgs.args]
-                      );
-                    })()
-                  : undefined;
-              if (
-                $steps["invokeGlobalAction"] != null &&
-                typeof $steps["invokeGlobalAction"] === "object" &&
-                typeof $steps["invokeGlobalAction"].then === "function"
-              ) {
-                $steps["invokeGlobalAction"] = await $steps[
-                  "invokeGlobalAction"
-                ];
-              }
-
-              $steps["splunk"] = true
+              $steps["splunk"] = $ctx.auth.isLogin
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
@@ -3007,6 +2979,34 @@ function PlasmicReviewCard__RenderFunc(props: {
                 typeof $steps["splunk"].then === "function"
               ) {
                 $steps["splunk"] = await $steps["splunk"];
+              }
+
+              $steps["multiline"] = $ctx.auth.isLogin
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["multilineTextInput", "value"]
+                      },
+                      operation: 1
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, undefined);
+                      return undefined;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["multiline"] != null &&
+                typeof $steps["multiline"] === "object" &&
+                typeof $steps["multiline"].then === "function"
+              ) {
+                $steps["multiline"] = await $steps["multiline"];
               }
             }}
           >
