@@ -77,9 +77,7 @@ type VariantPropType = keyof PlasmicSearchContentSlider__VariantsArgs;
 export const PlasmicSearchContentSlider__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicSearchContentSlider__ArgsType = {
-  data?: any;
-};
+export type PlasmicSearchContentSlider__ArgsType = { data?: any };
 type ArgPropType = keyof PlasmicSearchContentSlider__ArgsType;
 export const PlasmicSearchContentSlider__ArgProps = new Array<ArgPropType>(
   "data"
