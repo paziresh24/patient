@@ -511,7 +511,7 @@ const Receipt = () => {
                   </Button>
                   {!turnStatus.deletedTurn && (
                     <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
-                      لغو نوبت
+                      لغو درخواست
                     </Button>
                   )}
                 </div>
