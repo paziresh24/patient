@@ -9,8 +9,20 @@ import { turnDetailsData } from './turnDetails';
 import type { TurnProps } from './turnType';
 
 export const Turn: React.FC<TurnProps> = props => {
-  const { status, doctorInfo, paymentStatus, turnDetails, location, feedbackUrl, prescription, centerType, patientInfo, centerInfo, id } =
-    props;
+  const {
+    status,
+    isDelete,
+    doctorInfo,
+    paymentStatus,
+    turnDetails,
+    location,
+    feedbackUrl,
+    prescription,
+    centerType,
+    patientInfo,
+    centerInfo,
+    id,
+  } = props;
   const { t } = useTranslation();
 
   const detailsData = useMemo(
@@ -19,6 +31,7 @@ export const Turn: React.FC<TurnProps> = props => {
         data: omit(turnDetails, ['respiteDeleteTurn', 'bookTimestamp', 'possibilityBeingVisited']),
         centerType,
         status,
+        isDelete,
         paymentStatus,
         activePaymentStatus: centerInfo.activePaymentStatus,
         translate: t,
@@ -39,6 +52,7 @@ export const Turn: React.FC<TurnProps> = props => {
         trackingCode={turnDetails.trackingCode}
         nationalCode={patientInfo.nationalCode}
         status={status}
+        isDelete={isDelete}
         paymentStatus={paymentStatus}
       />
 
@@ -68,6 +82,7 @@ export const Turn: React.FC<TurnProps> = props => {
         description={turnDetails.description}
         slug={doctorInfo.slug}
         status={status}
+        isDelete={isDelete}
         paymentStatus={paymentStatus}
         hasPaging={centerInfo.hasPaging}
         bookTime={turnDetails.bookTime}

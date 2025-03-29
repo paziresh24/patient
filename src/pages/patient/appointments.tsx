@@ -172,7 +172,8 @@ export const Appointments = () => {
           books.map(turn => (
             <Turn
               key={turn.book_id}
-              status={turn.delete === 1 ? BookStatus.deleted : turn.book_status}
+              status={turn.book_status}
+              isDelete={turn.delete === 1}
               paymentStatus={turn.payment_status}
               id={turn.book_id}
               centerType={

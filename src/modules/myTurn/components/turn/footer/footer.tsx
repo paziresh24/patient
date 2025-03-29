@@ -40,6 +40,7 @@ interface TurnFooterProps {
   id: string;
   slug: string;
   status: BookStatus;
+  isDelete: boolean;
   pdfLink?: string;
   centerType: CenterType;
   hasPaging: boolean;
@@ -89,6 +90,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     paymentStatus,
     description,
     notRefundable,
+    isDelete,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -122,16 +124,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const shouldShowRemoveTurn =
-    isRequestVisitTurn ||
-    ((status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.deleted && status !== BookStatus.visited)) &&
-      paymentStatus !== PaymentStatus.paying);
+    !isDelete &&
+    (isRequestVisitTurn ||
+      ((status === BookStatus.notVisited || (isOnlineVisitTurn && status !== BookStatus.visited)) &&
+        paymentStatus !== PaymentStatus.paying));
 
   const shouldShowMessengerButton =
-    isOnlineVisitTurn &&
-    paymentStatus !== PaymentStatus.paying &&
-    status !== BookStatus.deleted &&
-    selectedOnlineVisitChannel &&
-    possibilityBeingVisited;
+    isOnlineVisitTurn && paymentStatus !== PaymentStatus.paying && !isDelete && selectedOnlineVisitChannel && possibilityBeingVisited;
 
   const showPrescription = () => {
     splunkInstance('doctor-profile').sendEvent({
@@ -154,6 +153,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const reBook = () => {
     if (isRequestVisitTurn) {
       router.push(`/booking/${slug}?centerId=${centerId}`);
+      return;
     }
     router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId} `);
   };
@@ -363,7 +363,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         </Button>
       )}
 
-      {[BookStatus.expired, BookStatus.visited, BookStatus.deleted, BookStatus.rejected].includes(status) && (
+      {([BookStatus.expired, BookStatus.visited, BookStatus.rejected].includes(status) || isDelete) && (
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
           <Button variant="secondary" block={true} onClick={reBook}>
@@ -414,6 +414,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست  حذف نوبت و استرداد وجه'} را انتخاب کنید`
             : notRefundable
             ? 'عدم امکان لغو نوبت'
+            : isRequestVisitTurn
+            ? 'آیا از لغو درخواست اطمینان دارید؟'
             : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
@@ -449,7 +451,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                 data-testid="modal__remove-turn-button"
                 disabled={isOnlineVisitTurn && !reasonDeleteTurn}
               >
-                {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
+                {isOnlineVisitTurn && status !== BookStatus.notVisited
+                  ? 'حذف نوبت و استرداد وجه'
+                  : isRequestVisitTurn
+                  ? 'لغو درخواست'
+                  : 'لغو نوبت'}
               </Button>
             )}
             <Button

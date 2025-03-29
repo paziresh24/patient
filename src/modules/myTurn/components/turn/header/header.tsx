@@ -34,10 +34,11 @@ interface TurnHeaderProps {
   status: BookStatus;
   paymentStatus: PaymentStatus;
   centerType: CenterType;
+  isDelete: boolean;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus } = props;
+  const { id, isDelete, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus } = props;
   const router = useRouter();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -92,7 +93,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
   const menuItems = [
     {
       id: 0,
-      name: 'قبض نوبت',
+      name: status === BookStatus.requested ? 'قبض درخواست' : 'قبض نوبت',
       icon: <ReceiptIcon />,
       action: receiptTurn,
       shouldShow: true,
@@ -102,7 +103,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       name: 'چاپ فاکتور',
       icon: <PrinterIcon />,
       action: factorTurn,
-      shouldShow: status !== BookStatus.deleted && status !== BookStatus.notVisited && paymentStatus === PaymentStatus.paid,
+      shouldShow: !isDelete && status !== BookStatus.notVisited && paymentStatus === PaymentStatus.paid,
     },
     {
       id: 2,
@@ -123,7 +124,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           expertise={doctorInfo.expertise}
         />
       </Link>
-      {shouldShowTagStatus && <TagStatus status={status} className="mx-5" />}
+      {shouldShowTagStatus && <TagStatus status={isDelete ? BookStatus.deleted : status} className="mx-5" />}
       {paymentStatus !== PaymentStatus.paying && (
         <DropDown
           element={

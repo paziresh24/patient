@@ -30,7 +30,7 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
       !customize.partnerKey &&
       (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
     ) {
-      router.replace(`/dashboard${router.pathname.replace('/patient', '')}`);
+      router.replace(`/dashboard${router.asPath.replace('/patient', '')}`);
     }
   }, [userInfo.id]);
 
