@@ -26,6 +26,8 @@ import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_sea
 import { useSearchStore } from '@/modules/search/store/search';
 import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import toast from 'react-hot-toast';
+import { toastActionble } from '@/common/utils/toastActionble';
 
 const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
@@ -41,6 +43,15 @@ const Home = ({ fragmentComponents }: any) => {
   useEffect(() => {
     // Prefetch the search page
     router.prefetch('/s/[[...params]]');
+    toast.error(
+      toastActionble({
+        message: 'hello',
+        action: {
+          label: 'button',
+          link: '/s',
+        },
+      }),
+    );
   }, []);
 
   return (

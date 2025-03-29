@@ -55,7 +55,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         window.location.pathname != '/login/oauthEmbed/' &&
         info?.id != getCookie('gozargah_logged_in_user_id') && (
           <iframe
-            src={`https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://local.paziresh24.com/login/oauthEmbed/&response_type=code&scope=openid&kc_idp_hint=gozar&skip_prompt=true`}
+            src={`https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://www.paziresh24.com/login/oauthEmbed/&response_type=code&scope=openid&kc_idp_hint=gozar&skip_prompt=true`}
             hidden
             className="absolute top-0 w-0 h-0 hidden"
           ></iframe>

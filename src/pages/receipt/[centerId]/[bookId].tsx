@@ -276,7 +276,7 @@ const Receipt = () => {
   };
   const handleMyTrunButtonAction = () => {
     router.push({
-      pathname: '/dashboard/appointments',
+      pathname: '/patient/appointments',
       query: {
         type: turnStatus.requestedTurn ? 'book_request' : 'book',
       },
@@ -322,6 +322,7 @@ const Receipt = () => {
   };
 
   const statusText = useMemo(() => {
+    if (turnStatus.deletedTurn && turnStatus.requestedTurn) return 'درخواست شما لغو شده است';
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
     if (turnStatus.expiredTurn && centerType === 'consult') return '';
@@ -507,7 +508,7 @@ const Receipt = () => {
               {turnStatus.requestedTurn && (
                 <div className="flex flex-col space-y-3">
                   <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                    نوبت های من
+                    درخواست‌های من
                   </Button>
                   {!turnStatus.deletedTurn && (
                     <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
@@ -633,6 +634,8 @@ const Receipt = () => {
           title={
             centerType === 'consult'
               ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+              : turnStatus.requestedTurn
+              ? 'آیا از لغو درخواست اطمینان دارید؟'
               : 'آیا از لغو نوبت اطمینان دارید؟'
           }
           {...removeModalProps}
@@ -650,7 +653,7 @@ const Receipt = () => {
           </div>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
-              لغو نوبت
+              {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
             </Button>
             <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
               انصراف

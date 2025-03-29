@@ -13,13 +13,22 @@ interface TurnDetailsDataParam {
     patientName: string;
   };
   status: BookStatus;
+  isDelete: boolean;
   paymentStatus: PaymentStatus;
   activePaymentStatus: Boolean;
   centerType: CenterType;
   translate: Translate;
 }
 
-export const turnDetailsData = ({ data, status, centerType, paymentStatus, activePaymentStatus, translate }: TurnDetailsDataParam) => {
+export const turnDetailsData = ({
+  data,
+  status,
+  isDelete,
+  centerType,
+  paymentStatus,
+  activePaymentStatus,
+  translate,
+}: TurnDetailsDataParam) => {
   const { bookTime, trackingCode, waitingTime, centerName, patientName } = data;
 
   const lists = [
@@ -30,20 +39,16 @@ export const turnDetailsData = ({ data, status, centerType, paymentStatus, activ
           ? translate('patient/appointments:turnDetails.timeForConsult')
           : translate('patient/appointments:turnDetails.time'),
       value: bookTime,
-      shouldShow: [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.deleted].includes(status),
+      shouldShow:
+        status !== BookStatus.requested && ([BookStatus.visited, BookStatus.notVisited, BookStatus.expired].includes(status) || isDelete),
     },
     {
       id: 2,
       name: translate('patient/appointments:turnDetails.referred'),
       value: patientName,
-      shouldShow: [
-        BookStatus.visited,
-        BookStatus.notVisited,
-        BookStatus.expired,
-        BookStatus.requested,
-        BookStatus.rejected,
-        BookStatus.deleted,
-      ].includes(status),
+      shouldShow:
+        [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.requested, BookStatus.rejected].includes(status) ||
+        isDelete,
     },
     {
       id: 3,
@@ -55,14 +60,9 @@ export const turnDetailsData = ({ data, status, centerType, paymentStatus, activ
       id: 4,
       name: translate('patient/appointments:turnDetails.trackingCode'),
       value: trackingCode,
-      shouldShow: [
-        BookStatus.visited,
-        BookStatus.notVisited,
-        BookStatus.expired,
-        BookStatus.requested,
-        BookStatus.rejected,
-        BookStatus.deleted,
-      ].includes(status),
+      shouldShow:
+        [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.requested, BookStatus.rejected].includes(status) ||
+        isDelete,
     },
     {
       id: 5,
@@ -77,7 +77,8 @@ export const turnDetailsData = ({ data, status, centerType, paymentStatus, activ
       }`,
       value: waitingTime,
       shouldShow:
-        [BookStatus.visited, BookStatus.notVisited, BookStatus.expired, BookStatus.deleted].includes(status) &&
+        ([BookStatus.visited, BookStatus.notVisited, BookStatus.expired].includes(status) || isDelete) &&
+        status !== BookStatus.requested &&
         centerType !== CenterType.consult,
     },
   ];

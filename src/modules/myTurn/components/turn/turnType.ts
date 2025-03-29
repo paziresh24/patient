@@ -5,6 +5,7 @@ import { PaymentStatus } from '../../types/paymentStatus';
 
 export interface TurnProps {
   status: BookStatus;
+  isDelete: boolean;
   paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
