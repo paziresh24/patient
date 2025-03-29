@@ -420,7 +420,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
     setBookRequestLoading(false);
 
-    toast.error(toastActionble({ ...data }));
+    toast.error(toastActionble({ ...data }), { duration: data?.duration ?? 10000 });
   };
 
   const handleChangeStep = (

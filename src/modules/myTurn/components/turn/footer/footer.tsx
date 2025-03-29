@@ -152,7 +152,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   };
 
   const reBook = () => {
-    router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId}`);
+    if (isRequestVisitTurn) {
+      router.push(`/booking/${slug}?centerId=${centerId}`);
+    }
+    router.push(`/booking/${slug}?centerId=${centerId}&serviceId=${serviceId} `);
   };
 
   const ClinicPrimaryButton = hasPaging && (
@@ -340,7 +343,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             onClick={showRemoveTurnModal}
             icon={status === BookStatus.notVisited && <TrashIcon />}
           >
-            {isOnlineVisitTurn && status !== BookStatus.notVisited ? 'حذف نوبت و استرداد وجه' : 'لغو نوبت'}
+            {isOnlineVisitTurn && status !== BookStatus.notVisited
+              ? 'حذف نوبت و استرداد وجه'
+              : isRequestVisitTurn
+              ? 'لغو درخواست'
+              : 'لغو نوبت'}
           </Button>
         )}
         {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && !isOnlineVisitTurn && (
@@ -360,7 +367,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         <div className="flex gap-2">
           {isBookForToday && ClinicPrimaryButton}
           <Button variant="secondary" block={true} onClick={reBook}>
-            {t('turnAction.rebook')}
+            {isRequestVisitTurn ? 'درخواست مجدد' : t('turnAction.rebook')}
           </Button>
           {(pdfLink || !!description) && (
             <Button variant="secondary" block={true} onClick={showPrescription}>
