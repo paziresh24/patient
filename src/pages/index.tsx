@@ -43,15 +43,6 @@ const Home = ({ fragmentComponents }: any) => {
   useEffect(() => {
     // Prefetch the search page
     router.prefetch('/s/[[...params]]');
-    toast.error(
-      toastActionble({
-        message: 'hello',
-        action: {
-          label: 'button',
-          link: '/s',
-        },
-      }),
-    );
   }, []);
 
   return (
