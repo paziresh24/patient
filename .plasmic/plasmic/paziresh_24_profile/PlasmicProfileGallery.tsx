@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -74,9 +74,7 @@ export type PlasmicProfileGallery__VariantsArgs = {};
 type VariantPropType = keyof PlasmicProfileGallery__VariantsArgs;
 export const PlasmicProfileGallery__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicProfileGallery__ArgsType = {
-  gallery?: any;
-};
+export type PlasmicProfileGallery__ArgsType = { gallery?: any };
 type ArgPropType = keyof PlasmicProfileGallery__ArgsType;
 export const PlasmicProfileGallery__ArgProps = new Array<ArgPropType>(
   "gallery"

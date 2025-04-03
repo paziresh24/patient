@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -75,9 +75,7 @@ type VariantPropType = keyof PlasmicProfileBreadcrumbs__VariantsArgs;
 export const PlasmicProfileBreadcrumbs__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicProfileBreadcrumbs__ArgsType = {
-  breadcrumbs?: any;
-};
+export type PlasmicProfileBreadcrumbs__ArgsType = { breadcrumbs?: any };
 type ArgPropType = keyof PlasmicProfileBreadcrumbs__ArgsType;
 export const PlasmicProfileBreadcrumbs__ArgProps = new Array<ArgPropType>(
   "breadcrumbs"
