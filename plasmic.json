@@ -1807,7 +1807,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -5696,6 +5697,134 @@
         }
       ],
       "jsBundleThemes": []
+    },
+    {
+      "projectId": "iTvVGxWkzCGxLfA4RjUaXF",
+      "projectApiToken": "9jImgg1rUGPwcaa2iFO44dbQgP5jVA4MlZKxIChhJLfw9d8RF084RXjHoEmMLrB4eZ7iQ2su7a7A1NeCXkA",
+      "projectName": "@hamdast/Vira",
+      "version": "latest",
+      "cssFilePath": "plasmic/hamdast_vira/plasmic.module.css",
+      "components": [
+        {
+          "id": "yyVhLmBrt-LV",
+          "name": "HamdastViraWidget",
+          "type": "managed",
+          "projectId": "iTvVGxWkzCGxLfA4RjUaXF",
+          "renderModuleFilePath": "plasmic/hamdast_vira/PlasmicHamdastViraWidget.tsx",
+          "importSpec": {
+            "modulePath": "HamdastViraWidget.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_vira/PlasmicHamdastViraWidget.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        }
+      ],
+      "icons": [],
+      "images": [],
+      "indirect": false,
+      "globalContextsFilePath": "plasmic/hamdast_vira/PlasmicGlobalContextsProvider.tsx",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "PSOGU88PfhAu",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "69DNhOOjxi0c",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        },
+        {
+          "id": "deJoUbszNNzl",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "pUoU_Y5c8yhR",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "OQ5NT6UbBaK_",
+          "name": "RadioFilter",
+          "displayName": "RadioFilter",
+          "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "69Tsoee3g1zJ",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "bL389SMeESvD",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "l2yA58eAUQcd",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "X6M5ditO28wi",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "1fIY4dAqPokq",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "Yurmip0-XJdl",
+          "name": "AuthGlobalContext",
+          "displayName": "AuthGlobalContext",
+          "componentImportPath": "@/common/fragment/authGlobalContext"
+        },
+        {
+          "id": "l9e8d5JMyvwF",
+          "name": "Fragment",
+          "displayName": "Fragment",
+          "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "wyzaCry3Aw0I",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "ig8iCe5YGlTq",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
+        },
+        {
+          "id": "M1R9BLbdiZ0I",
+          "name": "PWA",
+          "displayName": "PWA",
+          "componentImportPath": "@/common/fragment/pwa"
+        }
+      ],
+      "customFunctions": [
+        {
+          "defaultExport": true,
+          "id": "splunkEvent",
+          "importPath": "@/common/services/plasmicSplunkEvent",
+          "name": "splunkEvent",
+          "namespace": null
+        }
+      ]
     }
   ],
   "globalVariants": {
@@ -5765,6 +5894,12 @@
         "name": "Screen",
         "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
         "contextFilePath": "plasmic/hamdast_bimehnama/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "QQzuXpQqK7MV",
+        "name": "Screen",
+        "projectId": "iTvVGxWkzCGxLfA4RjUaXF",
+        "contextFilePath": "plasmic/hamdast_vira/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
