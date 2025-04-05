@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -271,15 +271,20 @@ function PlasmicSearchRequest__RenderFunc(props: {
                               display_expertise:
                                 Array.from(
                                   new Set(
-                                    (item.source?.expertises ?? []).map(
-                                      expertise =>
-                                        expertise?.degree?.name +
-                                        " " +
-                                        expertise?.expertise?.name
-                                    )
+                                    (item.source?.expertises ?? [])
+                                      .map(
+                                        expertise =>
+                                          expertise?.degree?.name +
+                                          " " +
+                                          expertise?.expertise?.name
+                                      )
+                                      .filter(
+                                        exp => exp.trim() !== "نامشخص نامشخص"
+                                      )
                                   )
                                 ).join(", ") ?? "",
                               satisfaction: item.source?.satisfaction ?? 0,
+
                               rates_count: item.source?.rates_count ?? 0,
                               price: (() => {
                                 const consultServices =

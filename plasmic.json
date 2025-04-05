@@ -1420,6 +1420,19 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicSearchResultQs.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "t_GYTnthnuf9",
+          "name": "DebugMode",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicDebugMode.tsx",
+          "importSpec": {
+            "modulePath": "DebugMode.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicDebugMode.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -1794,8 +1807,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -4398,7 +4410,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",
