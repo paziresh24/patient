@@ -144,17 +144,17 @@ function PlasmicReviewRateAndReviews__RenderFunc(props: {
           items: [
             {
               label:
-                "\u0628\u0631\u062e\u0648\u0631\u062f \u0645\u0646\u0627\u0633\u0628 \u067e\u0632\u0634\u06a9",
+                "\u0628\u0631\u062e\u0648\u0631\u062f \u0645\u0646\u0627\u0633\u0628",
               value: "2.5"
             },
             {
               label:
-                "\u062a\u0648\u0636\u06cc\u062d \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0647\u0646\u06af\u0627\u0645 \u0648\u06cc\u0632\u06cc\u062a",
+                "\u062a\u0648\u0636\u06cc\u062d \u062f\u0631 \u0647\u0646\u06af\u0627\u0645 \u0648\u06cc\u0632\u06cc\u062a",
               value: "4.5"
             },
             {
               label:
-                "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635 \u067e\u0632\u0634\u06a9",
+                "\u0645\u0647\u0627\u0631\u062a \u0648 \u062a\u062e\u0635\u0635",
               value: "3.8"
             }
           ],
