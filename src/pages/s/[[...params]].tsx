@@ -42,14 +42,12 @@ import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
 const Search = ({ host, fragmentComponents }: any) => {
-  console.log('features:', fragmentComponents);
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
   const shouldUseSearchViewEventRoutesList = useFeatureValue<{ routes: Array<string | null> }>('search:use-front-end-search-view-event', {
     routes: [],
   });
-  const shouldUseRowFilter = useFeatureIsOn('search:use-row-search');
 
   const {
     asPath,
@@ -67,7 +65,6 @@ const Search = ({ host, fragmentComponents }: any) => {
   const stat = useStat();
   const customize = useCustomize(state => state.customize);
   const showDesktopFiltersRow = useFeatureIsOn('search::desktop-filters-row');
-  const showConsultBanner = useFeatureIsOn('search:consult-banner');
   const showPlasmicSort = useFeatureIsOn('search_plasmic_sort');
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
@@ -257,8 +254,7 @@ const Search = ({ host, fragmentComponents }: any) => {
                 </div>
               )}
               {customize.showConsultServices &&
-                showConsultBanner &&
-                (showPlasmicConsultBanner ? (
+                (showPlasmicConsultBanner || fragmentComponents?.showPlasmicConsultBanner ? (
                   <div className="mb-3 md:hidden">
                     <Fragment
                       name="ConsultBanner"
@@ -304,6 +300,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicSuggestion: boolean = false;
     let showPlasmicResult: boolean = false;
     let showPlasmicSort: boolean = false;
+    let showPlasmicConsultBanner: boolean = false;
 
     try {
       const queryClient = new QueryClient();
@@ -345,6 +342,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
         showPlasmicResult = growthbook.isOn('search_plasmic_result');
         showPlasmicSort = growthbook.isOn('search_plasmic_sort');
+        showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
       } catch (error) {
         console.error(error);
       }
@@ -356,6 +354,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
             showPlasmicSuggestion,
             showPlasmicResult,
             showPlasmicSort,
+            showPlasmicConsultBanner,
             url,
           },
         },

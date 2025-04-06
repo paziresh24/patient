@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Vazirmatn%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&family=Inter%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
-
 .plasmic_tokens {
   --token-RjKMA1J_35QG: #ffffff;
   --plasmic-token-unnamed-style-token: var(--token-RjKMA1J_35QG);
@@ -43,14 +41,11 @@
   --plsmc-standard-width: 800px;
   --plsmc-wide-width: 1280px;
   --plsmc-viewport-gap: 16px;
-  --plsmc-wide-chunk: calc(
-    ((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) -
-      var(--plsmc-viewport-gap)
-  );
+  --plsmc-wide-chunk: calc(((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) - var(--plsmc-viewport-gap));
 }
 
 .plasmic_default_styles {
-  --mixin-cOJO4lYUDsPA_font-family: "Vazirmatn", sans-serif;
+  --mixin-cOJO4lYUDsPA_font-family: 'Vazirmatn', sans-serif;
   --mixin-cOJO4lYUDsPA_font-size: var(--token-podr231_9RBN);
   --mixin-cOJO4lYUDsPA_font-weight: 400;
   --mixin-cOJO4lYUDsPA_font-style: normal;
@@ -104,7 +99,7 @@
   --mixin-pGN74he4ytPO_border-bottom-right-radius: 3px;
   --mixin-pGN74he4ytPO_border-top-left-radius: 3px;
   --mixin-pGN74he4ytPO_border-top-right-radius: 3px;
-  --mixin-pGN74he4ytPO_font-family: "Inconsolata";
+  --mixin-pGN74he4ytPO_font-family: 'Inconsolata';
   --mixin-pGN74he4ytPO_padding-bottom: 1px;
   --mixin-pGN74he4ytPO_padding-left: 4px;
   --mixin-pGN74he4ytPO_padding-right: 4px;
@@ -133,7 +128,7 @@
   --mixin-U5O81GUQieG8_border-bottom-right-radius: 3px;
   --mixin-U5O81GUQieG8_border-top-left-radius: 3px;
   --mixin-U5O81GUQieG8_border-top-right-radius: 3px;
-  --mixin-U5O81GUQieG8_font-family: "Inconsolata";
+  --mixin-U5O81GUQieG8_font-family: 'Inconsolata';
   --mixin-U5O81GUQieG8_padding-bottom: 3px;
   --mixin-U5O81GUQieG8_padding-left: 6px;
   --mixin-U5O81GUQieG8_padding-right: 6px;
@@ -554,25 +549,17 @@ code:where(.root_reset.code),
 code:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-pGN74he4ytPO_font-family);
-  border-radius: var(--mixin-pGN74he4ytPO_border-top-left-radius)
-    var(--mixin-pGN74he4ytPO_border-top-right-radius)
-    var(--mixin-pGN74he4ytPO_border-bottom-right-radius)
-    var(--mixin-pGN74he4ytPO_border-bottom-left-radius);
-  padding: var(--mixin-pGN74he4ytPO_padding-top)
-    var(--mixin-pGN74he4ytPO_padding-right)
-    var(--mixin-pGN74he4ytPO_padding-bottom)
+  border-radius: var(--mixin-pGN74he4ytPO_border-top-left-radius) var(--mixin-pGN74he4ytPO_border-top-right-radius)
+    var(--mixin-pGN74he4ytPO_border-bottom-right-radius) var(--mixin-pGN74he4ytPO_border-bottom-left-radius);
+  padding: var(--mixin-pGN74he4ytPO_padding-top) var(--mixin-pGN74he4ytPO_padding-right) var(--mixin-pGN74he4ytPO_padding-bottom)
     var(--mixin-pGN74he4ytPO_padding-left);
-  border-top: var(--mixin-pGN74he4ytPO_border-top-width)
-    var(--mixin-pGN74he4ytPO_border-top-style)
+  border-top: var(--mixin-pGN74he4ytPO_border-top-width) var(--mixin-pGN74he4ytPO_border-top-style)
     var(--mixin-pGN74he4ytPO_border-top-color);
-  border-right: var(--mixin-pGN74he4ytPO_border-right-width)
-    var(--mixin-pGN74he4ytPO_border-right-style)
+  border-right: var(--mixin-pGN74he4ytPO_border-right-width) var(--mixin-pGN74he4ytPO_border-right-style)
     var(--mixin-pGN74he4ytPO_border-right-color);
-  border-bottom: var(--mixin-pGN74he4ytPO_border-bottom-width)
-    var(--mixin-pGN74he4ytPO_border-bottom-style)
+  border-bottom: var(--mixin-pGN74he4ytPO_border-bottom-width) var(--mixin-pGN74he4ytPO_border-bottom-style)
     var(--mixin-pGN74he4ytPO_border-bottom-color);
-  border-left: var(--mixin-pGN74he4ytPO_border-left-width)
-    var(--mixin-pGN74he4ytPO_border-left-style)
+  border-left: var(--mixin-pGN74he4ytPO_border-left-width) var(--mixin-pGN74he4ytPO_border-left-style)
     var(--mixin-pGN74he4ytPO_border-left-color);
 }
 
@@ -583,8 +570,7 @@ blockquote:where(.root_reset.blockquote),
 blockquote:where(.root_reset_tags) {
   color: var(--mixin-ciAJzhQl3NIA_color);
   padding-left: var(--mixin-ciAJzhQl3NIA_padding-left);
-  border-left: var(--mixin-ciAJzhQl3NIA_border-left-width)
-    var(--mixin-ciAJzhQl3NIA_border-left-style)
+  border-left: var(--mixin-ciAJzhQl3NIA_border-left-width) var(--mixin-ciAJzhQl3NIA_border-left-style)
     var(--mixin-ciAJzhQl3NIA_border-left-color);
 }
 
@@ -595,25 +581,17 @@ pre:where(.root_reset.pre),
 pre:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-U5O81GUQieG8_font-family);
-  border-radius: var(--mixin-U5O81GUQieG8_border-top-left-radius)
-    var(--mixin-U5O81GUQieG8_border-top-right-radius)
-    var(--mixin-U5O81GUQieG8_border-bottom-right-radius)
-    var(--mixin-U5O81GUQieG8_border-bottom-left-radius);
-  padding: var(--mixin-U5O81GUQieG8_padding-top)
-    var(--mixin-U5O81GUQieG8_padding-right)
-    var(--mixin-U5O81GUQieG8_padding-bottom)
+  border-radius: var(--mixin-U5O81GUQieG8_border-top-left-radius) var(--mixin-U5O81GUQieG8_border-top-right-radius)
+    var(--mixin-U5O81GUQieG8_border-bottom-right-radius) var(--mixin-U5O81GUQieG8_border-bottom-left-radius);
+  padding: var(--mixin-U5O81GUQieG8_padding-top) var(--mixin-U5O81GUQieG8_padding-right) var(--mixin-U5O81GUQieG8_padding-bottom)
     var(--mixin-U5O81GUQieG8_padding-left);
-  border-top: var(--mixin-U5O81GUQieG8_border-top-width)
-    var(--mixin-U5O81GUQieG8_border-top-style)
+  border-top: var(--mixin-U5O81GUQieG8_border-top-width) var(--mixin-U5O81GUQieG8_border-top-style)
     var(--mixin-U5O81GUQieG8_border-top-color);
-  border-right: var(--mixin-U5O81GUQieG8_border-right-width)
-    var(--mixin-U5O81GUQieG8_border-right-style)
+  border-right: var(--mixin-U5O81GUQieG8_border-right-width) var(--mixin-U5O81GUQieG8_border-right-style)
     var(--mixin-U5O81GUQieG8_border-right-color);
-  border-bottom: var(--mixin-U5O81GUQieG8_border-bottom-width)
-    var(--mixin-U5O81GUQieG8_border-bottom-style)
+  border-bottom: var(--mixin-U5O81GUQieG8_border-bottom-width) var(--mixin-U5O81GUQieG8_border-bottom-style)
     var(--mixin-U5O81GUQieG8_border-bottom-color);
-  border-left: var(--mixin-U5O81GUQieG8_border-left-width)
-    var(--mixin-U5O81GUQieG8_border-left-style)
+  border-left: var(--mixin-U5O81GUQieG8_border-left-width) var(--mixin-U5O81GUQieG8_border-left-style)
     var(--mixin-U5O81GUQieG8_border-left-color);
 }
 

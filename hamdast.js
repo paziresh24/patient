@@ -2,9 +2,7 @@ import PlasmicHamdastBimehnamaWidget, {
   PlasmicHamdastBimehnamaWidget__ArgProps,
 } from '.plasmic/plasmic/hamdast_bimehnama/PlasmicHamdastBimehnamaWidget';
 
-import PlasmicHamdastViraWidget, {
-  PlasmicHamdastViraWidget__ArgProps,
-} from '.plasmic/plasmic/hamdast_bimehnama/PlasmicHamdastViraWidget';
+import PlasmicHamdastViraWidget, { PlasmicHamdastViraWidget__ArgProps } from '.plasmic/plasmic/hamdast_vira/PlasmicHamdastViraWidget';
 
 export const Components = {
   hhhzbbsffq0nlna: {
