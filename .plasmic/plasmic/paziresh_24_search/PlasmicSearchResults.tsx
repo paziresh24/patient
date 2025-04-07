@@ -1254,11 +1254,20 @@ function PlasmicSearchResults__RenderFunc(props: {
                             }
                             style={{ fontWeight: 700 }}
                           >
-                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f. "}
+                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f."}
+                          </span>
+                          <React.Fragment>{"\n"}</React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {" "}
                           </span>
                           <React.Fragment>
                             {
-                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
+                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f.\n"
                             }
                           </React.Fragment>
                         </React.Fragment>
